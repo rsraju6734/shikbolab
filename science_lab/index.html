@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShikboLab - নিজে করে বিজ্ঞান শেখো</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="index.html">Shikbo<span>Lab</span></a>
+  <span>বাংলায় ইন্টারঅ্যাকটিভ বিজ্ঞান ল্যাব</span>
+</header>
+<div class="wrap">
+  <div class="hero">
+    <h1>বই পড়ে নয়, <em>নিজে করে</em> বিজ্ঞান শেখো</h1>
+    <p>নবম-দশম শ্রেণির জন্য সহজ নোট, অ্যানিমেটেড ল্যাব আর কুইজ। রসায়ন, পদার্থবিজ্ঞান, গণিত ও জীববিজ্ঞান, সব এক জায়গায়।</p>
+  </div>
+  <div class="filters" id="filters"></div>
+  <div class="grid" id="grid"></div>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; তৈরির কাজ চলছে</footer>
+<script src="js/chapters.js"></script>
+<script>
+var SUBJECTS = {
+  chemistry:{name:'রসায়ন',color:'#2a9d8f',icon:'🧪'},
+  physics:{name:'পদার্থবিজ্ঞান',color:'#1f3a5f',icon:'⚛️'},
+  math:{name:'গণিত',color:'#e76f51',icon:'📐'},
+  biology:{name:'জীববিজ্ঞান',color:'#e9a23b',icon:'🧬'}
+};
+var current = 'all';
+function render(){
+  var f = document.getElementById('filters');
+  var html = '<button data-s="all" class="'+(current==='all'?'active':'')+'">সব বিষয়</button>';
+  for (var k in SUBJECTS){ html += '<button data-s="'+k+'" class="'+(current===k?'active':'')+'">'+SUBJECTS[k].icon+' '+SUBJECTS[k].name+'</button>'; }
+  f.innerHTML = html;
+  f.querySelectorAll('button').forEach(function(b){ b.onclick=function(){ current=b.getAttribute('data-s'); render(); }; });
+  var g = document.getElementById('grid'); g.innerHTML = '';
+  window.CHAPTERS.forEach(function(c){
+    if (current!=='all' && c.subject!==current) return;
+    var s = SUBJECTS[c.subject];
+    var live = c.status==='live' && c.file;
+    var el = document.createElement(live?'a':'div');
+    el.className = 'card' + (live?'':' disabled');
+    el.style.borderTopColor = s.color;
+    if (live) el.href = c.file;
+    el.innerHTML = '<div class="sub" style="color:'+s.color+'">'+s.icon+' '+s.name+'</div><h3>'+c.title+'</h3><p>'+c.desc+'</p><span class="chip '+(live?'live':'soon')+'">'+(live?'ল্যাব খোলো':'শীঘ্রই আসছে')+'</span>';
+    g.appendChild(el);
+  });
+}
+render();
+</script>
+</body>
+</html>

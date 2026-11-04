@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>পর্যায় সারণি - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.ptscroll{overflow-x:auto;padding-bottom:6px}
+.pt{display:grid;grid-template-columns:30px repeat(18,minmax(36px,1fr));gap:3px;min-width:720px}
+.pt .hd{font-size:12px;font-weight:700;color:var(--muted);text-align:center;align-self:center;border-radius:6px;padding:2px 0}
+.pt .hd.hl{background:var(--gold);color:#1c2b39}
+.cell{border:1px solid #cfd9e1;border-radius:6px;background:#fff;font-family:system-ui,'Segoe UI',Arial,sans-serif;cursor:pointer;padding:2px 0;line-height:1.1;text-align:center}
+.cell small{display:block;font-size:9px;color:#5b6770}
+.cell b{font-size:14px;color:#1c2b39}
+.cell.s{background:#fdebd8}.cell.p{background:#dff1ec}.cell.d{background:#e7e4f5}
+.cell.sel{outline:3px solid #e76f51;box-shadow:0 0 10px rgba(231,111,81,.8);transform:scale(1.12);position:relative;z-index:2}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;margin:8px 0}
+.leg i{display:inline-block;width:14px;height:14px;border-radius:3px;border:1px solid #cfd9e1;vertical-align:middle;margin-right:4px}
+.lab2{display:grid;grid-template-columns:380px 1fr;gap:18px;margin-top:14px}
+.elbig{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.elsym{width:86px;height:86px;border-radius:14px;background:#1f3a5f;color:#fff;font-family:system-ui,Arial,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.elsym b{font-size:34px;line-height:1}.elsym small{font-size:12px}
+.cfg{font-family:system-ui,'Segoe UI',Arial,sans-serif;font-size:21px;background:#f6f9fb;border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0;word-spacing:4px}
+.cfg .r{color:#e63946;font-weight:700}
+.steps li{opacity:0;transform:translateY(8px);transition:all .5s;list-style:none;margin:8px 0;background:#eaf7f5;border-radius:8px;padding:8px 12px}
+.steps li.show{opacity:1;transform:none}
+.steps{padding-left:0}
+.ans{background:#fff4dc;border-radius:10px;padding:10px 12px;font-weight:700;margin-top:8px;display:none}
+.guess{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.guess select{width:auto;min-width:110px}
+.fb{font-weight:700;margin-top:4px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.chips button{font-family:inherit}
+details{border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0;background:#fff}
+details summary{cursor:pointer;font-weight:700;color:var(--navy)}
+details p{margin:8px 0 2px}
+@media(max-width:900px){.lab2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+
+<div class="wrap">
+  <div class="crumb">🧪 রসায়ন &rsaquo; নবম-দশম শ্রেণি &rsaquo; অধ্যায় ৪</div>
+  <h1 class="title">পর্যায় সারণি (Periodic Table)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab">🧭 ল্যাব</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্ন-উত্তর</a></nav>
+
+  <!-- ================= নোট ================= -->
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায়ে শিখবে:</b> পর্যায় সারণি কীভাবে তৈরি হলো, ইলেকট্রন বিন্যাস থেকে মৌলের ঠিকানা (পর্যায় ও গ্রুপ) বের করা, মৌলের পর্যায়বৃত্ত ধর্ম, আর বিভিন্ন গ্রুপের বিশেষ নাম।</div>
+
+    <h3>৪.১ পর্যায় সারণির পটভূমি</h3>
+    <table class="t">
+      <tr><th>সাল</th><th>বিজ্ঞানী</th><th>অবদান</th></tr>
+      <tr><td>১৭৮৯</td><td>ল্যাভয়সিয়ে</td><td>মৌলকে ধাতু ও অধাতু, এই দুই ভাগে ভাগ করেন</td></tr>
+      <tr><td>১৮২৯</td><td>ডোবেরাইনার</td><td>একই ধর্মের তিনটি মৌলকে পারমাণবিক ভর অনুযায়ী সাজালে মাঝের মৌলের ভর প্রথম ও তৃতীয়টির গড়ের কাছাকাছি হয়। এটাই <b>ত্রয়ী সূত্র</b></td></tr>
+      <tr><td>১৮৬৪</td><td>নিউল্যান্ডস</td><td><b>অষ্টক সূত্র</b>: ভর অনুযায়ী সাজালে যেকোনো মৌলের ধর্ম তার অষ্টম মৌলের ধর্মের সাথে মেলে</td></tr>
+      <tr><td>১৮৬৯</td><td>মেন্ডেলিফ</td><td><b>পর্যায় সূত্র</b>: পারমাণবিক ভর বাড়ালে মৌলের ধর্ম নির্দিষ্ট বিরতিতে বারবার ফিরে আসে। ৬৩টি মৌল নিয়ে প্রথম পর্যায় সারণি</td></tr>
+      <tr><td>১৯১৩</td><td>মোসলে</td><td>পারমাণবিক ভরের বদলে <b>পারমাণবিক সংখ্যা</b> অনুযায়ী সাজানোর প্রস্তাব দেন</td></tr>
+    </table>
+    <ul>
+      <li><b>মেন্ডেলিফের সাফল্য:</b> সারণিতে কিছু ঘর ফাঁকা রেখেছিলেন এবং অনাবিষ্কৃত মৌলের ধর্ম আগেই অনুমান করেছিলেন। পরে মৌলগুলো আবিষ্কারের পর সেই অনুমান ঠিক প্রমাণিত হয়।</li>
+      <li><b>মেন্ডেলিফের ত্রুটি:</b> ভর অনুযায়ী সাজালে আর্গন (ভর ৪০) পটাশিয়ামের (ভর ৩৯) পরে বসার কথা। কিন্তু ধর্ম মেলানোর জন্য আর্গনকে আগে বসাতে হয়েছিল। এই গরমিল মোসলের পারমাণবিক সংখ্যা দিয়ে মিটে যায়: আর্গন ১৮, পটাশিয়াম ১৯।</li>
+      <li><b>IUPAC</b> (আন্তর্জাতিক সংস্থা) এখন পর্যন্ত ১১৮টি মৌল শনাক্ত করেছে। বেশিরভাগ মৌল প্রকৃতিতে পাওয়া যায়, বাকিগুলো ল্যাবরেটরিতে তৈরি।</li>
+    </ul>
+
+    <h3>৪.২ আধুনিক পর্যায় সারণির বৈশিষ্ট্য</h3>
+    <ul>
+      <li><b>৭টি পর্যায়</b> (আনুভূমিক সারি) আর <b>১৮টি গ্রুপ</b> (খাড়া কলাম)।</li>
+      <li>পর্যায়ে মৌলের সংখ্যা: পর্যায় ১ এ ২টি; পর্যায় ২ ও ৩ এ ৮টি করে; পর্যায় ৪ ও ৫ এ ১৮টি করে; পর্যায় ৬ ও ৭ এ ৩২টি করে।</li>
+      <li>গ্রুপে মৌলের সংখ্যা: গ্রুপ ১ এ ৭টি; গ্রুপ ২ এ ৬টি; গ্রুপ ৩ এ ৩২টি; গ্রুপ ৪ থেকে ১২ প্রতিটিতে ৪টি; গ্রুপ ১৩ থেকে ১৭ প্রতিটিতে ৬টি; গ্রুপ ১৮ এ ৭টি।</li>
+      <li><b>ল্যান্থানাইড</b> সারি (পারমাণবিক সংখ্যা ৫৭-৭১) ও <b>অ্যাকটিনাইড</b> সারি (৮৯-১০৩) প্রতিটিতে ১৫টি মৌল। এগুলো সারণির নিচে আলাদা দেখানো হয়।</li>
+      <li>একই পর্যায়ে বাম থেকে ডানে গেলে ধর্ম ধীরে ধীরে বদলায়। একই গ্রুপের মৌলগুলোর ধর্ম প্রায় একই রকম।</li>
+    </ul>
+
+    <h3>৪.৩ ইলেকট্রন বিন্যাস থেকে মৌলের অবস্থান ⭐⭐⭐</h3>
+    <div class="key"><b>পর্যায় নম্বর</b> = সবচেয়ে বাইরের প্রধান শক্তিস্তরের নম্বর।<br>
+      উদাহরণ: Li (1s² 2s¹) এর বাইরের স্তর ২, তাই পর্যায় ২। K এর বাইরের স্তর ৪, তাই পর্যায় ৪।</div>
+    <p><b>গ্রুপ নম্বর বের করার ৩টি নিয়ম:</b></p>
+    <table class="t">
+      <tr><th>নিয়ম</th><th>কখন</th><th>গ্রুপ নম্বর</th><th>উদাহরণ</th></tr>
+      <tr><td>নিয়ম ১</td><td>বাইরের স্তরে শুধু s অরবিটাল</td><td>s এর ইলেকট্রন সংখ্যা</td><td>Na (3s¹) &rarr; গ্রুপ ১</td></tr>
+      <tr><td>নিয়ম ২</td><td>বাইরের স্তরে s ও p অরবিটাল</td><td>s + p এর ইলেকট্রন + ১০</td><td>B (2s² 2p¹) &rarr; ২+১+১০ = ১৩</td></tr>
+      <tr><td>নিয়ম ৩</td><td>বাইরের স্তরে s, আর আগের স্তরে d অরবিটাল</td><td>s + d এর ইলেকট্রন</td><td>Fe (3d⁶ 4s²) &rarr; ৬+২ = ৮</td></tr>
+    </table>
+    <div class="star">⭐ <b>ব্যতিক্রম:</b> He (1s²) নিয়ম অনুযায়ী গ্রুপ ২ হওয়ার কথা, কিন্তু নিষ্ক্রিয় গ্যাসের মতো আচরণ করে বলে তাকে <b>গ্রুপ ১৮</b> এ রাখা হয়। Cr (3d⁵ 4s¹) ও Cu (3d¹⁰ 4s¹) এর ইলেকট্রন বিন্যাস সাধারণ নিয়মের চেয়ে আলাদা।</div>
+    <p>নিচের <b>ল্যাবে</b> নিজে মৌল বেছে এই নিয়মগুলো ধাপে ধাপে দেখে নাও 👇</p>
+
+    <h3>৪.৪ ইলেকট্রন বিন্যাসই মূল ভিত্তি</h3>
+    <ul>
+      <li>বাইরের স্তরের ইলেকট্রন বিন্যাস একই হলে মৌলগুলো একই গ্রুপে থাকে।</li>
+      <li>বাইরের স্তরে <b>১টি</b> ইলেকট্রন থাকলে মৌল সাধারণত সেটা ত্যাগ করে ধনাত্মক আয়ন হয়: Na &rarr; Na<sup>+</sup> + e<sup>&minus;</sup></li>
+      <li>বাইরের স্তরে <b>৭টি</b> ইলেকট্রন থাকলে সাধারণত ১টি ইলেকট্রন নিয়ে ঋণাত্মক আয়ন হয়: Cl + e<sup>&minus;</sup> &rarr; Cl<sup>&minus;</sup></li>
+    </ul>
+
+    <h3>৪.৫ কিছু ব্যতিক্রম</h3>
+    <ul>
+      <li><b>হাইড্রোজেন:</b> অধাতু, তবু গ্রুপ ১ এ আছে। কারণ ক্ষারধাতুর মতো এর বাইরের স্তরে ১টি ইলেকট্রন। আবার হ্যালোজেনের মতো ১টি ইলেকট্রন গ্রহণও করতে পারে। তবে বেশিরভাগ ধর্ম ক্ষারধাতুর সাথে মেলে, তাই গ্রুপ ১।</li>
+      <li><b>হিলিয়াম:</b> ইলেকট্রন বিন্যাস অনুযায়ী গ্রুপ ২ হওয়ার কথা। কিন্তু মৃৎক্ষার ধাতুগুলো তীব্র তড়িৎ ধনাত্মক, আর He নিষ্ক্রিয়। তাই নিয়ন, আর্গনের সাথে গ্রুপ ১৮।</li>
+      <li><b>ল্যান্থানাইড ও অ্যাকটিনাইড:</b> এগুলো ৬ ও ৭ নম্বর পর্যায়ের গ্রুপ ৩-এর অংশ। মূল সারণিতে বসালে সারণির সৌন্দর্য নষ্ট হয়, তাই আলাদা করে নিচে রাখা হয়েছে।</li>
+    </ul>
+
+    <h3>৪.৬ মৌলের পর্যায়বৃত্ত ধর্ম ⭐⭐⭐</h3>
+    <ul>
+      <li><b>ধাতব ধর্ম:</b> ইলেকট্রন ত্যাগ করে ধনাত্মক আয়ন হওয়ার প্রবণতা। যে মৌল যত সহজে ইলেকট্রন ছাড়ে, তার ধাতব ধর্ম তত বেশি।</li>
+      <li><b>অধাতব ধর্ম:</b> ইলেকট্রন গ্রহণ করে ঋণাত্মক আয়ন হওয়ার প্রবণতা।</li>
+      <li><b>অর্ধধাতু/অপধাতু:</b> যারা কখনো ধাতুর মতো, কখনো অধাতুর মতো আচরণ করে (যেমন সিলিকন Si)। পর্যায়ের বামে সাধারণত ধাতু, মাঝে অর্ধধাতু, ডানে অধাতু।</li>
+      <li><b>পরমাণুর আকার (পারমাণবিক ব্যাসার্ধ):</b> বাম থেকে ডানে গেলে প্রোটন সংখ্যা বাড়ে, কিন্তু প্রধান শক্তিস্তর একই থাকে। নিউক্লিয়াসের টান বেশি হয়, ইলেকট্রন কাছে চলে আসে, ফলে আকার <b>কমে</b>। গ্রুপে উপর থেকে নিচে গেলে নতুন শক্তিস্তর যুক্ত হয়, ফলে আকার <b>বাড়ে</b>।</li>
+      <li><b>আয়নিকরণ শক্তি:</b> গ্যাসীয় অবস্থায় কোনো মৌলের ১ মোল পরমাণু থেকে ১ মোল ইলেকট্রন সরিয়ে ১ মোল ধনাত্মক আয়ন তৈরি করতে যে শক্তি লাগে। আকার কমলে আয়নিকরণ শক্তি <b>বাড়ে</b>।</li>
+      <li><b>ইলেকট্রন আসক্তি:</b> গ্যাসীয় অবস্থায় ১ মোল পরমাণুতে ১ মোল ইলেকট্রন ঢুকিয়ে ঋণাত্মক আয়ন বানালে যে শক্তি নির্গত হয়। আকার কমলে মান <b>বাড়ে</b> (বইয়ের নিয়ম অনুযায়ী)।</li>
+      <li><b>তড়িৎ ঋণাত্মকতা:</b> সমযোজী বন্ধনে থাকা পরমাণু বন্ধনের ইলেকট্রন জোড়াকে নিজের দিকে টানার ক্ষমতা। আকার ছোট হলে মান বেশি, আকার বড় হলে মান কম।</li>
+    </ul>
+    <table class="t">
+      <tr><th>ধর্ম</th><th>পর্যায়ে বাম &rarr; ডান</th><th>গ্রুপে উপর &rarr; নিচ</th></tr>
+      <tr><td>পরমাণুর আকার</td><td>কমে ⬇️</td><td>বাড়ে ⬆️</td></tr>
+      <tr><td>আয়নিকরণ শক্তি</td><td>বাড়ে ⬆️</td><td>কমে ⬇️</td></tr>
+      <tr><td>ইলেকট্রন আসক্তি</td><td>বাড়ে ⬆️</td><td>কমে ⬇️</td></tr>
+      <tr><td>তড়িৎ ঋণাত্মকতা</td><td>বাড়ে ⬆️</td><td>কমে ⬇️</td></tr>
+      <tr><td>ধাতব ধর্ম</td><td>কমে ⬇️</td><td>বাড়ে ⬆️</td></tr>
+    </table>
+    <div class="key">উদাহরণ: Na, Mg, Al, Si এর মধ্যে Si এর আকার সবচেয়ে ছোট, তাই আয়নিকরণ শক্তি সবচেয়ে বেশি। গ্রুপ ১ এ Li এর আকার সবচেয়ে ছোট, তাই Li এর আয়নিকরণ শক্তি সবচেয়ে বেশি। গ্রুপ ১৭ এ F এর আয়নিকরণ শক্তি সবচেয়ে বেশি।</div>
+
+    <h3>৪.৭ বিভিন্ন গ্রুপের বিশেষ নাম ⭐⭐</h3>
+    <table class="t">
+      <tr><th>নাম</th><th>গ্রুপ</th><th>মৌল</th><th>নামের কারণ</th></tr>
+      <tr><td>ক্ষারধাতু</td><td>১ (H বাদে)</td><td>Li, Na, K, Rb, Cs, Fr</td><td>পানিতে H₂ গ্যাস ও ক্ষার তৈরি করে</td></tr>
+      <tr><td>মৃৎক্ষার ধাতু</td><td>২</td><td>Be, Mg, Ca, Sr, Ba, Ra</td><td>যৌগ মাটিতে পাওয়া যায় এবং এরা ক্ষার তৈরি করে</td></tr>
+      <tr><td>মুদ্রা ধাতু</td><td>১১</td><td>Cu, Ag, Au, Rg</td><td>প্রথম ৩টি দিয়ে প্রাচীনকালে মুদ্রা তৈরি হতো</td></tr>
+      <tr><td>অবস্থান্তর মৌল</td><td>৩ থেকে ১২</td><td>Fe, Ni, Cu, Zn ইত্যাদি</td><td>যৌগ রঙিন হয়, বিক্রিয়ায় প্রভাবকের কাজ করে</td></tr>
+      <tr><td>হ্যালোজেন</td><td>১৭</td><td>F, Cl, Br, I, At, Ts</td><td>"লবণ উৎপাদনকারী": ধাতুর সাথে যুক্ত হয়ে লবণ গঠন করে</td></tr>
+      <tr><td>নিষ্ক্রিয় গ্যাস</td><td>১৮</td><td>He, Ne, Ar, Kr, Xe, Rn, Og</td><td>বাইরের স্তর পূর্ণ, তাই বিক্রিয়ায় অংশ নিতে চায় না</td></tr>
+    </table>
+
+    <h3>৪.৮ পর্যায় সারণির সুবিধা</h3>
+    <ul>
+      <li><b>রসায়ন পাঠ সহজ:</b> ১১৮টি মৌলের সব ধর্ম আলাদা করে মনে রাখা অসম্ভব। কিন্তু গ্রুপের সাধারণ ধর্ম জানলেই মৌলের ধর্ম সম্পর্কে ধারণা পাওয়া যায়।</li>
+      <li><b>নতুন মৌল আবিষ্কার:</b> ফাঁকা ঘরের মৌলের ধর্ম আগেই অনুমান করা গিয়েছিল।</li>
+      <li><b>গবেষণা:</b> নতুন কোনো পদার্থ বানাতে কী ধরনের মৌল লাগবে, তার ধারণা সারণি থেকে পাওয়া যায়।</li>
+    </ul>
+
+    <h3>৪.৯ একই গ্রুপের মৌল একই রকম আচরণ করে</h3>
+    <ul>
+      <li>গ্রুপ ১৭ এর F₂, Cl₂, Br₂, I₂ সবাই H₂ এর সাথে বিক্রিয়া করে HF, HCl, HBr, HI গ্যাস দেয়। যেমন: H₂ + Cl₂ &rarr; 2HCl</li>
+      <li>এই গ্যাসগুলো পানিতে দ্রবীভূত হলে হাইড্রোহ্যালাইড এসিড হয়, আর কার্বনেটের সাথে বিক্রিয়ায় CO₂ দেয়।</li>
+      <li>CaCO₃ + 2HCl &rarr; CaCl₂ + H₂O + CO₂ এবং MgCO₃ + 2HCl &rarr; MgCl₂ + H₂O + CO₂। গ্রুপ ২ এর Mg ও Ca একই রকম আচরণ করছে।</li>
+      <li>CO₂ গ্যাস বর্ণহীন, জ্বলন্ত কাঠি নিভিয়ে দেয়, আর চুনের পানিকে ঘোলা করে (CaCO₃ তৈরি হয়)।</li>
+    </ul>
+    <div class="star">⭐ <b>পরীক্ষার জন্য গুরুত্বপূর্ণ:</b> ইলেকট্রন বিন্যাস থেকে পর্যায় ও গ্রুপ বের করা (নিয়ম ১, ২, ৩), ৪.৬ এর ধর্মগুলোর প্রবণতা ও কারণ, বিশেষ নামের গ্রুপগুলো, H ও He এর ব্যতিক্রম, ত্রয়ী সূত্র ও মোসলের অবদান।</div>
+  </section>
+
+  <!-- ================= ল্যাব ================= -->
+  <section class="panel" id="lab">
+    <h2>🧭 ল্যাব ১: মৌলের ঠিকানা খুঁজো</h2>
+    <p>নিচের সারণি থেকে একটা মৌল বেছে নাও (প্রথম ৩০টি মৌল)। ইলেকট্রনগুলো ঘুরতে দেখবে, আর ইলেকট্রন বিন্যাস থেকে <b>পর্যায় ও গ্রুপ</b> কীভাবে বের হয় সেটা ধাপে ধাপে দেখতে পারবে। আগে নিজে অনুমান করে তারপর মিলিয়ে নিলে ভালো শেখা হয়!</p>
+    <div class="ptscroll"><div class="pt" id="pt"></div></div>
+    <div class="leg"><span><i style="background:#fdebd8"></i>s-ব্লক (গ্রুপ ১, ২, H, He)</span><span><i style="background:#dff1ec"></i>p-ব্লক (গ্রুপ ১৩-১৮)</span><span><i style="background:#e7e4f5"></i>d-ব্লক / অবস্থান্তর (গ্রুপ ৩-১২)</span></div>
+
+    <div class="lab2">
+      <div class="box" style="text-align:center">
+        <canvas id="bohr" width="340" height="340" style="margin:0 auto;max-width:100%"></canvas>
+        <div style="font-size:14px;margin-top:6px">শক্তিস্তরে ইলেকট্রন: <b id="shells">২, ১</b> &nbsp;|&nbsp; <span style="color:#e63946">●</span> বাইরের স্তর</div>
+        <label for="zs" style="margin-top:10px">পারমাণবিক সংখ্যা: <b id="zv">১</b></label>
+        <input type="range" id="zs" min="1" max="30" step="1" value="1">
+        <div class="btnrow" style="justify-content:center"><button class="btn alt" id="prev">&larr; আগের মৌল</button><button class="btn" id="next">+১ ইলেকট্রন যোগ করো &rarr;</button></div>
+        <div style="font-size:14px;margin-top:10px">📘 বইয়ের "শিক্ষার্থীর কাজ" (৩, ৪, ৬, ১১, ১৩, ১৬, ২১, ২৬):</div>
+        <div class="chips" id="bookchips" style="justify-content:center"></div>
+      </div>
+
+      <div class="box">
+        <div class="elbig"><div class="elsym"><small id="znum">১</small><b id="zsym">H</b><small id="zname">হাইড্রোজেন</small></div>
+          <div><b>ইলেকট্রন বিন্যাস</b><div class="cfg" id="cfg"></div></div></div>
+        <p style="margin:6px 0"><small>লাল রং = সবচেয়ে বাইরের শক্তিস্তরের অংশ (বইয়ে যেভাবে দেখানো হয়েছে)</small></p>
+        <b>🤔 আগে নিজে অনুমান করো:</b>
+        <div class="guess">
+          পর্যায় <select id="gp"><option value="">?</option></select>
+          গ্রুপ <select id="gg"><option value="">?</option></select>
+          <button class="btn" id="chk">মেলাও</button>
+        </div>
+        <div class="fb" id="fb"></div>
+        <div class="btnrow"><button class="btn alt" id="showsteps">▶ ধাপে ধাপে দেখাও</button></div>
+        <ol class="steps" id="steps"></ol>
+        <div class="ans" id="ansbox"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= কুইজ ================= -->
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <!-- ================= প্রশ্ন-উত্তর ================= -->
+  <section class="panel" id="qa">
+    <h2>📖 প্রশ্ন-উত্তর</h2>
+    <h3>সংক্ষিপ্ত প্রশ্ন (জ্ঞানমূলক ও অনুধাবনমূলক)</h3>
+    <details><summary>১. পর্যায় সারণি কী? (জ্ঞানমূলক)</summary><p>যে ছকে মৌলগুলোকে পারমাণবিক সংখ্যা অনুযায়ী সাজিয়ে একই ধর্মের মৌলগুলোকে একই গ্রুপে রাখা হয়েছে, তাকে পর্যায় সারণি বলে। এতে ৭টি পর্যায় ও ১৮টি গ্রুপ আছে।</p></details>
+    <details><summary>২. ডোবেরাইনারের ত্রয়ী সূত্র কী? (জ্ঞানমূলক)</summary><p>একই ধর্মের তিনটি মৌলকে পারমাণবিক ভরের ক্রমে সাজালে মাঝের মৌলের পারমাণবিক ভর প্রথম ও তৃতীয় মৌলের ভরের গড়ের সমান বা কাছাকাছি হয়। এটাই ত্রয়ী সূত্র।</p></details>
+    <details><summary>৩. IUPAC কী? (জ্ঞানমূলক)</summary><p>IUPAC এর পূর্ণরূপ International Union of Pure and Applied Chemistry। এটি রসায়নের আন্তর্জাতিক নিয়মকানুন নির্ধারণ করে এবং এখন পর্যন্ত ১১৮টি মৌল শনাক্ত করেছে।</p></details>
+    <details><summary>৪. Ca কে মৃৎক্ষার ধাতু বলা হয় কেন? (অনুধাবনমূলক)</summary><p>Ca এর বিভিন্ন যৌগ মাটিতে পাওয়া যায়। আবার Ca এর হাইড্রক্সাইড Ca(OH)₂ একটি ক্ষার। মাটিতে যৌগ পাওয়া যায় এবং ক্ষার তৈরি করে বলে Ca একটি মৃৎক্ষার ধাতু।</p></details>
+    <details><summary>৫. He কে নিষ্ক্রিয় গ্যাস বলা হয় কেন? (অনুধাবনমূলক)</summary><p>He এর বাইরের শক্তিস্তর পূর্ণ (1s²), তাই এটি নিজের সাথে বা অন্য মৌলের সাথে যুক্ত হয় না। এছাড়া He গ্যাস হিসেবে থাকে। এজন্য He কে নিষ্ক্রিয় গ্যাস বলে।</p></details>
+    <details><summary>৬. হাইড্রোজেনকে গ্রুপ ১ এ রাখা হয়েছে কেন? (অনুধাবনমূলক)</summary><p>H অধাতু হলেও এর বাইরের স্তরে ক্ষারধাতুর (Na, K ইত্যাদি) মতো ১টি ইলেকট্রন আছে এবং বেশিরভাগ ধর্ম ক্ষারধাতুর সাথে মেলে। তাই H কে গ্রুপ ১ এ রাখা হয়েছে।</p></details>
+    <details><summary>৭. ল্যান্থানাইড ও অ্যাকটিনাইড সারির মৌলগুলো সারণির নিচে আলাদা রাখা হয় কেন? (অনুধাবনমূলক)</summary><p>এগুলো ৬ ও ৭ নম্বর পর্যায়ের ৩ নম্বর গ্রুপের অংশ। মূল সারণিতে বসালে সারণি অনেক চওড়া হয়ে সৌন্দর্য নষ্ট হতো। তাই সুন্দরভাবে দেখানোর জন্য এগুলো নিচে আলাদা রাখা হয়েছে।</p></details>
+    <details><summary>৮. একই পর্যায়ে বাম থেকে ডানে গেলে পরমাণুর আকার কমে কেন? (অনুধাবনমূলক)</summary><p>বাম থেকে ডানে গেলে পারমাণবিক সংখ্যা বাড়ে, অর্থাৎ নিউক্লিয়াসে প্রোটন বাড়ে। কিন্তু প্রধান শক্তিস্তর একই থাকে। ফলে নিউক্লিয়াস ও ইলেকট্রনের আকর্ষণ বাড়ে, শক্তিস্তর নিউক্লিয়াসের কাছে চলে আসে এবং আকার কমে।</p></details>
+    <details><summary>৯. গ্রুপে উপর থেকে নিচে গেলে পরমাণুর আকার বাড়ে কেন? (অনুধাবনমূলক)</summary><p>প্রতিটি ধাপ নিচে নামলে বাইরের দিকে একটি নতুন শক্তিস্তর যুক্ত হয়। নতুন স্তর যুক্ত হওয়ার প্রভাব প্রোটন বাড়ার আকর্ষণের প্রভাবের চেয়ে বেশি, তাই আকার বাড়ে।</p></details>
+    <details><summary>১০. Na ও Cl এর মধ্যে কার তড়িৎ ঋণাত্মকতা বেশি এবং কেন? (অনুধাবনমূলক)</summary><p>Cl এর তড়িৎ ঋণাত্মকতা বেশি। Na ও Cl একই (৩য়) পর্যায়ে আছে। বাম থেকে ডানে গেলে আকার কমে এবং তড়িৎ ঋণাত্মকতা বাড়ে। Cl এর আকার Na এর চেয়ে ছোট, তাই Cl এর মান বেশি।</p></details>
+
+    <h3>সৃজনশীল প্রশ্ন (উদ্দীপকসহ)</h3>
+    <details><summary>সৃজনশীল ১: নিচের উদ্দীপকটি পড়ো</summary>
+      <p><b>উদ্দীপক:</b> পর্যায় সারণির একটি খণ্ডিত অংশে ৩য় পর্যায়ে Na, Mg ও Cl আছে, আর গ্রুপ ১৭ এ F (উপরে), Cl (মাঝে), Br (নিচে) আছে।</p>
+      <p><b>(ক) ত্রয়ী সূত্রটি লেখো। (জ্ঞান)</b><br>একই ধর্মের তিনটি মৌলকে পারমাণবিক ভরের ক্রমে সাজালে মাঝের মৌলের ভর প্রথম ও তৃতীয় মৌলের ভরের গড়ের কাছাকাছি হয়।</p>
+      <p><b>(খ) বেরিয়ামকে মৃৎক্ষার ধাতু বলা হয় কেন? ব্যাখ্যা করো। (অনুধাবন)</b><br>Ba পর্যায় সারণির গ্রুপ ২ এর মৌল। এর বিভিন্ন যৌগ মাটিতে পাওয়া যায় এবং এর হাইড্রক্সাইড Ba(OH)₂ একটি ক্ষার। তাই Ba কে মৃৎক্ষার ধাতু বলা হয়।</p>
+      <p><b>(ঘ) উদ্দীপকের পর্যায়ের (৩য় পর্যায়) বাম থেকে ডানে গেলে ইলেকট্রন আসক্তির মানের পরিবর্তন বিশ্লেষণ করো। (উচ্চতর দক্ষতা)</b><br>৩য় পর্যায়ে Na থেকে Cl এর দিকে গেলে পারমাণবিক সংখ্যা বাড়ে, অর্থাৎ নিউক্লিয়াসে প্রোটন বাড়ে, কিন্তু প্রধান শক্তিস্তর (৩) একই থাকে। ফলে নিউক্লিয়াসের আকর্ষণ বাড়ে এবং পরমাণুর আকার কমে। আকার কমলে বাইরে থেকে আসা ইলেকট্রনকে নিউক্লিয়াস সহজে টানতে পারে, তাই ইলেকট্রন আসক্তির মান বাড়ে। অতএব Na এর ইলেকট্রন আসক্তি সবচেয়ে কম এবং Cl এর সবচেয়ে বেশি। (বইয়ের নিয়ম অনুযায়ী)</p>
+    </details>
+    <details><summary>সৃজনশীল ২: নিচের উদ্দীপকটি পড়ো</summary>
+      <p><b>উদ্দীপক:</b> পর্যায় সারণির একটি খণ্ডিত অংশে গ্রুপ ১, ২, ৩ এবং পর্যায় ২, ৩, ৪ আছে। ৪র্থ পর্যায়ে গ্রুপ ১, ২, ৩ এ যথাক্রমে A, B, C মৌল আছে।</p>
+      <p><b>(ক) আধুনিক পর্যায় সূত্রটি লেখো। (জ্ঞান)</b><br>মৌলের ভৌত ও রাসায়নিক ধর্মগুলো তাদের পারমাণবিক সংখ্যার পর্যায়ক্রমিক ফাংশন, অর্থাৎ পারমাণবিক সংখ্যা বাড়লে ধর্মগুলো নির্দিষ্ট বিরতিতে পুনরাবৃত্তি হয়। <small>(এই সূত্রের ভাষা তোমার শিক্ষকের বা বইয়ের ভাষার সাথে মিলিয়ে নিও।)</small></p>
+      <p><b>(খ) B কে মৃৎক্ষার ধাতু বলা হয় কেন? (অনুধাবন)</b><br>B হলো ৪র্থ পর্যায়ের গ্রুপ ২ এর মৌল (ক্যালসিয়াম, Ca)। এর যৌগ মাটিতে পাওয়া যায় এবং এর হাইড্রক্সাইড Ca(OH)₂ ক্ষার। তাই B মৃৎক্ষার ধাতু।</p>
+      <p><b>(গ) A থেকে B এর দিকে যেতে পারমাণবিক আকারের পরিবর্তন ব্যাখ্যা করো। (প্রয়োগ)</b><br>A ও B একই (৪র্থ) পর্যায়ে। A থেকে B এর দিকে গেলে পারমাণবিক সংখ্যা ১ বাড়ে, অর্থাৎ নিউক্লিয়াসে প্রোটন বাড়ে। প্রধান শক্তিস্তর একই থাকায় নিউক্লিয়াসের আকর্ষণ বাড়ে, ইলেকট্রনের শক্তিস্তর নিউক্লিয়াসের কাছে আসে। তাই পরমাণুর আকার কমে।</p>
+      <p><b>(ঘ) A থেকে C এর দিকে যেতে আয়নিকরণ শক্তির মানের পরিবর্তন বিশ্লেষণ করো। (উচ্চতর দক্ষতা)</b><br>A, B, C একই পর্যায়ে, বাম থেকে ডানে (গ্রুপ ১ থেকে ৩) আছে। এই দিকে গেলে প্রোটন সংখ্যা বাড়ে কিন্তু শক্তিস্তর একই থাকে, তাই পারমাণবিক ব্যাসার্ধ কমে। ব্যাসার্ধ কমলে ইলেকট্রন সরানো কঠিন হয়, অর্থাৎ আয়নিকরণ শক্তি বাড়ে। অতএব A এর আয়নিকরণ শক্তি সবচেয়ে কম এবং C এর সবচেয়ে বেশি।</p>
+    </details>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab</footer>
+
+<script>
+var BN='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function $(id){return document.getElementById(id);}
+
+/* ---------- মৌলের তথ্য (১-৩০) ---------- */
+var EL = [null,
+['H','হাইড্রোজেন'],['He','হিলিয়াম'],['Li','লিথিয়াম'],['Be','বেরিলিয়াম'],['B','বোরন'],['C','কার্বন'],['N','নাইট্রোজেন'],['O','অক্সিজেন'],['F','ফ্লোরিন'],['Ne','নিয়ন'],
+['Na','সোডিয়াম'],['Mg','ম্যাগনেসিয়াম'],['Al','অ্যালুমিনিয়াম'],['Si','সিলিকন'],['P','ফসফরাস'],['S','সালফার'],['Cl','ক্লোরিন'],['Ar','আর্গন'],
+['K','পটাশিয়াম'],['Ca','ক্যালসিয়াম'],['Sc','স্ক্যান্ডিয়াম'],['Ti','টাইটানিয়াম'],['V','ভ্যানাডিয়াম'],['Cr','ক্রোমিয়াম'],['Mn','ম্যাঙ্গানিজ'],['Fe','আয়রন'],['Co','কোবাল্ট'],['Ni','নিকেল'],['Cu','কপার'],['Zn','জিংক']];
+
+/* সারণিতে ঘরের অবস্থান (সারি, কলাম) */
+function gp(z){
+  if (z===1) return [1,1]; if (z===2) return [1,18];
+  if (z===3||z===4) return [2,z-2]; if (z>=5&&z<=10) return [2,z+8];
+  if (z===11||z===12) return [3,z-10]; if (z>=13&&z<=18) return [3,z];
+  return [4,z-18];
+}
+
+/* ---------- ইলেকট্রন বিন্যাস ---------- */
+var ORDER=[['1s',2],['2s',2],['2p',6],['3s',2],['3p',6],['4s',2],['3d',10]];
+var SHOW=['1s','2s','2p','3s','3p','3d','4s'];
+function config(z){
+  var rem=z, occ={};
+  ORDER.forEach(function(o){ var n=Math.min(rem,o[1]); occ[o[0]]=n; rem-=n; });
+  if (z===24){ occ['4s']=1; occ['3d']=5; }
+  if (z===29){ occ['4s']=1; occ['3d']=10; }
+  return occ;
+}
+function analyse(z){
+  var occ=config(z), period=0;
+  SHOW.forEach(function(k){ if(occ[k]>0) period=Math.max(period, +k[0]); });
+  var s=occ[period+'s']||0, p=occ[period+'p']||0, d=occ[(period-1)+'d']||0, g, rule, calc;
+  if (z===2){ g=18; rule=0; calc='ব্যতিক্রম: নিষ্ক্রিয় গ্যাসের মতো আচরণ করে'; }
+  else if (p>0){ g=s+p+10; rule=2; calc=s+' + '+p+' + 10 = '+g; }
+  else if (d>0){ g=s+d; rule=3; calc=s+' + '+d+' = '+g; }
+  else { g=s; rule=1; calc=s+' = '+g; }
+  return {occ:occ, period:period, s:s, p:p, d:d, group:g, rule:rule, calc:calc};
+}
+function cfgHTML(z, a){
+  var out=[];
+  SHOW.forEach(function(k){
+    var n=a.occ[k]; if(!n) return;
+    var red = (+k[0]===a.period) || (k==='3d' && z>=21);
+    out.push('<span class="'+(red?'r':'')+'">'+k+'<sup>'+n+'</sup></span>');
+  });
+  return out.join(' ');
+}
+
+/* ---------- ছোট পর্যায় সারণি তৈরি ---------- */
+var cur=1, revealed=false, hlP=0, hlG=0;
+function buildTable(){
+  var t=$('pt'); t.innerHTML='';
+  var corner=document.createElement('div'); t.appendChild(corner);
+  for(var g=1; g<=18; g++){ var h=document.createElement('div'); h.className='hd'; h.id='gh'+g; h.textContent=bn(g); h.style.gridColumn=(g+1); h.style.gridRow=1; t.appendChild(h); }
+  for(var r=1; r<=4; r++){ var h2=document.createElement('div'); h2.className='hd'; h2.id='ph'+r; h2.textContent=bn(r); h2.style.gridColumn=1; h2.style.gridRow=(r+1); t.appendChild(h2); }
+  for(var z=1; z<=30; z++){
+    var pos=gp(z), b=document.createElement('button'); b.className='cell '+blockOf(z); b.id='c'+z;
+    b.innerHTML='<small>'+z+'</small><b>'+EL[z][0]+'</b>'; b.title=EL[z][1];
+    b.style.gridRow=(pos[0]+1); b.style.gridColumn=(pos[1]+1);
+    (function(zz){ b.onclick=function(){ setZ(zz); }; })(z);
+    t.appendChild(b);
+  }
+}
+function blockOf(z){ if(z<=2||z===3||z===4||z===11||z===12||z===19||z===20) return 's'; if(z>=21&&z<=30) return 'd'; return 'p'; }
+
+/* ---------- বোর মডেল অ্যানিমেশন ---------- */
+var cv=$('bohr'), ctx=cv.getContext('2d'), shellN=[], outer=1, ang=0;
+function drawBohr(){
+  var W=cv.width, cx=W/2, cy=W/2;
+  ctx.clearRect(0,0,W,W);
+  for(var i=0;i<shellN.length;i++){ ctx.beginPath(); ctx.arc(cx,cy,38*(i+1),0,6.283); ctx.strokeStyle='#cfd9e1'; ctx.lineWidth=1.5; ctx.stroke(); }
+  ctx.beginPath(); ctx.arc(cx,cy,16,0,6.283); ctx.fillStyle='#e76f51'; ctx.fill();
+  ctx.fillStyle='#fff'; ctx.font='bold 11px Arial'; ctx.textAlign='center'; ctx.fillText(cur+'+',cx,cy+4);
+  for(var s=0;s<shellN.length;s++){
+    var n=shellN[s], rad=38*(s+1), speed=0.022/(s+1);
+    for(var e=0;e<n;e++){
+      var a=ang*speed*60 + e*6.283/n + s;
+      var x=cx+rad*Math.cos(a), y=cy+rad*Math.sin(a);
+      ctx.beginPath(); ctx.arc(x,y,5.5,0,6.283); ctx.fillStyle=(s===outer-1)?'#e63946':'#2b6cb0'; ctx.fill();
+    }
+  }
+  ang+=0.016; requestAnimationFrame(drawBohr);
+}
+
+/* ---------- নির্বাচন ও আপডেট ---------- */
+function setZ(z){
+  cur=Math.max(1,Math.min(30,z)); revealed=false; hlP=0; hlG=0;
+  var a=analyse(cur);
+  $('zs').value=cur; $('zv').textContent=bn(cur);
+  $('znum').textContent=bn(cur); $('zsym').textContent=EL[cur][0]; $('zname').textContent=EL[cur][1];
+  $('cfg').innerHTML=cfgHTML(cur,a);
+  shellN=[0,0,0,0];
+  SHOW.forEach(function(k){ if(a.occ[k]) shellN[+k[0]-1]+=a.occ[k]; });
+  shellN=shellN.filter(function(n,i){ return i<a.period; });
+  outer=a.period;
+  $('shells').textContent=shellN.map(bn).join(', ');
+  document.querySelectorAll('.cell').forEach(function(c){ c.classList.remove('sel'); });
+  $('c'+cur).classList.add('sel');
+  document.querySelectorAll('.hd').forEach(function(h){ h.classList.remove('hl'); });
+  $('steps').innerHTML=''; $('ansbox').style.display='none'; $('fb').textContent=''; $('gp').value=''; $('gg').value='';
+}
+function showSteps(){
+  var a=analyse(cur), ol=$('steps'); ol.innerHTML='';
+  var items=[
+    '<b>ধাপ ১: ইলেকট্রন বিন্যাস লিখি।</b> '+cfgHTML(cur,a)+' (মোট '+bn(cur)+'টি ইলেকট্রন)',
+    '<b>ধাপ ২: পর্যায় নম্বর।</b> সবচেয়ে বাইরের প্রধান শক্তিস্তরের নম্বর '+bn(a.period)+', তাই <b>পর্যায় '+bn(a.period)+'</b>।'
+  ];
+  var ruleTxt = a.rule===0 ? '<b>ধাপ ৩: গ্রুপ নম্বর।</b> He এর ইলেকট্রন বিন্যাস 1s², নিয়ম অনুযায়ী গ্রুপ ২ হওয়ার কথা। কিন্তু এটি নিষ্ক্রিয় গ্যাস, তাই ব্যতিক্রম হিসেবে <b>গ্রুপ ১৮</b>।'
+    : a.rule===1 ? '<b>ধাপ ৩: গ্রুপ নম্বর (নিয়ম ১)।</b> বাইরের স্তরে শুধু s অরবিটাল আছে। s এর ইলেকট্রন সংখ্যাই গ্রুপ নম্বর: '+bn(a.calc)+'। তাই <b>গ্রুপ '+bn(a.group)+'</b>।'
+    : a.rule===2 ? '<b>ধাপ ৩: গ্রুপ নম্বর (নিয়ম ২)।</b> বাইরের স্তরে s ও p অরবিটাল আছে। s + p এর ইলেকট্রন + ১০: '+bn(a.calc)+'। তাই <b>গ্রুপ '+bn(a.group)+'</b>।'
+    : '<b>ধাপ ৩: গ্রুপ নম্বর (নিয়ম ৩)।</b> বাইরের স্তরে s আছে এবং আগের স্তরে d অরবিটাল আছে। s + d এর ইলেকট্রন: '+bn(a.calc)+'। তাই <b>গ্রুপ '+bn(a.group)+'</b>।';
+  items.push(ruleTxt);
+  items.forEach(function(h,i){ var li=document.createElement('li'); li.innerHTML=h; ol.appendChild(li); setTimeout(function(){ li.classList.add('show'); }, 250+i*900); });
+  setTimeout(function(){
+    var b=$('ansbox'); b.style.display='block';
+    b.innerHTML='✅ '+EL[cur][1]+' ('+EL[cur][0]+') আছে <b>পর্যায় '+bn(a.period)+'</b>, <b>গ্রুপ '+bn(a.group)+'</b>-এ।';
+    $('ph'+a.period).classList.add('hl'); $('gh'+a.group).classList.add('hl');
+  }, 250+items.length*900);
+}
+function checkGuess(){
+  var a=analyse(cur), p=$('gp').value, g=$('gg').value, fb=$('fb');
+  if(!p||!g){ fb.textContent='আগে পর্যায় ও গ্রুপ দুটোই বেছে নাও।'; fb.style.color='#5b6770'; return; }
+  var okp=(+p===a.period), okg=(+g===a.group);
+  if(okp&&okg){ fb.textContent='🎉 একদম ঠিক! পর্যায় '+bn(a.period)+', গ্রুপ '+bn(a.group)+'।'; fb.style.color='#1d7a6f'; }
+  else if(okp){ fb.textContent='পর্যায় ঠিক আছে ✅, কিন্তু গ্রুপ আবার ভেবে দেখো। বাইরের স্তরের ইলেকট্রন গুনে নিয়ম ১, ২, ৩ মিলিয়ে দেখো।'; fb.style.color='#b25e00'; }
+  else if(okg){ fb.textContent='গ্রুপ ঠিক আছে ✅, কিন্তু পর্যায় আবার ভেবে দেখো। সবচেয়ে বাইরের প্রধান শক্তিস্তর কোনটি?'; fb.style.color='#b25e00'; }
+  else { fb.textContent='এখনো মেলেনি। "ধাপে ধাপে দেখাও" বাটন চেপে নিয়মগুলো দেখে নাও, তারপর আবার চেষ্টা করো।'; fb.style.color='#b23a22'; }
+}
+
+/* ---------- শুরু ---------- */
+buildTable();
+for(var i=1;i<=7;i++){ var o=document.createElement('option'); o.value=i; o.textContent=bn(i); $('gp').appendChild(o); }
+for(var j=1;j<=18;j++){ var o2=document.createElement('option'); o2.value=j; o2.textContent=bn(j); $('gg').appendChild(o2); }
+[3,4,6,11,13,16,21,26].forEach(function(z){ var b=document.createElement('button'); b.className='btn alt'; b.style.padding='4px 10px'; b.textContent=bn(z)+' ('+EL[z][0]+')'; b.onclick=function(){ setZ(z); }; $('bookchips').appendChild(b); });
+$('zs').oninput=function(){ setZ(+this.value); };
+$('prev').onclick=function(){ setZ(cur-1); };
+$('next').onclick=function(){ setZ(cur+1); };
+$('showsteps').onclick=showSteps;
+$('chk').onclick=checkGuess;
+setZ(1); drawBohr();
+
+/* ---------- কুইজ ---------- */
+var QUIZ=[
+ {q:'১৯১৩ সালে পারমাণবিক সংখ্যা অনুযায়ী মৌল সাজানোর প্রস্তাব কে দেন?',o:['ল্যাভয়সিয়ে','মেন্ডেলিফ','মোসলে','নিউল্যান্ডস'],a:2,e:'মোসলে পারমাণবিক ভরের বদলে পারমাণবিক সংখ্যা অনুযায়ী সাজানোর প্রস্তাব দেন।'},
+ {q:'মেন্ডেলিফের পর্যায় সারণিতে কোন জোড়ার ক্ষেত্রে ভরের ক্রম ভাঙতে হয়েছিল?',o:['Ar ও K','Na ও Mg','Li ও Be','C ও N'],a:0,e:'আর্গনের ভর (৪০) পটাশিয়ামের (৩৯) চেয়ে বেশি, তবু ধর্ম মেলানোর জন্য আর্গনকে আগে বসাতে হয়েছিল।'},
+ {q:'আধুনিক পর্যায় সারণিতে পর্যায় ও গ্রুপের সংখ্যা কত?',o:['৭টি পর্যায়, ১৮টি গ্রুপ','১৮টি পর্যায়, ৭টি গ্রুপ','৮টি পর্যায়, ১৬টি গ্রুপ','৭টি পর্যায়, ১৬টি গ্রুপ'],a:0,e:'৭টি আনুভূমিক সারি (পর্যায়) ও ১৮টি খাড়া কলাম (গ্রুপ)।'},
+ {q:'কোনো মৌলের পর্যায় নম্বর কীভাবে পাওয়া যায়?',o:['বাইরের স্তরের ইলেকট্রন সংখ্যা থেকে','সবচেয়ে বাইরের প্রধান শক্তিস্তরের নম্বর থেকে','প্রোটন সংখ্যার অর্ধেক থেকে','নিউট্রন সংখ্যা থেকে'],a:1,e:'সবচেয়ে বাইরের প্রধান শক্তিস্তরের নম্বরই পর্যায় নম্বর।'},
+ {q:'1s² 2s² 2p⁵ ইলেকট্রন বিন্যাসের মৌলটি কোন গ্রুপে আছে?',o:['১৫','১৬','১৭','১৮'],a:2,e:'নিয়ম ২: ২ + ৫ + ১০ = ১৭। এটি ফ্লোরিন (F), হ্যালোজেন গ্রুপ।'},
+ {q:'1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁵ 4s² ইলেকট্রন বিন্যাসের মৌলটি কোন পর্যায় ও গ্রুপে?',o:['পর্যায় ৪, গ্রুপ ৭','পর্যায় ৩, গ্রুপ ৭','পর্যায় ৪, গ্রুপ ২','পর্যায় ৪, গ্রুপ ৫'],a:0,e:'বাইরের স্তর ৪, তাই পর্যায় ৪। নিয়ম ৩: ৫ + ২ = ৭। এটি ম্যাঙ্গানিজ (Mn)।'},
+ {q:'হিলিয়ামকে গ্রুপ ১৮ তে রাখা হয়েছে কেন?',o:['এর বাইরের স্তরে ৮টি ইলেকট্রন আছে','এটি নিষ্ক্রিয় গ্যাসের মতো আচরণ করে','এটি সবচেয়ে ভারী মৌল','এটি ধাতু'],a:1,e:'He এর ইলেকট্রন বিন্যাস 1s², তবু ধর্মে নিষ্ক্রিয় গ্যাসের মতো, তাই ব্যতিক্রম হিসেবে গ্রুপ ১৮।'},
+ {q:'একই পর্যায়ে বাম থেকে ডানে গেলে পরমাণুর আকার কেমন হয়?',o:['বাড়ে','কমে','একই থাকে','প্রথমে কমে পরে বাড়ে'],a:1,e:'প্রোটন বাড়ে কিন্তু শক্তিস্তর একই, তাই আকর্ষণ বাড়ে এবং আকার কমে।'},
+ {q:'গ্রুপে উপর থেকে নিচে গেলে আয়নিকরণ শক্তি কেমন হয়?',o:['বাড়ে','কমে','একই থাকে','দ্বিগুণ হয়'],a:1,e:'নিচে গেলে আকার বাড়ে, ফলে ইলেকট্রন সরানো সহজ হয়। তাই আয়নিকরণ শক্তি কমে।'},
+ {q:'Na, Mg, Al, Si এর মধ্যে কোনটির আয়নিকরণ শক্তি সবচেয়ে বেশি?',o:['Na','Mg','Al','Si'],a:3,e:'এদের মধ্যে Si এর আকার সবচেয়ে ছোট, তাই আয়নিকরণ শক্তি সবচেয়ে বেশি।'},
+ {q:'কোনটি মুদ্রা ধাতু?',o:['Na','Zn','Cu','Fe'],a:2,e:'গ্রুপ ১১ এর Cu, Ag, Au কে মুদ্রা ধাতু বলে।'},
+ {q:'গ্রুপ ১৭ এর মৌলগুলোকে কী বলা হয়?',o:['ক্ষারধাতু','মৃৎক্ষার ধাতু','হ্যালোজেন','নিষ্ক্রিয় গ্যাস'],a:2,e:'গ্রুপ ১৭ এর মৌল (F, Cl, Br, I...) হ্যালোজেন, মানে লবণ উৎপাদনকারী।'}
+];
+var answered=0, correct=0;
+(function(){
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div'); div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    item.o.forEach(function(opt,oi){ html+='<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+opt+'</button>'; });
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html; box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt'); if(!b||b.parentNode.getAttribute('data-done')) return;
+    var qi=+b.getAttribute('data-q'), oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');
+    btns[QUIZ[qi].a].classList.add('ok');
+    if(oi===QUIZ[qi].a) correct++; else b.classList.add('no');
+    $('exp'+qi).style.display='block'; answered++;
+    if(answered===QUIZ.length) $('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+</script>
+</body>
+</html>
