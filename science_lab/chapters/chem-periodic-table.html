@@ -33,6 +33,28 @@
 .fb{font-weight:700;margin-top:4px}
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
 .chips button{font-family:inherit}
+
+.tabs{flex-wrap:wrap}
+.tr{display:grid;grid-template-columns:54px repeat(7,minmax(46px,1fr));gap:4px;min-width:480px;align-items:center}
+.tr .th{font-size:12px;font-weight:700;color:var(--muted);text-align:center}
+.tr .tc{display:flex;align-items:center;justify-content:center;height:62px}
+.tb{border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:system-ui,Arial,sans-serif;font-weight:700;color:#1c2b39;transition:all .6s ease;line-height:1.05;border:2px solid rgba(31,58,95,.35)}
+.tb small{font-size:10px;font-weight:400}
+.duel{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0}
+.duel button{font-family:inherit}
+.lab3{display:grid;grid-template-columns:1fr 330px;gap:18px}
+.lab3 .btn{margin:4px 4px 4px 0}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;min-height:70px;font-weight:600}
+.eqb{background:#eaf7f5;border-radius:10px;padding:8px;text-align:center;font-weight:700;color:var(--navy);font-family:system-ui,Arial,sans-serif;margin:8px 0}
+.nl{position:relative;height:130px;margin:18px 10px 6px;min-width:520px}
+.nl .line{position:absolute;left:0;right:0;top:70px;height:4px;background:#cfd9e1;border-radius:2px}
+.nl .mk{position:absolute;top:44px;width:52px;margin-left:-26px;text-align:center;font-family:system-ui,Arial,sans-serif;font-size:12px}
+.nl .mk i{display:flex;align-items:center;justify-content:center;width:36px;height:36px;margin:0 auto 2px;border-radius:50%;color:#fff;font-style:normal;font-weight:700;font-size:14px}
+.nl .avg{position:absolute;top:6px;width:80px;margin-left:-40px;text-align:center;font-size:12px;font-weight:700;color:#e76f51;transition:left 1.2s ease;opacity:0}
+.nl .avg:after{content:'';display:block;width:2px;height:48px;background:#e76f51;margin:2px auto 0}
+.tabs2{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+@media(max-width:900px){.lab3{grid-template-columns:1fr}}
 details{border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0;background:#fff}
 details summary{cursor:pointer;font-weight:700;color:var(--navy)}
 details p{margin:8px 0 2px}
@@ -48,7 +70,7 @@ details p{margin:8px 0 2px}
 <div class="wrap">
   <div class="crumb">🧪 রসায়ন &rsaquo; নবম-দশম শ্রেণি &rsaquo; অধ্যায় ৪</div>
   <h1 class="title">পর্যায় সারণি (Periodic Table)</h1>
-  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab">🧭 ল্যাব</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্ন-উত্তর</a></nav>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab">🧭 ল্যাব ১</a><a href="#lab2">📊 ল্যাব ২</a><a href="#lab3">🧪 ল্যাব ৩</a><a href="#lab4">⚖️ ল্যাব ৪</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্ন-উত্তর</a></nav>
 
   <!-- ================= নোট ================= -->
   <section class="panel" id="note">
@@ -191,6 +213,121 @@ details p{margin:8px 0 2px}
         <div class="ans" id="ansbox"></div>
       </div>
     </div>
+  </section>
+
+
+  <!-- ================= ল্যাব ২ ================= -->
+  <section class="panel" id="lab2">
+    <h2>📊 ল্যাব ২: পর্যায়বৃত্ত ধর্মের প্রবণতা</h2>
+    <p>একটা ধর্ম বেছে নাও আর দেখো সারণিতে বাম থেকে ডানে এবং উপর থেকে নিচে গেলে সেটা কীভাবে বদলায়। এখানে পর্যায় ২, ৩, ৪ এর মৌলগুলো আছে (গ্রুপ ১, ২, ১৩-১৭)। <small>এটা বইয়ের সরল নিয়ম দেখানোর মডেল, সংখ্যাগুলো আসল পরিমাপ নয়।</small></p>
+    <div class="chips" id="propbtns"></div>
+    <div class="ptscroll"><div class="tr" id="trend"></div></div>
+    <div class="status" id="trendtxt"></div>
+    <h3>🎯 চ্যালেঞ্জ: কোনটি বেশি?</h3>
+    <div id="duelq" style="font-weight:700"></div>
+    <div class="duel" id="duelbtns"></div>
+    <div class="fb" id="duelfb"></div>
+    <button class="btn alt" id="duelnext">পরের প্রশ্ন</button>
+  </section>
+
+  <!-- ================= ল্যাব ৩ ================= -->
+  <section class="panel" id="lab3">
+    <h2>🧪 ল্যাব ৩: কার্বন ডাই-অক্সাইড তৈরির পরীক্ষণ</h2>
+    <p>বইয়ের পরীক্ষণটা নিজে চালাও। ধাপগুলো একটার পর একটা চাপো। এখানে দেখবে <b>একই গ্রুপের (গ্রুপ ২) Ca ও Mg-এর কার্বনেট</b> একই রকম বিক্রিয়া করে।</p>
+    <div class="lab3">
+      <div class="box" style="text-align:center">
+        <svg id="co2svg" viewBox="0 0 620 430" width="100%" style="max-width:640px">
+          <defs>
+            <clipPath id="fclip"><circle cx="190" cy="300" r="78"/></clipPath>
+            <clipPath id="jclip"><rect x="432" y="172" width="76" height="206"/></clipPath>
+          </defs>
+          <!-- স্ট্যান্ড -->
+          <rect x="20" y="388" width="230" height="12" rx="3" fill="#6b7280"/>
+          <rect x="56" y="40" width="8" height="350" fill="#6b7280"/>
+          <rect x="64" y="200" width="92" height="8" fill="#6b7280"/>
+          <rect x="150" y="190" width="14" height="28" rx="3" fill="#c77daf"/>
+          <!-- ফ্লাস্ক -->
+          <rect x="172" y="182" width="36" height="52" fill="#f3fafc" stroke="#1f3a5f" stroke-width="3"/>
+          <circle cx="190" cy="300" r="78" fill="#f3fafc" stroke="#1f3a5f" stroke-width="3"/>
+          <rect x="173" y="190" width="34" height="42" fill="#f3fafc"/>
+          <g clip-path="url(#fclip)">
+            <rect id="water" x="100" y="378" width="180" height="0" fill="#9fd3ea" opacity=".6"/>
+            <g id="pieces" style="display:none">
+              <polygon points="150,372 160,360 172,368 168,378 152,378" fill="#e6e1d6" stroke="#8d8576"/>
+              <polygon points="175,376 184,364 197,370 194,378" fill="#ddd7c9" stroke="#8d8576"/>
+              <polygon points="200,378 207,362 222,368 226,378" fill="#e9e4d9" stroke="#8d8576"/>
+              <polygon points="160,350 170,342 180,350 172,358" fill="#e6e1d6" stroke="#8d8576"/>
+              <polygon points="205,352 215,344 226,352 216,360" fill="#ddd7c9" stroke="#8d8576"/>
+            </g>
+            <g id="bubs"></g>
+          </g>
+          <!-- ছিপি, ফানেল, নল -->
+          <g id="fit" style="display:none">
+            <polygon points="168,170 212,170 208,190 172,190" fill="#d98a5b" stroke="#8a4f2a"/>
+            <rect x="184" y="120" width="6" height="215" fill="#eaf6fb" stroke="#1f3a5f"/>
+            <circle cx="187" cy="106" r="16" fill="#eaf6fb" stroke="#1f3a5f" stroke-width="2.5"/>
+            <rect x="181" y="140" width="12" height="9" rx="2" fill="#e76f51"/>
+            <polyline points="200,200 200,140 470,140 470,352" fill="none" stroke="#1f3a5f" stroke-width="8" stroke-linejoin="round"/>
+            <polyline points="200,200 200,140 470,140 470,352" fill="none" stroke="#eef6fb" stroke-width="4" stroke-linejoin="round"/>
+            <g id="flow"></g>
+            <text x="222" y="96" font-size="12" fill="#1f3a5f" font-weight="700">থিসল ফানেল</text>
+            <text x="300" y="130" font-size="12" fill="#1f3a5f" font-weight="700">নির্গম নল</text>
+          </g>
+          <!-- গ্যাসজার -->
+          <g id="jar" style="display:none">
+            <rect x="420" y="168" width="100" height="6" rx="2" fill="#b9c3cc"/>
+            <rect x="430" y="170" width="80" height="208" fill="#f3fafc" stroke="#1f3a5f" stroke-width="3"/>
+            <g clip-path="url(#jclip)"><rect id="gas" x="432" y="378" width="76" height="0" fill="#8a96a3" opacity=".35"/></g>
+            <rect x="420" y="378" width="100" height="10" fill="#7a5c45"/>
+            <text x="470" y="412" font-size="12" fill="#1f3a5f" font-weight="700" text-anchor="middle">গ্যাসজার</text>
+            <text id="co2lbl" x="470" y="300" font-size="14" fill="#44505c" font-weight="700" text-anchor="middle" opacity="0">CO₂</text>
+          </g>
+          <text x="190" y="415" font-size="12" fill="#1f3a5f" font-weight="700" text-anchor="middle">গোলতলী ফ্লাস্ক</text>
+          <!-- কাঠি -->
+          <g id="splint" style="display:none" transform="translate(446,40)">
+            <rect x="-2" y="0" width="5" height="70" fill="#8a5a2b"/>
+            <ellipse id="flame" cx="0" cy="-8" rx="6" ry="11" fill="#ff9f1c"/>
+            <ellipse id="flame2" cx="0" cy="-5" rx="3" ry="6" fill="#ffe066"/>
+          </g>
+          <!-- চুনের পানির টেস্টটিউব -->
+          <g id="lwg" style="display:none">
+            <rect x="548" y="290" width="40" height="95" rx="3" fill="#f3fafc" stroke="#1f3a5f" stroke-width="3"/>
+            <path d="M548 385 q20 14 40 0" fill="#f3fafc" stroke="#1f3a5f" stroke-width="3"/>
+            <rect id="lw" x="551" y="315" width="34" height="67" fill="#bfe3f3"/>
+            <rect id="lwm" x="551" y="315" width="34" height="67" fill="#f4efe0" opacity="0"/>
+            <text x="568" y="280" font-size="12" fill="#1f3a5f" font-weight="700" text-anchor="middle">চুনের পানি</text>
+          </g>
+        </svg>
+      </div>
+      <div class="box">
+        <label for="carb">কার্বনেট বেছে নাও (দুটোই গ্রুপ ২-এর মৌল)</label>
+        <select id="carb"><option value="Ca">ক্যালসিয়াম কার্বনেট (CaCO₃)</option><option value="Mg">ম্যাগনেসিয়াম কার্বনেট (MgCO₃)</option></select>
+        <div style="margin-top:8px">
+          <button class="btn" id="s1">১. ফ্লাস্কে কার্বনেট নাও</button>
+          <button class="btn" id="s2" disabled>২. ছিপি, ফানেল, নল ও গ্যাসজার লাগাও</button>
+          <button class="btn" id="s3" disabled>৩. ফানেল দিয়ে পানি ঢালো</button>
+          <button class="btn" id="s4" disabled>৪. ধীরে ধীরে HCl ঢালো</button>
+        </div>
+        <div style="margin-top:6px">
+          <button class="btn alt" id="t1" disabled>🔥 জ্বলন্ত কাঠি ধরো</button>
+          <button class="btn alt" id="t2" disabled>🧴 চুনের পানিতে গ্যাস চালাও</button>
+          <button class="btn alt" id="rs">↺ আবার শুরু</button>
+        </div>
+        <div class="say" id="say">ধাপ ১ চাপো। ফ্লাস্কে কার্বনেটের টুকরো নিয়ে শুরু করবো।</div>
+        <div class="eqb" id="eq3"></div>
+        <div style="font-size:14px"><b>সতর্কতা (বই অনুযায়ী):</b> থিসল ফানেলের নিচের প্রান্ত সবসময় পানিতে ডুবে থাকবে, আর গোলতলী ফ্লাস্ক স্ট্যান্ডে আটকানো থাকবে। শামুক, ঝিনুক বা ডিমের খোসা আর ভিনেগার দিয়েও এটা করা যায়।</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ল্যাব ৪ ================= -->
+  <section class="panel" id="lab4">
+    <h2>⚖️ ল্যাব ৪: ডোবেরাইনারের ত্রয়ী</h2>
+    <p>ডোবেরাইনার দেখেছিলেন, একই ধর্মের তিনটি মৌলকে পারমাণবিক ভর অনুযায়ী সাজালে <b>মাঝের মৌলের ভর, প্রথম ও তৃতীয়টির গড়ের কাছাকাছি</b> হয়। একটা ত্রয়ী বেছে "গড় বের করো" বাটন চাপো।</p>
+    <div class="tabs2" id="triadbtns"></div>
+    <div class="ptscroll"><div class="nl" id="nl"></div></div>
+    <button class="btn" id="avgbtn">⚖️ গড় বের করো</button>
+    <div class="status" id="triadtxt">একটা ত্রয়ী বেছে নিয়ে বাটন চাপো।</div>
   </section>
 
   <!-- ================= কুইজ ================= -->
@@ -417,6 +554,188 @@ $('showsteps').onclick=showSteps;
 $('chk').onclick=checkGuess;
 setZ(1); drawBohr();
 
+
+/* =============== ল্যাব ২: প্রবণতা =============== */
+var TR_ROWS=[[2,['Li','Be','B','C','N','O','F']],[3,['Na','Mg','Al','Si','P','S','Cl']],[4,['K','Ca','Ga','Ge','As','Se','Br']]];
+var TR_G=[1,2,13,14,15,16,17];
+function sval(x,y){ return 0.35+0.22*y-0.045*x; }
+var PROPS={
+ size:{name:'পরমাণুর আকার',rgb:'42,157,143',mode:'size',val:function(s){return s;},
+   x:'বাম → ডান: কমে ⬇️',y:'উপর → নিচ: বাড়ে ⬆️',
+   rx:'একই পর্যায়ে বাম থেকে ডানে গেলে প্রোটন বাড়ে কিন্তু শক্তিস্তর একই থাকে, তাই নিউক্লিয়াসের টান বাড়ে ও আকার কমে।',
+   ry:'গ্রুপে নিচে নামলে একটি করে নতুন শক্তিস্তর যুক্ত হয়, তাই আকার বাড়ে।'},
+ ie:{name:'আয়নিকরণ শক্তি',rgb:'231,111,81',mode:'shade',val:function(s){return 1-s;},
+   x:'বাম → ডান: বাড়ে ⬆️',y:'উপর → নিচ: কমে ⬇️',
+   rx:'আকার কমলে ইলেকট্রন সরানো কঠিন হয়, তাই আয়নিকরণ শক্তি বাড়ে।',
+   ry:'আকার বাড়লে বাইরের ইলেকট্রন সরানো সহজ হয়, তাই আয়নিকরণ শক্তি কমে।'},
+ ea:{name:'ইলেকট্রন আসক্তি',rgb:'43,108,176',mode:'shade',val:function(s){return 1-s;},
+   x:'বাম → ডান: বাড়ে ⬆️',y:'উপর → নিচ: কমে ⬇️',
+   rx:'আকার কমলে নিউক্লিয়াস নতুন ইলেকট্রনকে বেশি টানে, তাই ইলেকট্রন আসক্তি বাড়ে (বইয়ের নিয়ম)।',
+   ry:'আকার বাড়লে ইলেকট্রন আসক্তি কমে (বইয়ের নিয়ম)।'},
+ en:{name:'তড়িৎ ঋণাত্মকতা',rgb:'106,61,154',mode:'shade',val:function(s){return 1-s;},
+   x:'বাম → ডান: বাড়ে ⬆️',y:'উপর → নিচ: কমে ⬇️',
+   rx:'আকার ছোট হলে পরমাণু বন্ধনের ইলেকট্রন জোড়াকে বেশি টানে, তাই তড়িৎ ঋণাত্মকতা বাড়ে।',
+   ry:'আকার বড় হলে বন্ধনের ইলেকট্রনকে টানার ক্ষমতা কমে, তাই মান কমে।'},
+ metal:{name:'ধাতব ধর্ম',rgb:'233,162,59',mode:'shade',val:function(s){return s;},
+   x:'বাম → ডান: কমে ⬇️',y:'উপর → নিচ: বাড়ে ⬆️',
+   rx:'বাম থেকে ডানে গেলে ইলেকট্রন ত্যাগ করা কঠিন হয়, তাই ধাতব ধর্ম কমে।',
+   ry:'নিচে নামলে ইলেকট্রন ত্যাগ করা সহজ হয়, তাই ধাতব ধর্ম বাড়ে।'}
+};
+var curProp='size';
+function buildTrend(){
+  var t=$('trend'); t.innerHTML='';
+  t.appendChild(document.createElement('div'));
+  TR_G.forEach(function(g){ var h=document.createElement('div'); h.className='th'; h.textContent='গ্রুপ '+bn(g); t.appendChild(h); });
+  TR_ROWS.forEach(function(r,y){
+    var l=document.createElement('div'); l.className='th'; l.textContent='পর্যায় '+bn(r[0]); t.appendChild(l);
+    r[1].forEach(function(sym,x){
+      var c=document.createElement('div'); c.className='tc';
+      var b=document.createElement('div'); b.className='tb'; b.id='tb'+x+'_'+y; b.innerHTML=sym+'<small></small>';
+      c.appendChild(b); t.appendChild(c);
+    });
+  });
+}
+function applyProp(key){
+  curProp=key; var P=PROPS[key];
+  for(var y=0;y<3;y++) for(var x=0;x<7;x++){
+    var s=sval(x,y), v=P.val(s), b=$('tb'+x+'_'+y);
+    if(P.mode==='size'){ var d=22+40*s; b.style.width=d+'px'; b.style.height=d+'px'; b.style.background='rgba('+P.rgb+',.55)'; }
+    else { var a=0.12+0.8*(v-0.1)/0.82; b.style.width='46px'; b.style.height='46px'; b.style.background='rgba('+P.rgb+','+a.toFixed(2)+')'; }
+    b.querySelector('small').textContent=bn(Math.round(v*100));
+  }
+  document.querySelectorAll('#propbtns button').forEach(function(btn){ btn.className='btn'+(btn.getAttribute('data-k')===key?'':' alt'); });
+  $('trendtxt').innerHTML='<b>'+P.name+'</b><br>↔️ '+P.x+': '+P.rx+'<br>↕️ '+P.y+': '+P.ry+'<br><small>বৃত্তের ভেতরের সংখ্যা হলো প্রবণতা বোঝানোর আপেক্ষিক মান (০-১০০), আসল মান নয়।'+(key==='size'?' বড় বৃত্ত = বড় পরমাণু।':' গাঢ় রং = বেশি।')+'</small>';
+}
+var duel=null;
+function newDuel(){
+  var keys=Object.keys(PROPS), k=keys[Math.floor(Math.random()*keys.length)], a,b,dir;
+  if(Math.random()<0.5){ var y=Math.floor(Math.random()*3), x1=Math.floor(Math.random()*7), x2; do{ x2=Math.floor(Math.random()*7); }while(x2===x1); a={x:x1,y:y}; b={x:x2,y:y}; dir='x'; }
+  else { var x=Math.floor(Math.random()*7), y1=Math.floor(Math.random()*3), y2; do{ y2=Math.floor(Math.random()*3); }while(y2===y1); a={x:x,y:y1}; b={x:x,y:y2}; dir='y'; }
+  duel={k:k,a:a,b:b,dir:dir,done:false};
+  var P=PROPS[k];
+  function nm(p){ return TR_ROWS[p.y][1][p.x]; }
+  $('duelq').textContent='কোনটির '+P.name+' বেশি? '+nm(a)+' নাকি '+nm(b)+'?';
+  var box=$('duelbtns'); box.innerHTML='';
+  [a,b].forEach(function(p,i){ var bt=document.createElement('button'); bt.className='btn alt'; bt.textContent=nm(p)+' (পর্যায় '+bn(TR_ROWS[p.y][0])+', গ্রুপ '+bn(TR_G[p.x])+')'; bt.onclick=function(){ answerDuel(i); }; box.appendChild(bt); });
+  $('duelfb').textContent='';
+}
+function answerDuel(i){
+  if(duel.done) return; duel.done=true;
+  var P=PROPS[duel.k], va=P.val(sval(duel.a.x,duel.a.y)), vb=P.val(sval(duel.b.x,duel.b.y)), right=(va>vb)?0:1;
+  var why=(duel.dir==='x')?P.rx:P.ry, fb=$('duelfb');
+  var nm=function(p){ return TR_ROWS[p.y][1][p.x]; };
+  if(i===right){ fb.textContent='✅ ঠিক! '+why; fb.style.color='#1d7a6f'; }
+  else { fb.textContent='❌ সঠিক উত্তর '+nm(right===0?duel.a:duel.b)+'। '+why; fb.style.color='#b23a22'; }
+}
+buildTrend();
+Object.keys(PROPS).forEach(function(k){ var b=document.createElement('button'); b.className='btn alt'; b.setAttribute('data-k',k); b.textContent=PROPS[k].name; b.onclick=function(){ applyProp(k); }; $('propbtns').appendChild(b); });
+$('duelnext').onclick=newDuel;
+applyProp('size'); newDuel();
+
+/* =============== ল্যাব ৩: CO2 পরীক্ষণ =============== */
+var C3={step:0,reacting:false,g:0,water:0,milk:0,milkTarget:0,lw:0,splint:null};
+var bubs=[], flowp=[];
+(function(){
+  var gb=$('bubs'); for(var i=0;i<7;i++){ var c=document.createElementNS('http://www.w3.org/2000/svg','circle'); c.setAttribute('fill','#ffffff'); c.setAttribute('opacity','.85'); c.setAttribute('stroke','#7fb4cc'); gb.appendChild(c); bubs.push({el:c,x:150+Math.random()*80,y:300+Math.random()*70,r:2.5+Math.random()*2.5,v:0.5+Math.random()*0.8}); }
+  var gf=$('flow'); for(var j=0;j<14;j++){ var d=document.createElementNS('http://www.w3.org/2000/svg','circle'); d.setAttribute('r','2.6'); d.setAttribute('fill','#8a96a3'); d.setAttribute('opacity','0'); gf.appendChild(d); flowp.push({el:d,t:j/14}); }
+})();
+var PATH=[[200,196],[200,140],[470,140],[470,350]], PLEN=[];
+(function(){ var tot=0; for(var i=1;i<PATH.length;i++){ var l=Math.abs(PATH[i][0]-PATH[i-1][0])+Math.abs(PATH[i][1]-PATH[i-1][1]); PLEN.push(l); tot+=l; } PLEN.total=tot; })();
+function pathPt(t){
+  var d=t*PLEN.total, i=0; while(i<PLEN.length-1 && d>PLEN[i]){ d-=PLEN[i]; i++; }
+  var a=PATH[i], b=PATH[i+1], f=d/PLEN[i]; return [a[0]+(b[0]-a[0])*f, a[1]+(b[1]-a[1])*f];
+}
+function say(t){ $('say').innerHTML=t; }
+function eq3(){
+  var m=$('carb').value;
+  $('eq3').innerHTML = (m==='Ca') ? 'CaCO<sub>3</sub> + 2HCl &rarr; CaCl<sub>2</sub> + H<sub>2</sub>O + CO<sub>2</sub>' : 'MgCO<sub>3</sub> + 2HCl &rarr; MgCl<sub>2</sub> + H<sub>2</sub>O + CO<sub>2</sub>';
+}
+function resetC3(){
+  C3.step=0; C3.reacting=false; C3.g=0; C3.water=0; C3.milk=0; C3.milkTarget=0; C3.lw=0; C3.splint=null;
+  ['pieces','fit','jar','splint','lwg'].forEach(function(id){ $(id).style.display='none'; });
+  $('water').setAttribute('height',0); $('gas').setAttribute('height',0); $('co2lbl').setAttribute('opacity',0); $('lwm').setAttribute('opacity',0);
+  $('s1').disabled=false; ['s2','s3','s4','t1','t2'].forEach(function(id){ $(id).disabled=true; });
+  $('t2').textContent='🧴 চুনের পানিতে গ্যাস চালাও';
+  say('ধাপ ১ চাপো। ফ্লাস্কে কার্বনেটের টুকরো নিয়ে শুরু করবো।'); eq3();
+}
+$('s1').onclick=function(){ C3.step=1; $('pieces').style.display=''; this.disabled=true; $('s2').disabled=false; say('গোলতলী ফ্লাস্কে কার্বনেটের কিছু ছোট টুকরো নেওয়া হলো।'); };
+$('s2').onclick=function(){ C3.step=2; $('fit').style.display=''; $('jar').style.display=''; this.disabled=true; $('s3').disabled=false; say('ছিপির সাহায্যে ফ্লাস্কের এক মুখে থিসল ফানেল, আর অন্য মুখে দুইবার সমকোণে বাঁকানো নির্গম নল লাগানো হলো। নলের অন্য প্রান্ত গ্যাসজারে ঢুকানো হলো।'); };
+$('s3').onclick=function(){ C3.step=3; this.disabled=true; C3.water=1; $('s4').disabled=false; say('ফানেল দিয়ে কিছু পানি ঢালা হলো, যেন কার্বনেটের টুকরো আর ফানেলের নিচের প্রান্ত পানিতে ডুবে থাকে। (সতর্কতা: ফানেলের প্রান্ত সবসময় পানিতে ডুবে থাকতে হবে।)'); };
+$('s4').onclick=function(){ C3.step=4; this.disabled=true; C3.reacting=true; $('carb').disabled=true; say('ফানেল দিয়ে ধীরে ধীরে লঘু HCl ঢালা হলো। কার্বনেট ও HCl বিক্রিয়া করে CO<sub>2</sub> গ্যাস তৈরি করছে। বুদবুদ হয়ে নির্গম নল দিয়ে বেরিয়ে গ্যাসজারে জমছে। CO<sub>2</sub> বাতাসের চেয়ে ভারী, তাই গ্যাসজারের নিচ থেকে ভরছে।'); };
+$('t1').onclick=function(){
+  $('splint').style.display=''; C3.splint={y:40,t0:null,out:false,fin:false}; this.disabled=true;
+  say('জ্বলন্ত কাঠি গ্যাসজারের ভেতরে নামানো হচ্ছে...');
+};
+$('t2').onclick=function(){
+  $('lwg').style.display='';
+  if(C3.lw===0){ C3.lw=1; C3.milkTarget=0.97; $('t2').textContent='➕ আরও গ্যাস চালাও'; say('চুনের পানিতে CO<sub>2</sub> চালানো হলো। পানি <b>ঘোলা</b> হয়ে গেল, কারণ সাদা CaCO<sub>3</sub> অধঃক্ষেপ তৈরি হয়েছে।<br>Ca(OH)<sub>2</sub> + CO<sub>2</sub> &rarr; CaCO<sub>3</sub>&darr; + H<sub>2</sub>O'); }
+  else if(C3.lw===1){ C3.lw=2; C3.milkTarget=0; $('t2').disabled=true; say('আরও CO<sub>2</sub> চালালে ঘোলা পানি <b>আবার পরিষ্কার</b> হয়ে গেল, কারণ ক্যালসিয়াম বাইকার্বনেট তৈরি হয়েছে।<br>CaCO<sub>3</sub> + H<sub>2</sub>O + CO<sub>2</sub> &rarr; Ca(HCO<sub>3</sub>)<sub>2</sub>'); }
+};
+$('rs').onclick=function(){ $('carb').disabled=false; resetC3(); };
+$('carb').onchange=eq3;
+var lastT=0;
+function loop3(ts){
+  // বুদবুদ ও গ্যাস
+  var active=C3.reacting && C3.g<1;
+  if(C3.water){ var h=$('water'); var cur=parseFloat(h.getAttribute('height'))||0; var tgt=78; if(cur<tgt){ cur=Math.min(tgt,cur+1.2); h.setAttribute('height',cur); h.setAttribute('y',378-cur); } }
+  bubs.forEach(function(b){
+    if(active){ b.y-=b.v; if(b.y<302){ b.y=372; b.x=150+Math.random()*80; } b.el.setAttribute('cx',b.x); b.el.setAttribute('cy',b.y); b.el.setAttribute('r',b.r); b.el.setAttribute('opacity',.85); }
+    else b.el.setAttribute('opacity',0);
+  });
+  flowp.forEach(function(f){
+    if(active){ f.t=(f.t+0.006)%1; var p=pathPt(f.t); f.el.setAttribute('cx',p[0]); f.el.setAttribute('cy',p[1]); f.el.setAttribute('opacity',.9); }
+    else f.el.setAttribute('opacity',0);
+  });
+  if(active){
+    C3.g=Math.min(1,C3.g+0.0022);
+    var gh=200*C3.g; $('gas').setAttribute('height',gh); $('gas').setAttribute('y',378-gh);
+    $('co2lbl').setAttribute('opacity',C3.g>0.25?1:0);
+    if(C3.g>0.3) $('t2').disabled = (C3.lw===2);
+    if(C3.g>0.5 && !C3.splint) $('t1').disabled=false;
+    if(C3.g>=1) { say('গ্যাসজার CO<sub>2</sub> গ্যাসে ভরে গেছে। এবার CO<sub>2</sub>-এর ধর্ম পরীক্ষা করো: জ্বলন্ত কাঠি ধরো, আর চুনের পানিতে গ্যাস চালাও। (CO<sub>2</sub> বর্ণহীন, ছবিতে বোঝানোর জন্য হালকা ধূসর দেখানো হয়েছে।)'); }
+  }
+  // কাঠি
+  var sp=C3.splint;
+  if(sp && !sp.fin){
+    sp.y+=1.6; var top=378-200*C3.g; $('splint').setAttribute('transform','translate(446,'+sp.y+')');
+    if(!sp.out && sp.y+70>top && C3.g>0.4){ sp.out=true; $('flame').setAttribute('opacity',0); $('flame2').setAttribute('opacity',0); say('কাঠির আগুন <b>নিভে গেল</b>! তাই সিদ্ধান্ত: CO<sub>2</sub> গ্যাস আগুন নিভাতে সাহায্য করে।'); }
+    if(sp.y>230){ sp.fin=true; if(!sp.out){ say('আগুন নেভেনি, কারণ গ্যাসজারে যথেষ্ট CO<sub>2</sub> নেই।'); } setTimeout(function(){ if(C3.splint===sp){ $('splint').style.display='none'; $('flame').setAttribute('opacity',1); $('flame2').setAttribute('opacity',1); } },1500); }
+  }
+  // চুনের পানির রং
+  C3.milk+=(C3.milkTarget-C3.milk)*0.03; $('lwm').setAttribute('opacity',C3.milk.toFixed(3));
+  requestAnimationFrame(loop3);
+}
+resetC3(); requestAnimationFrame(loop3);
+
+/* =============== ল্যাব ৪: ত্রয়ী =============== */
+var TRIADS=[
+ {n:'Li - Na - K',g:'গ্রুপ ১ (ক্ষারধাতু)',e:[['Li',7],['Na',23],['K',39]]},
+ {n:'Ca - Sr - Ba',g:'গ্রুপ ২ (মৃৎক্ষার ধাতু)',e:[['Ca',40],['Sr',88],['Ba',137]]},
+ {n:'Cl - Br - I',g:'গ্রুপ ১৭ (হ্যালোজেন)',e:[['Cl',35.5],['Br',80],['I',127]]}
+];
+var curTriad=0, COLS=['#2a9d8f','#1f3a5f','#e9a23b'];
+function fmt(v){ return bn(Number(v.toFixed(2))); }
+function drawTriad(i){
+  curTriad=i; var T=TRIADS[i], nl=$('nl'); nl.innerHTML='<div class="line"></div>';
+  T.e.forEach(function(el,k){
+    var d=document.createElement('div'); d.className='mk'; d.style.left=(el[1]/140*100)+'%';
+    d.innerHTML='<i style="background:'+COLS[k]+'">'+el[0]+'</i>'+fmt(el[1]); nl.appendChild(d);
+  });
+  var a=document.createElement('div'); a.className='avg'; a.id='avgmk'; a.style.left=(T.e[0][1]/140*100)+'%'; a.innerHTML='গড়'; nl.appendChild(a);
+  $('triadtxt').innerHTML='ত্রয়ী: <b>'+T.n+'</b> ('+T.g+'). এই তিনটি মৌল একই গ্রুপের, তাই এদের ধর্ম একই রকম। "গড় বের করো" চাপো।';
+  document.querySelectorAll('#triadbtns button').forEach(function(b,k){ b.className='btn'+(k===i?'':' alt'); });
+}
+TRIADS.forEach(function(t,i){ var b=document.createElement('button'); b.className='btn alt'; b.textContent=t.n; b.onclick=function(){ drawTriad(i); }; $('triadbtns').appendChild(b); });
+$('avgbtn').onclick=function(){
+  var T=TRIADS[curTriad], a=T.e[0][1], m=T.e[1][1], c=T.e[2][1], avg=(a+c)/2, diff=Math.abs(avg-m);
+  var mk=$('avgmk'); mk.style.opacity=1; mk.innerHTML='গড়<br>'+fmt(avg);
+  setTimeout(function(){ mk.style.left=(avg/140*100)+'%'; },50);
+  setTimeout(function(){
+    $('triadtxt').innerHTML='প্রথম ও তৃতীয় মৌলের ভরের গড় = ('+fmt(a)+' + '+fmt(c)+') ÷ ২ = <b>'+fmt(avg)+'</b>.<br>মাঝের মৌল '+T.e[1][0]+'-এর ভর = <b>'+fmt(m)+'</b>. পার্থক্য মাত্র '+fmt(diff)+'। অর্থাৎ ভর প্রায় মিলে গেছে ✅<br><small>ডোবেরাইনার এভাবে আরও কয়েকটি ত্রয়ী খুঁজে পেয়েছিলেন। সব মৌলের জন্য এমন ত্রয়ী পাওয়া যায়নি।</small>';
+  },1300);
+};
+drawTriad(0);
+
 /* ---------- কুইজ ---------- */
 var QUIZ=[
  {q:'১৯১৩ সালে পারমাণবিক সংখ্যা অনুযায়ী মৌল সাজানোর প্রস্তাব কে দেন?',o:['ল্যাভয়সিয়ে','মেন্ডেলিফ','মোসলে','নিউল্যান্ডস'],a:2,e:'মোসলে পারমাণবিক ভরের বদলে পারমাণবিক সংখ্যা অনুযায়ী সাজানোর প্রস্তাব দেন।'},
@@ -429,6 +748,9 @@ var QUIZ=[
  {q:'একই পর্যায়ে বাম থেকে ডানে গেলে পরমাণুর আকার কেমন হয়?',o:['বাড়ে','কমে','একই থাকে','প্রথমে কমে পরে বাড়ে'],a:1,e:'প্রোটন বাড়ে কিন্তু শক্তিস্তর একই, তাই আকর্ষণ বাড়ে এবং আকার কমে।'},
  {q:'গ্রুপে উপর থেকে নিচে গেলে আয়নিকরণ শক্তি কেমন হয়?',o:['বাড়ে','কমে','একই থাকে','দ্বিগুণ হয়'],a:1,e:'নিচে গেলে আকার বাড়ে, ফলে ইলেকট্রন সরানো সহজ হয়। তাই আয়নিকরণ শক্তি কমে।'},
  {q:'Na, Mg, Al, Si এর মধ্যে কোনটির আয়নিকরণ শক্তি সবচেয়ে বেশি?',o:['Na','Mg','Al','Si'],a:3,e:'এদের মধ্যে Si এর আকার সবচেয়ে ছোট, তাই আয়নিকরণ শক্তি সবচেয়ে বেশি।'},
+ {q:'কোন গ্যাস চুনের পানিকে ঘোলা করে?',o:['অক্সিজেন','কার্বন ডাই-অক্সাইড','হাইড্রোজেন','নাইট্রোজেন'],a:1,e:'CO<sub>2</sub> চুনের পানির (Ca(OH)<sub>2</sub>) সাথে বিক্রিয়ায় সাদা CaCO<sub>3</sub> অধঃক্ষেপ তৈরি করে, তাই পানি ঘোলা হয়।'},
+ {q:'কার্বন ডাই-অক্সাইড ভরা গ্যাসজারে জ্বলন্ত কাঠি ধরলে কী হয়?',o:['আরও জোরে জ্বলে','নিভে যায়','রং বদলে যায়','কিছুই হয় না'],a:1,e:'CO<sub>2</sub> আগুন নিভাতে সাহায্য করে, তাই কাঠির আগুন নিভে যায়।'},
+ {q:'ডোবেরাইনারের ত্রয়ীতে Li (৭) ও K (৩৯) এর মাঝের Na এর ভর প্রায় কত হওয়া উচিত?',o:['১৫','২৩','৩২','৪৬'],a:1,e:'(৭ + ৩৯) ÷ ২ = ২৩, যা Na এর পারমাণবিক ভরের সমান।'},
  {q:'কোনটি মুদ্রা ধাতু?',o:['Na','Zn','Cu','Fe'],a:2,e:'গ্রুপ ১১ এর Cu, Ag, Au কে মুদ্রা ধাতু বলে।'},
  {q:'গ্রুপ ১৭ এর মৌলগুলোকে কী বলা হয়?',o:['ক্ষারধাতু','মৃৎক্ষার ধাতু','হ্যালোজেন','নিষ্ক্রিয় গ্যাস'],a:2,e:'গ্রুপ ১৭ এর মৌল (F, Cl, Br, I...) হ্যালোজেন, মানে লবণ উৎপাদনকারী।'}
 ];
