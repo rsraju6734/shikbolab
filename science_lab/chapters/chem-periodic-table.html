@@ -8,13 +8,13 @@
 <link rel="stylesheet" href="../css/style.css">
 <style>
 .ptscroll{overflow-x:auto;padding-bottom:6px}
-.pt{display:grid;grid-template-columns:30px repeat(18,minmax(36px,1fr));gap:3px;min-width:720px}
+.pt{display:grid;grid-template-columns:30px repeat(18,minmax(38px,1fr));grid-template-rows:auto repeat(7,auto) 10px auto auto;gap:3px;min-width:780px}
 .pt .hd{font-size:12px;font-weight:700;color:var(--muted);text-align:center;align-self:center;border-radius:6px;padding:2px 0}
 .pt .hd.hl{background:var(--gold);color:#1c2b39}
 .cell{border:1px solid #cfd9e1;border-radius:6px;background:#fff;font-family:system-ui,'Segoe UI',Arial,sans-serif;cursor:pointer;padding:2px 0;line-height:1.1;text-align:center}
 .cell small{display:block;font-size:9px;color:#5b6770}
 .cell b{font-size:14px;color:#1c2b39}
-.cell.s{background:#fdebd8}.cell.p{background:#dff1ec}.cell.d{background:#e7e4f5}
+.cell.s{background:#fdebd8}.cell.p{background:#dff1ec}.cell.d{background:#e7e4f5}.cell.f{background:#fff3b0}.cell.ph{background:#f4f4f4;border-style:dashed;color:#888;cursor:default;font-size:9px;display:flex;align-items:center;justify-content:center}
 .cell.sel{outline:3px solid #e76f51;box-shadow:0 0 10px rgba(231,111,81,.8);transform:scale(1.12);position:relative;z-index:2}
 .leg{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;margin:8px 0}
 .leg i{display:inline-block;width:14px;height:14px;border-radius:3px;border:1px solid #cfd9e1;vertical-align:middle;margin-right:4px}
@@ -22,7 +22,7 @@
 .elbig{display:flex;align-items:center;gap:14px;margin-bottom:8px}
 .elsym{width:86px;height:86px;border-radius:14px;background:#1f3a5f;color:#fff;font-family:system-ui,Arial,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .elsym b{font-size:34px;line-height:1}.elsym small{font-size:12px}
-.cfg{font-family:system-ui,'Segoe UI',Arial,sans-serif;font-size:21px;background:#f6f9fb;border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0;word-spacing:4px}
+.cfg{font-family:system-ui,'Segoe UI',Arial,sans-serif;font-size:19px;background:#f6f9fb;border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0;word-spacing:4px}
 .cfg .r{color:#e63946;font-weight:700}
 .steps li{opacity:0;transform:translateY(8px);transition:all .5s;list-style:none;margin:8px 0;background:#eaf7f5;border-radius:8px;padding:8px 12px}
 .steps li.show{opacity:1;transform:none}
@@ -157,16 +157,17 @@ details p{margin:8px 0 2px}
   <!-- ================= ল্যাব ================= -->
   <section class="panel" id="lab">
     <h2>🧭 ল্যাব ১: মৌলের ঠিকানা খুঁজো</h2>
-    <p>নিচের সারণি থেকে একটা মৌল বেছে নাও (প্রথম ৩০টি মৌল)। ইলেকট্রনগুলো ঘুরতে দেখবে, আর ইলেকট্রন বিন্যাস থেকে <b>পর্যায় ও গ্রুপ</b> কীভাবে বের হয় সেটা ধাপে ধাপে দেখতে পারবে। আগে নিজে অনুমান করে তারপর মিলিয়ে নিলে ভালো শেখা হয়!</p>
+    <p>নিচের সারণি থেকে একটা মৌল বেছে নাও (সব ১১৮টি মৌল)। ইলেকট্রনগুলো ঘুরতে দেখবে, আর ইলেকট্রন বিন্যাস থেকে <b>পর্যায় ও গ্রুপ</b> কীভাবে বের হয় সেটা ধাপে ধাপে দেখতে পারবে। আগে নিজে অনুমান করে তারপর মিলিয়ে নিলে ভালো শেখা হয়!</p>
     <div class="ptscroll"><div class="pt" id="pt"></div></div>
-    <div class="leg"><span><i style="background:#fdebd8"></i>s-ব্লক (গ্রুপ ১, ২, H, He)</span><span><i style="background:#dff1ec"></i>p-ব্লক (গ্রুপ ১৩-১৮)</span><span><i style="background:#e7e4f5"></i>d-ব্লক / অবস্থান্তর (গ্রুপ ৩-১২)</span></div>
+    <div class="leg"><span><i style="background:#fdebd8"></i>s-ব্লক (গ্রুপ ১, ২, H, He)</span><span><i style="background:#dff1ec"></i>p-ব্লক (গ্রুপ ১৩-১৮)</span><span><i style="background:#e7e4f5"></i>d-ব্লক / অবস্থান্তর (গ্রুপ ৩-১২)</span><span><i style="background:#fff3b0"></i>নিচের দুই সারি: ল্যান্থানাইড (৫৭-৭১) ও অ্যাকটিনাইড (৮৯-১০৩)</span></div>
+    <p style="font-size:15px;color:#5b6770;margin:4px 0">📘 বইয়ের শিক্ষার্থীর কাজ প্রথম ৩০টি মৌল নিয়ে। বাকি মৌলগুলো অতিরিক্ত শেখার জন্য (পরীক্ষার জন্য প্রথম ৩০টিই জরুরি)।</p>
 
     <div class="lab2">
       <div class="box" style="text-align:center">
         <canvas id="bohr" width="340" height="340" style="margin:0 auto;max-width:100%"></canvas>
         <div style="font-size:14px;margin-top:6px">শক্তিস্তরে ইলেকট্রন: <b id="shells">২, ১</b> &nbsp;|&nbsp; <span style="color:#e63946">●</span> বাইরের স্তর</div>
         <label for="zs" style="margin-top:10px">পারমাণবিক সংখ্যা: <b id="zv">১</b></label>
-        <input type="range" id="zs" min="1" max="30" step="1" value="1">
+        <input type="range" id="zs" min="1" max="118" step="1" value="1">
         <div class="btnrow" style="justify-content:center"><button class="btn alt" id="prev">&larr; আগের মৌল</button><button class="btn" id="next">+১ ইলেকট্রন যোগ করো &rarr;</button></div>
         <div style="font-size:14px;margin-top:10px">📘 বইয়ের "শিক্ষার্থীর কাজ" (৩, ৪, ৬, ১১, ১৩, ১৬, ২১, ২৬):</div>
         <div class="chips" id="bookchips" style="justify-content:center"></div>
@@ -176,6 +177,8 @@ details p{margin:8px 0 2px}
         <div class="elbig"><div class="elsym"><small id="znum">১</small><b id="zsym">H</b><small id="zname">হাইড্রোজেন</small></div>
           <div><b>ইলেকট্রন বিন্যাস</b><div class="cfg" id="cfg"></div></div></div>
         <p style="margin:6px 0"><small>লাল রং = সবচেয়ে বাইরের শক্তিস্তরের অংশ (বইয়ে যেভাবে দেখানো হয়েছে)</small></p>
+        <div id="short" style="font-size:15px;color:#46586a;margin-bottom:6px"></div>
+        <div id="xnote" style="font-size:14px;background:#f0f6fa;border-radius:8px;padding:6px 10px;margin-bottom:8px;display:none"></div>
         <b>🤔 আগে নিজে অনুমান করো:</b>
         <div class="guess">
           পর্যায় <select id="gp"><option value="">?</option></select>
@@ -235,97 +238,135 @@ var BN='০১২৩৪৫৬৭৮৯';
 function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
 function $(id){return document.getElementById(id);}
 
-/* ---------- মৌলের তথ্য (১-৩০) ---------- */
-var EL = [null,
-['H','হাইড্রোজেন'],['He','হিলিয়াম'],['Li','লিথিয়াম'],['Be','বেরিলিয়াম'],['B','বোরন'],['C','কার্বন'],['N','নাইট্রোজেন'],['O','অক্সিজেন'],['F','ফ্লোরিন'],['Ne','নিয়ন'],
-['Na','সোডিয়াম'],['Mg','ম্যাগনেসিয়াম'],['Al','অ্যালুমিনিয়াম'],['Si','সিলিকন'],['P','ফসফরাস'],['S','সালফার'],['Cl','ক্লোরিন'],['Ar','আর্গন'],
-['K','পটাশিয়াম'],['Ca','ক্যালসিয়াম'],['Sc','স্ক্যান্ডিয়াম'],['Ti','টাইটানিয়াম'],['V','ভ্যানাডিয়াম'],['Cr','ক্রোমিয়াম'],['Mn','ম্যাঙ্গানিজ'],['Fe','আয়রন'],['Co','কোবাল্ট'],['Ni','নিকেল'],['Cu','কপার'],['Zn','জিংক']];
+/* ---------- মৌলের তথ্য (১-১১৮) ---------- */
+var SYM='H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og'.split(' ');
+var NAME=['হাইড্রোজেন','হিলিয়াম','লিথিয়াম','বেরিলিয়াম','বোরন','কার্বন','নাইট্রোজেন','অক্সিজেন','ফ্লোরিন','নিয়ন',
+'সোডিয়াম','ম্যাগনেসিয়াম','অ্যালুমিনিয়াম','সিলিকন','ফসফরাস','সালফার','ক্লোরিন','আর্গন',
+'পটাশিয়াম','ক্যালসিয়াম','স্ক্যান্ডিয়াম','টাইটানিয়াম','ভ্যানাডিয়াম','ক্রোমিয়াম','ম্যাঙ্গানিজ','আয়রন','কোবাল্ট','নিকেল','কপার','জিংক','গ্যালিয়াম','জার্মেনিয়াম','আর্সেনিক','সেলেনিয়াম','ব্রোমিন','ক্রিপটন',
+'রুবিডিয়াম','স্ট্রনসিয়াম','ইট্রিয়াম','জির্কোনিয়াম','নিওবিয়াম','মলিবডেনাম','টেকনেসিয়াম','রুথেনিয়াম','রোডিয়াম','প্যালাডিয়াম','সিলভার','ক্যাডমিয়াম','ইন্ডিয়াম','টিন','এন্টিমনি','টেলুরিয়াম','আয়োডিন','জেনন',
+'সিজিয়াম','বেরিয়াম','ল্যান্থানাম','সিরিয়াম','প্রাসিওডিমিয়াম','নিওডিমিয়াম','প্রোমেথিয়াম','সামারিয়াম','ইউরোপিয়াম','গ্যাডোলিনিয়াম','টার্বিয়াম','ডিসপ্রোসিয়াম','হলমিয়াম','আর্বিয়াম','থুলিয়াম','ইটার্বিয়াম','লুটেশিয়াম',
+'হ্যাফনিয়াম','ট্যান্টালাম','টাংস্টেন','রেনিয়াম','অসমিয়াম','ইরিডিয়াম','প্ল্যাটিনাম','গোল্ড','মার্কারি','থ্যালিয়াম','লেড','বিসমাথ','পোলোনিয়াম','অ্যাস্টাটিন','রেডন',
+'ফ্রান্সিয়াম','রেডিয়াম','অ্যাকটিনিয়াম','থোরিয়াম','প্রোটেকটিনিয়াম','ইউরেনিয়াম','নেপচুনিয়াম','প্লুটোনিয়াম','আমেরিসিয়াম','কুরিয়াম','বার্কেলিয়াম','ক্যালিফোর্নিয়াম','আইনস্টেনিয়াম','ফার্মিয়াম','মেন্ডেলেভিয়াম','নোবেলিয়াম','লরেন্সিয়াম',
+'রাদারফোর্ডিয়াম','ডুবনিয়াম','সিবর্গিয়াম','বোরিয়াম','হাসিয়াম','মিটনেরিয়াম','ডার্মস্টেডিয়াম','রন্টজেনিয়াম','কোপারনেসিয়াম','নিহোনিয়াম','ফ্লেরোভিয়াম','মস্কোভিয়াম','লিভারমোরিয়াম','টেনেসাইন','ওগানেসন'];
+var EL=[null]; for(var q=0;q<118;q++) EL.push([SYM[q],NAME[q]]);
 
-/* সারণিতে ঘরের অবস্থান (সারি, কলাম) */
-function gp(z){
-  if (z===1) return [1,1]; if (z===2) return [1,18];
-  if (z===3||z===4) return [2,z-2]; if (z>=5&&z<=10) return [2,z+8];
-  if (z===11||z===12) return [3,z-10]; if (z>=13&&z<=18) return [3,z];
-  return [4,z-18];
+/* ---------- সারণিতে মৌলের অবস্থান ---------- */
+function isSeries(z){ return (z>=57&&z<=71)||(z>=89&&z<=103); }
+function lperiod(z){ return z<=2?1:z<=10?2:z<=18?3:z<=36?4:z<=54?5:z<=86?6:7; }
+function lgroup(z){
+  if(z===1) return 1; if(z===2) return 18;
+  if(z<=4) return z-2; if(z<=10) return z+8;
+  if(z<=12) return z-10; if(z<=18) return z;
+  if(z<=36) return z-18; if(z<=54) return z-36;
+  if(z<=56) return z-54; if(isSeries(z)) return 3;
+  if(z<=86) return z-68; if(z<=88) return z-86;
+  return z-100;
 }
+function blockOf(z){ if(isSeries(z)) return 'f'; var g=lgroup(z); if(z<=2||g<=2) return 's'; if(g>=13) return 'p'; return 'd'; }
 
 /* ---------- ইলেকট্রন বিন্যাস ---------- */
-var ORDER=[['1s',2],['2s',2],['2p',6],['3s',2],['3p',6],['4s',2],['3d',10]];
-var SHOW=['1s','2s','2p','3s','3p','3d','4s'];
+var MAD=[['1s',2],['2s',2],['2p',6],['3s',2],['3p',6],['4s',2],['3d',10],['4p',6],['5s',2],['4d',10],['5p',6],['6s',2],['4f',14],['5d',10],['6p',6],['7s',2],['5f',14],['6d',10],['7p',6]];
+var SHOW=['1s','2s','2p','3s','3p','3d','4s','4p','4d','4f','5s','5p','5d','5f','6s','6p','6d','7s','7p'];
+var EXC={24:{'4s':1,'3d':5},29:{'4s':1,'3d':10},41:{'5s':1,'4d':4},42:{'5s':1,'4d':5},44:{'5s':1,'4d':7},45:{'5s':1,'4d':8},46:{'5s':0,'4d':10},47:{'5s':1,'4d':10},
+ 57:{'4f':0,'5d':1},58:{'4f':1,'5d':1},64:{'4f':7,'5d':1},78:{'5d':9,'6s':1},79:{'5d':10,'6s':1},
+ 89:{'5f':0,'6d':1},90:{'5f':0,'6d':2},91:{'5f':2,'6d':1},92:{'5f':3,'6d':1},93:{'5f':4,'6d':1},96:{'5f':7,'6d':1},103:{'6d':0,'7p':1}};
 function config(z){
   var rem=z, occ={};
-  ORDER.forEach(function(o){ var n=Math.min(rem,o[1]); occ[o[0]]=n; rem-=n; });
-  if (z===24){ occ['4s']=1; occ['3d']=5; }
-  if (z===29){ occ['4s']=1; occ['3d']=10; }
+  MAD.forEach(function(o){ var n=Math.min(rem,o[1]); occ[o[0]]=n; rem-=n; });
+  if(EXC[z]) for(var k in EXC[z]) occ[k]=EXC[z][k];
   return occ;
 }
 function analyse(z){
-  var occ=config(z), period=0;
-  SHOW.forEach(function(k){ if(occ[k]>0) period=Math.max(period, +k[0]); });
-  var s=occ[period+'s']||0, p=occ[period+'p']||0, d=occ[(period-1)+'d']||0, g, rule, calc;
-  if (z===2){ g=18; rule=0; calc='ব্যতিক্রম: নিষ্ক্রিয় গ্যাসের মতো আচরণ করে'; }
-  else if (p>0){ g=s+p+10; rule=2; calc=s+' + '+p+' + 10 = '+g; }
-  else if (d>0){ g=s+d; rule=3; calc=s+' + '+d+' = '+g; }
+  var occ=config(z), period=lperiod(z), series=isSeries(z);
+  var s=occ[period+'s']||0, p=occ[period+'p']||0, d=(period>=4)?(occ[(period-1)+'d']||0):0, g, rule, calc;
+  if(z===2){ g=18; rule=0; calc=''; }
+  else if(series){ g=3; rule=4; calc=''; }
+  else if(p>0){ g=s+p+10; rule=2; calc=s+' + '+p+' + 10 = '+g; }
+  else if(d>0){ g=s+d; rule=3; calc=s+' + '+d+' = '+g; }
   else { g=s; rule=1; calc=s+' = '+g; }
-  return {occ:occ, period:period, s:s, p:p, d:d, group:g, rule:rule, calc:calc};
+  return {occ:occ, period:period, s:s, p:p, d:d, group:g, rule:rule, calc:calc, series:series};
 }
-function cfgHTML(z, a){
+function termsOf(a, filterFn){
   var out=[];
-  SHOW.forEach(function(k){
-    var n=a.occ[k]; if(!n) return;
-    var red = (+k[0]===a.period) || (k==='3d' && z>=21);
-    out.push('<span class="'+(red?'r':'')+'">'+k+'<sup>'+n+'</sup></span>');
-  });
-  return out.join(' ');
+  SHOW.forEach(function(k){ var n=a.occ[k]; if(!n) return; if(filterFn && !filterFn(k,n)) return; out.push(k); });
+  return out;
+}
+function isRed(k, a){
+  var n=parseInt(k,10), l=k.slice(-1);
+  if(n===a.period) return true;
+  if(l==='d' && n===a.period-1 && a.rule===3) return true;
+  if(l==='f' && n===a.period-2 && a.rule===4) return true;
+  return false;
+}
+function cfgHTML(z,a){
+  return termsOf(a).map(function(k){ return '<span class="'+(isRed(k,a)?'r':'')+'">'+k+'<sup>'+a.occ[k]+'</sup></span>'; }).join(' ');
+}
+function shortHTML(z,a){
+  var core=[[86,'Rn'],[54,'Xe'],[36,'Kr'],[18,'Ar'],[10,'Ne'],[2,'He']], c=null;
+  for(var i=0;i<core.length;i++){ if(z>core[i][0]){ c=core[i]; break; } }
+  if(!c || z<11) return '';
+  var co=config(c[0]), parts=[];
+  SHOW.forEach(function(k){ var n=(a.occ[k]||0)-(co[k]||0); if(n>0) parts.push(k+'<sup>'+n+'</sup>'); });
+  return 'সংক্ষেপে: <b>['+c[1]+']</b> '+parts.join(' ');
 }
 
-/* ---------- ছোট পর্যায় সারণি তৈরি ---------- */
-var cur=1, revealed=false, hlP=0, hlG=0;
+/* ---------- সারণি তৈরি ---------- */
+var cur=1, revealed=false;
 function buildTable(){
   var t=$('pt'); t.innerHTML='';
   var corner=document.createElement('div'); t.appendChild(corner);
   for(var g=1; g<=18; g++){ var h=document.createElement('div'); h.className='hd'; h.id='gh'+g; h.textContent=bn(g); h.style.gridColumn=(g+1); h.style.gridRow=1; t.appendChild(h); }
-  for(var r=1; r<=4; r++){ var h2=document.createElement('div'); h2.className='hd'; h2.id='ph'+r; h2.textContent=bn(r); h2.style.gridColumn=1; h2.style.gridRow=(r+1); t.appendChild(h2); }
-  for(var z=1; z<=30; z++){
-    var pos=gp(z), b=document.createElement('button'); b.className='cell '+blockOf(z); b.id='c'+z;
-    b.innerHTML='<small>'+z+'</small><b>'+EL[z][0]+'</b>'; b.title=EL[z][1];
-    b.style.gridRow=(pos[0]+1); b.style.gridColumn=(pos[1]+1);
+  for(var r=1; r<=7; r++){ var h2=document.createElement('div'); h2.className='hd'; h2.id='ph'+r; h2.textContent=bn(r); h2.style.gridColumn=1; h2.style.gridRow=(r+1); t.appendChild(h2); }
+  [[7,'57-71'],[8,'89-103']].forEach(function(x){ var p=document.createElement('div'); p.className='cell ph'; p.textContent=x[1]; p.style.gridRow=x[0]; p.style.gridColumn=4; t.appendChild(p); });
+  for(var z=1; z<=118; z++){
+    var b=document.createElement('button'); b.className='cell '+blockOf(z); b.id='c'+z;
+    b.innerHTML='<small>'+z+'</small><b>'+EL[z][0]+'</b>'; b.title=z+' - '+EL[z][1];
+    if(isSeries(z)){ var base=(z<=71)?57:89; b.style.gridRow=(z<=71)?10:11; b.style.gridColumn=(z-base)+3+1; }
+    else { b.style.gridRow=lperiod(z)+1; b.style.gridColumn=lgroup(z)+1; }
     (function(zz){ b.onclick=function(){ setZ(zz); }; })(z);
     t.appendChild(b);
   }
 }
-function blockOf(z){ if(z<=2||z===3||z===4||z===11||z===12||z===19||z===20) return 's'; if(z>=21&&z<=30) return 'd'; return 'p'; }
 
 /* ---------- বোর মডেল অ্যানিমেশন ---------- */
 var cv=$('bohr'), ctx=cv.getContext('2d'), shellN=[], outer=1, ang=0;
 function drawBohr(){
-  var W=cv.width, cx=W/2, cy=W/2;
+  var W=cv.width, cx=W/2, cy=W/2, ns=shellN.length||1, step=Math.min(38,150/ns), er=ns>4?3.6:5.5;
   ctx.clearRect(0,0,W,W);
-  for(var i=0;i<shellN.length;i++){ ctx.beginPath(); ctx.arc(cx,cy,38*(i+1),0,6.283); ctx.strokeStyle='#cfd9e1'; ctx.lineWidth=1.5; ctx.stroke(); }
-  ctx.beginPath(); ctx.arc(cx,cy,16,0,6.283); ctx.fillStyle='#e76f51'; ctx.fill();
-  ctx.fillStyle='#fff'; ctx.font='bold 11px Arial'; ctx.textAlign='center'; ctx.fillText(cur+'+',cx,cy+4);
+  for(var i=0;i<shellN.length;i++){ ctx.beginPath(); ctx.arc(cx,cy,step*(i+1),0,6.283); ctx.strokeStyle='#cfd9e1'; ctx.lineWidth=1.5; ctx.stroke(); }
+  ctx.beginPath(); ctx.arc(cx,cy,Math.min(16,step*0.6),0,6.283); ctx.fillStyle='#e76f51'; ctx.fill();
+  ctx.fillStyle='#fff'; ctx.font='bold '+(cur>99?8:10)+'px Arial'; ctx.textAlign='center'; ctx.fillText(cur+'+',cx,cy+3);
   for(var s=0;s<shellN.length;s++){
-    var n=shellN[s], rad=38*(s+1), speed=0.022/(s+1);
+    var n=shellN[s], rad=step*(s+1), speed=0.022/(s+1);
     for(var e=0;e<n;e++){
       var a=ang*speed*60 + e*6.283/n + s;
-      var x=cx+rad*Math.cos(a), y=cy+rad*Math.sin(a);
-      ctx.beginPath(); ctx.arc(x,y,5.5,0,6.283); ctx.fillStyle=(s===outer-1)?'#e63946':'#2b6cb0'; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx+rad*Math.cos(a), cy+rad*Math.sin(a), er, 0, 6.283);
+      ctx.fillStyle=(s===outer-1)?'#e63946':'#2b6cb0'; ctx.fill();
     }
   }
   ang+=0.016; requestAnimationFrame(drawBohr);
 }
 
 /* ---------- নির্বাচন ও আপডেট ---------- */
+function noteFor(z,a){
+  var m=[];
+  if(z>30) m.push('📌 এই মৌলটি বইয়ের প্রথম ৩০টির বাইরে, অতিরিক্ত শেখার জন্য।');
+  if(EXC[z]) m.push((z===24||z===29?'বইয়েও আছে: ':'')+'এই মৌলের ইলেকট্রন বিন্যাস সাধারণ ক্রম থেকে একটু আলাদা (ব্যতিক্রম বিন্যাস)।');
+  if(a.series) m.push('এটি '+(z<=71?'ল্যান্থানাইড':'অ্যাকটিনাইড')+' সারির মৌল, তাই সারণির নিচে আলাদা সারিতে দেখানো হয়।');
+  if(z>=103) m.push('⚠️ ১০৩ থেকে ১১৮ নম্বর মৌলগুলো ল্যাবরেটরিতে তৈরি, খুব অল্প সময় টেকে। এদের ইলেকট্রন বিন্যাস গবেষণা ও গণনাভিত্তিক অনুমান।');
+  return m.join('<br>');
+}
 function setZ(z){
-  cur=Math.max(1,Math.min(30,z)); revealed=false; hlP=0; hlG=0;
+  cur=Math.max(1,Math.min(118,z)); revealed=false;
   var a=analyse(cur);
   $('zs').value=cur; $('zv').textContent=bn(cur);
   $('znum').textContent=bn(cur); $('zsym').textContent=EL[cur][0]; $('zname').textContent=EL[cur][1];
-  $('cfg').innerHTML=cfgHTML(cur,a);
-  shellN=[0,0,0,0];
-  SHOW.forEach(function(k){ if(a.occ[k]) shellN[+k[0]-1]+=a.occ[k]; });
-  shellN=shellN.filter(function(n,i){ return i<a.period; });
-  outer=a.period;
+  $('cfg').innerHTML=cfgHTML(cur,a); $('short').innerHTML=shortHTML(cur,a);
+  var nt=noteFor(cur,a), nb=$('xnote'); nb.innerHTML=nt; nb.style.display=nt?'block':'none';
+  var sh=[0,0,0,0,0,0,0];
+  SHOW.forEach(function(k){ if(a.occ[k]) sh[parseInt(k,10)-1]+=a.occ[k]; });
+  shellN=sh.filter(function(n){ return n>0; });
+  outer=Math.min(a.period, shellN.length);
   $('shells').textContent=shellN.map(bn).join(', ');
   document.querySelectorAll('.cell').forEach(function(c){ c.classList.remove('sel'); });
   $('c'+cur).classList.add('sel');
@@ -334,11 +375,15 @@ function setZ(z){
 }
 function showSteps(){
   var a=analyse(cur), ol=$('steps'); ol.innerHTML='';
+  var maxn=0; SHOW.forEach(function(k){ if(a.occ[k]) maxn=Math.max(maxn,parseInt(k,10)); });
+  var pTxt='<b>ধাপ ২: পর্যায় নম্বর।</b> সবচেয়ে বাইরের প্রধান শক্তিস্তরের নম্বর '+bn(a.period)+', তাই <b>পর্যায় '+bn(a.period)+'</b>।';
+  if(maxn!==a.period) pTxt+=' (এই মৌলের '+bn(a.period)+'s অরবিটালে ইলেকট্রন নেই, তবু সারণিতে এটি '+bn(a.period)+'ম পর্যায়ের মৌল।)';
   var items=[
     '<b>ধাপ ১: ইলেকট্রন বিন্যাস লিখি।</b> '+cfgHTML(cur,a)+' (মোট '+bn(cur)+'টি ইলেকট্রন)',
-    '<b>ধাপ ২: পর্যায় নম্বর।</b> সবচেয়ে বাইরের প্রধান শক্তিস্তরের নম্বর '+bn(a.period)+', তাই <b>পর্যায় '+bn(a.period)+'</b>।'
+    pTxt
   ];
   var ruleTxt = a.rule===0 ? '<b>ধাপ ৩: গ্রুপ নম্বর।</b> He এর ইলেকট্রন বিন্যাস 1s², নিয়ম অনুযায়ী গ্রুপ ২ হওয়ার কথা। কিন্তু এটি নিষ্ক্রিয় গ্যাস, তাই ব্যতিক্রম হিসেবে <b>গ্রুপ ১৮</b>।'
+    : a.rule===4 ? '<b>ধাপ ৩: গ্রুপ নম্বর।</b> এটি '+(cur<=71?'ল্যান্থানাইড':'অ্যাকটিনাইড')+' সারির মৌল। বইয়ের ৪.২ অনুযায়ী এই ১৫টি মৌল '+bn(a.period)+' নম্বর পর্যায়ের <b>গ্রুপ ৩</b>-এর অংশ।'
     : a.rule===1 ? '<b>ধাপ ৩: গ্রুপ নম্বর (নিয়ম ১)।</b> বাইরের স্তরে শুধু s অরবিটাল আছে। s এর ইলেকট্রন সংখ্যাই গ্রুপ নম্বর: '+bn(a.calc)+'। তাই <b>গ্রুপ '+bn(a.group)+'</b>।'
     : a.rule===2 ? '<b>ধাপ ৩: গ্রুপ নম্বর (নিয়ম ২)।</b> বাইরের স্তরে s ও p অরবিটাল আছে। s + p এর ইলেকট্রন + ১০: '+bn(a.calc)+'। তাই <b>গ্রুপ '+bn(a.group)+'</b>।'
     : '<b>ধাপ ৩: গ্রুপ নম্বর (নিয়ম ৩)।</b> বাইরের স্তরে s আছে এবং আগের স্তরে d অরবিটাল আছে। s + d এর ইলেকট্রন: '+bn(a.calc)+'। তাই <b>গ্রুপ '+bn(a.group)+'</b>।';
@@ -346,7 +391,7 @@ function showSteps(){
   items.forEach(function(h,i){ var li=document.createElement('li'); li.innerHTML=h; ol.appendChild(li); setTimeout(function(){ li.classList.add('show'); }, 250+i*900); });
   setTimeout(function(){
     var b=$('ansbox'); b.style.display='block';
-    b.innerHTML='✅ '+EL[cur][1]+' ('+EL[cur][0]+') আছে <b>পর্যায় '+bn(a.period)+'</b>, <b>গ্রুপ '+bn(a.group)+'</b>-এ।';
+    b.innerHTML='✅ '+EL[cur][1]+' ('+EL[cur][0]+') আছে <b>পর্যায় '+bn(a.period)+'</b>, <b>গ্রুপ '+bn(a.group)+'</b>-এ'+(a.series?' ('+(cur<=71?'ল্যান্থানাইড':'অ্যাকটিনাইড')+' সারি)':'')+'।';
     $('ph'+a.period).classList.add('hl'); $('gh'+a.group).classList.add('hl');
   }, 250+items.length*900);
 }
