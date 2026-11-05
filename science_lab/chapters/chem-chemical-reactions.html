@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>রাসায়নিক বিক্রিয়া - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.rxlist{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.rxlist button{font-family:system-ui,'Segoe UI',Arial,sans-serif}
+.rxstage{position:relative;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;min-height:150px;background:#f6f9fb;border:2px solid var(--line);border-radius:14px;padding:16px;margin:10px 0;transition:box-shadow .6s,border-color .6s}
+.rxstage.exo{border-color:#e76f51;box-shadow:0 0 28px rgba(231,111,81,.7)}
+.rxstage.endo{border-color:#2b6cb0;box-shadow:0 0 28px rgba(43,108,176,.6)}
+.rxrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+.tok{font-family:system-ui,'Segoe UI',Arial,sans-serif;font-weight:700;font-size:20px;padding:10px 16px;border-radius:30px;background:#dff1ec;border:2px solid #2a9d8f;transition:all .7s}
+.tok.p{background:#fdebd8;border-color:#e9a23b}
+.tok.dim{opacity:.25;transform:scale(.8)}
+.tok.pulse{animation:pls .7s ease-in-out infinite alternate}
+@keyframes pls{from{transform:scale(1)}to{transform:scale(1.12)}}
+.rxprod{opacity:0;transition:opacity .8s}
+.rxprod.show{opacity:1}
+.rxarr{font-size:34px;font-weight:800;color:var(--navy);min-width:48px;text-align:center;font-family:system-ui,Arial,sans-serif}
+.rxarr.flip{animation:flp 1.2s ease-in-out infinite}
+@keyframes flp{0%,100%{transform:scaleX(1)}50%{transform:scaleX(-1)}}
+.edot{position:absolute;width:14px;height:14px;border-radius:50%;background:#ffd23f;border:2px solid #b8860b;left:0;top:0;opacity:0;transition:transform 1.1s ease-in-out,opacity .3s;z-index:3}
+.ppt{animation:fall 1.4s ease-in forwards}
+@keyframes fall{from{transform:translateY(-6px)}to{transform:translateY(34px);background:#fff;border-color:#9aa5b1}}
+.qcard{border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:8px 0;background:#fff}
+.qcard p{margin:0 0 6px;font-weight:700}
+.qcard .opt{display:inline-block;width:auto;margin:3px 6px 3px 0}
+.qcard .why{display:none;background:#f0f6fa;border-radius:8px;padding:6px 10px;margin-top:6px;font-size:15px}
+.atoms{max-width:640px;width:100%}
+.half{font-family:system-ui,'Segoe UI',Arial,sans-serif;font-size:22px;font-weight:700;text-align:center;background:#eaf7f5;border-radius:10px;padding:12px;margin:8px 0}
+.coin{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.calc{font-family:system-ui,'Segoe UI',Arial,sans-serif}
+.num{width:90px;padding:8px;border-radius:8px;border:2px solid #cfd9e1;font-size:16px;font-family:inherit}
+.lab2g{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+details{border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0;background:#fff}
+details summary{cursor:pointer;font-weight:700;color:var(--navy)}
+details p{margin:8px 0 2px}
+.soon{background:#f0f6fa;border:2px dashed #9aa5b1;border-radius:12px;padding:12px 16px;color:#46586a}
+.steps li{opacity:0;transform:translateY(8px);transition:all .5s;list-style:none;margin:8px 0;background:#eaf7f5;border-radius:8px;padding:8px 12px}
+.steps li.show{opacity:1;transform:none}
+.steps{padding-left:0}
+.fb{font-weight:700;margin-top:4px}
+@media(max-width:900px){.lab2g{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+
+<div class="wrap">
+  <div class="crumb">🧪 রসায়ন &rsaquo; নবম-দশম শ্রেণি &rsaquo; অধ্যায় ৭</div>
+  <h1 class="title">রাসায়নিক বিক্রিয়া (Chemical Reactions)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🧭 ল্যাব ১</a><a href="#lab2">⚡ ল্যাব ২</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্ন-উত্তর</a></nav>
+
+  <!-- ================= নোট ================= -->
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায়ে শিখবে:</b> ভৌত ও রাসায়নিক পরিবর্তনের পার্থক্য, বিক্রিয়ার শ্রেণিবিভাগ (একমুখী/উভমুখী, তাপোৎপাদী/তাপহারী, রেডক্স/নন-রেডক্স), জারণ সংখ্যা, প্রশমন ও অধঃক্ষেপণ, বাস্তব জীবনের বিক্রিয়া, বিক্রিয়ার হার ও লা-শাতেলিয়ার নীতি।</div>
+
+    <h3>৭.১ পদার্থের পরিবর্তন</h3>
+    <ul>
+      <li><b>ভৌত পরিবর্তন:</b> শুধু বাইরের অবস্থা বদলায়, ভেতরের রাসায়নিক গঠন একই থাকে। যেমন: বরফ &#8652; পানি &#8652; জলীয় বাষ্প (তিন অবস্থাতেই H<sub>2</sub>O)।</li>
+      <li><b>রাসায়নিক পরিবর্তন:</b> সম্পূর্ণ আলাদা ধর্মের নতুন পদার্থ তৈরি হয়। পুরনো বন্ধন ভাঙে, নতুন বন্ধন গঠিত হয়। এটাই <b>রাসায়নিক বিক্রিয়া</b>। যেমন: CH<sub>4</sub> + 2O<sub>2</sub> &rarr; CO<sub>2</sub> + 2H<sub>2</sub>O + তাপ, CaCO<sub>3</sub> + 2HCl &rarr; CaCl<sub>2</sub> + H<sub>2</sub>O + CO<sub>2</sub>।</li>
+    </ul>
+
+    <h3>৭.২ রাসায়নিক বিক্রিয়ার শ্রেণিবিভাগ ⭐⭐⭐</h3>
+    <table class="t">
+      <tr><th>ভিত্তি</th><th>প্রকার</th><th>চেনার উপায় ও উদাহরণ</th></tr>
+      <tr><td rowspan="2">দিক</td><td>একমুখী</td><td>উৎপাদ আবার বিক্রিয়ক হয় না। একটি ডানমুখী তীর (&rarr;)। যেমন: CaCO<sub>3</sub> &rarr;(তাপ) CaO + CO<sub>2</sub></td></tr>
+      <tr><td>উভমুখী</td><td>বিক্রিয়ক থেকে উৎপাদ, আবার উৎপাদ থেকে বিক্রিয়ক। দুটি বিপরীতমুখী তীর (&#8652;)। যেমন: H<sub>2</sub> + I<sub>2</sub> &#8652; 2HI</td></tr>
+      <tr><td rowspan="2">তাপ</td><td>তাপোৎপাদী</td><td>তাপ উৎপন্ন হয়, ΔH <b>ঋণাত্মক</b>। যেমন: N<sub>2</sub> + 3H<sub>2</sub> &#8652; 2NH<sub>3</sub>; ΔH = &minus;92 kJ</td></tr>
+      <tr><td>তাপহারী</td><td>তাপ শোষিত হয়, ΔH <b>ধনাত্মক</b>। যেমন: N<sub>2</sub> + O<sub>2</sub> &#8652; 2NO; ΔH = +180 kJ</td></tr>
+      <tr><td rowspan="2">ইলেকট্রন স্থানান্তর</td><td>রেডক্স</td><td>ইলেকট্রনের আদান-প্রদান ঘটে, জারণ সংখ্যা বদলায়</td></tr>
+      <tr><td>নন-রেডক্স</td><td>ইলেকট্রনের আদান-প্রদান ঘটে না, জারণ সংখ্যা বদলায় না</td></tr>
+    </table>
+    <div class="key">🧠 <b>মনে রাখার কৌশল:</b> তাপ উৎপন্ন &rarr; তাপোৎপাদী &rarr; ΔH মাইনাস (&minus;)। তাপ শোষণ &rarr; তাপহারী &rarr; ΔH প্লাস (+)।</div>
+
+    <h3>রেডক্স (জারণ-বিজারণ) বিক্রিয়া ⭐⭐⭐</h3>
+    <ul>
+      <li>Red (বিজারণ) + Ox (জারণ) = <b>Redox</b>। এক অংশে ইলেকট্রন ত্যাগ, অন্য অংশে সেটা গ্রহণ।</li>
+      <li><b>জারণ</b> = ইলেকট্রন ত্যাগ (ধনাত্মক চার্জ বাড়ে বা ঋণাত্মক চার্জ কমে)। যেমন: Na &rarr; Na<sup>+</sup> + e<sup>&minus;</sup>, Fe<sup>2+</sup> &rarr; Fe<sup>3+</sup> + e<sup>&minus;</sup></li>
+      <li><b>বিজারণ</b> = ইলেকট্রন গ্রহণ (ধনাত্মক চার্জ কমে বা ঋণাত্মক চার্জ বাড়ে)। যেমন: Cl + e<sup>&minus;</sup> &rarr; Cl<sup>&minus;</sup>, Cu<sup>2+</sup> + e<sup>&minus;</sup> &rarr; Cu<sup>+</sup></li>
+      <li><b>বিজারক</b> পদার্থ ইলেকট্রন <b>ত্যাগ</b> করে (নিজে জারিত হয়)। <b>জারক</b> পদার্থ ইলেকট্রন <b>গ্রহণ</b> করে (নিজে বিজারিত হয়)। Na + &frac12;Cl<sub>2</sub> &rarr; NaCl এ Na বিজারক, Cl জারক।</li>
+      <li>জারণ ও বিজারণ <b>একসাথে (যুগপৎ)</b> ঘটে। কেউ ইলেকট্রন দিলে অন্য কেউ সেটা নেবেই, তাই রেডক্স মানে ইলেকট্রন স্থানান্তর।</li>
+    </ul>
+    <div class="key">🧠 <b>মনে রাখার কৌশল:</b> জারণ = ত্যাগ (জারণ সংখ্যা বাড়ে), বিজারণ = গ্রহণ (জারণ সংখ্যা কমে)।</div>
+
+    <h4 style="margin:12px 0 4px;color:var(--navy)">জারণ সংখ্যা</h4>
+    <p>অণু বা যৌগমূলকে কোনো পরমাণুর ইলেকট্রন ছাড়ার বা নেওয়ার প্রবণতা দেখায় চিহ্নসহ একটি সংখ্যা। একে <b>জারণ সংখ্যা</b> বলে।</p>
+    <table class="t">
+      <tr><th>নিয়ম</th><th>উদাহরণ</th></tr>
+      <tr><td>মুক্ত মৌল বা নিরপেক্ষ পরমাণুর জারণ সংখ্যা <b>০</b></td><td>Fe = 0, H<sub>2</sub> এর H = 0, Cl<sub>2</sub> এর Cl = 0</td></tr>
+      <tr><td>ধাতুর জারণ সংখ্যা ধনাত্মক, অধাতুর ঋণাত্মক</td><td>NaCl এ Na = +1, Cl = &minus;1</td></tr>
+      <tr><td>নিরপেক্ষ যৌগে সব পরমাণুর জারণ সংখ্যার যোগফল <b>০</b></td><td>H<sub>2</sub>O: (+1)&times;2 + (&minus;2) = 0</td></tr>
+      <tr><td>আয়নে যোগফল = আয়নের চার্জ</td><td>SO<sub>4</sub><sup>2&minus;</sup> = &minus;2, NH<sub>4</sub><sup>+</sup> = +1</td></tr>
+      <tr><td>ক্ষার ধাতু (K, Na) = +1, মৃৎক্ষার ধাতু (Ca, Mg) = +2</td><td>KCl এ K = +1, CaO এ Ca = +2</td></tr>
+      <tr><td>ধাতব হ্যালাইডে হ্যালোজেন = &minus;1</td><td>MgCl<sub>2</sub> এ Cl = &minus;1</td></tr>
+      <tr><td>H সাধারণত +1 (ধাতব হাইড্রাইডে &minus;1)</td><td>NH<sub>3</sub> এ H = +1</td></tr>
+      <tr><td>O সাধারণত &minus;2। পার-অক্সাইডে &minus;1। সুপার-অক্সাইডে &minus;&frac12;</td><td>CaO এ O = &minus;2, H<sub>2</sub>O<sub>2</sub> এ O = &minus;1</td></tr>
+    </table>
+    <div class="key"><b>জারণ সংখ্যা নির্ণয়ের পদ্ধতি (বই অনুযায়ী):</b> অজানা পরমাণুর জারণ সংখ্যা ধরো x। সব পরমাণুর জারণ সংখ্যাকে পরমাণু সংখ্যা দিয়ে গুণ করে যোগ করো। যোগফল অণুতে ০, আয়নে চার্জের সমান। তারপর x বের করো।<br>
+      <b>উদাহরণ:</b> KMnO<sub>4</sub>: (+1)&times;1 + x&times;1 + (&minus;2)&times;4 = 0 &rArr; x = <b>+7</b>। H<sub>2</sub>SO<sub>4</sub>: (+1)&times;2 + x + (&minus;2)&times;4 = 0 &rArr; x = <b>+6</b>।</div>
+
+    <h4 style="margin:12px 0 4px;color:var(--navy)">রেডক্স বিক্রিয়ার চার ধরন</h4>
+    <table class="t">
+      <tr><th>ধরন</th><th>অর্থ</th><th>উদাহরণ</th></tr>
+      <tr><td>সংযোজন</td><td>দুই বা বেশি পদার্থ যুক্ত হয়ে একটিমাত্র উৎপাদ</td><td>2FeCl<sub>2</sub> + Cl<sub>2</sub> &rarr; 2FeCl<sub>3</sub>; N<sub>2</sub> + 3H<sub>2</sub> &rarr; 2NH<sub>3</sub></td></tr>
+      <tr><td>বিয়োজন</td><td>একটি যৌগ ভেঙে একাধিক যৌগ বা মৌল</td><td>PCl<sub>5</sub> &rarr;(তাপ) PCl<sub>3</sub> + Cl<sub>2</sub>; 2H<sub>2</sub>O &rarr;(তড়িৎবিশ্লেষণ) 2H<sub>2</sub> + O<sub>2</sub></td></tr>
+      <tr><td>প্রতিস্থাপন</td><td>অধিক সক্রিয় মৌল কম সক্রিয় মৌলকে সরিয়ে নতুন যৌগ তৈরি করে</td><td>Zn + H<sub>2</sub>SO<sub>4</sub> &rarr; ZnSO<sub>4</sub> + H<sub>2</sub></td></tr>
+      <tr><td>দহন</td><td>বাতাসের অক্সিজেনে পুড়ে অক্সাইড তৈরি। সবসময় তাপ উৎপন্ন হয়</td><td>CH<sub>4</sub> + 2O<sub>2</sub> &rarr; CO<sub>2</sub> + 2H<sub>2</sub>O + তাপ; 2Mg + O<sub>2</sub> &rarr; 2MgO</td></tr>
+    </table>
+
+    <h3>নন-রেডক্স বিক্রিয়া ⭐⭐⭐</h3>
+    <ul>
+      <li><b>প্রশমন বিক্রিয়া:</b> এসিড + ক্ষার &rarr; লবণ + পানি। এর অন্য নাম এসিড-ক্ষার বিক্রিয়া। HCl + NaOH &rarr; NaCl + H<sub>2</sub>O</li>
+      <li>প্রশমন বিক্রিয়া সবসময় <b>তাপোৎপাদী</b>। তীব্র এসিড ও ক্ষারে ΔH = &minus;57.34 kJ।</li>
+      <li>আসল ঘটনা: <b>H<sup>+</sup> + OH<sup>&minus;</sup> &rarr; H<sub>2</sub>O + 57.34 kJ</b>। Na<sup>+</sup> ও Cl<sup>&minus;</sup> বিক্রিয়ায় অংশ নেয় না, এদের <b>দর্শক আয়ন</b> বলে।</li>
+      <li><b>প্রশমন তাপ:</b> ১ মোল পানি উৎপন্ন হতে যে পরিমাণ তাপ উৎপন্ন হয় (57.34 kJ)।</li>
+      <li><b>অধঃক্ষেপণ বিক্রিয়া:</b> দ্রবণীয় বিক্রিয়ক মিশে অদ্রবণীয় কঠিন উৎপাদ (অধঃক্ষেপ) তৈরি হয়ে পাত্রের তলায় জমে। সমীকরণে অধঃক্ষেপের পাশে নিচমুখী তীর (&darr;) দেওয়া হয়।<br>
+        NaCl + AgNO<sub>3</sub> &rarr; AgCl&darr; (সাদা) + NaNO<sub>3</sub><br>
+        Na<sub>2</sub>SO<sub>4</sub> + BaCl<sub>2</sub> &rarr; BaSO<sub>4</sub>&darr; + 2NaCl<br>
+        FeSO<sub>4</sub> + 2NaOH &rarr; Fe(OH)<sub>2</sub>&darr; (সবুজ) + Na<sub>2</sub>SO<sub>4</sub></li>
+    </ul>
+
+    <h3>৭.৩ বিশেষ ধরনের বিক্রিয়া</h3>
+    <ul>
+      <li><b>আর্দ্র বিশ্লেষণ:</b> পানি বিক্রিয়ক হিসেবে অন্য যৌগের সাথে বিক্রিয়া করে। SiCl<sub>4</sub> + 4H<sub>2</sub>O &rarr; Si(OH)<sub>4</sub> + 4HCl</li>
+      <li><b>পানিযোজন:</b> যৌগের সাথে পানি যুক্ত হয়। ZnSO<sub>4</sub> + 7H<sub>2</sub>O &rarr; ZnSO<sub>4</sub>&middot;7H<sub>2</sub>O। এতে ইলেকট্রনের আদান-প্রদান হয় না।</li>
+      <li><b>সমাণুকরণ:</b> দুটি যৌগের আণবিক সংকেত একই কিন্তু গাঠনিক সংকেত আলাদা (সমাণু)। একটি থেকে অন্যটি তৈরিই সমাণুকরণ। NH<sub>4</sub>CNO &rarr;(তাপ) H<sub>2</sub>N-CO-NH<sub>2</sub> (ইউরিয়া)</li>
+      <li><b>পলিমারকরণ:</b> প্রভাবক, উচ্চ চাপ ও তাপে অসংখ্য ছোট অণু (মনোমার) যুক্ত হয়ে বিশাল অণু (পলিমার) তৈরি। n CH<sub>2</sub>=CH<sub>2</sub> &rarr; (&minus;CH<sub>2</sub>&minus;CH<sub>2</sub>&minus;)<sub>n</sub> (পলিথিন)</li>
+    </ul>
+
+    <h3>৭.৪ বাস্তব জীবনের বিক্রিয়া ⭐⭐</h3>
+    <ul>
+      <li><b>লোহায় মরিচা:</b> বাতাসের অক্সিজেন ও জলীয় বাষ্পের সাথে বিক্রিয়ায় আর্দ্র ফেরিক অক্সাইড (Fe<sub>2</sub>O<sub>3</sub>&middot;nH<sub>2</sub>O) বা মরিচা তৈরি হয়।<br>2Fe + 1.5O<sub>2</sub> + 3H<sub>2</sub>O &rarr; 2Fe(OH)<sub>3</sub> &rarr; Fe<sub>2</sub>O<sub>3</sub>&middot;nH<sub>2</sub>O</li>
+      <li><b>Cu ও Al এর ক্ষয়রোধ:</b> এদের উপর CuO ও Al<sub>2</sub>O<sub>3</sub> এর পাতলা আস্তরণ পড়ে, যা ভেতরের ধাতুকে বাঁচায়।</li>
+      <li><b>পিঁপড়া/মৌমাছির কামড়:</b> এদের হুলে এসিড থাকে। ক্ষতস্থানে চুন (ক্ষার) লাগালে প্রশমন বিক্রিয়ায় জ্বালা কমে।</li>
+      <li><b>শ্বসন:</b> C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> + 6O<sub>2</sub> &rarr; 6CO<sub>2</sub> + 6H<sub>2</sub>O + শক্তি</li>
+      <li><b>অ্যান্টাসিড:</b> Mg(OH)<sub>2</sub> ও Al(OH)<sub>3</sub> পাকস্থলীর বাড়তি HCl কে প্রশমিত করে। 2HCl + Mg(OH)<sub>2</sub> &rarr; MgCl<sub>2</sub> + 2H<sub>2</sub>O</li>
+      <li><b>জ্বালানি:</b> প্রাকৃতিক গ্যাসের (মিথেন) দহন: CH<sub>4</sub> + 2O<sub>2</sub> &rarr; CO<sub>2</sub> + 2H<sub>2</sub>O + শক্তি</li>
+      <li><b>ক্ষতিকর বিক্রিয়া রোধ:</b> মরিচা ঠেকাতে লোহার উপর রং দেওয়া, ইলেকট্রোপ্লেটিং, জিংকের প্রলেপ (গ্যালভানাইজিং) বা টিনের প্রলেপ (টিন প্লেটিং)। সেলাইয়ের সুচ নারিকেল তেলে ডুবিয়ে রাখলে বাতাস ও জলীয় বাষ্প থেকে বাঁচে। বর্ষায় পিচ্ছিল আঙিনায় বালু (SiO<sub>2</sub>, অম্লধর্মী) দিলে ক্ষারকে প্রশমিত করে পিচ্ছিলতা কমে।</li>
+    </ul>
+
+    <h3>৭.৫ বিক্রিয়ার হার ও লা-শাতেলিয়ার নীতি ⭐⭐⭐</h3>
+    <ul>
+      <li><b>বিক্রিয়ার হার:</b> একক সময়ে যে পরিমাণ বিক্রিয়ক উৎপাদে পরিণত হয়। যেমন: NaCl এ AgNO<sub>3</sub> দিলে ১ সেকেন্ডের কম সময়ে AgCl জমে (হার বেশি), আর লোহায় মরিচা পড়তে অনেক দিন লাগে (হার কম)।</li>
+      <li>বইয়ের পরীক্ষায় Na<sub>2</sub>CO<sub>3</sub> এ ভিনেগার বা লেবুর রস দিলে গ্যাসের বুদবুদ ওঠে। <b>গরম পানিতে বুদবুদ বেশি</b>, অর্থাৎ বিক্রিয়ার হার বেশি।</li>
+      <li><b>সাম্যাবস্থা:</b> উভমুখী বিক্রিয়ায় সম্মুখবর্তী ও পশ্চাৎমুখী বিক্রিয়ার হার সমান হয়ে গেলে সাম্যাবস্থা। তখন বিক্রিয়ক ও উৎপাদের ঘনমাত্রা বদলায় না, কিন্তু বিক্রিয়া থেমে যায় না, দুই দিকেই চলতে থাকে।</li>
+      <li><b>লা-শাতেলিয়ার নীতি:</b> সাম্যাবস্থায় তাপ, চাপ বা ঘনমাত্রা বদলালে সাম্য এমন দিকে সরে যায় যাতে ওই পরিবর্তনের ফল কমে যায় (প্রশমিত হয়)।</li>
+    </ul>
+    <table class="t">
+      <tr><th>কী বদলালে</th><th>সাম্য কোন দিকে সরে (N<sub>2</sub> + 3H<sub>2</sub> &#8652; 2NH<sub>3</sub> + 92 kJ)</th></tr>
+      <tr><td>তাপ বাড়ালে</td><td>বামে (তাপহারী দিকে, NH<sub>3</sub> ভাঙে)</td></tr>
+      <tr><td>তাপ কমালে</td><td>ডানে (তাপোৎপাদী দিকে, NH<sub>3</sub> বাড়ে)</td></tr>
+      <tr><td>চাপ বাড়ালে</td><td>ডানে (গ্যাসীয় মোল কম দিকে: ১+৩ = ৪ থেকে ২)</td></tr>
+      <tr><td>চাপ কমালে</td><td>বামে (মোল বেশি দিকে)</td></tr>
+      <tr><td>বিক্রিয়ক বাড়ালে</td><td>ডানে (উৎপাদ বাড়ে)</td></tr>
+      <tr><td>উৎপাদ বাড়ালে</td><td>বামে (বিক্রিয়ক বাড়ে)</td></tr>
+    </table>
+    <div class="key">N<sub>2</sub> + O<sub>2</sub> &#8652; 2NO তে বিক্রিয়কের মোল ১+১ = ২, উৎপাদের মোলও ২। মোল সংখ্যা বদলায় না, তাই এই সাম্যাবস্থায় <b>চাপের কোনো প্রভাব নেই</b>। আবার এটা তাপহারী, তাই তাপ বাড়ালে সাম্য ডানে সরে।</div>
+    <div class="star">⭐ <b>পরীক্ষার জন্য গুরুত্বপূর্ণ:</b> বিক্রিয়ার ধরন চেনা, জারণ সংখ্যা নির্ণয়, জারণ-বিজারণের সংজ্ঞা ও জারক-বিজারক চেনা, প্রশমন ও অধঃক্ষেপণ, প্রশমন তাপ, বাস্তব জীবনের উদাহরণ, লা-শাতেলিয়ার নীতি।</div>
+  </section>
+
+  <!-- ================= ল্যাব ১ ================= -->
+  <section class="panel" id="lab1">
+    <h2>🧭 ল্যাব ১: বিক্রিয়ার ধরন চেনো</h2>
+    <p>একটা বিক্রিয়া বেছে নাও। দিক, তাপ আর ইলেকট্রন স্থানান্তর, এই প্রশ্নগুলোর উত্তর দাও। তারপর "বিক্রিয়া ঘটাও" চাপলে বিক্রিয়াটা চোখের সামনে ঘটবে: তাপ ছড়াবে, ইলেকট্রন লাফাবে, অধঃক্ষেপ নিচে জমবে।</p>
+    <div class="rxlist" id="rxlist"></div>
+    <div class="rxstage" id="rxstage">
+      <div class="rxrow" id="rxreac"></div>
+      <div class="rxarr" id="rxarr">?</div>
+      <div class="rxrow rxprod" id="rxprod"></div>
+      <div class="edot" id="edot"></div>
+    </div>
+    <div id="rxq"></div>
+    <div class="btnrow"><button class="btn" id="rxgo" disabled>▶ বিক্রিয়া ঘটাও</button></div>
+    <div class="eqb" id="rxfull" style="display:none"></div>
+    <div class="say" id="rxsay" style="min-height:0;display:none"></div>
+  </section>
+
+  <!-- ================= ল্যাব ২ ================= -->
+  <section class="panel" id="lab2">
+    <h2>⚡ ল্যাব ২: ইলেকট্রন স্থানান্তর ও জারণ সংখ্যা</h2>
+
+    <h3>ক) ইলেকট্রন কীভাবে স্থানান্তরিত হয়: Na + &frac12;Cl<sub>2</sub> &rarr; NaCl</h3>
+    <div style="text-align:center">
+      <svg id="atoms" class="atoms" viewBox="0 0 560 270">
+        <text x="140" y="26" text-anchor="middle" font-size="14" font-weight="700" fill="#1f3a5f">সোডিয়াম পরমাণু</text>
+        <text x="420" y="26" text-anchor="middle" font-size="14" font-weight="700" fill="#1f3a5f">ক্লোরিন পরমাণু</text>
+        <circle cx="140" cy="140" r="58" fill="none" stroke="#b9c3cc" stroke-dasharray="4 4" id="nring"/>
+        <circle cx="140" cy="140" r="34" fill="#e8eef4" stroke="#1f3a5f" stroke-width="2.5"/>
+        <text id="nsym" x="140" y="146" text-anchor="middle" font-size="20" font-weight="700" fill="#1f3a5f" font-family="Arial">Na</text>
+        <circle cx="420" cy="140" r="58" fill="none" stroke="#b9c3cc" stroke-dasharray="4 4"/>
+        <circle cx="420" cy="140" r="34" fill="#e8eef4" stroke="#1f3a5f" stroke-width="2.5"/>
+        <text id="csym" x="420" y="146" text-anchor="middle" font-size="20" font-weight="700" fill="#1f3a5f" font-family="Arial">Cl</text>
+        <circle id="slot" cx="362" cy="140" r="6" fill="none" stroke="#e63946" stroke-dasharray="2 2"/>
+        <g id="clel"></g>
+        <circle id="nel" cx="198" cy="140" r="6" fill="#e63946"/>
+        <text id="nox" x="140" y="224" text-anchor="middle" font-size="14" fill="#44505c" font-family="Arial">জারণ সংখ্যা: ০</text>
+        <text id="cox" x="420" y="224" text-anchor="middle" font-size="14" fill="#44505c" font-family="Arial">জারণ সংখ্যা: ০</text>
+        <text id="nlbl" x="140" y="244" text-anchor="middle" font-size="13" font-weight="700" fill="#e76f51"></text>
+        <text id="clbl" x="420" y="244" text-anchor="middle" font-size="13" font-weight="700" fill="#2b6cb0"></text>
+      </svg>
+    </div>
+    <div class="btnrow" style="justify-content:center"><button class="btn" id="etrans">▶ ইলেকট্রন স্থানান্তর করো</button><button class="btn alt" id="ereset">↺ আবার</button></div>
+    <div class="say" id="esay" style="min-height:0">লাল ইলেকট্রনটা Na-এর বাইরের স্তরে একা আছে। বাটন চাপলে সেটা Cl-এর খালি জায়গায় যাবে।</div>
+    <div class="eqb" id="halfeq" style="display:none"></div>
+
+    <div class="lab2g">
+      <div>
+        <h3>খ) এটা জারণ নাকি বিজারণ?</h3>
+        <div class="half" id="hq"></div>
+        <div class="coin"><button class="btn" id="hox">জারণ</button><button class="btn" id="hred">বিজারণ</button><button class="btn alt" id="hnext">পরেরটা</button></div>
+        <div class="fb" id="hfb"></div>
+      </div>
+      <div>
+        <h3>গ) জারণ সংখ্যা ক্যালকুলেটর</h3>
+        <div class="coin" id="cchips"></div>
+        <div class="calc half" id="cfor" style="font-size:20px"></div>
+        <div class="guess" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0">
+          <span id="cq"></span> = <input class="num" id="cin" type="number" step="1" placeholder="যেমন +5">
+          <button class="btn" id="cchk">মেলাও</button>
+        </div>
+        <div class="fb" id="cfb"></div>
+        <button class="btn alt" id="cshow">▶ ধাপে ধাপে দেখাও</button>
+        <ol class="steps" id="csteps"></ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel soon">
+    🔜 <b>শীঘ্রই আসছে:</b> ল্যাব ৩ (অধঃক্ষেপণ ও প্রশমন), ল্যাব ৪ (বিক্রিয়ার হার), ল্যাব ৫ (লা-শাতেলিয়ার নীতি), ল্যাব ৬ (মরিচা ও সুরক্ষা)।
+  </section>
+
+  <!-- ================= কুইজ ================= -->
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <!-- ================= প্রশ্ন-উত্তর ================= -->
+  <section class="panel" id="qa">
+    <h2>📖 প্রশ্ন-উত্তর</h2>
+    <h3>সংক্ষিপ্ত প্রশ্ন (জ্ঞানমূলক ও অনুধাবনমূলক)</h3>
+    <details><summary>১. ভৌত পরিবর্তন কী? (জ্ঞানমূলক)</summary><p>যে পরিবর্তনে পদার্থের শুধু বাইরের অবস্থা বদলায় কিন্তু ভেতরের রাসায়নিক গঠন বদলায় না, তাকে ভৌত পরিবর্তন বলে। যেমন: বরফ গলে পানি হওয়া।</p></details>
+    <details><summary>২. রাসায়নিক পরিবর্তন কী? (জ্ঞানমূলক)</summary><p>যে পরিবর্তনে সম্পূর্ণ আলাদা ধর্মের নতুন পদার্থ তৈরি হয়, তাকে রাসায়নিক পরিবর্তন বা রাসায়নিক বিক্রিয়া বলে। যেমন: মিথেন পোড়ানো।</p></details>
+    <details><summary>৩. একমুখী বিক্রিয়া কাকে বলে? (জ্ঞানমূলক)</summary><p>যে বিক্রিয়ায় বিক্রিয়ক পদার্থ উৎপাদে পরিণত হয়, কিন্তু উৎপাদ আবার বিক্রিয়কে পরিণত হয় না, তাকে একমুখী বিক্রিয়া বলে। এর সমীকরণে একটি ডানমুখী তীর (&rarr;) ব্যবহার করা হয়।</p></details>
+    <details><summary>৪. উভমুখী বিক্রিয়া বলতে কী বোঝ? (অনুধাবনমূলক)</summary><p>যে বিক্রিয়ায় বিক্রিয়ক বিক্রিয়া করে উৎপাদ তৈরি করে, আবার সেই উৎপাদ বিক্রিয়া করে বিক্রিয়ক ফিরিয়ে দেয়, তাকে উভমুখী বিক্রিয়া বলে। এতে দুটি বিপরীতমুখী তীর (&#8652;) ব্যবহার করা হয়। যেমন: H<sub>2</sub> + I<sub>2</sub> &#8652; 2HI।</p></details>
+    <details><summary>৫. তাপোৎপাদী বিক্রিয়া কাকে বলে? (জ্ঞানমূলক)</summary><p>যে রাসায়নিক বিক্রিয়ায় তাপ উৎপন্ন হয়, তাকে তাপোৎপাদী বিক্রিয়া বলে। এতে ΔH এর মান ঋণাত্মক হয়। যেমন: N<sub>2</sub> + 3H<sub>2</sub> &#8652; 2NH<sub>3</sub>; ΔH = &minus;92 kJ।</p></details>
+    <details><summary>৬. জারণ সংখ্যা কী? (জ্ঞানমূলক)</summary><p>অণু বা যৌগমূলকের মধ্যে থাকা কোনো পরমাণুর ইলেকট্রন ছাড়ার বা গ্রহণ করার প্রবণতা যে ধনাত্মক বা ঋণাত্মক চিহ্নযুক্ত সংখ্যা দিয়ে প্রকাশ করা হয়, তাকে ওই পরমাণুর জারণ সংখ্যা বলে।</p></details>
+    <details><summary>৭. জারণ-বিজারণকে যুগপৎ ক্রিয়া বলা হয় কেন? (অনুধাবনমূলক)</summary><p>জারণে ইলেকট্রন ত্যাগ হয়, বিজারণে সেই ইলেকট্রন গ্রহণ হয়। একটি পদার্থ ইলেকট্রন ত্যাগ করলে অন্য পদার্থ না নিলে ত্যাগ সম্ভব নয়। তাই যেখানে জারণ ঘটে, ঠিক সেই সময় সেখানে বিজারণও ঘটে। এজন্য একে যুগপৎ ক্রিয়া বলে।</p></details>
+    <details><summary>৮. প্রশমন বিক্রিয়া কী? (জ্ঞানমূলক)</summary><p>এসিড ও ক্ষার পরস্পরের সাথে বিক্রিয়া করে প্রশমিত হয়ে লবণ ও পানি উৎপন্ন করলে তাকে প্রশমন বিক্রিয়া বলে। যেমন: HCl + NaOH &rarr; NaCl + H<sub>2</sub>O।</p></details>
+    <details><summary>৯. প্রশমন তাপ কী? (জ্ঞানমূলক)</summary><p>১ মোল পানি উৎপন্ন করতে যে পরিমাণ তাপ উৎপন্ন হয়, তাকে প্রশমন তাপ বলে। এর মান 57.34 kJ।</p></details>
+    <details><summary>১০. দর্শক আয়ন কী? (অনুধাবনমূলক)</summary><p>HCl ও NaOH এর বিক্রিয়ায় Na<sup>+</sup> ও Cl<sup>&minus;</sup> আয়ন দ্রবণে থাকে কিন্তু বিক্রিয়ায় অংশ নেয় না। এদের দর্শক আয়ন বলে। আসল বিক্রিয়া হলো H<sup>+</sup> + OH<sup>&minus;</sup> &rarr; H<sub>2</sub>O।</p></details>
+    <details><summary>১১. অধঃক্ষেপণ বিক্রিয়া কাকে বলে? (জ্ঞানমূলক)</summary><p>যে বিক্রিয়ায় দ্রবণীয় বিক্রিয়ক বিক্রিয়া করে অদ্রবণীয় কঠিন উৎপাদে পরিণত হয়, তাকে অধঃক্ষেপণ বিক্রিয়া বলে। কঠিন উৎপাদটি অধঃক্ষেপ হিসেবে পাত্রের তলায় জমে। যেমন: NaCl + AgNO<sub>3</sub> &rarr; AgCl&darr; + NaNO<sub>3</sub>।</p></details>
+    <details><summary>১২. মৌমাছির কামড়ে ক্ষতস্থানে চুন লাগানো হয় কেন? (অনুধাবনমূলক)</summary><p>মৌমাছির হুলে এক ধরনের এসিড থাকে, যা জ্বালা-যন্ত্রণা সৃষ্টি করে। চুন একটি ক্ষার। চুন লাগালে এসিডের সাথে বিক্রিয়ায় (প্রশমন) এসিড প্রশমিত হয়ে যায় এবং জ্বালা বন্ধ হয়।</p></details>
+    <details><summary>১৩. রাসায়নিক সাম্যাবস্থা বলতে কী বোঝায়? (জ্ঞানমূলক)</summary><p>উভমুখী বিক্রিয়ায় যখন সম্মুখবর্তী বিক্রিয়ার হার এবং পশ্চাৎমুখী বিক্রিয়ার হার সমান হয়ে যায়, সেই অবস্থাকে রাসায়নিক সাম্যাবস্থা বলে। তখন বিক্রিয়ক ও উৎপাদের ঘনমাত্রা অপরিবর্তিত থাকে।</p></details>
+    <details><summary>১৪. লা-শাতেলিয়ার নীতিটি লেখো। (জ্ঞানমূলক)</summary><p>কোনো বিক্রিয়ার সাম্যাবস্থায় তাপ, চাপ, ঘনমাত্রা ইত্যাদি পরিবর্তন করলে সাম্যের অবস্থান এমনভাবে বদলায় যেন ওই পরিবর্তনের ফল প্রশমিত হয়।</p></details>
+    <details><summary>১৫. বিক্রিয়ার হার কী? (জ্ঞানমূলক)</summary><p>একক সময়ে যে পরিমাণ বিক্রিয়ক উৎপাদে পরিণত হয়, তাকে বিক্রিয়ার হার বলে।</p></details>
+
+    <h3>সৃজনশীল প্রশ্ন (উত্তরসহ)</h3>
+    <details><summary>সৃজনশীল ১: অপু ও সেতুর রান্নার গ্যাস</summary>
+      <p><b>উদ্দীপক:</b> অপু ও সেতু দুজনের বাসায় রান্নায় প্রাকৃতিক গ্যাস ব্যবহার হয়। অপুর বাসায় পাত্রের নিচে কালো দাগ পড়লেও সেতুর বাসায় পাত্রের নিচে কোনো দাগ নেই।</p>
+      <p><b>(ক) একমুখী বিক্রিয়া কাকে বলে? (জ্ঞান)</b><br>যে বিক্রিয়ায় বিক্রিয়ক উৎপাদে পরিণত হয় কিন্তু উৎপাদ আবার বিক্রিয়কে পরিণত হয় না, তাকে একমুখী বিক্রিয়া বলে।</p>
+      <p><b>(খ) রাসায়নিক সাম্যাবস্থা বলতে কী বোঝায়? (অনুধাবন)</b><br>উভমুখী বিক্রিয়ায় সম্মুখবর্তী ও পশ্চাৎমুখী বিক্রিয়ার হার সমান হয়ে গেলে সেই অবস্থাকে রাসায়নিক সাম্যাবস্থা বলে। এই অবস্থায় বিক্রিয়ক ও উৎপাদের ঘনমাত্রা বদলায় না।</p>
+      <p><b>(গ) রান্নার সময় তাদের বাসায় সম্পন্ন বিক্রিয়াটি কোন ধরনের? ব্যাখ্যা করো। (প্রয়োগ)</b><br>প্রাকৃতিক গ্যাসের মূল উপাদান মিথেন (CH<sub>4</sub>)। রান্নার সময় মিথেন বাতাসের অক্সিজেনের সাথে পুড়ে কার্বন ডাই-অক্সাইড ও পানি উৎপন্ন করে এবং তাপ দেয়: CH<sub>4</sub> + 2O<sub>2</sub> &rarr; CO<sub>2</sub> + 2H<sub>2</sub>O + তাপ। এটি একটি <b>দহন বিক্রিয়া</b>। এতে অক্সিজেন ইলেকট্রন গ্রহণ করে আর অন্য মৌল ইলেকট্রন ত্যাগ করে, তাই এটি জারণ-বিজারণ (রেডক্স) বিক্রিয়ার অন্তর্ভুক্ত।</p>
+      <p><b>(ঘ) কোন বাসায় গ্যাসের অপচয় হচ্ছে? যুক্তি দাও। (উচ্চতর দক্ষতা)</b><br>অপুর বাসায়। পাত্রের নিচে কালো দাগ মানে গ্যাস পুরোপুরি পোড়ে না। পর্যাপ্ত অক্সিজেন না পেলে অসম্পূর্ণ দহনে কার্বনের কালো কণা (কালি) তৈরি হয়। ফলে গ্যাস থেকে পুরো তাপ পাওয়া যায় না এবং গ্যাসের অপচয় হয়। সেতুর বাসায় সম্পূর্ণ দহন হচ্ছে, তাই দাগ নেই। <small>(অসম্পূর্ণ দহনের ধারণাটি তুমি যে পাতাগুলো দিয়েছো সেখানে আলাদা করে নেই, এটা সাধারণ ধারণা। শিক্ষকের সাথে মিলিয়ে নিও।)</small></p>
+    </details>
+    <details><summary>সৃজনশীল ২: Pb(NO<sub>3</sub>)<sub>2</sub> + 2KI</summary>
+      <p><b>উদ্দীপক:</b> Pb(NO<sub>3</sub>)<sub>2</sub> + 2KI &rarr; (বিক্রিয়া)। চারটি পাত্রে ০.২ M Pb(NO<sub>3</sub>)<sub>2</sub> এর আয়তন ১, ২, ৩, ৪ mL এবং পানি যথাক্রমে ৪, ৩, ২, ১ mL। প্রতিটিতে ০.৫ M KI এর ১ mL। প্রতি পাত্রের মোট আয়তন ৬ mL। অধঃক্ষেপ হলুদ। [K = 39, I = 127]</p>
+      <p><b>(ক) তাপোৎপাদী বিক্রিয়া কাকে বলে? (জ্ঞান)</b><br>যে রাসায়নিক বিক্রিয়ায় তাপ উৎপন্ন হয়, তাকে তাপোৎপাদী বিক্রিয়া বলে।</p>
+      <p><b>(খ) যোজনী ও জারণ সংখ্যা এক নয় কেন? ব্যাখ্যা করো। (অনুধাবন)</b><br>যোজনী হলো কোনো মৌলের অন্য পরমাণুর সাথে যুক্ত হওয়ার ক্ষমতা। এটা একটি সংখ্যা মাত্র, কোনো চিহ্ন নেই এবং ভগ্নাংশ হয় না। জারণ সংখ্যা হলো ইলেকট্রন ছাড়ার বা নেওয়ার প্রবণতা, এর সাথে ধনাত্মক বা ঋণাত্মক চিহ্ন থাকে, আর এটি শূন্য বা ভগ্নাংশও হতে পারে (যেমন সুপার-অক্সাইডে O এর জারণ সংখ্যা &minus;&frac12;)। উদাহরণ: H<sub>2</sub>O<sub>2</sub> এ অক্সিজেনের যোজনী ২, কিন্তু জারণ সংখ্যা &minus;১।</p>
+      <p><b>(গ) সারণিতে ব্যবহৃত মোট KI এর পরিমাণ কত গ্রাম? (প্রয়োগ)</b><br>KI এর আয়তন ৪ mL = ০.০০৪ L, ঘনমাত্রা ০.৫ M।<br>মোল = ০.৫ &times; ০.০০৪ = ০.০০২ মোল।<br>KI এর মোলার ভর = ৩৯ + ১২৭ = ১৬৬ g/mol।<br>ভর = ০.০০২ &times; ১৬৬ = <b>০.৩৩২ গ্রাম</b>।</p>
+      <p><b>(ঘ) কোন পাত্রের দ্রবণটি অধিক হলুদ হবে? যুক্তিসহ ব্যাখ্যা করো। (উচ্চতর দক্ষতা)</b><br>বিক্রিয়া: Pb(NO<sub>3</sub>)<sub>2</sub> + 2KI &rarr; PbI<sub>2</sub>&darr; (হলুদ) + 2KNO<sub>3</sub>। ১ মোল PbI<sub>2</sub> তৈরিতে ২ মোল KI লাগে।<br>প্রতি পাত্রে KI = ০.৫ &times; ১ = ০.৫ মিলিমোল।<br>১ম পাত্রে Pb(NO<sub>3</sub>)<sub>2</sub> = ০.২ &times; ১ = ০.২ মিলিমোল (এটাই সীমিত), তাই PbI<sub>2</sub> = ০.২ মিলিমোল।<br>২য়, ৩য়, ৪র্থ পাত্রে Pb(NO<sub>3</sub>)<sub>2</sub> = ০.৪, ০.৬, ০.৮ মিলিমোল, যা বেশি। কিন্তু KI মাত্র ০.৫ মিলিমোল, তাই KI সীমিত। এখানে PbI<sub>2</sub> = ০.৫ &divide; ২ = ০.২৫ মিলিমোল, তিন পাত্রেই সমান।<br>মোট আয়তন সব পাত্রে সমান (৬ mL)। অতএব ২য়, ৩য় ও ৪র্থ পাত্রের দ্রবণ সমান হলুদ, এবং ১ম পাত্রের চেয়ে বেশি হলুদ।<br><small>(বইয়ের উত্তরমালায় ভিন্ন উত্তর থাকতে পারে, তাই শিক্ষকের সাথে মিলিয়ে নিও।)</small></p>
+    </details>
+    <details><summary>সৃজনশীল ৩: Na + &frac12;Cl<sub>2</sub> ও Zn + H<sub>2</sub>SO<sub>4</sub></summary>
+      <p><b>উদ্দীপক:</b> Na + &frac12;Cl<sub>2</sub> &rarr; NaCl এবং Zn + H<sub>2</sub>SO<sub>4</sub> &rarr; ZnSO<sub>4</sub> + H<sub>2</sub></p>
+      <p><b>(ক) সমাণুকরণ বিক্রিয়া কাকে বলে? (জ্ঞান)</b><br>দুটি যৌগের আণবিক সংকেত একই কিন্তু গাঠনিক সংকেত আলাদা হলে তাদের সমাণু বলে। একটি যৌগ থেকে তার সমাণু তৈরির প্রক্রিয়াকে সমাণুকরণ বিক্রিয়া বলে।</p>
+      <p><b>(খ) উভমুখী বিক্রিয়া বলতে কী বোঝ? (অনুধাবন)</b><br>যে বিক্রিয়ায় বিক্রিয়ক থেকে উৎপাদ তৈরি হয় এবং উৎপাদ আবার বিক্রিয়কে পরিণত হয়, তাকে উভমুখী বিক্রিয়া বলে। এর সমীকরণে &#8652; চিহ্ন দেওয়া হয়।</p>
+      <p><b>(গ) দ্বিতীয় বিক্রিয়ার উৎপাদ যৌগটিতে সালফারের জারণ সংখ্যা নির্ণয় করো। (প্রয়োগ)</b><br>উৎপাদ যৌগ ZnSO<sub>4</sub>। ধরি S এর জারণ সংখ্যা x। Zn এর জারণ সংখ্যা +২, O এর &minus;২। নিরপেক্ষ যৌগে যোগফল ০:<br>(+২) &times; ১ + x &times; ১ + (&minus;২) &times; ৪ = ০<br>বা ২ + x &minus; ৮ = ০, অর্থাৎ x = <b>+৬</b>।</p>
+      <p><b>(ঘ) উদ্দীপকের প্রথম বিক্রিয়ায় জারণ-বিজারণ যুগপৎ ঘটে, বিশ্লেষণ করো। (উচ্চতর দক্ষতা)</b><br>Na + &frac12;Cl<sub>2</sub> &rarr; NaCl এ Na তার বাইরের স্তরের ১টি ইলেকট্রন ত্যাগ করে Na<sup>+</sup> হয়। এটি জারণ অর্ধবিক্রিয়া: Na &rarr; Na<sup>+</sup> + e<sup>&minus;</sup> (জারণ সংখ্যা ০ থেকে +১)। Cl সেই ইলেকট্রনটি গ্রহণ করে Cl<sup>&minus;</sup> হয়। এটি বিজারণ অর্ধবিক্রিয়া: Cl + e<sup>&minus;</sup> &rarr; Cl<sup>&minus;</sup> (জারণ সংখ্যা ০ থেকে &minus;১)। Cl ইলেকট্রন গ্রহণ না করলে Na ইলেকট্রন ত্যাগ করতে পারত না। অর্থাৎ জারণ ঘটলে সাথে সাথে বিজারণ ঘটে। তাই এই বিক্রিয়ায় জারণ-বিজারণ যুগপৎ ঘটে।</p>
+    </details>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab</footer>
+
+<script>
+var BN='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function $(id){return document.getElementById(id);}
+
+/* =============== ল্যাব ১: বিক্রিয়ার ধরন =============== */
+var GEN_ONE='বইয়ে এই বিক্রিয়াটি একমুখী তীর (&rarr;) দিয়ে দেখানো হয়েছে। উৎপাদ আবার বিক্রিয়ক হয়ে ফিরে আসে না।';
+var RX=[
+ {n:'CH₄ দহন',r:['CH₄','2O₂'],p:['CO₂','2H₂O'],full:'CH<sub>4</sub> + 2O<sub>2</sub> &rarr; CO<sub>2</sub> + 2H<sub>2</sub>O + তাপ',dir:'one',heat:'exo',redox:true,type:'দহন বিক্রিয়া (রেডক্স)',e:[0,1],ppt:-1,
+  wDir:'উৎপাদ CO₂ ও H₂O আবার CH₄ ও O₂ হয়ে ফিরে আসে না, তাই একমুখী।',wHeat:'দহন বিক্রিয়ায় সবসময় তাপ উৎপন্ন হয়, তাই এটি তাপোৎপাদী।',wRedox:'C এর জারণ সংখ্যা −৪ থেকে +৪ (জারণ), O এর ০ থেকে −২ (বিজারণ)। জারণ সংখ্যা বদলেছে, তাই রেডক্স।'},
+ {n:'HCl + NaOH',r:['HCl','NaOH'],p:['NaCl','H₂O'],full:'HCl + NaOH &rarr; NaCl + H<sub>2</sub>O + তাপ (ΔH = &minus;57.34 kJ)',dir:'one',heat:'exo',redox:false,type:'প্রশমন বিক্রিয়া (নন-রেডক্স)',e:null,ppt:-1,
+  wDir:GEN_ONE,wHeat:'প্রশমন বিক্রিয়া সবসময় তাপোৎপাদী। তীব্র এসিড ও ক্ষারের ক্ষেত্রে ΔH = −৫৭.৩৪ kJ (ঋণাত্মক)।',wRedox:'H +১, Cl −১, Na +১, O −২। বিক্রিয়ার আগে ও পরে কারো জারণ সংখ্যা বদলায়নি, তাই নন-রেডক্স।'},
+ {n:'NaCl + AgNO₃',r:['NaCl','AgNO₃'],p:['AgCl ↓','NaNO₃'],full:'NaCl + AgNO<sub>3</sub> &rarr; AgCl&darr; + NaNO<sub>3</sub>',dir:'one',heat:null,redox:false,type:'অধঃক্ষেপণ বিক্রিয়া (নন-রেডক্স)',e:null,ppt:0,
+  wDir:'AgCl অদ্রবণীয়, কঠিন হয়ে তলায় জমে যায়। বইয়ে একমুখী তীর (→) আছে।',wRedox:'Na +১, Cl −১, Ag +১, N +৫, O −২। কারো জারণ সংখ্যা বদলায়নি, তাই নন-রেডক্স।'},
+ {n:'Zn + H₂SO₄',r:['Zn','H₂SO₄'],p:['ZnSO₄','H₂ ↑'],full:'Zn + H<sub>2</sub>SO<sub>4</sub> &rarr; ZnSO<sub>4</sub> + H<sub>2</sub>',dir:'one',heat:null,redox:true,type:'প্রতিস্থাপন বিক্রিয়া (রেডক্স)',e:[0,1],ppt:-1,
+  wDir:GEN_ONE,wRedox:'Zn এর জারণ সংখ্যা ০ থেকে +২ (জারণ), H এর +১ থেকে ০ (বিজারণ)। তাই রেডক্স।'},
+ {n:'N₂ + 3H₂ (হেবার)',r:['N₂','3H₂'],p:['2NH₃'],full:'N<sub>2</sub> + 3H<sub>2</sub> &#8652; 2NH<sub>3</sub> + 92 kJ (ΔH = &minus;92 kJ)',dir:'rev',heat:'exo',redox:true,type:'সংযোজন (সংশ্লেষণ) বিক্রিয়া (রেডক্স)',e:[1,0],ppt:-1,
+  wDir:'NH₃ ভেঙে আবার N₂ ও H₂ তৈরি হয়, তাই উভমুখী (⇌)।',wHeat:'বইয়ে ΔH = −৯২ kJ দেওয়া আছে। ঋণাত্মক মান মানে তাপ উৎপন্ন হয়, তাই তাপোৎপাদী।',wRedox:'N এর জারণ সংখ্যা ০ থেকে −৩, H এর ০ থেকে +১। জারণ সংখ্যা বদলেছে, তাই রেডক্স।'},
+ {n:'N₂ + O₂',r:['N₂','O₂'],p:['2NO'],full:'N<sub>2</sub> + O<sub>2</sub> + 180 kJ &#8652; 2NO (ΔH = +180 kJ)',dir:'rev',heat:'endo',redox:true,type:'সংযোজন বিক্রিয়া (রেডক্স)',e:[0,1],ppt:-1,
+  wDir:'NO ভেঙে আবার N₂ ও O₂ হতে পারে। বইয়ে ⇌ দেখানো হয়েছে, তাই উভমুখী।',wHeat:'বিক্রিয়ায় ১৮০ kJ তাপ শোষিত হয় (ΔH = +১৮০ kJ), তাই তাপহারী।',wRedox:'N এর জারণ সংখ্যা ০ থেকে +২, O এর ০ থেকে −২। তাই রেডক্স।'},
+ {n:'2FeCl₂ + Cl₂',r:['2FeCl₂','Cl₂'],p:['2FeCl₃'],full:'2FeCl<sub>2</sub> + Cl<sub>2</sub> &rarr; 2FeCl<sub>3</sub>',dir:'one',heat:null,redox:true,type:'সংযোজন বিক্রিয়া (রেডক্স)',e:[0,1],ppt:-1,
+  wDir:GEN_ONE,wRedox:'Fe এর জারণ সংখ্যা +২ থেকে +৩ (জারণ), Cl এর ০ থেকে −১ (বিজারণ)। তাই রেডক্স।'},
+ {n:'Na + ½Cl₂',r:['Na','½Cl₂'],p:['NaCl'],full:'Na + &frac12;Cl<sub>2</sub> &rarr; NaCl',dir:'one',heat:null,redox:true,type:'সংযোজন বিক্রিয়া (রেডক্স)',e:[0,1],ppt:-1,
+  wDir:GEN_ONE,wRedox:'Na এর জারণ সংখ্যা ০ থেকে +১ (জারণ), Cl এর ০ থেকে −১ (বিজারণ)। তাই রেডক্স।'},
+ {n:'পানির তড়িৎবিশ্লেষণ',r:['2H₂O'],p:['2H₂','O₂'],full:'2H<sub>2</sub>O &rarr; 2H<sub>2</sub> + O<sub>2</sub> (তড়িৎবিশ্লেষণে)',dir:'one',heat:null,redox:true,type:'বিয়োজন বিক্রিয়া (রেডক্স)',e:null,ppt:-1,
+  wDir:GEN_ONE,wRedox:'H এর জারণ সংখ্যা +১ থেকে ০ (বিজারণ), O এর −২ থেকে ০ (জারণ)। তাই রেডক্স।'},
+ {n:'Na₂SO₄ + BaCl₂',r:['Na₂SO₄','BaCl₂'],p:['BaSO₄ ↓','2NaCl'],full:'Na<sub>2</sub>SO<sub>4</sub> + BaCl<sub>2</sub> &rarr; BaSO<sub>4</sub>&darr; + 2NaCl',dir:'one',heat:null,redox:false,type:'অধঃক্ষেপণ বিক্রিয়া (নন-রেডক্স)',e:null,ppt:0,
+  wDir:'BaSO₄ অদ্রবণীয়, অধঃক্ষেপ হয়ে জমে যায়। বইয়ে একমুখী তীর (→) আছে।',wRedox:'Na +১, S +৬, O −২, Ba +২, Cl −১। কারো জারণ সংখ্যা বদলায়নি, তাই নন-রেডক্স।'},
+ {n:'PCl₅ (তাপে)',r:['PCl₅'],p:['PCl₃','Cl₂'],full:'PCl<sub>5</sub> &rarr; PCl<sub>3</sub> + Cl<sub>2</sub> (তাপে)',dir:'one',heat:null,redox:true,type:'বিয়োজন বিক্রিয়া (রেডক্স)',e:null,ppt:-1,
+  wDir:GEN_ONE,wRedox:'P এর জারণ সংখ্যা +৫ থেকে +৩ (বিজারণ), Cl এর −১ থেকে ০ (জারণ)। তাই রেডক্স।'}
+];
+var curRX=null, ansCount=0, needQ=0, rightFirst=0;
+function buildList(){
+  var box=$('rxlist');
+  RX.forEach(function(R,i){ var b=document.createElement('button'); b.className='btn alt'; b.textContent=R.n; b.onclick=function(){ pickRX(i); }; box.appendChild(b); });
+}
+function renderEq(R, arrowTxt){
+  var rr=$('rxreac'); rr.innerHTML='';
+  R.r.forEach(function(t,k){ var s=document.createElement('span'); s.className='tok'; s.id='rt'+k; s.textContent=t; rr.appendChild(s); if(k<R.r.length-1){ var pl=document.createElement('span'); pl.textContent='+'; pl.style.fontWeight='700'; rr.appendChild(pl); } });
+  var pp=$('rxprod'); pp.innerHTML=''; pp.classList.remove('show');
+  R.p.forEach(function(t,k){ var s=document.createElement('span'); s.className='tok p'; s.id='pt'+k; s.textContent=t; pp.appendChild(s); if(k<R.p.length-1){ var pl=document.createElement('span'); pl.textContent='+'; pl.style.fontWeight='700'; pp.appendChild(pl); } });
+  var ar=$('rxarr'); ar.className='rxarr'; ar.innerHTML=arrowTxt;
+}
+function pickRX(i){
+  var R=RX[i]; curRX=R; ansCount=0; rightFirst=0;
+  var st=$('rxstage'); st.className='rxstage'; $('edot').style.opacity=0;
+  renderEq(R,'?');
+  $('rxfull').style.display='none'; $('rxsay').style.display='none'; $('rxgo').disabled=true;
+  document.querySelectorAll('#rxlist button').forEach(function(b,k){ b.className='btn'+(k===i?'':' alt'); });
+  var Q=[{k:'dir',q:'১. দিক: এই বিক্রিয়াটি একমুখী নাকি উভমুখী?',o:[['one','একমুখী (→)'],['rev','উভমুখী (⇌)']],right:R.dir,why:R.wDir}];
+  if(R.heat) Q.push({k:'heat',q:'২. তাপ: এটি তাপোৎপাদী নাকি তাপহারী?',o:[['exo','তাপোৎপাদী'],['endo','তাপহারী']],right:R.heat,why:R.wHeat});
+  Q.push({k:'redox',q:(R.heat?'৩':'২')+'. ইলেকট্রন স্থানান্তর: রেডক্স নাকি নন-রেডক্স?',o:[['y','রেডক্স'],['n','নন-রেডক্স']],right:R.redox?'y':'n',why:R.wRedox});
+  needQ=Q.length;
+  var qb=$('rxq'); qb.innerHTML='';
+  Q.forEach(function(item,qi){
+    var d=document.createElement('div'); d.className='qcard';
+    var h='<p>'+item.q+'</p>';
+    item.o.forEach(function(op){ h+='<button class="opt" data-q="'+qi+'" data-v="'+op[0]+'">'+op[1]+'</button>'; });
+    h+='<div class="why" id="why'+qi+'"></div>';
+    d.innerHTML=h; qb.appendChild(d);
+    d.addEventListener('click',function(ev){
+      var b=ev.target.closest('.opt'); if(!b||d.getAttribute('data-done')) return;
+      d.setAttribute('data-done','1');
+      var ok=(b.getAttribute('data-v')===item.right);
+      d.querySelectorAll('.opt').forEach(function(x){ if(x.getAttribute('data-v')===item.right) x.classList.add('ok'); });
+      if(!ok) b.classList.add('no'); else rightFirst++;
+      var w=$('why'+qi); w.style.display='block'; w.innerHTML=(ok?'✅ ঠিক! ':'❌ সঠিক উত্তর আলাদা। ')+item.why;
+      ansCount++;
+      if(ansCount===needQ){ $('rxgo').disabled=false; }
+    });
+  });
+}
+$('rxgo').onclick=function(){
+  var R=curRX; if(!R) return; this.disabled=true;
+  var st=$('rxstage'); var reacs=document.querySelectorAll('#rxreac .tok'); reacs.forEach(function(t){ t.classList.add('pulse'); });
+  var delay=900;
+  if(R.e){
+    var a=$('rt'+R.e[0]).getBoundingClientRect(), b=$('rt'+R.e[1]).getBoundingClientRect(), s=st.getBoundingClientRect(), dot=$('edot');
+    dot.style.transition='none'; dot.style.transform='translate('+(a.left-s.left+a.width/2-7)+'px,'+(a.top-s.top+a.height/2-7)+'px)'; dot.style.opacity=1;
+    setTimeout(function(){ dot.style.transition='transform 1.1s ease-in-out,opacity .3s'; dot.style.transform='translate('+(b.left-s.left+b.width/2-7)+'px,'+(b.top-s.top+b.height/2-7)+'px)'; },60);
+    delay=1500;
+  }
+  setTimeout(function(){
+    reacs.forEach(function(t){ t.classList.remove('pulse'); t.classList.add('dim'); });
+    $('edot').style.opacity=0;
+    $('rxprod').classList.add('show');
+    var ar=$('rxarr'); ar.innerHTML=(R.dir==='rev')?'&#8652;':'&rarr;'; if(R.dir==='rev') ar.classList.add('flip');
+    if(R.heat==='exo') st.classList.add('exo'); if(R.heat==='endo') st.classList.add('endo');
+    if(R.ppt>=0) $('pt'+R.ppt).classList.add('ppt');
+    var f=$('rxfull'); f.style.display='block'; f.innerHTML=R.full;
+    var say=$('rxsay'); say.style.display='block';
+    var msg='<b>ধরন:</b> '+R.type+'। ';
+    msg+= (R.dir==='rev'?'উভমুখী':'একমুখী');
+    if(R.heat) msg+=', '+(R.heat==='exo'?'তাপোৎপাদী (তাপ ছড়াচ্ছে 🔥)':'তাপহারী (তাপ শোষিত হচ্ছে ❄️)');
+    msg+=', '+(R.redox?'রেডক্স (ইলেকট্রনের আদান-প্রদান ঘটেছে ⚡)':'নন-রেডক্স (ইলেকট্রনের আদান-প্রদান নেই)')+'।';
+    if(R.ppt>=0) msg+=' সাদা/কঠিন অধঃক্ষেপ নিচে জমছে।';
+    msg+='<br>প্রথমবারেই ঠিক উত্তর: <b>'+bn(rightFirst)+' / '+bn(needQ)+'</b>';
+    say.innerHTML=msg;
+  }, delay);
+};
+buildList(); pickRX(0);
+
+/* =============== ল্যাব ২ক: ইলেকট্রন স্থানান্তর =============== */
+var clEl=[];
+function drawCl(full){
+  var g=$('clel'); g.innerHTML=''; var NS='http://www.w3.org/2000/svg';
+  for(var k=0;k<8;k++){
+    if(k===4 && !full) continue;
+    var ang=k*Math.PI/4, c=document.createElementNS(NS,'circle');
+    c.setAttribute('cx',420+58*Math.cos(ang)); c.setAttribute('cy',140+58*Math.sin(ang)); c.setAttribute('r',6); c.setAttribute('fill','#2b6cb0'); g.appendChild(c);
+  }
+}
+var etRun=false;
+function resetE(){
+  etRun=false; drawCl(false);
+  $('nel').setAttribute('cx',198); $('nel').setAttribute('cy',140); $('nel').style.display=''; $('nring').style.display='';
+  $('slot').style.display=''; $('nsym').textContent='Na'; $('csym').textContent='Cl';
+  $('nox').textContent='জারণ সংখ্যা: ০'; $('cox').textContent='জারণ সংখ্যা: ০'; $('nlbl').textContent=''; $('clbl').textContent='';
+  $('esay').innerHTML='লাল ইলেকট্রনটা Na-এর বাইরের স্তরে একা আছে। বাটন চাপলে সেটা Cl-এর খালি জায়গায় যাবে।';
+  $('halfeq').style.display='none'; $('etrans').disabled=false;
+}
+$('etrans').onclick=function(){
+  if(etRun) return; etRun=true; this.disabled=true;
+  var t0=null, x0=198, x1=362;
+  function step(ts){
+    if(!t0) t0=ts; var k=Math.min(1,(ts-t0)/1800), e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    $('nel').setAttribute('cx',x0+(x1-x0)*e);
+    if(k<1) requestAnimationFrame(step); else done();
+  }
+  requestAnimationFrame(step);
+  function done(){
+    $('nel').style.display='none'; $('slot').style.display='none'; drawCl(true); $('nring').style.display='none';
+    $('nsym').innerHTML='Na'; $('csym').textContent='Cl';
+    $('nox').textContent='জারণ সংখ্যা: ০ → +১'; $('cox').textContent='জারণ সংখ্যা: ০ → −১';
+    $('nlbl').textContent='Na⁺ (জারিত, বিজারক)'; $('clbl').textContent='Cl⁻ (বিজারিত, জারক)';
+    $('esay').innerHTML='Na ইলেকট্রন <b>ত্যাগ</b> করলো, তাই Na <b>জারিত</b> হলো (জারণ সংখ্যা বাড়লো, সে <b>বিজারক</b>)। Cl ইলেকট্রন <b>গ্রহণ</b> করলো, তাই Cl <b>বিজারিত</b> হলো (জারণ সংখ্যা কমলো, সে <b>জারক</b>)। দুটো একসাথে ঘটলো, তাই এটা <b>জারণ-বিজারণ (রেডক্স)</b>।';
+    var h=$('halfeq'); h.style.display='block'; h.innerHTML='জারণ অর্ধবিক্রিয়া: Na &rarr; Na<sup>+</sup> + e<sup>&minus;</sup><br>বিজারণ অর্ধবিক্রিয়া: Cl + e<sup>&minus;</sup> &rarr; Cl<sup>&minus;</sup><br>মোট: Na + Cl &rarr; Na<sup>+</sup> + Cl<sup>&minus;</sup> &equiv; NaCl';
+    etRun=false;
+  }
+};
+$('ereset').onclick=resetE; resetE();
+
+/* =============== ল্যাব ২খ: জারণ নাকি বিজারণ =============== */
+var HALF=[
+ {h:'Na &rarr; Na<sup>+</sup> + e<sup>&minus;</sup>',a:'ox',w:'Na: ০ থেকে +১। ইলেকট্রন ত্যাগ, ধনাত্মক চার্জ বাড়লো, তাই জারণ।'},
+ {h:'Fe<sup>2+</sup> &rarr; Fe<sup>3+</sup> + e<sup>&minus;</sup>',a:'ox',w:'Fe: +২ থেকে +৩। ইলেকট্রন ত্যাগ, ধনাত্মক চার্জ বাড়লো, তাই জারণ।'},
+ {h:'Cl + e<sup>&minus;</sup> &rarr; Cl<sup>&minus;</sup>',a:'red',w:'Cl: ০ থেকে −১। ইলেকট্রন গ্রহণ, ঋণাত্মক চার্জ বাড়লো, তাই বিজারণ।'},
+ {h:'Cu<sup>2+</sup> + e<sup>&minus;</sup> &rarr; Cu<sup>+</sup>',a:'red',w:'Cu: +২ থেকে +১। ইলেকট্রন গ্রহণ, ধনাত্মক চার্জ কমলো, তাই বিজারণ।'},
+ {h:'Mg &rarr; Mg<sup>2+</sup> + 2e<sup>&minus;</sup>',a:'ox',w:'Mg: ০ থেকে +২। দুটি ইলেকট্রন ত্যাগ, তাই জারণ।'},
+ {h:'Fe<sup>3+</sup> + e<sup>&minus;</sup> &rarr; Fe<sup>2+</sup>',a:'red',w:'Fe: +৩ থেকে +২। ইলেকট্রন গ্রহণ, ধনাত্মক চার্জ কমলো, তাই বিজারণ।'},
+ {h:'O + 2e<sup>&minus;</sup> &rarr; O<sup>2&minus;</sup>',a:'red',w:'O: ০ থেকে −২। দুটি ইলেকট্রন গ্রহণ, তাই বিজারণ।'},
+ {h:'Al &rarr; Al<sup>3+</sup> + 3e<sup>&minus;</sup>',a:'ox',w:'Al: ০ থেকে +৩। তিনটি ইলেকট্রন ত্যাগ, তাই জারণ।'}
+];
+var hcur=0, hdone=false;
+function newHalf(){ var n; do{ n=Math.floor(Math.random()*HALF.length); }while(n===hcur&&HALF.length>1); hcur=n; hdone=false; $('hq').innerHTML=HALF[n].h; $('hfb').textContent=''; }
+function ansHalf(v){ if(hdone) return; hdone=true; var H=HALF[hcur], f=$('hfb'); if(v===H.a){ f.style.color='#1d7a6f'; f.textContent='✅ ঠিক! '+H.w; } else { f.style.color='#b23a22'; f.textContent='❌ ভুল। '+H.w; } }
+$('hox').onclick=function(){ ansHalf('ox'); }; $('hred').onclick=function(){ ansHalf('red'); }; $('hnext').onclick=newHalf; newHalf();
+
+/* =============== ল্যাব ২গ: জারণ সংখ্যা ক্যালকুলেটর =============== */
+var CALC=[
+ {f:'KMnO<sub>4</sub>',el:'Mn',n:1,charge:0,known:[['K',1,1,'ক্ষার ধাতু, +১'],['O',-2,4,'অক্সিজেন সাধারণত −২']]},
+ {f:'H<sub>2</sub>SO<sub>4</sub>',el:'S',n:1,charge:0,known:[['H',1,2,'হাইড্রোজেন সাধারণত +১'],['O',-2,4,'অক্সিজেন সাধারণত −২']]},
+ {f:'CaCO<sub>3</sub>',el:'C',n:1,charge:0,known:[['Ca',2,1,'মৃৎক্ষার ধাতু, +২'],['O',-2,3,'অক্সিজেন সাধারণত −২']]},
+ {f:'FeCl<sub>3</sub>',el:'Fe',n:1,charge:0,known:[['Cl',-1,3,'ধাতব হ্যালাইডে হ্যালোজেন −১']]},
+ {f:'HNO<sub>3</sub>',el:'N',n:1,charge:0,known:[['H',1,1,'হাইড্রোজেন সাধারণত +১'],['O',-2,3,'অক্সিজেন সাধারণত −২']]},
+ {f:'SO<sub>4</sub><sup>2&minus;</sup>',el:'S',n:1,charge:-2,known:[['O',-2,4,'অক্সিজেন সাধারণত −২']]},
+ {f:'NH<sub>4</sub><sup>+</sup>',el:'N',n:1,charge:1,known:[['H',1,4,'হাইড্রোজেন সাধারণত +১']]},
+ {f:'H<sub>2</sub>O<sub>2</sub>',el:'O',n:2,charge:0,known:[['H',1,2,'হাইড্রোজেন সাধারণত +১']],note:'এটি পার-অক্সাইড, তাই O এর জারণ সংখ্যা −১ হওয়ার কথা'}
+];
+var ccur=0;
+function sgn(v){ return (v>0?'+':(v<0?'−':''))+bn(Math.abs(v)); }
+function ansOf(C){ var s=0; C.known.forEach(function(k){ s+=k[1]*k[2]; }); return (C.charge-s)/C.n; }
+function pickCalc(i){
+  ccur=i; var C=CALC[i];
+  $('cfor').innerHTML=C.f+' &nbsp;&rarr;&nbsp; <b>'+C.el+'</b> এর জারণ সংখ্যা কত?';
+  $('cq').innerHTML=C.el+' এর জারণ সংখ্যা'; $('cin').value=''; $('cfb').textContent=''; $('csteps').innerHTML='';
+  document.querySelectorAll('#cchips button').forEach(function(b,k){ b.className='btn'+(k===i?'':' alt'); b.style.padding='5px 10px'; });
+}
+CALC.forEach(function(C,i){ var b=document.createElement('button'); b.className='btn alt'; b.style.padding='5px 10px'; b.innerHTML=C.f; b.onclick=function(){ pickCalc(i); }; $('cchips').appendChild(b); });
+$('cchk').onclick=function(){
+  var C=CALC[ccur], v=parseFloat($('cin').value), f=$('cfb');
+  if(isNaN(v)){ f.style.color='#5b6770'; f.textContent='আগে একটা সংখ্যা লেখো (যেমন +5 বা -2)।'; return; }
+  if(v===ansOf(C)){ f.style.color='#1d7a6f'; f.textContent='🎉 একদম ঠিক! '+C.el+' এর জারণ সংখ্যা '+sgn(ansOf(C))+'।'; }
+  else { f.style.color='#b23a22'; f.textContent='এখনো মেলেনি। "ধাপে ধাপে দেখাও" চেপে নিয়মটা দেখে নাও, তারপর আবার চেষ্টা করো।'; }
+};
+$('cshow').onclick=function(){
+  var C=CALC[ccur], ol=$('csteps'); ol.innerHTML='';
+  var terms=C.known.map(function(k){ return '('+sgn(k[1])+') × '+bn(k[2]); });
+  terms.push('x × '+bn(C.n));
+  var lhs=terms.join(' + ');
+  var rhs=(C.charge===0)?'০':sgn(C.charge);
+  var kn=C.known.reduce(function(a,k){ return a+k[1]*k[2]; },0);
+  var items=[
+    '<b>ধাপ ১:</b> ধরি, '+C.el+' এর জারণ সংখ্যা <b>x</b>।',
+    '<b>ধাপ ২:</b> জানা মান: '+C.known.map(function(k){ return k[0]+' = '+sgn(k[1])+' ('+k[3]+')'; }).join('; ')+'।'+(C.note?' ('+C.note+')':''),
+    '<b>ধাপ ৩:</b> সব জারণ সংখ্যা পরমাণু সংখ্যা দিয়ে গুণ করে যোগ করি। '+(C.charge===0?'যোগফল ০ (নিরপেক্ষ অণু):':'যোগফল = আয়নের চার্জ ('+sgn(C.charge)+'):')+'<br>'+lhs+' = '+rhs,
+    '<b>ধাপ ৪:</b> '+(C.n>1?bn(C.n)+'x ':'x ')+'= '+rhs+' − ('+sgn(kn)+') = '+sgn(C.charge-kn)+(C.n>1?'<br>অতএব x = '+sgn(ansOf(C))+'।':'<br>অতএব x = <b>'+sgn(ansOf(C))+'</b>।')
+  ];
+  items.forEach(function(h,i){ var li=document.createElement('li'); li.innerHTML=h; ol.appendChild(li); setTimeout(function(){ li.classList.add('show'); },200+i*800); });
+};
+pickCalc(0);
+
+/* =============== কুইজ =============== */
+var QUIZ=[
+ {q:'কোনটি রাসায়নিক পরিবর্তন?',o:['বরফ গলে পানি হওয়া','মিথেন গ্যাস পোড়ানো','পানি বাষ্প হওয়া','পানি জমে বরফ হওয়া'],a:1,e:'মিথেন পুড়ে CO₂ ও পানি তৈরি হয়, অর্থাৎ নতুন পদার্থ তৈরি হয়। বাকিগুলোতে শুধু অবস্থা বদলায় (ভৌত পরিবর্তন)।'},
+ {q:'একমুখী বিক্রিয়ার সমীকরণে কোন চিহ্ন ব্যবহার করা হয়?',o:['একটি ডানমুখী তীর (→)','দুটি বিপরীতমুখী তীর (⇌)','ঊর্ধ্বমুখী তীর (↑)','সমান চিহ্ন (=)'],a:0,e:'একমুখী বিক্রিয়ায় একটি ডানমুখী তীর, উভমুখীতে দুটি বিপরীতমুখী তীর (⇌)।'},
+ {q:'তাপোৎপাদী বিক্রিয়ায় ΔH এর মান কেমন হয়?',o:['ধনাত্মক','ঋণাত্মক','শূন্য','নির্ণয় করা যায় না'],a:1,e:'তাপ উৎপন্ন হলে ΔH ঋণাত্মক হয় (যেমন −৯২ kJ)।'},
+ {q:'N₂ + O₂ + 180 kJ ⇌ 2NO বিক্রিয়াটি কোন ধরনের?',o:['তাপোৎপাদী','তাপহারী','প্রশমন','দহন'],a:1,e:'বিক্রিয়ায় ১৮০ kJ তাপ শোষিত হয় (ΔH = +১৮০ kJ), তাই এটি তাপহারী।'},
+ {q:'জারণ বিক্রিয়ায় কী ঘটে?',o:['ইলেকট্রন ত্যাগ','ইলেকট্রন গ্রহণ','প্রোটন ত্যাগ','নিউট্রন গ্রহণ'],a:0,e:'জারণ মানে ইলেকট্রন ত্যাগ, আর বিজারণ মানে ইলেকট্রন গ্রহণ।'},
+ {q:'Na + ½Cl₂ → NaCl বিক্রিয়ায় বিজারক পদার্থ কোনটি?',o:['Cl₂','NaCl','Na','কোনোটিই নয়'],a:2,e:'Na ইলেকট্রন ত্যাগ করে, তাই Na বিজারক। যে ইলেকট্রন গ্রহণ করে (Cl) সে জারক।'},
+ {q:'মুক্ত মৌলের (যেমন Fe, H₂) জারণ সংখ্যা কত?',o:['+১','−১','০','+২'],a:2,e:'মুক্ত মৌল ও নিরপেক্ষ পরমাণুর জারণ সংখ্যা শূন্য।'},
+ {q:'H₂SO₄ এ সালফারের (S) জারণ সংখ্যা কত?',o:['+২','+৪','+৬','+৮'],a:2,e:'(+১)×২ + x + (−২)×৪ = ০, অর্থাৎ x = +৬।'},
+ {q:'KMnO₄ এ Mn এর জারণ সংখ্যা কত?',o:['+৩','+৫','+৬','+৭'],a:3,e:'(+১)×১ + x + (−২)×৪ = ০, অর্থাৎ x = +৭।'},
+ {q:'Zn + H₂SO₄ → ZnSO₄ + H₂ কোন ধরনের বিক্রিয়া?',o:['সংযোজন','বিয়োজন','প্রতিস্থাপন','প্রশমন'],a:2,e:'অধিক সক্রিয় Zn, H কে প্রতিস্থাপন করেছে, তাই প্রতিস্থাপন বিক্রিয়া।'},
+ {q:'HCl + NaOH → NaCl + H₂O কোন ধরনের বিক্রিয়া?',o:['প্রশমন (নন-রেডক্স)','দহন','প্রতিস্থাপন','বিয়োজন'],a:0,e:'এসিড ও ক্ষার মিলে লবণ ও পানি হয়েছে। এটি প্রশমন বিক্রিয়া, জারণ সংখ্যা বদলায়নি।'},
+ {q:'NaCl দ্রবণে AgNO₃ যোগ করলে কোনটি সাদা অধঃক্ষেপ হিসেবে জমে?',o:['NaNO₃','AgCl','Na₂SO₄','AgNO₃'],a:1,e:'AgCl পানিতে প্রায় অদ্রবণীয়, তাই সাদা অধঃক্ষেপ হয়ে জমে। NaNO₃ দ্রবণীয়।'},
+ {q:'HCl ও NaOH এর বিক্রিয়ায় দর্শক আয়ন কোনগুলো?',o:['H⁺ ও OH⁻','Na⁺ ও Cl⁻','H⁺ ও Cl⁻','Na⁺ ও OH⁻'],a:1,e:'Na⁺ ও Cl⁻ বিক্রিয়ায় অংশ নেয় না, তাই এরা দর্শক আয়ন। আসল বিক্রিয়া H⁺ + OH⁻ → H₂O।'},
+ {q:'মৌমাছির কামড়ে ক্ষতস্থানে চুন লাগালে জ্বালা কমে কেন?',o:['চুন ঠান্ডা বলে','চুন (ক্ষার) এসিডকে প্রশমিত করে','চুন রক্ত জমাট করে','চুন ব্যথা ভুলিয়ে দেয়'],a:1,e:'হুলের এসিডকে ক্ষার (চুন) প্রশমিত করে, তাই জ্বালা কমে।'},
+ {q:'ভিনেগারে কোন এসিড থাকে?',o:['সাইট্রিক এসিড','এসিটিক এসিড','টারটারিক এসিড','এসকরবিক এসিড'],a:1,e:'ভিনেগারে এসিটিক এসিড (৪-১০%) থাকে। সাইট্রিক এসিড থাকে লেবুর রসে।'},
+ {q:'2FeCl₂ + Cl₂ → 2FeCl₃ বিক্রিয়াটি কোনটি?',o:['শুধু সংযোজন, রেডক্স নয়','জারণ-বিজারণ ও সংযোজন','প্রশমন','অধঃক্ষেপণ'],a:1,e:'Fe এর জারণ সংখ্যা +২ থেকে +৩ এবং Cl এর ০ থেকে −১ হয়েছে, তাই রেডক্স। আবার দুটি যুক্ত হয়ে একটি উৎপাদ, তাই সংযোজনও।'},
+ {q:'H₂SO₄ + MgO → MgSO₄ + H₂O বিক্রিয়ায় কোনটি ঘটে?',o:['তাপ উৎপন্ন হয়','ইলেকট্রন স্থানান্তর ঘটে','অধঃক্ষেপ পড়ে','জারণ সংখ্যা বদলে যায়'],a:0,e:'এসিড ও ক্ষারধর্মী অক্সাইডের বিক্রিয়া একটি প্রশমন। এতে তাপ উৎপন্ন হয়। ইলেকট্রন স্থানান্তর হয় না, আর MgSO₄ দ্রবণীয়, তাই অধঃক্ষেপও পড়ে না।'},
+ {q:'গরম পানিতে Na₂CO₃ এর সাথে ভিনেগারের বিক্রিয়ার হার ঠান্ডা পানির তুলনায় কেমন?',o:['বেশি','কম','সমান','বিক্রিয়াই হয় না'],a:0,e:'বইয়ের পরীক্ষায় গরম পানির টেস্টটিউবে সবচেয়ে বেশি গ্যাসের বুদবুদ ওঠে, অর্থাৎ হার বেশি।'},
+ {q:'N₂ + 3H₂ ⇌ 2NH₃ + 92 kJ বিক্রিয়ায় চাপ বাড়ালে সাম্য কোন দিকে সরে?',o:['ডানদিকে (NH₃ বাড়ে)','বামদিকে','কোনোদিকে না','প্রথমে বামে পরে ডানে'],a:0,e:'চাপ বাড়ালে সাম্য গ্যাসীয় মোল কম দিকে সরে। বামে ৪ মোল (১+৩), ডানে ২ মোল, তাই ডানে সরে।'},
+ {q:'একই বিক্রিয়ায় (N₂ + 3H₂ ⇌ 2NH₃ + 92 kJ) তাপমাত্রা বাড়ালে সাম্য কোন দিকে সরে?',o:['ডানদিকে','বামদিকে (NH₃ ভাঙে)','কোনোদিকে না','জানা যায় না'],a:1,e:'তাপ বাড়ালে সাম্য সেই দিকে সরে যেদিকে তাপ শোষিত হয়, অর্থাৎ তাপহারী (বাম) দিকে। তাই NH₃ ভেঙে N₂ ও H₂ হয়।'},
+ {q:'N₂ + O₂ ⇌ 2NO সাম্যাবস্থায় চাপের প্রভাব কেমন?',o:['ডানে সরায়','বামে সরায়','কোনো প্রভাব নেই','বিক্রিয়া থামিয়ে দেয়'],a:2,e:'বিক্রিয়কের মোল ১+১ = ২, উৎপাদের মোলও ২। মোল সংখ্যা বদলায় না, তাই চাপের কোনো প্রভাব নেই।'}
+];
+var answered=0, correct=0;
+(function(){
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div'); div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    item.o.forEach(function(opt,oi){ html+='<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+opt+'</button>'; });
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html; box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt'); if(!b||b.parentNode.getAttribute('data-done')) return;
+    var qi=+b.getAttribute('data-q'), oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');
+    btns[QUIZ[qi].a].classList.add('ok');
+    if(oi===QUIZ[qi].a) correct++; else b.classList.add('no');
+    $('exp'+qi).style.display='block'; answered++;
+    if(answered===QUIZ.length) $('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+</script>
+</body>
+</html>
