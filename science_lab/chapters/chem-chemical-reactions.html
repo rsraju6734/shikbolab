@@ -45,6 +45,17 @@ details p{margin:8px 0 2px}
 .steps li.show{opacity:1;transform:none}
 .steps{padding-left:0}
 .fb{font-weight:700;margin-top:4px}
+.ptscroll{overflow-x:auto;padding-bottom:6px}
+.l3g{display:grid;grid-template-columns:330px 1fr;gap:18px;margin:8px 0}
+.leg2{display:flex;gap:10px;flex-wrap:wrap;font-size:14px;margin:6px 0;font-family:system-ui,'Segoe UI',Arial,sans-serif}
+.leg2 i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:4px;vertical-align:middle}
+.rtbl{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:8px 0;min-width:560px}
+.rtbl div{background:#f6f9fb;border:1px solid var(--line);border-radius:10px;padding:6px;text-align:center;font-size:14px}
+.rtbl b{display:block;font-size:20px;color:var(--navy)}
+.chk{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0}
+.chk label{background:#fff;border:2px solid #cfd9e1;border-radius:10px;padding:4px 12px;cursor:pointer}
+@media(max-width:900px){.l3g{grid-template-columns:1fr}}
+
 @media(max-width:900px){.lab2g{grid-template-columns:1fr}}
 </style>
 </head>
@@ -57,7 +68,7 @@ details p{margin:8px 0 2px}
 <div class="wrap">
   <div class="crumb">🧪 রসায়ন &rsaquo; নবম-দশম শ্রেণি &rsaquo; অধ্যায় ৭</div>
   <h1 class="title">রাসায়নিক বিক্রিয়া (Chemical Reactions)</h1>
-  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🧭 ল্যাব ১</a><a href="#lab2">⚡ ল্যাব ২</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্ন-উত্তর</a></nav>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🧭 ল্যাব ১</a><a href="#lab2">⚡ ল্যাব ২</a><a href="#lab3">🧪 ল্যাব ৩</a><a href="#lab4">⏱️ ল্যাব ৪</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্ন-উত্তর</a></nav>
 
   <!-- ================= নোট ================= -->
   <section class="panel" id="note">
@@ -235,8 +246,69 @@ details p{margin:8px 0 2px}
     </div>
   </section>
 
-  <section class="panel soon">
-    🔜 <b>শীঘ্রই আসছে:</b> ল্যাব ৩ (অধঃক্ষেপণ ও প্রশমন), ল্যাব ৪ (বিক্রিয়ার হার), ল্যাব ৫ (লা-শাতেলিয়ার নীতি), ল্যাব ৬ (মরিচা ও সুরক্ষা)।
+  <!-- ================= ল্যাব ৩ ================= -->
+  <section class="panel" id="lab3">
+    <h2>🧪 ল্যাব ৩: অধঃক্ষেপণ ও প্রশমন</h2>
+    <h3>ক) অধঃক্ষেপণ বিক্রিয়া: টেস্টটিউবে ফোঁটা ফোঁটা মেশাও</h3>
+    <p>একটা বিক্রিয়া বেছে নাও। ড্রপার দিয়ে ফোঁটা ফোঁটা যোগ করো। আয়নগুলো ঘুরছে, যেগুলো মিলে <b>অদ্রবণীয় কঠিন</b> তৈরি করে, সেগুলো জোড়া লেগে তলায় জমবে। যারা বিক্রিয়ায় অংশ নেয় না (দর্শক আয়ন), তারা দ্রবণেই থেকে যাবে।</p>
+    <div class="rxlist" id="pplist"></div>
+    <div class="l3g">
+      <div class="box" style="text-align:center">
+        <canvas id="ppcv" width="300" height="330" style="margin:0 auto;max-width:100%"></canvas>
+        <div class="btnrow" style="justify-content:center"><button class="btn" id="ppdrop">💧 ফোঁটা যোগ করো</button><button class="btn alt" id="ppall">সব মিশিয়ে দাও</button><button class="btn alt" id="ppreset">↺ আবার</button></div>
+        <div class="chk"><label><input type="checkbox" id="ppion" checked> আয়ন দেখাও</label><label><input type="checkbox" id="ppspec"> দর্শক আয়ন চিহ্নিত করো</label></div>
+      </div>
+      <div>
+        <div class="eqb" id="ppeq"></div>
+        <div class="leg2" id="pplegend"></div>
+        <div class="say" id="ppsay"></div>
+      </div>
+    </div>
+
+    <h3>খ) প্রশমন বিক্রিয়া: লিটমাস কাগজ দিয়ে (বইয়ের পরীক্ষণ)</h3>
+    <p>বিকারে NaOH দ্রবণ আর একটা <b>নীল লিটমাস কাগজ</b> আছে। ড্রপার দিয়ে ধীরে ধীরে HCl ঢালো (বইয়ে একই সাথে কাচদণ্ড দিয়ে নেড়ে মেশানো হয়)। লিটমাস কাগজ নীল থেকে <b>লাল</b> হলে ধরে নেওয়া হয় NaOH প্রশমিত হয়ে গেছে।</p>
+    <div class="l3g">
+      <div class="box" style="text-align:center">
+        <svg id="nbk" viewBox="0 0 300 300" width="100%" style="max-width:300px">
+          <rect x="140" y="6" width="22" height="34" rx="8" fill="#e76f51"/>
+          <rect x="146" y="40" width="10" height="34" fill="#eaf6fb" stroke="#1f3a5f"/>
+          <circle id="ndrp" cx="151" cy="82" r="5" fill="#bfe3f7" stroke="#1f3a5f" style="display:none"/>
+          <path d="M80 110 L80 262 Q80 274 92 274 L208 274 Q220 274 220 262 L220 110" fill="#f7fbfd" stroke="#1f3a5f" stroke-width="3"/>
+          <rect id="nliq" x="83" y="176" width="134" height="96" fill="#d9eef8"/>
+          <rect id="nlit" x="168" y="96" width="16" height="118" fill="#2f5fd0" stroke="#1f3a5f"/>
+          <text x="176" y="88" font-size="11" text-anchor="middle" fill="#1f3a5f" font-weight="700">লিটমাস</text>
+          <text x="125" y="244" font-size="12" fill="#1f3a5f" font-weight="700" text-anchor="middle">NaOH</text>
+          <rect x="250" y="70" width="12" height="180" rx="6" fill="#fff" stroke="#1f3a5f" stroke-width="2"/>
+          <rect id="nthm" x="253" y="190" width="6" height="58" fill="#e63946"/>
+          <text id="ntemp" x="256" y="270" text-anchor="middle" font-size="12" fill="#1f3a5f" font-weight="700" font-family="Arial">২৫°C</text>
+          <text x="256" y="58" text-anchor="middle" font-size="11" fill="#5b6770">তাপমাত্রা</text>
+        </svg>
+        <div id="ncount" style="font-weight:700">HCl এর ফোঁটা: ০</div>
+        <div class="btnrow" style="justify-content:center"><button class="btn" id="ndrop">💧 HCl এর ফোঁটা ঢালো</button><button class="btn alt" id="nreset">↺ আবার</button></div>
+      </div>
+      <div>
+        <div class="eqb">HCl + NaOH &rarr; NaCl + H<sub>2</sub>O + তাপ<br><small>আসল বিক্রিয়া: H<sup>+</sup> + OH<sup>&minus;</sup> &rarr; H<sub>2</sub>O + 57.34 kJ</small></div>
+        <div class="say" id="nsay">ফোঁটা ঢালো আর লিটমাসের রং দেখো।</div>
+        <p style="font-size:14px;color:#5b6770">থার্মোমিটারের তাপমাত্রা বাড়া বোঝানোর জন্য আঁকা (সংখ্যাগুলো আসল পরিমাপ নয়)। প্রশমন বিক্রিয়া সবসময় তাপোৎপাদী।</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ল্যাব ৪ ================= -->
+  <section class="panel" id="lab4">
+    <h2>⏱️ ল্যাব ৪: বিক্রিয়ার হার পরীক্ষা (বইয়ের অনুসন্ধান)</h2>
+    <p>চারটি টেস্টটিউবে সামান্য Na<sub>2</sub>CO<sub>3</sub> (কাপড় কাচা সোডা) আছে। ১ ও ২ নম্বরে স্বাভাবিক (ঠান্ডা) পানি, ৩ ও ৪ নম্বরে গরম পানি। এবার ২ ও ৪ নম্বরে ভিনেগার বা লেবুর রস ঢালো আর বুদবুদ গুনে তুলনা করো। ৫ নম্বর টেস্টটিউবটা তোমার নিজের, তাপমাত্রা বদলে দেখো।</p>
+    <div class="ptscroll"><canvas id="ratecv" width="720" height="290" style="max-width:none"></canvas></div>
+    <div class="ptscroll"><div class="rtbl" id="rcnt"></div></div>
+    <div class="btnrow"><button class="btn" id="racid">🍋 ভিনেগার/লেবুর রস ঢালো (২, ৪ ও ৫ নম্বরে)</button><button class="btn alt" id="rreset">↺ আবার</button></div>
+    <div style="margin:8px 0">৫ নম্বর টেস্টটিউবের পানির তাপমাত্রা: <b id="tval">২৫°C</b>
+      <input type="range" id="tslide" min="20" max="80" step="5" value="25" style="max-width:320px;display:block"></div>
+    <div class="eqb">Na<sub>2</sub>CO<sub>3</sub> + 2CH<sub>3</sub>COOH &rarr; 2CH<sub>3</sub>COONa + H<sub>2</sub>O + CO<sub>2</sub><br><small>বুদবুদ হলো CO<sub>2</sub> গ্যাস</small></div>
+    <p style="font-size:14px;color:#5b6770">বইয়ে সংখ্যাগত মান দেওয়া নেই। বুদবুদের সংখ্যা তুলনা বোঝানোর জন্য, আসল পরিমাপ নয়।</p>
+
+    <h3>🤔 বইয়ের প্রশ্নগুলো</h3>
+    <div id="rqs"></div>
+    <div class="key">📌 <b>সিদ্ধান্ত:</b> বিভিন্ন বিক্রিয়া সম্পন্ন হতে বিভিন্ন সময় নেয়। যে বিক্রিয়া অল্প সময়ে ঘটে তার হার বেশি, আর যে বিক্রিয়ায় অনেক সময় লাগে তার হার কম। এই পরীক্ষায় গরম পানিতে বিক্রিয়ার হার বেশি দেখা গেল।</div>
   </section>
 
   <!-- ================= কুইজ ================= -->
@@ -494,6 +566,217 @@ $('cshow').onclick=function(){
 };
 pickCalc(0);
 
+
+/* =============== ল্যাব ৩ক: অধঃক্ষেপণ =============== */
+var PPR=[
+ {n:'NaCl + AgNO₃',eq:'NaCl(aq) + AgNO<sub>3</sub>(aq) &rarr; AgCl(s)&darr; + NaNO<sub>3</sub>(aq)',liq:'#e3f1f8',ppcol:'#ffffff',ppn:'AgCl (সাদা)',
+  tube:[{k:'Na',l:'Na⁺',c:'#e9a23b',spec:true,n:12},{k:'Cl',l:'Cl⁻',c:'#2a9d8f',n:12,role:'a'}],
+  drop:[{k:'Ag',l:'Ag⁺',c:'#6c7a89',n:3,role:'b'},{k:'NO3',l:'NO₃',c:'#8e44ad',spec:true,n:3}],kb:1,
+  done:'AgCl পানিতে অদ্রবণীয়, তাই Ag<sup>+</sup> আর Cl<sup>&minus;</sup> জোড়া লেগে কঠিন <b>সাদা AgCl অধঃক্ষেপ</b> হয়ে তলায় জমলো। Na<sup>+</sup> ও NO<sub>3</sub><sup>&minus;</sup> দ্রবণেই রইলো, কারণ NaNO<sub>3</sub> পানিতে দ্রবণীয়।'},
+ {n:'Na₂SO₄ + BaCl₂',eq:'Na<sub>2</sub>SO<sub>4</sub>(aq) + BaCl<sub>2</sub>(aq) &rarr; BaSO<sub>4</sub>(s)&darr; + 2NaCl(aq)',liq:'#e3f1f8',ppcol:'#ffffff',ppn:'BaSO₄ (সাদা)',
+  tube:[{k:'Na',l:'Na⁺',c:'#e9a23b',spec:true,n:16},{k:'SO4',l:'SO₄',c:'#c0392b',n:8,role:'a'}],
+  drop:[{k:'Ba',l:'Ba²⁺',c:'#34495e',n:2,role:'b'},{k:'Cl',l:'Cl⁻',c:'#2a9d8f',spec:true,n:4}],kb:1,
+  done:'BaSO<sub>4</sub> অদ্রবণীয়, তাই Ba<sup>2+</sup> আর SO<sub>4</sub><sup>2&minus;</sup> মিলে <b>সাদা BaSO<sub>4</sub> অধঃক্ষেপ</b> হয়ে তলায় জমলো। Na<sup>+</sup> ও Cl<sup>&minus;</sup> দ্রবণেই রইলো (NaCl দ্রবণীয়)।'},
+ {n:'FeSO₄ + NaOH',eq:'FeSO<sub>4</sub>(aq) + 2NaOH(aq) &rarr; Fe(OH)<sub>2</sub>(s)&darr; + Na<sub>2</sub>SO<sub>4</sub>(aq)',liq:'#e6efc4',ppcol:'#5aa84a',ppn:'Fe(OH)₂ (সবুজ)',
+  tube:[{k:'SO4',l:'SO₄',c:'#c0392b',spec:true,n:6},{k:'Fe',l:'Fe²⁺',c:'#2e8b57',n:6,role:'a'}],
+  drop:[{k:'OH',l:'OH⁻',c:'#2b6cb0',n:3,role:'b'},{k:'Na',l:'Na⁺',c:'#e9a23b',spec:true,n:3}],kb:2,
+  done:'Fe<sup>2+</sup> আর OH<sup>&minus;</sup> মিলে অদ্রবণীয় <b>সবুজ Fe(OH)<sub>2</sub> অধঃক্ষেপ</b> তৈরি হলো এবং ধীরে ধীরে নিচে জমলো। Na<sup>+</sup> ও SO<sub>4</sub><sup>2&minus;</sup> দ্রবণেই রইলো (Na<sub>2</sub>SO<sub>4</sub> দ্রবণীয়)।'}
+];
+var ppc=$('ppcv'), ppx=ppc.getContext('2d');
+var PP={cur:0,ions:[],ppts:[],drops:[],heights:{},dropN:0,fin:false,timer:null};
+var TB={x1:100,x2:200,top:36,liq:118,cy:262,r:50};
+function tubePath(c){ c.beginPath(); c.moveTo(TB.x1,TB.top); c.lineTo(TB.x1,TB.cy); c.arc(150,TB.cy,TB.r,Math.PI,0,true); c.lineTo(TB.x2,TB.top); }
+function botY(x){ var d=Math.abs(x-150); return TB.cy+Math.sqrt(Math.max(0,TB.r*TB.r-d*d)); }
+function mkIon(def,x,y){ return {k:def.k,l:def.l,c:def.c,spec:!!def.spec,role:def.role||'s',x:x,y:y,vx:(Math.random()-.5)*1.5,vy:(Math.random()-.5)*1.5}; }
+function ppReset(i){
+  if(PP.timer){ clearTimeout(PP.timer); PP.timer=null; }
+  PP.cur=i; var R=PPR[i]; PP.ions=[]; PP.ppts=[]; PP.drops=[]; PP.heights={}; PP.dropN=0; PP.fin=false;
+  R.tube.forEach(function(d){ for(var k=0;k<d.n;k++){ PP.ions.push(mkIon(d,110+Math.random()*80,TB.liq+14+Math.random()*130)); } });
+  $('ppeq').innerHTML=R.eq; $('ppdrop').disabled=false; $('ppall').disabled=false;
+  $('ppsay').innerHTML='<b>টেস্টটিউবে আছে:</b> '+R.tube.map(function(d){return d.l;}).join(', ')+' আয়ন। ড্রপারে আছে: '+R.drop.map(function(d){return d.l;}).join(', ')+'। ফোঁটা যোগ করো (মোট ৪ ফোঁটা লাগবে)।';
+  var lg=''; R.tube.concat(R.drop).forEach(function(d){ lg+='<span><i style="background:'+d.c+'"></i>'+d.l+(d.spec?' (দর্শক)':'')+'</span>'; });
+  lg+='<span><i style="background:'+R.ppcol+';border:1px solid #8a96a3;border-radius:2px"></i>'+R.ppn+' অধঃক্ষেপ</span>';
+  $('pplegend').innerHTML=lg;
+  document.querySelectorAll('#pplist button').forEach(function(b,k){ b.className='btn'+(k===i?'':' alt'); });
+}
+function ppAddDrop(){
+  if(PP.dropN>=4) return; PP.dropN++;
+  PP.drops.push({y:20,col:'#c9d6df'});
+  if(PP.dropN>=4){ $('ppdrop').disabled=true; $('ppall').disabled=true; }
+}
+function spawnDropIons(){
+  var R=PPR[PP.cur];
+  R.drop.forEach(function(d){ for(var k=0;k<d.n;k++){ PP.ions.push(mkIon(d,125+Math.random()*50,TB.liq+8+Math.random()*10)); } });
+}
+function ppStep(){
+  var R=PPR[PP.cur], i,j;
+  // ফোঁটা পড়া
+  for(i=PP.drops.length-1;i>=0;i--){ var d=PP.drops[i]; d.y+=6; if(d.y>=TB.liq){ PP.drops.splice(i,1); spawnDropIons(); } }
+  // আয়নের চলাচল
+  var aIons=PP.ions.filter(function(q){return q.role==='a';});
+  PP.ions.forEach(function(q){
+    q.vx+=(Math.random()-.5)*0.35; q.vy+=(Math.random()-.5)*0.35;
+    if(q.role==='b' && aIons.length){
+      var best=null,bd=1e9; aIons.forEach(function(a){ var dd=Math.hypot(a.x-q.x,a.y-q.y); if(dd<bd){bd=dd;best=a;} });
+      if(best && bd>0){ q.vx+=(best.x-q.x)/bd*0.12; q.vy+=(best.y-q.y)/bd*0.12; }
+    }
+    var sp=Math.hypot(q.vx,q.vy); if(sp>1.6){ q.vx*=1.6/sp; q.vy*=1.6/sp; }
+    q.x+=q.vx; q.y+=q.vy;
+    var minY=TB.liq+10, maxY=TB.cy+TB.r-12, hw=44;
+    if(q.y>TB.cy){ hw=Math.sqrt(Math.max(1,TB.r*TB.r-(q.y-TB.cy)*(q.y-TB.cy)))-10; }
+    if(q.y<minY){ q.y=minY; q.vy=Math.abs(q.vy); } if(q.y>maxY){ q.y=maxY; q.vy=-Math.abs(q.vy); }
+    if(q.x<150-hw){ q.x=150-hw; q.vx=Math.abs(q.vx); } if(q.x>150+hw){ q.x=150+hw; q.vx=-Math.abs(q.vx); }
+  });
+  // বিক্রিয়া: b আয়ন a আয়নের কাছে এলে
+  for(i=0;i<PP.ions.length;i++){
+    var b=PP.ions[i]; if(b.role!=='b') continue;
+    for(j=0;j<PP.ions.length;j++){
+      var a=PP.ions[j]; if(a.role!=='a') continue;
+      if(Math.hypot(a.x-b.x,a.y-b.y)<13){
+        var need=R.kb, bs=[b];
+        if(need>1){ PP.ions.forEach(function(o){ if(o!==b && o.role==='b' && bs.length<need && Math.hypot(o.x-a.x,o.y-a.y)<60) bs.push(o); }); }
+        if(bs.length>=need){
+          PP.ppts.push({x:a.x,y:a.y,vy:0,set:false});
+          PP.ions=PP.ions.filter(function(o){ return o!==a && bs.indexOf(o)<0; });
+          i=-1; break;
+        }
+      }
+    }
+  }
+  // অধঃক্ষেপ পড়া
+  PP.ppts.forEach(function(p){
+    if(p.set) return; p.vy=Math.min(1.8,p.vy+0.08); p.y+=p.vy;
+    var bin=Math.floor((p.x-TB.x1)/8), fl=botY(p.x)-6-(PP.heights[bin]||0);
+    if(p.y>=fl){ p.y=fl; p.set=true; PP.heights[bin]=(PP.heights[bin]||0)+6; }
+  });
+  // শেষ
+  if(!PP.fin && PP.dropN>=4 && PP.drops.length===0){
+    var left=PP.ions.filter(function(q){return q.role==='a';}).length, mov=PP.ppts.filter(function(p){return !p.set;}).length;
+    if(left===0 && mov===0){ PP.fin=true; $('ppsay').innerHTML='✅ '+R.done; }
+  }
+}
+function ppDraw(){
+  var c=ppx, R=PPR[PP.cur]; c.clearRect(0,0,300,330);
+  c.save(); tubePath(c); c.clip(); c.fillStyle=R.liq; c.fillRect(0,TB.liq,300,260);
+  PP.ppts.forEach(function(p){ c.fillStyle=R.ppcol; c.strokeStyle='#8a96a3'; c.lineWidth=1; c.fillRect(p.x-3,p.y-3,7,7); c.strokeRect(p.x-3,p.y-3,7,7); });
+  if($('ppion').checked){
+    var sp=$('ppspec').checked;
+    PP.ions.forEach(function(q){
+      c.beginPath(); c.arc(q.x,q.y,8,0,6.283); c.fillStyle=q.c; c.fill();
+      if(sp && q.spec){ c.beginPath(); c.arc(q.x,q.y,11,0,6.283); c.strokeStyle='#e9a23b'; c.lineWidth=2; c.setLineDash([3,3]); c.stroke(); c.setLineDash([]); }
+      c.fillStyle='#fff'; c.font='bold 7px Arial'; c.textAlign='center'; c.fillText(q.l.replace('²⁺','').replace('⁺','').replace('⁻',''),q.x,q.y+2.5);
+    });
+  }
+  c.restore();
+  tubePath(c); c.strokeStyle='#1f3a5f'; c.lineWidth=4; c.stroke();
+  c.fillStyle='#eaf6fb'; c.fillRect(TB.x1-6,TB.top-6,TB.x2-TB.x1+12,6); c.strokeStyle='#1f3a5f'; c.lineWidth=2; c.strokeRect(TB.x1-6,TB.top-6,TB.x2-TB.x1+12,6);
+  PP.drops.forEach(function(d){ c.beginPath(); c.arc(150,d.y,5,0,6.283); c.fillStyle='#bfe3f7'; c.strokeStyle='#1f3a5f'; c.lineWidth=1; c.fill(); c.stroke(); });
+  c.fillStyle='#e76f51'; c.fillRect(140,0,20,12); c.fillStyle='#eaf6fb'; c.fillRect(145,12,10,14); c.strokeStyle='#1f3a5f'; c.strokeRect(145,12,10,14);
+}
+function ppLoop(){ ppStep(); ppDraw(); requestAnimationFrame(ppLoop); }
+PPR.forEach(function(R,i){ var b=document.createElement('button'); b.className='btn alt'; b.textContent=R.n; b.onclick=function(){ ppReset(i); }; $('pplist').appendChild(b); });
+$('ppdrop').onclick=ppAddDrop;
+$('ppall').onclick=function(){
+  $('ppall').disabled=true; $('ppdrop').disabled=true;
+  (function go(){ if(PP.dropN<4){ ppAddDrop(); PP.timer=setTimeout(go,1100); } })();
+};
+$('ppreset').onclick=function(){ ppReset(PP.cur); };
+ppReset(0); ppLoop();
+
+/* =============== ল্যাব ৩খ: প্রশমন (লিটমাস) =============== */
+var NB={d:0,busy:false};
+function nUpdate(){
+  var d=NB.d, col='#2f5fd0', msg;
+  if(d>=10) col='#d62828'; else if(d>=8) col='#6a5acd';
+  $('nlit').setAttribute('fill',col);
+  var t=25+0.4*Math.min(d,10); $('ntemp').textContent=bn(t.toFixed(1))+'°C';
+  var h=58+Math.min(d,10)*9; $('nthm').setAttribute('height',h); $('nthm').setAttribute('y',248-h);
+  $('nliq').setAttribute('y',176-Math.min(d,14)*1.2); $('nliq').setAttribute('height',96+Math.min(d,14)*1.2);
+  $('ncount').textContent='HCl এর ফোঁটা: '+bn(d);
+  if(d===0) msg='ফোঁটা ঢালো আর লিটমাসের রং দেখো।';
+  else if(d<8) msg='লিটমাস এখনো <b>নীল</b>। NaOH (ক্ষার) এখনো বেশি আছে।';
+  else if(d<10) msg='লিটমাসের নীল রং ফিকে হচ্ছে, প্রায় শেষের দিকে। আরও ধীরে ঢালো।';
+  else if(d===10) msg='✅ লিটমাস নীল থেকে <b>লাল</b> হয়ে গেল! বইয়ের নিয়ম অনুযায়ী এই মুহূর্তে NaOH, HCl দ্বারা <b>প্রশমিত</b> হয়েছে। লক্ষ করো, থার্মোমিটারের তাপমাত্রা বেড়েছে, কারণ প্রশমন বিক্রিয়া তাপোৎপাদী।<br>HCl + NaOH &rarr; NaCl + H<sub>2</sub>O। এখানে Na<sup>+</sup> ও Cl<sup>&minus;</sup> দর্শক আয়ন।';
+  else msg='এখন অতিরিক্ত HCl (এসিড) আছে, তাই লিটমাস লাল থাকছে।';
+  $('nsay').innerHTML=msg;
+}
+$('ndrop').onclick=function(){
+  if(NB.busy||NB.d>=13) return; NB.busy=true; var dr=$('ndrp'); dr.style.display=''; var y=82, t0=null;
+  function step(ts){ if(!t0) t0=ts; var k=Math.min(1,(ts-t0)/450); dr.setAttribute('cy',82+(176-82)*k*k); if(k<1) requestAnimationFrame(step); else { dr.style.display='none'; NB.d++; NB.busy=false; nUpdate(); } }
+  requestAnimationFrame(step);
+};
+$('nreset').onclick=function(){ NB.d=0; NB.busy=false; nUpdate(); };
+nUpdate();
+
+/* =============== ল্যাব ৪: বিক্রিয়ার হার =============== */
+var RC=$('ratecv'), rx=RC.getContext('2d');
+var RT=[{x:70,name:'১',sub:'ঠান্ডা পানি',hot:0,acid:false,fixed:true},{x:210,name:'২',sub:'ঠান্ডা পানি + ভিনেগার',hot:0,acid:false,rate:0.03,fixed:true},{x:350,name:'৩',sub:'গরম পানি',hot:1,acid:false,fixed:true},{x:490,name:'৪',sub:'গরম পানি + ভিনেগার',hot:1,acid:false,rate:0.12,fixed:true},{x:630,name:'৫',sub:'তোমার টেস্টটিউব',hot:0,acid:false,rate:0.03,fixed:false}];
+var RB=[[],[],[],[],[]], POP=[[],[],[],[],[]], acidOn=false, RTemp=25;
+function rate5(){ return 0.03+(RTemp-20)*0.00225; }
+function tcolor(h){ var t=Math.max(0,Math.min(1,h)); var a=[223,240,250], b=[253,229,207]; return 'rgb('+Math.round(a[0]+(b[0]-a[0])*t)+','+Math.round(a[1]+(b[1]-a[1])*t)+','+Math.round(a[2]+(b[2]-a[2])*t)+')'; }
+function rReset(){ acidOn=false; RT.forEach(function(t){ t.acid=false; }); RB=[[],[],[],[],[]]; POP=[[],[],[],[],[]]; $('racid').disabled=false; }
+var rlast=0;
+function rLoop(ts){
+  var dt=Math.min(40,ts-rlast||16); rlast=ts; var c=rx; c.clearRect(0,0,720,290);
+  RT.forEach(function(T,ti){
+    var hot=(ti===4)?(RTemp-20)/60:T.hot, liqY=90, bot=210;
+    c.save(); c.beginPath(); c.moveTo(T.x-32,30); c.lineTo(T.x-32,bot); c.arc(T.x,bot,32,Math.PI,0,true); c.lineTo(T.x+32,30); c.clip();
+    c.fillStyle=tcolor(hot); c.fillRect(T.x-40,liqY,80,200);
+    c.fillStyle='#fff'; for(var k=0;k<9;k++){ c.beginPath(); c.arc(T.x-18+k*4.5,bot+22-(k%3)*3,2.4,0,6.283); c.fill(); }
+    var r=(ti===4)?rate5():T.rate;
+    if(T.acid && r){ if(Math.random()<r*dt/16.7){ RB[ti].push({x:T.x-20+Math.random()*40,y:bot+14,v:0.7+Math.random()*0.8,r:2+Math.random()*2.5}); } }
+    RB[ti].forEach(function(b,bi){ b.y-=b.v; b.x+=(Math.random()-.5)*0.6; c.beginPath(); c.arc(b.x,b.y,b.r,0,6.283); c.fillStyle='rgba(255,255,255,.9)'; c.strokeStyle='#7fb4cc'; c.lineWidth=1; c.fill(); c.stroke(); });
+    RB[ti]=RB[ti].filter(function(b){ if(b.y<=liqY+4){ POP[ti].push(ts); return false; } return true; });
+    c.restore();
+    c.beginPath(); c.moveTo(T.x-32,30); c.lineTo(T.x-32,bot); c.arc(T.x,bot,32,Math.PI,0,true); c.lineTo(T.x+32,30); c.strokeStyle='#1f3a5f'; c.lineWidth=3; c.stroke();
+    c.fillStyle='#1f3a5f'; c.font='bold 16px "Hind Siliguri","Nirmala UI",sans-serif'; c.textAlign='center'; c.fillText(T.name,T.x,262);
+    c.font='12px "Hind Siliguri","Nirmala UI",sans-serif'; c.fillStyle='#46586a'; c.fillText(T.sub,T.x,280);
+  });
+  requestAnimationFrame(rLoop);
+}
+function rCounts(){
+  var now=performance.now(), html='';
+  RT.forEach(function(T,ti){
+    POP[ti]=POP[ti].filter(function(t){ return now-t<10000; });
+    html+='<div>টেস্টটিউব '+T.name+'<b>'+bn(POP[ti].length)+'</b>বুদবুদ (গত ১০ সে.)</div>';
+  });
+  $('rcnt').innerHTML=html;
+}
+$('racid').onclick=function(){ acidOn=true; [1,3,4].forEach(function(i){ RT[i].acid=true; }); this.disabled=true; };
+$('rreset').onclick=rReset;
+$('tslide').oninput=function(){ RTemp=+this.value; $('tval').textContent=bn(RTemp)+'°C'; };
+setInterval(rCounts,500); rCounts(); requestAnimationFrame(rLoop);
+
+/* বইয়ের প্রশ্ন */
+var RQ=[
+ {q:'১. কোন কোন টেস্টটিউবে গ্যাসের বুদবুদ উৎপন্ন হয়?',type:'multi',ans:[2,4],why:'২ ও ৪ নম্বরে ভিনেগার (এসিড) আছে, তাই Na₂CO₃ এর সাথে বিক্রিয়া করে CO₂ গ্যাসের বুদবুদ তৈরি হয়।'},
+ {q:'২. কোন কোন টেস্টটিউবে গ্যাসের বুদবুদ উৎপন্ন হয় না?',type:'multi',ans:[1,3],why:'১ ও ৩ নম্বরে শুধু Na₂CO₃ আর পানি, এসিড নেই, তাই বিক্রিয়া হয়নি।'},
+ {q:'৩. কোন টেস্টটিউবে সবচেয়ে বেশি পরিমাণে গ্যাসের বুদবুদ উৎপন্ন হয়?',type:'single',opts:['১','২','৩','৪'],ans:3,why:'৪ নম্বরে গরম পানি ও ভিনেগার দুটোই আছে, তাই বিক্রিয়ার হার সবচেয়ে বেশি।'},
+ {q:'৪. বুদবুদ ওঠে এমন টেস্টটিউবগুলোর মধ্যে কোনটিতে সবচেয়ে কম বুদবুদ ওঠে?',type:'single',opts:['২','৪'],ans:0,why:'২ নম্বরে ঠান্ডা পানি, তাই হার কম। (বইয়ের প্রশ্নে "সবচেয়ে কম" লেখা আছে। ১ ও ৩ নম্বরে বুদবুদই ওঠে না, তাই এখানে বুদবুদ ওঠে এমনগুলোর মধ্যে ধরা হলো।)'},
+ {q:'৫. চিন্তা করো: ২ ও ৪ নম্বরের মধ্যে ৪ নম্বরে বেশি গ্যাস নির্গত হয় কেন?',type:'single',opts:['৪ নম্বরে গরম পানি, তাই তাপমাত্রা বেশি','৪ নম্বরের টেস্টটিউব বড়','৪ নম্বরে Na₂CO₃ বেশি','৪ নম্বরে ভিনেগারের রং ভিন্ন'],ans:0,why:'দুটোতেই ভিনেগার আছে। পার্থক্য শুধু পানির তাপমাত্রা। তাপমাত্রা বেশি হলে বিক্রিয়ার হার বেশি হয়, তাই বেশি গ্যাস ওঠে।'}
+];
+(function(){
+  var box=$('rqs');
+  RQ.forEach(function(Q,qi){
+    var d=document.createElement('div'); d.className='qcard';
+    var h='<p>'+Q.q+'</p>';
+    if(Q.type==='multi'){ h+='<div class="chk">'; [1,2,3,4].forEach(function(n){ h+='<label><input type="checkbox" value="'+n+'"> '+bn(n)+' নম্বর</label>'; }); h+='</div><button class="btn" data-m="1">মেলাও</button>'; }
+    else { Q.opts.forEach(function(o,oi){ h+='<button class="opt" data-o="'+oi+'">'+o+'</button>'; }); }
+    h+='<div class="why"></div>';
+    d.innerHTML=h; box.appendChild(d);
+    var w=d.querySelector('.why');
+    function show(ok){ w.style.display='block'; w.innerHTML=(ok?'✅ ঠিক! ':'❌ আবার ভাবো। ')+Q.why; }
+    if(Q.type==='multi'){
+      d.querySelector('button[data-m]').onclick=function(){
+        var sel=[].slice.call(d.querySelectorAll('input:checked')).map(function(x){return +x.value;}).sort().join(',');
+        show(sel===Q.ans.slice().sort().join(','));
+      };
+    } else {
+      d.addEventListener('click',function(ev){ var b=ev.target.closest('.opt'); if(!b||d.getAttribute('data-done')) return; d.setAttribute('data-done','1'); var oi=+b.getAttribute('data-o'); d.querySelectorAll('.opt')[Q.ans].classList.add('ok'); if(oi!==Q.ans) b.classList.add('no'); show(oi===Q.ans); });
+    }
+  });
+})();
+
 /* =============== কুইজ =============== */
 var QUIZ=[
  {q:'কোনটি রাসায়নিক পরিবর্তন?',o:['বরফ গলে পানি হওয়া','মিথেন গ্যাস পোড়ানো','পানি বাষ্প হওয়া','পানি জমে বরফ হওয়া'],a:1,e:'মিথেন পুড়ে CO₂ ও পানি তৈরি হয়, অর্থাৎ নতুন পদার্থ তৈরি হয়। বাকিগুলোতে শুধু অবস্থা বদলায় (ভৌত পরিবর্তন)।'},
@@ -510,6 +793,8 @@ var QUIZ=[
  {q:'NaCl দ্রবণে AgNO₃ যোগ করলে কোনটি সাদা অধঃক্ষেপ হিসেবে জমে?',o:['NaNO₃','AgCl','Na₂SO₄','AgNO₃'],a:1,e:'AgCl পানিতে প্রায় অদ্রবণীয়, তাই সাদা অধঃক্ষেপ হয়ে জমে। NaNO₃ দ্রবণীয়।'},
  {q:'HCl ও NaOH এর বিক্রিয়ায় দর্শক আয়ন কোনগুলো?',o:['H⁺ ও OH⁻','Na⁺ ও Cl⁻','H⁺ ও Cl⁻','Na⁺ ও OH⁻'],a:1,e:'Na⁺ ও Cl⁻ বিক্রিয়ায় অংশ নেয় না, তাই এরা দর্শক আয়ন। আসল বিক্রিয়া H⁺ + OH⁻ → H₂O।'},
  {q:'মৌমাছির কামড়ে ক্ষতস্থানে চুন লাগালে জ্বালা কমে কেন?',o:['চুন ঠান্ডা বলে','চুন (ক্ষার) এসিডকে প্রশমিত করে','চুন রক্ত জমাট করে','চুন ব্যথা ভুলিয়ে দেয়'],a:1,e:'হুলের এসিডকে ক্ষার (চুন) প্রশমিত করে, তাই জ্বালা কমে।'},
+ {q:'এন্টাসিড জাতীয় ওষুধ সেবনে কোন ধরনের বিক্রিয়া সম্পন্ন হয়?',o:['প্রশমন','দহন','সংযোজন','প্রতিস্থাপন'],a:0,e:'এন্টাসিড (Mg(OH)₂, Al(OH)₃) ক্ষার। এরা পাকস্থলীর বাড়তি HCl এসিডের সাথে বিক্রিয়া করে প্রশমিত করে, তাই এটি প্রশমন বিক্রিয়া।'},
+ {q:'অধঃক্ষেপণ বিক্রিয়ায় তলায় যা জমে তাকে কী বলে?',o:['দর্শক আয়ন','অধঃক্ষেপ','প্রভাবক','দ্রাবক'],a:1,e:'অদ্রবণীয় কঠিন উৎপাদটি তলানি হিসেবে জমে, একে অধঃক্ষেপ (precipitate) বলে।'},
  {q:'ভিনেগারে কোন এসিড থাকে?',o:['সাইট্রিক এসিড','এসিটিক এসিড','টারটারিক এসিড','এসকরবিক এসিড'],a:1,e:'ভিনেগারে এসিটিক এসিড (৪-১০%) থাকে। সাইট্রিক এসিড থাকে লেবুর রসে।'},
  {q:'2FeCl₂ + Cl₂ → 2FeCl₃ বিক্রিয়াটি কোনটি?',o:['শুধু সংযোজন, রেডক্স নয়','জারণ-বিজারণ ও সংযোজন','প্রশমন','অধঃক্ষেপণ'],a:1,e:'Fe এর জারণ সংখ্যা +২ থেকে +৩ এবং Cl এর ০ থেকে −১ হয়েছে, তাই রেডক্স। আবার দুটি যুক্ত হয়ে একটি উৎপাদ, তাই সংযোজনও।'},
  {q:'H₂SO₄ + MgO → MgSO₄ + H₂O বিক্রিয়ায় কোনটি ঘটে?',o:['তাপ উৎপন্ন হয়','ইলেকট্রন স্থানান্তর ঘটে','অধঃক্ষেপ পড়ে','জারণ সংখ্যা বদলে যায়'],a:0,e:'এসিড ও ক্ষারধর্মী অক্সাইডের বিক্রিয়া একটি প্রশমন। এতে তাপ উৎপন্ন হয়। ইলেকট্রন স্থানান্তর হয় না, আর MgSO₄ দ্রবণীয়, তাই অধঃক্ষেপও পড়ে না।'},
