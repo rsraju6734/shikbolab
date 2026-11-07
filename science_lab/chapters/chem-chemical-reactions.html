@@ -46,6 +46,16 @@ details p{margin:8px 0 2px}
 .steps{padding-left:0}
 .fb{font-weight:700;margin-top:4px}
 .ptscroll{overflow-x:auto;padding-bottom:6px}
+
+.gcv{max-width:600px;margin:6px 0}
+.shiftbar{font-size:18px;font-weight:800;text-align:center;border-radius:10px;padding:8px;margin:8px 0;background:#eaf7f5;color:var(--navy);transition:background .4s}
+.shiftbar.r{background:#fde0da}.shiftbar.l{background:#dbe8fb}
+.ctl{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.ctl .btn{padding:6px 10px;font-size:14px}
+.lvl{font-size:14px;color:#46586a;margin:4px 0}
+.nailctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.nailctl label{background:#fff;border:2px solid #cfd9e1;border-radius:10px;padding:4px 12px;cursor:pointer}
+.nailctl select{width:auto}
 .l3g{display:grid;grid-template-columns:330px 1fr;gap:18px;margin:8px 0}
 .leg2{display:flex;gap:10px;flex-wrap:wrap;font-size:14px;margin:6px 0;font-family:system-ui,'Segoe UI',Arial,sans-serif}
 .leg2 i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:4px;vertical-align:middle}
@@ -68,7 +78,7 @@ details p{margin:8px 0 2px}
 <div class="wrap">
   <div class="crumb">🧪 রসায়ন &rsaquo; নবম-দশম শ্রেণি &rsaquo; অধ্যায় ৭</div>
   <h1 class="title">রাসায়নিক বিক্রিয়া (Chemical Reactions)</h1>
-  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🧭 ল্যাব ১</a><a href="#lab2">⚡ ল্যাব ২</a><a href="#lab3">🧪 ল্যাব ৩</a><a href="#lab4">⏱️ ল্যাব ৪</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্ন-উত্তর</a></nav>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🧭 ল্যাব ১</a><a href="#lab2">⚡ ল্যাব ২</a><a href="#lab3">🧪 ল্যাব ৩</a><a href="#lab4">⏱️ ল্যাব ৪</a><a href="#lab5">⚖️ ল্যাব ৫</a><a href="#lab6">🔩 ল্যাব ৬</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্ন-উত্তর</a></nav>
 
   <!-- ================= নোট ================= -->
   <section class="panel" id="note">
@@ -309,6 +319,73 @@ details p{margin:8px 0 2px}
     <h3>🤔 বইয়ের প্রশ্নগুলো</h3>
     <div id="rqs"></div>
     <div class="key">📌 <b>সিদ্ধান্ত:</b> বিভিন্ন বিক্রিয়া সম্পন্ন হতে বিভিন্ন সময় নেয়। যে বিক্রিয়া অল্প সময়ে ঘটে তার হার বেশি, আর যে বিক্রিয়ায় অনেক সময় লাগে তার হার কম। এই পরীক্ষায় গরম পানিতে বিক্রিয়ার হার বেশি দেখা গেল।</div>
+  </section>
+
+  <!-- ================= ল্যাব ৫ ================= -->
+  <section class="panel" id="lab5">
+    <h2>⚖️ ল্যাব ৫: লা-শাতেলিয়ার নীতি</h2>
+    <p>একটা উভমুখী বিক্রিয়া বেছে নাও। শুরুতে শুধু বিক্রিয়ক আছে, দেখো কীভাবে <b>সাম্যাবস্থা</b> আসে (সম্মুখবর্তী ও পশ্চাৎমুখী হার সমান হয়ে যায়, বইয়ের চিত্র ৭.০৫-এর মতো)। সাম্য এলে তাপ, চাপ বা ঘনমাত্রা বদলে দাও। সাম্য কোন দিকে সরে যায় সেটা দেখো।</p>
+    <div class="rxlist" id="lclist"></div>
+    <div class="eqb" id="lceq"></div>
+    <div class="l3g">
+      <div class="box" style="text-align:center">
+        <canvas id="lccyl" width="300" height="200" style="margin:0 auto;max-width:300px"></canvas>
+        <div class="lvl" id="lclvl"></div>
+        <div class="ctl" style="justify-content:center">
+          <button class="btn" id="lcth">🔥 তাপ বাড়াও</button><button class="btn" id="lctc">❄️ তাপ কমাও</button>
+          <button class="btn" id="lcpu">⬇️ চাপ বাড়াও</button><button class="btn" id="lcpd">⬆️ চাপ কমাও</button>
+        </div>
+        <div class="ctl" style="justify-content:center">
+          <button class="btn alt" id="lcaa"></button><button class="btn alt" id="lcab"></button>
+          <button class="btn alt" id="lcac"></button><button class="btn alt" id="lcrc"></button>
+        </div>
+        <button class="btn alt" id="lcreset">↺ শুরু থেকে দেখাও</button>
+      </div>
+      <div>
+        <div class="shiftbar" id="lcshift">⚖️</div>
+        <canvas id="lcg1" class="gcv" width="600" height="170"></canvas>
+        <canvas id="lcg2" class="gcv" width="600" height="170"></canvas>
+      </div>
+    </div>
+    <div class="say" id="lcsay">সাম্যাবস্থা আসার জন্য কয়েক সেকেন্ড অপেক্ষা করো।</div>
+    <div class="key">🧠 <b>নীতি:</b> সাম্যাবস্থায় তাপ, চাপ বা ঘনমাত্রা বদলালে সাম্য এমন দিকে সরে যায় যাতে ওই পরিবর্তনের ফল কমে যায় (প্রশমিত হয়)। ছবির গ্রাফ সরল মডেল, সংখ্যাগুলো আসল পরিমাপ নয়।</div>
+  </section>
+
+  <!-- ================= ল্যাব ৬ ================= -->
+  <section class="panel" id="lab6">
+    <h2>🔩 ল্যাব ৬: মরিচা ও সুরক্ষা</h2>
+    <h3>ক) লোহায় মরিচা কখন পড়ে?</h3>
+    <p>অবস্থা বদলে "সময় এগোও" চাপো। দেখো কোন অবস্থায় মরিচা পড়ে, আর কোন সুরক্ষায় লোহা বাঁচে।</p>
+    <div class="nailctl">
+      <label><input type="checkbox" id="rair" checked> বাতাসের অক্সিজেন (O₂)</label>
+      <label><input type="checkbox" id="rwat" checked> পানি/জলীয় বাষ্প (H₂O)</label>
+      <select id="rcoat"><option value="none">কোনো সুরক্ষা নেই</option><option value="paint">রং করা</option><option value="zinc">জিংকের প্রলেপ (গ্যালভানাইজিং)</option><option value="tin">টিনের প্রলেপ (টিন প্লেটিং)</option><option value="oil">নারিকেল তেলে ডোবানো (সুচের জন্য)</option></select>
+    </div>
+    <div class="l3g">
+      <div class="box" style="text-align:center">
+        <canvas id="nailcv" width="320" height="220" style="margin:0 auto;max-width:320px"></canvas>
+        <div style="font-weight:700;margin:4px 0">দিন: <span id="nday">০</span></div>
+        <div class="btnrow" style="justify-content:center"><button class="btn" id="nrun">▶ সময় এগোও</button><button class="btn alt" id="nrst">↺ আবার</button></div>
+      </div>
+      <div>
+        <div class="say" id="nailsay">অবস্থা ঠিক করে "সময় এগোও" চাপো।</div>
+        <div class="eqb" id="nsteps" style="display:none"></div>
+      </div>
+    </div>
+
+    <h3>খ) কপার ও অ্যালুমিনিয়াম ক্ষয় হয় না কেন?</h3>
+    <p>একটা ধাতু বেছে নাও আর সময় এগিয়ে দাও। বাতাসের অক্সিজেন (নীল বিন্দু) ধাতুর উপর আসছে।</p>
+    <div class="rxlist" id="mlist"></div>
+    <div class="l3g">
+      <div class="box" style="text-align:center">
+        <canvas id="metcv" width="320" height="220" style="margin:0 auto;max-width:320px"></canvas>
+        <div style="font-weight:700;margin:4px 0">দিন: <span id="mday">০</span></div>
+        <div class="btnrow" style="justify-content:center"><button class="btn" id="mrun">▶ সময় এগোও</button><button class="btn alt" id="mrst">↺ আবার</button></div>
+      </div>
+      <div><div class="say" id="metsay"></div>
+        <div class="key">🛡️ <b>ক্ষয়রোধের উপায় (বই অনুযায়ী):</b> লোহার উপর রং দেওয়া, ইলেকট্রোপ্লেটিংয়ে অন্য ধাতুর প্রলেপ (জিংকের হলে গ্যালভানাইজিং, টিনের হলে টিন প্লেটিং), আর সেলাইয়ের সুচ নারিকেল তেলে ডুবিয়ে রাখা।</div>
+      </div>
+    </div>
   </section>
 
   <!-- ================= কুইজ ================= -->
@@ -777,6 +854,215 @@ var RQ=[
   });
 })();
 
+
+/* =============== ল্যাব ৫: লা-শাতেলিয়ার নীতি =============== */
+var LCR={
+ haber:{n:'N₂ + 3H₂ ⇌ 2NH₃ (তাপোৎপাদী)',eq:'N<sub>2</sub> + 3H<sub>2</sub> &#8652; 2NH<sub>3</sub> + 92 kJ',b:3,K0:0.5926,a:6,exo:true,kf0:0.07,A:'N₂',B:'H₂',C:'NH₃',nB0:3,
+  ex:{
+   th:'তাপ বাড়ানো হলো। সাম্য <b>বামে</b> সরে (NH₃ ভাঙে), কারণ বামমুখী বিক্রিয়াটি তাপ শোষণ করে এবং বাড়তি তাপ কমিয়ে দেয়।',
+   tc:'তাপ কমানো হলো। সাম্য <b>ডানে</b> সরে (NH₃ বাড়ে), কারণ ডানমুখী বিক্রিয়াটি তাপ উৎপন্ন করে এবং হারানো তাপ পূরণ করে।',
+   pu:'চাপ বাড়ানো হলো (আয়তন কমলো)। সাম্য <b>ডানে</b> সরে, কারণ ডানে গ্যাসীয় মোল কম (বামে ১+৩ = ৪, ডানে ২) এবং চাপ বাড়ার ফল কমে যায়।',
+   pd:'চাপ কমানো হলো। সাম্য <b>বামে</b> সরে, কারণ বামে গ্যাসীয় মোল বেশি এবং চাপ কমার ফল পূরণ হয়।',
+   aa:'N₂ এর ঘনমাত্রা বাড়ানো হলো। সাম্য <b>ডানে</b> সরে, কারণ বাড়তি N₂ খরচ করে NH₃ তৈরি হয়।',
+   ab:'H₂ এর ঘনমাত্রা বাড়ানো হলো। সাম্য <b>ডানে</b> সরে, কারণ বাড়তি H₂ খরচ করে NH₃ তৈরি হয়।',
+   ac:'NH₃ (উৎপাদ) এর ঘনমাত্রা বাড়ানো হলো। সাম্য <b>বামে</b> সরে, কারণ বাড়তি NH₃ ভেঙে N₂ ও H₂ তৈরি হয়।',
+   rc:'NH₃ (উৎপাদ) সরানো হলো। সাম্য <b>ডানে</b> সরে, কারণ হারানো NH₃ পূরণ করতে আরও NH₃ তৈরি হয়।'}},
+ no:{n:'N₂ + O₂ ⇌ 2NO (তাপহারী)',eq:'N<sub>2</sub> + O<sub>2</sub> + 180 kJ &#8652; 2NO',b:1,K0:0.5,a:6,exo:false,kf0:0.2,A:'N₂',B:'O₂',C:'NO',nB0:1,
+  ex:{
+   th:'তাপ বাড়ানো হলো। সাম্য <b>ডানে</b> সরে (NO বাড়ে), কারণ ডানমুখী বিক্রিয়াটি তাপ শোষণ করে এবং বাড়তি তাপ কমিয়ে দেয়।',
+   tc:'তাপ কমানো হলো। সাম্য <b>বামে</b> সরে (NO ভাঙে), কারণ বামমুখী বিক্রিয়াটি তাপ উৎপন্ন করে।',
+   pu:'চাপ বাড়ানো হলো। বিক্রিয়কের মোল ১+১ = ২, উৎপাদের মোলও ২। মোল সংখ্যা সমান, তাই সাম্যে <b>চাপের কোনো প্রভাব নেই</b>। (ঘনমাত্রা বাড়লেও সাম্য সরে না।)',
+   pd:'চাপ কমানো হলো। মোল সংখ্যা সমান (২ = ২), তাই সাম্যে <b>চাপের কোনো প্রভাব নেই</b>।',
+   aa:'N₂ এর ঘনমাত্রা বাড়ানো হলো। সাম্য <b>ডানে</b> সরে (NO বাড়ে)।',
+   ab:'O₂ এর ঘনমাত্রা বাড়ানো হলো। সাম্য <b>ডানে</b> সরে (NO বাড়ে)।',
+   ac:'NO (উৎপাদ) এর ঘনমাত্রা বাড়ানো হলো। সাম্য <b>বামে</b> সরে, কারণ বাড়তি NO ভেঙে N₂ ও O₂ তৈরি হয়।',
+   rc:'NO (উৎপাদ) সরানো হলো। সাম্য <b>ডানে</b> সরে, কারণ হারানো NO পূরণ করতে আরও NO তৈরি হয়।'}}
+};
+var LC={kind:'haber',S:null,t:0,hist:[],events:[],eqT:0,last:0,parts:{A:[],B:[],C:[]}};
+var VL=[0.5,0.7,1,1.4,2], LCnames={A:'#2b6cb0',B:'#2e8b57',C:'#e76f51'};
+function lcT(L){ return 1+0.1*L; }
+function lcK(R,L){ return R.K0*Math.exp((R.exo?1:-1)*R.a*(1/lcT(L)-1)); }
+function lcKf(R,L){ return R.kf0*Math.exp(3*(1-1/lcT(L))); }
+function lcStep(R,S,dt){
+  var cA=S.nA/S.V, cB=S.nB/S.V, cC=S.nC/S.V, f=lcKf(R,S.L), kb=f/lcK(R,S.L);
+  var rf=f*cA*Math.pow(cB,R.b), rb=kb*cC*cC, xi=S.V*(rf-rb)*dt;
+  xi=Math.max(-S.nC/2,Math.min(xi,Math.min(S.nA,S.nB/R.b)));
+  S.nA-=xi; S.nB-=R.b*xi; S.nC+=2*xi;
+  return {rf:rf,rb:rb,cA:S.nA/S.V,cB:S.nB/S.V,cC:S.nC/S.V};
+}
+function lcFresh(){
+  var R=LCR[LC.kind]; LC.S={nA:1,nB:R.nB0,nC:0,V:1,vi:2,L:0}; LC.t=0; LC.hist=[]; LC.events=[]; LC.eqT=0;
+  $('lceq').innerHTML=R.eq;
+  $('lcaa').textContent='➕ '+R.A+' যোগ'; $('lcab').textContent='➕ '+R.B+' যোগ'; $('lcac').textContent='➕ '+R.C+' (উৎপাদ) যোগ'; $('lcrc').textContent='➖ '+R.C+' (উৎপাদ) সরাও';
+  $('lcsay').innerHTML='শুরুতে শুধু '+R.A+' ও '+R.B+' আছে। সাম্যাবস্থা আসা পর্যন্ত অপেক্ষা করো।';
+  document.querySelectorAll('#lclist button').forEach(function(b,i){ b.className='btn'+((i===(LC.kind==='haber'?0:1))?'':' alt'); });
+  lcLvl();
+}
+function lcLvl(){
+  var L=LC.S.L, txt=(L===0?'স্বাভাবিক':(L>0?'স্বাভাবিকের চেয়ে '+bn(L)+' ধাপ বেশি':'স্বাভাবিকের চেয়ে '+bn(-L)+' ধাপ কম'));
+  var pv=LC.S.vi, ptxt=(pv===2?'স্বাভাবিক':(pv<2?'স্বাভাবিকের চেয়ে '+bn(2-pv)+' ধাপ বেশি':'স্বাভাবিকের চেয়ে '+bn(pv-2)+' ধাপ কম'));
+  $('lclvl').innerHTML='🌡️ তাপমাত্রা: <b>'+txt+'</b> &nbsp;|&nbsp; ⬇️ চাপ: <b>'+ptxt+'</b>';
+}
+function lcEvent(key,label,mod){
+  var R=LCR[LC.kind], S=LC.S; mod(R,S);
+  LC.events.push({t:LC.t,label:label}); LC.eqT=0;
+  $('lcsay').innerHTML=R.ex[key]; lcLvl();
+}
+$('lcth').onclick=function(){ if(LC.S.L<2) lcEvent('th','তাপ↑',function(R,S){ S.L++; }); };
+$('lctc').onclick=function(){ if(LC.S.L>-2) lcEvent('tc','তাপ↓',function(R,S){ S.L--; }); };
+$('lcpu').onclick=function(){ if(LC.S.vi>0) lcEvent('pu','চাপ↑',function(R,S){ S.vi--; S.V=VL[S.vi]; }); };
+$('lcpd').onclick=function(){ if(LC.S.vi<4) lcEvent('pd','চাপ↓',function(R,S){ S.vi++; S.V=VL[S.vi]; }); };
+$('lcaa').onclick=function(){ lcEvent('aa','+'+LCR[LC.kind].A,function(R,S){ S.nA+=0.5; }); };
+$('lcab').onclick=function(){ lcEvent('ab','+'+LCR[LC.kind].B,function(R,S){ S.nB+=0.5*R.b; }); };
+$('lcac').onclick=function(){ lcEvent('ac','+'+LCR[LC.kind].C,function(R,S){ S.nC+=0.5; }); };
+$('lcrc').onclick=function(){ lcEvent('rc','−'+LCR[LC.kind].C,function(R,S){ S.nC=Math.max(0,S.nC-0.5); }); };
+$('lcreset').onclick=lcFresh;
+[['haber'],['no']].forEach(function(k,i){ var b=document.createElement('button'); b.className='btn alt'; b.textContent=LCR[k[0]].n; b.onclick=function(){ LC.kind=k[0]; lcFresh(); }; $('lclist').appendChild(b); });
+function lcParts(){
+  var S=LC.S, want={A:Math.min(30,Math.round(S.nA*5)),B:Math.min(40,Math.round(S.nB*5)),C:Math.min(30,Math.round(S.nC*5))};
+  ['A','B','C'].forEach(function(k){ var a=LC.parts[k]; while(a.length<want[k]) a.push({u:Math.random(),v:Math.random(),du:(Math.random()-.5)*0.02,dv:(Math.random()-.5)*0.02}); while(a.length>want[k]) a.splice(Math.floor(Math.random()*a.length),1); });
+}
+function lcCyl(){
+  var c=$('lccyl').getContext('2d'), S=LC.S, W=140*S.V, x0=14, y0=24, H=150;
+  c.clearRect(0,0,300,200);
+  var tint=S.L>0?'rgba(231,111,81,'+(0.08*S.L)+')':'rgba(43,108,176,'+(0.08*-S.L)+')';
+  c.fillStyle='#f7fbfd'; c.fillRect(x0,y0,W,H); c.fillStyle=tint; c.fillRect(x0,y0,W,H);
+  c.strokeStyle='#1f3a5f'; c.lineWidth=3; c.strokeRect(x0,y0,W,H);
+  c.fillStyle='#8b95a1'; c.fillRect(x0+W,y0+10,12,H-20); c.fillRect(x0+W+12,y0+H/2-3,24,6);
+  var sp=1+0.25*S.L; var R=LCR[LC.kind];
+  ['A','B','C'].forEach(function(k){
+    LC.parts[k].forEach(function(p){
+      p.u+=p.du*sp; p.v+=p.dv*sp; if(p.u<0.04||p.u>0.96) p.du*=-1; if(p.v<0.04||p.v>0.96) p.dv*=-1;
+      p.du+=(Math.random()-.5)*0.004; p.dv+=(Math.random()-.5)*0.004;
+      c.beginPath(); c.arc(x0+p.u*W,y0+p.v*H,5,0,6.283); c.fillStyle=LCnames[k]; c.fill();
+    });
+  });
+  c.fillStyle='#1f3a5f'; c.font='12px "Hind Siliguri","Nirmala UI",sans-serif'; c.textAlign='left';
+  var lx=x0; [['A',R.A],['B',R.B],['C',R.C]].forEach(function(q,i){ c.fillStyle=LCnames[q[0]]; c.beginPath(); c.arc(lx+6,190,5,0,6.283); c.fill(); c.fillStyle='#1f3a5f'; c.fillText(q[1],lx+14,194); lx+=70; });
+}
+function lcGraph(id,series,title,events){
+  var cv=$(id), c=cv.getContext('2d'), W=600, H=170, L=40, B=26, T=18, win=20;
+  c.clearRect(0,0,W,H); c.fillStyle='#fff'; c.fillRect(0,0,W,H);
+  var t1=LC.t, t0=Math.max(0,t1-win), mx=0.0001;
+  LC.hist.forEach(function(h){ if(h.t>=t0) series.forEach(function(s){ mx=Math.max(mx,h[s.k]); }); });
+  mx*=1.15;
+  c.strokeStyle='#9aa5b1'; c.lineWidth=1.5; c.beginPath(); c.moveTo(L,T); c.lineTo(L,H-B); c.lineTo(W-10,H-B); c.stroke();
+  c.fillStyle='#46586a'; c.font='11px "Hind Siliguri","Nirmala UI",sans-serif'; c.textAlign='left'; c.fillText(title,L+4,12); c.textAlign='right'; c.fillText('সময় →',W-12,H-8);
+  function X(t){ return L+(t-t0)/(t1-t0||1)*(W-L-12); } function Y(v){ return H-B-(v/mx)*(H-B-T); }
+  (events||[]).forEach(function(e){ if(e.t>=t0){ c.strokeStyle='#b9c3cc'; c.setLineDash([4,3]); c.beginPath(); c.moveTo(X(e.t),T); c.lineTo(X(e.t),H-B); c.stroke(); c.setLineDash([]); c.fillStyle='#1f3a5f'; c.textAlign='left'; c.fillText(e.label,X(e.t)+3,T+10); } });
+  series.forEach(function(s){
+    c.beginPath(); var first=true;
+    LC.hist.forEach(function(h){ if(h.t<t0) return; var x=X(h.t), y=Y(h[s.k]); if(first){ c.moveTo(x,y); first=false; } else c.lineTo(x,y); });
+    c.strokeStyle=s.col; c.lineWidth=2.2; c.stroke();
+  });
+  var lx=L+60; series.forEach(function(s){ c.fillStyle=s.col; c.fillRect(lx,H-18,10,10); c.fillStyle='#46586a'; c.textAlign='left'; c.fillText(s.name,lx+14,H-9); lx+=110; });
+}
+function lcLoop(ts){
+  var dt=Math.min(0.05,(ts-LC.last)/1000||0.016); LC.last=ts;
+  var R=LCR[LC.kind], S=LC.S, steps=Math.max(1,Math.round(dt*120)), o, i;
+  for(i=0;i<steps;i++){ o=lcStep(R,S,1/120); LC.t+=1/120; }
+  LC.hist.push({t:LC.t,rf:o.rf,rb:o.rb,cA:o.cA,cB:o.cB,cC:o.cC});
+  if(LC.hist.length>3000) LC.hist.shift();
+  var rel=(o.rf-o.rb)/(o.rf||1), bar=$('lcshift');
+  if(Math.abs(rel)<0.03){ LC.eqT+=dt; bar.className='shiftbar'; bar.innerHTML='⚖️ সাম্যাবস্থা: সম্মুখবর্তী ও পশ্চাৎমুখী হার সমান'; }
+  else if(rel>0){ LC.eqT=0; bar.className='shiftbar r'; bar.innerHTML='⟶ সাম্য ডানে সরছে ('+R.C+' বাড়ছে)'; }
+  else { LC.eqT=0; bar.className='shiftbar l'; bar.innerHTML='⟵ সাম্য বামে সরছে ('+R.A+', '+R.B+' বাড়ছে)'; }
+  lcParts(); lcCyl();
+  lcGraph('lcg1',[{k:'rf',col:'#2b6cb0',name:'সম্মুখবর্তী হার'},{k:'rb',col:'#e76f51',name:'বিপরীতমুখী হার'}],'বিক্রিয়ার হার',LC.events);
+  lcGraph('lcg2',[{k:'cA',col:LCnames.A,name:R.A},{k:'cB',col:LCnames.B,name:R.B},{k:'cC',col:LCnames.C,name:R.C}],'ঘনমাত্রা',LC.events);
+  requestAnimationFrame(lcLoop);
+}
+lcFresh(); requestAnimationFrame(lcLoop);
+
+/* =============== ল্যাব ৬ক: লোহায় মরিচা =============== */
+var NL={day:0,run:false,rust:0,spots:[]};
+(function(){ for(var i=0;i<46;i++){ NL.spots.push({x:70+Math.random()*190,y:100+Math.random()*20,r:2+Math.random()*5}); } })();
+var nparts=[]; for(var q=0;q<22;q++) nparts.push({x:Math.random()*320,y:Math.random()*220,vx:(Math.random()-.5)*0.8,vy:(Math.random()-.5)*0.8,t:q%2});
+function nailRate(){ return ($('rair').checked && $('rwat').checked && $('rcoat').value==='none')?1/45:0; }
+function nailDraw(){
+  var c=$('nailcv').getContext('2d'); c.clearRect(0,0,320,220);
+  var coat=$('rcoat').value, air=$('rair').checked, wat=$('rwat').checked;
+  nparts.forEach(function(p){
+    p.x+=p.vx; p.y+=p.vy; if(p.x<0||p.x>320) p.vx*=-1; if(p.y<0||p.y>220) p.vy*=-1;
+    var onShaft=(p.x>55&&p.x<275&&p.y>82&&p.y<138);
+    if(onShaft && coat!=='none'){ p.vy=(p.y<110?-1:1)*Math.abs(p.vy||0.4); }
+    if(p.t===0 && !air) return; if(p.t===1 && !wat) return;
+    c.beginPath(); c.arc(p.x,p.y,p.t===0?5:4,0,6.283); c.fillStyle=p.t===0?'rgba(43,108,176,.75)':'rgba(120,200,235,.8)'; c.fill();
+    c.fillStyle='#fff'; c.font='bold 6px Arial'; c.textAlign='center'; c.fillText(p.t===0?'O₂':'H₂O',p.x,p.y+2);
+  });
+  var colors={paint:'#2b6cb0',zinc:'#b9c3cc',tin:'#dfe7ee',oil:'rgba(240,200,60,.55)'};
+  if(coat!=='none'){ c.fillStyle=colors[coat]; c.fillRect(48,76,236,70); c.beginPath(); c.arc(50,111,34,Math.PI*0.5,Math.PI*1.5); c.fill(); }
+  c.fillStyle='#8b95a1'; c.fillRect(60,92,210,38);
+  c.beginPath(); c.moveTo(270,92); c.lineTo(305,111); c.lineTo(270,130); c.closePath(); c.fillStyle='#8b95a1'; c.fill();
+  c.fillStyle='#6f7a86'; c.fillRect(46,84,16,54);
+  var n=Math.floor(NL.rust*NL.spots.length);
+  for(var i=0;i<n;i++){ var s=NL.spots[i]; c.beginPath(); c.arc(s.x,s.y,s.r*(0.5+NL.rust),0,6.283); c.fillStyle='rgba(176,86,32,'+(0.5+0.4*NL.rust)+')'; c.fill(); }
+  c.fillStyle='#1f3a5f'; c.font='12px "Hind Siliguri","Nirmala UI",sans-serif'; c.textAlign='left'; c.fillText('লোহার পেরেক'+(coat!=='none'?' (সুরক্ষিত)':''),10,16);
+}
+function nailLoop(){
+  if(NL.run){ NL.day=Math.min(60,NL.day+0.3); NL.rust=Math.min(1,NL.rust+nailRate()*0.3); if(NL.day>=60){ NL.run=false; nailFinish(); } $('nday').textContent=bn(Math.round(NL.day)); updateSteps(); }
+  nailDraw(); requestAnimationFrame(nailLoop);
+}
+function updateSteps(){
+  var b=$('nsteps');
+  if(NL.rust>0.15){ b.style.display='block'; b.innerHTML='2Fe + 1.5O<sub>2</sub> + 3H<sub>2</sub>O &rarr; 2Fe(OH)<sub>3</sub>'+(NL.rust>0.6?'<br>2Fe(OH)<sub>3</sub> &rarr; Fe<sub>2</sub>O<sub>3</sub>&middot;nH<sub>2</sub>O (মরিচা)':''); }
+}
+function nailFinish(){
+  var air=$('rair').checked, wat=$('rwat').checked, coat=$('rcoat').value, m;
+  if(!air && !wat) m='বাতাস আর পানি, দুটোর কোনোটাই নেই। তাই লোহা অক্ষত আছে।';
+  else if(!air) m='বাতাসের অক্সিজেন নেই। অক্সিজেন ছাড়া মরিচা তৈরি হয় না, লোহা অক্ষত আছে।';
+  else if(!wat) m='পানি বা জলীয় বাষ্প নেই। মরিচা পড়তে বাতাসের অক্সিজেন ও জলীয় বাষ্প দুটোই লাগে, তাই লোহা অক্ষত আছে।';
+  else if(coat==='paint') m='রং বাতাস ও জলীয় বাষ্পকে লোহার সংস্পর্শে আসতে দেয় না, তাই মরিচা পড়েনি।';
+  else if(coat==='zinc') m='লোহার উপর জিংকের প্রলেপ (গ্যালভানাইজিং) আছে। লোহা বাতাস ও জলীয় বাষ্পের সংস্পর্শে আসেনি, তাই মরিচা পড়েনি।';
+  else if(coat==='tin') m='লোহার উপর টিনের প্রলেপ (টিন প্লেটিং) আছে। লোহা বাতাস ও জলীয় বাষ্পের সংস্পর্শে আসেনি, তাই মরিচা পড়েনি।';
+  else if(coat==='oil') m='নারিকেল তেলের আবরণ বাতাসের অক্সিজেন ও জলীয় বাষ্পকে সুচের কাছে আসতে দেয় না, তাই মরিচা পড়েনি।';
+  else m='বাতাসের অক্সিজেন ও জলীয় বাষ্প দুটোই আছে আর কোনো সুরক্ষা নেই। লোহার সাথে বিক্রিয়ায় মরিচা (Fe<sub>2</sub>O<sub>3</sub>&middot;nH<sub>2</sub>O) তৈরি হলো, আর লোহার পৃষ্ঠ ক্ষয় হচ্ছে।';
+  $('nailsay').innerHTML=(NL.rust>0.2?'🟤 ':'✅ ')+m;
+}
+$('nrun').onclick=function(){ if(NL.day>=60) return; NL.run=true; $('nailsay').innerHTML='সময় এগোচ্ছে...'; };
+$('nrst').onclick=function(){ NL.run=false; NL.day=0; NL.rust=0; $('nday').textContent='০'; $('nsteps').style.display='none'; $('nailsay').innerHTML='অবস্থা ঠিক করে "সময় এগোও" চাপো।'; };
+['rair','rwat','rcoat'].forEach(function(id){ $(id).onchange=function(){ $('nrst').onclick(); }; });
+nailLoop();
+
+/* =============== ল্যাব ৬খ: Fe, Cu, Al =============== */
+var MET={fe:{n:'লোহা (Fe)',col:'#8b95a1',oxcol:'#b05620',porous:true,say:'<b>লোহা:</b> মরিচা ঝাঁঝরি (ছিদ্রযুক্ত) জাতীয় পদার্থ। এর ভেতর দিয়ে বাতাসের অক্সিজেন ও জলীয় বাষ্প ঢুকে ভেতরের লোহাকে ক্রমাগত ক্ষয় করতে থাকে। ফলে একসময় পুরো লোহার জিনিসটাই নষ্ট হয়ে যায়।'},
+ cu:{n:'কপার (Cu)',col:'#c97a4a',oxcol:'#3b2f2a',porous:false,say:'<b>কপার:</b> বাতাসের অক্সিজেনের সংস্পর্শে প্রথমে এর উপর CuO এর পাতলা আস্তরণ পড়ে। এই আস্তরণ ভেদ করে অক্সিজেন ভেতরে ঢুকতে পারে না, তাই ভেতরের Cu আর ক্ষয় হয় না। CuO কপারকে রক্ষা করে।'},
+ al:{n:'অ্যালুমিনিয়াম (Al)',col:'#c9d1d9',oxcol:'#9aa5b1',porous:false,say:'<b>অ্যালুমিনিয়াম:</b> প্রথমে এর উপর Al₂O₃ এর পাতলা আস্তরণ পড়ে। এটি অক্সিজেনকে ভেতরে ঢুকতে দেয় না, তাই ভেতরের Al আর ক্ষয় হয় না। Al₂O₃ অ্যালুমিনিয়ামকে রক্ষা করে।'}};
+var MT={k:'fe',day:0,run:false}, mparts=[];
+for(var z=0;z<14;z++) mparts.push({x:60+Math.random()*240,y:Math.random()*100,v:0.5+Math.random()*0.7});
+function metDraw(){
+  var M=MET[MT.k], c=$('metcv').getContext('2d'); c.clearRect(0,0,320,220);
+  var d=MT.day, th, rec=0;
+  if(M.porous){ th=Math.min(38,d*0.7); rec=Math.min(26,d*0.4); } else { th=Math.min(5,d*1.2); rec=0; }
+  var top=110+rec;
+  c.fillStyle=M.col; c.fillRect(50,top+th,230,200-(top+th)); c.strokeStyle='#1f3a5f'; c.lineWidth=2; c.strokeRect(50,top+th,230,200-(top+th));
+  if(th>0.5){
+    c.fillStyle=M.oxcol; c.fillRect(50,top,230,th);
+    if(M.porous){ c.fillStyle='rgba(255,255,255,.55)'; for(var i=0;i<16;i++){ c.fillRect(56+i*14,top+3+(i*7)%Math.max(4,th-6),6,Math.min(8,th)); } }
+  }
+  var surf=top-1;
+  mparts.forEach(function(p){
+    p.y+=p.v; var limit=M.porous?(top+th+rec*0+0):(top-2);
+    if(!M.porous && th>=4 && p.y>=surf-3){ p.v=-Math.abs(p.v); }
+    if(p.y<0) p.v=Math.abs(p.v);
+    if(M.porous && p.y>=top+th-2){ p.y=Math.random()*20; p.v=0.5+Math.random()*0.7; p.x=60+Math.random()*240; }
+    if(!M.porous && th<4 && p.y>=top+th-2){ p.y=Math.random()*20; p.v=0.5+Math.random()*0.7; }
+    c.beginPath(); c.arc(p.x,p.y,4.5,0,6.283); c.fillStyle='rgba(43,108,176,.8)'; c.fill();
+    c.fillStyle='#fff'; c.font='bold 6px Arial'; c.textAlign='center'; c.fillText('O₂',p.x,p.y+2);
+  });
+  c.fillStyle='#1f3a5f'; c.font='12px "Hind Siliguri","Nirmala UI",sans-serif'; c.textAlign='left';
+  c.fillText(M.n+(th>0.5?(M.porous?'  (মরিচার ছিদ্রযুক্ত স্তর)':'  (পাতলা অক্সাইড আস্তরণ)'):''),8,16);
+}
+function metLoop(){
+  if(MT.run){ MT.day=Math.min(60,MT.day+0.3); if(MT.day>=60) MT.run=false; $('mday').textContent=bn(Math.round(MT.day)); }
+  metDraw(); requestAnimationFrame(metLoop);
+}
+Object.keys(MET).forEach(function(k){ var b=document.createElement('button'); b.className='btn alt'; b.textContent=MET[k].n; b.onclick=function(){ MT.k=k; MT.day=0; MT.run=false; $('mday').textContent='০'; $('metsay').innerHTML=MET[k].say; document.querySelectorAll('#mlist button').forEach(function(x){ x.className='btn alt'; }); b.className='btn'; }; $('mlist').appendChild(b); });
+$('mlist').firstChild.className='btn'; $('metsay').innerHTML=MET.fe.say;
+$('mrun').onclick=function(){ if(MT.day<60) MT.run=true; };
+$('mrst').onclick=function(){ MT.day=0; MT.run=false; $('mday').textContent='০'; };
+metLoop();
+
 /* =============== কুইজ =============== */
 var QUIZ=[
  {q:'কোনটি রাসায়নিক পরিবর্তন?',o:['বরফ গলে পানি হওয়া','মিথেন গ্যাস পোড়ানো','পানি বাষ্প হওয়া','পানি জমে বরফ হওয়া'],a:1,e:'মিথেন পুড়ে CO₂ ও পানি তৈরি হয়, অর্থাৎ নতুন পদার্থ তৈরি হয়। বাকিগুলোতে শুধু অবস্থা বদলায় (ভৌত পরিবর্তন)।'},
@@ -795,6 +1081,9 @@ var QUIZ=[
  {q:'মৌমাছির কামড়ে ক্ষতস্থানে চুন লাগালে জ্বালা কমে কেন?',o:['চুন ঠান্ডা বলে','চুন (ক্ষার) এসিডকে প্রশমিত করে','চুন রক্ত জমাট করে','চুন ব্যথা ভুলিয়ে দেয়'],a:1,e:'হুলের এসিডকে ক্ষার (চুন) প্রশমিত করে, তাই জ্বালা কমে।'},
  {q:'এন্টাসিড জাতীয় ওষুধ সেবনে কোন ধরনের বিক্রিয়া সম্পন্ন হয়?',o:['প্রশমন','দহন','সংযোজন','প্রতিস্থাপন'],a:0,e:'এন্টাসিড (Mg(OH)₂, Al(OH)₃) ক্ষার। এরা পাকস্থলীর বাড়তি HCl এসিডের সাথে বিক্রিয়া করে প্রশমিত করে, তাই এটি প্রশমন বিক্রিয়া।'},
  {q:'অধঃক্ষেপণ বিক্রিয়ায় তলায় যা জমে তাকে কী বলে?',o:['দর্শক আয়ন','অধঃক্ষেপ','প্রভাবক','দ্রাবক'],a:1,e:'অদ্রবণীয় কঠিন উৎপাদটি তলানি হিসেবে জমে, একে অধঃক্ষেপ (precipitate) বলে।'},
+ {q:'লোহার মরিচার রাসায়নিক সংকেত কোনটি?',o:['Fe₂O₃·nH₂O','FeO','Fe(OH)₂ শুধু','FeSO₄'],a:0,e:'লোহা বাতাসের অক্সিজেন ও জলীয় বাষ্পের সাথে বিক্রিয়ায় আর্দ্র ফেরিক অক্সাইড Fe₂O₃·nH₂O (মরিচা) তৈরি করে।'},
+ {q:'কপার ও অ্যালুমিনিয়াম সহজে ক্ষয় হয় না কেন?',o:['এরা বাতাসের সাথে বিক্রিয়াই করে না','এদের উপর CuO ও Al₂O₃ এর রক্ষাকারী আস্তরণ পড়ে','এরা পানিতে অদ্রবণীয়','এরা খুব ভারী'],a:1,e:'প্রথমে বাতাসের অক্সিজেনের সাথে বিক্রিয়ায় CuO ও Al₂O₃ এর পাতলা আস্তরণ পড়ে, যা ভেতরের ধাতুকে বাতাস থেকে আলাদা করে রাখে।'},
+ {q:'লোহার উপর জিংকের প্রলেপ দেওয়াকে কী বলে?',o:['টিন প্লেটিং','গ্যালভানাইজিং','অ্যানোডাইজিং','পলিমারকরণ'],a:1,e:'জিংকের প্রলেপ দিলে গ্যালভানাইজিং, টিনের প্রলেপ দিলে টিন প্লেটিং বলে।'},
  {q:'ভিনেগারে কোন এসিড থাকে?',o:['সাইট্রিক এসিড','এসিটিক এসিড','টারটারিক এসিড','এসকরবিক এসিড'],a:1,e:'ভিনেগারে এসিটিক এসিড (৪-১০%) থাকে। সাইট্রিক এসিড থাকে লেবুর রসে।'},
  {q:'2FeCl₂ + Cl₂ → 2FeCl₃ বিক্রিয়াটি কোনটি?',o:['শুধু সংযোজন, রেডক্স নয়','জারণ-বিজারণ ও সংযোজন','প্রশমন','অধঃক্ষেপণ'],a:1,e:'Fe এর জারণ সংখ্যা +২ থেকে +৩ এবং Cl এর ০ থেকে −১ হয়েছে, তাই রেডক্স। আবার দুটি যুক্ত হয়ে একটি উৎপাদ, তাই সংযোজনও।'},
  {q:'H₂SO₄ + MgO → MgSO₄ + H₂O বিক্রিয়ায় কোনটি ঘটে?',o:['তাপ উৎপন্ন হয়','ইলেকট্রন স্থানান্তর ঘটে','অধঃক্ষেপ পড়ে','জারণ সংখ্যা বদলে যায়'],a:0,e:'এসিড ও ক্ষারধর্মী অক্সাইডের বিক্রিয়া একটি প্রশমন। এতে তাপ উৎপন্ন হয়। ইলেকট্রন স্থানান্তর হয় না, আর MgSO₄ দ্রবণীয়, তাই অধঃক্ষেপও পড়ে না।'},
