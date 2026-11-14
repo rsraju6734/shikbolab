@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>বৈদ্যুতিক সার্কিট ল্যাব - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+canvas{width:100%;height:auto;max-width:700px;display:block;margin:8px auto;border-radius:12px;background:#0f1a28}
+canvas.light{background:#fff;border:1px solid var(--line)}
+.ctl{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.ctl input[type=range]{width:200px;max-width:100%}
+.ctl select,.ctl input[type=number]{font-family:inherit;font-size:16px;padding:6px 8px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;width:auto}
+.vals{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.vals div{background:#eaf7f5;border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);font-family:system-ui,Arial,sans-serif}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ptscroll{overflow-x:auto}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.bulbs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.fb{font-weight:700;margin-top:6px}
+.apl td,.apl th{font-size:15px;padding:6px}
+.apl input{width:70px;font-family:inherit;font-size:15px;padding:4px;border-radius:6px;border:2px solid #cfd9e1}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">⚛️ পদার্থবিজ্ঞান &rsaquo; বিশেষ ল্যাব (এক্সট্রা)</div>
+  <h1 class="title">⚡ বৈদ্যুতিক সার্কিট ল্যাব</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🔋 ল্যাব ১</a><a href="#lab2">💡 ল্যাব ২</a><a href="#lab3">🧮 ল্যাব ৩</a><a href="#lab4">🔌 ল্যাব ৪</a><a href="#quiz">❓ কুইজ</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই ল্যাবে শিখবে:</b> তড়িৎ প্রবাহ, বিভব পার্থক্য, রোধ, ওহমের সূত্র, শ্রেণি ও সমান্তরাল সংযোগ, ক্ষমতা ও বিদ্যুৎ খরচ।</div>
+    <div class="warn">ℹ️ এই অধ্যায়টি NCTB বইয়ের সাথে মিলিয়ে সাজানো নয়, এটি একটি এক্সট্রা ল্যাব। বইয়ের নির্দিষ্ট অধ্যায়ের PDF পেলে আমি বইয়ের ক্রম অনুযায়ী নোট ও প্রশ্ন যোগ করে দেব।</div>
+
+    <h3>১. তড়িৎ প্রবাহ, বিভব পার্থক্য ও রোধ ⭐⭐⭐</h3>
+    <ul>
+      <li><b>তড়িৎ প্রবাহ (I):</b> প্রতি সেকেন্ডে কতটা আধান কোনো তারের প্রস্থচ্ছেদ দিয়ে যায়। একক <b>অ্যাম্পিয়ার (A)</b>। I = Q ÷ t।</li>
+      <li><b>বিভব পার্থক্য (V):</b> প্রতি একক আধানকে চালাতে কত শক্তি দেওয়া হয়। একক <b>ভোল্ট (V)</b>। ব্যাটারি এই "ঠেলা" দেয়।</li>
+      <li><b>রোধ (R):</b> তারের বা বস্তুর প্রবাহে বাধা দেওয়ার ক্ষমতা। একক <b>ওহম (Ω)</b>।</li>
+      <li>ধাতুর তারে <b>ইলেকট্রন</b> চলে ঋণাত্মক প্রান্ত (−) থেকে ধনাত্মক প্রান্তের (+) দিকে। কিন্তু নিয়ম অনুযায়ী <b>প্রচলিত তড়িৎ প্রবাহ</b> ধরা হয় ধনাত্মক থেকে ঋণাত্মকের দিকে, অর্থাৎ <b>ইলেকট্রনের উল্টো দিকে</b>।</li>
+    </ul>
+    <h3>২. ওহমের সূত্র ⭐⭐⭐</h3>
+    <div class="key">স্থির তাপমাত্রায় কোনো পরিবাহীর দুই প্রান্তের বিভব পার্থক্য (V) তড়িৎ প্রবাহের (I) সমানুপাতিক। <b>V = I × R</b>, অর্থাৎ <b>I = V ÷ R</b>। V–I গ্রাফ মূলবিন্দু দিয়ে যাওয়া সরলরেখা, যার ঢাল = 1/R।</div>
+    <h3>৩. শ্রেণি ও সমান্তরাল সংযোগ ⭐⭐⭐</h3>
+    <table class="t">
+      <tr><th>বিষয়</th><th>শ্রেণি সংযোগ</th><th>সমান্তরাল সংযোগ</th></tr>
+      <tr><td>প্রবাহের পথ</td><td>একটাই পথ</td><td>একাধিক পথ</td></tr>
+      <tr><td>প্রবাহ</td><td>সবখানে সমান</td><td>ভাগ হয়ে যায় (I = I₁ + I₂ + ...)</td></tr>
+      <tr><td>বিভব পার্থক্য</td><td>ভাগ হয় (V = V₁ + V₂ + ...)</td><td>প্রতি শাখায় সমান</td></tr>
+      <tr><td>সমতুল্য রোধ</td><td>R = R₁ + R₂ + ...</td><td>1/R = 1/R₁ + 1/R₂ + ...</td></tr>
+      <tr><td>একটা বাল্ব খুললে</td><td>সবগুলো নিভে যায়</td><td>বাকিগুলো জ্বলতে থাকে</td></tr>
+      <tr><td>বাসাবাড়ির সংযোগ</td><td>হয় না</td><td>হয় (তাই এক বাতি নিভলে অন্যগুলো জ্বলে)</td></tr>
+    </table>
+    <div class="star">📌 সমান্তরালে রোধ যোগ করলে মোট রোধ <b>কমে</b>, কারণ প্রবাহের জন্য আরও পথ খুলে যায়। মোট রোধ সবচেয়ে ছোট রোধের চেয়েও কম হয়।</div>
+    <h3>৪. ক্ষমতা ও বিদ্যুৎ খরচ ⭐⭐</h3>
+    <ul>
+      <li><b>ক্ষমতা P = V × I = I²R = V²/R</b>। একক <b>ওয়াট (W)</b>।</li>
+      <li>বিদ্যুৎ খরচ = ক্ষমতা × সময়। একক <b>কিলোওয়াট-ঘণ্টা (kWh)</b>, বিলে একেই "ইউনিট" বলে। ১ kWh = ১০০০ ওয়াট ক্ষমতার যন্ত্র ১ ঘণ্টা চললে যা খরচ হয়।</li>
+    </ul>
+    <h3>৫. নিরাপত্তা ⭐</h3>
+    <ul>
+      <li>ভেজা হাতে সুইচ বা প্লাগ ছোঁবে না। ভেজা শরীরের রোধ কমে যায়, তাই বেশি প্রবাহ শরীর দিয়ে যায়।</li>
+      <li><b>ফিউজ:</b> নির্দিষ্ট প্রবাহের বেশি হলে গলে গিয়ে সার্কিট কেটে দেয়, ফলে আগুন লাগা ঠেকায়। এক সকেটে অনেক যন্ত্র লাগালে প্রবাহ বেড়ে তার গরম হয়ে আগুন ধরতে পারে।</li>
+    </ul>
+  </section>
+
+  <!-- ============ ল্যাব ১ ============ -->
+  <section class="panel" id="lab1">
+    <h2>🔋 ল্যাব ১: ওহমের সূত্র নিজে পরীক্ষা করো</h2>
+    <div class="key">ভোল্টেজ (V) ও রোধ (R) বদলে দেখো প্রবাহ (I) কেমন হয়। "রেকর্ড করো" চেপে ডেটা জমাও, তারপর গ্রাফে দেখো বিন্দুগুলো একটা সোজা রেখায় পড়ে কিনা।</div>
+    <div class="ctl">
+      <label>ব্যাটারি: <b id="l1vv">6</b> V</label><input type="range" id="l1v" min="0" max="12" step="0.5" value="6">
+      <label>রোধ: <b id="l1rv">10</b> Ω</label><input type="range" id="l1r" min="1" max="50" step="1" value="10">
+    </div>
+    <canvas id="c1" width="700" height="340"></canvas>
+    <div class="vals"><div id="l1i">I = 0.6 A</div><div id="l1p">P = 3.6 W</div><div id="l1v2">V = 6 V</div></div>
+    <div class="btnrow"><button class="btn" id="l1rec">📌 রেকর্ড করো</button><button class="btn alt" id="l1clr">🗑️ ডেটা মুছো</button></div>
+    <div class="say" id="l1say"></div>
+    <div class="grid2">
+      <div><canvas id="g1" class="light" width="340" height="260"></canvas></div>
+      <div class="ptscroll"><table class="t" id="l1tbl"><tr><th>#</th><th>V (ভোল্ট)</th><th>R (Ω)</th><th>I (A)</th><th>V÷I (Ω)</th></tr></table></div>
+    </div>
+    <div class="say" id="l1g"></div>
+  </section>
+
+  <!-- ============ ল্যাব ২ ============ -->
+  <section class="panel" id="lab2">
+    <h2>💡 ল্যাব ২: শ্রেণি ও সমান্তরাল সংযোগ</h2>
+    <div class="key">১ থেকে ৪টা একই রকম বাল্ব (প্রতিটির রোধ ১০ Ω) লাগাও। কোনো বাল্বে click করে সেটাকে "খুলে" ফেলো বা আবার লাগাও।</div>
+    <div class="ctl">
+      <label>সংযোগ:</label><select id="l2m"><option value="s">শ্রেণি (এক সারিতে)</option><option value="p">সমান্তরাল (আলাদা শাখায়)</option></select>
+      <label>বাল্ব সংখ্যা:</label><select id="l2n"><option>1</option><option>2</option><option selected>3</option><option>4</option></select>
+      <label>ব্যাটারি: <b id="l2vv">12</b> V</label><input type="range" id="l2v" min="3" max="12" step="1" value="12">
+    </div>
+    <canvas id="c2" width="700" height="340"></canvas>
+    <div class="vals"><div id="l2r">মোট রোধ</div><div id="l2i">মোট প্রবাহ</div><div id="l2b">প্রতি বাল্বে</div></div>
+    <div class="say" id="l2say"></div>
+    <div class="btnrow"><button class="btn alt" id="l2all">🔁 সব বাল্ব আবার লাগাও</button></div>
+  </section>
+
+  <!-- ============ ল্যাব ৩ ============ -->
+  <section class="panel" id="lab3">
+    <h2>🧮 ল্যাব ৩: সমতুল্য রোধের চ্যালেঞ্জ</h2>
+    <div class="key">সার্কিটের ছবি দেখে সমতুল্য রোধ (Ω) বের করো। উত্তর দশমিকে লিখতে পারো (দুই ঘর পর্যন্ত)।</div>
+    <canvas id="c3" class="light" width="700" height="170"></canvas>
+    <div class="guessb"><b id="l3q"></b></div>
+    <div class="ctl"><input type="number" id="l3a" step="0.01" placeholder="উত্তর"> Ω <button class="btn" id="l3ok">✔ যাচাই করো</button><button class="btn alt" id="l3nx">➡️ পরের প্রশ্ন</button></div>
+    <div class="fb" id="l3fb"></div>
+    <div class="say" id="l3sc">স্কোর: ০ / ০</div>
+  </section>
+
+  <!-- ============ ল্যাব ৪ ============ -->
+  <section class="panel" id="lab4">
+    <h2>🔌 ল্যাব ৪: তোমার বাসার বিদ্যুৎ খরচ (kWh)</h2>
+    <div class="key">প্রতিটি যন্ত্র দিনে কত ঘণ্টা চালাও লিখো। মাসে কত ইউনিট (kWh) খরচ হবে সেটা বের হবে।</div>
+    <div class="ptscroll"><table class="t apl" id="l4t"></table></div>
+    <div class="vals"><div id="l4d">দিনে: ০ kWh</div><div id="l4m">মাসে (৩০ দিন): ০ ইউনিট</div></div>
+    <div class="say" id="l4s"></div>
+    <div class="star">📌 ওয়াট ও ঘণ্টা গুণ করে ১০০০ দিয়ে ভাগ দিলে kWh। এখানে ওয়াট সংখ্যাগুলো সাধারণ আনুমানিক মান, তোমার যন্ত্রের গায়ে লেখা ওয়াট দেখে বদলে নিও। ইউনিটের দাম এলাকা ও সময়ভেদে বদলায়, তাই আমি দাম ধরিনি।</div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab</footer>
+
+<script>
+var BN='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function $(id){return document.getElementById(id);}
+function f2(x){return bn((Math.round(x*100)/100).toString().replace(/\.0+$/,''));}
+function R2(c){var d=Math.min(2,window.devicePixelRatio||1); var w=c.width,h=c.height; c.width=w*d; c.height=h*d; var x=c.getContext('2d'); x.setTransform(d,0,0,d,0,0); return x;}
+
+/* ---------- সাধারণ: তারের পথ ধরে ইলেকট্রন চালানো ---------- */
+function pathLen(p){var L=0;for(var i=1;i<p.length;i++)L+=Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]);return L;}
+function ptAt(p,d){var L=pathLen(p); d=((d%L)+L)%L; for(var i=1;i<p.length;i++){var s=Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]); if(d<=s){var t=d/s; return [p[i-1][0]+(p[i][0]-p[i-1][0])*t,p[i-1][1]+(p[i][1]-p[i-1][1])*t];} d-=s;} return p[0];}
+function drawWire(x,p,col){x.strokeStyle=col||'#90a4ae';x.lineWidth=4;x.lineJoin='round';x.beginPath();x.moveTo(p[0][0],p[0][1]);for(var i=1;i<p.length;i++)x.lineTo(p[i][0],p[i][1]);x.stroke();}
+function drawElectrons(x,p,off,n,col){var L=pathLen(p),gap=L/n;x.fillStyle=col||'#4fc3f7';for(var i=0;i<n;i++){var q=ptAt(p,i*gap+off);x.beginPath();x.arc(q[0],q[1],3.4,0,6.283);x.fill();}}
+function zig(x,x1,y,x2,heat){
+  var n=8,w=(x2-x1)/n;x.strokeStyle=heat>0?'rgb('+Math.round(180+75*heat)+','+Math.round(120-80*heat)+',60)':'#cfd8dc';x.lineWidth=5;
+  if(heat>0){x.shadowColor='rgba(255,120,40,'+heat+')';x.shadowBlur=26*heat;}
+  x.beginPath();x.moveTo(x1,y);for(var i=0;i<n;i++){x.lineTo(x1+w*(i+.5),y+(i%2?14:-14));}x.lineTo(x2,y);x.stroke();x.shadowBlur=0;
+}
+function meter(x,cx0,cy0,txt,col){x.fillStyle='#0f1a28';x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.arc(cx0,cy0,24,0,6.283);x.fill();x.stroke();x.fillStyle=col;x.font='700 15px system-ui,Arial';x.textAlign='center';x.textBaseline='middle';x.fillText(txt,cx0,cy0);}
+
+/* ===================== ল্যাব ১ ===================== */
+var c1=$('c1'),x1=R2(c1),g1=$('g1'),gx=R2(g1),L1={off:0,pts:[]};
+var P1=[[90,170],[90,80],[610,80],[610,280],[90,280],[90,170]];
+var P1e=P1.slice().reverse();
+function l1vals(){var V=+$('l1v').value,R=+$('l1r').value;return {V:V,R:R,I:V/R,P:V*V/R};}
+function l1ui(){var s=l1vals();$('l1vv').textContent=f2(s.V);$('l1rv').textContent=f2(s.R);$('l1i').textContent='I = '+f2(s.I)+' A';$('l1p').textContent='P = '+f2(s.P)+' W';$('l1v2').textContent='V = '+f2(s.V)+' V';
+  $('l1say').textContent=s.V===0?'ব্যাটারি ০ ভোল্ট: ঠেলা নেই, তাই প্রবাহও নেই।':'I = V ÷ R = '+f2(s.V)+' ÷ '+f2(s.R)+' = '+f2(s.I)+' অ্যাম্পিয়ার। ভোল্টেজ দ্বিগুণ করলে প্রবাহ দ্বিগুণ, রোধ দ্বিগুণ করলে প্রবাহ অর্ধেক।';}
+['l1v','l1r'].forEach(function(id){$(id).addEventListener('input',l1ui);}); l1ui();
+function l1draw(dt){
+  var s=l1vals(),x=x1;x.clearRect(0,0,700,340);x.fillStyle='#0f1a28';x.fillRect(0,0,700,340);
+  drawWire(x,[[90,170],[90,80],[300,80]]);drawWire(x,[[420,80],[610,80],[610,280],[90,280],[90,200]]);
+  var heat=Math.min(1,s.P/60);zig(x,300,80,420,heat);
+  // ব্যাটারি
+  x.strokeStyle='#eceff1';x.lineWidth=4;x.beginPath();x.moveTo(70,170);x.lineTo(110,170);x.stroke();x.lineWidth=8;x.beginPath();x.moveTo(78,200);x.lineTo(102,200);x.stroke();
+  x.fillStyle='#ef5350';x.font='700 18px system-ui';x.textAlign='left';x.fillText('+',118,166);x.fillStyle='#90caf9';x.fillText('−',118,208);
+  // ভোল্টমিটার ও অ্যামিটার
+  drawWire(x,[[300,80],[300,30],[336,30]],'#ffd54f');drawWire(x,[[420,80],[420,30],[384,30]],'#ffd54f');
+  meter(x,360,30,'V','#ffd54f');
+  x.fillStyle='#ffd54f';x.font='700 14px system-ui';x.textAlign='center';x.fillText(f2(s.V)+' V',360,62);
+  meter(x,350,280,'A','#81c784');
+  x.fillStyle='#81c784';x.fillText(f2(s.I)+' A',350,252);
+  x.fillStyle='#cfd8dc';x.font='700 14px system-ui';x.textAlign='center';x.fillText('R = '+f2(s.R)+' Ω',360,118);
+  // প্রচলিত প্রবাহ তীর
+  x.fillStyle='#ff8a65';x.font='13px Hind Siliguri,system-ui';x.textAlign='left';x.fillText('প্রচলিত তড়িৎপ্রবাহ →',140,68);
+  x.fillStyle='#4fc3f7';x.fillText('← ইলেকট্রনের গতি',440,300);
+  // ইলেকট্রন
+  var sp=Math.min(260,s.I*28);L1.off+=sp*dt;
+  if(s.I>0) drawElectrons(x,P1e,L1.off,30);
+  requestAnimationFrame(l1tick);
+}
+var l1t=performance.now();function l1tick(n){var dt=Math.min(.05,(n-l1t)/1000);l1t=n;l1draw(dt);}
+requestAnimationFrame(l1tick);
+function l1graph(){
+  var x=gx;x.clearRect(0,0,340,260);x.fillStyle='#fff';x.fillRect(0,0,340,260);
+  var ox=44,oy=220,W=280,H=190,Vm=12,Im=12;
+  x.strokeStyle='#cfd9e1';x.lineWidth=1;for(var i=0;i<=6;i++){x.beginPath();x.moveTo(ox+W*i/6,oy);x.lineTo(ox+W*i/6,oy-H);x.stroke();x.beginPath();x.moveTo(ox,oy-H*i/6);x.lineTo(ox+W,oy-H*i/6);x.stroke();}
+  x.strokeStyle='#1f3a5f';x.lineWidth=2;x.beginPath();x.moveTo(ox,oy-H);x.lineTo(ox,oy);x.lineTo(ox+W,oy);x.stroke();
+  x.fillStyle='#1f3a5f';x.font='12px Hind Siliguri,system-ui';x.textAlign='center';x.fillText('V (ভোল্ট) →',ox+W/2,248);x.save();x.translate(12,oy-H/2);x.rotate(-Math.PI/2);x.fillText('I (অ্যাম্পিয়ার) →',0,0);x.restore();
+  x.textAlign='center';for(i=0;i<=6;i++){x.fillText(bn(i*2),ox+W*i/6,oy+14);} x.textAlign='right';for(i=0;i<=6;i++){x.fillText(bn(i*2),ox-5,oy-H*i/6+4);}
+  var p=L1.pts;
+  if(p.length>=2){var sl=0,n=0;p.forEach(function(q){if(q.V>0){sl+=q.I/q.V;n++;}}); if(n){sl/=n; x.strokeStyle='rgba(231,111,81,.7)';x.setLineDash([6,4]);x.beginPath();x.moveTo(ox,oy);var xe=Math.min(Vm,Im/sl);x.lineTo(ox+W*xe/Vm,oy-H*Math.min(Im,sl*xe)/Im);x.stroke();x.setLineDash([]);}}
+  p.forEach(function(q){x.fillStyle='#2a9d8f';x.beginPath();x.arc(ox+W*q.V/Vm,oy-H*Math.min(Im,q.I)/Im,5,0,6.283);x.fill();});
+}
+$('l1rec').onclick=function(){var s=l1vals();if(s.V===0){$('l1g').textContent='০ ভোল্টে রেকর্ড করার মানে নেই, ভোল্টেজ বাড়াও।';return;}
+  L1.pts.push({V:s.V,R:s.R,I:s.I});var t=$('l1tbl'),r=t.insertRow(-1);r.innerHTML='<td>'+bn(L1.pts.length)+'</td><td>'+f2(s.V)+'</td><td>'+f2(s.R)+'</td><td>'+f2(s.I)+'</td><td>'+f2(s.V/s.I)+'</td>';
+  l1graph();var same=L1.pts.every(function(q){return q.R===L1.pts[0].R;});
+  $('l1g').textContent=L1.pts.length<3?'আরও কয়েকটা ভিন্ন ভোল্টেজে রেকর্ড করো। রোধ একই রাখবে।':(same?'✅ রোধ একই রেখে ভোল্টেজ বদলিয়েছ: বিন্দুগুলো মূলবিন্দু দিয়ে যাওয়া সরলরেখায় পড়েছে, আর V÷I সব সারিতে সমান ('+f2(s.R)+' Ω)। এটাই ওহমের সূত্র।':'⚠️ ডেটায় ভিন্ন ভিন্ন রোধ মেশানো আছে, তাই বিন্দুগুলো এক রেখায় নাও পড়তে পারে। ওহমের সূত্র পরীক্ষা করতে রোধ স্থির রাখো।');};
+$('l1clr').onclick=function(){L1.pts=[];var t=$('l1tbl');while(t.rows.length>1)t.deleteRow(1);l1graph();$('l1g').textContent='';};
+l1graph();
+
+/* ===================== ল্যাব ২ ===================== */
+var c2=$('c2'),x2=R2(c2),L2={off:0,broken:{},pos:[]};
+function l2model(){
+  var m=$('l2m').value,n=+$('l2n').value,V=+$('l2v').value,R=10,i,ok=[];
+  for(i=0;i<n;i++)ok.push(!L2.broken[i]);
+  var res={m:m,n:n,V:V,ok:ok,I:0,Req:Infinity,each:[],cur:[]};
+  if(m==='s'){
+    if(ok.every(Boolean)){res.Req=n*R;res.I=V/res.Req;for(i=0;i<n;i++){res.each.push(V/n);res.cur.push(res.I);}}
+    else{for(i=0;i<n;i++){res.each.push(0);res.cur.push(0);}}
+  }else{
+    var k=ok.filter(Boolean).length;
+    if(k>0){res.Req=R/k;res.I=V/res.Req;}
+    for(i=0;i<n;i++){res.each.push(ok[i]?V:0);res.cur.push(ok[i]?V/R:0);}
+  }
+  return res;
+}
+function bulb(x,cx0,cy0,p,ok){
+  var b=Math.min(1,p/15);
+  if(ok&&b>0){var g=x.createRadialGradient(cx0,cy0,2,cx0,cy0,26+b*40);g.addColorStop(0,'rgba(255,236,120,'+(0.25+0.75*b)+')');g.addColorStop(1,'rgba(255,236,120,0)');x.fillStyle=g;x.beginPath();x.arc(cx0,cy0,26+b*40,0,6.283);x.fill();}
+  x.fillStyle=(ok&&b>0)?'rgb(255,'+Math.round(220+30*b)+','+Math.round(90+120*b)+')':'#37474f';
+  x.strokeStyle=ok?'#eceff1':'#ef5350';x.lineWidth=3;x.beginPath();x.arc(cx0,cy0,19,0,6.283);x.fill();x.stroke();
+  if(!ok){x.strokeStyle='#ef5350';x.beginPath();x.moveTo(cx0-12,cy0-12);x.lineTo(cx0+12,cy0+12);x.moveTo(cx0+12,cy0-12);x.lineTo(cx0-12,cy0+12);x.stroke();}
+  else{x.strokeStyle='rgba(0,0,0,.45)';x.lineWidth=2;x.beginPath();x.moveTo(cx0-8,cy0+8);x.lineTo(cx0-4,cy0-2);x.lineTo(cx0+4,cy0-2);x.lineTo(cx0+8,cy0+8);x.stroke();}
+}
+function l2draw(dt){
+  var s=l2model(),x=x2,n=s.n,i;x.clearRect(0,0,700,340);x.fillStyle='#0f1a28';x.fillRect(0,0,700,340);
+  var sp=Math.min(200,s.I*30);L2.off+=sp*dt;
+  // ব্যাটারি
+  x.strokeStyle='#eceff1';x.lineWidth=4;x.beginPath();x.moveTo(52,150);x.lineTo(88,150);x.stroke();x.lineWidth=8;x.beginPath();x.moveTo(60,176);x.lineTo(80,176);x.stroke();
+  x.fillStyle='#ef5350';x.font='700 18px system-ui';x.textAlign='left';x.fillText('+',96,146);x.fillStyle='#90caf9';x.fillText('−',96,184);
+  s.pos=[];
+  if(s.m==='s'){
+    var path=[[70,150],[70,70],[630,70],[630,270],[70,270],[70,176]];
+    drawWire(x,path);
+    var gap=560/(n+1);
+    for(i=0;i<n;i++){var bx=70+gap*(i+1);s.pos.push([bx,70]);}
+    // বাল্বের নিচে তার ঢেকে
+    for(i=0;i<n;i++){var p=s.ok&&s.ok[i]&&s.ok.every(Boolean)?(s.each[i]*s.each[i]/10):0;bulb(x,s.pos[i][0],70,p,s.ok[i]);}
+    if(s.I>0) drawElectrons(x,path.slice().reverse(),L2.off,28);
+  }else{
+    var top=[[70,150],[70,70],[630,70]],bot=[[70,176],[70,270],[630,270]];
+    drawWire(x,top);drawWire(x,bot);
+    var gp=560/(n+1);
+    for(i=0;i<n;i++){var bx2=70+gp*(i+1);drawWire(x,[[bx2,70],[bx2,270]]);s.pos.push([bx2,170]);}
+    for(i=0;i<n;i++){var pw=s.ok[i]?s.each[i]*s.each[i]/10:0;bulb(x,s.pos[i][0],170,pw,s.ok[i]);}
+    if(s.I>0){
+      drawElectrons(x,[[70,176],[70,270],[70+gp*n+40,270]].reverse(),L2.off,10);
+      for(i=0;i<n;i++) if(s.ok[i]){var bx3=70+gp*(i+1);drawElectrons(x,[[bx3,270],[bx3,70]],L2.off*(s.cur[i]/Math.max(.01,s.I))*1.0,6);}
+    }
+  }
+  L2.pos=s.pos;
+  x.fillStyle='#cfd8dc';x.font='13px Hind Siliguri,system-ui';x.textAlign='center';
+  for(i=0;i<n;i++){var lb=s.ok[i]?'বাল্ব '+bn(i+1):'(খোলা)';if(s.m==='s')x.fillText(lb,s.pos[i][0],112);else{x.textAlign='left';x.fillText(lb,s.pos[i][0]+26,s.pos[i][1]+4);x.textAlign='center';}}
+  requestAnimationFrame(l2tick);
+}
+var l2t=performance.now();function l2tick(n){var dt=Math.min(.05,(n-l2t)/1000);l2t=n;l2draw(dt);}
+requestAnimationFrame(l2tick);
+function l2ui(){
+  var s=l2model(),i;$('l2vv').textContent=f2(s.V);
+  $('l2r').textContent='মোট রোধ = '+(isFinite(s.Req)?f2(s.Req)+' Ω':'অসীম (সার্কিট কাটা)');
+  $('l2i').textContent='মোট প্রবাহ = '+f2(s.I)+' A';
+  var e=s.each.filter(function(v,j){return s.ok[j];});
+  $('l2b').textContent='প্রতি বাল্বে: '+(s.m==='s'?(s.I>0?f2(s.V/s.n)+' V':'০ V'):f2(s.V)+' V');
+  var t='';
+  if(s.m==='s') t=s.ok.every(Boolean)?('শ্রেণি: মোট রোধ = '+s.n+' × ১০ = '+f2(s.Req)+' Ω। প্রবাহ সবখানে সমান ('+f2(s.I)+' A), ভোল্টেজ ভাগ হয়ে প্রতি বাল্বে '+f2(s.V/s.n)+' V, তাই বাল্ব বাড়ালে সবকটাই ম্লান হয়। একটা খুলে দেখো: সব নিভে যাবে!'):'⚠️ একটা বাল্ব খোলা, শ্রেণি সংযোগে পথ কেটে গেছে, তাই সবকটা নিভে গেছে।';
+  else{var k=s.ok.filter(Boolean).length;t=k?('সমান্তরাল: প্রতি শাখায় পুরো '+f2(s.V)+' V, তাই প্রতিটি বাল্ব সমান উজ্জ্বল। মোট রোধ = ১০ ÷ '+k+' = '+f2(s.Req)+' Ω, মোট প্রবাহ '+f2(s.I)+' A (প্রতি শাখায় '+f2(s.V/10)+' A)। একটা বাল্ব খুললেও বাকিগুলো জ্বলে, বাড়িঘরে এভাবেই সংযোগ থাকে।'):'সবকটা বাল্ব খোলা, তাই কোনো প্রবাহ নেই।';}
+  $('l2say').textContent=bn(t);
+}
+['l2m','l2n','l2v'].forEach(function(id){$(id).addEventListener('input',function(){if(id==='l2n')L2.broken={};l2ui();});$(id).addEventListener('change',function(){l2ui();});});
+c2.addEventListener('click',function(ev){
+  var r=c2.getBoundingClientRect(),mx=(ev.clientX-r.left)*700/r.width,my=(ev.clientY-r.top)*340/r.height;
+  for(var i=0;i<L2.pos.length;i++){if(Math.hypot(mx-L2.pos[i][0],my-L2.pos[i][1])<30){L2.broken[i]=!L2.broken[i];l2ui();return;}}
+});
+$('l2all').onclick=function(){L2.broken={};l2ui();};
+l2ui();
+
+/* ===================== ল্যাব ৩ ===================== */
+var c3=$('c3'),x3=R2(c3),Q={cur:null,tot:0,ok:0,done:false};
+var VALS=[2,3,4,6,12];
+function pick(){return VALS[Math.floor(Math.random()*VALS.length)];}
+function par(a,b){return a*b/(a+b);}
+function newQ(){
+  var t=Math.floor(Math.random()*4),a=pick(),b=pick(),c=pick(),R,txt;
+  if(t===0){R=a+b+c;txt='তিনটি রোধ শ্রেণিতে: '+a+' Ω, '+b+' Ω, '+c+' Ω';}
+  else if(t===1){R=1/(1/a+1/b+1/c);txt='তিনটি রোধ সমান্তরালে: '+a+' Ω, '+b+' Ω, '+c+' Ω';}
+  else if(t===2){R=a+par(b,c);txt=a+' Ω শ্রেণিতে আছে ('+b+' Ω ও '+c+' Ω)-এর সমান্তরাল জোড়ার সাথে';}
+  else{R=par(a,b)+c;txt='('+a+' Ω ও '+b+' Ω)-এর সমান্তরাল জোড়া শ্রেণিতে আছে '+c+' Ω-এর সাথে';}
+  Q.cur={t:t,a:a,b:b,c:c,R:R,txt:txt};Q.done=false;
+  $('l3q').textContent='❓ '+bn(txt)+'। সমতুল্য রোধ কত?';$('l3a').value='';$('l3fb').textContent='';
+  l3draw();
+}
+function resistor(x,x0,y0,len,lab){var w=len/6;x.strokeStyle='#1f3a5f';x.lineWidth=3;x.beginPath();x.moveTo(x0,y0);for(var i=0;i<6;i++)x.lineTo(x0+w*(i+.5),y0+(i%2?9:-9));x.lineTo(x0+len,y0);x.stroke();x.fillStyle='#e76f51';x.font='700 14px system-ui';x.textAlign='center';x.fillText(lab+' Ω',x0+len/2,y0-16);}
+function wire(x,pts){x.strokeStyle='#546e7a';x.lineWidth=2.5;x.beginPath();x.moveTo(pts[0][0],pts[0][1]);for(var i=1;i<pts.length;i++)x.lineTo(pts[i][0],pts[i][1]);x.stroke();}
+function l3draw(){
+  var x=x3,q=Q.cur;x.clearRect(0,0,700,170);x.fillStyle='#fff';x.fillRect(0,0,700,170);
+  var y=85;
+  x.fillStyle='#2a9d8f';x.beginPath();x.arc(50,y,5,0,6.283);x.arc(650,y,5,0,6.283);x.fill();
+  if(q.t===0){wire(x,[[50,y],[110,y]]);resistor(x,110,y,120,q.a);wire(x,[[230,y],[270,y]]);resistor(x,270,y,120,q.b);wire(x,[[390,y],[430,y]]);resistor(x,430,y,120,q.c);wire(x,[[550,y],[650,y]]);}
+  else if(q.t===1){wire(x,[[50,y],[200,y]]);var ys=[28,85,142],vs=[q.a,q.b,q.c];wire(x,[[200,28],[200,142]]);wire(x,[[500,28],[500,142]]);ys.forEach(function(yy,i){wire(x,[[200,yy],[270,yy]]);resistor(x,270,yy,180,vs[i]);wire(x,[[450,yy],[500,yy]]);});wire(x,[[500,y],[650,y]]);}
+  else{
+    var sp=(q.t===2);
+    wire(x,[[50,y],[110,y]]);
+    if(sp){resistor(x,110,y,110,q.a);wire(x,[[220,y],[300,y]]);wire(x,[[300,45],[300,125]]);wire(x,[[300,45],[340,45]]);resistor(x,340,45,140,q.b);wire(x,[[480,45],[520,45]]);wire(x,[[300,125],[340,125]]);resistor(x,340,125,140,q.c);wire(x,[[480,125],[520,125]]);wire(x,[[520,45],[520,125]]);wire(x,[[520,y],[650,y]]);}
+    else{wire(x,[[110,y],[130,y]]);wire(x,[[130,45],[130,125]]);wire(x,[[130,45],[160,45]]);resistor(x,160,45,140,q.a);wire(x,[[300,45],[330,45]]);wire(x,[[130,125],[160,125]]);resistor(x,160,125,140,q.b);wire(x,[[300,125],[330,125]]);wire(x,[[330,45],[330,125]]);wire(x,[[330,y],[400,y]]);resistor(x,400,y,130,q.c);wire(x,[[530,y],[650,y]]);}
+  }
+}
+function l3upd(){$('l3sc').textContent='স্কোর: '+bn(Q.ok)+' / '+bn(Q.tot);}
+$('l3ok').onclick=function(){
+  if(Q.done) return; var v=parseFloat($('l3a').value); if(isNaN(v)){$('l3fb').textContent='আগে একটা সংখ্যা লিখো।';return;}
+  Q.done=true;Q.tot++;var q=Q.cur,good=Math.abs(v-q.R)<0.02;if(good)Q.ok++;
+  var how=q.t===0?'শ্রেণি: '+q.a+' + '+q.b+' + '+q.c+' = '+f2(q.R):q.t===1?'সমান্তরাল: 1/R = 1/'+q.a+' + 1/'+q.b+' + 1/'+q.c+', তাই R = '+f2(q.R):q.t===2?'প্রথমে সমান্তরাল জোড়া: '+q.b+'×'+q.c+'÷('+q.b+'+'+q.c+') = '+f2(par(q.b,q.c))+' Ω। তারপর শ্রেণিতে '+q.a+' যোগ করে '+f2(q.R)+' Ω':'প্রথমে সমান্তরাল জোড়া: '+q.a+'×'+q.b+'÷('+q.a+'+'+q.b+') = '+f2(par(q.a,q.b))+' Ω। তারপর শ্রেণিতে '+q.c+' যোগ করে '+f2(q.R)+' Ω';
+  $('l3fb').innerHTML=(good?'✅ সঠিক! ':'❌ ঠিক হয়নি। সঠিক উত্তর '+f2(q.R)+' Ω। ')+'<br><span style="font-weight:400">'+bn(how)+'</span>';
+  $('l3fb').style.color=good?'#1d7a6f':'#c0392b';l3upd();
+};
+$('l3nx').onclick=function(){newQ();};
+newQ();
+
+/* ===================== ল্যাব ৪ ===================== */
+var APL=[['LED বাল্ব',10,5],['টিউব লাইট',40,4],['সিলিং ফ্যান',75,8],['টিভি',100,3],['ল্যাপটপ',60,3],['মোবাইল চার্জার',5,3],['ইস্ত্রি',1000,0.5],['এয়ার কন্ডিশনার',1500,0],['ওয়াটার পাম্প',750,0.5]];
+(function(){
+  var t=$('l4t'),h='<tr><th>যন্ত্র</th><th>ক্ষমতা (W)</th><th>ঘণ্টা/দিন</th><th>kWh/দিন</th></tr>';
+  APL.forEach(function(a,i){h+='<tr><td>'+a[0]+'</td><td>'+bn(a[1])+'</td><td><input type="number" min="0" max="24" step="0.5" value="'+a[2]+'" data-i="'+i+'"></td><td id="k'+i+'">0</td></tr>';});
+  t.innerHTML=h;
+  t.addEventListener('input',l4);
+  l4();
+})();
+function l4(){
+  var tot=0;APL.forEach(function(a,i){var hh=+document.querySelector('#l4t input[data-i="'+i+'"]').value||0;hh=Math.max(0,Math.min(24,hh));var k=a[1]*hh/1000;tot+=k;$('k'+i).textContent=f2(k);});
+  $('l4d').textContent='দিনে: '+f2(tot)+' kWh';$('l4m').textContent='মাসে (৩০ দিন): '+f2(tot*30)+' ইউনিট';
+  var mx=-1,mi=0;APL.forEach(function(a,i){var hh=+document.querySelector('#l4t input[data-i="'+i+'"]').value||0;var k=a[1]*hh;if(k>mx){mx=k;mi=i;}});
+  $('l4s').textContent=mx>0?'সবচেয়ে বেশি বিদ্যুৎ খায়: '+APL[mi][0]+'। বেশি ওয়াটের যন্ত্র কম সময় চালালেও অনেক ইউনিট লাগে। LED বাল্ব ১০ ওয়াটে প্রায় একই আলো দেয়, তাই টাকা বাঁচায়।':'ঘণ্টা বসিয়ে দেখো।';
+}
+
+/* ===================== কুইজ ===================== */
+var QUIZ=[
+ {q:'ওহমের সূত্র অনুযায়ী V = ?',o:['I ÷ R','I × R','R ÷ I','I + R'],a:1,e:'V = I × R। তাই I = V ÷ R এবং R = V ÷ I।'},
+ {q:'৬ ভোল্টের ব্যাটারি ১২ Ω রোধের সাথে যুক্ত করলে প্রবাহ কত?',o:['২ A','০.৫ A','৭২ A','১৮ A'],a:1,e:'I = V ÷ R = ৬ ÷ ১২ = ০.৫ A।'},
+ {q:'রোধ দ্বিগুণ করলে (ভোল্টেজ একই থাকলে) প্রবাহ কী হবে?',o:['দ্বিগুণ','অর্ধেক','একই','চার গুণ'],a:1,e:'I = V ÷ R, তাই R দ্বিগুণ হলে I অর্ধেক।'},
+ {q:'ইলেকট্রন কোন দিকে চলে?',o:['ধনাত্মক থেকে ঋণাত্মক প্রান্তে','ঋণাত্মক থেকে ধনাত্মক প্রান্তে','দুদিকেই সমান','চলে না'],a:1,e:'ইলেকট্রনের আধান ঋণাত্মক, তাই (−) থেকে (+) দিকে চলে। প্রচলিত তড়িৎপ্রবাহ এর উল্টো দিক ধরা হয়।'},
+ {q:'শ্রেণি সংযোগে কোন রাশিটি সবখানে সমান থাকে?',o:['বিভব পার্থক্য','তড়িৎ প্রবাহ','রোধ','ক্ষমতা'],a:1,e:'একটাই পথ, তাই প্রবাহ সবখানে সমান। বিভব পার্থক্য ভাগ হয়ে যায়।'},
+ {q:'সমান্তরাল সংযোগে ২ Ω ও ২ Ω রোধের সমতুল্য রোধ কত?',o:['৪ Ω','২ Ω','১ Ω','০.৫ Ω'],a:2,e:'1/R = 1/2 + 1/2 = 1, তাই R = ১ Ω। সমতুল্য রোধ ছোট রোধের চেয়েও কম।'},
+ {q:'বাড়ির বাতিগুলো সমান্তরালে লাগানো হয় কেন?',o:['খরচ কম হয় বলে','একটা বাতি নিভলেও অন্যগুলো জ্বলে, আর সবাই পুরো ভোল্টেজ পায়','তার কম লাগে','বাতি ম্লান থাকে'],a:1,e:'সমান্তরালে প্রতি শাখা স্বাধীন, আর প্রতিটি যন্ত্রে পুরো ভোল্টেজ পড়ে।'},
+ {q:'৩ Ω ও ৬ Ω রোধ শ্রেণিতে যুক্ত থাকলে সমতুল্য রোধ কত?',o:['২ Ω','৯ Ω','১৮ Ω','৩ Ω'],a:1,e:'শ্রেণিতে রোধ যোগ হয়: ৩ + ৬ = ৯ Ω।'},
+ {q:'ক্ষমতার একক কোনটি?',o:['ভোল্ট','ওহম','ওয়াট','অ্যাম্পিয়ার'],a:2,e:'ক্ষমতা P = V × I, একক ওয়াট (W)।'},
+ {q:'১০০০ ওয়াটের ইস্ত্রি ২ ঘণ্টা চললে কত kWh (ইউনিট) খরচ হয়?',o:['০.২','২','২০','২০০০'],a:1,e:'১০০০ W = ১ kW। ১ kW × ২ ঘণ্টা = ২ kWh।'},
+ {q:'ফিউজের কাজ কী?',o:['ভোল্টেজ বাড়ানো','বেশি প্রবাহ হলে গলে গিয়ে সার্কিট কেটে দেওয়া','আলো জ্বালানো','রোধ বাড়ানো'],a:1,e:'নির্দিষ্ট সীমার বেশি প্রবাহ হলে ফিউজ গলে যায় ও সার্কিট কেটে আগুন লাগা ঠেকায়।'},
+ {q:'ভেজা হাতে সুইচ ছোঁয়া বিপজ্জনক কেন?',o:['পানি বিদ্যুৎ তৈরি করে','ভেজা শরীরের রোধ কমে যায়, তাই শরীর দিয়ে বেশি প্রবাহ যায়','সুইচ গরম হয়ে যায়','ভোল্টেজ বেড়ে যায়'],a:1,e:'I = V ÷ R। শরীরের রোধ কমলে একই ভোল্টেজে প্রবাহ বেশি হয়, যা বিপজ্জনক।'}
+];
+var answered=0,correct=0;
+(function(){
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    item.o.forEach(function(opt,oi){html+='<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+opt+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a].classList.add('ok');
+    if(oi===QUIZ[qi].a)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+</script>
+</body>
+</html>
