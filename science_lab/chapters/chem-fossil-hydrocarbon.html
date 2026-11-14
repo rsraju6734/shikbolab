@@ -29,6 +29,18 @@ details p{margin:8px 0 2px}
 .legend2{display:flex;gap:12px;flex-wrap:wrap;font-size:14px;margin:6px 0}
 .legend2 i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:4px;vertical-align:middle}
 .guess{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+
+.twocol{display:grid;grid-template-columns:300px 1fr;gap:18px;margin:8px 0}
+.stp{opacity:0;transform:translateY(8px);transition:all .5s;background:#eaf7f5;border-radius:10px;padding:8px 12px;margin:8px 0;list-style:none}
+.stp.show{opacity:1;transform:none}
+.cardx{border:1px solid var(--line);border-radius:12px;background:#fff;padding:10px 12px;margin:8px 0}
+.cardx .rg{font-size:14px;color:#46586a}
+.cardx .eqs{font-family:system-ui,'Segoe UI',Arial,sans-serif;font-weight:700;color:var(--navy);margin:4px 0}
+.crumbs{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:14px;margin:6px 0}
+.crumbs span{background:#eaf7f5;border-radius:12px;padding:2px 10px;cursor:pointer}
+select.sel{width:auto;min-width:150px;display:inline-block;margin:0 6px}
+ol.steps{padding-left:0}
+@media(max-width:900px){.twocol{grid-template-columns:1fr}}
 .num{width:90px;padding:8px;border-radius:8px;border:2px solid #cfd9e1;font-size:16px;font-family:inherit}
 @media(max-width:900px){.l3g{grid-template-columns:1fr}}
 </style>
@@ -42,7 +54,7 @@ details p{margin:8px 0 2px}
 <div class="wrap">
   <div class="crumb">🧪 রসায়ন &rsaquo; নবম-দশম শ্রেণি &rsaquo; অধ্যায় ১১</div>
   <h1 class="title">খনিজ সম্পদ: জীবাশ্ম (Mineral Resources: Fossils)</h1>
-  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🛢️ ল্যাব ১</a><a href="#lab2">🧬 ল্যাব ২</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্ন-উত্তর</a></nav>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🛢️ ল্যাব ১</a><a href="#lab2">🧬 ল্যাব ২</a><a href="#lab3">🔬 ল্যাব ৩</a><a href="#lab4">🗺️ ল্যাব ৪</a><a href="#lab5">🧵 ল্যাব ৫</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্ন-উত্তর</a></nav>
 
   <!-- ================= নোট ================= -->
   <section class="panel" id="note">
@@ -234,6 +246,57 @@ details p{margin:8px 0 2px}
     <div class="rxlist" id="clb"></div>
     <div class="fb" id="clfb"></div>
     <button class="btn alt" id="cln">পরের যৌগ</button>
+  </section>
+
+  <!-- ================= ল্যাব ৩ ================= -->
+  <section class="panel" id="lab3">
+    <h2>🔬 ল্যাব ৩: অসম্পৃক্ততার পরীক্ষা</h2>
+    <p>একটা গ্যাস আর একটা পরীক্ষার দ্রবণ বেছে নাও। "গ্যাস চালাও" চাপলে দেখো দ্রবণের রং বদলায় কিনা। পাশে অণুর ভেতরে কী ঘটছে সেটাও দেখবে। অসম্পৃক্ত যৌগ (দ্বি বা ত্রিবন্ধনযুক্ত) রং উধাও করে দেয়, সম্পৃক্ত যৌগ পারে না।</p>
+    <div class="rxlist" id="uslist"></div>
+    <div class="rxlist" id="usr"></div>
+    <div class="twocol">
+      <div class="box" style="text-align:center">
+        <canvas id="tubecv" width="260" height="300" style="margin:0 auto;max-width:260px"></canvas>
+        <div class="btnrow" style="justify-content:center"><button class="btn" id="usgo">💨 গ্যাস চালাও</button><button class="btn alt" id="usrst">↺ নতুন টেস্টটিউব</button></div>
+      </div>
+      <div>
+        <canvas id="molcv" width="520" height="210" style="max-width:100%"></canvas>
+        <div class="eqb" id="useq"></div>
+        <div class="say" id="ussay">একটা গ্যাস বেছে "গ্যাস চালাও" চাপো।</div>
+        <div id="usmy" style="display:none"><b>এই গ্যাসটা কী ধরনের?</b> <button class="btn alt" id="mys1">সম্পৃক্ত</button> <button class="btn alt" id="mys2">অসম্পৃক্ত</button><div class="fb" id="mysfb"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ল্যাব ৪ ================= -->
+  <section class="panel" id="lab4">
+    <h2>🗺️ ল্যাব ৪: রূপান্তরের মানচিত্র</h2>
+    <p>একটা যৌগ বেছে নাও। দেখো সেটা থেকে কী কী তৈরি হয়, আর সেটা নিজে কীভাবে তৈরি হয়। তীরের পাশে বিকারক, শর্ত ও সমীকরণ আছে। "যাও" চেপে পরের যৌগে চলে যাও। বইয়ের সৃজনশীল প্রশ্নের উত্তরও এখান থেকে পাবে।</p>
+    <div style="margin:6px 0">এখন আছো: <select id="mapsel" class="sel"></select></div>
+    <div class="crumbs" id="mapcr"></div>
+    <div class="twocol" style="grid-template-columns:1fr 1fr">
+      <div><h3 style="margin-top:6px">➡️ এটা থেকে তৈরি হয়</h3><div id="mapout"></div></div>
+      <div><h3 style="margin-top:6px">⬅️ এটা যেভাবে তৈরি হয়</h3><div id="mapin"></div></div>
+    </div>
+    <h3>🧭 পথ খোঁজো</h3>
+    <div>শুরু: <select id="pfrom" class="sel"></select> &rarr; শেষ: <select id="pto" class="sel"></select> <button class="btn" id="pgo">পথ দেখাও</button></div>
+    <ol class="steps" id="pres"></ol>
+    <h3>🎯 বিকারক চেনো</h3>
+    <div id="rq" style="font-weight:700"></div>
+    <div class="rxlist" id="rqb"></div>
+    <div class="fb" id="rqfb"></div>
+    <button class="btn alt" id="rqn">পরের প্রশ্ন</button>
+  </section>
+
+  <!-- ================= ল্যাব ৫ ================= -->
+  <section class="panel" id="lab5">
+    <h2>🧵 ল্যাব ৫: পলিমারকরণ</h2>
+    <p>একটা পলিমার বেছে "পলিমারকরণ শুরু করো" চাপো। ছোট মনোমার অণুগুলো একটার পর একটা জোড়া লেগে লম্বা শিকল (পলিমার) হবে। সংযোজন পলিমারে কোনো অণু বের হয় না, কিন্তু নাইলন ৬:৬ (ঘনীভবন পলিমার)-এ প্রতিবার জোড়া লাগার সময় পানির অণু বেরিয়ে যায়।</p>
+    <div class="rxlist" id="pmlist"></div>
+    <div class="ptscroll"><canvas id="pmcv" width="640" height="260" style="max-width:none"></canvas></div>
+    <div class="btnrow"><button class="btn" id="pmgo">▶ পলিমারকরণ শুরু করো</button><button class="btn alt" id="pmrst">↺ আবার</button></div>
+    <div class="eqb" id="pmeq"></div>
+    <div class="info" id="pminfo"></div>
   </section>
 
   <!-- ================= কুইজ ================= -->
@@ -520,6 +583,246 @@ function clNew(){
 }
 $('cln').onclick=clNew; clNew();
 
+
+/* =============== ল্যাব ৩: অসম্পৃক্ততার পরীক্ষা =============== */
+var USC={ethane:{n:'ইথেন (C₂H₆)',sat:true},ethene:{n:'ইথিন (C₂H₄)',sat:false},ethyne:{n:'ইথাইন (C₂H₂)',sat:false}};
+var USR={br:{n:'ব্রোমিন দ্রবণ (লাল)',col:[217,56,30]},mn:{n:'পটাশিয়াম পারম্যাঙ্গানেট (গোলাপি)',col:[222,110,180]}};
+var US={c:'ethene',r:'br',p:0,run:false,T:0,mys:false,myc:null,bub:[]};
+function usSetup(){
+  $('uslist').innerHTML=''; Object.keys(USC).forEach(function(k){ var b=document.createElement('button'); b.className='btn alt'; b.setAttribute('data-k',k); b.textContent=USC[k].n; b.onclick=function(){ US.mys=false; usPick(k); }; $('uslist').appendChild(b); });
+  var m=document.createElement('button'); m.className='btn alt'; m.setAttribute('data-k','mys'); m.textContent='🎲 অজানা গ্যাস'; m.onclick=function(){ var ks=Object.keys(USC); US.mys=true; US.myc=ks[Math.floor(Math.random()*3)]; usPick(US.myc,true); }; $('uslist').appendChild(m);
+  $('usr').innerHTML=''; Object.keys(USR).forEach(function(k){ var b=document.createElement('button'); b.className='btn alt'; b.setAttribute('data-r',k); b.textContent=USR[k].n; b.onclick=function(){ US.r=k; usReset(); usMark(); }; $('usr').appendChild(b); });
+}
+function usMark(){
+  document.querySelectorAll('#uslist button').forEach(function(b){ var k=b.getAttribute('data-k'); b.className='btn'+(((US.mys&&k==='mys')||(!US.mys&&k===US.c))?'':' alt'); });
+  document.querySelectorAll('#usr button').forEach(function(b){ b.className='btn'+(b.getAttribute('data-r')===US.r?'':' alt'); });
+}
+function usPick(k,mys){ US.c=k; usReset(); usMark(); if(mys){ $('ussay').innerHTML='🎲 একটি অজানা গ্যাস X দেওয়া হলো। পরীক্ষা চালিয়ে বলো এটা সম্পৃক্ত না অসম্পৃক্ত।'; $('usmy').style.display='block'; } }
+function usReset(){
+  US.p=0; US.run=false; US.T=0; US.bub=[]; $('usgo').disabled=false; $('mysfb').textContent='';
+  if(!US.mys) $('usmy').style.display='none';
+  var eq='';
+  if(!US.mys){ eq=usEq(); $('useq').innerHTML=eq; $('ussay').innerHTML='"গ্যাস চালাও" চাপো।'; } else { $('useq').innerHTML='?'; }
+}
+function usEq(){
+  var c=US.c, r=US.r;
+  if(c==='ethane') return 'C<sub>2</sub>H<sub>6</sub> + '+(r==='br'?'Br<sub>2</sub>':'KMnO<sub>4</sub>')+' &rarr; কোনো বিক্রিয়া নেই';
+  if(r==='br'&&c==='ethene') return 'CH<sub>2</sub>=CH<sub>2</sub> + Br<sub>2</sub> &rarr; CH<sub>2</sub>Br&ndash;CH<sub>2</sub>Br (ডাইব্রোমো ইথেন)';
+  if(r==='br'&&c==='ethyne') return 'CH&equiv;CH + 2Br<sub>2</sub> &rarr; CHBr<sub>2</sub>&ndash;CHBr<sub>2</sub> (টেট্রাব্রোমো ইথেন)';
+  if(r==='mn'&&c==='ethene') return 'CH<sub>2</sub>=CH<sub>2</sub> + H<sub>2</sub>O + [O] &rarr;(KMnO<sub>4</sub>, KOH) CH<sub>2</sub>OH&ndash;CH<sub>2</sub>OH (ইথিলিন গ্লাইকল)';
+  return 'ইথাইনও অসম্পৃক্ত, তাই KMnO<sub>4</sub> এর গোলাপি রং অপসারিত হয়';
+}
+$('usgo').onclick=function(){ if(US.run||US.p>=1) return; US.run=true; US.T=0; this.disabled=true; $('ussay').innerHTML='গ্যাস চালানো হচ্ছে...'; };
+$('usrst').onclick=function(){ US.mys=false; usReset(); usMark(); };
+function lerp(a,b,t){ return a+(b-a)*t; } function cl(v){ return Math.max(0,Math.min(1,v)); } function ez(t){ return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2; }
+function tubeDraw(dt){
+  var c=$('tubecv').getContext('2d'); c.clearRect(0,0,260,300);
+  var R=USR[US.r].col, rate=(US.c==='ethane')?0:((US.c==='ethyne'&&US.r==='br')?2/6:1/6);
+  if(US.run){ US.T+=dt; US.p=Math.min(1,US.p+rate*dt); if(Math.random()<0.5) US.bub.push({x:128+(Math.random()-.5)*16,y:232,v:1+Math.random()}); if(US.T>6){ US.run=false; usDone(); } }
+  var a=1-US.p, W0=[226,240,248], w=Math.round(W0[0]-(W0[0]-R[0])*a), g=Math.round(W0[1]-(W0[1]-R[1])*a), b=Math.round(W0[2]-(W0[2]-R[2])*a);
+  c.save(); c.beginPath(); c.moveTo(70,30); c.lineTo(70,205); c.arc(130,205,60,Math.PI,0,true); c.lineTo(190,30); c.clip();
+  c.fillStyle='rgb('+w+','+g+','+b+')'; c.fillRect(60,95,140,220);
+  US.bub.forEach(function(q){ q.y-=q.v*1.8; c.beginPath(); c.arc(q.x,q.y,3.2,0,6.283); c.fillStyle='rgba(255,255,255,.85)'; c.fill(); });
+  US.bub=US.bub.filter(function(q){ return q.y>99; });
+  c.restore();
+  c.beginPath(); c.moveTo(70,30); c.lineTo(70,205); c.arc(130,205,60,Math.PI,0,true); c.lineTo(190,30); c.strokeStyle='#1f3a5f'; c.lineWidth=4; c.stroke();
+  c.strokeStyle='#8b95a1'; c.lineWidth=5; c.beginPath(); c.moveTo(128,4); c.lineTo(128,228); c.stroke();
+  c.fillStyle='#1f3a5f'; c.font='12px "Hind Siliguri","Nirmala UI",sans-serif'; c.textAlign='center'; c.fillText(US.mys?'গ্যাস X':'গ্যাস: '+USC[US.c].n,130,290);
+}
+function usDone(){
+  var c=US.c, un=!USC[c].sat, nm=US.r==='br'?'ব্রোমিনের লাল রং':'KMnO₄ এর গোলাপি রং', msg;
+  if(un) msg='✅ '+nm+' <b>উধাও</b> হয়ে গেল! তাই গ্যাসটি <b>অসম্পৃক্ত</b> (দ্বি বা ত্রিবন্ধন আছে)।'+((c==='ethyne'&&US.r==='br')?' ইথাইন দ্বিগুণ দ্রুত রং উধাও করেছে, কারণ ১ মোল ইথাইনে ২ মোল Br₂ যুক্ত হয়।':'');
+  else msg='🔎 '+nm+' <b>বদলায়নি</b>। কোনো বিক্রিয়া হয়নি, তাই গ্যাসটি <b>সম্পৃক্ত</b> (শুধু একক বন্ধন)।';
+  if(US.mys){ US.mysDone=true; msg+='<br>এখন নিচে বলো: গ্যাসটা সম্পৃক্ত না অসম্পৃক্ত?'; }
+  $('ussay').innerHTML=msg;
+}
+function ansMys(sat){ var c=US.myc; if(!US.mys||US.p===0&&!USC[c].sat&&false) return; var right=(USC[c].sat===sat);
+  $('mysfb').style.color=right?'#1d7a6f':'#b23a22'; $('mysfb').innerHTML=(right?'🎉 ঠিক! ':'❌ ভুল। ')+'গ্যাসটি ছিল <b>'+USC[c].n+'</b>, তাই '+(USC[c].sat?'সম্পৃক্ত':'অসম্পৃক্ত')+'।'; }
+$('mys1').onclick=function(){ ansMys(true); }; $('mys2').onclick=function(){ ansMys(false); };
+/* অণুর অ্যানিমেশন */
+function molDraw(){
+  var c=$('molcv').getContext('2d'); c.clearRect(0,0,520,210);
+  var cm=US.c, mn=(US.r==='mn'), T=US.run?US.T:(US.p>=1||US.p>0?99:0), C1=[200,112], C2=[300,112];
+  if(US.mys && !US.run && US.p===0){ c.fillStyle='#5b6770'; c.font='14px "Hind Siliguri","Nirmala UI",sans-serif'; c.textAlign='center'; c.fillText('পরীক্ষা চালালে অণুর ভেতরের পরিবর্তন দেখা যাবে',260,110); return; }
+  if(cm==='ethyne'&&mn){ c.fillStyle='#46586a'; c.font='15px "Hind Siliguri","Nirmala UI",sans-serif'; c.textAlign='center'; c.fillText('ইথাইন অসম্পৃক্ত। KMnO₄ দ্বারা জারিত হয় এবং রং উধাও হয়।',260,100); c.fillText('(বইয়ে এই বিক্রিয়ার সমীকরণ দেওয়া নেই)',260,126); return; }
+  var showName=!US.mys||US.p>=1; 
+  // H পরমাণু
+  var Hs=(cm==='ethane')?[[160,112],[172,76],[172,148],[340,112],[328,76],[328,148]]:(cm==='ethene')?[[168,82],[168,142],[332,82],[332,142]]:[[150,112],[350,112]];
+  // বন্ধন সময়রেখা
+  var st1=cl((T-1.9)/0.7), st2=cl((T-5.1)/0.7), lines=[1,1,1];
+  if(cm==='ethene'){ lines=[1,1-st1,0]; }
+  if(cm==='ethyne'){ lines=[1,1-st2,1-st1]; }
+  if(cm==='ethane'){ lines=[1,0,0]; }
+  var nL=(cm==='ethane')?1:(cm==='ethene'?2:3);
+  c.strokeStyle='#1f3a5f'; c.lineWidth=3;
+  Hs.forEach(function(h){ var near=(h[0]<250)?C1:C2; c.beginPath(); c.moveTo(near[0],near[1]); c.lineTo(h[0],h[1]); c.stroke(); });
+  for(var i=0;i<nL;i++){ var off=(i-(nL-1)/2)*7; c.globalAlpha=lines[i]; c.beginPath(); c.moveTo(C1[0],C1[1]+off); c.lineTo(C2[0],C2[1]+off); c.stroke(); c.globalAlpha=1; }
+  function atom(x,y,r,col,txt,al){ c.globalAlpha=al==null?1:al; c.beginPath(); c.arc(x,y,r,0,6.283); c.fillStyle=col; c.fill(); c.strokeStyle='rgba(31,58,95,.5)'; c.lineWidth=1.5; c.stroke(); c.fillStyle='#fff'; c.font='bold '+(r>10?11:9)+'px Arial'; c.textAlign='center'; c.fillText(txt,x,y+4); c.globalAlpha=1; }
+  var XC=mn?'#2a9d8f':'#a0522d', XL=mn?'OH':'Br';
+  function stage(t0,Lend,Rend,fromBottom,bondFade){
+    var p1=cl((T-t0)/1.0), p2=cl((T-t0-1.0)/0.9), p3=cl((T-t0-1.9)/0.7), y0=fromBottom?196:24, y1=fromBottom?168:52;
+    var cy=lerp(y0,y1,ez(p1)), lx=lerp(228,Lend[0],ez(p2)), ly=lerp(cy,Lend[1],ez(p2)), rx=lerp(272,Rend[0],ez(p2)), ry=lerp(cy,Rend[1],ez(p2));
+    if(T<t0) return;
+    if(p2<1){ c.globalAlpha=1-p2; c.strokeStyle='#8b6b4a'; c.lineWidth=3; c.beginPath(); c.moveTo(lx,ly); c.lineTo(rx,ry); c.stroke(); c.globalAlpha=1; }
+    if(p3>0){ c.globalAlpha=p3; c.strokeStyle='#1f3a5f'; c.lineWidth=3; c.beginPath(); c.moveTo(C1[0],C1[1]); c.lineTo(Lend[0],Lend[1]); c.moveTo(C2[0],C2[1]); c.lineTo(Rend[0],Rend[1]); c.stroke(); c.globalAlpha=1; }
+    atom(lx,ly,12,XC,XL); atom(rx,ry,12,XC,XL);
+    if(mn && p2<1){ c.fillStyle='#2a9d8f'; c.font='11px "Hind Siliguri","Nirmala UI",sans-serif'; c.textAlign='center'; c.fillText('H₂O + [O]',250,cy-16); }
+    if(!mn && p2<1){ c.fillStyle='#8b6b4a'; c.font='11px Arial'; c.textAlign='center'; c.fillText('Br₂',250,cy-16); }
+  }
+  c.beginPath(); 
+  if(cm==='ethane'){
+    var p=cl(T/1.2), q=cl((T-1.2)/1.2), cy=lerp(24,56,ez(p))-lerp(0,32,ez(q));
+    if(T>0){ atom(228,cy,12,XC,XL); atom(272,cy,12,XC,XL); c.strokeStyle='#8b6b4a'; c.lineWidth=3; c.beginPath(); c.moveTo(228,cy); c.lineTo(272,cy); c.stroke(); }
+    if(T>1.4){ c.fillStyle='#b23a22'; c.font='bold 13px "Hind Siliguri","Nirmala UI",sans-serif'; c.textAlign='center'; c.fillText('একক বন্ধন ভাঙে না, কোনো বিক্রিয়া হয় না',260,196); }
+  } else {
+    stage(0,[200,66],[300,158],false);
+    if(cm==='ethyne') stage(3.2,[200,158],[300,66],true);
+  }
+  atom(C1[0],C1[1],14,'#e76f51','C'); atom(C2[0],C2[1],14,'#e76f51','C');
+  Hs.forEach(function(h){ atom(h[0],h[1],9,'#8ecae6','H'); });
+  var doneT=(cm==='ethyne')?5.9:2.7;
+  if(cm!=='ethane' && T>=doneT){ c.fillStyle='#1d7a6f'; c.font='bold 13px "Hind Siliguri","Nirmala UI",sans-serif'; c.textAlign='center'; c.fillText(cm==='ethene'?'দ্বিবন্ধন ভেঙে একক বন্ধন হলো, '+XL+' যুক্ত হলো':'ত্রিবন্ধন ভেঙে একক বন্ধন হলো, চারটি '+XL+' যুক্ত হলো',260,198); }
+}
+var usLast=0;
+function usLoop(ts){ var dt=Math.min(0.05,(ts-usLast)/1000||0.016); usLast=ts; tubeDraw(dt); molDraw(); requestAnimationFrame(usLoop); }
+usSetup(); usPick('ethene'); requestAnimationFrame(usLoop);
+
+/* =============== ল্যাব ৪: রূপান্তরের মানচিত্র =============== */
+var MN={
+ starch:['স্টার্চ',''],glucose:['গ্লুকোজ',''],etoh:['ইথানল','CH₃CH₂OH'],etal:['ইথান্যাল','CH₃CHO'],ace:['ইথানয়িক এসিড','CH₃COOH'],naac:['সোডিয়াম ইথানয়েট','CH₃COONa'],
+ ch4:['মিথেন','CH₄'],co2:['কার্বন ডাই-অক্সাইড','CO₂'],ch3cl:['ক্লোরো মিথেন','CH₃Cl'],c2h2:['ইথাইন','CH≡CH'],c2h4:['ইথিন','CH₂=CH₂'],c2h6:['ইথেন','CH₃–CH₃'],
+ cac2:['ক্যালসিয়াম কার্বাইড','CaC₂'],etcl:['ইথাইল ক্লোরাইড','CH₃CH₂Cl'],etbr:['ইথাইল ব্রোমাইড','CH₃CH₂Br'],pe:['পলিথিন','(–CH₂–CH₂–)ₙ'],vcl:['ভিনাইল ক্লোরাইড','CH₂=CHCl'],pvc:['PVC','(–CH₂–CHCl–)ₙ']
+};
+var ME=[
+ ['cac2','c2h2','পানি (H₂O)','CaC₂ + 2H₂O → CH≡CH + Ca(OH)₂'],
+ ['c2h2','c2h6','H₂, নিকেল প্রভাবক, ১৮০-২০০°C','CH≡CH + 2H₂ → CH₃–CH₃'],
+ ['c2h4','c2h6','H₂, নিকেল প্রভাবক, ১৮০-২০০°C','CH₂=CH₂ + H₂ → CH₃–CH₃'],
+ ['c2h4','etoh','জলীয় বাষ্প, H₃PO₄ প্রভাবক, উচ্চ তাপ ও উচ্চ চাপ','CH₂=CH₂ + H₂O → CH₃CH₂OH'],
+ ['etoh','c2h4','অতিরিক্ত গাঢ় H₂SO₄, উত্তপ্ত','CH₃CH₂OH → CH₂=CH₂ + H₂O'],
+ ['etcl','c2h4','NaOH দ্রবণ, উত্তপ্ত (বইয়ের মতে; টীকা: সাধারণত অ্যালকোহলীয় NaOH)','CH₃CH₂Cl + NaOH → CH₂=CH₂ + NaCl + H₂O'],
+ ['etbr','etoh','NaOH এর জলীয় দ্রবণ, উত্তপ্ত','CH₃CH₂Br + NaOH → CH₃CH₂OH + NaBr'],
+ ['etoh','etal','শক্তিশালী জারক K₂Cr₂O₇ + H₂SO₄','CH₃CH₂OH + [O] → CH₃CHO + H₂O'],
+ ['etal','ace','জারক K₂Cr₂O₇ + H₂SO₄ (জায়মান অক্সিজেন [O])','CH₃CHO + [O] → CH₃COOH'],
+ ['c2h2','etal','পানি, 20% H₂SO₄ + 2% HgSO₄, 80°C','CH≡CH + H₂O → CH₃CHO'],
+ ['ace','naac','NaOH (ক্ষার, প্রশমন)','CH₃COOH + NaOH → CH₃COONa + H₂O'],
+ ['naac','ch4','NaOH, CaO, উত্তাপ (ডিকার্বক্সিলেশন)','CH₃COONa + NaOH → CH₄ + Na₂CO₃'],
+ ['co2','ch4','H₂, নিকেল প্রভাবক, 250°C','CO₂ + 4H₂ → CH₄ + 2H₂O'],
+ ['ch4','ch3cl','Cl₂, অতিবেগুনি (UV) আলো','CH₄ + Cl₂ → CH₃Cl + HCl'],
+ ['ch4','co2','অক্সিজেন (দহন)','CH₄ + 2O₂ → CO₂ + 2H₂O + তাপশক্তি'],
+ ['ch4','c2h2','উচ্চ তাপ (সৃজনশীল ২-এর বিক্রিয়া i)','2CH₄ → CH≡CH + 3H₂ (বইয়ে H₂ ছাপা, ঠিক 3H₂)'],
+ ['c2h2','vcl','HCl (সংযোজন)','CH≡CH + HCl → CH₂=CHCl'],
+ ['vcl','pvc','জৈব পার-অক্সাইড, উচ্চ চাপ ও তাপ (পলিমারকরণ)','n CH₂=CHCl → (–CH₂–CHCl–)ₙ'],
+ ['c2h4','pe','১০০০ atm, 200°C, সামান্য O₂ (পলিমারকরণ)','n CH₂=CH₂ → (–CH₂–CH₂–)ₙ'],
+ ['starch','glucose','এনজাইম ডায়াস্টেজ ও ম্যাল্টেজ, পানি','স্টার্চ → গ্লুকোজ'],
+ ['glucose','etoh','এনজাইম জাইমেজ (গাঁজন)','গ্লুকোজ → ইথানল']
+];
+var MS={cur:'etoh',hist:['etoh']};
+function nmHtml(k){ return MN[k][0]+(MN[k][1]?' ('+MN[k][1]+')':''); }
+function mapRender(){
+  var k=MS.cur; $('mapsel').value=k;
+  $('mapcr').innerHTML='পথ: '; MS.hist.forEach(function(h,i){ var s=document.createElement('span'); s.textContent=MN[h][0]; s.onclick=function(){ MS.cur=h; MS.hist=MS.hist.slice(0,i+1); mapRender(); }; $('mapcr').appendChild(s); if(i<MS.hist.length-1) $('mapcr').appendChild(document.createTextNode(' → ')); });
+  function card(e,dir){ var o=(dir==='out')?e[1]:e[0], d=document.createElement('div'); d.className='cardx';
+    d.innerHTML='<div class="rg">'+(dir==='out'?'পাওয়া যায়: ':'যা থেকে তৈরি: ')+'<b>'+MN[o][0]+'</b></div><div class="rg">🧪 '+e[2]+'</div><div class="eqs">'+e[3]+'</div>';
+    var b=document.createElement('button'); b.className='btn alt'; b.style.padding='4px 12px'; b.textContent='যাও → '+MN[o][0]; b.onclick=function(){ MS.cur=o; MS.hist.push(o); mapRender(); }; d.appendChild(b); return d; }
+  var out=ME.filter(function(e){return e[0]===k;}), inn=ME.filter(function(e){return e[1]===k;});
+  $('mapout').innerHTML=''; $('mapin').innerHTML='';
+  if(!out.length) $('mapout').innerHTML='<div class="cardx">এই যৌগ থেকে আর কিছু তৈরির বিক্রিয়া এই মানচিত্রে নেই।</div>';
+  if(!inn.length) $('mapin').innerHTML='<div class="cardx">এটি এই মানচিত্রের শুরুর যৌগ।</div>';
+  out.forEach(function(e){ $('mapout').appendChild(card(e,'out')); }); inn.forEach(function(e){ $('mapin').appendChild(card(e,'in')); });
+}
+Object.keys(MN).forEach(function(k){ ['mapsel','pfrom','pto'].forEach(function(id){ var o=document.createElement('option'); o.value=k; o.textContent=MN[k][0]; $(id).appendChild(o); }); });
+$('mapsel').onchange=function(){ MS.cur=this.value; MS.hist=[this.value]; mapRender(); };
+$('pfrom').value='starch'; $('pto').value='ch4';
+function bfs(a,b){
+  var q=[[a]], seen={}; seen[a]=1;
+  while(q.length){ var p=q.shift(), last=p[p.length-1]; if(last===b) return p;
+    ME.forEach(function(e){ if(e[0]===last && !seen[e[1]]){ seen[e[1]]=1; q.push(p.concat([e[1]])); } }); }
+  return null;
+}
+$('pgo').onclick=function(){
+  var a=$('pfrom').value, b=$('pto').value, ol=$('pres'); ol.innerHTML='';
+  if(a===b){ ol.innerHTML='<li class="stp show">শুরু আর শেষ একই যৌগ।</li>'; return; }
+  var path=bfs(a,b);
+  if(!path){ ol.innerHTML='<li class="stp show">❌ এই মানচিত্রে '+MN[a][0]+' থেকে '+MN[b][0]+' পর্যন্ত কোনো পথ নেই।</li>'; return; }
+  var li=document.createElement('li'); li.className='stp'; li.innerHTML='✅ <b>'+bn(path.length-1)+' ধাপে</b> পৌঁছানো যায়: '+path.map(function(k){return '<b>'+MN[k][0]+'</b>';}).join(' → '); ol.appendChild(li); setTimeout(function(){ li.classList.add('show'); },100);
+  for(var i=0;i<path.length-1;i++){ (function(i){ var e=ME.filter(function(x){return x[0]===path[i]&&x[1]===path[i+1];})[0]; var l=document.createElement('li'); l.className='stp'; l.innerHTML='<b>ধাপ '+bn(i+1)+':</b> '+MN[path[i]][0]+' → '+MN[path[i+1]][0]+'<br>🧪 '+e[2]+'<br><span class="eqs" style="font-family:system-ui,Arial,sans-serif;font-weight:700">'+e[3]+'</span>'; ol.appendChild(l); setTimeout(function(){ l.classList.add('show'); },500+i*900); })(i); }
+};
+mapRender();
+// বিকারক চেনো
+var rqi=-1;
+function rqNew(){
+  var n; do{ n=Math.floor(Math.random()*ME.length); }while(n===rqi); rqi=n; var e=ME[n];
+  $('rq').innerHTML=MN[e[0]][0]+' থেকে '+MN[e[1]][0]+' তৈরিতে কোন বিকারক/শর্ত লাগে?'; $('rqfb').textContent='';
+  var opts=[n]; while(opts.length<4){ var r=Math.floor(Math.random()*ME.length); if(opts.indexOf(r)<0 && ME[r][2]!==e[2]) opts.push(r); }
+  opts.sort(function(){return Math.random()-.5;});
+  var b=$('rqb'); b.innerHTML='';
+  opts.forEach(function(oi){ var x=document.createElement('button'); x.className='btn alt'; x.style.padding='5px 10px'; x.style.textAlign='left'; x.textContent=ME[oi][2]; x.onclick=function(){ if(oi===rqi){ $('rqfb').style.color='#1d7a6f'; $('rqfb').innerHTML='✅ ঠিক! '+e[3]; } else { $('rqfb').style.color='#b23a22'; $('rqfb').textContent='❌ ভুল। আবার চেষ্টা করো।'; } }; b.appendChild(x); });
+}
+$('rqn').onclick=rqNew; rqNew();
+
+/* =============== ল্যাব ৫: পলিমারকরণ =============== */
+var PM={
+ pe:{n:'পলিথিন',type:'add',mon:'CH₂=CH₂',unit:'–CH₂–CH₂–',col:'#2a9d8f',cond:'১০০০ atm, 200°C, সামান্য O₂',eq:'n CH<sub>2</sub>=CH<sub>2</sub> &rarr; (&minus;CH<sub>2</sub>&minus;CH<sub>2</sub>&minus;)<sub>n</sub>',prop:'সহজে কাটা যায় না, টেকসই',use:'প্লাস্টিক ব্যাগ, প্লাস্টিক শিট',mname:'ইথিন'},
+ pp:{n:'পলিপ্রোপিন',type:'add',mon:'CH₂=CH–CH₃',unit:'–CH₂–CH(CH₃)–',col:'#e9a23b',cond:'TiCl₄ প্রভাবক, 140 atm, 120°C',eq:'n CH<sub>2</sub>=CH&ndash;CH<sub>3</sub> &rarr; [&minus;CH<sub>2</sub>&minus;CH(CH<sub>3</sub>)&minus;]<sub>n</sub>',prop:'পলিথিনের চেয়ে মজবুত ও হালকা, উচ্চ তাপ সহ্য করে',use:'প্লাস্টিক রশি, বোতল, পাইপ, কার্পেট',mname:'প্রোপিন'},
+ pvc:{n:'PVC (পলিভিনাইল ক্লোরাইড)',type:'add',mon:'CH₂=CHCl',unit:'–CH₂–CHCl–',col:'#8e6bbf',cond:'জৈব পার-অক্সাইড, উচ্চ চাপ ও উচ্চ তাপমাত্রা',eq:'n CH<sub>2</sub>=CHCl &rarr; (&minus;CH<sub>2</sub>&minus;CHCl&minus;)<sub>n</sub>',prop:'শক্ত, কঠিন, পলিথিনের তুলনায় কম নমনীয়',use:'পানির পাইপ, বিদ্যুৎ অপরিবাহী পদার্থ, মেডিকেল ডিভাইস',mname:'ভিনাইল ক্লোরাইড'},
+ ny:{n:'নাইলন ৬:৬',type:'cond',monA:'অ্যাডিপিক এসিড',monB:'হেক্সামেথিলিন ডাই-অ্যামিন',unitA:'OC–(CH₂)₄–CO',unitB:'NH–(CH₂)₆–NH',col:'#2b6cb0',col2:'#e76f51',cond:'TiO₂ প্রভাবক, তাপ',eq:'nHOOC&ndash;(CH<sub>2</sub>)<sub>4</sub>&ndash;COOH + nNH<sub>2</sub>&ndash;(CH<sub>2</sub>)<sub>6</sub>&ndash;NH<sub>2</sub> &rarr; (&minus;OC&ndash;(CH<sub>2</sub>)<sub>4</sub>&ndash;CONH&ndash;(CH<sub>2</sub>)<sub>6</sub>&ndash;NH&minus;)<sub>n</sub> + 2nH<sub>2</sub>O',prop:'চকচকে, টেকসই, নমনীয়',use:'কৃত্রিম কাপড়, রশি, দাঁতের ব্রাশ'}
+};
+var PS={k:'pe',free:[],chain:[],run:false,timer:0,water:[],h2o:0,fly:null};
+function pmInit(k){
+  PS.k=k; PS.run=false; PS.chain=[]; PS.water=[]; PS.h2o=0; PS.fly=null; PS.timer=0; PS.free=[];
+  var P=PM[k], N=(P.type==='add')?12:10;
+  for(var i=0;i<N;i++) PS.free.push({x:30+Math.random()*580,y:150+Math.random()*95,vx:(Math.random()-.5)*0.7,vy:(Math.random()-.5)*0.7,t:(P.type==='cond')?(i%2):0});
+  $('pmeq').innerHTML=P.eq;
+  var inf='<b class="n">'+P.n+'</b> ('+(P.type==='add'?'সংযোজন পলিমার':'ঘনীভবন পলিমার')+')<br>';
+  inf+=(P.type==='add')?'মনোমার: <b>'+P.mname+'</b> ('+P.mon+')':'মনোমার: <b>'+P.monA+'</b> ও <b>'+P.monB+'</b>';
+  inf+='<br>শর্ত: '+P.cond+'<br>ধর্ম: '+P.prop+'<br>ব্যবহার: '+P.use+'<br>'+((P.type==='add')?'মনোমারগুলো সরাসরি যুক্ত হয়, কোনো ছোট অণু বের হয় না।':'প্রতিবার জোড়া লাগার সময় একটি পানির (H₂O) অণু বেরিয়ে যায়।');
+  $('pminfo').innerHTML=inf; $('pmgo').disabled=false;
+  document.querySelectorAll('#pmlist button').forEach(function(b){ b.className='btn'+(b.getAttribute('data-k')===k?'':' alt'); });
+}
+Object.keys(PM).forEach(function(k){ var b=document.createElement('button'); b.className='btn alt'; b.setAttribute('data-k',k); b.textContent=PM[k].n; b.onclick=function(){ pmInit(k); }; $('pmlist').appendChild(b); });
+function slotPos(i,P){ var per=(P.type==='add')?9:5, w=(P.type==='add')?64:110, r=Math.floor(i/per), cI=i%per; return [24+cI*(w+6), 34+r*46]; }
+$('pmgo').onclick=function(){ if(PS.run||PS.chain.length>0) return; PS.run=true; PS.timer=0; this.disabled=true; };
+$('pmrst').onclick=function(){ pmInit(PS.k); };
+var pmLast=0;
+function pmLoop(ts){
+  var dt=Math.min(0.05,(ts-pmLast)/1000||0.016); pmLast=ts;
+  var P=PM[PS.k], c=$('pmcv').getContext('2d'); c.clearRect(0,0,640,260);
+  // কণা চলাচল
+  PS.free.forEach(function(f){ f.x+=f.vx; f.y+=f.vy; if(f.x<20||f.x>600) f.vx*=-1; if(f.y<140||f.y>245) f.vy*=-1; });
+  if(PS.run){
+    PS.timer+=dt;
+    if(!PS.fly && PS.free.length>0 && PS.timer>0.3){
+      var wantT=(P.type==='cond')?(PS.chain.length%2):0, idx=PS.free.findIndex(function(f){return f.t===wantT;});
+      if(idx>=0){ var f=PS.free.splice(idx,1)[0]; PS.fly={f:f,x0:f.x,y0:f.y,t:0,slot:PS.chain.length}; }
+    }
+    if(PS.fly){ PS.fly.t+=dt/0.6; if(PS.fly.t>=1){ var t=PS.fly.f.t; PS.chain.push({t:t}); if(P.type==='cond' && PS.chain.length>1){ var sp=slotPos(PS.chain.length-1,P); PS.water.push({x:sp[0],y:sp[1]+30,a:1}); PS.h2o++; } PS.fly=null; PS.timer=0; } }
+    if(PS.free.length===0 && !PS.fly) PS.run=false;
+  }
+  // শিকল
+  PS.chain.forEach(function(u,i){
+    var sp=slotPos(i,P), w=(P.type==='add')?64:110, col=(P.type==='add')?P.col:(u.t===0?P.col:P.col2), txt=(P.type==='add')?P.unit:(u.t===0?P.unitA:P.unitB);
+    c.fillStyle=col; c.globalAlpha=0.92; c.beginPath(); c.roundRect?c.roundRect(sp[0],sp[1],w,30,8):c.rect(sp[0],sp[1],w,30); c.fill(); c.globalAlpha=1;
+    c.fillStyle='#fff'; c.font='bold '+((P.type==='add')?'10':'11')+'px Arial'; c.textAlign='center'; c.fillText(txt,sp[0]+w/2,sp[1]+19);
+    if(i>0 && (i%((P.type==='add')?9:5))!==0){ c.strokeStyle='#1f3a5f'; c.lineWidth=3; c.beginPath(); c.moveTo(sp[0]-6,sp[1]+15); c.lineTo(sp[0],sp[1]+15); c.stroke(); }
+  });
+  // ভাসমান মনোমার
+  PS.free.forEach(function(f){
+    var w=(P.type==='add')?64:110, col=(P.type==='add')?P.col:(f.t===0?P.col:P.col2), txt=(P.type==='add')?P.mon:(f.t===0?P.monA:P.monB);
+    c.fillStyle=col; c.globalAlpha=0.35; c.fillRect(f.x-w/2,f.y-11,w,22); c.globalAlpha=1; c.strokeStyle=col; c.lineWidth=2; c.strokeRect(f.x-w/2,f.y-11,w,22);
+    c.fillStyle='#1c2b39'; c.font=(P.type==='add'?'10':'9')+'px Arial'; c.textAlign='center'; c.fillText(txt,f.x,f.y+4);
+  });
+  if(PS.fly){ var sp2=slotPos(PS.fly.slot,P), e=ez(Math.min(1,PS.fly.t)), x=lerp(PS.fly.x0,sp2[0]+((P.type==='add')?32:55),e), y=lerp(PS.fly.y0,sp2[1]+15,e), w=(P.type==='add')?64:110, col=(P.type==='add')?P.col:(PS.fly.f.t===0?P.col:P.col2), txt=(P.type==='add')?P.mon:(PS.fly.f.t===0?P.monA:P.monB);
+    c.fillStyle=col; c.globalAlpha=0.6; c.fillRect(x-w/2,y-11,w,22); c.globalAlpha=1; c.strokeStyle=col; c.lineWidth=2; c.strokeRect(x-w/2,y-11,w,22); c.fillStyle='#1c2b39'; c.font='10px Arial'; c.textAlign='center'; c.fillText(txt,x,y+4); }
+  // পানির অণু
+  PS.water.forEach(function(w){ w.y-=0.8; w.a-=0.008; c.globalAlpha=Math.max(0,w.a); c.beginPath(); c.arc(w.x,w.y,10,0,6.283); c.fillStyle='#8ecae6'; c.fill(); c.fillStyle='#1c2b39'; c.font='bold 9px Arial'; c.textAlign='center'; c.fillText('H₂O',w.x,w.y+3); c.globalAlpha=1; });
+  PS.water=PS.water.filter(function(w){return w.a>0 && w.y>0;});
+  // স্ট্যাটাস
+  var n=PS.chain.length, lbl=(n===0)?'মনোমার আলাদা আলাদা ভাসছে':(n===1?'১টি মনোমার':(n===2?'ডাইমার (২টি)':(n===3?'ট্রাইমার (৩টি)':'পলিমার ('+bn(n)+'টি একক জোড়া)')));
+  c.fillStyle='#1f3a5f'; c.font='bold 14px "Hind Siliguri","Nirmala UI",sans-serif'; c.textAlign='left'; c.fillText(lbl+(P.type==='cond'?'   |   বেরিয়ে গেছে H₂O: '+bn(PS.h2o)+'টি':''),20,18);
+  if(!PS.run && PS.free.length===0 && n>0){ c.fillStyle='#1d7a6f'; c.font='bold 13px "Hind Siliguri","Nirmala UI",sans-serif'; c.fillText('✅ পলিমার তৈরি হলো!',20,140); }
+  requestAnimationFrame(pmLoop);
+}
+pmInit('pe'); requestAnimationFrame(pmLoop);
 /* =============== কুইজ =============== */
 var QUIZ=[
  {q:'প্রাকৃতিক গ্যাসে শতকরা কত ভাগ ইথেন থাকে?',o:['৩ ভাগ','৪ ভাগ','৬ ভাগ','৭ ভাগ'],a:3,e:'প্রাকৃতিক গ্যাসে মিথেন ৮০%, ইথেন ৭%, প্রোপেন ৬%, বিউটেন ও আইসোবিউটেন ৪%, পেন্টেন ৩%।'},
@@ -546,6 +849,11 @@ var QUIZ=[
  {q:'পলিথিনের মনোমার কোনটি?',o:['ইথেন','ইথিন','ইথাইন','প্রোপিন'],a:1,e:'ইথিন (CH₂=CH₂) অণুগুলো যুক্ত হয়ে পলিথিন তৈরি করে।'},
  {q:'নাইলন ৬:৬ তৈরির সময় ছোট কোন অণু বেরিয়ে যায়?',o:['CO₂','H₂O','HCl','NH₃'],a:1,e:'নাইলন ঘনীভবন পলিমার। এতে প্রতিবার জোড়া লাগার সময় পানির (H₂O) অণু বেরিয়ে যায়।'},
  {q:'CH₃–C≡CH-এর সাথে Br₂ বিক্রিয়ার দুই ধাপের পর শেষ উৎপাদ (Y) কোনটি?',o:['১,১-ডাইব্রোমো প্রোপেন','২,২-ডাইব্রোমো প্রোপেন','১,১,২,২-টেট্রাব্রোমো প্রোপেন','১,২-ডাইব্রোমো প্রোপিন'],a:2,e:'ত্রিবন্ধনে দুই মোল Br₂ যুক্ত হয়। প্রথমে ডাইব্রোমো প্রোপিন (দ্বিবন্ধন থাকে), তারপর সব বন্ধন একক হয়ে ১,১,২,২-টেট্রাব্রোমো প্রোপেন হয়।'},
+ {q:'ইথিন গ্যাস লাল ব্রোমিন দ্রবণে চালালে কী দেখা যায়?',o:['রং আরও গাঢ় হয়','লাল রং উধাও হয়ে যায়','সাদা অধঃক্ষেপ পড়ে','কিছুই হয় না'],a:1,e:'ইথিন অসম্পৃক্ত, ব্রোমিনের সাথে সংযোজন বিক্রিয়া করে ডাইব্রোমো ইথেন তৈরি করে, তাই লাল রং উধাও হয়।'},
+ {q:'১ মোল ইথাইনের সাথে সর্বোচ্চ কত মোল Br₂ যুক্ত হতে পারে?',o:['১ মোল','২ মোল','৩ মোল','৪ মোল'],a:1,e:'ত্রিবন্ধনে CH≡CH + 2Br₂ → CHBr₂–CHBr₂। দুই মোল Br₂ যুক্ত হয়।'},
+ {q:'সোডিয়াম ইথানয়েট থেকে NaOH ও CaO দিয়ে মিথেন তৈরির বিক্রিয়াকে কী বলে?',o:['দহন','ডিকার্বক্সিলেশন','পলিমারকরণ','হাইড্রোজেন সংযোজন'],a:1,e:'কার্বক্সিল গ্রুপ (−COOH) থেকে CO₂ (এখানে Na₂CO₃) বেরিয়ে গিয়ে মিথেন হয়, একে ডিকার্বক্সিলেশন বলে।'},
+ {q:'PVC এর মনোমার কোনটি?',o:['ইথিন','প্রোপিন','ভিনাইল ক্লোরাইড','ইথাইন'],a:2,e:'ভিনাইল ক্লোরাইড (CH₂=CHCl) পলিমারকরণে PVC তৈরি করে।'},
+ {q:'কোনটি ঘনীভবন পলিমারের উদাহরণ?',o:['পলিথিন','পলিপ্রোপিন','PVC','নাইলন ৬:৬'],a:3,e:'নাইলন ৬:৬ তৈরির সময় পানির অণু বেরিয়ে যায়, তাই এটি ঘনীভবন পলিমার। বাকিগুলো সংযোজন পলিমার।'},
  {q:'প্লাস্টিক পরিবেশের জন্য ক্ষতিকর, কারণ-',o:['এটি দ্রুত পচে যায়','ব্যাকটেরিয়ায় ক্ষয় হয় না, তাই মাটি ও পানিতে থেকে যায়','এটি খুব ভারী','এটি জলে মিশে যায়'],a:1,e:'প্লাস্টিক ব্যাকটেরিয়া বা অক্সিজেনের সাথে বিক্রিয়া করে ক্ষয় হয় না, তাই একই রকম থেকে মাটি ও পানি দূষিত করে।'},
  {q:'জৈব যৌগ সাধারণত কোন ধরনের বন্ধনে গঠিত?',o:['আয়নিক','সমযোজী','ধাতব','হাইড্রোজেন বন্ধন'],a:1,e:'জৈব যৌগ সাধারণত সমযোজী বন্ধনে গঠিত, আর অজৈব যৌগ সাধারণত আয়নিক বা সমযোজী।'}
 ];
