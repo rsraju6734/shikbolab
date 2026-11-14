@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>পদার্থের অবস্থা (অধ্যায় ২) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+.ctl select{font-family:inherit;font-size:16px;padding:6px 8px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;max-width:100%}
+</style>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#chemistry">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">🧪 রসায়ন &rsaquo; দ্বিতীয় অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🧊 পদার্থের অবস্থা (States of Matter)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🔵 ল্যাব ১</a><a href="#lab2">🌫️ ল্যাব ২</a><a href="#lab3">💨 ল্যাব ৩</a><a href="#lab4">🌡️ ল্যাব ৪</a><a href="#lab5">⚗️ ল্যাব ৫</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+
+  <!-- ================= নোট ================= -->
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> কণার গতিতত্ত্ব দিয়ে কঠিন-তরল-গ্যাসের ধর্ম বোঝাতে, ব্যাপন ও নিঃসরণ ব্যাখ্যা করতে, গলন-স্ফুটনের সময় তাপমাত্রা কেন বাড়ে না বলতে, আর পাতন ও ঊর্ধ্বপাতন বোঝাতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের (২য় অধ্যায়ের) ক্রম মেনে সহজ ভাষায় লেখা। পরীক্ষায় লিখতে হলে বইয়ের ভাষা ও শিক্ষকের নির্দেশ মেনে লিখবে।</div>
+
+    <h3>২.১ পদার্থ ও পদার্থের তিন অবস্থা ⭐⭐⭐</h3>
+    <div class="key">যার নির্দিষ্ট <b>ভর</b> আছে এবং যে জায়গা দখল করে তাকে <b>পদার্থ</b> বলে। তাপমাত্রা বদলালে একই পদার্থ কঠিন, তরল বা গ্যাসীয় অবস্থায় যেতে পারে।</div>
+    <table class="t">
+      <tr><th></th><th>কঠিন</th><th>তরল</th><th>গ্যাস</th></tr>
+      <tr><td>ভর</td><td>নির্দিষ্ট</td><td>নির্দিষ্ট</td><td>নির্দিষ্ট</td></tr>
+      <tr><td>আকার</td><td>নির্দিষ্ট</td><td>নেই (পাত্রের আকার নেয়)</td><td>নেই</td></tr>
+      <tr><td>আয়তন</td><td>নির্দিষ্ট</td><td>নির্দিষ্ট</td><td>নেই (পাত্র ভরে ফেলে)</td></tr>
+      <tr><td>আন্তঃকণা আকর্ষণ বল</td><td>সবচেয়ে বেশি</td><td>কঠিনের চেয়ে কম</td><td>খুবই কম</td></tr>
+      <tr><td>কণার দূরত্ব</td><td>খুব কাছাকাছি</td><td>কঠিনের চেয়ে একটু বেশি</td><td>অনেক বেশি</td></tr>
+      <tr><td>চাপ দিলে</td><td>সংকুচিত হয় না</td><td>আয়তন সামান্য কমে</td><td>আয়তন অনেক কমে</td></tr>
+      <tr><td>তাপ দিলে</td><td>আয়তন খুব সামান্য বাড়ে</td><td>কঠিনের চেয়ে বেশি বাড়ে</td><td>আয়তন অনেক বাড়ে</td></tr>
+    </table>
+    <p>উদাহরণ: চেয়ার, টেবিল, বরফ কঠিন। পানি, তেল, কেরোসিন তরল। বাতাস, অক্সিজেন, নাইট্রোজেন, CO₂ গ্যাস।</p>
+
+    <h3>২.২ কণার গতিতত্ত্ব ⭐⭐⭐</h3>
+    <ul>
+      <li>সব পদার্থ ক্ষুদ্র ক্ষুদ্র <b>কণা</b> দিয়ে তৈরি। কণাগুলো একে অপরকে টানে, একে বলে <b>আন্তঃকণা আকর্ষণ বল</b>। আবার কণাগুলো সব সময় <b>গতিশীল</b>।</li>
+      <li><b>কঠিন:</b> আকর্ষণ বল বেশি, তাই কণা নিজের জায়গায় থেকে শুধু কাঁপে।</li>
+      <li><b>তরল:</b> তাপ দিলে কণা তাপশক্তি নিয়ে বেশি কাঁপে, আকর্ষণ কিছুটা কাটিয়ে গতিশক্তি পায়। তখন কণা একটু চলাচল করতে পারে।</li>
+      <li><b>গ্যাস:</b> আরও তাপে গতিশক্তি এত বাড়ে যে কণা আকর্ষণ থেকে প্রায় মুক্ত হয়ে সব দিকে ছুটতে থাকে। যে পাত্রে রাখা হয় তার পুরো আয়তনে ছড়িয়ে যায়।</li>
+      <li>তাপমাত্রা বাড়ালে কণার গতিশক্তি আরও বাড়ে।</li>
+    </ul>
+
+    <h3>২.৩ ব্যাপন ⭐⭐⭐</h3>
+    <div class="key"><b>ব্যাপন:</b> কোনো মাধ্যমে কঠিন, তরল ও বায়বীয় পদার্থের স্বতঃস্ফূর্ত ও সমানভাবে ছড়িয়ে পড়ার প্রক্রিয়া। পদার্থ <b>উচ্চ ঘনমাত্রার</b> স্থান থেকে <b>নিম্ন ঘনমাত্রার</b> স্থানের দিকে ছড়ায়।</div>
+    <ul>
+      <li>উদাহরণ: ঘরের এক কোণে সুগন্ধি শিশির মুখ খুলে রাখলে সারা ঘরে গন্ধ ছড়ায়।</li>
+      <li>ছড়াতে কম সময় লাগলে ব্যাপন হার <b>বেশি</b>। যে পদার্থের আণবিক ভর <b>কম</b>, তার ব্যাপন হার <b>বেশি</b>।</li>
+      <li><b>পরীক্ষা ১:</b> পানিতে KMnO₄ (পটাশিয়াম পারম্যাঙ্গানেট) দিলে গোলাপি রং সারা পানিতে ছড়ায়। <b>গরম পানিতে আরও দ্রুত</b>। অর্থাৎ তাপে ব্যাপন হার বাড়ে।</li>
+      <li><b>পরীক্ষা ২:</b> পানিতে নীল দ্রবণ দিলে সেটা কঠিন KMnO₄-এর চেয়ে দ্রুত ছড়ায়। অর্থাৎ <b>কঠিনের চেয়ে তরলের ব্যাপন দ্রুত</b>। গ্যাসের ব্যাপন আরও বেশি।</li>
+      <li><b>পরীক্ষা ৩:</b> কাচনলের এক মুখে HCl, অন্য মুখে NH₄OH-এ ভেজা তুলা। নলের ভেতরে NH₄Cl-এর সাদা ধোঁয়া তৈরি হয়, তবে <b>HCl-এর দিকে কাছাকাছি</b>। কারণ NH₃ (আণবিক ভর ১৭) হালকা, তাই বেশি দূরে যায়; HCl (৩৬.৫) ভারী, তাই কম দূরে।</li>
+      <li>H₂, He, N₂, O₂, CO₂-এর আণবিক ভর যথাক্রমে ২, ৪, ২৮, ৩২, ৪৪। তাই <b>H₂-এর ব্যাপন হার সবচেয়ে বেশি</b> আর <b>CO₂-এর সবচেয়ে কম</b>।</li>
+    </ul>
+
+    <h3>২.৪ নিঃসরণ ⭐⭐⭐</h3>
+    <div class="key"><b>নিঃসরণ:</b> সরু ছিদ্রপথে <b>উচ্চচাপ</b> থেকে কোনো গ্যাসের <b>নিম্নচাপের</b> দিকে সজোরে বেরিয়ে আসার প্রক্রিয়া।</div>
+    <ul>
+      <li>উদাহরণ: বেলুনে স্কচটেপ লাগিয়ে আলপিন ফোটালে বাতাস সরু ছিদ্র দিয়ে সজোরে বেরোয়। যানবাহনের CNG সিলিন্ডারের মুখ খুললে গ্যাস উচ্চচাপ থেকে ইঞ্জিনে বেরোয়।</li>
+      <li><b>ব্যাপন ও নিঃসরণের পার্থক্য:</b> ব্যাপনে চাপের প্রভাব নেই, আর কঠিন, তরল ও গ্যাস সবই ছড়ায়। নিঃসরণে চাপের প্রভাব আছে, আর শুধু গ্যাস সরু ছিদ্র দিয়ে উচ্চ থেকে নিম্নচাপে যায়।</li>
+      <li>রান্নার গ্যাসের সিলিন্ডারের মুখ খুললে আগে সরু ছিদ্রে <b>নিঃসরণ</b>, তারপর ঘরে ছড়িয়ে পড়ে <b>ব্যাপন</b>।</li>
+      <li>তাপ দিলে ব্যাপনের মতো নিঃসরণের হারও বাড়ে।</li>
+    </ul>
+
+    <h3>২.৫ মোমবাতির জ্বলন ও মোমের তিন অবস্থা ⭐</h3>
+    <p>মোম হাইড্রোকার্বনের মিশ্রণ। সুতার চারদিকে কঠিন মোম তাপে গলে তরল হয়। তরল মোম সুতা বেয়ে উঠে বাষ্প হয়। এই বাষ্প বাতাসের অক্সিজেনের সাথে বিক্রিয়া করে কার্বন ডাই-অক্সাইড, জলীয় বাষ্প, আলো ও তাপ দেয়। তরল মোমের কিছু অংশ ঠান্ডা হলে আবার কঠিন হয়। এভাবে মোমের <b>তিন অবস্থাই</b> দেখা যায়।</p>
+
+    <h3>২.৬ গলন ও স্ফুটন ⭐⭐⭐</h3>
+    <ul>
+      <li><b>গলন:</b> তাপ দিলে কঠিন থেকে তরলে রূপান্তর। <b>গলনাঙ্ক:</b> ১.০ বায়ুমণ্ডলীয় চাপে যে তাপমাত্রায় কঠিন তরল হয়। বরফের গলনাঙ্ক ০°C।</li>
+      <li><b>স্ফুটন:</b> তাপ দিলে তরল থেকে গ্যাসে রূপান্তর। <b>স্ফুটনাঙ্ক:</b> ১.০ বায়ুমণ্ডলীয় চাপে যে তাপমাত্রায় তরল গ্যাস হয়। পানির স্ফুটনাঙ্ক ১০০°C। স্ফুটনের উল্টো প্রক্রিয়া <b>ঘনীভবন</b>।</li>
+      <li><b>বিশুদ্ধ</b> কঠিনের নির্দিষ্ট গলনাঙ্ক আছে, বিশুদ্ধ তরলের নির্দিষ্ট স্ফুটনাঙ্ক। অবিশুদ্ধ (মিশ্র) পদার্থের গলনাঙ্ক কম ও স্ফুটনাঙ্ক বেশি হয়, আর সুনির্দিষ্ট গলনাঙ্ক বা স্ফুটনাঙ্ক থাকে না (একটি পরিসর থাকে)।</li>
+      <li>উদাহরণ: বিশুদ্ধ ইউরিয়া ১৩৩°C-এ গলে। বিশুদ্ধ সালফারের গলনাঙ্ক ১১৫°C, নমুনা এর চেয়ে কম তাপমাত্রায় গললে ভেজাল আছে। পানিতে সামান্য অ্যালকোহল মেশালে স্ফুটনাঙ্ক ১০০°C হবে না।</li>
+      <li>গলন ও স্ফুটনের সময় তাপ দিলেও <b>তাপমাত্রা বাড়ে না</b>। ওই তাপটুকু কণাগুলো শোষণ করে কঠিন থেকে তরল বা তরল থেকে গ্যাসে যেতে খরচ করে।</li>
+    </ul>
+    <div class="star"><b>লেখচিত্র (ল্যাব ৪-এ নিজে বানাবে):</b> বরফে (−৪০°C) তাপ দিলে তাপমাত্রা বাড়ে, ০°C-এ থেমে যায় (<b>AB রেখা</b>, গলনাঙ্ক রেখা)। সব বরফ গলার পর আবার বাড়ে, ১০০°C-এ থামে (<b>CD রেখা</b>, স্ফুটনাঙ্ক রেখা)। সব পানি বাষ্প হওয়ার পর আবার বাড়ে। জলীয় বাষ্পকে ঠান্ডা করলে উল্টো চিত্র পাওয়া যায়।</div>
+
+    <h3>২.৭ পাতন ও ঊর্ধ্বপাতন ⭐⭐⭐</h3>
+    <ul>
+      <li><b>বাষ্পীভবন:</b> তাপে তরল থেকে বাষ্প (যেমন গরম চা থেকে বাষ্প ওঠা)। <b>ঘনীভবন:</b> উষ্ণ বাষ্প ঠান্ডা হয়ে তরল।</li>
+      <li><div class="key" style="margin:8px 0"><b>পাতন = বাষ্পীভবন + ঘনীভবন।</b> তরলকে বাষ্প করে আবার ঠান্ডা করে তরলে ফিরিয়ে আনার পদ্ধতি।</div></li>
+      <li><b>ঊর্ধ্বপাতন:</b> কঠিন পদার্থে তাপ দিলে সেটা তরল না হয়ে <b>সরাসরি বাষ্পে</b> পরিণত হওয়া। যেসব পদার্থ এমন করে তাদের <b>উদ্বায়ী</b> পদার্থ বলে।</li>
+      <li>উদাহরণ: নিশাদল (NH₄Cl), কর্পূর (C₁₀H₁₆O), ন্যাপথলিন (C₁₀H₈), কঠিন CO₂, আয়োডিন (I₂), অ্যালুমিনিয়াম ক্লোরাইড (AlCl₃)।</li>
+      <li><b>প্রয়োগ:</b> নিশাদল ও খাদ্যলবণের মিশ্রণ থেকে নিশাদল আলাদা করা যায়। আয়োডিনযুক্ত লবণ থেকে আয়োডিন আলাদা করা যায়। কিন্তু বালি ও গ্লুকোজের মিশ্রণে কোনো উদ্বায়ী পদার্থ নেই, তাই ঊর্ধ্বপাতনে আলাদা করা যায় না।</li>
+    </ul>
+  </section>
+
+  <!-- ================= ল্যাব ১ ================= -->
+  <section class="panel" id="lab1">
+    <h2>🔵 ল্যাব ১: কণার জগতে ঢুকে দেখো</h2>
+    <div class="say">👉 তাপমাত্রা স্লাইডার নাড়ো। কণাগুলো কীভাবে কাঁপে, চলে বা ছুটে বেড়ায় দেখো। তারপর "চাপ দাও" স্লাইডার নাড়ো।</div>
+    <div class="row">
+      <div>
+        <canvas id="s1" class="w" width="380" height="300"></canvas>
+        <div class="btnrow"><button class="btn alt" id="p1">❄️ কঠিন</button><button class="btn alt" id="p2">💧 তরল</button><button class="btn alt" id="p3">☁️ গ্যাস</button></div>
+      </div>
+      <div class="grow">
+        <div class="ctl"><label>🌡️ তাপমাত্রা:</label><input type="range" id="t1" min="0" max="100" value="15" style="flex:1;min-width:140px"></div>
+        <div class="ctl"><label>⬇️ চাপ দাও:</label><input type="range" id="pr1" min="0" max="100" value="0" style="flex:1;min-width:140px"></div>
+        <div class="say" id="s1name"></div>
+        <div class="bar"><div class="bl">কণার গতিশক্তি</div><div class="bt"><div class="bf" id="bKE" style="background:#e76f51"></div></div></div>
+        <div class="bar"><div class="bl">আন্তঃকণা আকর্ষণ</div><div class="bt"><div class="bf" id="bAt" style="background:#2a9d8f"></div></div></div>
+        <div id="s1facts" class="tlinfo"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ল্যাব ২ ================= -->
+  <section class="panel" id="lab2">
+    <h2>🌫️ ল্যাব ২: ব্যাপন</h2>
+    <h3>ক) গরম পানিতে KMnO₄ দ্রুত ছড়ায় কেন? (পরীক্ষা ১)</h3>
+    <div class="row">
+      <div>
+        <canvas id="df" class="w" width="380" height="300"></canvas>
+        <div class="btnrow"><button class="btn" id="dfGo">💧 KMnO₄ ছেড়ে দাও</button><button class="btn alt" id="dfReset">↻ আবার</button></div>
+      </div>
+      <div class="grow">
+        <div class="bar"><div class="bl">ঠান্ডা পানিতে ছড়িয়েছে</div><div class="bt"><div class="bf" id="bCold" style="background:#8e44ad"></div></div></div>
+        <div class="bar"><div class="bl">গরম পানিতে ছড়িয়েছে</div><div class="bt"><div class="bf" id="bHot" style="background:#e76f51"></div></div></div>
+        <div class="say" id="dftxt">দুই বিকারে একসাথে KMnO₄ ছেড়ে দিয়ে দেখো কোনটা আগে ছড়ায়।</div>
+        <small>🔎 তাপমাত্রা (১০°C ও ৬০°C) ধারণামূলক। বইয়ে "ঠান্ডা পানি" ও "গরম পানি" বলা আছে।</small>
+      </div>
+    </div>
+
+    <h3>খ) দুই গ্যাসের ব্যাপন হারের দৌড় (পরীক্ষা ৩)</h3>
+    <p>নলের A মুখে প্রথম গ্যাস, B মুখে দ্বিতীয় গ্যাস। হালকা গ্যাস দ্রুত ছড়ায়, তাই বেশি দূরে যায়। তারা যেখানে মিলবে সেই জায়গাটা দেখো।</p>
+    <div class="ctl"><label>A প্রান্ত:</label><select id="g1s"></select><label>B প্রান্ত:</label><select id="g2s"></select><button class="btn" id="gGo">▶ শুরু</button></div>
+    <canvas id="tube" width="380" height="150" style="max-width:380px;width:100%"></canvas>
+    <div class="say" id="gtxt"></div>
+    <b>ব্যাপন হারের তুলনা (H₂ = ১০০ ধরে):</b>
+    <div id="gbars"></div>
+    <small>🔎 বইয়ে বলা আছে "আণবিক ভর কম হলে ব্যাপন হার বেশি"। ল্যাবে যে মিলনস্থল দেখাচ্ছি সেটা হিসাব করা হয়েছে এই নিয়ম (হার ∝ ১/√আণবিক ভর, গ্রাহামের সূত্র) দিয়ে। বইয়ের HCl ও NH₃-এর ছবির সাথে এটা মিলে যায় (প্রায় ৪০ সেমি ও ৬০ সেমি)।</small>
+  </section>
+
+  <!-- ================= ল্যাব ৩ ================= -->
+  <section class="panel" id="lab3">
+    <h2>💨 ল্যাব ৩: নিঃসরণ (সরু ছিদ্র দিয়ে গ্যাস বেরোনো)</h2>
+    <div class="say">👉 বাঁ দিকের ঘরে উচ্চচাপের গ্যাস, ডান দিকে ফাঁকা। মাঝের দেয়ালে একটা সরু ছিদ্র আছে। গ্যাসের পরিমাণ (চাপ) বাড়ালে নিঃসরণ হার কী হয় দেখো।</div>
+    <div class="row">
+      <div><canvas id="ef" class="w" width="380" height="260"></canvas></div>
+      <div class="grow">
+        <div class="ctl"><label>🎈 গ্যাসের পরিমাণ (চাপ):</label><input type="range" id="en" min="5" max="60" value="30" style="flex:1;min-width:130px"></div>
+        <div class="ctl"><label>🌡️ তাপমাত্রা:</label><input type="range" id="et" min="1" max="4" step="0.5" value="2" style="flex:1;min-width:130px"></div>
+        <div class="btnrow"><button class="btn alt" id="eReset">↻ আবার শুরু</button></div>
+        <div class="bar"><div class="bl">বাঁ ঘরের চাপ</div><div class="bt"><div class="bf" id="bEL" style="background:#e63946"></div></div></div>
+        <div class="bar"><div class="bl">ডান ঘরের চাপ</div><div class="bt"><div class="bf" id="bER" style="background:#2b6cb0"></div></div></div>
+        <div class="say" id="etxt"></div>
+        <small>🚗 CNG সিলিন্ডারের গ্যাস উচ্চচাপে ভরা থাকে। মুখ খুললে ওই গ্যাস নিঃসরণের মাধ্যমে ইঞ্জিনে বেরোয়।</small>
+      </div>
+    </div>
+    <div class="key"><b>মনে রাখো:</b> রান্নার গ্যাসের সিলিন্ডারের মুখ খুললে প্রথমে সরু ছিদ্র দিয়ে <b>নিঃসরণ</b> ঘটে। তারপর বেরিয়ে আসা গ্যাস ঘরে ধীরে ধীরে ছড়িয়ে পড়ে, সেটা <b>ব্যাপন</b>।</div>
+  </section>
+
+  <!-- ================= ল্যাব ৪ ================= -->
+  <section class="panel" id="lab4">
+    <h2>🌡️ ল্যাব ৪: গলন, স্ফুটন ও তাপীয় লেখচিত্র</h2>
+    <div class="say">👉 −৪০°C-এর বরফে "তাপ দাও" চাপো। কণাগুলো দেখো, আর ডানে লেখচিত্র নিজে আঁকা হতে দেখো। তারপর "ঠান্ডা করো" চেপে উল্টো লেখচিত্র বানাও।</div>
+    <div class="row">
+      <div>
+        <canvas id="hs" class="w" width="380" height="260"></canvas>
+        <div class="btnrow"><button class="btn" id="hHeat">🔥 তাপ দাও</button><button class="btn alt" id="hCool">❄️ ঠান্ডা করো</button><button class="btn alt" id="hPause">⏸ থামাও</button><button class="btn alt" id="hReset">↻ আবার</button></div>
+        <div class="ctl"><label>গতি:</label><select id="hSpd"><option value="1">×১</option><option value="2" selected>×২</option><option value="4">×৪</option></select></div>
+      </div>
+      <div class="grow">
+        <div class="say" id="hname"></div>
+        <canvas id="hg" class="w" width="380" height="250"></canvas>
+        <div class="fb" id="hnote"></div>
+      </div>
+    </div>
+
+    <h3>🕵️ গলনাঙ্ক-স্ফুটনাঙ্ক গোয়েন্দা: বিশুদ্ধ না অবিশুদ্ধ?</h3>
+    <p>নিচের পর্যবেক্ষণ পড়ে বলো, নমুনাটা বিশুদ্ধ না অবিশুদ্ধ।</p>
+    <div class="tlinfo" id="dq"></div>
+    <div class="cls"><button id="dqP">✅ বিশুদ্ধ</button><button id="dqI">🔀 অবিশুদ্ধ</button><button class="btn alt" id="dqN" style="display:none">পরের নমুনা →</button></div>
+    <div class="fb" id="dqf"></div>
+    <small id="dqs"></small>
+
+    <h3>🕯️ মোমবাতির তিন অবস্থা</h3>
+    <div class="flow" id="cflow">
+      <span>কঠিন মোম</span><i>🔥→</i><span>তরল মোম</span><i>🔥→</i><span>মোমের বাষ্প</span><i>+O₂→</i><span>CO₂ + জলীয় বাষ্প + আলো ও তাপ</span>
+    </div>
+    <button class="btn" id="cplay">▶ জ্বালাও</button> <small>ঠান্ডা হলে তরল মোমের কিছু অংশ আবার কঠিন হয়।</small>
+  </section>
+
+  <!-- ================= ল্যাব ৫ ================= -->
+  <section class="panel" id="lab5">
+    <h2>⚗️ ল্যাব ৫: পাতন ও ঊর্ধ্বপাতন</h2>
+    <h3>ক) ঊর্ধ্বপাতন (পরীক্ষা ৭)</h3>
+    <div class="ctl"><label>মিশ্রণ বেছে নাও:</label><select id="sm"></select><button class="btn" id="sHeat">🔥 তাপ দাও</button><button class="btn alt" id="sReset">↻ আবার</button></div>
+    <div class="row">
+      <div><canvas id="sub" class="w" width="380" height="290"></canvas></div>
+      <div class="grow"><div class="say" id="sres"></div>
+        <div class="bar"><div class="bl">ঢাকনায় জমেছে</div><div class="bt"><div class="bf" id="bSub" style="background:#8e44ad"></div></div></div>
+        <div class="bar"><div class="bl">নিচে পড়ে আছে</div><div class="bt"><div class="bf" id="bRem" style="background:#b08968"></div></div></div>
+        <small>উদ্বায়ী পদার্থ তাপে সরাসরি বাষ্প হয়ে ওঠে, ঠান্ডা ঢাকনায় লেগে আবার কঠিন হয়। ছবি সহজ করে আঁকা।</small></div>
+    </div>
+
+    <h3>খ) পাতন = বাষ্পীভবন + ঘনীভবন</h3>
+    <div class="row">
+      <div><canvas id="dis" class="w" width="380" height="200"></canvas>
+        <div class="btnrow"><button class="btn" id="dHeat">🔥 তাপ দাও / বন্ধ করো</button><button class="btn alt" id="dReset">↻ আবার</button></div></div>
+      <div class="grow"><div class="say" id="dtxt">তাপ দিলে ফ্লাস্কের তরল বাষ্প হয় (বাষ্পীভবন)। ঠান্ডা নলে বাষ্প আবার তরল হয় (ঘনীভবন)। এভাবে পাতন হয়।</div>
+        <div class="bar"><div class="bl">জমা হওয়া পাতিত তরল</div><div class="bt"><div class="bf" id="bDis" style="background:#2b6cb0"></div></div></div></div>
+    </div>
+  </section>
+
+  <!-- ================= কুইজ ================= -->
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <!-- ================= প্রশ্ন-উত্তর ================= -->
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। উত্তরগুলো বইয়ের তথ্য থেকে আমার লেখা সহজ রূপ। পরীক্ষায় শিক্ষকের নির্দেশনা মেনে লিখবে।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; পদার্থের অবস্থা (অধ্যায় ২)</footer>
+
+<script>
+var BN='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function rnd(){return Math.random();}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(rnd()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+/* ============ কণার সিমুলেশন (কঠিন/তরল/গ্যাস) ============ */
+function Sim(cv,o){
+  this.cv=cv;this.x=cv.getContext('2d');this.x0=o.x0;this.x1=o.x1;this.floor=o.floor;this.top=o.top;
+  this.cols=o.cols;this.rows=o.rows;this.sp=o.sp;this.n=this.cols*this.rows;this.lid=!!o.lid;
+  this.liqTop=this.floor-this.n*this.sp*this.sp*1.15/(this.x1-this.x0);
+  this.gasTop=this.top;this.ly=this.top;this.ps=[];
+  var bx=(this.x0+this.x1)/2-(this.cols-1)*this.sp/2;
+  for(var i=0;i<this.n;i++){var r=Math.floor(i/this.cols),c=i%this.cols;
+    var hx=bx+c*this.sp,hy=this.floor-9-(this.rows-1-r)*this.sp;
+    this.ps.push({i:i,r:r,c:c,hx:hx,hy:hy,x:hx,y:hy,a:rnd()*6.28,m:0});}
+}
+Sim.prototype.setMode=function(p,m){if(p.m!==m){if(p.m===0)p.a=rnd()*6.28;p.m=m;}};
+Sim.prototype.step=function(speed,jit){
+  var s=this;
+  s.ps.forEach(function(p){
+    if(p.m===0){p.x+=(p.hx-p.x)*0.25+(rnd()-.5)*jit;p.y+=(p.hy-p.y)*0.25+(rnd()-.5)*jit;return;}
+    var sp=p.m===2?speed.g:speed.l;
+    p.a+=(rnd()-.5)*0.5;p.x+=Math.cos(p.a)*sp;p.y+=Math.sin(p.a)*sp;
+    var yt=(p.m===1?s.liqTop:s.gasTop)+5,xl=s.x0+5,xr=s.x1-5,yb=s.floor-5;
+    if(p.x<xl){p.x=xl;p.a=Math.PI-p.a;}if(p.x>xr){p.x=xr;p.a=Math.PI-p.a;}
+    if(p.y>yb){p.y=yb;p.a=-p.a;}
+    if(p.y<yt){p.y=Math.min(p.y+4,yt);if(Math.sin(p.a)<0)p.a=-p.a;}
+  });
+};
+Sim.prototype.draw=function(lidTarget){
+  var x=this.x,W=this.cv.width,H=this.cv.height;x.clearRect(0,0,W,H);
+  x.strokeStyle='#1f3a5f';x.lineWidth=4;x.beginPath();x.moveTo(this.x0,this.top-6);x.lineTo(this.x0,this.floor);x.lineTo(this.x1,this.floor);x.lineTo(this.x1,this.top-6);x.stroke();
+  if(this.lid){this.ly+=(lidTarget-this.ly)*0.15;x.fillStyle='#7a8b99';x.fillRect(this.x0+2,this.ly-9,this.x1-this.x0-4,9);
+    x.fillStyle='#5b6770';x.fillRect((this.x0+this.x1)/2-3,this.ly-34,6,26);x.beginPath();x.moveTo((this.x0+this.x1)/2-9,this.ly-18);x.lineTo((this.x0+this.x1)/2,this.ly-6);x.lineTo((this.x0+this.x1)/2+9,this.ly-18);x.fill();}
+  var P=this.ps,cols=this.cols;
+  x.strokeStyle='#9dc3e6';x.lineWidth=2;
+  P.forEach(function(p){if(p.m!==0)return;var r=P[p.i+1];if(p.c<cols-1&&r&&r.m===0){x.beginPath();x.moveTo(p.x,p.y);x.lineTo(r.x,r.y);x.stroke();}
+    var d=P[p.i+cols];if(d&&d.m===0){x.beginPath();x.moveTo(p.x,p.y);x.lineTo(d.x,d.y);x.stroke();}});
+  var col=['#2a6fb0','#3da5e0','#e9a23b'];
+  P.forEach(function(p){x.fillStyle=col[p.m];x.strokeStyle='#fff';x.lineWidth=1.5;x.beginPath();x.arc(p.x,p.y,6,0,7);x.fill();x.stroke();});
+};
+
+/* ---------- ল্যাব ১ ---------- */
+var S1=new Sim($('s1'),{x0:80,x1:300,floor:278,top:34,cols:8,rows:5,sp:17,lid:true});
+var STN=['কঠিন','তরল','গ্যাস'];
+function s1mode(){var T=+$('t1').value;return T<34?0:(T<67?1:2);}
+var S1F=[
+ '<b>কঠিন:</b> কণা নিজের জায়গায় থেকে কাঁপে। আকার ও আয়তন নির্দিষ্ট। চাপ দিলে সংকুচিত হয় না। আন্তঃকণা আকর্ষণ সবচেয়ে বেশি।',
+ '<b>তরল:</b> কণা একটু চলাচল করতে পারে। আয়তন নির্দিষ্ট কিন্তু পাত্রের আকার নেয়। চাপে আয়তন সামান্য কমে।',
+ '<b>গ্যাস:</b> কণা সব দিকে ছুটে বেড়ায়, পাত্রের পুরো জায়গা ভরে। চাপ দিলে আয়তন অনেক কমে। আন্তঃকণা আকর্ষণ খুবই কম।'];
+function s1ui(){
+  var T=+$('t1').value,m=s1mode();
+  $('s1name').innerHTML='এখন অবস্থা: <b>'+STN[m]+'</b>'+(T>=34&&T<36?' (গলছে)':'');
+  $('bKE').style.width=Math.max(6,T)+'%';$('bAt').style.width=[90,50,6][m]+'%';
+  var P=+$('pr1').value/100,vol='';
+  if(m===2)vol='<br>📦 গ্যাসের আয়তন এখন: <b>'+bn(Math.round((S1.floor-S1.gasTop)/(S1.floor-S1.top)*100))+'%</b>';
+  $('s1facts').innerHTML=S1F[m]+vol;
+}
+function s1frame(){
+  var T=+$('t1').value,P=+$('pr1').value/100,m=s1mode();
+  S1.ps.forEach(function(p){S1.setMode(p,m);});
+  S1.gasTop=lerp(S1.top,170,P);
+  S1.liqTop=S1.floor-S1.n*S1.sp*S1.sp*1.15/(S1.x1-S1.x0)+P*4;
+  var jit=0.5+T/34*1.4,sl=1.0+Math.max(0,(T-34))/33*1.0,sg=2.0+Math.max(0,(T-67))/33*2.2;
+  S1.step({l:sl,g:sg},jit);
+  var lid=m===0?S1.floor-9-4*S1.sp-12:(m===1?S1.liqTop-3:S1.gasTop-3);
+  S1.draw(lid);s1ui();
+}
+$('p1').onclick=function(){$('t1').value=15;};$('p2').onclick=function(){$('t1').value=50;};$('p3').onclick=function(){$('t1').value=90;};
+
+/* ---------- ল্যাব ২ক: ব্যাপন (KMnO₄) ---------- */
+var DF={on:false,t:0,ps:[]};
+var DW={L:[{x0:20,x1:180},{x0:200,x1:360}],top:90,floor:270};
+function dfInit(){DF.on=false;DF.t=0;DF.ps=[];
+  for(var b=0;b<2;b++){var cx=(DW.L[b].x0+DW.L[b].x1)/2;
+    for(var i=0;i<90;i++)DF.ps.push({b:b,x:cx+(rnd()-.5)*14,y:DW.floor-4-rnd()*6,d:rnd()*90,act:false});}
+  $('dftxt').textContent='দুই বিকারে একসাথে KMnO₄ ছেড়ে দিয়ে দেখো কোনটা আগে ছড়ায়।';$('bCold').style.width='0';$('bHot').style.width='0';}
+$('dfGo').onclick=function(){DF.on=true;};$('dfReset').onclick=dfInit;dfInit();
+function cover(b){var seen={},n=0,w=DW.L[b].x1-DW.L[b].x0,h=DW.floor-DW.top;
+  DF.ps.forEach(function(p){if(p.b!==b)return;var k=Math.floor((p.x-DW.L[b].x0)/w*8)+'_'+Math.floor((p.y-DW.top)/h*6);if(!seen[k]){seen[k]=1;n++;}});return Math.round(n/48*100);}
+function dfFrame(){
+  var c=$('df'),x=c.getContext('2d');x.clearRect(0,0,380,300);
+  var names=['ঠান্ডা পানি (১০°C)','গরম পানি (৬০°C)'],wc=['#cfe9f7','#f7e2d6'];
+  for(var b=0;b<2;b++){var L=DW.L[b];x.fillStyle=wc[b];x.fillRect(L.x0,DW.top,L.x1-L.x0,DW.floor-DW.top);
+    x.strokeStyle='#1f3a5f';x.lineWidth=4;x.beginPath();x.moveTo(L.x0,60);x.lineTo(L.x0,DW.floor);x.lineTo(L.x1,DW.floor);x.lineTo(L.x1,60);x.stroke();
+    x.fillStyle='#1f3a5f';x.font='bold 13px sans-serif';x.fillText(names[b],L.x0+6,24);
+    if(b===1){x.font='22px sans-serif';x.fillText('🔥',(L.x0+L.x1)/2-10,296);}}
+  if(DF.on)DF.t++;
+  DF.ps.forEach(function(p){
+    if(DF.on&&DF.t>p.d)p.act=true;
+    if(p.act){var s=p.b?2.4:0.9,L=DW.L[p.b];var a=rnd()*6.28;p.x+=Math.cos(a)*s;p.y+=Math.sin(a)*s;
+      if(p.x<L.x0+4)p.x=L.x0+4;if(p.x>L.x1-4)p.x=L.x1-4;if(p.y<DW.top+4)p.y=DW.top+4;if(p.y>DW.floor-4)p.y=DW.floor-4;}
+    x.fillStyle='rgba(150,30,170,.45)';x.beginPath();x.arc(p.x,p.y,5.5,0,7);x.fill();});
+  if(DF.on&&DF.t%6===0){var c0=cover(0),c1=cover(1);$('bCold').style.width=c0+'%';$('bHot').style.width=c1+'%';
+    if(c1>=60&&c0<60)$('dftxt').innerHTML='🔥 গরম পানিতে রং আগে ছড়াল। <b>তাপ দিলে কণার গতিশক্তি বাড়ে, তাই ব্যাপন হার বাড়ে।</b>';
+    if(c1>=60&&c0>=60)$('dftxt').innerHTML='দুই বিকারেই রং ছড়িয়েছে, তবে গরম পানিতে অনেক আগে ছড়িয়েছিল।';}
+}
+
+/* ---------- ল্যাব ২খ: দুই গ্যাসের দৌড় ---------- */
+var GAS=[{k:'H₂',m:2,c:'#2a9d8f'},{k:'He',m:4,c:'#8e44ad'},{k:'NH₃',m:17,c:'#e76f51'},{k:'N₂',m:28,c:'#1f3a5f'},{k:'O₂',m:32,c:'#2b6cb0'},{k:'HCl',m:36.5,c:'#c2185b'},{k:'CO₂',m:44,c:'#6d4c41'}];
+var TB={on:false,t:0,done:false,r1:0,r2:0,d:50,pts1:[],pts2:[]};
+(function(){var h='';GAS.forEach(function(g,i){h+='<option value="'+i+'">'+g.k+' (ভর '+bn(g.m)+')</option>';});$('g1s').innerHTML=h;$('g2s').innerHTML=h;$('g1s').value=5;$('g2s').value=2;
+  var rt=GAS.map(function(g){return {g:g,r:100*Math.sqrt(2)/Math.sqrt(g.m)};}).sort(function(a,b){return b.r-a.r;}),b='';
+  rt.forEach(function(o){b+='<div class="bar"><div class="bl">'+o.g.k+' (ভর '+bn(o.g.m)+')</div><div class="bt"><div class="bf" style="width:'+o.r.toFixed(0)+'%;background:'+o.g.c+'"></div></div><div style="width:44px;font-weight:700">'+bn(Math.round(o.r))+'</div></div>';});
+  $('gbars').innerHTML=b;})();
+function tbInit(){var a=GAS[+$('g1s').value],b=GAS[+$('g2s').value];TB.t=0;TB.done=false;TB.on=false;
+  var w1=1/Math.sqrt(a.m),w2=1/Math.sqrt(b.m),T=300;TB.r1=w1/(w1+w2)*100/T;TB.r2=w2/(w1+w2)*100/T;TB.d=w1/(w1+w2)*100;TB.T=T;
+  TB.pts1=[];TB.pts2=[];for(var i=0;i<16;i++){TB.pts1.push(rnd());TB.pts2.push(rnd());}
+  $('gtxt').innerHTML='A: <b>'+a.k+'</b>, B: <b>'+b.k+'</b>। "শুরু" চাপো।';}
+$('gGo').onclick=function(){tbInit();TB.on=true;};$('g1s').onchange=tbInit;$('g2s').onchange=tbInit;tbInit();
+function tubeFrame(){
+  var c=$('tube'),x=c.getContext('2d'),W=380;x.clearRect(0,0,W,150);
+  var X0=20,X1=360,sc=(X1-X0)/100,y0=45,y1=95,a=GAS[+$('g1s').value],b=GAS[+$('g2s').value];
+  x.fillStyle='#f3f8fb';x.fillRect(X0,y0,X1-X0,y1-y0);x.strokeStyle='#1f3a5f';x.lineWidth=3;x.strokeRect(X0,y0,X1-X0,y1-y0);
+  x.fillStyle='#eee';x.beginPath();x.ellipse(X0-6,70,12,22,0,0,7);x.fill();x.stroke();x.beginPath();x.ellipse(X1+6,70,12,22,0,0,7);x.fill();x.stroke();
+  x.fillStyle='#1f3a5f';x.font='bold 13px sans-serif';x.fillText('A: '+a.k,X0-10,26);x.fillText('B: '+b.k,X1-36,26);
+  x.font='10px sans-serif';for(var cm=0;cm<=100;cm+=20){x.fillRect(X0+cm*sc,y1,1,5);x.fillText(bn(cm),X0+cm*sc-5,y1+16);}x.fillText('সেমি (A থেকে)',150,y1+32);
+  if(TB.on&&!TB.done){TB.t++;if(TB.t>=TB.T){TB.done=true;TB.on=false;}}
+  var f1=TB.r1*TB.t,f2=TB.r2*TB.t;if(TB.done){f1=TB.d;f2=100-TB.d;}
+  TB.pts1.forEach(function(r){var px=X0+(r*f1)*sc,py=y0+8+((r*977)%1)*34;x.fillStyle=a.c;x.beginPath();x.arc(px+(rnd()-.5)*2,py+(rnd()-.5)*2,4,0,7);x.fill();});
+  TB.pts2.forEach(function(r){var px=X1-(r*f2)*sc,py=y0+8+((r*733)%1)*34;x.fillStyle=b.c;x.beginPath();x.arc(px+(rnd()-.5)*2,py+(rnd()-.5)*2,4,0,7);x.fill();});
+  if(TB.t>0){x.strokeStyle=a.c;x.lineWidth=3;x.beginPath();x.moveTo(X0+f1*sc,y0-4);x.lineTo(X0+f1*sc,y0+2);x.stroke();}
+  if(TB.done){var mx=X0+TB.d*sc,pair=(a.k==='HCl'&&b.k==='NH₃')||(a.k==='NH₃'&&b.k==='HCl');
+    x.setLineDash([4,3]);x.strokeStyle='#e76f51';x.lineWidth=3;x.beginPath();x.moveTo(mx,y0-8);x.lineTo(mx,y1+6);x.stroke();x.setLineDash([]);
+    if(pair){x.fillStyle='rgba(255,255,255,.95)';x.beginPath();x.ellipse(mx,70,10,22,0,0,7);x.fill();x.fillStyle='#1f3a5f';x.font='bold 11px sans-serif';x.fillText('NH₄Cl এর সাদা ধোঁয়া',mx-52,40);}
+    var fast=TB.d<50?b.k:a.k,slow=TB.d<50?a.k:b.k;
+    $('gtxt').innerHTML='🎯 গ্যাস দুটো A থেকে <b>'+bn(TB.d.toFixed(0))+' সেমি</b> দূরে মিলল। '+(Math.abs(TB.d-50)<1?'দুটোর আণবিক ভর সমান, তাই মাঝখানে।':'<b>'+fast+'</b> (ভর '+bn(GAS.filter(function(g){return g.k===fast;})[0].m)+') হালকা, তাই বেশি দূরে গেছে। <b>'+slow+'</b> ভারী, তাই কম দূরে।')+(pair?' (বইয়ের পরীক্ষায় সাদা ধোঁয়া HCl-এর কাছাকাছি হয়।)':' <small>(সাদা ধোঁয়া শুধু NH₃ ও HCl মিললে তৈরি হয়, অন্য জোড়ায় এটা শুধু মিলনস্থান।)</small>');}
+}
+
+/* ---------- ল্যাব ৩: নিঃসরণ ---------- */
+var EF={ps:[],ev:[],t:0};
+var EH={x:190,y0:108,y1:136};
+function efInit(){EF.ps=[];EF.ev=[];EF.t=0;var n=+$('en').value;
+  for(var i=0;i<n;i++)EF.ps.push({x:30+rnd()*150,y:50+rnd()*170,a:rnd()*6.28,s:0});}
+$('eReset').onclick=efInit;$('en').oninput=efInit;efInit();
+function efFrame(){
+  var c=$('ef'),x=c.getContext('2d');x.clearRect(0,0,380,260);
+  x.fillStyle='#fdf1ee';x.fillRect(20,40,170,190);x.fillStyle='#edf5fb';x.fillRect(200,40,160,190);
+  x.strokeStyle='#1f3a5f';x.lineWidth=4;x.beginPath();x.moveTo(20,40);x.lineTo(20,230);x.lineTo(360,230);x.lineTo(360,40);x.lineTo(200,40);x.lineTo(200,EH.y0);x.moveTo(200,EH.y1);x.lineTo(200,230);x.moveTo(190,40);x.lineTo(190,EH.y0);x.moveTo(190,EH.y1);x.lineTo(190,230);x.moveTo(20,40);x.lineTo(190,40);x.stroke();
+  x.fillStyle='#1f3a5f';x.font='bold 13px sans-serif';x.fillText('উচ্চচাপ',60,28);x.fillText('নিম্নচাপ',240,28);x.fillText('সরু ছিদ্র',166,258);
+  var sp=+$('et').value*1.3,now=EF.t++;
+  EF.ps.forEach(function(p){
+    p.a+=(rnd()-.5)*0.4;var nx=p.x+Math.cos(p.a)*sp,ny=p.y+Math.sin(p.a)*sp;
+    var L=p.s===0?24:204,R=p.s===0?186:356;
+    if(p.s===0&&nx>R&&ny>EH.y0&&ny<EH.y1){p.s=1;p.x=204;p.y=ny;p.a=rnd()*1.2-0.6;EF.ev.push(now);return;}
+    if(p.s===1&&nx<L&&ny>EH.y0&&ny<EH.y1){p.s=0;p.x=186;p.y=ny;p.a=Math.PI+rnd()-0.5;EF.ev.push(-now);return;}
+    if(nx<L){nx=L;p.a=Math.PI-p.a;}if(nx>R){nx=R;p.a=Math.PI-p.a;}if(ny<44){ny=44;p.a=-p.a;}if(ny>226){ny=226;p.a=-p.a;}
+    p.x=nx;p.y=ny;
+    x.fillStyle=p.s?'#2b6cb0':'#e63946';x.beginPath();x.arc(p.x,p.y,5,0,7);x.fill();});
+  var l=0,r=0;EF.ps.forEach(function(p){if(p.s)r++;else l++;});
+  var n0=EF.ps.length||1;$('bEL').style.width=Math.round(l/60*100)+'%';$('bER').style.width=Math.round(r/60*100)+'%';
+  var win=300,go=0;EF.ev=EF.ev.filter(function(e){return Math.abs(e)>now-win;});EF.ev.forEach(function(e){if(e>0)go++;});
+  if(now%10===0)$('etxt').innerHTML='গত ৫ সেকেন্ডে বাঁ থেকে ডানে বেরিয়েছে: <b>'+bn(go)+'টি</b> কণা। বাঁয়ে '+bn(l)+'টি, ডানে '+bn(r)+'টি।<br>'+(l>r+3?'বাঁ ঘরে চাপ বেশি, তাই বেশি কণা ছিদ্রে পৌঁছে বেরোচ্ছে। এটাই নিঃসরণ।':'দুই পাশে প্রায় সমান কণা, তাই নিট নিঃসরণ থেমে এসেছে।');
+}
+
+/* ---------- ল্যাব ৪: তাপীয় লেখচিত্র ---------- */
+var HS=new Sim($('hs'),{x0:90,x1:290,floor:246,top:24,cols:8,rows:4,sp:17,lid:false});
+var HD={T:-40,stage:'ice',prog:0,dir:0,t:0,hist:[],marks:{melt:false,boil:false}};
+function hReset(){HD.T=-40;HD.stage='ice';HD.prog=0;HD.dir=0;HD.t=0;HD.hist=[];HD.marks={melt:false,boil:false};$('hnote').textContent='';}
+$('hHeat').onclick=function(){HD.dir=1;};$('hCool').onclick=function(){HD.dir=-1;};$('hPause').onclick=function(){HD.dir=0;};$('hReset').onclick=hReset;hReset();
+function hLogic(){
+  var k=+$('hSpd').value,d=HD.dir;if(!d)return;
+  var dT=0.35*k,dp=k;
+  switch(HD.stage){
+   case 'ice':HD.T+=d*dT;if(HD.T>=0){HD.T=0;HD.stage='melt';HD.prog=0;}if(HD.T<-40)HD.T=-40;break;
+   case 'melt':HD.prog+=d*dp/120;if(HD.prog>=1){HD.prog=1;HD.stage='water';}if(HD.prog<=0){HD.prog=0;HD.stage='ice';}break;
+   case 'water':HD.T+=d*dT;if(HD.T>=100){HD.T=100;HD.stage='boil';HD.prog=0;}if(HD.T<=0){HD.T=0;HD.stage='melt';HD.prog=1;}break;
+   case 'boil':HD.prog+=d*dp/200;if(HD.prog>=1){HD.prog=1;HD.stage='steam';}if(HD.prog<=0){HD.prog=0;HD.stage='water';}break;
+   case 'steam':HD.T+=d*dT;if(HD.T>140)HD.T=140;if(HD.T<=100){HD.T=100;HD.stage='boil';HD.prog=1;}break;}
+  HD.t++;HD.hist.push({t:HD.t,T:HD.T,s:HD.stage});
+  if(HD.stage==='melt')HD.marks.melt=true;if(HD.stage==='boil')HD.marks.boil=true;
+}
+function hFrame(){
+  hLogic();var st=HD.stage,n=HS.n,i;
+  var nl=0,ng=0;if(st==='melt')nl=Math.round(HD.prog*n);if(st==='water')nl=n;if(st==='boil'){nl=n;ng=Math.round(HD.prog*n);}if(st==='steam'){nl=n;ng=n;}
+  HS.ps.forEach(function(p,j){var m=0;if(j<ng)m=2;else if(j<nl)m=1;HS.setMode(p,m);});
+  var jit=0.3+(HD.T+40)/40*0.7,sl=0.8+Math.max(0,HD.T)/100*0.8,sg=2+Math.max(0,HD.T-100)/40*1.2;
+  HS.step({l:sl,g:sg},jit);HS.draw(0);
+  var x=HS.x;x.fillStyle='#1f3a5f';x.font='bold 18px sans-serif';x.fillText(bn(HD.T.toFixed(0)).replace('-','−')+'°C',10,34);
+  if(HD.dir===1){x.font='26px sans-serif';x.fillText('🔥',(HS.x0+HS.x1)/2-14,258);}
+  if(HD.dir===-1){x.font='26px sans-serif';x.fillText('❄️',(HS.x0+HS.x1)/2-14,258);}
+  var nm={ice:'🧊 বরফ (কঠিন)',melt:'⏳ বরফ গলছে',water:'💧 পানি (তরল)',boil:'♨️ পানি ফুটছে',steam:'☁️ জলীয় বাষ্প (গ্যাস)'};
+  $('hname').innerHTML='এখন: <b>'+nm[st]+'</b> &mdash; '+bn(HD.T.toFixed(0)).replace('-','−')+'°C';
+  if(st==='melt')$('hnote').innerHTML=(HD.dir===1?'🔥 তাপ দিচ্ছি, কিন্তু তাপমাত্রা ০°C-এই আটকে আছে! তাপটা কণার আকর্ষণ ভেঙে কঠিনকে তরল বানাতে খরচ হচ্ছে।':'❄️ তাপ সরিয়ে নিচ্ছি, কিন্তু তাপমাত্রা ০°C-এই আছে। তরল জমে কঠিন হচ্ছে।');
+  else if(st==='boil')$('hnote').innerHTML=(HD.dir===1?'🔥 তাপ দিচ্ছি, কিন্তু তাপমাত্রা ১০০°C-এ আটকে আছে! তাপ দিয়ে তরলকে বাষ্প বানানো হচ্ছে।':'❄️ বাষ্প ঘনীভূত হয়ে তরল হচ্ছে, তাপমাত্রা ১০০°C-এই আছে।');
+  else if(HD.dir!==0)$('hnote').textContent=HD.dir===1?'তাপমাত্রা বাড়ছে, কারণ তাপ কণার গতিশক্তি বাড়াচ্ছে।':'তাপমাত্রা কমছে, কারণ কণার গতিশক্তি কমছে।';
+  hGraph();
+}
+function hGraph(){
+  var c=$('hg'),x=c.getContext('2d');x.clearRect(0,0,380,250);
+  var L=44,R=366,T=14,B=206,xm=Math.max(900,HD.t+40),yr=function(v){return B-(v+40)/190*(B-T);},xr=function(t){return L+t/xm*(R-L);};
+  x.strokeStyle='#dfe6ec';x.lineWidth=1;x.fillStyle='#5b6770';x.font='11px sans-serif';
+  for(var v=-40;v<=140;v+=20){x.beginPath();x.moveTo(L,yr(v));x.lineTo(R,yr(v));x.stroke();x.fillText(bn(v),4,yr(v)+4);}
+  x.setLineDash([5,4]);x.strokeStyle='#e76f5188';[0,100].forEach(function(v){x.beginPath();x.moveTo(L,yr(v));x.lineTo(R,yr(v));x.stroke();});x.setLineDash([]);
+  x.fillStyle='#1f3a5f';x.font='bold 12px sans-serif';x.fillText('সময় →',R-52,B+18);x.save();x.translate(12,120);x.rotate(-Math.PI/2);x.fillText('তাপমাত্রা (°C)',-10,0);x.restore();
+  x.lineWidth=3;
+  for(var i=1;i<HD.hist.length;i++){var a=HD.hist[i-1],b=HD.hist[i];x.strokeStyle=(b.s==='melt'||b.s==='boil')?'#e76f51':'#2a9d8f';x.beginPath();x.moveTo(xr(a.t),yr(a.T));x.lineTo(xr(b.t),yr(b.T));x.stroke();}
+  if(HD.hist.length){var l=HD.hist[HD.hist.length-1];x.fillStyle='#1f3a5f';x.beginPath();x.arc(xr(l.t),yr(l.T),5,0,7);x.fill();}
+  x.fillStyle='#e76f51';x.font='bold 12px sans-serif';if(HD.marks.melt)x.fillText('AB: গলনাঙ্ক রেখা',L+8,yr(0)-6);if(HD.marks.boil)x.fillText('CD: স্ফুটনাঙ্ক রেখা',L+60,yr(100)-6);
+}
+
+/* গোয়েন্দা */
+var DQ=[
+ {t:'🔬 <b>ইউরিয়া নমুনা:</b> তাপ দিলে ঠিক <b>১৩৩°C</b>-এ গলে গেল। (বিশুদ্ধ ইউরিয়ার গলনাঙ্ক ১৩৩°C)',p:true,e:'নির্দিষ্ট তাপমাত্রায় গলেছে এবং সেটা বিশুদ্ধ ইউরিয়ার গলনাঙ্কের সাথে মেলে। তাই বিশুদ্ধ।'},
+ {t:'🔬 <b>সালফার নমুনা:</b> ১১৫°C-এর চেয়ে <b>কম</b> তাপমাত্রায় গলতে শুরু করল। (বিশুদ্ধ সালফারের গলনাঙ্ক ১১৫°C)',p:false,e:'বিশুদ্ধ সালফার ১১৫°C-এ গলে। কম তাপমাত্রায় গললে নমুনায় ভেজাল আছে, অর্থাৎ অবিশুদ্ধ।'},
+ {t:'🔬 <b>মোম:</b> একটা নির্দিষ্ট তাপমাত্রায় না গলে একটা <b>তাপমাত্রার পরিসর (range)</b> ধরে ধীরে গলল।',p:false,e:'মোম বিভিন্ন হাইড্রোকার্বনের মিশ্রণ। মিশ্রণের সুনির্দিষ্ট গলনাঙ্ক থাকে না, থাকে একটি পরিসর।'},
+ {t:'🔬 <b>পানি:</b> ১ বায়ুমণ্ডলীয় চাপে ঠিক <b>১০০°C</b>-এ ফুটতে শুরু করল।',p:true,e:'বিশুদ্ধ পানির স্ফুটনাঙ্ক ১০০°C। এই মান মিলেছে, তাই বিশুদ্ধ।'},
+ {t:'🔬 <b>পানি ও সামান্য অ্যালকোহলের মিশ্রণ:</b> ১০০°C <b>না</b> হয়ে অন্য এক তাপমাত্রায় ফুটতে শুরু করল।',p:false,e:'পানিতে অ্যালকোহল মেশালে স্ফুটনাঙ্ক ১০০°C হয় না। তাই এটা অবিশুদ্ধ (ভেজাল মিশ্রিত)।'}
+];
+var dqi=-1,dqD=false,dqR=0,dqT=0;
+function dqNew(){dqi=(dqi+1)%DQ.length;dqD=false;$('dq').innerHTML=DQ[dqi].t;$('dqf').textContent='';$('dqN').style.display='none';}
+function dqAns(v){if(dqD)return;dqD=true;dqT++;var ok=v===DQ[dqi].p;if(ok)dqR++;$('dqf').innerHTML=(ok?'✅ ঠিক! ':'❌ ভুল। ')+DQ[dqi].e;$('dqs').textContent='স্কোর: '+bn(dqR)+' / '+bn(dqT);$('dqN').style.display='inline-block';}
+$('dqP').onclick=function(){dqAns(true);};$('dqI').onclick=function(){dqAns(false);};$('dqN').onclick=dqNew;dqNew();
+$('cplay').onclick=function(){var sp=$('cflow').querySelectorAll('span');sp.forEach(function(s){s.classList.remove('show');});sp.forEach(function(s,i){setTimeout(function(){s.classList.add('show');},i*800);});};
+$('cflow').querySelectorAll('span').forEach(function(s){s.classList.add('show');});
+
+/* ---------- ল্যাব ৫ক: ঊর্ধ্বপাতন ---------- */
+var MIX=[
+ {n:'বিশুদ্ধ AlCl₃ (উদ্বায়ী)',v:1,txt:'কঠিন AlCl₃ তরল না হয়ে সরাসরি গ্যাস হচ্ছে, তারপর ঠান্ডা ঢাকনায় লেগে আবার কঠিন হয়ে জমছে।'},
+ {n:'নিশাদল (NH₄Cl) + খাদ্যলবণ (NaCl)',v:0.5,txt:'নিশাদল ঊর্ধ্বপাতিত হয়ে ঢাকনায় জমছে। খাদ্যলবণ উদ্বায়ী নয়, তাই নিচে থেকে যাচ্ছে। এভাবে মিশ্রণ আলাদা হলো।'},
+ {n:'আয়োডিনযুক্ত খাদ্যলবণ',v:0.15,txt:'আয়োডিন সহজে বাষ্পীভূত হয়ে ঢাকনায় জমছে, লবণ নিচে থাকছে। আয়োডিন আলাদা করা গেল।'},
+ {n:'বালি + গ্লুকোজ',v:0,txt:'কোনো উদ্বায়ী পদার্থ নেই, তাই কিছুই ওপরে উঠছে না। ঊর্ধ্বপাতন দিয়ে বালি আর গ্লুকোজ আলাদা করা যায় না।'}];
+var SB={ps:[],heat:false,t:0};
+(function(){var h='';MIX.forEach(function(m,i){h+='<option value="'+i+'">'+m.n+'</option>';});$('sm').innerHTML=h;})();
+function sbInit(){var m=MIX[+$('sm').value];SB.ps=[];SB.heat=false;SB.t=0;
+  var N=60;for(var i=0;i<N;i++){var vol=i<Math.round(N*m.v);SB.ps.push({v:vol,s:'solid',x:128+(i%15)*9,y:244-Math.floor(i/15)*9,a:rnd()*6.28});}
+  SB.ps=shuffle(SB.ps).map(function(p,i){p.x=128+(i%15)*9;p.y=244-Math.floor(i/15)*9;return p;});
+  $('sres').textContent='"তাপ দাও" চাপো।';$('bSub').style.width='0';$('bRem').style.width='100%';}
+$('sm').onchange=sbInit;$('sReset').onclick=sbInit;$('sHeat').onclick=function(){SB.heat=true;var m=MIX[+$('sm').value];$('sres').innerHTML='🔥 '+m.txt;};sbInit();
+function subFrame(){
+  var c=$('sub'),x=c.getContext('2d');x.clearRect(0,0,380,290);
+  x.fillStyle='#fff';x.strokeStyle='#1f3a5f';x.lineWidth=4;x.beginPath();x.moveTo(100,92);x.lineTo(100,252);x.lineTo(280,252);x.lineTo(280,92);x.stroke();
+  x.fillStyle='#9ad7ff';x.strokeStyle='#5b8aa8';x.lineWidth=3;x.fillRect(96,82,188,8);x.strokeRect(96,82,188,8);
+  x.fillStyle='#e8f4fb';[[120,52],[160,50],[200,52],[240,50]].forEach(function(q){x.fillRect(q[0],q[1],26,26);x.strokeStyle='#8ab4cc';x.lineWidth=1.5;x.strokeRect(q[0],q[1],26,26);});
+  x.fillStyle='#1f3a5f';x.font='bold 11px sans-serif';x.fillText('বরফ খণ্ড',150,44);x.fillText('ঢাকনা',290,90);x.fillText('বিকার',290,170);
+  x.strokeStyle='#555';x.lineWidth=3;x.beginPath();x.moveTo(90,254);x.lineTo(290,254);x.moveTo(100,254);x.lineTo(86,284);x.moveTo(280,254);x.lineTo(294,284);x.stroke();
+  if(SB.heat){x.font='26px sans-serif';x.fillText('🔥',178,282);SB.t++;}
+  var dep=0,sol=0,tot=SB.ps.filter(function(p){return p.v;}).length||1,vs=0;
+  SB.ps.forEach(function(p){
+    if(p.v&&p.s==='solid'&&SB.heat&&rnd()<0.012)p.s='gas';
+    if(p.s==='gas'){p.a+=(rnd()-.5)*0.6;p.x+=Math.cos(p.a)*1.5;p.y+=Math.sin(p.a)*1.5-0.7;
+      if(p.x<106)p.x=106;if(p.x>274)p.x=274;if(p.y<94){p.s='dep';p.y=96+rnd()*4;}}
+    if(p.s==='dep')dep++;
+    if(p.s==='solid')sol++;
+    x.fillStyle=p.v?(p.s==='gas'?'#c9a0ff':'#8e44ad'):'#b08968';
+    x.beginPath();if(p.s==='solid'||p.s==='dep')x.rect(p.x-4,(p.s==='dep'?p.y-12:p.y)-4,8,8);else x.arc(p.x,p.y,4,0,7);x.fill();});
+  var vtot=SB.ps.filter(function(p){return p.v;}).length;
+  $('bSub').style.width=(vtot?Math.round(dep/vtot*100):0)+'%';$('bRem').style.width=Math.round((SB.ps.length-dep)/SB.ps.length*100)+'%';
+}
+
+/* ---------- ল্যাব ৫খ: পাতন ---------- */
+var DS={heat:false,ps:[],coll:0};
+var PATH=[[62,118],[62,90],[120,90],[150,92],[250,92],[292,104],[326,128]];
+function pAt(s){var seg=PATH.length-1,f=s*seg,i=Math.min(seg-1,Math.floor(f)),t=f-i;return [lerp(PATH[i][0],PATH[i+1][0],t),lerp(PATH[i][1],PATH[i+1][1],t)];}
+$('dHeat').onclick=function(){DS.heat=!DS.heat;};$('dReset').onclick=function(){DS.heat=false;DS.ps=[];DS.coll=0;};
+function disFrame(){
+  var c=$('dis'),x=c.getContext('2d');x.clearRect(0,0,380,200);
+  x.fillStyle='#cfe9f7';x.fillRect(22,126,80,44);x.strokeStyle='#1f3a5f';x.lineWidth=4;
+  x.beginPath();x.arc(62,138,38,Math.PI*1.15,Math.PI*1.85,true);x.stroke();
+  x.beginPath();x.moveTo(24,128);x.lineTo(24,170);x.lineTo(100,170);x.lineTo(100,128);x.stroke();
+  x.beginPath();x.moveTo(52,100);x.lineTo(52,92);x.lineTo(120,80);x.stroke();x.beginPath();x.moveTo(72,100);x.lineTo(72,100);x.stroke();
+  x.fillStyle='#dff0fa';x.fillRect(150,72,110,38);x.strokeStyle='#2b6cb0';x.lineWidth=3;x.strokeRect(150,72,110,38);
+  x.fillStyle='#1f3a5f';x.font='bold 11px sans-serif';x.fillText('ঠান্ডা (ঘনীভবন)',160,66);x.fillText('বাষ্পীভবন',24,60);x.fillText('সংগ্রহ',312,196);
+  x.strokeStyle='#1f3a5f';x.lineWidth=3;x.beginPath();x.moveTo(300,138);x.lineTo(300,182);x.lineTo(354,182);x.lineTo(354,138);x.stroke();
+  x.fillStyle='#4aa3df';var h=DS.coll*0.4;x.fillRect(302,181-h,50,h);
+  x.fillStyle='#555';x.beginPath();x.moveTo(30,176);x.lineTo(94,176);x.lineTo(80,192);x.lineTo(44,192);x.fill();
+  if(DS.heat){x.font='24px sans-serif';x.fillText('🔥',50,198);if(rnd()<0.12)DS.ps.push({s:0});}
+  DS.ps.forEach(function(p){p.s+=0.006;var q=pAt(Math.min(p.s,1));
+    var cond=q[0]>150&&q[0]<262||p.s>0.62;x.fillStyle=cond?'#2b6cb0':'#cfd6dc';x.strokeStyle='#8a99a6';x.lineWidth=1;x.beginPath();x.arc(q[0],q[1],cond?3.5:5,0,7);x.fill();if(!cond)x.stroke();
+    if(p.s>=1){p.dead=1;DS.coll=Math.min(100,DS.coll+1.5);}});
+  DS.ps=DS.ps.filter(function(p){return !p.dead;});
+  if(DS.heat){x.fillStyle='#cfd6dc';for(var i=0;i<4;i++){x.beginPath();x.arc(40+i*16+(rnd()-.5)*3,132-((Date.now()/30+i*20)%40)*0.6,3,0,7);x.fill();}}
+  $('bDis').style.width=DS.coll+'%';
+}
+
+/* ---------- কুইজ ---------- */
+function zsvg(){return '<svg viewBox="0 0 220 120" style="width:230px;display:block;margin:6px 0"><line x1="26" y1="100" x2="210" y2="100" stroke="#1f3a5f" stroke-width="2"/><line x1="26" y1="10" x2="26" y2="100" stroke="#1f3a5f" stroke-width="2"/><polyline points="26,100 70,50 102,50 124,32 150,32 190,10" fill="none" stroke="#e76f51" stroke-width="3"/><text x="2" y="52" font-size="10" fill="#1f3a5f">১৫৪</text><text x="2" y="14" font-size="10" fill="#1f3a5f">২৫০</text><text x="2" y="86" font-size="10" fill="#1f3a5f">৫৪</text><text x="66" y="44" font-size="10" fill="#1f3a5f">A</text><text x="100" y="44" font-size="10" fill="#1f3a5f">B</text><text x="120" y="26" font-size="10" fill="#1f3a5f">C</text><text x="150" y="26" font-size="10" fill="#1f3a5f">D</text><text x="190" y="116" font-size="10" fill="#5b6770">সময় →</text></svg>';}
+var QUIZ=[
+ {q:'কাপে গরম চা রাখলে নিচের কোন প্রক্রিয়াটি ঘটে?',o:['বাষ্পীভবন','ঊর্ধ্বপাতন','ব্যাপন','নিঃসরণ'],a:0,e:'গরম চা থেকে বাষ্প উঠে যায়। তরল থেকে বাষ্পে রূপান্তরকে বাষ্পীভবন বলে।'},
+ {q:'কঠিন পদার্থের কোন বৈশিষ্ট্যটি ঠিক?',o:['নির্দিষ্ট ভর, আকার ও আয়তন আছে','আকার নেই, আয়তন আছে','আকার ও আয়তন কিছুই নেই','শুধু আয়তন নেই'],a:0,e:'কঠিন পদার্থের নির্দিষ্ট ভর, নির্দিষ্ট আকার ও নির্দিষ্ট আয়তন থাকে। তরলের আকার নেই, গ্যাসের আকার ও আয়তন দুটোই নেই।'},
+ {q:'কঠিন পদার্থে তাপ দিলে তার কণাগুলো কী করে?',o:['স্থির হয়ে যায়','আগের চেয়ে বেশি কাঁপে','ছুটে সব দিকে চলে যায়','নতুন কণা তৈরি করে'],a:1,e:'তাপশক্তি পেয়ে কণাগুলো আগের চেয়ে বেশি কাঁপে। তাপ আরও বাড়লে আকর্ষণ কাটিয়ে তরল হয়।'},
+ {q:'কোন অবস্থায় আন্তঃকণা আকর্ষণ বল সবচেয়ে কম?',o:['কঠিন','তরল','গ্যাস','সব অবস্থায় সমান'],a:2,e:'গ্যাসে কণাগুলো অনেক দূরে দূরে থাকে, তাই আকর্ষণ বল খুবই কম।'},
+ {q:'চাপ দিলে কোন অবস্থার পদার্থের আয়তন সবচেয়ে বেশি কমে?',o:['কঠিন','তরল','গ্যাস','সবার সমান'],a:2,e:'গ্যাসের কণার মাঝে অনেক ফাঁকা জায়গা থাকে, তাই চাপে আয়তন অনেক কমে। (ল্যাব ১-এ চাপ স্লাইডারে দেখেছ।)'},
+ {q:'ব্যাপন কাকে বলে?',o:['সরু ছিদ্র দিয়ে গ্যাস বেরোনো','পদার্থের স্বতঃস্ফূর্তভাবে উচ্চ ঘনমাত্রা থেকে নিম্ন ঘনমাত্রার দিকে ছড়িয়ে পড়া','কঠিন থেকে সরাসরি বাষ্প হওয়া','তরল থেকে বাষ্প হওয়া'],a:1,e:'ব্যাপনে পদার্থ নিজে নিজেই উচ্চ ঘনমাত্রার স্থান থেকে নিম্ন ঘনমাত্রার স্থানে ছড়িয়ে পড়ে।'},
+ {q:'গরম পানিতে KMnO₄ দ্রুত ছড়ায় কেন?',o:['পানি ভারী বলে','তাপে কণার গতিশক্তি বাড়ে, তাই ব্যাপন হার বাড়ে','KMnO₄ গলে যায় বলে','পানির আয়তন কমে যায় বলে'],a:1,e:'তাপ দিলে কণার গতিশক্তি বাড়ে। তাই ব্যাপন হার বেড়ে যায়।'},
+ {q:'কোনটির ব্যাপনের হার বেশি?',o:['CO₂','NH₃','HCl','H₂SO₄'],a:1,e:'আণবিক ভর কম হলে ব্যাপন হার বেশি। NH₃ (১৭), HCl (৩৬.৫), CO₂ (৪৪), H₂SO₄ (৯৮)। সবচেয়ে হালকা NH₃।'},
+ {q:'H₂, He, N₂, O₂ ও CO₂ গ্যাসগুলোর মধ্যে কোনটির ব্যাপন হার সবচেয়ে কম?',o:['H₂','He','O₂','CO₂'],a:3,e:'আণবিক ভর যথাক্রমে ২, ৪, ২৮, ৩২, ৪৪। CO₂-এর ভর সবচেয়ে বেশি, তাই ব্যাপন হার সবচেয়ে কম।'},
+ {q:'ব্যাপন ও নিঃসরণের মূল পার্থক্য কোনটি?',o:['ব্যাপনে চাপের প্রভাব আছে, নিঃসরণে নেই','নিঃসরণে সরু ছিদ্রপথে চাপের প্রভাবে গ্যাস উচ্চচাপ থেকে নিম্নচাপে যায়, ব্যাপনে চাপের প্রভাব নেই','দুটো একই','ব্যাপন শুধু কঠিনে ঘটে'],a:1,e:'নিঃসরণ হলো সরু ছিদ্রপথে উচ্চচাপ থেকে নিম্নচাপের দিকে গ্যাসের সজোরে বেরোনো। ব্যাপনে চাপের প্রভাব নেই।'},
+ {q:'বরফ গলার সময় তাপ দিতে থাকলেও তাপমাত্রা ০°C-এ থাকে কেন?',o:['থার্মোমিটার নষ্ট বলে','তাপটুকু কণাগুলো শোষণ করে কঠিন থেকে তরলে রূপান্তরে খরচ করে','তাপ কোনোভাবে হারিয়ে যায়','বরফ তাপ নেয় না'],a:1,e:'বিশুদ্ধ পদার্থের গলনের সময় দেওয়া তাপ কণার আকর্ষণ ভেঙে অবস্থা বদলাতে খরচ হয়, তাই তাপমাত্রা বাড়ে না।'},
+ {q:'১ বায়ুমণ্ডলীয় চাপে বিশুদ্ধ পানির স্ফুটনাঙ্ক কত?',o:['০°C','৫০°C','১০০°C','১৫০°C'],a:2,e:'১.০ বায়ুমণ্ডলীয় চাপে পানি ১০০°C-এ ফোটে। পানিতে অ্যালকোহল মেশালে এই মান বদলে যায়।'},
+ {q:'অজানা কঠিন বস্তু Z-এর তাপীয় বক্ররেখা দেখো। বক্ররেখা থেকে বোঝা যায়—<br>i. Z-এর গলনাঙ্ক ১৫৪°C<br>ii. Z বস্তুটি উদ্বায়ী<br>iii. AB ও CD রেখা বস্তুটির গলনাঙ্ক ও স্ফুটনাঙ্ক বোঝায়'+zsvg(),o:['i ও ii','ii ও iii','i ও iii','i, ii ও iii'],a:2,fix:true,e:'AB সমতল রেখা ১৫৪°C-এ, এটা গলনাঙ্ক। CD রেখা স্ফুটনাঙ্ক। বস্তুটি তরল হয়ে তারপর বাষ্প হয়েছে, তাই এটা উদ্বায়ী নয় (উদ্বায়ী হলে তরল না হয়ে সরাসরি বাষ্প হতো)। সঠিক: i ও iii।'},
+ {q:'কোনটি ঊর্ধ্বপাতিত হয়?',o:['আয়োডিন','খাদ্যলবণ','তুঁতে','সোডা অ্যাশ'],a:0,e:'আয়োডিন (I₂) উদ্বায়ী, তাপে তরল না হয়ে সরাসরি বাষ্প হয়। খাদ্যলবণ, তুঁতে ও সোডা অ্যাশ এমন নয়।'},
+ {q:'ঊর্ধ্বপাতন কাকে বলে?',o:['তরল থেকে বাষ্প হওয়া','কঠিন পদার্থ তাপে তরল না হয়ে সরাসরি বাষ্প হওয়া','বাষ্প থেকে তরল হওয়া','তরল থেকে কঠিন হওয়া'],a:1,e:'যে প্রক্রিয়ায় কঠিন পদার্থে তাপ দিলে সেটা তরল না হয়ে সরাসরি বাষ্পে পরিণত হয়, তাকে ঊর্ধ্বপাতন বলে।'},
+ {q:'পাতন = ?',o:['গলন + স্ফুটন','বাষ্পীভবন + ঘনীভবন','ব্যাপন + নিঃসরণ','ঊর্ধ্বপাতন + গলন'],a:1,e:'তরলকে বাষ্প করে (বাষ্পীভবন) আবার ঠান্ডা করে তরলে (ঘনীভবন) ফিরিয়ে আনার পদ্ধতিই পাতন।'},
+ {q:'নিশাদল ও খাদ্যলবণের মিশ্রণ থেকে নিশাদল আলাদা করার পদ্ধতি কোনটি?',o:['ঊর্ধ্বপাতন','পাতন','ব্যাপন','নিঃসরণ'],a:0,e:'নিশাদল (NH₄Cl) উদ্বায়ী, তাপে সরাসরি বাষ্প হয়ে ঠান্ডা জায়গায় জমে। খাদ্যলবণ নিচে থাকে।'},
+ {q:'বালি ও গ্লুকোজের মিশ্রণ ঊর্ধ্বপাতন দিয়ে আলাদা করা যায় না কেন?',o:['দুটোই উদ্বায়ী বলে','কোনোটিই উদ্বায়ী নয় বলে','দুটোই গ্যাস বলে','দুটোই তরল বলে'],a:1,e:'ঊর্ধ্বপাতনের জন্য অন্তত একটি উদ্বায়ী পদার্থ লাগে। বালি ও গ্লুকোজের কোনোটিই উদ্বায়ী নয়।'},
+ {q:'মোমবাতি জ্বলার সময় মোমের কয়টি অবস্থা দেখা যায়?',o:['একটি','দুটি','তিনটি','কোনোটিই না'],a:2,e:'কঠিন মোম, গলা তরল মোম এবং মোমের বাষ্প (গ্যাসীয় অবস্থা), এই তিনটিই দেখা যায়।'}
+];
+$('qn').textContent=bn(QUIZ.length);
+var answered=0,correct=0;
+(function(){
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});if(!item.fix)ord=shuffle(ord);item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';div.innerHTML=html;box.appendChild(div);});
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);});
+})();
+
+/* ---------- প্রশ্ন-উত্তর ---------- */
+var QA=[
+ {h:'সৃজনশীল ১ (আয়োডিনযুক্ত লবণ ও বালি-গ্লুকোজের ছবি)',items:[
+  ['(ক) ব্যাপন কাকে বলে? [জ্ঞান]','কোনো মাধ্যমে কঠিন, তরল ও বায়বীয় পদার্থের স্বতঃস্ফূর্ত ও সমানভাবে ছড়িয়ে পড়ার প্রক্রিয়াকে ব্যাপন বলে। এতে পদার্থ উচ্চ ঘনমাত্রার স্থান থেকে নিম্ন ঘনমাত্রার স্থানের দিকে ছড়ায়।'],
+  ['(খ) রান্নার কাজে জ্বালানি হিসেবে ব্যবহৃত গ্যাসের সিলিন্ডারের মুখ খুলে দিলে ব্যাপন ও নিঃসরণের মধ্যে কোনটি আগে ঘটে? [অনুধাবন]','নিঃসরণ আগে ঘটে। সিলিন্ডারের ভেতরে গ্যাস উচ্চচাপে থাকে। মুখ খুললে সরু ছিদ্রপথে ওই গ্যাস নিম্নচাপের দিকে সজোরে বেরিয়ে আসে, এটাই নিঃসরণ। এরপর বেরিয়ে আসা গ্যাস ঘরের চারদিকে ধীরে ধীরে ছড়িয়ে পড়ে, এটা ব্যাপন।'],
+  ['(গ) তাপমাত্রা বাড়াতে থাকলে উদ্দীপকের কোন পদার্থটি সবার আগে বাষ্পীভূত হবে? কারণ ব্যাখ্যা করো। [প্রয়োগ]','আয়োডিন সবার আগে বাষ্পীভূত হবে। আয়োডিন একটি উদ্বায়ী পদার্থ, তাপ দিলে তরল না হয়ে সহজেই সরাসরি বাষ্পে পরিণত হয় (ঊর্ধ্বপাতন)। খাদ্যলবণ, বালি ও গ্লুকোজ উদ্বায়ী নয়।'],
+  ['(ঘ) ক-পাত্রের উপাদান ও খ-পাত্রের উপাদানকে পৃথকীকরণে একই পদ্ধতির ব্যবহার সম্ভব কি না, যুক্তিসহ ব্যাখ্যা করো। [উচ্চতর দক্ষতা]','সম্ভব নয়। ক-পাত্রে আয়োডিনযুক্ত খাদ্যলবণ আছে। আয়োডিন উদ্বায়ী, তাই তাপ দিলে ঊর্ধ্বপাতিত হয়ে আলাদা হয়, লবণ পড়ে থাকে। খ-পাত্রে বালি ও গ্লুকোজ আছে। এদের কোনোটিই উদ্বায়ী নয়, তাই তাপ দিয়ে ঊর্ধ্বপাতন করে আলাদা করা যায় না। অর্থাৎ ক-পাত্রের জন্য ঊর্ধ্বপাতন কাজ করে, খ-পাত্রের জন্য করে না।']]},
+ {h:'সৃজনশীল ২ (কাচনলে HCl ও NH₄OH-এ ভেজা তুলা; A প্রান্ত ৪০ সেমি, B প্রান্ত ৬০ সেমি)',items:[
+  ['(ক) নিঃসরণ কী? [জ্ঞান]','সরু ছিদ্রপথে উচ্চচাপ থেকে কোনো গ্যাসের নিম্নচাপের দিকে সজোরে বেরিয়ে আসার প্রক্রিয়াকে নিঃসরণ বলে।'],
+  ['(খ) একই পদার্থের গলনাঙ্ক ও স্ফুটনাঙ্ক ভিন্ন কেন? [অনুধাবন]','গলনাঙ্কে কঠিন তরলে পরিণত হয়, আর স্ফুটনাঙ্কে তরল গ্যাসে পরিণত হয়। এ দুটি আলাদা রূপান্তর, আর প্রতিটিতে কণার আন্তঃকণা আকর্ষণ আলাদাভাবে কাটাতে হয়। তাই দুটি রূপান্তর ভিন্ন তাপমাত্রায় ঘটে। যেমন বরফ ০°C-এ গলে, আর পানি ১০০°C-এ ফোটে।'],
+  ['(গ) উদ্দীপকের প্রক্রিয়াটি কোন ধরনের পরিবর্তন? ব্যাখ্যা করো। [প্রয়োগ]','প্রক্রিয়াটি ব্যাপন। HCl ও NH₃ গ্যাস নলের ভেতর দিয়ে দুই দিক থেকে ছড়িয়ে পড়ে। তারা পরস্পর মিলিত হয়ে বিক্রিয়া করে NH₄Cl-এর সাদা ধোঁয়া তৈরি করে। তাই গ্যাস দুটির ছড়ানো ভৌত পরিবর্তন (ব্যাপন), আর সাদা ধোঁয়া তৈরি একটি রাসায়নিক বিক্রিয়া।'],
+  ['(ঘ) উৎপন্ন সাদা ধোঁয়া A প্রান্তের কাছাকাছি উৎপন্ন হওয়ার যৌক্তিক কারণ ব্যাখ্যা করো। [উচ্চতর দক্ষতা]','A প্রান্তে HCl এবং B প্রান্তে NH₄OH (যা থেকে NH₃ গ্যাস বের হয়)। NH₃-এর আণবিক ভর ১৭, আর HCl-এর আণবিক ভর ৩৬.৫। যে গ্যাসের আণবিক ভর কম তার ব্যাপন হার বেশি। তাই NH₃ দ্রুত ব্যাপিত হয়ে B থেকে বেশি দূরত্ব (৬০ সেমি) অতিক্রম করে, আর HCl ধীরে ব্যাপিত হয়ে A থেকে কম দূরত্ব (৪০ সেমি) অতিক্রম করে। ফলে দুই গ্যাস A প্রান্তের কাছাকাছি মিলিত হয়ে সাদা ধোঁয়া তৈরি করে।']]},
+ {h:'সৃজনশীল ৩ (বিকারে বরফের টুকরায় ধীরে ধীরে তাপ প্রদান)',items:[
+  ['(ক) পাতন কাকে বলে? [জ্ঞান]','কোনো তরলকে তাপ প্রয়োগে বাষ্পে পরিণত করে আবার শীতল করে তরলে পরিণত করার পদ্ধতিকে পাতন বলে। পাতন = বাষ্পীভবন + ঘনীভবন।'],
+  ['(খ) ব্যাপন ও নিঃসরণ বলতে কী বোঝ? [অনুধাবন]','ব্যাপন: কোনো মাধ্যমে কঠিন, তরল বা গ্যাস নিজে নিজেই উচ্চ ঘনমাত্রা থেকে নিম্ন ঘনমাত্রার স্থানে ছড়িয়ে পড়া, এতে চাপের প্রভাব নেই। নিঃসরণ: সরু ছিদ্রপথে উচ্চচাপ থেকে নিম্নচাপের দিকে গ্যাসের সজোরে বেরিয়ে আসা।'],
+  ['(গ) উদ্দীপকের ঘটনাটিকে গ্রাফ পেপারে উপস্থাপন করো। [প্রয়োগ]','X অক্ষে সময় (তাপ শোষণ), Y অক্ষে তাপমাত্রা (°C) নাও। গ্রাফে প্রথমে বরফের তাপমাত্রা বাড়তে থাকবে (ঢালু রেখা), ০°C-এ এসে সমতল রেখা (AB, গলনাঙ্ক রেখা) হবে, তখন বরফ-পানি একসাথে থাকবে। এরপর পানির তাপমাত্রা বাড়তে বাড়তে ১০০°C-এ আসবে। ১০০°C-এ আবার সমতল রেখা (CD, স্ফুটনাঙ্ক রেখা), তারপর জলীয় বাষ্পের তাপমাত্রা বাড়বে। (ল্যাব ৪-এ এটা নিজে আঁকা হতে দেখেছ।)'],
+  ['(ঘ) উদ্দীপকে উল্লিখিত বরফের পরিবর্তে ন্যাপথলিন ব্যবহার করলে কী ঘটনা ঘটবে? বিশ্লেষণ করো। [উচ্চতর দক্ষতা]','ন্যাপথলিন (C₁₀H₈) একটি উদ্বায়ী পদার্থ। তাপ দিলে এটা তরল না হয়ে সরাসরি বাষ্পে পরিণত হয়, অর্থাৎ ঊর্ধ্বপাতিত হয়। তাই বরফের মতো গলনাঙ্ক রেখায় সমতল অংশ (পানি হয়ে থাকার ধাপ) পাওয়া যাবে না। কঠিন ন্যাপথলিন বিকার থেকে বাষ্প হয়ে উঠে যাবে এবং ঠান্ডা স্থানে আবার কঠিন হয়ে জমবে।']]},
+ {h:'অতিরিক্ত সংক্ষিপ্ত প্রশ্ন (নিজের অনুশীলনের জন্য)',items:[
+  ['গলনাঙ্ক ও স্ফুটনাঙ্ক কী?','১.০ বায়ুমণ্ডলীয় চাপে যে তাপমাত্রায় কোনো কঠিন পদার্থ তাপ প্রয়োগে তরলে পরিণত হয় তা গলনাঙ্ক (বরফের ০°C)। একই চাপে যে তাপমাত্রায় তরল গ্যাসে পরিণত হয় তা স্ফুটনাঙ্ক (পানির ১০০°C)।'],
+  ['বিশুদ্ধ ও অবিশুদ্ধ পদার্থ গলনাঙ্ক দিয়ে কীভাবে চেনা যায়?','বিশুদ্ধ কঠিনের নির্দিষ্ট গলনাঙ্ক থাকে। নমুনা ওই তাপমাত্রার চেয়ে কম তাপমাত্রায় গললে বা একটি পরিসর ধরে গললে বুঝতে হবে সেটা অবিশুদ্ধ। যেমন বিশুদ্ধ সালফার ১১৫°C-এ গলে, নমুনা এর কমে গললে ভেজাল আছে।'],
+  ['ঊর্ধ্বপাতন কাকে বলে? কয়েকটি উদাহরণ দাও।','কঠিন পদার্থে তাপ দিলে সেটা তরল না হয়ে সরাসরি বাষ্পে পরিণত হওয়ার প্রক্রিয়া। উদাহরণ: নিশাদল (NH₄Cl), কর্পূর, ন্যাপথলিন, কঠিন CO₂, আয়োডিন, অ্যালুমিনিয়াম ক্লোরাইড।'],
+  ['কণার গতিতত্ত্ব কী?','পদার্থ ক্ষুদ্র কণা দিয়ে গঠিত। কণাগুলোর মধ্যে আন্তঃকণা আকর্ষণ বল ও গতি আছে। আকর্ষণ বল ও গতিশক্তির তারতম্যের কারণে পদার্থ কঠিন, তরল বা গ্যাসীয় হয়। কণার গতির সাহায্যে পদার্থের তিন অবস্থার ধর্ম ব্যাখ্যা করার তত্ত্বই কণার গতিতত্ত্ব।']]}
+];
+(function(){
+  var h='',n=0;QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+/* ---------- অ্যানিমেশন লুপ ---------- */
+function frame(){s1frame();dfFrame();tubeFrame();efFrame();hFrame();subFrame();disFrame();requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>
