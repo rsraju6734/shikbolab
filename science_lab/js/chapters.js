@@ -4,6 +4,7 @@
    extra  : true দিলে সেটা নিচের 'বোনাস এক্সট্রা ল্যাব' অংশে যাবে (না দিলে বিষয়ের ভেতরের অধ্যায় হবে)  */
 window.CHAPTERS = [
   { subject:'chemistry', title:'রসায়নের ধারণা (অধ্যায় ১)', desc:'রসায়নের ইতিহাস, দৈনন্দিন জীবনে রসায়ন, গবেষণা ও ল্যাবের নিরাপত্তা: নিজে করে শেখো।', file:'chapters/chem-concepts-of-chemistry.html', status:'live' },
+  { subject:'chemistry', title:'পদার্থের অবস্থা (অধ্যায় ২)', desc:'কণার গতি দেখো, ব্যাপন ও নিঃসরণ পরীক্ষা করো, বরফ থেকে বাষ্পের লেখচিত্র নিজে আঁকো।', file:'chapters/chem-states-of-matter.html', status:'live' },
   { subject:'chemistry', title:'পর্যায় সারণি (অধ্যায় ৪)', desc:'সব ১১৮টি মৌলের ঠিকানা খুঁজো: ইলেকট্রন ঘুরতে দেখো, পর্যায় ও গ্রুপ বের করো।', file:'chapters/chem-periodic-table.html', status:'live' },
   { subject:'chemistry', title:'রাসায়নিক বিক্রিয়া (অধ্যায় ৭)', desc:'বিক্রিয়ার ধরন চেনো, ইলেকট্রন স্থানান্তর ও জারণ সংখ্যা নিজে করে দেখো।', file:'chapters/chem-chemical-reactions.html', status:'live' },
   { subject:'chemistry', title:'খনিজ সম্পদ: জীবাশ্ম (অধ্যায় ১১)', desc:'পেট্রোলিয়ামের আংশিক পাতন দেখো, হাইড্রোকার্বনের গঠন নিজে বানাও।', file:'chapters/chem-fossil-hydrocarbon.html', status:'live' },
