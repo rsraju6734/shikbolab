@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>রসায়ন ও শক্তি (অধ্যায় ৮) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+</style>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#chemistry">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">🧪 রসায়ন &rsaquo; অষ্টম অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">⚡ রসায়ন ও শক্তি (Chemistry and Energy)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🌡️ ল্যাব ১</a><a href="#lab2">🔗 ল্যাব ২</a><a href="#lab3">⛽ ল্যাব ৩</a><a href="#lab4">🔌 ল্যাব ৪</a><a href="#lab5">🥄 ল্যাব ৫</a><a href="#lab6">🔋 ল্যাব ৬</a><a href="#lab7">☢️ ল্যাব ৭</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> রাসায়নিক শক্তি, বন্ধন শক্তি ও ΔH বুঝিয়ে হিসাব করতে; তাপোৎপাদী ও তাপহারী বিক্রিয়া চিনতে; জ্বালানির ভালো-মন্দ বলতে; তড়িৎ বিশ্লেষণ ও গ্যালভানিক কোষ ব্যাখ্যা করতে; ইলেকট্রোপ্লেটিং ও ধাতু বিশুদ্ধকরণ বুঝতে; নিউক্লিয়ার বিক্রিয়া ও বিদ্যুৎ উৎপাদন বলতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের (৮ম অধ্যায়ের) ক্রম মেনে সহজ ভাষায় লেখা। পরীক্ষায় লিখতে হলে বইয়ের ভাষা ও শিক্ষকের নির্দেশ মেনে লিখবে।</div>
+
+    <h3>৮.১ রাসায়নিক শক্তি ⭐⭐⭐</h3>
+    <ul>
+      <li>পদার্থের ভেতরে লুকিয়ে থাকা শক্তিকে <b>রাসায়নিক শক্তি</b> বলে। বিক্রিয়ায় এটাই তাপ শক্তিতে বদলে যায়।</li>
+      <li><b>বন্ধন শক্তি:</b> বন্ধনে আবদ্ধ দুটি পরমাণু যে আকর্ষণ শক্তিতে যুক্ত থাকে। আরও সহজে: দুই পরমাণুর বন্ধন ভাঙতে যে শক্তি দিতে হয়, বন্ধন তৈরি হলে সেই শক্তিই নির্গত হয়।</li>
+      <li><b>আন্তঃআণবিক শক্তি:</b> সমযোজী যৌগের এক অণু আরেক অণুকে যে আকর্ষণে ধরে রাখে (যেমন পানির অণুগুলোর মধ্যে)।</li>
+      <li>আয়নিক যৌগে আয়নের আকর্ষণ সমযোজী যৌগের আন্তঃআণবিক আকর্ষণের চেয়ে বেশি। তাই আয়নিক পদার্থের গলনাঙ্ক ও স্ফুটনাঙ্ক বেশি, আর কক্ষ তাপমাত্রায় তারা কঠিন। (ন্যাপথলিনের মতো কিছু সমযোজী যৌগও কঠিন।)</li>
+      <li><b>শক্তির রূপান্তর:</b> বিক্রিয়ায় শক্তি তাপ, আলো, বিদ্যুৎ, শব্দ ইত্যাদি রূপে বদলায়।</li>
+      <li><b>শক্তির একক:</b> ক্যালরি (Cal) আর জুল (J)। ১ গ্রাম পানির তাপমাত্রা ১°C বাড়াতে যে তাপ লাগে তা ১ ক্যালরি। ১ কিলোক্যালরি = ১০০০ ক্যালরি। ১ হাজার জুল = ১ কিলোজুল (kJ)। <b>১ Cal = ৪.১৮ J</b>।</li>
+    </ul>
+    <h4>৮.১.২ তাপের পরিবর্তন: তাপোৎপাদী ও তাপহারী বিক্রিয়া</h4>
+    <p>H হলো বস্তুর ধারণকৃত তাপ (heat content), একে অভ্যন্তরীণ শক্তিও বলে। বিক্রিয়কের মোট শক্তি H₁, উৎপাদের মোট শক্তি H₂ হলে:</p>
+    <div class="key"><b>ΔH = H₂ − H₁</b> (উৎপাদের শক্তি − বিক্রিয়কের শক্তি)</div>
+    <table class="t">
+      <tr><th></th><th>তাপোৎপাদী</th><th>তাপহারী</th></tr>
+      <tr><td>তাপ</td><td>নির্গত হয়</td><td>শোষিত হয় (তাপ দিতে হয়)</td></tr>
+      <tr><td>H₁ ও H₂</td><td>H₁ &gt; H₂</td><td>H₁ &lt; H₂</td></tr>
+      <tr><td>ΔH</td><td><b>ঋণাত্মক (−)</b></td><td><b>ধনাত্মক (+)</b></td></tr>
+      <tr><td>সমীকরণে তাপ</td><td>ডানপাশে + তাপ</td><td>বামপাশে + তাপ</td></tr>
+    </table>
+    <ul>
+      <li>উদাহরণ ১: H₁ = ৫০, H₂ = ২০ kJ/mol হলে ΔH = (২০ − ৫০) = <b>−৩০ kJ/mol</b>, অর্থাৎ ৩০ kJ/mol তাপ নির্গত হয়।</li>
+      <li>উদাহরণ ২: H₁ = ৭০, H₂ = ৮০ হলে ΔH = <b>+১০ kJ/mol</b>। কমপক্ষে ১০ kJ শক্তি না দিলে বিক্রিয়া ঘটবে না।</li>
+      <li><b>তাপোৎপাদী:</b> CH₄(g) + 2O₂(g) → CO₂(g) + 2H₂O(g); ΔH = −৮৯০ kJ/mol (রান্নার গ্যাস পোড়ানো)। CaO(s) + H₂O(l) → Ca(OH)₂(aq); ΔH = −৬৩.৯৫ kJ/mol (চুনে পানি দিলে গরম হয়)।</li>
+      <li><b>তাপহারী:</b> CaCO₃(s) → CaO(s) + CO₂(g); ΔH = +১৭৬.৮ kJ/mol। শামুক বা ঝিনুকের খোলস (প্রায় ৯৮% CaCO₃) আগুনে পুড়িয়ে চুন বানানো হয়।</li>
+    </ul>
+    <h4>৮.১.৩ বন্ধন শক্তি থেকে ΔH হিসাব</h4>
+    <p>বিক্রিয়ায় বিক্রিয়কের বন্ধন <b>ভাঙতে</b> শক্তি লাগে (B₁), আর উৎপাদের বন্ধন <b>তৈরি</b> হতে শক্তি নির্গত হয় (B₂)।</p>
+    <div class="key"><b>ΔH = B₁ − B₂</b> = (বিক্রিয়কের বন্ধন ভাঙার মোট শক্তি) − (উৎপাদের বন্ধন গড়ার মোট শক্তি)</div>
+    <p>তাপোৎপাদী বিক্রিয়ায় B₁ &lt; B₂, তাই ΔH ঋণাত্মক। তাপহারীতে B₁ &gt; B₂, তাই ΔH ধনাত্মক।</p>
+    <table class="t">
+      <tr><th>বন্ধন</th><th>kJ/mol</th><th>বন্ধন</th><th>kJ/mol</th><th>বন্ধন</th><th>kJ/mol</th></tr>
+      <tr><td>C-H</td><td>৪১৪</td><td>N-H</td><td>৩৯১</td><td>H-Cl</td><td>৪৩১</td></tr>
+      <tr><td>C-Cl</td><td>৩২৬</td><td>O-H</td><td>৪৬৪</td><td>H-H</td><td>৪৩৬</td></tr>
+      <tr><td>C-C</td><td>৩৪৪</td><td>O=O</td><td>৪৯৮</td><td>H-Br</td><td>৩৬৬</td></tr>
+      <tr><td>C=C</td><td>৬১৫</td><td>C≡C</td><td>৮১২</td><td>H-F</td><td>৫৬৩</td></tr>
+      <tr><td>N≡N</td><td>৯৪৬</td><td>Cl-Cl</td><td>২৪৪</td><td>H-I</td><td>২৯৯</td></tr>
+      <tr><td>Br-Br</td><td>১৯৩</td><td>I-I</td><td>১৫১</td><td>C=O</td><td>৭২৪</td></tr>
+      <tr><td>O-O</td><td>১৪৩</td><td>C-O</td><td>৩৫০</td><td></td><td></td></tr>
+    </table>
+    <p><b>উদাহরণ:</b> CH₄ + Cl₂ → CH₃Cl + HCl। ভাঙে: C-H (৪১৪) + Cl-Cl (২৪৪) = ৬৫৮ kJ। গড়ে: C-Cl (৩২৬) + H-Cl (৪৩১) = ৭৫৭ kJ। ΔH = ৬৫৮ − ৭৫৭ = <b>−৯৯ kJ</b>। ঋণাত্মক, তাই তাপোৎপাদী।</p>
+
+    <h3>৮.২ রাসায়নিক শক্তির ব্যবহার ⭐⭐</h3>
+    <ul>
+      <li><b>জ্বালানি পোড়ানো:</b> কয়লা, কাঠ, প্রাকৃতিক গ্যাস (মূল উপাদান মিথেন CH₄) বাতাসের অক্সিজেনের সাথে বিক্রিয়া (দহন) করে তাপ ও আলো দেয়।</li>
+      <li><b>আতশবাজি:</b> ভেতরের রাসায়নিক বিক্রিয়ায় রাসায়নিক শক্তি আলো ও শব্দে বদলায়।</li>
+      <li><b>ড্রাই সেল:</b> রাসায়নিক শক্তি → বিদ্যুৎ শক্তি (টর্চ, ঘড়ি, রিমোট)।</li>
+      <li><b>ডেনিয়েল সেল:</b> Zn(s) + CuSO₄(aq) → ZnSO₄(aq) + Cu(s), রাসায়নিক শক্তি থেকে বিদ্যুৎ।</li>
+      <li><b>তাপ থেকে যান্ত্রিক শক্তি:</b> কাঠ-কয়লায় রান্না, ইটের ভাটা, লোহা-ইস্পাত কারখানা। ইঞ্জিনের দহন কক্ষে জ্বালানি পুড়ে তাপ হয়, তা যান্ত্রিক শক্তিতে বদলে গাড়ি-জাহাজ-বিমান-ট্রেন চলে।</li>
+      <li><b>সালোকসংশ্লেষণ:</b> 6CO₂ + 12H₂O → C₆H₁₂O₆ + 6O₂ + 6H₂O (সূর্যের আলো ও ক্লোরোফিল)। সূর্যের আলো রাসায়নিক শক্তি হয়ে শর্করায় জমা থাকে। রাসায়নিক শক্তি ছাড়া প্রাণের অস্তিত্ব অসম্ভব।</li>
+    </ul>
+    <h4>জ্বালানির বিশুদ্ধতা ও পরিবেশ</h4>
+    <ul>
+      <li>পেট্রোলিয়াম, কয়লা, প্রাকৃতিক গ্যাস হলো <b>জীবাশ্ম জ্বালানি</b>। প্রতি বছর জীবাশ্ম জ্বালানি পুড়ে প্রায় ২১.৩ বিলিয়ন টন CO₂ তৈরি হচ্ছে।</li>
+      <li><b>গ্রিনহাউস প্রভাব:</b> CO₂ প্রচুর তাপ ধরে রাখে, পৃথিবী গরম হয় (বৈশ্বিক উষ্ণায়ন)। মেরুর বরফ গলে সমুদ্রের পানি বাড়ে, বাংলাদেশসহ অনেক দেশের বিশাল এলাকা তলিয়ে যেতে পারে।</li>
+      <li><b>অবিশুদ্ধ জ্বালানি:</b> প্রকৃতির জ্বালানিতে N, S, P-র যৌগ মিশে থাকে। কম বাতাসে পুড়লে বিষাক্ত <b>কার্বন মনোক্সাইড (CO)</b> হয়। এজন্য বাজারে ছাড়ার আগে বিশুদ্ধ করা দরকার।</li>
+      <li><b>এসিড বৃষ্টি:</b> CO₂ + H₂O → H₂CO₃; 2SO₂ + O₂ → 2SO₃, SO₃ + H₂O → H₂SO₄; 4NO₂ + 2H₂O + O₂ → 4HNO₃। এই এসিড বৃষ্টির পানির সাথে নামে। গাছপালা মরে, জলাশয় অম্লযুক্ত হয়ে মাছ বাঁচে না।</li>
+      <li><b>ফটোকেমিক্যাল ধোঁয়া:</b> গাড়ির ধোঁয়ার CO, নাইট্রাস অক্সাইড, মিথেন সূর্যের আলোয় বিক্রিয়া করে বিষাক্ত ধোঁয়া বানায়। এটা ওজোন (O₃) স্তর ক্ষয় করে। ওজোন স্তর সূর্যের অতিবেগুনি রশ্মি আটকায়, যা ক্যান্সারও ঘটাতে পারে।</li>
+      <li><b>ইথানল (CH₃CH₂OH, ইথাইল অ্যালকোহল)</b> পুড়িয়েও তাপ পাওয়া যায়। যুক্তরাষ্ট্রে পেট্রোলের সাথে ১০% ইথানল মেশানো হয়, এতে জীবাশ্ম জ্বালানির উপর চাপ কমে।</li>
+    </ul>
+
+    <h3>৮.৩ তড়িৎ-রাসায়নিক প্রক্রিয়া ⭐⭐⭐</h3>
+    <ul>
+      <li><b>তড়িৎ রাসায়নিক কোষ:</b> যে যন্ত্রে রাসায়নিক বিক্রিয়া ঘটিয়ে বিদ্যুৎ তৈরি হয় অথবা বিদ্যুৎ দিয়ে রাসায়নিক বিক্রিয়া ঘটানো হয়। দুটি দণ্ড (ধাতব বা গ্রাফাইট) তড়িৎ বিশ্লেষ্যের দ্রবণে আংশিক ডোবানো থাকে। এই দণ্ডকে <b>তড়িৎদ্বার (ইলেকট্রোড)</b> বলে।</li>
+      <li>দুই প্রকার: <b>(i) তড়িৎ বিশ্লেষ্য কোষ</b> (বাইরের বিদ্যুৎ দিয়ে বিক্রিয়া ঘটানো) এবং <b>(ii) গ্যালভানিক কোষ</b> (বিক্রিয়া করে বিদ্যুৎ তৈরি)।</li>
+      <li><b>বিদ্যুৎ পরিবাহী:</b> ধাতু, গ্রাফাইট, গলিত লবণ, লবণের দ্রবণ, এসিড-ক্ষার দ্রবণ। দুই প্রকার: <b>ইলেকট্রনীয় পরিবাহী</b> (মুক্ত ইলেকট্রনের মাধ্যমে: Fe, Cu, Ni, গ্রাফাইট) ও <b>তড়িৎ বিশ্লেষ্য পরিবাহী</b> (আয়নের মাধ্যমে)।</li>
+      <li><b>তড়িৎ বিশ্লেষ্য:</b> কঠিন অবস্থায় বিদ্যুৎ পরিবহন করে না, কিন্তু গলিত বা দ্রবীভূত অবস্থায় করে এবং রাসায়নিক পরিবর্তন ঘটে। যেমন NaCl, CuSO₄, H₂SO₄, CH₃COOH।
+        <br><b>তীব্র</b> (সম্পূর্ণ আয়নিত: NaCl, CuSO₄, H₂SO₄) ও <b>মৃদু</b> (অল্প আয়নিত: NH₄OH, CH₃COOH)।</li>
+      <li><b>অ্যানোড ও ক্যাথোড:</b> যে তড়িৎদ্বারে <b>জারণ</b> (ইলেকট্রন ত্যাগ) ঘটে তা <b>অ্যানোড</b>, যেখানে <b>বিজারণ</b> (ইলেকট্রন গ্রহণ) ঘটে তা <b>ক্যাথোড</b>। ক্যাথোডে আকৃষ্ট আয়ন <b>ক্যাটায়ন</b>, অ্যানোডে আকৃষ্ট আয়ন <b>অ্যানায়ন</b>।</li>
+    </ul>
+    <h4>৮.৩.২ তড়িৎ বিশ্লেষণ</h4>
+    <p>গলিত বা দ্রবীভূত তড়িৎ বিশ্লেষ্যের মধ্য দিয়ে বিদ্যুৎ চালনা করলে তার যে রাসায়নিক পরিবর্তন ঘটে তাকে তড়িৎ বিশ্লেষণ বলে।</p>
+    <ul>
+      <li><b>গলিত NaCl:</b> 2NaCl(l) → 2Na(s) + Cl₂(g)। অ্যানোডে (+) Cl⁻ → ½Cl₂ + e⁻ (জারণ)। ক্যাথোডে (−) Na⁺ + e⁻ → Na (বিজারণ)। <br>অ্যানোডের ক্লোরিন গ্যাস চেনা যায় ভেজা নীল লিটমাস লাল হওয়ায় (Cl₂ + H₂O → HCl + HOCl)।</li>
+      <li><b>গাঢ় NaCl দ্রবণ:</b> আয়ন Na⁺, Cl⁻ এবং পানি থেকে H⁺, OH⁻। ক্যাথোডে H⁺ আগে ইলেকট্রন নেয়: H⁺ + e⁻ → H, H + H → H₂। অ্যানোডে Cl⁻ আগে ইলেকট্রন ছাড়ে (ঘনমাত্রা বেশি বলে): Cl⁻ → Cl + e⁻, Cl + Cl → Cl₂। দ্রবণে Na⁺ ও OH⁻ থেকে যায়, তাই <b>NaOH (ক্ষার)</b> তৈরি হয়। অর্থাৎ <b>H₂, Cl₂ ও NaOH</b>।</li>
+      <li><b>কোন আয়ন আগে চার্জমুক্ত হবে?</b> তিনটি বিষয় ঠিক করে: (i) তড়িৎ রাসায়নিক সারিতে আয়নের অবস্থান (যে আয়ন সারির <b>নিচে</b>, সে আগে চার্জমুক্ত হয়: Na⁺ ও H⁺-এর মধ্যে H⁺; Zn²⁺ ও Fe²⁺-এর মধ্যে Fe²⁺)। (ii) আয়নের ঘনমাত্রা (Cl⁻ ঘনমাত্রা বেশি বলে OH⁻-এর আগে চার্জমুক্ত হয়)। (iii) তড়িৎদ্বারের প্রকৃতি (প্ল্যাটিনাম ক্যাথোডে H⁺ আগে, পারদ ক্যাথোডে Na⁺ আগে)।</li>
+      <li><b>বিশুদ্ধ পানির তড়িৎ বিশ্লেষণ:</b> প্ল্যাটিনাম পাত ব্যবহার করা হয়। বিশুদ্ধ পানি প্রায় বিদ্যুৎ অপরিবাহী, তাই কয়েক ফোঁটা H₂SO₄ দেওয়া হয় আয়ন বাড়াতে। ক্যাথোডে 4H⁺ + 4e⁻ → 2H₂। অ্যানোডে 4OH⁻ → O₂ + 2H₂O + 4e⁻। <b>H₂ : O₂ = ২ : ১</b> (আয়তন)।</li>
+    </ul>
+    <h4>৮.৩.৩ তড়িৎ বিশ্লেষণের ব্যবহার</h4>
+    <ul>
+      <li><b>ধাতু নিষ্কাশন:</b> সক্রিয় ধাতু (Na, Mg, Al) আকরিক গলিয়ে বিশ্লেষণ করে। গলিত Al₂O₃: ক্যাথোডে 2Al³⁺ + 6e⁻ → 2Al; অ্যানোডে 3O²⁻ → 1½O₂ + 6e⁻।</li>
+      <li><b>ধাতু বিশুদ্ধকরণ (Cu, Zn, Pb, Al):</b> ভেজাল মিশ্রিত অবিশুদ্ধ ধাতুর দণ্ড ব্যাটারির <b>ধনাত্মক</b> প্রান্তে (অ্যানোড), বিশুদ্ধ ধাতুর দণ্ড <b>ঋণাত্মক</b> প্রান্তে (ক্যাথোড)। অবিশুদ্ধ দণ্ড ক্ষয় হয়, বিশুদ্ধ দণ্ড মোটা হতে থাকে।</li>
+      <li><b>ইলেকট্রোপ্লেটিং:</b> তড়িৎ বিশ্লেষণে এক ধাতুর উপর অন্য ধাতুর প্রলেপ। উজ্জ্বলতা বাড়াতে ও ক্ষয়রোধ করতে (Ni, Cr, Ag)। যে জিনিসে প্রলেপ দেবে তাকে ব্যাটারির <b>ঋণাত্মক</b> প্রান্তে (ক্যাথোড) যুক্ত করো, প্রলেপের ধাতুর পাত <b>ধনাত্মক</b> প্রান্তে (অ্যানোড)।<br>চামচে সিলভার: দ্রবণ AgNO₃। অ্যানোডে Ag → Ag⁺ + e⁻। ক্যাথোডে Ag⁺ + e⁻ → Ag।</li>
+      <li><b>বাণিজ্যিক ব্যবহার:</b> Na, Al, Mg, Ca নিষ্কাশন; Cu, Au, Ag বিশুদ্ধ করা; লোহায় দস্তার প্রলেপ (মরিচা রোধ); গয়নায় Cr, Ni, Au, Ag প্রলেপ; সমুদ্রের পানির বিশ্লেষণে পাওয়া ক্লোরিন জীবাণুনাশক ও শিল্পের কাঁচামাল।</li>
+    </ul>
+
+    <h3>৮.৪ রাসায়নিক বিক্রিয়ায় বিদ্যুৎ উৎপাদন ⭐⭐⭐</h3>
+    <ul>
+      <li><b>গ্যালভানিক বা ভোল্টায়িক কোষ:</b> দুটি ভিন্ন ধাতুর দণ্ড (তড়িৎদ্বার) দুটি পাত্রের দ্রবণে ডোবানো। <b>অধিক সক্রিয় ধাতুর দণ্ড = অ্যানোড (−)</b>, <b>কম সক্রিয় ধাতুর দণ্ড = ক্যাথোড (+)</b>।</li>
+      <li><b>ডেনিয়েল কোষ:</b> Zn দণ্ড ZnSO₄ দ্রবণে, Cu দণ্ড CuSO₄ দ্রবণে, মাঝে লবণ সেতু, বাইরে তার ও বাল্ব।<br>অ্যানোড (জারণ): Zn → Zn²⁺ + 2e⁻<br>ক্যাথোড (বিজারণ): Cu²⁺ + 2e⁻ → Cu<br>কোষ বিক্রিয়া: Zn + Cu²⁺ → Zn²⁺ + Cu<br>ইলেকট্রন অ্যানোড থেকে তার দিয়ে ক্যাথোডে যায়, এটাই বিদ্যুৎ। জিংক দণ্ড ক্ষয় হয়, কপার দণ্ডে Cu জমে।</li>
+      <li><b>তড়িৎদ্বারের লেখা:</b> ধাতু | ধাতুর আয়ন, যেমন Zn|Zn²⁺, Cu|Cu²⁺। উপরের সারিতে যে ধাতু আছে সে অ্যানোড, নিচের সারিতে যে আছে সে ক্যাথোড। কপার-সিলভার কোষে Cu অ্যানোড, Ag ক্যাথোড: Cu → Cu²⁺ + 2e⁻; 2Ag⁺ + 2e⁻ → 2Ag; কোষ বিক্রিয়া Cu + 2Ag⁺ → Cu²⁺ + 2Ag।</li>
+      <li>Na, K, Ca-এর মতো অতি সক্রিয় ধাতুর তড়িৎদ্বার সরাসরি বানানো যায় না, তখন <b>অ্যামালগাম</b> (পারদ + সক্রিয় ধাতুর মিশ্রণ) ব্যবহার হয়।</li>
+      <li><b>লবণ সেতু:</b> U আকৃতির নলে আগার-আগার ও KCl দ্রবণের জেলি। এটা না থাকলে অ্যানোড দ্রবণে ধনাত্মক আয়ন বেশি জমে, ক্যাথোড দ্রবণে ঋণাত্মক আয়ন বেশি হয়, আধান নিরপেক্ষতা নষ্ট হয়ে বিক্রিয়া ও বিদ্যুৎ থেমে যায়। লবণ সেতু থেকে Cl⁻ অ্যানোড দ্রবণে এবং K⁺ ক্যাথোড দ্রবণে আসে, আধান ঠিক থাকে। (K⁺ ও Cl⁻-এর গতি সমান।)</li>
+      <li><b>ড্রাই সেল:</b> অ্যানোড = দস্তার (Zn) কৌটা। ভেতরে MnO₂, NH₄Cl, ZnCl₂ ও পাতিত পানির কাই। মাঝখানে কার্বন (গ্রাফাইট) দণ্ড = ক্যাথোড।<br>অ্যানোড: Zn → Zn²⁺ + 2e⁻<br>ক্যাথোড: 2NH₄⁺ + 2MnO₂ + 2e⁻ → 2NH₃ + Mn₂O₃ + H₂O<br>কোষ: Zn + 2NH₄⁺ + 2MnO₂ → Zn²⁺ + 2NH₃ + Mn₂O₃ + H₂O</li>
+      <li><b>হাইড্রোজেন ফুয়েল সেল:</b> অ্যানোডে H₂ জারিত হয়, ক্যাথোডে O₂ বিজারিত হয়ে পানি হয়, বিদ্যুতে গাড়িও চলে। <b>রক্তে গ্লুকোজ মাপার যন্ত্র</b> তড়িৎ বিশ্লেষণ কৌশলে কাজ করে (গ্লুকোজ অ্যানোডে জারিত হয়)।</li>
+      <li><b>ব্যাটারির ক্ষতি:</b> ড্রাই সেলে Zn, MnO₂ এবং লেড-স্টোরেজ ব্যাটারিতে Pb, PbO₂ থাকে। এগুলো বিষাক্ত ও ক্যান্সার সৃষ্টিকারী। যেখানে সেখানে ফেললে মাটি ও পানি দূষিত হয়।</li>
+    </ul>
+    <table class="t">
+      <tr><th>তড়িৎ বিশ্লেষ্য কোষ</th><th>গ্যালভানিক কোষ</th></tr>
+      <tr><td>বিদ্যুৎ ব্যবহার করে রাসায়নিক বিক্রিয়া ঘটায়</td><td>রাসায়নিক বিক্রিয়ায় বিদ্যুৎ উৎপাদন করে</td></tr>
+      <tr><td>অ্যানোড ধনাত্মক, ক্যাথোড ঋণাত্মক</td><td>অ্যানোড ঋণাত্মক, ক্যাথোড ধনাত্মক</td></tr>
+      <tr><td>মৌল/যৌগ উৎপাদন, ইলেকট্রোপ্লেটিং, ধাতু বিশোধন</td><td>ব্যাটারি তৈরি</td></tr>
+    </table>
+    <h4>তড়িৎ রাসায়নিক সারি (বইয়ের তালিকা, উপর থেকে নিচে)</h4>
+    <p><b>ক্যাটায়ন:</b> Li⁺, K⁺, Na⁺, Mg²⁺, Al³⁺, Zn²⁺, Fe²⁺, Sn²⁺, Pb²⁺, H⁺, Cu²⁺, Ag⁺, Au³⁺<br><b>অ্যানায়ন:</b> NO₃⁻, SO₄²⁻, Cl⁻, Br⁻, I⁻, OH⁻<br>নিয়ম: সারির <b>নিচের</b> আয়ন আগে চার্জমুক্ত হয়। (ধাতুর ক্ষেত্রে উপরের ধাতু বেশি সক্রিয়।)</p>
+
+    <h3>৮.৫ নিউক্লিয়ার বিক্রিয়া ও বিদ্যুৎ ⭐⭐</h3>
+    <ul>
+      <li><b>নিউক্লিয়ার বিক্রিয়া:</b> যে বিক্রিয়ায় মৌলের নিউক্লিয়াস বদলায়। রাসায়নিক বিক্রিয়ায় শুধু ইলেকট্রনের আদান-প্রদান হয়, নিউক্লিয়াস বদলায় না। নিউক্লিয়ার বিক্রিয়ায় ইলেকট্রনের ভূমিকা নেই, নতুন মৌল তৈরি হয় এবং প্রচুর শক্তি নির্গত হয়।</li>
+      <li><b>ফিশন (বিভাজন):</b> বড় ভারী নিউক্লিয়াস ভেঙে ছোট নিউক্লিয়াস। স্বল্পগতির নিউট্রনে ²³⁵U-কে আঘাত করলে ¹⁴¹Ba, ⁹²Kr, ৩টি নিউট্রন ও প্রচুর শক্তি।<br>²³⁵₉₂U + ¹₀n → ¹⁴¹₅₆Ba + ⁹²₃₆Kr + 3 ¹₀n + প্রচুর শক্তি</li>
+      <li><b>ফিউশন (সংযোজন):</b> ছোট নিউক্লিয়াস জোড়া লেগে বড় নিউক্লিয়াস: ²₁H + ³₁H → ⁴₂He + ¹₀n + প্রচুর শক্তি। এই বিক্রিয়ায় হাইড্রোজেন বোমা বানানো হয়।</li>
+      <li><b>চেইন বিক্রিয়া:</b> একবার শুরু হলে চালু রাখতে বাড়তি শক্তি লাগে না। ফিশনে বেরোনো ৩টি নিউট্রনের একাংশ আরও ²³⁵U ভাঙে, তাতে আরও নিউট্রন বেরোয়, এভাবে চলতে থাকে। নিয়ন্ত্রণ করা জটিল।</li>
+      <li><b>বিদ্যুৎ উৎপাদন:</b> পারমাণবিক চুল্লিতে ফিশনের চেইন বিক্রিয়া নিয়ন্ত্রণ করা হয়। তাপে বাষ্প তৈরি → বাষ্পে টারবাইন ঘোরে → বিদ্যুৎ উৎপন্ন হয়। বাংলাদেশে পাবনার <b>রূপপুরে</b> পারমাণবিক বিদ্যুৎ কেন্দ্রের প্রস্তুতি চলছে।</li>
+    </ul>
+
+    <h3>পরীক্ষণ ⭐⭐</h3>
+    <ul>
+      <li><b>পরীক্ষণ ১: গ্যালভানিক কোষে বিদ্যুৎ।</b> দুই বিকারে ZnSO₄ ও CuSO₄ দ্রবণ, Zn ও Cu দণ্ড, লবণ সেতু (বা ভেজা কাগজ), তামার তার, LED। LED-এর পজিটিভ প্রান্ত Cu-এর তারে, নেগেটিভ প্রান্ত Zn-এর তারে লাগালে LED জ্বলবে। সতর্কতা: দুই দ্রবণের উচ্চতা সমান রাখা, লবণ সেতুর সংযোগ ভালো করা।</li>
+      <li><b>পরীক্ষণ ২: NH₄Cl পানিতে দ্রবীভূত করা।</b> ৫০ g পাতিত পানিতে ১০ g NH₄Cl মিশিয়ে কাচদণ্ডে নেড়ে থার্মোমিটারে তাপমাত্রা দেখো। <b>তাপমাত্রা কমে</b>, অর্থাৎ <b>তাপহারী</b> প্রক্রিয়া (NH₄Cl → NH₄⁺ + Cl⁻; কেলাস ভাঙতে ও আয়ন তৈরি করতে শক্তি পানি থেকে আসে)।</li>
+      <li><b>পরীক্ষণ ৩: পানিতে চুন (CaO) মেশানো।</b> বিকারের অর্ধেক পাতিত পানিতে CaO মিশিয়ে নেড়ে তাপমাত্রা মাপো। <b>তাপমাত্রা বাড়ে</b>, অর্থাৎ <b>তাপোৎপাদী</b> (CaO + H₂O → Ca(OH)₂ + তাপ)।</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🌡️ ল্যাব ১: তাপোৎপাদী ও তাপহারী বিক্রিয়া (ΔH)</h2>
+    <div class="say">👉 বিক্রিয়া বেছে নাও বা নিজে H₁ ও H₂ স্লাইডার নাড়াও। ΔH = H₂ − H₁। বিকারের থার্মোমিটার দেখো তাপমাত্রা বাড়ে না কমে।</div>
+    <div class="ctl"><label>বিক্রিয়া:</label><select id="h1s"></select></div>
+    <div class="ctl"><label>H₁ (বিক্রিয়ক): <b id="h1av"></b></label><input type="range" id="h1a" min="5" max="95" value="50" style="flex:1;min-width:120px"><label>H₂ (উৎপাদ): <b id="h1bv"></b></label><input type="range" id="h1b" min="5" max="95" value="20" style="flex:1;min-width:120px"></div>
+    <div class="row">
+      <div><canvas id="h1c" class="w" width="380" height="270"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="h1t"></div></div>
+    </div>
+    <h3>🎮 তাপোৎপাদী না তাপহারী?</h3>
+    <div class="tlinfo" id="h1q"></div><div class="cls" id="h1o"></div><div class="fb" id="h1f"></div><small id="h1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🔗 ল্যাব ২: বন্ধন শক্তি দিয়ে ΔH হিসাব</h2>
+    <div class="say">👉 বিক্রিয়া বেছে "পরের ধাপ" চাপো। আগে বিক্রিয়কের বন্ধন ভাঙে (শক্তি লাগে), তারপর উৎপাদের বন্ধন গড়ে (শক্তি বেরোয়)। ΔH = B₁ − B₂।</div>
+    <div class="ctl"><label>বিক্রিয়া:</label><select id="b2s"></select><button class="btn" id="b2n">পরের ধাপ ▶</button><button class="btn alt" id="b2r">↻ শুরু থেকে</button></div>
+    <div class="stepper" id="b2st"></div>
+    <div class="row">
+      <div><canvas id="b2c" class="w" width="380" height="240"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="b2t"></div></div>
+    </div>
+    <h3>🎮 ΔH কত?</h3>
+    <div class="tlinfo" id="b2q"></div><div class="cls" id="b2o"></div><div class="fb" id="b2f"></div><small id="b2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>⛽ ল্যাব ৩: জ্বালানি পোড়ালে কী হয়?</h2>
+    <div class="say">👉 জ্বালানি, বিশুদ্ধতা আর অক্সিজেনের পরিমাণ বদলে দেখো কী কী গ্যাস বেরোয় এবং বৃষ্টি কেমন হয়।</div>
+    <div class="ctl"><label>জ্বালানি:</label><select id="f3f"></select><label>বিশুদ্ধতা:</label><select id="f3p"><option value="1">বিশুদ্ধ</option><option value="0">অবিশুদ্ধ (S, N যৌগ মিশ্রিত)</option></select><label>বাতাস:</label><select id="f3o"><option value="1">অক্সিজেন পর্যাপ্ত</option><option value="0">অক্সিজেন কম</option></select></div>
+    <div class="row">
+      <div><canvas id="f3c" class="w" width="380" height="260"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="f3t"></div></div>
+    </div>
+    <div class="flow" id="f3fl"></div>
+    <h3>🎮 কোন গ্যাস কোন সমস্যা করে?</h3>
+    <div class="tlinfo" id="e3q"></div><div class="cls" id="e3o"></div><div class="fb" id="e3f"></div><small id="e3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🔌 ল্যাব ৪: তড়িৎ বিশ্লেষণ</h2>
+    <div class="say">👉 তড়িৎ বিশ্লেষ্য বেছে ▶ বিদ্যুৎ দাও। আয়ন কোন দিকে যায় আর কোথায় কী তৈরি হয় দেখো।</div>
+    <div class="ctl"><label>বিশ্লেষ্য:</label><select id="z4m"><option value="0">গলিত NaCl</option><option value="1">গাঢ় NaCl দ্রবণ</option><option value="2">পানি + কয়েক ফোঁটা H₂SO₄ (Pt তড়িৎদ্বার)</option><option value="3">গলিত Al₂O₃</option></select><label id="z4sl">ক্যাথোড:</label><select id="z4s"><option value="0">প্ল্যাটিনাম (Pt)</option><option value="1">পারদ (Hg)</option></select><button class="btn" id="z4go">▶ বিদ্যুৎ দাও</button></div>
+    <div class="row">
+      <div><canvas id="z4c" class="w" width="380" height="300"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="z4t"></div></div>
+    </div>
+    <h3>🎮 কোন আয়ন আগে চার্জমুক্ত হবে?</h3>
+    <div class="say">নিয়ম: তড়িৎ রাসায়নিক সারির <b>নিচের</b> আয়ন আগে চার্জমুক্ত হয়। (ক্যাটায়ন সারি: Li⁺ K⁺ Na⁺ Mg²⁺ Al³⁺ Zn²⁺ Fe²⁺ Sn²⁺ Pb²⁺ H⁺ Cu²⁺ Ag⁺ Au³⁺। অ্যানায়ন সারি: NO₃⁻ SO₄²⁻ Cl⁻ Br⁻ I⁻ OH⁻)</div>
+    <div class="tlinfo" id="i4q"></div><div class="cls" id="i4o"></div><div class="fb" id="i4f"></div><small id="i4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🥄 ল্যাব ৫: ইলেকট্রোপ্লেটিং ও ধাতু বিশুদ্ধকরণ</h2>
+    <div class="ctl"><label>কাজ:</label><select id="p5m"><option value="0">চামচে সিলভারের প্রলেপ (AgNO₃)</option><option value="1">অবিশুদ্ধ কপার বিশুদ্ধ করা</option></select><button class="btn" id="p5go">▶ বিদ্যুৎ দাও</button><button class="btn alt" id="p5re">↻ আবার</button></div>
+    <div class="row">
+      <div><canvas id="p5c" class="w" width="380" height="290"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="p5t"></div></div>
+    </div>
+    <h3>🎮 ব্যাটারির কোন প্রান্তে লাগাবে?</h3>
+    <div class="tlinfo" id="p5q"></div><div class="cls" id="p5o"></div><div class="fb" id="p5f"></div><small id="p5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🔋 ল্যাব ৬: গ্যালভানিক কোষ (ডেনিয়েল কোষ) ও ড্রাই সেল</h2>
+    <div class="say">👉 দুটি ধাতু বেছে নাও। তড়িৎ রাসায়নিক সারিতে যে ধাতু উপরে সে অ্যানোড (জারণ)। লবণ সেতু খুলে দিলে কী হয় দেখো।</div>
+    <div class="ctl"><label>ধাতু ১:</label><select id="g6a"></select><label>ধাতু ২:</label><select id="g6b"></select><label><input type="checkbox" id="g6br" checked> লবণ সেতু আছে</label><button class="btn alt" id="g6re">↻ আবার চালু</button></div>
+    <div class="row">
+      <div><canvas id="g6c" class="w" width="380" height="290"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="g6t"></div></div>
+    </div>
+    <h3>🎮 কোনটি অ্যানোড?</h3>
+    <div class="tlinfo" id="g6q"></div><div class="cls" id="g6o"></div><div class="fb" id="g6f"></div><small id="g6sc"></small>
+    <h3>ড্রাই সেলের অংশ (বোতাম চাপো)</h3>
+    <div class="pills" id="dcb"></div>
+    <div class="tlinfo" id="dct" style="min-height:60px">একটি অংশ বেছে নাও।</div>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>☢️ ল্যাব ৭: নিউক্লিয়ার ফিশন, চেইন বিক্রিয়া ও ফিউশন</h2>
+    <div class="say">👉 "নিউট্রন ছোড়ো" চাপো। ²³⁵U ভাঙলে ৩টি নিউট্রন বেরোয়, সেগুলো আরও ইউরেনিয়াম ভাঙে। কন্ট্রোল রড নামালে নিউট্রন শোষিত হয়ে চেইন থামে।</div>
+    <div class="ctl"><button class="btn" id="n7go">⚛ নিউট্রন ছোড়ো</button><button class="btn alt" id="n7r">↻ রিসেট</button><label>কন্ট্রোল রড: <b id="n7rv"></b>%</label><input type="range" id="n7rod" min="0" max="100" value="0" style="flex:1;min-width:140px"></div>
+    <canvas id="n7c" class="w" width="380" height="260"></canvas>
+    <div class="tlinfo" id="n7t"></div>
+    <h3>চুল্লি থেকে বিদ্যুৎ</h3>
+    <div class="flow" id="n7fl"></div>
+    <div class="ctl"><button class="btn" id="n7pl">▶ ধাপগুলো দেখাও</button></div>
+    <h3>ফিউশন: ²H + ³H → ⁴He + n</h3>
+    <div class="ctl"><button class="btn" id="n7fu">▶ ফিউশন ঘটাও</button></div>
+    <canvas id="n7d" class="w" width="380" height="150"></canvas>
+    <div class="tlinfo" id="n7ft" style="min-height:50px">ছোট নিউক্লিয়াস জোড়া লেগে বড় নিউক্লিয়াস হলে প্রচুর শক্তি বেরোয়।</div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। সৃজনশীল প্রশ্ন ১, ২ ও ৩ বইয়ের অনুশীলনী থেকে নেওয়া। বাকি প্রশ্ন বইয়ের বিষয় ধরে আমার বানানো অনুশীলন। বইয়ে উত্তরমালা নেই, সব উত্তর আমার লেখা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; রসায়ন ও শক্তি (অধ্যায় ৮)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+/* ---------- ল্যাব ১: ΔH ---------- */
+var HP=[
+ {n:'কাস্টম: নিজে H₁, H₂ বসাও',c:1},
+ {n:'বইয়ের উদাহরণ ১ (H₁ = ৫০, H₂ = ২০)',H1:50,H2:20},
+ {n:'বইয়ের উদাহরণ ২ (H₁ = ৭০, H₂ = ৮০)',H1:70,H2:80},
+ {n:'মিথেন পোড়ানো (ΔH = −৮৯০)',dH:-890,H1:80,H2:20},
+ {n:'CaO + পানি (পরীক্ষণ ৩) ΔH = −৬৩.৯৫',dH:-63.95,H1:60,H2:42},
+ {n:'CaCO₃ → CaO + CO₂ ΔH = +১৭৬.৮',dH:176.8,H1:20,H2:80},
+ {n:'NH₄Cl পানিতে দ্রবীভূত (পরীক্ষণ ২)',dH:null,H1:40,H2:56,note:'বইয়ে ΔH-এর মান দেওয়া নেই। শুধু জানা আছে তাপমাত্রা কমে, তাই এটা তাপহারী।'}];
+$('h1s').innerHTML=HP.map(function(p,i){return '<option value="'+i+'">'+p.n+'</option>';}).join('');
+var H1={H1:50,H2:20,T:30,Tt:30,dH:-30,txt:''};
+function h1set(){
+  var p=HP[+$('h1s').value],c=!!p.c;
+  $('h1a').disabled=!c;$('h1b').disabled=!c;
+  if(!c){$('h1a').value=p.H1;$('h1b').value=p.H2;}
+  var a=+$('h1a').value,b=+$('h1b').value;H1.H1=a;H1.H2=b;
+  $('h1av').textContent=bn(a);$('h1bv').textContent=bn(b);
+  var dH=(p.dH===undefined)?(b-a):p.dH;H1.dH=dH;
+  var exo=b<a,eq=(a===b);
+  H1.Tt=30+(b-a)*-0.3;
+  var t='H₁ = '+bn(a)+', H₂ = '+bn(b)+'<br>';
+  if(p.dH===undefined)t+='ΔH = H₂ − H₁ = '+bn(b)+' − '+bn(a)+' = <b>'+(b-a>0?'+':'')+bn(b-a)+' kJ/mol</b><br>';
+  else if(p.dH===null)t+='ΔH = <b>ধনাত্মক (+)</b><br>';
+  else t+='ΔH = <b>'+(dH>0?'+':'−')+f(Math.abs(dH),2)+' kJ/mol</b> (বইয়ের মান)<br>';
+  t+=eq?'H₁ = H₂, তাপ বদলায় না।':(exo?'H₁ &gt; H₂, তাই <b>তাপোৎপাদী</b>। ΔH ঋণাত্মক। তাপ নির্গত হয়, তাপমাত্রা বাড়ে।':'H₁ &lt; H₂, তাই <b>তাপহারী</b>। ΔH ধনাত্মক। তাপ শোষিত হয়, তাপমাত্রা কমে।');
+  if(p.note)t+='<br><small>'+p.note+'</small>';
+  t+='<br><small>থার্মোমিটারের মান শুধু বোঝার জন্য আঁকা, বইয়ের মাপ নয়।</small>';
+  $('h1t').innerHTML=t;
+}
+$('h1s').addEventListener('change',h1set);$('h1a').addEventListener('input',h1set);$('h1b').addEventListener('input',h1set);h1set();
+function h1draw(){
+  var x=ctxOf('h1c');x.clearRect(0,0,380,270);
+  H1.T+=(H1.Tt-H1.T)*0.04;
+  var y1=250-H1.H1*2.2,y2=250-H1.H2*2.2;
+  x.strokeStyle='#888';x.lineWidth=2;x.beginPath();x.moveTo(24,20);x.lineTo(24,255);x.stroke();txt(x,'শক্তি',24,10,'12px Hind Siliguri',NAVY);
+  x.lineWidth=5;x.strokeStyle=ORG;x.beginPath();x.moveTo(40,y1);x.lineTo(95,y1);x.stroke();
+  x.strokeStyle=BLU;x.beginPath();x.moveTo(125,y2);x.lineTo(180,y2);x.stroke();
+  txt(x,'H₁ বিক্রিয়ক',68,y1-12,'bold 12px Hind Siliguri',NAVY);txt(x,'H₂ উৎপাদ',152,y2-12,'bold 12px Hind Siliguri',NAVY);
+  x.setLineDash([4,4]);x.lineWidth=1;x.strokeStyle='#999';x.beginPath();x.moveTo(95,y1);x.lineTo(125,y2);x.stroke();x.setLineDash([]);
+  var exo=H1.H2<H1.H1,ys=Math.min(y1,y2),ye=Math.max(y1,y2);
+  if(Math.abs(y1-y2)>3){x.strokeStyle=exo?RED:BLU;x.lineWidth=3;x.beginPath();x.moveTo(110,exo?y1:y2);x.lineTo(110,exo?y2:y1);x.stroke();
+    var dir=exo?1:-1,ay=exo?y2:y1;x.fillStyle=exo?RED:BLU;x.beginPath();x.moveTo(110,ay);x.lineTo(104,ay-6*dir);x.lineTo(116,ay-6*dir);x.fill();
+    txt(x,exo?'ΔH −':'ΔH +',110,(y1+y2)/2,'bold 12px Hind Siliguri',exo?RED:BLU);
+    txt(x,exo?'🔥 তাপ বেরোয়':'❄️ তাপ ঢোকে',110,ye+22>262?262:ye+22,'12px Hind Siliguri',NAVY);}
+  /* বিকার ও থার্মোমিটার */
+  x.strokeStyle=NAVY;x.lineWidth=3;x.strokeRect(215,130,90,100);
+  x.fillStyle=exo?'rgba(231,111,81,.25)':'rgba(75,150,230,.3)';if(Math.abs(y1-y2)<4)x.fillStyle='rgba(150,150,150,.2)';x.fillRect(217,160,86,68);
+  var th=clamp((H1.T-0)/70,0.05,1);x.strokeStyle='#555';x.lineWidth=2;x.strokeRect(335,40,14,190);
+  x.fillStyle=RED;x.fillRect(337,230-th*188,10,th*188);circ(x,0,342,238,10,RED);
+  txt(x,f(H1.T,1)+'°C',342,22,'bold 13px Hind Siliguri',NAVY);txt(x,'বিকার',260,248,'12px Hind Siliguri',NAVY);
+  if(Math.abs(y1-y2)>3){for(var i=0;i<3;i++){var w=(Date.now()/600+i/3)%1;txt(x,exo?'♨':'❄',235+i*30,exo?125-w*35:95+w*35,'18px sans-serif',exo?RED:BLU);}}
+}
+mkGame('h1q','h1o','h1f','h1sc',function(){
+  var L=[['ΔH = −৩০ kJ/mol',1],['ΔH = +১০ kJ/mol',0],['H₁ বেশি, H₂ কম',1],['H₁ কম, H₂ বেশি',0],['রান্নার গ্যাস (মিথেন) পোড়ানো',1],['ঝিনুক পুড়িয়ে চুন বানানো',0],['চুনে (CaO) পানি দিলে গরম হয়',1],['NH₄Cl পানিতে দিলে পানি ঠান্ডা হয়',0],['সমীকরণের বামপাশে + তাপ লেখা আছে',0],['সমীকরণের ডানপাশে + তাপ লেখা আছে',1]];
+  var it=pick(L);
+  return {q:'<b>'+it[0]+'</b>',o:[{t:'তাপোৎপাদী',ok:it[1]===1},{t:'তাপহারী',ok:it[1]===0}],good:'ঠিক! তাপোৎপাদীতে ΔH ঋণাত্মক, তাপহারীতে ধনাত্মক।',bad:'মনে রাখো: তাপ বেরোলে তাপোৎপাদী (ΔH −), তাপ ঢুকলে তাপহারী (ΔH +)।'};
+});
+
+/* ---------- ল্যাব ২: বন্ধন শক্তি ---------- */
+var BR=[
+ {n:'CH₄ + Cl₂ → CH₃Cl + HCl',br:[['C-H',1,414],['Cl-Cl',1,244]],fo:[['C-Cl',1,326],['H-Cl',1,431]]},
+ {n:'H₂ + Cl₂ → 2HCl',br:[['H-H',1,436],['Cl-Cl',1,244]],fo:[['H-Cl',2,431]]},
+ {n:'H₂ + I₂ → 2HI',br:[['H-H',1,436],['I-I',1,151]],fo:[['H-I',2,299]]},
+ {n:'N₂ + 3H₂ → 2NH₃',br:[['N≡N',1,946],['H-H',3,436]],fo:[['N-H',6,391]]},
+ {n:'2H₂ + O₂ → 2H₂O',br:[['H-H',2,436],['O=O',1,498]],fo:[['O-H',4,464]]},
+ {n:'2HCl → H₂ + Cl₂ (উল্টো বিক্রিয়া)',br:[['H-Cl',2,431]],fo:[['H-H',1,436],['Cl-Cl',1,244]]}];
+$('b2s').innerHTML=BR.map(function(r,i){return '<option value="'+i+'">'+r.n+'</option>';}).join('');
+var B2={s:0};
+function bsum(l){return l.reduce(function(s,e){return s+e[1]*e[2];},0);}
+function blist(l){return l.map(function(e){return bn(e[1])+' মোল '+e[0]+' × '+bn(e[2])+' = '+bn(e[1]*e[2]);}).join('<br>');}
+function b2show(){
+  var r=BR[+$('b2s').value],B1=bsum(r.br),Bf=bsum(r.fo),S=B2.s,t='<b>'+r.n+'</b><br>';
+  var N=['১. ভাঙা বন্ধন','২. B₁','৩. গড়া বন্ধন','৪. B₂','৫. ΔH'];
+  $('b2st').innerHTML=N.map(function(s,i){return '<span class="'+(i<S?'done':(i===S?'on':''))+'">'+s+'</span>';}).join('');
+  t+='<b>বিক্রিয়কের বন্ধন ভাঙে (শক্তি লাগে):</b><br>'+blist(r.br)+'<br>';
+  if(S>=1)t+='B₁ = <b>'+bn(B1)+' kJ</b><br>';
+  if(S>=2)t+='<br><b>উৎপাদের বন্ধন গড়ে (শক্তি বেরোয়):</b><br>'+blist(r.fo)+'<br>';
+  if(S>=3)t+='B₂ = <b>'+bn(Bf)+' kJ</b><br>';
+  if(S>=4){var d=B1-Bf;t+='<br>ΔH = B₁ − B₂ = '+bn(B1)+' − '+bn(Bf)+' = <b>'+(d>0?'+':'−')+bn(Math.abs(d))+' kJ</b><br>'+(d<0?'ঋণাত্মক, তাই <b>তাপোৎপাদী</b>।':'ধনাত্মক, তাই <b>তাপহারী</b>।');}
+  $('b2t').innerHTML=t;B2.B1=B1;B2.B2=Bf;
+}
+$('b2n').onclick=function(){B2.s=Math.min(4,B2.s+1);b2show();};
+$('b2r').onclick=function(){B2.s=0;b2show();};
+$('b2s').addEventListener('change',function(){B2.s=0;b2show();});b2show();
+function b2draw(){
+  var x=ctxOf('b2c');x.clearRect(0,0,380,240);
+  var mx=Math.max(B2.B1,B2.B2,1),S=B2.s;
+  x.strokeStyle='#888';x.lineWidth=2;x.beginPath();x.moveTo(40,200);x.lineTo(360,200);x.stroke();
+  function bar(px,v,col,lab,show){if(!show)return;var h=v/mx*160;x.fillStyle=col;x.fillRect(px,200-h,70,h);txt(x,bn(v)+' kJ',px+35,200-h-10,'bold 13px Hind Siliguri',NAVY);txt(x,lab,px+35,216,'bold 13px Hind Siliguri',NAVY);}
+  bar(70,B2.B1,ORG,'B₁ (ভাঙতে)',S>=1);bar(190,B2.B2,BLU,'B₂ (গড়তে)',S>=3);
+  if(S>=4){var d=B2.B1-B2.B2;txt(x,'ΔH = '+(d>0?'+':'−')+bn(Math.abs(d)),310,60,'bold 18px Hind Siliguri',d<0?RED:BLU);txt(x,d<0?'🔥 তাপ বেরোয়':'❄️ তাপ লাগে',310,88,'14px Hind Siliguri',NAVY);}
+  if(S===0)txt(x,'ধাপ চাপলে বার আসবে',190,110,'14px Hind Siliguri','#999');
+}
+mkGame('b2q','b2o','b2f','b2sc',function(){
+  var r=pick(BR),B1=bsum(r.br),Bf=bsum(r.fo),d=B1-Bf,o=[d,-d,B1,Bf].filter(function(v,i,a){return a.indexOf(v)===i;});
+  while(o.length<4)o.push(d+50*o.length);o=shuffle(o);
+  return {q:'<b>'+r.n+'</b><br>বন্ধন ভাঙে B₁ = '+bn(B1)+' kJ, বন্ধন গড়ে B₂ = '+bn(Bf)+' kJ। ΔH কত?',o:o.map(function(v){return {t:(v>0?'+':(v<0?'−':''))+bn(Math.abs(v))+' kJ',ok:v===d};}),good:'ΔH = B₁ − B₂।',bad:'ΔH = B₁ − B₂ = '+bn(B1)+' − '+bn(Bf)+' = '+bn(d)+'।'};
+});
+/* ---------- ল্যাব ৩: জ্বালানি ---------- */
+var FU=[
+ {n:'কাঠ',eq:'কার্বন যৌগ + O₂ → CO₂ + H₂O + তাপ ও আলো'},
+ {n:'কয়লা',eq:'C + O₂ → CO₂ + তাপ'},
+ {n:'পেট্রোল / ডিজেল',eq:'পেট্রোলিয়াম + O₂ → CO₂ + H₂O + শক্তি'},
+ {n:'প্রাকৃতিক গ্যাস (মিথেন)',eq:'CH₄ + 2O₂ → CO₂ + 2H₂O + তাপ'},
+ {n:'ইথানল',eq:'C₂H₅OH + 3O₂ → 2CO₂ + 3H₂O + তাপ'}];
+$('f3f').innerHTML=FU.map(function(r,i){return '<option value="'+i+'">'+r.n+'</option>';}).join('');
+var F3={sm:[],rain:[],acid:false,co:false,tm:[]};
+function f3set(){
+  var u=FU[+$('f3f').value],pure=$('f3p').value==='1',ox=$('f3o').value==='1';
+  F3.acid=!pure;F3.co=!ox;
+  var t='<b>'+u.n+'</b>: '+u.eq+'<br><b>বের হয়:</b> CO₂, জলীয় বাষ্প, তাপ, আলো';
+  if(!ox)t+='<br>⚠️ অক্সিজেন কম তাই <b>CO (কার্বন মনোক্সাইড)</b>: বিষাক্ত, শরীরের ক্ষতি করে।';
+  if(!pure)t+='<br>⚠️ অবিশুদ্ধ, তাই N, S-এর যৌগ পুড়ে <b>SO₂, NO₂</b> বাতাসে যায় এবং এসিড বৃষ্টি হয়।';
+  t+='<br>🌍 CO₂ তাপ ধরে রাখে, তাই গ্রিনহাউস প্রভাব ও বৈশ্বিক উষ্ণায়ন।';
+  if(u.n==='ইথানল')t+='<br>💡 পেট্রোলের সাথে ১০% ইথানল মেশালে জীবাশ্ম জ্বালানির ওপর চাপ কমে।';
+  $('f3t').innerHTML=t;
+  var steps=['CO₂ + H₂O → H₂CO₃','2SO₂ + O₂ → 2SO₃','2SO₃ + 2H₂O → 2H₂SO₄','4NO₂ + 2H₂O + O₂ → 4HNO₃'];
+  F3.tm.forEach(clearTimeout);F3.tm=[];
+  $('f3fl').innerHTML=(pure?steps.slice(0,1):steps).map(function(s,i){return '<span id="fs'+i+'">'+s+'</span>';}).join('');
+  (pure?[0]:[0,1,2,3]).forEach(function(i,k){F3.tm.push(setTimeout(function(){var e=$('fs'+i);if(e)e.classList.add('show');},400+k*700));});
+}
+['f3f','f3p','f3o'].forEach(function(id){$(id).addEventListener('change',f3set);});f3set();
+function f3draw(){
+  var x=ctxOf('f3c');x.clearRect(0,0,380,260);
+  x.fillStyle=F3.acid?'#d8dcc0':'#d9ecf7';x.fillRect(0,0,380,150);
+  x.fillStyle=F3.acid?'#a9ad8a':'#fff';for(var c=0;c<3;c++){circ(x,0,200+c*45,38+(c%2)*8,26,x.fillStyle);}
+  x.fillStyle='#8a6d4f';x.fillRect(0,230,380,30);
+  x.fillStyle='#777';x.fillRect(60,120,40,110);x.fillRect(50,225,60,8);x.fillStyle='#555';x.fillRect(55,112,50,10);
+  if(Math.random()<0.35)F3.sm.push({x:80,y:108,vx:rnd(-.2,.6),vy:-rnd(.5,1.1),r:5,a:1});
+  F3.sm=F3.sm.filter(function(p){p.x+=p.vx;p.y+=p.vy;p.r+=0.07;p.a-=0.006;return p.a>0&&p.y>30;});
+  F3.sm.forEach(function(p){x.globalAlpha=Math.max(0,p.a)*.8;circ(x,0,p.x,p.y,p.r,F3.co||F3.acid?'#333':'#999');});x.globalAlpha=1;
+  if(F3.sm.length&&Math.random()<0.5)F3.rain.push({x:rnd(170,320),y:60,v:rnd(1.5,3)});
+  F3.rain=F3.rain.filter(function(d){d.y+=d.v;return d.y<228;});
+  F3.rain.forEach(function(d){x.strokeStyle=F3.acid?'#9aa82a':'#4b96e6';x.lineWidth=2;x.beginPath();x.moveTo(d.x,d.y);x.lineTo(d.x,d.y+8);x.stroke();});
+  if(F3.acid)for(var i=0;i<4;i++){txt(x,'🥀',230+i*30,238,'14px sans-serif',NAVY);}else for(var j=0;j<4;j++){txt(x,'🌱',230+j*30,238,'14px sans-serif',NAVY);}
+  txt(x,F3.acid?'এসিড বৃষ্টি':'বৃষ্টি',250,150,'bold 13px Hind Siliguri',NAVY);txt(x,F3.co?'⚠ CO':'',100,250,'bold 14px Hind Siliguri',RED);
+}
+mkGame('e3q','e3o','e3f','e3sc',function(){
+  var L=[['CO₂ জমে পৃথিবী গরম হয়ে উঠছে','গ্রিনহাউস প্রভাব'],['মেরুর বরফ গলে সমুদ্রের পানি বাড়ছে','গ্রিনহাউস প্রভাব'],['SO₂ ও NO₂ বৃষ্টির পানিতে মিশে এসিড হয়','এসিড বৃষ্টি'],['গাছপালা মরে, জলাশয় অম্লযুক্ত হয়','এসিড বৃষ্টি'],['কম অক্সিজেনে পুড়লে তৈরি CO রক্তে মিশে ক্ষতি করে','বিষাক্ত গ্যাস (CO)'],['অতিবেগুনি রশ্মি পৃথিবীতে বেশি পৌঁছায়','ওজোন স্তরের ক্ষয়'],['ফটোকেমিক্যাল ধোঁয়া ওজোন (O₃) স্তর ক্ষয় করে','ওজোন স্তরের ক্ষয়']];
+  var it=pick(L),all=['গ্রিনহাউস প্রভাব','এসিড বৃষ্টি','বিষাক্ত গ্যাস (CO)','ওজোন স্তরের ক্ষয়'];
+  return {q:'<b>'+it[0]+'</b>। এটা কোন সমস্যা?',o:all.map(function(s){return {t:s,ok:s===it[1]};}),good:'ঠিক! '+it[1]+'।',bad:'সঠিক উত্তর: '+it[1]+'।'};
+});
+
+/* ---------- ল্যাব ৪: তড়িৎ বিশ্লেষণ ---------- */
+var ZM=[
+ {c:['Na⁺'],a:['Cl⁻'],dc:'Na⁺',da:'Cl⁻',gc:['Na (কঠিন)',2],ga:['Cl₂ গ্যাস',1],
+  t:'<b>গলিত NaCl</b>: আয়ন Na⁺ ও Cl⁻।<br>অ্যানোড (+): Cl⁻ → ½Cl₂ + e⁻ (জারণ)<br>ক্যাথোড (−): Na⁺ + e⁻ → Na (বিজারণ)<br>মোট: 2NaCl(l) → 2Na(s) + Cl₂(g)<br><small>Cl₂ চেনা যায়: ভেজা নীল লিটমাস লাল হয়।</small>'},
+ {c:['Na⁺','H⁺'],a:['Cl⁻','OH⁻'],dc:'H⁺',da:'Cl⁻',gc:['H₂ গ্যাস',1],ga:['Cl₂ গ্যাস',1],
+  t:'<b>গাঢ় NaCl দ্রবণ</b> (Pt ক্যাথোড): আয়ন Na⁺, H⁺, Cl⁻, OH⁻।<br>ক্যাথোড: H⁺ সারির নিচে, তাই আগে: H⁺ + e⁻ → H; H + H → H₂<br>অ্যানোড: Cl⁻-এর ঘনমাত্রা বেশি, তাই আগে: Cl⁻ → Cl + e⁻; Cl + Cl → Cl₂<br>দ্রবণে থাকা Na⁺ ও OH⁻ মিলে <b>NaOH (ক্ষার)</b>।'},
+ {c:['H⁺'],a:['OH⁻'],dc:'H⁺',da:'OH⁻',gc:['H₂ গ্যাস',2],ga:['O₂ গ্যাস',1],
+  t:'<b>পানি + কয়েক ফোঁটা H₂SO₄</b> (Pt): বিশুদ্ধ পানিতে আয়ন খুব কম, তাই এসিড দিয়ে আয়ন বাড়ানো হয়।<br>ক্যাথোড: 4H⁺ + 4e⁻ → 2H₂<br>অ্যানোড: 4OH⁻ → O₂ + 2H₂O + 4e⁻<br><b>H₂ : O₂ = ২ : ১</b> (আয়তন)।'},
+ {c:['Al³⁺'],a:['O²⁻'],dc:'Al³⁺',da:'O²⁻',gc:['Al (কঠিন)',4],ga:['O₂ গ্যাস',3],
+  t:'<b>গলিত Al₂O₃</b>: Al₂O₃ ⇌ 2Al³⁺ + 3O²⁻।<br>ক্যাথোড: 2Al³⁺ + 6e⁻ → 2Al<br>অ্যানোড: 3O²⁻ → 1½O₂ + 6e⁻<br>মোট: 2Al₂O₃ → 4Al + 3O₂ (সক্রিয় ধাতু এভাবে নিষ্কাশন হয়)।'}];
+var Z4={on:false,P:[],ga:0,gc:0};
+function z4reset(){
+  var m=ZM[+$('z4m').value],hg=$('z4m').value==='1'&&$('z4s').value==='1';
+  Z4.m=m;Z4.hg=hg;Z4.dc=hg?'Na⁺':m.dc;Z4.ga=0;Z4.gc=0;Z4.q=0;Z4.P=[];
+  m.c.forEach(function(s){for(var i=0;i<5;i++)Z4.P.push({s:s,t:'c',x:rnd(140,240),y:rnd(150,255)});});
+  m.a.forEach(function(s){for(var i=0;i<5;i++)Z4.P.push({s:s,t:'a',x:rnd(140,240),y:rnd(150,255)});});
+  $('z4sl').style.display=$('z4s').style.display=($('z4m').value==='1')?'':'none';
+  var t=m.t;if(hg)t+='<br><br><b>পারদ (Hg) ক্যাথোডে</b> Na⁺ আগে চার্জমুক্ত হয় (তড়িৎদ্বারের প্রকৃতির প্রভাব)। তাই H₂-এর বদলে সোডিয়াম পাওয়া যায়।';
+  $('z4t').innerHTML=t;
+}
+$('z4m').addEventListener('change',z4reset);$('z4s').addEventListener('change',z4reset);
+$('z4go').onclick=function(){Z4.on=!Z4.on;$('z4go').textContent=Z4.on?'⏸ বিদ্যুৎ বন্ধ করো':'▶ বিদ্যুৎ দাও';};
+z4reset();
+function z4draw(){
+  var x=ctxOf('z4c');x.clearRect(0,0,380,300);
+  var m=Z4.m,AX=130,CX=250;
+  x.fillStyle='rgba(75,150,230,.22)';x.fillRect(70,120,240,150);x.strokeStyle=NAVY;x.lineWidth=3;x.strokeRect(70,100,240,170);
+  x.fillStyle='#555';x.fillRect(AX-7,50,14,190);x.fillStyle='#8a5a44';x.fillRect(CX-7,50,14,190);
+  txt(x,'অ্যানোড (+)',AX,40,'bold 12px Hind Siliguri',RED);txt(x,'ক্যাথোড (−)',CX,40,'bold 12px Hind Siliguri',BLU);
+  x.strokeStyle='#444';x.lineWidth=2;x.beginPath();x.moveTo(AX,50);x.lineTo(AX,16);x.lineTo(168,16);x.moveTo(CX,50);x.lineTo(CX,16);x.lineTo(212,16);x.stroke();
+  x.fillStyle='#eee';x.fillRect(168,6,44,20);x.strokeRect(168,6,44,20);txt(x,'+',176,16,'bold 14px sans-serif',RED);txt(x,'−',204,16,'bold 14px sans-serif',BLU);
+  Z4.P.forEach(function(p){
+    var tx=p.t==='c'?CX-20:AX+20,disc=(p.t==='c'?p.s===Z4.dc:p.s===m.da);
+    if(Z4.on){var dx=tx-p.x;p.x+=Math.sign(dx)*Math.min(Math.abs(dx),disc?1.4:.6);p.y+=rnd(-1.2,1.2);
+      if(disc&&Math.abs(p.x-tx)<3){p.x=rnd(150,230);p.y=rnd(150,255);if(p.t==='c')Z4.gc+=1;else Z4.ga+=1;Z4.bub=Z4.bub||[];Z4.bub.push({x:p.t==='c'?CX:AX,y:240,t:p.t});}
+    }else{p.x+=rnd(-.6,.6);p.y+=rnd(-.6,.6);}
+    p.x=clamp(p.x,78,302);p.y=clamp(p.y,128,262);
+    circ(x,0,p.x,p.y,11,p.t==='c'?'#f4b6b0':'#b6c9f4',p.t==='c'?RED:BLU,1.5);txt(x,p.s,p.x,p.y,'bold 9px Hind Siliguri',NAVY);
+  });
+  Z4.bub=(Z4.bub||[]).filter(function(b){b.y-=1.6;return b.y>70;});
+  Z4.bub.forEach(function(b){circ(x,0,b.x+rnd(-3,3),b.y,3,0,'#7aa',1);});
+  if(Z4.on&&Z4.q<400)Z4.q++;
+  var gcn=Z4.hg?['Na (পারদে)',2]:Z4.m.gc,mx=Math.max(gcn[1],Z4.m.ga[1]);
+  function gauge(px,lab,r,col){var h=Z4.q/400*120*r/mx;x.strokeStyle='#888';x.lineWidth=1;x.strokeRect(px,150,22,120);x.fillStyle=col;x.fillRect(px,270-h,22,h);txt(x,lab,px+11,285,'11px Hind Siliguri',NAVY);txt(x,'অনুপাত '+bn(r),px+11,140,'11px Hind Siliguri',NAVY);}
+  gauge(30,Z4.m.ga[0],Z4.m.ga[1],'#9ad');gauge(328,gcn[0],gcn[1],'#e9a');
+}
+/* আয়ন রেস গেম */
+var CATS=['Li⁺','K⁺','Na⁺','Mg²⁺','Al³⁺','Zn²⁺','Fe²⁺','Sn²⁺','Pb²⁺','H⁺','Cu²⁺','Ag⁺','Au³⁺'],ANS=['NO₃⁻','SO₄²⁻','Cl⁻','Br⁻','I⁻','OH⁻'];
+mkGame('i4q','i4o','i4f','i4sc',function(){
+  var cat=Math.random()<.6,L=cat?CATS:ANS,i=Math.floor(Math.random()*L.length),j;
+  do{j=Math.floor(Math.random()*L.length);}while(j===i||(!cat&&((L[i]==='Cl⁻'&&L[j]==='OH⁻')||(L[j]==='Cl⁻'&&L[i]==='OH⁻'))));
+  var a=L[i],b=L[j],w=Math.max(i,j),win=L[w];
+  return {q:'দ্রবণে <b>'+a+'</b> ও <b>'+b+'</b> আছে। '+(cat?'ক্যাথোডে':'অ্যানোডে')+' কোনটি আগে চার্জমুক্ত হবে?',o:shuffle([a,b]).map(function(s){return {t:s,ok:s===win};}),good:win+' সারিতে নিচে, তাই আগে চার্জমুক্ত হয়।',bad:'সারির নিচের আয়ন আগে: '+win+'।'};
+});
+/* ---------- ল্যাব ৫: ইলেকট্রোপ্লেটিং ---------- */
+var P5={on:false,t:0,ion:[]};
+function p5reset(){P5.t=0;P5.on=false;$('p5go').textContent='▶ বিদ্যুৎ দাও';P5.ion=[];for(var i=0;i<8;i++)P5.ion.push({x:rnd(135,235),y:rnd(150,255)});p5text();}
+function p5text(){
+  var m=$('p5m').value==='0',p=Math.min(1,P5.t/700);
+  $('p5t').innerHTML=(m?'<b>চামচে সিলভার প্রলেপ</b><br>দ্রবণ: AgNO₃ → Ag⁺ + NO₃⁻<br>চামচ ব্যাটারির <b>ঋণাত্মক (−)</b> প্রান্তে = ক্যাথোড<br>সিলভার পাত <b>ধনাত্মক (+)</b> প্রান্তে = অ্যানোড<br>অ্যানোড: Ag → Ag⁺ + e⁻ (পাত ক্ষয় হয়)<br>ক্যাথোড: Ag⁺ + e⁻ → Ag (চামচে জমে)':'<b>অবিশুদ্ধ কপার বিশুদ্ধ করা</b><br>ভেজাল মিশ্রিত দণ্ড ব্যাটারির <b>ধনাত্মক (+)</b> প্রান্তে = অ্যানোড (ক্ষয় হয়)<br>বিশুদ্ধ কপার দণ্ড <b>ঋণাত্মক (−)</b> প্রান্তে = ক্যাথোড (মোটা হয়)<br>অ্যানোড: Cu → Cu²⁺ + 2e⁻<br>ক্যাথোড: Cu²⁺ + 2e⁻ → Cu')+'<br><br>সময় অগ্রগতি: <b>'+bn(Math.round(p*100))+'%</b>';
+}
+$('p5go').onclick=function(){P5.on=!P5.on;$('p5go').textContent=P5.on?'⏸ বন্ধ করো':'▶ বিদ্যুৎ দাও';};
+$('p5re').onclick=p5reset;$('p5m').addEventListener('change',p5reset);p5reset();
+function p5draw(){
+  var x=ctxOf('p5c'),m=$('p5m').value==='0';x.clearRect(0,0,380,290);
+  if(P5.on&&P5.t<700){P5.t++;if(P5.t%20===0)p5text();}
+  var p=Math.min(1,P5.t/700);
+  x.fillStyle='rgba(75,150,230,.22)';x.fillRect(50,120,280,150);x.strokeStyle=NAVY;x.lineWidth=3;x.strokeRect(50,100,280,170);
+  var aw=(m?14:22)-p*(m?7:11);
+  x.fillStyle=m?'#c8ccd0':'#b87333';x.fillRect(110-aw/2,60,aw,180);
+  if(!m){x.fillStyle='#4a3b2a';for(var i=0;i<14;i++)x.fillRect(110-aw/2+(i*5)%Math.max(2,aw-2),70+i*12,3,3);}
+  if(m){var th=p*7;x.strokeStyle='#555';x.lineWidth=2;x.fillStyle='#c8ccd0';
+    x.fillRect(268,60,6,110);x.beginPath();x.ellipse(271,200,24,30,0,0,7);x.fillStyle='#8a8d91';x.fill();x.lineWidth=2+th;x.strokeStyle='#e6e9ee';x.stroke();}
+  else{var cw=8+p*14;x.fillStyle='#d28a4a';x.fillRect(270-cw/2,60,cw,180);}
+  txt(x,m?'Ag পাত (+)':'অবিশুদ্ধ Cu (+)',110,50,'bold 12px Hind Siliguri',RED);txt(x,m?'চামচ (−)':'বিশুদ্ধ Cu (−)',270,50,'bold 12px Hind Siliguri',BLU);
+  x.strokeStyle='#444';x.lineWidth=2;x.beginPath();x.moveTo(110,60);x.lineTo(110,14);x.lineTo(168,14);x.moveTo(270,60);x.lineTo(270,14);x.lineTo(212,14);x.stroke();
+  x.fillStyle='#eee';x.fillRect(168,4,44,20);x.strokeRect(168,4,44,20);txt(x,'+',176,14,'bold 14px sans-serif',RED);txt(x,'−',204,14,'bold 14px sans-serif',BLU);
+  P5.ion.forEach(function(q){if(P5.on){q.x+=1.0;q.y+=rnd(-.8,.8);if(q.x>245){q.x=rnd(125,150);q.y=rnd(150,255);}}else{q.x+=rnd(-.4,.4);q.y+=rnd(-.4,.4);}q.y=clamp(q.y,128,262);
+    circ(x,0,q.x,q.y,11,'#ffe0a8',ORG,1.5);txt(x,m?'Ag⁺':'Cu²⁺',q.x,q.y,'bold 9px Hind Siliguri',NAVY);});
+  x.fillStyle='#ddd';x.fillRect(60,278,260,8);x.fillStyle='#2a9d8f';x.fillRect(60,278,260*p,8);
+}
+mkGame('p5q','p5o','p5f','p5sc',function(){
+  var L=[['যে জিনিসে প্রলেপ দেবে (যেমন চামচ)',1],['প্রলেপের ধাতুর পাত (যেমন সিলভার)',0],['বিশুদ্ধকরণে অবিশুদ্ধ ধাতুর দণ্ড',0],['বিশুদ্ধকরণে বিশুদ্ধ ধাতুর দণ্ড',1],['যে তড়িৎদ্বারে নতুন ধাতু জমে',1],['যে তড়িৎদ্বারের ধাতু ক্ষয় হয়ে আয়ন হয়ে দ্রবণে যায়',0]];
+  var it=pick(L);
+  return {q:'<b>'+it[0]+'</b> ব্যাটারির কোন প্রান্তে লাগাবে?',o:[{t:'ধনাত্মক (+) প্রান্তে',ok:it[1]===0},{t:'ঋণাত্মক (−) প্রান্তে',ok:it[1]===1}],good:'ঠিক! যেখানে ধাতু জমে সেটা ক্যাথোড (−), যেখান থেকে ক্ষয় হয় সেটা অ্যানোড (+)।',bad:'মনে রাখো: জমে ক্যাথোডে (−), ক্ষয় হয় অ্যানোডে (+)।'};
+});
+
+/* ---------- ল্যাব ৬: গ্যালভানিক কোষ ---------- */
+var GM=[{s:'Mg',i:'Mg²⁺',z:2,c:'#c4c7cb'},{s:'Al',i:'Al³⁺',z:3,c:'#d4d8dd'},{s:'Zn',i:'Zn²⁺',z:2,c:'#9aa3ab'},{s:'Fe',i:'Fe²⁺',z:2,c:'#6b6f73'},{s:'Sn',i:'Sn²⁺',z:2,c:'#b9bcc0'},{s:'Pb',i:'Pb²⁺',z:2,c:'#7d8187'},{s:'Cu',i:'Cu²⁺',z:2,c:'#c26a3a'},{s:'Ag',i:'Ag⁺',z:1,c:'#dfe3e6'}];
+var gopt=GM.map(function(m,i){return '<option value="'+i+'">'+m.s+'</option>';}).join('');
+$('g6a').innerHTML=gopt;$('g6b').innerHTML=gopt;$('g6a').value=2;$('g6b').value=6;
+var G6={t:0,wk:0,e:[],bi:[],io:[]};
+function g6pair(){var a=+$('g6a').value,b=+$('g6b').value;if(a===b)return null;return a<b?[GM[a],GM[b]]:[GM[b],GM[a]];}
+function g6text(){
+  var p=g6pair();
+  if(!p){$('g6t').innerHTML='দুটি আলাদা ধাতু বেছে নাও।';return;}
+  var A=p[0],C=p[1],l=(function(a,b){var g=function(x,y){return y?g(y,x%y):x;};return a*b/g(a,b);})(A.z,C.z),ka=l/A.z,kc=l/C.z;
+  function co(k){return k>1?bn(k):'';}
+  $('g6t').innerHTML='<b>অ্যানোড (−):</b> '+A.s+' (সারিতে উপরে, বেশি সক্রিয়)<br><b>ক্যাথোড (+):</b> '+C.s+' (সারিতে নিচে)<br><br>অ্যানোডে জারণ: '+co(ka)+A.s+' → '+co(ka)+A.i+' + '+bn(l)+'e⁻<br>ক্যাথোডে বিজারণ: '+co(kc)+C.i+' + '+bn(l)+'e⁻ → '+co(kc)+C.s+'<br>কোষ বিক্রিয়া: '+co(ka)+A.s+' + '+co(kc)+C.i+' → '+co(ka)+A.i+' + '+co(kc)+C.s+'<br>তড়িৎদ্বার: '+A.s+'|'+A.i+' এবং '+C.s+'|'+C.i+'<br><small>ইলেকট্রন তার দিয়ে অ্যানোড থেকে ক্যাথোডে যায়। বাল্বের উজ্জ্বলতা শুধু সারির দূরত্বের আন্দাজ, বইয়ে ভোল্টেজের মান নেই।</small>';
+}
+function g6go(){G6.t=0;G6.wk=0;g6text();}
+['g6a','g6b'].forEach(function(id){$(id).addEventListener('change',g6go);});$('g6br').addEventListener('change',g6go);$('g6re').onclick=g6go;g6go();
+function g6draw(){
+  var x=ctxOf('g6c');x.clearRect(0,0,380,290);var p=g6pair();
+  if(!p){txt(x,'দুটি আলাদা ধাতু বেছে নাও',190,140,'bold 15px Hind Siliguri',RED);return;}
+  var A=p[0],C=p[1],br=$('g6br').checked;G6.t++;
+  var gap=GM.indexOf(C)-GM.indexOf(A),inten=clamp(gap/6,.25,1);
+  var fade=br?1:clamp(1-(G6.t-120)/80,0,1),work=fade>0.02;inten*=fade;
+  if(work&&G6.wk<500)G6.wk++;var pr=G6.wk/500;
+  x.fillStyle='rgba(75,150,230,.22)';x.fillRect(20,150,140,110);x.fillRect(220,150,140,110);x.strokeStyle=NAVY;x.lineWidth=3;x.strokeRect(20,130,140,130);x.strokeRect(220,130,140,130);
+  var aw=14-pr*6,cw=14+pr*8;x.fillStyle=A.c;x.fillRect(90-aw/2,95,aw,150);x.fillStyle=C.c;x.fillRect(290-cw/2,95,cw,150);
+  txt(x,A.s+' (অ্যানোড −)',90,278,'bold 12px Hind Siliguri',BLU);txt(x,C.s+' (ক্যাথোড +)',290,278,'bold 12px Hind Siliguri',RED);
+  x.strokeStyle='#444';x.lineWidth=2;x.beginPath();x.moveTo(90,95);x.lineTo(90,50);x.lineTo(168,50);x.moveTo(212,50);x.lineTo(290,50);x.lineTo(290,95);x.stroke();
+  var g=x.createRadialGradient(190,40,2,190,40,28);g.addColorStop(0,'rgba(255,240,120,'+(0.15+inten*.85)+')');g.addColorStop(1,'rgba(255,240,120,0)');x.fillStyle=g;x.fillRect(150,5,80,70);
+  circ(x,0,190,44,14,'rgba(255,235,100,'+(0.2+inten*.8)+')','#555',2);txt(x,'💡',190,44,'16px sans-serif',NAVY);
+  if(br){x.strokeStyle='#9aa3ab';x.lineWidth=10;x.beginPath();x.moveTo(130,190);x.lineTo(130,120);x.lineTo(250,120);x.lineTo(250,190);x.stroke();x.strokeStyle='#e8ecef';x.lineWidth=6;x.stroke();txt(x,'লবণ সেতু (KCl)',190,108,'11px Hind Siliguri',NAVY);}
+  else txt(x,'⚠ লবণ সেতু নেই',190,120,'bold 12px Hind Siliguri',RED);
+  if(work){if(G6.t%14===0)G6.e.push({d:0});G6.e.forEach(function(e){e.d+=0.008*(0.4+inten);});G6.e=G6.e.filter(function(e){return e.d<1;});
+    G6.e.forEach(function(e){var d=e.d,px,py;if(d<.3){px=90;py=lerp(95,50,d/.3);}else if(d<.7){px=lerp(90,290,(d-.3)/.4);py=50;}else{px=290;py=lerp(50,95,(d-.7)/.3);}circ(x,0,px,py,4,'#ffd34d','#a80',1);});
+    if(br&&G6.t%25===0){G6.bi.push({d:0,k:1});G6.bi.push({d:0,k:0});}G6.bi.forEach(function(b){b.d+=.012;});G6.bi=G6.bi.filter(function(b){return b.d<1;});
+    G6.bi.forEach(function(b){var d=b.d,px=b.k?lerp(130,250,Math.min(1,d*1.3)):lerp(250,130,Math.min(1,d*1.3));circ(x,0,px,b.k?120:120,6,b.k?'#f4b6b0':'#b6c9f4',0);txt(x,b.k?'K⁺':'Cl⁻',px,120,'bold 7px Hind Siliguri',NAVY);});
+    if(G6.t%30===0){G6.io.push({s:'a',x:90,y:rnd(160,230),v:rnd(-.7,-.3)});G6.io.push({s:'c',x:rnd(235,330),y:rnd(160,230),v:0});}
+  }
+  G6.io=G6.io.filter(function(q){if(q.s==='a'){q.x+=q.v*2;q.y+=rnd(-.4,.4);return q.x>28;}q.x+=(290-q.x)*.02;return Math.abs(q.x-290)>12;});
+  G6.io.forEach(function(q){circ(x,0,q.x,q.y,9,'#ffe0a8',ORG,1);txt(x,q.s==='a'?A.i:C.i,q.x,q.y,'bold 7px Hind Siliguri',NAVY);});
+  if(!br&&!work)txt(x,'আধান নিরপেক্ষতা নষ্ট, বিদ্যুৎ বন্ধ',190,18,'bold 12px Hind Siliguri',RED);
+}
+mkGame('g6q','g6o','g6f','g6sc',function(){
+  var i=Math.floor(Math.random()*GM.length),j;do{j=Math.floor(Math.random()*GM.length);}while(j===i);
+  var win=GM[Math.min(i,j)];
+  return {q:'<b>'+GM[i].s+'</b> ও <b>'+GM[j].s+'</b> দিয়ে গ্যালভানিক কোষ বানালে কোনটি অ্যানোড হবে?',o:shuffle([GM[i],GM[j]]).map(function(m){return {t:m.s,ok:m===win};}),good:win.s+' সারিতে উপরে, বেশি সক্রিয়, তাই জারিত হয়ে অ্যানোড।',bad:'সারিতে যে ধাতু উপরে সে অ্যানোড: '+win.s+'।'};
+});
+var DC=[['দস্তার (Zn) কৌটা','অ্যানোড (−)। Zn → Zn²⁺ + 2e⁻ (জারণ)। ইলেকট্রন তার দিয়ে কার্বন দণ্ডে যায়।'],['কার্বন (গ্রাফাইট) দণ্ড','ক্যাথোড (+)। এখানে ইলেকট্রন গ্রহণ (বিজারণ) হয়।'],['কাই: MnO₂, NH₄Cl, ZnCl₂, পাতিত পানি','কাইটা কৌটার ভেতরে ভরা থাকে। ক্যাথোডে: 2NH₄⁺ + 2MnO₂ + 2e⁻ → 2NH₃ + Mn₂O₃ + H₂O।'],['ধাতব ক্যাপ','ওপরের ধনাত্মক (+) প্রান্ত।'],['ধাতব বেইজ','নিচের ঋণাত্মক (−) প্রান্ত।'],['পুরো কোষ বিক্রিয়া','Zn + 2NH₄⁺ + 2MnO₂ → Zn²⁺ + 2NH₃ + Mn₂O₃ + H₂O। রাসায়নিক শক্তি → বিদ্যুৎ শক্তি।']];
+$('dcb').innerHTML=DC.map(function(d,i){return '<button data-i="'+i+'">'+d[0]+'</button>';}).join('');
+$('dcb').addEventListener('click',function(ev){var b=ev.target.closest('button');if(!b)return;var all=$('dcb').querySelectorAll('button');for(var k=0;k<all.length;k++)all[k].classList.remove('on');b.classList.add('on');$('dct').innerHTML='<b>'+DC[+b.getAttribute('data-i')][0]+'</b>: '+DC[+b.getAttribute('data-i')][1];});
+
+/* =================== কুইজ =================== */
+var QUIZ=[
+ {q:'বিদ্যুৎ পরিবহণের কৌশলের উপর ভিত্তি করে পরিবাহী কত প্রকার?',o:['এক','দুই','তিন','চার'],a:1,e:'দুই প্রকার: ইলেকট্রনীয় পরিবাহী (মুক্ত ইলেকট্রনে) ও তড়িৎ বিশ্লেষ্য পরিবাহী (আয়নে)।'},
+ {q:'একটি কোষে নিকেল দণ্ড ব্যাটারির (+) প্রান্তে, লোহার দণ্ড (−) প্রান্তে, দ্রবণে Ni²⁺ ও SO₄²⁻। এই প্রক্রিয়া লোহার-',o:['পরিমাণ বৃদ্ধি করে','ক্ষয়রোধ করে','দৃঢ়তা বৃদ্ধি করে','বিশুদ্ধতা বৃদ্ধি করে'],a:1,e:'লোহার ওপর নিকেলের প্রলেপ পড়ে (ইলেকট্রোপ্লেটিং)। এতে লোহার ক্ষয় (মরিচা) রোধ হয়।'},
+ {q:'ঐ কোষ সম্পর্কে: (i) Ni ক্ষয়প্রাপ্ত হয়, (ii) Fe অ্যানোড হিসেবে কাজ করে, (iii) ইলেকট্রনের আদান-প্রদান ঘটে। কোনটি সঠিক?',o:['i ও ii','ii ও iii','i ও iii','i, ii ও iii'],a:2,e:'Ni (+) প্রান্তে, তাই অ্যানোড, ক্ষয় হয়। Fe (−) প্রান্তে, তাই ক্যাথোড। (ii) ভুল।'},
+ {q:'তড়িৎ বিশ্লেষণের মাধ্যমে কোনো ধাতুর উপর অন্য ধাতুর প্রলেপ দেওয়াকে কী বলে?',o:['ভলকানাইজিং','ধাতু বিশোধন','গ্যালভানাইজিং','ইলেকট্রোপ্লেটিং'],a:3,e:'এটাই ইলেকট্রোপ্লেটিং।'},
+ {q:'নিউক্লিয় বিক্রিয়ার সময় নিউক্লিয়াসকে সাধারণত কী দিয়ে আঘাত করা হয়?',o:['প্রোটন','ইলেকট্রন','পজিট্রন','নিউট্রন'],a:3,e:'নিউট্রন চার্জহীন, তাই সহজে নিউক্লিয়াসে ঢোকে। স্বল্পগতির নিউট্রন দিয়ে ²³⁵U-কে আঘাত করা হয়।'},
+ {q:'প্ল্যাটিনাম তড়িৎদ্বারে NaCl জলীয় দ্রবণ বিশ্লেষণে উৎপন্ন হয়: (i) H₂, (ii) Cl₂, (iii) NaOH দ্রবণ',o:['i ও ii','ii ও iii','i ও iii','i, ii ও iii'],a:3,e:'ক্যাথোডে H₂, অ্যানোডে Cl₂, আর দ্রবণে Na⁺ ও OH⁻ মিলে NaOH।'},
+ {q:'১ ক্যালরি (Cal) কত জুল?',o:['১ J','৪.১৮ J','১০০০ J','৪১.৮ J'],a:1,e:'১ Cal = ৪.১৮ J।'},
+ {q:'১ হাজার জুল-কে কী বলে?',o:['১ ক্যালরি','১ কিলোজুল','১ নিউটন','১ কিলোক্যালরি'],a:1,e:'১০০০ J = ১ kJ।'},
+ {q:'কোনো বিক্রিয়ায় ΔH ঋণাত্মক হলে বিক্রিয়াটি-',o:['তাপহারী','তাপোৎপাদী','অসম্ভব','কোনো তাপ বদলায় না'],a:1,e:'ΔH ঋণাত্মক মানে H₂ < H₁, তাপ নির্গত হয়, তাই তাপোৎপাদী।'},
+ {q:'বিক্রিয়কের শক্তি H₁ = ৭০ kJ/mol, উৎপাদের H₂ = ৮০ kJ/mol। ΔH কত এবং বিক্রিয়াটি কেমন?',o:['−১০, তাপোৎপাদী','+১০, তাপহারী','+১০, তাপোৎপাদী','−১০, তাপহারী'],a:1,e:'ΔH = H₂ − H₁ = ৮০ − ৭০ = +১০ kJ/mol। ধনাত্মক, তাই তাপহারী।'},
+ {q:'H₁ = ৫০ ও H₂ = ২০ kJ/mol হলে ΔH কত?',o:['+৩০','−৩০','+৭০','−৭০'],a:1,e:'ΔH = ২০ − ৫০ = −৩০ kJ/mol।'},
+ {q:'বন্ধন শক্তি ব্যবহার করে ΔH বের করার সূত্র কোনটি?',o:['ΔH = B₂ − B₁','ΔH = B₁ − B₂','ΔH = B₁ + B₂','ΔH = B₁ × B₂'],a:1,e:'ΔH = (বিক্রিয়কের বন্ধন ভাঙার শক্তি B₁) − (উৎপাদের বন্ধন গড়ার শক্তি B₂)।'},
+ {q:'CH₄ + Cl₂ → CH₃Cl + HCl বিক্রিয়ায় ΔH কত? (C-H = ৪১৪, Cl-Cl = ২৪৪, C-Cl = ৩২৬, H-Cl = ৪৩১ kJ/mol)',o:['−৯৯ kJ','+৯৯ kJ','−৭৫৭ kJ','+৬৫৮ kJ'],a:0,e:'B₁ = ৪১৪ + ২৪৪ = ৬৫৮, B₂ = ৩২৬ + ৪৩১ = ৭৫৭। ΔH = ৬৫৮ − ৭৫৭ = −৯৯ kJ।'},
+ {q:'H₂ + Cl₂ → 2HCl বিক্রিয়ায় ΔH কত? (H-H = ৪৩৬, Cl-Cl = ২৪৪, H-Cl = ৪৩১)',o:['−১৮২ kJ','+১৮২ kJ','−৮৬২ kJ','−৬৮০ kJ'],a:0,e:'B₁ = ৪৩৬ + ২৪৪ = ৬৮০। B₂ = ২ × ৪৩১ = ৮৬২। ΔH = ৬৮০ − ৮৬২ = −১৮২ kJ।'},
+ {q:'বিক্রিয়ায় বন্ধন নিয়ে কোনটি সঠিক?',o:['ভাঙতে ও গড়তে দুটোতেই শক্তি লাগে','ভাঙতে শক্তি লাগে, গড়লে শক্তি নির্গত হয়','ভাঙলে শক্তি নির্গত হয়, গড়তে শক্তি লাগে','কোনোটিতেই শক্তি লাগে না'],a:1,e:'বন্ধন ভাঙতে শক্তি লাগে (B₁)। বন্ধন তৈরি হলে শক্তি বেরোয় (B₂)।'},
+ {q:'নিচের কোনটি তাপহারী বিক্রিয়া?',o:['মিথেন পোড়ানো','CaO + পানি','CaCO₃ → CaO + CO₂','২Mg + O₂'],a:2,e:'ঝিনুক/শামুক (CaCO₃) পুড়িয়ে চুন বানাতে তাপ দিতে হয়। ΔH = +১৭৬.৮ kJ।'},
+ {q:'পানিতে চুন (CaO) মেশালে তাপমাত্রা-',o:['কমে','বাড়ে','একই থাকে','প্রথমে কমে, পরে বাড়ে'],a:1,e:'CaO + H₂O → Ca(OH)₂ + তাপ। এটা তাপোৎপাদী।'},
+ {q:'NH₄Cl পানিতে দ্রবীভূত করলে পানির তাপমাত্রা-',o:['কমে','বাড়ে','স্থির থাকে','ফুটতে শুরু করে'],a:0,e:'কেলাস ভাঙতে ও আয়নিত হতে পানি থেকে শক্তি নেয়। এটা তাপহারী।'},
+ {q:'প্রাকৃতিক গ্যাসের প্রধান উপাদান কোনটি?',o:['ইথানল','মিথেন (CH₄)','CO₂','হাইড্রোজেন'],a:1,e:'রান্নার গ্যাসের প্রধান উপাদান মিথেন।'},
+ {q:'সালোকসংশ্লেষণে সূর্যের আলো কী রূপে জমা থাকে?',o:['তাপ শক্তি','রাসায়নিক শক্তি (শর্করায়)','শব্দ শক্তি','নিউক্লিয়ার শক্তি'],a:1,e:'6CO₂ + 12H₂O → C₆H₁₂O₆ + 6O₂ + 6H₂O। আলোক শক্তি শর্করার রাসায়নিক শক্তি হয়।'},
+ {q:'ডেনিয়েল কোষে শক্তির রূপান্তর কোনটি?',o:['তাপ → বিদ্যুৎ','রাসায়নিক শক্তি → বিদ্যুৎ শক্তি','বিদ্যুৎ → রাসায়নিক শক্তি','আলো → বিদ্যুৎ'],a:1,e:'Zn + CuSO₄ → ZnSO₄ + Cu বিক্রিয়ায় তৈরি ইলেকট্রন প্রবাহই বিদ্যুৎ।'},
+ {q:'গ্রিনহাউস প্রভাবের জন্য সবচেয়ে বেশি দায়ী গ্যাস কোনটি?',o:['O₂','N₂','CO₂','He'],a:2,e:'CO₂ প্রচুর তাপ ধরে রাখে। এর ভূমিকা অন্য গ্যাসের চেয়ে অনেক বেশি।'},
+ {q:'এসিড বৃষ্টির জন্য প্রধানত কোন গ্যাসগুলো দায়ী?',o:['O₂ ও N₂','SO₂ ও NO₂','H₂ ও He','CH₄ ও Ar'],a:1,e:'SO₂ থেকে H₂SO₄ ও NO₂ থেকে HNO₃ তৈরি হয়ে বৃষ্টির সাথে নামে।'},
+ {q:'ওজোন স্তর পৃথিবীকে কিসের হাত থেকে রক্ষা করে?',o:['ইনফ্রারেড রশ্মি','অতিবেগুনি রশ্মি','শব্দ','বায়ু'],a:1,e:'ওজোন স্তর সূর্যের অতিবেগুনি রশ্মি আটকায়। এই রশ্মি ক্যান্সারও ঘটাতে পারে।'},
+ {q:'জ্বালানি কম অক্সিজেনে পুড়লে কোন বিষাক্ত গ্যাস তৈরি হয়?',o:['CO₂','কার্বন মনোক্সাইড (CO)','O₂','H₂'],a:1,e:'অসম্পূর্ণ দহনে CO হয়, যা শরীরের জন্য অত্যন্ত ক্ষতিকর।'},
+ {q:'তড়িৎ বিশ্লেষ্য কোষে অ্যানোড-',o:['ঋণাত্মক চার্জযুক্ত','ধনাত্মক চার্জযুক্ত','চার্জহীন','সব সময় ধাতব নয়'],a:1,e:'তড়িৎ বিশ্লেষ্য কোষে অ্যানোড (+), ক্যাথোড (−)। গ্যালভানিক কোষে উল্টো।'},
+ {q:'গ্যালভানিক কোষে অ্যানোড-',o:['ধনাত্মক','ঋণাত্মক','চার্জহীন','কখনো ধাতু নয়'],a:1,e:'গ্যালভানিক কোষে অ্যানোড ঋণাত্মক, ক্যাথোড ধনাত্মক।'},
+ {q:'অ্যানোডে কোন বিক্রিয়া ঘটে?',o:['বিজারণ','জারণ','নিরপেক্ষকরণ','কিছুই না'],a:1,e:'অ্যানোডে ইলেকট্রন ত্যাগ (জারণ), ক্যাথোডে ইলেকট্রন গ্রহণ (বিজারণ)।'},
+ {q:'গলিত NaCl-এর তড়িৎ বিশ্লেষণে ক্যাথোডে কী পাওয়া যায়?',o:['Cl₂ গ্যাস','সোডিয়াম ধাতু','H₂ গ্যাস','O₂ গ্যাস'],a:1,e:'Na⁺ + e⁻ → Na। অ্যানোডে Cl₂ গ্যাস পাওয়া যায়।'},
+ {q:'ভেজা নীল লিটমাস কাগজ লাল হয়ে গেলে বোঝা যায় গ্যাসটি-',o:['H₂','O₂','Cl₂','N₂'],a:2,e:'Cl₂ + H₂O → HCl + HOCl। উৎপন্ন এসিডে নীল লিটমাস লাল হয়।'},
+ {q:'পানির তড়িৎ বিশ্লেষণে H₂ ও O₂ গ্যাসের আয়তনের অনুপাত কত?',o:['১ : ১','২ : ১','১ : ২','৩ : ১'],a:1,e:'4H⁺ + 4e⁻ → 2H₂ এবং 4OH⁻ → O₂ + 2H₂O + 4e⁻। তাই H₂ : O₂ = ২ : ১।'},
+ {q:'পানির তড়িৎ বিশ্লেষণে সামান্য H₂SO₄ দেওয়া হয় কেন?',o:['রং বদলাতে','পানির আয়ন ও পরিবাহিতা বাড়াতে','পানি ফোটাতে','গ্যাস দ্রবীভূত করতে'],a:1,e:'বিশুদ্ধ পানি খুব অল্প আয়নিত হয়, প্রায় বিদ্যুৎ অপরিবাহী। এসিড আয়ন বাড়ায়।'},
+ {q:'সিলভার প্লেটিংয়ে চামচকে ব্যাটারির কোন প্রান্তে যুক্ত করা হয়?',o:['ধনাত্মক (+)','ঋণাত্মক (−)','কোনোটিতে নয়','দুটিতেই'],a:1,e:'চামচ ক্যাথোড (−), সেখানে Ag⁺ + e⁻ → Ag হয়ে সিলভার জমে।'},
+ {q:'তড়িৎ বিশ্লেষণে ধাতু বিশুদ্ধকরণে অবিশুদ্ধ ধাতুর দণ্ড ব্যাটারির কোন প্রান্তে থাকে?',o:['ঋণাত্মক','ধনাত্মক','মাঝখানে','কোথাও নয়'],a:1,e:'অবিশুদ্ধ দণ্ড অ্যানোড (+), ক্ষয় হয়। বিশুদ্ধ দণ্ড ক্যাথোড (−), মোটা হয়।'},
+ {q:'দ্রবণে Na⁺ ও H⁺ আছে। ক্যাথোডে কোনটি আগে চার্জমুক্ত হবে? (Pt ক্যাথোড)',o:['Na⁺','H⁺','দুটো একসাথে','কোনোটিই না'],a:1,e:'তড়িৎ রাসায়নিক সারিতে H⁺ নিচে, Na⁺ উপরে। নিচের আয়ন আগে ইলেকট্রন নেয়।'},
+ {q:'Zn|Zn²⁺ ও Cu|Cu²⁺ দিয়ে গ্যালভানিক কোষে অ্যানোড কোনটি?',o:['Zn','Cu','দুটোই','কোনোটিই না'],a:0,e:'Zn সারিতে উপরে (বেশি সক্রিয়), তাই জারিত হয়ে অ্যানোড।'},
+ {q:'গ্যালভানিক কোষে লবণ সেতুর কাজ কী?',o:['বিদ্যুৎ বন্ধ করা','দুই দ্রবণের আধান নিরপেক্ষতা বজায় রাখা','দণ্ড ক্ষয় করা','তাপ দেওয়া'],a:1,e:'লবণ সেতু থেকে Cl⁻ অ্যানোড দ্রবণে ও K⁺ ক্যাথোড দ্রবণে আসে। তাই আধান ঠিক থাকে ও বিদ্যুৎ চলতে থাকে।'},
+ {q:'ড্রাই সেলে অ্যানোড হিসেবে কাজ করে-',o:['কার্বন দণ্ড','দস্তার (Zn) কৌটা','MnO₂','NH₄Cl'],a:1,e:'Zn কৌটায় Zn → Zn²⁺ + 2e⁻। কার্বন দণ্ড ক্যাথোড।'},
+ {q:'কোনটি নিউক্লিয়ার ফিশন বিক্রিয়া?',o:['²H + ³H → ⁴He + n','²³⁵U + n → ¹⁴¹Ba + ⁹²Kr + 3n','২H₂ + O₂ → ২H₂O','Zn + Cu²⁺ → Zn²⁺ + Cu'],a:1,e:'ফিশনে বড় নিউক্লিয়াস ভেঙে ছোট নিউক্লিয়াস ও নিউট্রন হয়।'},
+ {q:'হাইড্রোজেন বোমা তৈরি হয় কোন বিক্রিয়ায়?',o:['ফিশন','ফিউশন','দহন','তড়িৎ বিশ্লেষণ'],a:1,e:'ছোট নিউক্লিয়াস জুড়ে বড় নিউক্লিয়াস হওয়ার বিক্রিয়া (ফিউশন) দিয়ে হাইড্রোজেন বোমা হয়।'},
+ {q:'নিউক্লিয়ার বিক্রিয়ায় কিসের পরিবর্তন ঘটে?',o:['শুধু ইলেকট্রনের আদান-প্রদান','নিউক্লিয়াসের','শুধু আয়নের','কোনো পরিবর্তন হয় না'],a:1,e:'রাসায়নিক বিক্রিয়ায় ইলেকট্রনের আদান-প্রদান হয়। নিউক্লিয়ার বিক্রিয়ায় নিউক্লিয়াস বদলায়, নতুন মৌল তৈরি হয়।'},
+ {q:'বাংলাদেশে পারমাণবিক বিদ্যুৎ কেন্দ্র কোথায় নির্মাণ হচ্ছে?',o:['কক্সবাজার','রূপপুর, পাবনা','খুলনা','সিলেট'],a:1,e:'পাবনা জেলার রূপপুরে।'},
+ {q:'গলিত অ্যালুমিনা (Al₂O₃) তড়িৎ বিশ্লেষণে ক্যাথোডে কী পাওয়া যায়?',o:['O₂','Al ধাতু','H₂','Cl₂'],a:1,e:'2Al³⁺ + 6e⁻ → 2Al। অ্যানোডে O₂ পাওয়া যায়।'},
+ {q:'নিচের কোনটি মৃদু তড়িৎ বিশ্লেষ্য?',o:['NaCl','CuSO₄','H₂SO₄','CH₃COOH'],a:3,e:'ইথানয়িক (অ্যাসিটিক) এসিড দ্রবণে খুব অল্প আয়নিত হয়।'},
+ {q:'নিউক্লিয়ার চেইন বিক্রিয়া মানে-',o:['বিক্রিয়া একবার শুরু হলে নিজে নিজেই চলতে থাকে','বিক্রিয়ায় লোহার শিকল লাগে','দুটি বিক্রিয়া মিলে যায়','বিক্রিয়া কখনো শুরু হয় না'],a:0,e:'ফিশনে বেরোনো নিউট্রন আরও নিউক্লিয়াস ভাঙে। তাই বাড়তি শক্তি ছাড়াই চলে।'}
+];
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+/* =================== প্রশ্ন-উত্তর =================== */
+var QA=[
+ {h:'সৃজনশীল প্রশ্ন (বইয়ের অনুশীলনী)',items:[
+  ['প্রশ্ন ১: (i) পেট্রোলিয়াম + O₂ → CO₂ + H₂O + শক্তি; (ii) ²³⁸U + ₀n¹ → ₅₆Ba + ₃₆Kr + 3₀n¹ + শক্তি; (iii) Zn + CuCl₂ → ZnCl₂ + Cu + শক্তি। (ক) ইলেকট্রোপ্লেটিং কী? (খ) তড়িৎ রাসায়নিক কোষে লবণ সেতু ব্যবহার করা হয় কেন? (গ) উদ্দীপকের দ্বিতীয় বিক্রিয়াটি রাসায়নিক বিক্রিয়া নয়, ব্যাখ্যা করো। (ঘ) শক্তি উৎপাদনে (i) ও (iii)-এর বিক্রিয়া তুলনা করো।',
+   '<b>(ক)</b> তড়িৎ বিশ্লেষণের মাধ্যমে একটি ধাতুর উপর অন্য একটি ধাতুর প্রলেপ দেওয়াকে ইলেকট্রোপ্লেটিং বলে। উজ্জ্বলতা বাড়াতে বা ক্ষয়রোধ করতে এটা করা হয়।<br><b>(খ)</b> অ্যানোড দ্রবণে ধনাত্মক আয়ন (যেমন Zn²⁺) বেশি জমে, ক্যাথোড দ্রবণে ধনাত্মক আয়ন কমে ঋণাত্মক আয়ন (SO₄²⁻) বেশি হয়। এতে আধান নিরপেক্ষতা নষ্ট হয়ে বিক্রিয়া ও বিদ্যুৎ থেমে যায়। লবণ সেতু (KCl-এর জেলি) থেকে Cl⁻ অ্যানোডে ও K⁺ ক্যাথোডে এসে আধান সমান রাখে, তাই বিদ্যুৎ প্রবাহ চলতে থাকে।<br><b>(গ)</b> (ii) বিক্রিয়ায় ইউরেনিয়ামের <b>নিউক্লিয়াস</b> ভেঙে Ba ও Kr-এর নিউক্লিয়াস (নতুন মৌল) ও নিউট্রন তৈরি হচ্ছে, সাথে প্রচুর শক্তি। এটা নিউক্লিয়ার (ফিশন) বিক্রিয়া। রাসায়নিক বিক্রিয়ায় শুধু ইলেকট্রনের আদান-প্রদান বা ভাগাভাগি হয়, নিউক্লিয়াস বদলায় না, নতুন মৌল তৈরি হয় না। (বইয়ে উদ্দীপকে ²³⁸U ছাপা আছে, তবে পাঠ্যাংশে এই বিক্রিয়া ²³⁵U দিয়ে দেখানো, মনে হয় ছাপার ভুল।)<br><b>(ঘ)</b> দুটোই তাপোৎপাদী, শক্তি ছাড়ে। (i) দহন: পেট্রোলিয়ামের রাসায়নিক শক্তি তাপ ও আলোয় বদলায়। এই তাপ দিয়ে ইঞ্জিন চালিয়ে গাড়ি, জাহাজ, বিদ্যুৎ কেন্দ্র চালানো হয়। তবে CO₂ তৈরি হয় (গ্রিনহাউস প্রভাব), অবিশুদ্ধ হলে এসিড বৃষ্টির গ্যাসও হয়। (iii) Zn + CuCl₂ বিক্রিয়ায় যদি তড়িৎদ্বার ও লবণ সেতু দিয়ে গ্যালভানিক কোষ বানানো হয়, তাহলে শক্তি সরাসরি <b>বিদ্যুৎ</b> হিসেবে পাওয়া যায়, কোনো CO₂ বা ধোঁয়া হয় না। কিন্তু এভাবে অল্প পরিমাণ বিদ্যুৎ মেলে, ব্যাটারির মতো ছোট কাজে লাগে। অর্থাৎ (i) বেশি পরিমাণ তাপ দেয় কিন্তু পরিবেশের ক্ষতি করে, (iii) পরিচ্ছন্ন কিন্তু কম পরিমাণ।'],
+  ['প্রশ্ন ২: একটি বিকারে বিগলিত MgCl₂, দুটি তড়িৎদ্বার ও ব্যাটারি লাগানো আছে। (ক) ধাতব পরিবাহী কী? (খ) এসিড মিশ্রিত পানিকে তড়িৎ বিশ্লেষ্য পরিবাহী বলা হয় কেন? ব্যাখ্যা করো। (গ) কোষে অ্যানোডে সংঘটিত বিক্রিয়াটি ব্যাখ্যা করো। (ঘ) উদ্দীপকে সংঘটিত বিক্রিয়ায় তড়িৎ প্রবাহের প্রয়োজনীয়তার যৌক্তিক ব্যাখ্যা দাও।',
+   '<b>(ক)</b> যেসব ধাতুতে ধাতব বন্ধন আছে এবং মুক্ত ইলেকট্রনের মাধ্যমে বিদ্যুৎ চলে, যেমন Fe, Cu, Ni। এদের ইলেকট্রনীয় পরিবাহীও বলে।<br><b>(খ)</b> এসিড মিশ্রিত পানিতে বিদ্যুৎ চালালে আয়ন (H⁺, OH⁻, SO₄²⁻) বিদ্যুৎ বহন করে, আর সাথে সাথে ক্যাথোডে H₂ ও অ্যানোডে O₂ উৎপন্ন হয়, অর্থাৎ রাসায়নিক পরিবর্তন ঘটে। ইলেকট্রনের বদলে আয়ন দিয়ে বিদ্যুৎ চলে এবং রাসায়নিক পরিবর্তন ঘটে বলে একে তড়িৎ বিশ্লেষ্য পরিবাহী বলে।<br><b>(গ)</b> গলিত MgCl₂ → Mg²⁺ + 2Cl⁻। অ্যানোড (+) ঋণাত্মক Cl⁻ আয়নকে আকর্ষণ করে। Cl⁻ ইলেকট্রন ত্যাগ করে Cl হয় (জারণ): 2Cl⁻ → Cl₂ + 2e⁻। অর্থাৎ অ্যানোডে ক্লোরিন গ্যাস পাওয়া যায়।<br><b>(ঘ)</b> MgCl₂ একটি আয়নিক যৌগ, Mg²⁺ ও Cl⁻-এর মধ্যে শক্তিশালী আকর্ষণ আছে। তাই এটা আপনা আপনি ভেঙে Mg ও Cl₂ হয় না (অস্বতঃস্ফূর্ত বিক্রিয়া)। বাইরে থেকে বিদ্যুৎ শক্তি দিলে (১) ব্যাটারির (−) ক্যাথোড Mg²⁺-কে এবং (+) অ্যানোড Cl⁻-কে টেনে আনে, (২) ক্যাথোড Mg²⁺-কে ইলেকট্রন সরবরাহ করে (Mg²⁺ + 2e⁻ → Mg), আর অ্যানোড Cl⁻ থেকে ইলেকট্রন নেয়। তড়িৎ প্রবাহ না থাকলে আয়ন নির্দিষ্ট তড়িৎদ্বারের দিকে যাবে না, ইলেকট্রনের আদান-প্রদান হবে না, বিক্রিয়াও হবে না। তাই বিদ্যুৎ দরকার।'],
+  ['প্রশ্ন ৩: (i) তড়িৎ বিশ্লেষণ কোষ (ii) গ্যালভানিক কোষ। (ক) তাপোৎপাদী বিক্রিয়া কাকে বলে? (খ) পানির তড়িৎ বিশ্লেষণের সময় সামান্য সালফিউরিক এসিড যোগ করা হয় কেন? (গ) (i) নং কোষের গঠন ব্যাখ্যা করো। (ঘ) (ii) নং কোষের সাহায্যে বিদ্যুৎ উৎপাদনের সম্ভাবনা বিশ্লেষণ করো।',
+   '<b>(ক)</b> যে বিক্রিয়ায় তাপ উৎপন্ন (নির্গত) হয় তাকে তাপোৎপাদী বিক্রিয়া বলে। এতে ΔH ঋণাত্মক। যেমন CH₄ + 2O₂ → CO₂ + 2H₂O; ΔH = −৮৯০ kJ/mol।<br><b>(খ)</b> বিশুদ্ধ পানি খুব সামান্য আয়নিত হয়, তাই এটা প্রায় বিদ্যুৎ অপরিবাহী। সামান্য H₂SO₄ দিলে আয়ন বেড়ে বিদ্যুৎ পরিবাহিতা বাড়ে, বিদ্যুৎ চলে ও বিশ্লেষণ হয়।<br><b>(গ)</b> একটি পাত্রে তড়িৎ বিশ্লেষ্যের গলিত বা দ্রবণ নেওয়া হয়। তাতে দুটি তড়িৎদ্বার (ধাতব বা গ্রাফাইট দণ্ড) আংশিক ডোবানো থাকে (পানির জন্য নিষ্ক্রিয় Pt)। দণ্ড দুটি ধাতব তার দিয়ে ব্যাটারির সাথে যুক্ত থাকে। ধনাত্মক প্রান্তের সাথে যুক্ত দণ্ড অ্যানোড (জারণ), ঋণাত্মক প্রান্তেরটি ক্যাথোড (বিজারণ)। ব্যাটারির বিদ্যুৎ রাসায়নিক বিক্রিয়া ঘটায়।<br><b>(ঘ)</b> গ্যালভানিক কোষে (যেমন ডেনিয়েল কোষ) দুটি ভিন্ন ধাতুর দণ্ড তাদের আয়নের দ্রবণে ডোবানো, মাঝে লবণ সেতু। বেশি সক্রিয় ধাতু (Zn) অ্যানোড, কম সক্রিয় (Cu) ক্যাথোড। Zn → Zn²⁺ + 2e⁻ এবং Cu²⁺ + 2e⁻ → Cu। ইলেকট্রন তার দিয়ে প্রবাহিত হয়, এতে বাল্ব জ্বলে। অর্থাৎ বিদ্যুৎ উৎপাদন সম্ভব। তবে বিক্রিয়ক ফুরিয়ে গেলে বিদ্যুৎ বন্ধ হয়, উৎপাদন ছোট পরিসরের (টর্চ, ঘড়ি, মোবাইল), আর ব্যবহৃত ব্যাটারির Zn, MnO₂, Pb বিষাক্ত বলে পরিবেশ দূষণ করে। বড় আকারের বিদ্যুতের জন্য অন্য উৎস (যেমন পারমাণবিক) লাগে।']
+ ]},
+ {h:'সংক্ষিপ্ত প্রশ্ন',items:[
+  ['রাসায়নিক শক্তি কাকে বলে?','পদার্থের অণু বা পরমাণুগুলো যে শক্তির সাহায্যে পরস্পরের সাথে যুক্ত থাকে এবং পদার্থের মধ্যে যে শক্তি লুকিয়ে থাকে তাকে রাসায়নিক শক্তি বলে। বিক্রিয়ায় এটা তাপ, আলো, বিদ্যুৎ ইত্যাদিতে রূপান্তরিত হয়।'],
+  ['বন্ধন শক্তি ও আন্তঃআণবিক শক্তির পার্থক্য কী?','বন্ধন শক্তি: অণুর ভেতরে দুটি পরমাণুকে যে আকর্ষণ ধরে রাখে (যেমন O=O, H-Cl)। আন্তঃআণবিক শক্তি: সমযোজী যৌগের এক অণুকে আরেক অণুর সাথে যে আকর্ষণ ধরে রাখে (যেমন পানির অণুগুলোর মধ্যে)।'],
+  ['তাপোৎপাদী ও তাপহারী বিক্রিয়ার পার্থক্য লেখো।','তাপোৎপাদী: তাপ নির্গত হয়, H₁ > H₂, ΔH ঋণাত্মক, সমীকরণের ডানে + তাপ (উদাহরণ: মিথেন পোড়ানো, CaO + পানি)। তাপহারী: তাপ শোষিত হয়, H₁ < H₂, ΔH ধনাত্মক, বামে + তাপ (উদাহরণ: CaCO₃ ভাঙা, NH₄Cl পানিতে দ্রবীভূত হওয়া)।'],
+  ['ΔH কী? কীভাবে বের করা হয়?','বিক্রিয়ায় তাপ শক্তির পরিবর্তনকে ΔH বলে। অভ্যন্তরীণ শক্তি থেকে: ΔH = H₂ − H₁ (উৎপাদ − বিক্রিয়ক)। বন্ধন শক্তি থেকে: ΔH = B₁ − B₂ (ভাঙার শক্তি − গড়ার শক্তি)।'],
+  ['এসিড বৃষ্টি কীভাবে হয়? এর ক্ষতি কী?','জীবাশ্ম জ্বালানি (বিশেষ করে অবিশুদ্ধ) পুড়ে CO₂, SO₂, NO₂ হয়। এগুলো বৃষ্টির পানির সাথে মিশে H₂CO₃, H₂SO₄, HNO₃ তৈরি করে (যেমন 2SO₂ + O₂ → 2SO₃; SO₃ + H₂O → H₂SO₄)। ক্ষতি: গাছপালা মরে, জলাশয়ের পানি অম্লযুক্ত হয়ে মাছ ও জলজ প্রাণী টিকে থাকতে পারে না।'],
+  ['গ্রিনহাউস প্রভাব কী?','CO₂-সহ কিছু গ্যাস পৃথিবীর তাপ ধরে রেখে তাপমাত্রা বাড়ায়, একে গ্রিনহাউস প্রভাব বলে। এতে বৈশ্বিক উষ্ণায়ন হয়, মেরুর বরফ গলে সমুদ্রের পানি বাড়ে, বাংলাদেশসহ অনেক দেশের নিচু এলাকা ডুবে যেতে পারে।'],
+  ['জ্বালানির বিশুদ্ধতা গুরুত্বপূর্ণ কেন?','অবিশুদ্ধ জ্বালানিতে N, S, P-র যৌগ মিশে থাকে। পোড়ালে এদের অক্সাইড বাতাসে যায় ও এসিড বৃষ্টি করে। অক্সিজেন কম থাকলে বিষাক্ত CO তৈরি হয়। তাই জ্বালানি বিশুদ্ধ করে নেওয়া দরকার।'],
+  ['তড়িৎ বিশ্লেষ্য কী? উদাহরণ দাও।','যেসব পদার্থ কঠিন অবস্থায় বিদ্যুৎ পরিবহন করে না কিন্তু গলিত বা দ্রবীভূত অবস্থায় করে এবং রাসায়নিক পরিবর্তন ঘটায়। যেমন NaCl, CuSO₄, H₂SO₄, CH₃COOH।'],
+  ['অ্যানোড ও ক্যাথোড কী?','যে তড়িৎদ্বারে জারণ (ইলেকট্রন ত্যাগ) ঘটে সেটা অ্যানোড। যেখানে বিজারণ (ইলেকট্রন গ্রহণ) ঘটে সেটা ক্যাথোড। তড়িৎ বিশ্লেষ্য কোষে অ্যানোড (+), ক্যাথোড (−)। গ্যালভানিক কোষে অ্যানোড (−), ক্যাথোড (+)।'],
+  ['তড়িৎ বিশ্লেষ্য কোষ ও গ্যালভানিক কোষের পার্থক্য লেখো।','তড়িৎ বিশ্লেষ্য কোষে বিদ্যুৎ দিয়ে রাসায়নিক বিক্রিয়া ঘটানো হয়, অ্যানোড ধনাত্মক ও ক্যাথোড ঋণাত্মক, কাজ: মৌল/যৌগ উৎপাদন, ইলেকট্রোপ্লেটিং, ধাতু বিশোধন। গ্যালভানিক কোষে রাসায়নিক বিক্রিয়ায় বিদ্যুৎ উৎপন্ন হয়, অ্যানোড ঋণাত্মক ও ক্যাথোড ধনাত্মক, কাজ: ব্যাটারি তৈরি।'],
+  ['ইলেকট্রোপ্লেটিং করা হয় কেন?','লোহার মতো ধাতুতে মরিচা (ক্ষয়) রোধ করতে এবং গয়না ইত্যাদিকে উজ্জ্বল ও মসৃণ করতে। যেমন লোহার উপর দস্তা, নিকেল বা ক্রোমিয়ামের প্রলেপ।'],
+  ['ড্রাই সেলের গঠন ও বিক্রিয়া সংক্ষেপে লেখো।','দস্তার (Zn) কৌটা অ্যানোড, ভেতরে MnO₂, NH₄Cl, ZnCl₂ ও পাতিত পানির কাই, মাঝখানে কার্বন দণ্ড ক্যাথোড। অ্যানোড: Zn → Zn²⁺ + 2e⁻। ক্যাথোড: 2NH₄⁺ + 2MnO₂ + 2e⁻ → 2NH₃ + Mn₂O₃ + H₂O। রাসায়নিক শক্তি বিদ্যুৎ শক্তিতে বদলায়।'],
+  ['ফিশন ও ফিউশনের পার্থক্য কী?','ফিশন: বড় ভারী নিউক্লিয়াস ভেঙে ছোট নিউক্লিয়াস ও নিউট্রন তৈরি (²³⁵U + n → ¹⁴¹Ba + ⁹²Kr + 3n)। পারমাণবিক চুল্লিতে বিদ্যুৎ উৎপাদনে ব্যবহার হয়। ফিউশন: ছোট নিউক্লিয়াস জুড়ে বড় নিউক্লিয়াস (²H + ³H → ⁴He + n)। হাইড্রোজেন বোমায় ব্যবহার হয়। দুটোতেই প্রচুর শক্তি বের হয়।'],
+  ['নিউক্লিয়ার চেইন বিক্রিয়া কী?','ফিশনে বেরোনো নিউট্রন আরও ²³⁵U ভাঙে, তাতে আবার নিউট্রন বেরোয়। একবার শুরু হলে বাড়তি শক্তি ছাড়াই নিজে নিজে চলতে থাকে। পারমাণবিক চুল্লিতে একে নিয়ন্ত্রণ করে বিদ্যুৎ উৎপাদন করা হয়।']
+ ]},
+ {h:'গাণিতিক ও প্রয়োগ অনুশীলন',items:[
+  ['H₁ = ৯০ kJ/mol, H₂ = ৬৫ kJ/mol হলে ΔH কত? বিক্রিয়াটি কেমন?','ΔH = H₂ − H₁ = ৬৫ − ৯০ = <b>−২৫ kJ/mol</b>। ঋণাত্মক, তাই তাপোৎপাদী (২৫ kJ/mol তাপ নির্গত হয়)।'],
+  ['2H₂ + O₂ → 2H₂O বিক্রিয়ায় ΔH কত? (H-H = ৪৩৬, O=O = ৪৯৮, O-H = ৪৬৪ kJ/mol)','ভাঙে: ২ × ৪৩৬ + ৪৯৮ = ১৩৭০ kJ (B₁)। গড়ে: ৪ × ৪৬৪ = ১৮৫৬ kJ (B₂) (২টি H₂O-তে ৪টি O-H)। ΔH = ১৩৭০ − ১৮৫৬ = <b>−৪৮৬ kJ</b>, তাপোৎপাদী।'],
+  ['N₂ + 3H₂ → 2NH₃ বিক্রিয়ায় ΔH কত? (N≡N = ৯৪৬, H-H = ৪৩৬, N-H = ৩৯১)','ভাঙে: ৯৪৬ + ৩ × ৪৩৬ = ২২৫৪। গড়ে: ২টি NH₃-তে ৬টি N-H = ৬ × ৩৯১ = ২৩৪৬। ΔH = ২২৫৪ − ২৩৪৬ = <b>−৯২ kJ</b>।'],
+  ['২৫০ ক্যালরি কত জুল? ৫০০ জুল কত ক্যালরি?','১ Cal = ৪.১৮ J। ২৫০ Cal = ২৫০ × ৪.১৮ = <b>১০৪৫ J</b>। ৫০০ J = ৫০০ ÷ ৪.১৮ = <b>প্রায় ১১৯.৬ Cal</b>।'],
+  ['দ্রবণে Cu²⁺ ও H⁺ আছে। ক্যাথোডে কোনটি আগে চার্জমুক্ত হবে? কারণ দাও।','সারিতে ক্যাটায়ন: ... Pb²⁺, H⁺, Cu²⁺, Ag⁺ ...। Cu²⁺ সারিতে H⁺-এর নিচে, তাই <b>Cu²⁺ আগে</b> ইলেকট্রন গ্রহণ করে Cu হবে।'],
+  ['Cu|Cu²⁺ ও Ag|Ag⁺ দিয়ে গ্যালভানিক কোষ বানালে অ্যানোড, ক্যাথোড ও কোষ বিক্রিয়া লেখো।','Cu সারিতে উপরে, তাই <b>অ্যানোড</b>: Cu → Cu²⁺ + 2e⁻। Ag <b>ক্যাথোড</b>: 2Ag⁺ + 2e⁻ → 2Ag। কোষ বিক্রিয়া: Cu + 2Ag⁺ → Cu²⁺ + 2Ag।'],
+  ['চামচের উপর সিলভার প্রলেপের তড়িৎদ্বার ও বিক্রিয়া লেখো।','দ্রবণ AgNO₃। চামচ ক্যাথোড (ব্যাটারির −), সিলভার পাত অ্যানোড (+)। অ্যানোড: Ag → Ag⁺ + e⁻। ক্যাথোড: Ag⁺ + e⁻ → Ag (চামচে জমে)।']
+ ]}
+];
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+/* ---------- ল্যাব ৭: নিউক্লিয়ার ---------- */
+var N7={u:[],n:[],ba:[],fis:0,rod:0};
+function n7reset(){N7.u=[];N7.n=[];N7.ba=[];N7.fis=0;for(var j=0;j<4;j++)for(var i=0;i<6;i++)N7.u.push({x:60+i*50,y:50+j*55,a:1});n7text();}
+function n7text(){
+  var left=N7.u.filter(function(u){return u.a;}).length;
+  $('n7t').innerHTML='⚛ বিভাজিত ²³⁵U: <b>'+bn(N7.fis)+'</b> | অবশিষ্ট ²³⁵U: '+bn(left)+' | চলমান নিউট্রন: '+bn(N7.n.length)+'<br>'+(N7.n.length>0&&N7.fis>1?'<b>চেইন বিক্রিয়া চলছে!</b> প্রতি ফিশনে ৩টি করে নিউট্রন বেরোয়।':(N7.fis>0?'চেইন থেমে গেছে (নিউট্রন শেষ বা কন্ট্রোল রডে শোষিত)।':'একটি নিউট্রন ছুড়ে শুরু করো।'))+'<br><small>²³⁵U + ¹n → ¹⁴¹Ba + ⁹²Kr + 3 ¹n + প্রচুর শক্তি। এই সিমুলেশনের আকার ও সম্ভাব্যতা শুধু বোঝার জন্য।</small>';
+}
+$('n7go').onclick=function(){var r=Math.floor(Math.random()*4);N7.n.push({x:0,y:50+r*55+rnd(-12,12),vx:3,vy:rnd(-.3,.3)});};
+$('n7r').onclick=n7reset;
+$('n7rod').addEventListener('input',function(){N7.rod=+$('n7rod').value;$('n7rv').textContent=bn(N7.rod);});$('n7rv').textContent=bn(0);
+var N7T=0;
+function n7draw(){
+  var x=ctxOf('n7c');x.clearRect(0,0,380,260);N7T++;
+  x.fillStyle='#f3f6f8';x.fillRect(0,0,380,260);
+  var rb=20+N7.rod*2.2,rods=[85,185,285];
+  N7.u.forEach(function(u){if(u.a){circ(x,0,u.x,u.y,15,'#ffe27a','#b8941c',2);txt(x,'U',u.x,u.y,'bold 11px Hind Siliguri',NAVY);}});
+  N7.ba.forEach(function(b){b.l--;b.x+=b.vx;b.y+=b.vy;x.globalAlpha=clamp(b.l/80,0,1);circ(x,0,b.x,b.y,8,b.k?'#9ccbea':'#f4a6c0','#555',1);txt(x,b.k?'Ba':'Kr',b.x,b.y,'bold 7px Hind Siliguri',NAVY);x.globalAlpha=1;});
+  N7.ba=N7.ba.filter(function(b){return b.l>0;});
+  x.fillStyle='#555';rods.forEach(function(r){x.fillRect(r-4,10,8,rb);});
+  var ch=false;
+  N7.n.forEach(function(q){
+    q.x+=q.vx;q.y+=q.vy;
+    rods.forEach(function(r){if(!q.dead&&Math.abs(q.x-r)<4&&q.y<rb+10&&q.y>10)q.dead=true;});
+    if(!q.dead)N7.u.forEach(function(u){if(!q.dead&&u.a&&Math.hypot(q.x-u.x,q.y-u.y)<24){u.a=0;q.dead=true;N7.fis++;ch=true;
+      N7.ba.push({x:u.x,y:u.y,vx:-.5,vy:-.4,l:90,k:1});N7.ba.push({x:u.x,y:u.y,vx:.5,vy:.4,l:90,k:0});
+      for(var k=0;k<3;k++){var a=rnd(0,6.28);N7.n.push({x:u.x+Math.cos(a)*16,y:u.y+Math.sin(a)*16,vx:Math.cos(a)*2,vy:Math.sin(a)*2});}}});
+    if(!q.dead)circ(x,0,q.x,q.y,4,'#2a9d8f');
+  });
+  N7.n=N7.n.filter(function(q){return !q.dead&&q.x>-5&&q.x<385&&q.y>-5&&q.y<265;});
+  if(ch||N7T%20===0)n7text();
+  x.fillStyle='#ddd';x.fillRect(20,246,340,8);x.fillStyle=RED;x.fillRect(20,246,340*N7.fis/24,8);txt(x,'তাপ',12,250,'10px Hind Siliguri',NAVY);
+}
+n7reset();
+var N7F={p:0,run:false};
+$('n7fu').onclick=function(){N7F.p=0;N7F.run=true;};
+function n7fdraw(){
+  var x=ctxOf('n7d');x.clearRect(0,0,380,150);
+  if(N7F.run){N7F.p=Math.min(1,N7F.p+0.008);if(N7F.p>=1)N7F.run=false;}
+  var p=N7F.p;
+  function cl(cx,cy,list){list.forEach(function(k,i){var a=i*2.1,ox=Math.cos(a)*(list.length>1?8:0),oy=Math.sin(a)*(list.length>1?8:0);circ(x,0,cx+ox,cy+oy,8,k==='p'?'#f4a6c0':'#9fd8a6','#555',1);});}
+  if(p<.45){var u=p/.45;cl(lerp(60,180,u),75,['p','n']);cl(lerp(320,205,u),75,['p','n','n']);txt(x,'²H',lerp(60,180,u),105,'bold 12px Hind Siliguri',NAVY);txt(x,'³H',lerp(320,205,u),105,'bold 12px Hind Siliguri',NAVY);}
+  else{var v=(p-.45)/.55;if(v<.12){x.fillStyle='rgba(255,230,100,'+(1-v/.12)+')';circ(x,0,190,75,40,x.fillStyle);}
+    cl(190,75,['p','p','n','n']);txt(x,'⁴He',190,105,'bold 12px Hind Siliguri',NAVY);cl(lerp(190,350,v),lerp(75,20,v),['n']);txt(x,'n',lerp(190,350,v),lerp(75,20,v)+14,'bold 11px Hind Siliguri',NAVY);
+    if(v>.3)txt(x,'⚡ প্রচুর শক্তি',190,135,'bold 14px Hind Siliguri',RED);}
+}
+var N7S=['ফিশন চেইন বিক্রিয়া (নিয়ন্ত্রিত)','তাপ','বাষ্প তৈরি','বাষ্পে টারবাইন ঘোরে','বিদ্যুৎ'];
+function n7flow(){$('n7fl').innerHTML=N7S.map(function(s,i){return (i?'<i>→</i>':'')+'<span id="nf'+i+'">'+s+'</span>';}).join('');}
+n7flow();
+$('n7pl').onclick=function(){n7flow();N7S.forEach(function(s,i){setTimeout(function(){$('nf'+i).classList.add('show');},i*700);});};
+function frame(){h1draw();b2draw();f3draw();z4draw();p5draw();g6draw();n7draw();n7fdraw();requestAnimationFrame(frame);}
+frame();
+
+</script>
+</body>
+</html>
