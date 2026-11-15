@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>খনিজ সম্পদ: ধাতু-অধাতু (অধ্যায় ১০) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+</style>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#chemistry">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">🧪 রসায়ন &rsaquo; দশম অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">⛏️ খনিজ সম্পদ: ধাতু-অধাতু (Mineral Resources)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🪨 ল্যাব ১</a><a href="#lab2">🧲 ল্যাব ২</a><a href="#lab3">🔥 ল্যাব ৩</a><a href="#lab4">📶 ল্যাব ৪</a><a href="#lab5">⚡ ল্যাব ৫</a><a href="#lab6">🏭 ল্যাব ৬</a><a href="#lab7">🔩 ল্যাব ৭</a><a href="#lab8">🦠 ল্যাব ৮</a><a href="#lab9">🧪 ল্যাব ৯</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> খনিজ সম্পদ বলতে; শিলা, খনিজ ও আকরিক আলাদা করতে; ধাতু নিষ্কাশনের ৫টি ধাপ বলতে; সংকর ধাতু ও ক্ষয় (মরিচা) ব্যাখ্যা করতে; সালফার ও সালফিউরিক এসিড প্রস্তুতি ও ধর্ম বলতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের (১০ম অধ্যায়ের) ক্রম মেনে সহজ ভাষায় লেখা। পরীক্ষায় লিখতে হলে বইয়ের ভাষা ও শিক্ষকের নির্দেশ মেনে লিখবে।</div>
+
+    <h3>১০.১ খনিজ সম্পদ ⭐⭐⭐</h3>
+    <ul>
+      <li>প্রয়োজনীয় ধাতু, অধাতু বা তাদের যৌগ প্রকৃতিতে মাটি, পানি বা বায়ুমণ্ডল থেকে সংগ্রহ করা হয়। যেখান থেকে সংগ্রহ করা হয় তাকে <b>খনিজ</b> বলে।</li>
+      <li>খনিজ <b>কঠিন</b> (লোহা, তামা), <b>তরল</b> (পেট্রোলিয়াম) বা <b>গ্যাসীয়</b> (প্রাকৃতিক গ্যাস) হতে পারে। এই সবকিছুকে একসাথে <b>খনিজ সম্পদ</b> বলে।</li>
+      <li><b>ভূত্বকের উপাদান:</b> অক্সিজেন ৪৬%, সিলিকন ২৭%, অ্যালুমিনিয়াম ৮.৪%, আয়রন ৫%, ক্যালসিয়াম ৪%, সোডিয়াম ৩%, পটাশিয়াম ৩%, ম্যাগনেসিয়াম ২%, অন্যান্য ২%।</li>
+    </ul>
+    <p><b>শিলা:</b> বিভিন্ন খনিজ মিশে শক্ত কণা তৈরি হয়, কণাগুলো একত্র হয়ে যা তৈরি হয় তাই শিলা। তিন প্রকার:</p>
+    <table class="t">
+      <tr><th>প্রকার</th><th>কীভাবে তৈরি</th><th>উদাহরণ (বইয়ের)</th></tr>
+      <tr><td>আগ্নেয় শিলা</td><td>আগ্নেয়গিরির গলিত ম্যাগমা ঠাণ্ডা হয়ে জমে</td><td>গ্রানাইট</td></tr>
+      <tr><td>পাললিক শিলা</td><td>বৃষ্টি, বাতাস, ঝড়ে ধুয়ে আসা কাদামাটি, বালি পলি হয়ে স্তরে স্তরে জমে</td><td>বেলেপাথর</td></tr>
+      <tr><td>রূপান্তরিত শিলা</td><td>আগ্নেয় বা পাললিক শিলা তাপ ও চাপে নতুন রূপ নেয়</td><td>কয়লা (বইয়ের মতে)</td></tr>
+    </table>
+    <p><b>খনিজ ও আকরিক:</b></p>
+    <ul>
+      <li><b>খনিজ:</b> মাটির ওপরে বা তলদেশে যেসব পদার্থ থেকে প্রয়োজনীয় ধাতু বা অধাতু সংগ্রহ করা হয়। যে অঞ্চল থেকে তোলা হয় তাকে <b>খনি</b> বলে।</li>
+      <li><b>আকরিক:</b> যে খনিজ থেকে <b>লাভজনকভাবে</b> ধাতু বা অধাতু নিষ্কাশন করা যায়। যেমন গ্যালেনা (PbS) থেকে লেড, বক্সাইট থেকে অ্যালুমিনিয়াম, আয়রন পাইরাইটস (FeS₂) থেকে আয়রন।</li>
+      <li>কাদামাটি থেকে লাভজনকভাবে অ্যালুমিনিয়াম পাওয়া যায় না, তাই কাদামাটি শুধু খনিজ, আকরিক নয়।</li>
+    </ul>
+    <div class="key">⭐ <b>মনে রাখো:</b> আকরিক হলে সেটা অবশ্যই খনিজ, কিন্তু খনিজ হলেই আকরিক নাও হতে পারে।</div>
+    <ul><li><b>অবস্থান:</b> সব খনিজ মাটির নিচে নয়। সালফার ভূগর্ভে। সাদা মাটি (কেউলিন) নেত্রকোনার বিজয়পুরে ভূপৃষ্ঠে। জিরকন (জিরকোনিয়াম), হেমাটাইট (লোহা), বক্সাইট (অ্যালুমিনিয়াম) অনেক জায়গায় ভূপৃষ্ঠে। হ্যালোজেনের খনিজ সমুদ্রের পানিতে।</li></ul>
+
+    <h3>১০.২ ধাতু নিষ্কাশন ⭐⭐⭐</h3>
+    <ul>
+      <li>যে পদ্ধতিতে আকরিক থেকে ধাতু সংগ্রহ করা হয় তাকে <b>ধাতু নিষ্কাশন</b> বলে। সব ধাতুর ধর্ম আলাদা, তাই একটাই পদ্ধতি নেই।</li>
+      <li>সোনা, প্ল্যাটিনামের মতো অসক্রিয় ধাতু বিশুদ্ধ অবস্থায়ও পাওয়া যায়। সক্রিয় ধাতু অক্সাইড, সালফাইড, নাইট্রেট, কার্বনেট ইত্যাদি যৌগ হিসেবে পাওয়া যায়।</li>
+    </ul>
+    <div class="key"><b>৫টি ধাপ:</b> (i) চূর্ণ-বিচূর্ণ করা → (ii) ঘনীকরণ → (iii) অক্সাইডে রূপান্তর → (iv) অক্সাইডকে ধাতুতে বিজারণ → (v) ধাতু বিশুদ্ধিকরণ। (প্রতিটি ধাতুর জন্য সব ধাপ লাগে না।)</div>
+    <p><b>(i) চূর্ণ-বিচূর্ণ:</b> বড় শিলাখণ্ড আগে <b>জো ক্রাশারে</b> ছোট টুকরা, তারপর <b>বল ক্রাশারে</b> মিহি পাউডার করা হয়।</p>
+    <p><b>(ii) ঘনীকরণ:</b> আকরিকের সাথে মিশে থাকা অপদ্রব্যকে <b>খনিজমল (গ্যাং)</b> বলে (যেমন বক্সাইটের সাথে বালি)। খনিজমল সরিয়ে বিশুদ্ধ আকরিক পাওয়ার পদ্ধতি ঘনীকরণ।</p>
+    <table class="t">
+      <tr><th>পদ্ধতি</th><th>কোন আকরিক</th><th>কীভাবে</th></tr>
+      <tr><td>হাইড্রোলাইটিক</td><td>অক্সাইড আকরিক</td><td>আকরিক ভারী, খনিজমল হালকা। কম্পমান খাঁজকাটা টেবিলে আকরিক ঢেলে পানি প্রবাহিত করলে ভারী আকরিক খাঁজে থাকে, হালকা খনিজমল ধুয়ে যায়।</td></tr>
+      <tr><td>ফেনা ভাসমান</td><td>সালফাইড আকরিক</td><td>ট্যাংকে আকরিক, পানি ও অল্প তেল দিয়ে বায়ুপ্রবাহ দিলে সালফাইড আকরিক তেলে দ্রবীভূত হয়ে ফেনায় ভেসে ওঠে। খনিজমল তলায় থাকে।</td></tr>
+      <tr><td>চৌম্বকীয় পৃথকীকরণ</td><td>চৌম্বক আকরিক (ক্রোমাইট FeO·Cr₂O₃, রুটাইল TiO₂)</td><td>ঘূর্ণায়মান বেল্টে চুম্বকের টানে চৌম্বক অংশ কাছে জমে, অচৌম্বক অংশ দূরে পড়ে।</td></tr>
+      <tr><td>রাসায়নিক</td><td>যেখানে একটি জিনিস বিক্রিয়া করে অন্যটি করে না। যেমন বক্সাইট</td><td>বক্সাইট + NaOH (উত্তপ্ত) → সোডিয়াম অ্যালুমিনেট দ্রবণ</td></tr>
+    </table>
+    <p class="eq">Al₂O₃·2H₂O + 2NaOH →(Δ) 2NaAlO₂ + 3H₂O<br>NaAlO₂ + 2H₂O → Al(OH)₃↓ + NaOH<br>2Al(OH)₃ →(১১০০°C) Al₂O₃ + 3H₂O</p>
+    <p><b>তেল ফেনা ভাসমান পরীক্ষা (বইয়ের):</b> টেস্টটিউবে বালি ও খনিজ (চেলকোপাইরাইট/গ্যালেনা/হেমাটাইট গুঁড়ো), সাবান, কয়েক ফোঁটা কেরোসিন দিয়ে ঝাঁকালে খনিজ ফেনায় ওপরে ভাসে, বালি তলায় থাকে।</p>
+    <p><b>(iii) অক্সাইডে রূপান্তর:</b></p>
+    <ul>
+      <li><b>ভস্মীকরণ (Calcination):</b> আকরিককে গলনাঙ্কের কম তাপমাত্রায় <b>বাতাসের অনুপস্থিতিতে</b> উত্তপ্ত করা। কার্বনেট, বাইকার্বনেট, হাইড্রোক্সাইড থেকে CO₂ বা পানি বেরিয়ে যায়।<br>Fe₂O₃·3H₂O →(Δ) Fe₂O₃ + 3H₂O; ZnCO₃ → ZnO + CO₂; CaCO₃ → CaO + CO₂</li>
+      <li><b>তাপজারণ (Roasting):</b> সাধারণত সালফাইড আকরিককে গলনাঙ্কের কম তাপমাত্রায় <b>বাতাসের উপস্থিতিতে</b> উত্তপ্ত করা। সালফার, ফসফরাস, আর্সেনিক উদ্বায়ী অক্সাইড হয়ে বেরিয়ে যায়।<br>2PbS + 3O₂ → 2PbO + 2SO₂; 2ZnS + 3O₂ → 2ZnO + 2SO₂</li>
+    </ul>
+    <p><b>(iv) বিজারণ:</b> ধাতুর সক্রিয়তা অনুযায়ী পদ্ধতি বদলায়:</p>
+    <table class="t">
+      <tr><th>সক্রিয়তা সিরিজে</th><th>ধাতু</th><th>পদ্ধতি</th></tr>
+      <tr><td>বেশি সক্রিয় (ওপরে)</td><td>K, Na, Ca, Mg, Al</td><td><b>তড়িৎ বিশ্লেষণ</b></td></tr>
+      <tr><td>মধ্যম সক্রিয়</td><td>Zn, Fe, Pb</td><td><b>কার্বন বিজারণ</b></td></tr>
+      <tr><td>কম সক্রিয়</td><td>Cu, Hg, Ag</td><td><b>স্ববিজারণ</b></td></tr>
+      <tr><td>প্রায় অসক্রিয় (একেবারে নিচে)</td><td>Pt, Au</td><td>বিশুদ্ধ অবস্থায় পাওয়া যায়</td></tr>
+    </table>
+    <ul>
+      <li><b>তড়িৎ বিশ্লেষণে Al:</b> Al₂O₃ গলনাঙ্ক ২০৫০°C, অনেক বেশি। <b>ক্রায়োলাইট (Na₃AlF₆)</b> মেশালে ৮০০–১০০০°C-এ গলে। গ্রাফাইট-আস্তরণযুক্ত স্টিলের পাত্র (ব্যাটারির ঋণাত্মক প্রান্তে, ক্যাথোড) ও কার্বন দণ্ড (ধনাত্মক প্রান্তে, অ্যানোড)।<br>Al₂O₃ → 2Al³⁺ + 3O²⁻<br>অ্যানোড: 6O²⁻ → 3O₂ + 12e⁻ &nbsp;|&nbsp; ক্যাথোড: 2Al³⁺ + 6e⁻ → 2Al</li>
+      <li><b>কার্বন বিজারণ:</b> ধাতব অক্সাইডকে কার্বনসহ গরম করা। ZnO + C → Zn + CO; FeO + C → Fe + CO; PbO + C → Pb + CO; CuO + C → Cu + CO</li>
+      <li><b>স্ববিজারণ:</b> কোনো বিজারক ছাড়া শুধু উত্তপ্ত করেই। যেমন মার্কারি: HgS + O₂ → Hg + SO₂</li>
+    </ul>
+    <p><b>(v) ধাতু বিশুদ্ধিকরণ:</b></p>
+    <ul>
+      <li><b>বিগালক:</b> খনিজমল সরাতে যে পদার্থ যোগ করা হয়। খনিজমল ক্ষারীয় হলে <b>এসিডিক বিগালক (SiO₂)</b>, এসিডিক হলে <b>ক্ষারীয় বিগালক (CaO)</b>। বিগালক + খনিজমল = <b>ধাতুমল</b> (স্ল্যাগ), যা গলিত ধাতুর ওপরে ভাসে, আলাদা করা হয়।</li>
+      <li><b>তড়িৎ বিশোধন:</b> অবিশুদ্ধ ধাতু <b>অ্যানোড</b> (ব্যাটারির +), বিশুদ্ধ ধাতুর পাত <b>ক্যাথোড</b> (−), তড়িৎ বিশ্লেষ্য ঐ ধাতুর লবণের দ্রবণ।</li>
+      <li><b>কপার:</b> বিজারণে পাওয়া কপার ৯৮% বিশুদ্ধ। CuSO₄ দ্রবণে তড়িৎ বিশোধনে ৯৯.৯% হয়। অ্যানোড: Cu → Cu²⁺ + 2e⁻ (জারণ)। ক্যাথোড: Cu²⁺ + 2e⁻ → Cu (বিজারণ)। অবিশুদ্ধ দণ্ড মোটা, বিশুদ্ধ দণ্ড পাতলা।</li>
+    </ul>
+    <h3>আয়রন নিষ্কাশন (বাত্যা চুল্লি) ⭐⭐</h3>
+    <ul>
+      <li>লোহার গুরুত্বপূর্ণ আকরিক <b>হেমাটাইট Fe₂O₃</b>। তিন ধাপ: গাঁটীকরণ (গাঢ় করা), ভস্মীকরণ/তাপজারণ, বিগলন (বাত্যাচুল্লিতে)।</li>
+      <li>চুল্লিতে ওপর থেকে আকরিক, কোক (কার্বন) ও চুনাপাথর (CaCO₃) দেওয়া হয়, নিচ থেকে গরম বায়ু। নিচে গলিত আয়রন ও ধাতুমল আলাদা জমে।</li>
+      <li>বিক্রিয়া: Fe₂O₃ + 3C → 2Fe + 3CO; CaCO₃ → CaO + CO₂; <b>CaO + SiO₂ → CaSiO₃ (ধাতুমল)</b>। (আকরিকে খনিজমল SiO₂ থাকে।)</li>
+    </ul>
+
+    <h3>১০.৩ সংকর ধাতু ⭐⭐⭐</h3>
+    <ul>
+      <li>গলিত ধাতুর মধ্যে অন্য ধাতু বা অধাতু মিশিয়ে ঠাণ্ডা করলে যে কঠিন পদার্থ পাওয়া যায় তা <b>সংকর ধাতু</b>। সাধারণত ধাতুর চেয়ে বেশি উপযোগী।</li>
+      <li>তামা নরম, তাই প্রাচীনকালে তামার সাথে টিন মিশিয়ে <b>ব্রোঞ্জ</b> বানানো হয়েছিল (ব্রোঞ্জ যুগ: খ্রিস্টপূর্ব ৩০০০–১০০০)।</li>
+      <li>প্রধান ধাতুর নামে সংকর ধাতুর নাম: স্টিল = লোহার সংকর, কাঁসা ও পিতল = কপারের সংকর।</li>
+    </ul>
+    <table class="t">
+      <tr><th>সংকর ধাতু</th><th>উপাদান</th><th>ব্যবহার</th></tr>
+      <tr><td>স্টিল</td><td>লোহা ৯৯%, কার্বন ১%</td><td>রেলের চাকা, ইঞ্জিন, জাহাজ, ছুরি, কাঁচি, কৃষি যন্ত্রপাতি</td></tr>
+      <tr><td>স্টেইনলেস স্টিল</td><td>লোহা ৭৪%, ক্রোমিয়াম ১৮%, নিকেল ৮%</td><td>অস্ত্রোপচারের যন্ত্র, রান্নার সিঙ্ক, রসায়ন শিল্পের পাত্র</td></tr>
+      <tr><td>পিতল (ব্রাস)</td><td>কপার ৬৫%, জিংক ৩৫%</td><td>অলংকার, বৈদ্যুতিক সুইচ, দরজার হাতল</td></tr>
+      <tr><td>কাঁসা (ব্রোঞ্জ)</td><td>কপার ৯০%, টিন ১০%</td><td>থালা, গ্লাস, যন্ত্রাংশ</td></tr>
+      <tr><td>ডুরালুমিন</td><td>অ্যালুমিনিয়াম ৯৫%, কপার ৪%, Mg, Mn ও Fe ১%</td><td>উড়োজাহাজের বডি</td></tr>
+      <tr><td>২৪ ক্যারেট স্বর্ণ</td><td>স্বর্ণ ১০০%</td><td>ডেন্টিস্ট্রি, মুদ্রা, ইলেকট্রনিক সংযোগ</td></tr>
+      <tr><td>২২ ক্যারেট স্বর্ণ</td><td>স্বর্ণ ৯১.৬৭%, কপার ও অন্য ধাতু ৮.৩৩%</td><td>অলংকার</td></tr>
+      <tr><td>২১ ক্যারেট স্বর্ণ</td><td>স্বর্ণ ৮৭.৫%, কপার ও অন্য ধাতু ১২.৫%</td><td>অলংকার</td></tr>
+    </table>
+    <p>ক্যারেট ÷ ২৪ = স্বর্ণের ভগ্নাংশ। (২২ ÷ ২৪ = ৯১.৬৭%, ২১ ÷ ২৪ = ৮৭.৫%)</p>
+
+    <h3>১০.৪ ধাতুর ক্ষয় ⭐⭐⭐</h3>
+    <ul>
+      <li>লোহা বাতাসে থাকলে লালচে বাদামি <b>মরিচা</b> পড়ে। মরিচা = আর্দ্র ফেরিক অক্সাইড (Fe₂O₃·nH₂O)।</li>
+      <li>কপার, পিতল, কাঁসায় কালো/বাদামি/সবুজ <b>তাম্রমল</b> পড়ে। কোনো কোনো তাম্রমলে কিউপ্রাস অক্সাইড (Cu₂O), কোনোটিতে কিউপ্রাস সালফাইড (Cu₂S) থাকে। সব জায়গায় একই পদার্থ তৈরি হয় না, তাই তাম্রমলকে একটি নির্দিষ্ট সংকেতে লেখা যায় না।</li>
+      <li>বিশুদ্ধ ধাতু বা সংকর ধাতু বাতাসে থাকলে ভিন্ন বর্ণের নতুন পদার্থ তৈরি হওয়ার প্রক্রিয়াই <b>ধাতুর ক্ষয়</b>।</li>
+      <li>মরিচা পড়া একটি <b>জারণ-বিজারণ</b> বিক্রিয়া। মরিচার জন্য <b>অক্সিজেন ও পানি</b> দুটোই লাগে।</li>
+    </ul>
+    <p class="eq">H₂O → H⁺ + OH⁻<br>2Fe → 2Fe²⁺ + 4e⁻ (জারণ)<br>O₂ + 4H⁺ + 4e⁻ → 2H₂O (বিজারণ)<br>4Fe²⁺ + 4H⁺ + O₂ → 4Fe³⁺ + 2H₂O<br>Fe³⁺ + 3OH⁻ → Fe(OH)₃<br>2Fe(OH)₃ → Fe₂O₃·3H₂O (মরিচা)</p>
+    <p><b>অনুসন্ধান (মরিচা পরীক্ষা):</b> চারটি টেস্টটিউবে লোহার পেরেক: (১) বায়ু + অনার্দ্র CaCl₂ (শুকনো), (২) ফুটানো পানি (অক্সিজেন নেই), (৩) ফুটানো পানি + ওপরে তেলের স্তর, (৪) ঠাণ্ডা পানি (দ্রবীভূত অক্সিজেনসহ)। এক সপ্তাহ পর <b>শুধু ৪ নম্বরে</b> বেশি মরিচা পড়ে।</p>
+    <p><b>ক্ষয়রোধের উপায়:</b> (i) রং করা, (ii) ইলেকট্রোপ্লেটিং, (iii) গ্যালভানাইজিং। বইয়ের মতে বেশি সক্রিয় ধাতুকে বাঁচাতে তার ওপর কম সক্রিয় ধাতুর প্রলেপ দেওয়া হয়।</p>
+    <div class="warn">ℹ️ <b>অতিরিক্ত তথ্য (বইয়ে নেই):</b> জিংক কিন্তু লোহার চেয়ে বেশি সক্রিয়। গ্যালভানাইজিংয়ে জিংক নিজে আগে ক্ষয় হয়ে লোহাকে বাঁচায়। তাই পরীক্ষায় বইয়ের বাক্যটি বইয়ের মতোই লিখো, আর শিক্ষককে জিজ্ঞেস করে নিও।</div>
+    <ul>
+      <li><b>ইলেকট্রোপ্লেটিং:</b> প্রলেপ দেওয়া ধাতু ব্যাটারির +, বস্তু (যেমন লোহা) ব্যাটারির −। CuSO₄ দ্রবণে: Cu → Cu²⁺ + 2e⁻ ও Cu²⁺ + 2e⁻ → Cu (লোহায় লাগে)।</li>
+      <li><b>গ্যালভানাইজিং:</b> যেকোনো ধাতুর ওপর জিংকের প্রলেপ। তড়িৎ বিশ্লেষণ লাগে না।</li>
+    </ul>
+    <p><b>পুনঃপ্রক্রিয়াজাতকরণ:</b> পরিত্যক্ত ধাতু থেকে আবার ব্যবহারযোগ্য ধাতু বানানো। যেমন আমেরিকায় ব্যবহৃত কপারের প্রায় ২১% এবং ইউরোপে ব্যবহৃত অ্যালুমিনিয়ামের ৬০% পুনঃপ্রক্রিয়াজাত।</p>
+
+    <h3>১০.৫ খনিজ অধাতু: সালফার ⭐⭐⭐</h3>
+    <ul>
+      <li>সালফার হলুদ বর্ণের পদার্থ, ভূগর্ভের অনেক নিচে থাকে। <b>ফ্রাশ (Frasch) পদ্ধতিতে</b> উত্তোলন করা হয়।</li>
+      <li>সালফার ১১৫°C-এ গলে। খনিতে তিনটি <b>এককেন্দ্রিক পাইপ</b> ঢোকানো হয়। বাইরের পাইপ দিয়ে <b>সুপার হিটেড ওয়াটার</b> (১০০°C-এর বেশি কিন্তু ৩৭৪°C পর্যন্ত গরম, চাপে তরল) যায়, তাতে সালফার গলে। সবচেয়ে ভেতরের পাইপ দিয়ে ২০–২২ বায়ুমণ্ডল চাপের <b>বাতাস</b> দেওয়া হয়। গলিত সালফার মাঝের পাইপ দিয়ে ওপরে উঠে আসে।</li>
+      <li><b>সালফারের ব্যবহার:</b> সালফিউরিক এসিড প্রস্তুতি, রাবারের ভলকানাইজিং (রাবার টেকসই করা), সালফানাইড (ওষুধ, ব্যাকটেরিয়া ধ্বংস করে)।</li>
+    </ul>
+    <p><b>সালফার ডাই-অক্সাইড:</b> S + O₂ → SO₂। বিষাক্ত, ঝাঁজালো গন্ধ, চোখ জ্বালা করে। কয়লা বা পেট্রোলিয়ামে সালফার থাকলে পোড়ালে SO₂ হয়। বৃষ্টিতে SO₂ + H₂O → H₂SO₃ (সালফিউরাস এসিড) হয়ে <b>এসিড বৃষ্টি</b> ঘটায়।</p>
+    <p><b>সালফিউরিক এসিড (রাসায়নিক দ্রব্যের রাজা):</b> সবচেয়ে বেশি ব্যবহৃত বলে। শিল্পে <b>স্পর্শ পদ্ধতিতে</b> তৈরি।</p>
+    <table class="t">
+      <tr><th>ধাপ</th><th>কী ঘটে</th><th>সমীকরণ</th></tr>
+      <tr><td>১</td><td>চুল্লিতে সালফার ও শুষ্ক বায়ু</td><td>S + O₂ → SO₂</td></tr>
+      <tr><td>২</td><td>SO₂ ও O₂ ৪৫০–৫৫০°C তাপমাত্রায় ভ্যানাডিয়াম পেন্টা-অক্সাইড (V₂O₅) প্রভাবকের ওপর দিয়ে</td><td>2SO₂ + O₂ → 2SO₃</td></tr>
+      <tr><td>৩</td><td>SO₃ সরাসরি পানিতে নয়, <b>গাঢ় H₂SO₄-এ শোষণ</b> করে অলিয়াম (ধূমায়মান H₂SO₄) বানানো হয়, তারপর পানি মিশানো হয়</td><td>H₂SO₄ + SO₃ → H₂S₂O₇<br>H₂S₂O₇ + H₂O → 2H₂SO₄</td></tr>
+    </table>
+    <p><small>কেন সরাসরি নয়? SO₃ + H₂O থেকে বাষ্পীয় H₂SO₄ হয়, যা ঘন কুয়াশা বানায়। এতে কাজ করা কঠিন, আর বাষ্পীয় এসিডকে ঘনীভূত করে তরল করাও কঠিন।</small></p>
+    <p><b>H₂SO₄-এর ধর্ম:</b></p>
+    <ul>
+      <li><b>এসিড ধর্ম:</b> ক্ষারের সাথে লবণ ও পানি। H₂SO₄ + Ca(OH)₂ → CaSO₄ + 2H₂O।</li>
+      <li><b>জারণ ধর্ম:</b> শুধু <b>গাঢ়</b> H₂SO₄-এর আছে (লঘুর নেই)। গাঢ় এসিড কপারকে জারিত করে নিজে বিজারিত হয়: <b>2H₂SO₄(গাঢ়) + Cu → CuSO₄ + SO₂ + 2H₂O</b>।</li>
+      <li><b>নিরুদন ধর্ম:</b> পানি শোষণের ধর্ম। গাঢ় H₂SO₄ চিনি (C₁₂H₂₂O₁₁) থেকে পানি শোষণ করে কালো কার্বন রেখে যায়: <b>C₁₂H₂₂O₁₁ + H₂SO₄ → 12C + H₂SO₄·11H₂O</b>। লঘুর নিরুদন ধর্ম নেই।</li>
+      <li><b>লঘুকরণ:</b> পানিতে <b>ফোঁটায় ফোঁটায়</b> এসিড মেশাতে হয়, কারণ হাইড্রেশনের তাপ অত্যধিক।</li>
+    </ul>
+    <p><b>বইয়ের একক কাজ:</b> (১) চুনের পানিতে লঘু H₂SO₄ দিলে ঘোলা (CaSO₄) হয়, এসিডধর্ম। (২) KI-তে ঘন H₂SO₄ দিলে আয়োডিন মুক্ত হয়, জারণধর্ম। (৩) চিনিতে ঘন H₂SO₄ দিলে কালো কার্বন, নিরুদন ধর্ম।</p>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🪨 ল্যাব ১: ভূত্বক, শিলা, খনিজ ও আকরিক</h2>
+    <div class="say">👉 পাই চার্টের টুকরায় ক্লিক করে ভূত্বকের উপাদান দেখো। নিচে শিলার তিন প্রকার বাছো। তারপর খেলায় আকরিক-খনিজ-শিলা চেনো।</div>
+    <div class="row">
+      <div><canvas id="e1c" class="w" width="380" height="260"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="e1t"></div></div>
+    </div>
+    <div class="pills" id="e1p"></div>
+    <h3>🎮 কোনটা কী?</h3>
+    <div class="tlinfo" id="e1q"></div><div class="cls" id="e1o"></div><div class="fb" id="e1f"></div><small id="e1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🧲 ল্যাব ২: আকরিকের ঘনীকরণ</h2>
+    <div class="say">👉 একটি পদ্ধতি বেছে "চালু করো" চাপো। সোনালি/কালো কণা আকরিক, হালকা ধূসর কণা খনিজমল (বালি)। কোন পদ্ধতিতে কীভাবে আলাদা হয় দেখো।</div>
+    <div class="ctl"><label>পদ্ধতি:</label><select id="c2s"><option value="0">হাইড্রোলাইটিক (পানির স্রোত)</option><option value="1">ফেনা ভাসমান (তেল ও বাতাস)</option><option value="2">চৌম্বকীয় পৃথকীকরণ</option></select><button class="btn" id="c2go">▶ চালু করো</button><button class="btn alt" id="c2rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="c2c" class="w" width="380" height="290"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="c2t"></div></div>
+    </div>
+    <h3>🎮 কোন পদ্ধতি?</h3>
+    <div class="tlinfo" id="c2q"></div><div class="cls" id="c2o"></div><div class="fb" id="c2f"></div><small id="c2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🔥 ল্যাব ৩: ভস্মীকরণ ও তাপজারণ</h2>
+    <div class="say">👉 একটি আকরিক বেছে "তাপ দাও" চাপো। বাতাস ঢোকে কিনা আর কী বেরোয় লক্ষ করো। বাতাসের অনুপস্থিতিতে হলে ভস্মীকরণ, উপস্থিতিতে হলে তাপজারণ।</div>
+    <div class="ctl"><label>আকরিক:</label><select id="h3s"></select><button class="btn" id="h3go">🔥 তাপ দাও</button><button class="btn alt" id="h3rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="h3c" class="w" width="380" height="260"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="h3t"></div></div>
+    </div>
+    <h3>🎮 ভস্মীকরণ না তাপজারণ?</h3>
+    <div class="tlinfo" id="h3q"></div><div class="cls" id="h3o"></div><div class="fb" id="h3f"></div><small id="h3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>📶 ল্যাব ৪: সক্রিয়তা সিরিজ ও বিজারণ পদ্ধতি</h2>
+    <div class="say">👉 সিঁড়ির যেকোনো ধাতুতে ক্লিক করো। ধাতুটি কতটা সক্রিয় আর কোন পদ্ধতিতে নিষ্কাশন হয় দেখো। "ধাতু অক্সাইড + C" বোতামে কার্বন বিজারণ চালাও।</div>
+    <div class="row">
+      <div><canvas id="m4c" class="w" width="380" height="330"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="m4t"></div><div class="ctl"><button class="btn" id="m4c1">ZnO + C</button><button class="btn" id="m4c2">FeO + C</button><button class="btn" id="m4c3">PbO + C</button></div></div>
+    </div>
+    <h3>🎮 কোন পদ্ধতিতে নিষ্কাশন?</h3>
+    <div class="tlinfo" id="m4q"></div><div class="cls" id="m4o"></div><div class="fb" id="m4f"></div><small id="m4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>⚡ ল্যাব ৫: তড়িৎ বিশ্লেষণে Al নিষ্কাশন ও Cu বিশোধন</h2>
+    <div class="say">👉 একটি পদ্ধতি বেছে "বিদ্যুৎ চালু" চাপো। ইলেকট্রোডে কী ঘটে, কোনটা ছোট বা বড় হয় দেখো।</div>
+    <div class="ctl"><label>পদ্ধতি:</label><select id="z5s"><option value="0">অ্যালুমিনিয়াম নিষ্কাশন (Al₂O₃ + ক্রায়োলাইট)</option><option value="1">কপার বিশোধন (CuSO₄ দ্রবণ)</option></select><button class="btn" id="z5go">⚡ বিদ্যুৎ চালু/বন্ধ</button><button class="btn alt" id="z5rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="z5c" class="w" width="380" height="300"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="z5t"></div></div>
+    </div>
+    <h3>🎮 ইলেকট্রোডের প্রশ্ন</h3>
+    <div class="tlinfo" id="z5q"></div><div class="cls" id="z5o"></div><div class="fb" id="z5f"></div><small id="z5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🏭 ল্যাব ৬: বাত্যা চুল্লিতে আয়রন নিষ্কাশন</h2>
+    <div class="say">👉 "চালু" চাপলে ওপর থেকে আকরিক, কোক, চুনাপাথর পড়বে, নিচে গলিত আয়রন ও ধাতুমল জমবে। বোতাম চেপে কোন অংশে কোন বিক্রিয়া দেখো।</div>
+    <div class="ctl"><button class="btn" id="b6go">▶ চালু/বন্ধ</button><button class="btn alt" id="b6rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="b6c" class="w" width="380" height="330"></canvas></div>
+      <div class="grow"><div class="pills" id="b6p"></div><div class="tlinfo" id="b6t"></div></div>
+    </div>
+    <h3>🎮 বাত্যা চুল্লির খেলা</h3>
+    <div class="tlinfo" id="b6q"></div><div class="cls" id="b6o"></div><div class="fb" id="b6f"></div><small id="b6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>🔩 ল্যাব ৭: সংকর ধাতু ও স্বর্ণের ক্যারেট</h2>
+    <div class="say">👉 একটি সংকর ধাতু বেছে উপাদানের শতকরা ভাগ ও ব্যবহার দেখো। নিচে ক্যারেট স্লাইডার নেড়ে স্বর্ণের শতকরা ভাগ হিসাব করো।</div>
+    <div class="ctl"><label>সংকর ধাতু:</label><select id="y7s"></select></div>
+    <div class="row">
+      <div><canvas id="y7c" class="w" width="380" height="200"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="y7t"></div></div>
+    </div>
+    <div class="ctl"><label>স্বর্ণ: <b id="y7kv"></b> ক্যারেট</label><input type="range" id="y7k" min="1" max="24" value="22" style="flex:1;min-width:140px"></div>
+    <div class="tlinfo" id="y7g"></div>
+    <h3>🎮 সংকর ধাতুর খেলা</h3>
+    <div class="tlinfo" id="y7q"></div><div class="cls" id="y7o"></div><div class="fb" id="y7f"></div><small id="y7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>🦠 ল্যাব ৮: মরিচা পড়ার পরীক্ষা ও ক্ষয়রোধ</h2>
+    <div class="say">👉 দিনের স্লাইডার নাড়াও (০–৭ দিন)। চার টেস্টটিউবের মধ্যে কোনটিতে মরিচা পড়ে? নিচের বোতামে ক্ষয়রোধের উপায় দেখো।</div>
+    <div class="ctl"><label>দিন: <b id="r8dv"></b></label><input type="range" id="r8d" min="0" max="7" value="0" style="flex:1;min-width:140px"><button class="btn alt" id="r8p">▶ অটো</button></div>
+    <div class="row">
+      <div><canvas id="r8c" class="w" width="380" height="290"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="r8t"></div><div class="pills" id="r8p2"></div></div>
+    </div>
+    <h3>🎮 মরিচার খেলা</h3>
+    <div class="tlinfo" id="r8q"></div><div class="cls" id="r8o"></div><div class="fb" id="r8f"></div><small id="r8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>🧪 ল্যাব ৯: সালফার, স্পর্শ পদ্ধতি ও H₂SO₄-এর ধর্ম</h2>
+    <div class="say">👉 <b>ক)</b> ফ্রাশ বা স্পর্শ পদ্ধতি বেছে "পরের ধাপ" চাপো।</div>
+    <div class="ctl"><label>পদ্ধতি:</label><select id="s9s"><option value="0">ফ্রাশ পদ্ধতি (সালফার উত্তোলন)</option><option value="1">স্পর্শ পদ্ধতি (H₂SO₄ প্রস্তুতি)</option></select><button class="btn" id="s9n">পরের ধাপ ▶</button><button class="btn alt" id="s9r">↻</button></div>
+    <div class="row">
+      <div><canvas id="s9c" class="w" width="380" height="280"></canvas></div>
+      <div class="grow"><div class="stepper" id="s9st"></div><div class="tlinfo" id="s9t"></div></div>
+    </div>
+    <div class="say">👉 <b>খ)</b> সালফিউরিক এসিডের পরীক্ষা বেছে "চালাও" চাপো।</div>
+    <div class="ctl"><label>পরীক্ষা:</label><select id="a9s"><option value="0">লঘু H₂SO₄ + চুনের পানি</option><option value="1">KI + ঘন H₂SO₄</option><option value="2">চিনি + ঘন H₂SO₄</option><option value="3">Cu + গাঢ় H₂SO₄ (গরম)</option><option value="4">পানিতে H₂SO₄ মেশানো (লঘুকরণ)</option></select><button class="btn" id="a9go">▶ চালাও</button><button class="btn alt" id="a9rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="a9c" class="w" width="380" height="290"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="a9t"></div></div>
+    </div>
+    <h3>🎮 কোন ধর্ম?</h3>
+    <div class="tlinfo" id="s9q"></div><div class="cls" id="s9o"></div><div class="fb" id="s9f"></div><small id="s9sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। সৃজনশীল প্রশ্ন ১, ২ ও ৩ বইয়ের অনুশীলনী থেকে নেওয়া। বাকি প্রশ্ন বইয়ের বিষয় ধরে আমার বানানো অনুশীলন। বইয়ে উত্তরমালা নেই, সব উত্তর আমার লেখা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; খনিজ সম্পদ: ধাতু-অধাতু (অধ্যায় ১০)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+
+/* ---------- ল্যাব ১ ---------- */
+var E1D=[['অক্সিজেন',46,'#e8833a'],['সিলিকন',27,'#2f6fbf'],['অ্যালুমিনিয়াম',8.4,'#78b34a'],['আয়রন',5,'#5b6bb5'],['ক্যালসিয়াম',4,'#f2c230'],['সোডিয়াম',3,'#6a9fd8'],['পটাশিয়াম',3,'#9a9ad0'],['ম্যাগনেসিয়াম',2,'#b5532a'],['অন্যান্য',2,'#999999']];
+var E1={sel:0,tot:E1D.reduce(function(a,d){return a+d[1];},0)};
+function e1show(){var d=E1D[E1.sel];$('e1t').innerHTML='<b>'+d[0]+'</b>: ভূত্বকের <b>'+bn(d[1])+'%</b><br><small>ভূত্বকের ৭৩%-এর বেশি অক্সিজেন ও সিলিকন। আকরিক বা শিলা সব এগুলো দিয়েই গড়া।</small>';}
+e1show();
+$('e1c').onclick=function(ev){var r=this.getBoundingClientRect(),sx=380/r.width,x=(ev.clientX-r.left)*sx-190,y=(ev.clientY-r.top)*sx-130;if(x*x+y*y>110*110)return;var a=Math.atan2(y,x);if(a<0)a+=Math.PI*2;var acc=0;for(var i=0;i<E1D.length;i++){acc+=E1D[i][1]/E1.tot*Math.PI*2;if(a<=acc){E1.sel=i;break;}}e1show();};
+var RK=[['আগ্নেয় শিলা','আগ্নেয়গিরির গলিত ম্যাগমা ঠাণ্ডা হয়ে কঠিন হলে। উদাহরণ: গ্রানাইট। এ থেকে অনেক মূল্যবান খনিজ পাওয়া যায়।'],['পাললিক শিলা','বৃষ্টি, বাতাস, ঝড়ে ধুয়ে আসা কাদামাটি, বালি পলি হয়ে স্তরে স্তরে জমে। উদাহরণ: বেলেপাথর।'],['রূপান্তরিত শিলা','আগ্নেয় ও পাললিক শিলা তাপ ও চাপে নতুন রূপ নিলে। উদাহরণ: কয়লা (বইয়ের মতে)।']];
+$('e1p').innerHTML=RK.map(function(r,i){return '<button data-i="'+i+'">'+r[0]+'</button>';}).join('');
+$('e1p').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;$('e1t').innerHTML='<b>'+RK[+b.getAttribute('data-i')][0]+'</b><br>'+RK[+b.getAttribute('data-i')][1];};
+function e1draw(){var x=ctxOf('e1c');x.clearRect(0,0,380,260);var a0=0;
+  E1D.forEach(function(d,i){var a1=a0+d[1]/E1.tot*Math.PI*2,m=(a0+a1)/2,off=i===E1.sel?12:0,cx=190+Math.cos(m)*off,cy=130+Math.sin(m)*off;x.fillStyle=d[2];x.beginPath();x.moveTo(cx,cy);x.arc(cx,cy,100,a0,a1);x.closePath();x.fill();x.strokeStyle='#fff';x.lineWidth=2;x.stroke();
+    if(d[1]>=4)txt(x,bn(d[1])+'%',cx+Math.cos(m)*65,cy+Math.sin(m)*65,'bold 12px Hind Siliguri','#fff');a0=a1;});
+  txt(x,'ভূত্বকের উপাদান (ক্লিক করো)',190,246,'bold 12px Hind Siliguri',NAVY);}
+var E1G=[['গ্যালেনা (PbS)','আকরিক (খনিজও)','গ্যালেনা থেকে লাভজনকভাবে লেড পাওয়া যায়, তাই আকরিক।'],['বক্সাইট','আকরিক (খনিজও)','বক্সাইট থেকে লাভজনকভাবে অ্যালুমিনিয়াম পাওয়া যায়, তাই আকরিক।'],['কাদামাটি','শুধু খনিজ (আকরিক নয়)','কাদামাটি থেকে লাভজনকভাবে অ্যালুমিনিয়াম পাওয়া যায় না, তাই আকরিক নয়।'],['আয়রন পাইরাইটস (FeS₂)','আকরিক (খনিজও)','এ থেকে আয়রন ধাতু নিষ্কাশন করা যায়, তাই আকরিক।'],['গ্রানাইট','আগ্নেয় শিলা','ম্যাগমা ঠাণ্ডা হয়ে হয়, তাই আগ্নেয় শিলা।'],['বেলেপাথর','পাললিক শিলা','বালি পলি হয়ে স্তরে জমে, তাই পাললিক শিলা।'],['কয়লা (বইয়ের মতে)','রূপান্তরিত শিলা','বইয়ে কয়লাকে রূপান্তরিত শিলার উদাহরণ দেওয়া হয়েছে।']];
+mkGame('e1q','e1o','e1f','e1sc',function(){var g=pick(E1G),rock=g[1].indexOf('শিলা')>0;var all=rock?['আগ্নেয় শিলা','পাললিক শিলা','রূপান্তরিত শিলা']:['আকরিক (খনিজও)','শুধু খনিজ (আকরিক নয়)'];return {q:'<b>'+g[0]+'</b> কোনটি?',o:opts(g[1],all.filter(function(z){return z!==g[1];})),good:g[2],bad:g[2]};});
+/* ---------- ল্যাব ২ ---------- */
+var C2={T:0,run:false,pts:[]};
+function c2make(){var m=+$('c2s').value;C2.pts=[];for(var i=0;i<40;i++){var ore=i%3===0,p={ore:ore,d:Math.random()*.4,ph:Math.random()*6};
+  if(m===0){p.sx=rnd(190,250);p.sy=rnd(30,60);p.ex=ore?rnd(40,150):rnd(250,350);p.ey=ore?rnd(215,240):rnd(215,240);}
+  else if(m===1){p.sx=rnd(100,280);p.sy=rnd(140,230);p.ex=ore?rnd(100,280):rnd(100,280);p.ey=ore?rnd(104,120):rnd(228,246);}
+  else{p.sx=rnd(185,215);p.sy=rnd(40,70);p.ex=ore?rnd(80,160):rnd(230,320);p.ey=rnd(225,245);}
+  C2.pts.push(p);}}
+function c2info(){var m=+$('c2s').value;$('c2t').innerHTML=['<b>হাইড্রোলাইটিক:</b> সাধারণত <b>অক্সাইড</b> আকরিকে। আকরিক ভারী, খনিজমল হালকা। কম্পমান খাঁজকাটা টেবিলে আকরিক ঢেলে পানি চালালে ভারী আকরিক খাঁজে থাকে, হালকা খনিজমল ধুয়ে যায়।','<b>ফেনা ভাসমান:</b> <b>সালফাইড</b> আকরিকে। ট্যাংকে আকরিক, পানি ও অল্প তেল দিয়ে বায়ুপ্রবাহ দিলে সালফাইড আকরিক তেলে দ্রবীভূত হয়ে ফেনায় ভেসে ওঠে। খনিজমল তলায় থাকে।','<b>চৌম্বকীয় পৃথকীকরণ:</b> আকরিক বা খনিজমলের যেকোনো একটি চুম্বকে আকৃষ্ট হলে। ঘূর্ণায়মান বেল্টে চুম্বকের টানে চৌম্বক অংশ কাছে জমে, অচৌম্বক অংশ দূরে পড়ে। (ক্রোমাইট FeO·Cr₂O₃, রুটাইল TiO₂)'][m];}
+$('c2s').onchange=function(){C2.T=0;C2.run=false;c2make();c2info();};
+$('c2go').onclick=function(){C2.T=0;C2.run=true;};$('c2rs').onclick=function(){C2.T=0;C2.run=false;};
+c2make();c2info();
+function c2draw(){var x=ctxOf('c2c'),m=+$('c2s').value;x.clearRect(0,0,380,290);if(C2.run)C2.T=Math.min(1.1,C2.T+.005);
+  if(m===0){x.fillStyle='#8aa0b0';x.beginPath();x.moveTo(40,180);x.lineTo(350,205);x.lineTo(350,215);x.lineTo(40,190);x.fill();for(var i=0;i<8;i++){x.strokeStyle='#5d7380';x.beginPath();x.moveTo(60+i*36,184+i*3);x.lineTo(60+i*36,192+i*3);x.stroke();}
+    x.fillStyle='#bbb';x.beginPath();x.moveTo(170,10);x.lineTo(270,10);x.lineTo(240,50);x.lineTo(200,50);x.fill();if(C2.run&&C2.T<.9){x.strokeStyle='rgba(80,150,220,.6)';x.lineWidth=3;for(var w=0;w<4;w++){x.beginPath();x.moveTo(50+w*8,170+(C2.T*300+w*20)%30);x.lineTo(320,198);x.stroke();}}
+    x.fillStyle='#e6dccb';x.fillRect(30,235,130,45);x.fillRect(240,235,120,45);txt(x,'ঘনীভূত আকরিক',95,268,'bold 11px Hind Siliguri','#333');txt(x,'খনিজমল',300,268,'bold 11px Hind Siliguri','#333');}
+  else if(m===1){x.fillStyle='rgba(150,200,235,.6)';x.fillRect(80,110,220,140);x.fillStyle='rgba(255,255,255,.85)';for(var b=0;b<10;b++)circ(x,0,90+b*21,105+Math.sin(b+C2.T*5)*3,9,'rgba(255,255,255,.9)','#bcd',1);x.strokeStyle='#6b7c8a';x.lineWidth=4;x.beginPath();x.moveTo(80,80);x.lineTo(80,250);x.lineTo(300,250);x.lineTo(300,80);x.stroke();
+    if(C2.run&&C2.T<1)for(var a=0;a<12;a++)circ(x,0,95+a*17,240-((C2.T*500+a*17)%120),3,'rgba(255,255,255,.7)','#9ab',1);txt(x,'ফেনা (আকরিক ওপরে)',190,70,'bold 11px Hind Siliguri','#a60');txt(x,'খনিজমল (তলায়)',190,268,'bold 11px Hind Siliguri','#333');txt(x,'বাতাস ↑ + তেল',190,282,'11px Hind Siliguri','#567');}
+  else{x.fillStyle='#555';x.beginPath();x.ellipse(120,130,26,26,0,0,7);x.ellipse(260,130,26,26,0,0,7);x.fill();x.fillRect(120,104,140,6);x.fillRect(120,150,140,6);x.fillStyle='#c33';x.fillRect(96,120,22,22);txt(x,'চুম্বক',107,170,'bold 10px Hind Siliguri','#c33');x.fillStyle='#bbb';x.beginPath();x.moveTo(170,10);x.lineTo(230,10);x.lineTo(215,40);x.lineTo(185,40);x.fill();x.fillStyle='#e6dccb';x.fillRect(70,235,110,45);x.fillRect(215,235,120,45);txt(x,'চৌম্বক (আকরিক)',125,268,'bold 10px Hind Siliguri','#333');txt(x,'অচৌম্বক (খনিজমল)',275,268,'bold 10px Hind Siliguri','#333');}
+  C2.pts.forEach(function(p){var t=ease(clamp((C2.T-p.d)/.6,0,1)),px=lerp(p.sx,p.ex,t)+Math.sin(p.ph+C2.T*6)*(1-t)*3,py=lerp(p.sy,p.ey,t);circ(x,0,px,py,p.ore?5:4,p.ore?(m===2?'#444':'#c9a227'):'#cfc8b8',p.ore?'#755':'#998',1);});
+}
+mkGame('c2q','c2o','c2f','c2sc',function(){var Q=[['সালফাইড আকরিক ঘনীকরণের পদ্ধতি','ফেনা ভাসমান','সালফাইড আকরিক তেলে দ্রবীভূত হয়ে ফেনায় ভাসে।'],['ভারী অক্সাইড আকরিক ও হালকা খনিজমল আলাদা করতে','হাইড্রোলাইটিক','পানির স্রোতে হালকা খনিজমল ধুয়ে যায়।'],['ক্রোমাইট (FeO·Cr₂O₃)-এর মতো চৌম্বক ধর্মের আকরিকের জন্য','চৌম্বকীয় পৃথকীকরণ','চুম্বকের টানে চৌম্বক অংশ আলাদা হয়।'],['বক্সাইট থেকে NaOH দিয়ে বিশুদ্ধ Al₂O₃ বানানো হয় যে পদ্ধতিতে','রাসায়নিক পদ্ধতি','NaOH শুধু Al₂O₃-এর সাথে বিক্রিয়া করে, খনিজমলের সাথে করে না।']];var q=pick(Q);return {q:q[0]+' কোন পদ্ধতি?',o:opts(q[1],['হাইড্রোলাইটিক','ফেনা ভাসমান','চৌম্বকীয় পৃথকীকরণ','রাসায়নিক পদ্ধতি'].filter(function(z){return z!==q[1];}).slice(0,3)),good:q[2],bad:q[2]};});
+
+/* ---------- ল্যাব ৩ ---------- */
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+var H3D=[
+ {n:'ZnCO₃ (ক্যালামাইন)',t:0,a:'#d9d3c3',b:'#f3f0e4',eq:'ZnCO₃ → ZnO + CO₂',g:'CO₂',gc:'#8a8a8a'},
+ {n:'CaCO₃ (চুনাপাথর)',t:0,a:'#ece9e0',b:'#faf8f0',eq:'CaCO₃ → CaO + CO₂',g:'CO₂',gc:'#8a8a8a'},
+ {n:'Fe₂O₃·3H₂O (আর্দ্র আকরিক)',t:0,a:'#c88a3a',b:'#a8381c',eq:'Fe₂O₃·3H₂O → Fe₂O₃ + 3H₂O',g:'জলীয় বাষ্প',gc:'#8fc0e8'},
+ {n:'PbS (গ্যালেনা)',t:1,a:'#6f7b88',b:'#e5c04a',eq:'2PbS + 3O₂ → 2PbO + 2SO₂',g:'SO₂',gc:'#d4b92e'},
+ {n:'ZnS (জিংক ব্লেন্ড)',t:1,a:'#bfae80',b:'#f3f0e4',eq:'2ZnS + 3O₂ → 2ZnO + 2SO₂',g:'SO₂',gc:'#d4b92e'}];
+var H3={T:0,run:false,done:false};
+$('h3s').innerHTML=H3D.map(function(d,i){return '<option value="'+i+'">'+d.n+'</option>';}).join('');
+function h3info(){var d=H3D[+$('h3s').value];
+  if(H3.done)$('h3t').innerHTML='<b>'+(d.t?'তাপজারণ (Roasting)':'ভস্মীকরণ (Calcination)')+'</b><br>'+d.eq+'<br>বাতাস: '+(d.t?'<b>ছিল</b> (O₂ বিক্রিয়ায় অংশ নিয়েছে)':'<b>ছিল না</b>')+'<br>বেরিয়ে গেছে: <b>'+d.g+'</b><br><small>দুই ক্ষেত্রেই গলনাঙ্কের কম তাপমাত্রা। শেষে অক্সাইড পাওয়া যায়।</small>';
+  else if(H3.run)$('h3t').innerHTML='তাপ দেওয়া হচ্ছে… দেখো বাতাস ঢুকছে কিনা।';
+  else $('h3t').innerHTML='<b>'+d.n+'</b> বেছেছ। "তাপ দাও" চাপো।<br><small>ভস্মীকরণ: বাতাসের অনুপস্থিতিতে। তাপজারণ: বাতাসের উপস্থিতিতে (সাধারণত সালফাইড আকরিকে)।</small>';}
+$('h3s').onchange=function(){H3.T=0;H3.run=false;H3.done=false;h3info();};
+$('h3go').onclick=function(){H3.T=0;H3.run=true;H3.done=false;h3info();};
+$('h3rs').onclick=function(){H3.T=0;H3.run=false;H3.done=false;h3info();};
+h3info();
+function h3draw(){var x=ctxOf('h3c'),d=H3D[+$('h3s').value];x.clearRect(0,0,380,260);
+  if(H3.run){H3.T=Math.min(1.05,H3.T+.0045);if(H3.T>=1&&!H3.done){H3.done=true;H3.run=false;h3info();}}
+  var tt=clamp(H3.T,0,1);
+  x.fillStyle='#8a8f98';x.fillRect(180,36,22,50);txt(x,'চিমনি',191,26,'10px Hind Siliguri','#567');
+  x.fillStyle='#a85a3a';x.fillRect(100,80,180,140);x.fillStyle='#2b1d1a';x.fillRect(114,94,152,112);
+  for(var r=0;r<7;r++){x.strokeStyle='rgba(0,0,0,.18)';x.beginPath();x.moveTo(100,80+r*20);x.lineTo(280,80+r*20);x.stroke();}
+  x.fillStyle=mixc(d.a,d.b,tt);x.beginPath();x.moveTo(140,200);x.lineTo(240,200);x.lineTo(215,160);x.lineTo(165,160);x.closePath();x.fill();x.strokeStyle='rgba(0,0,0,.3)';x.stroke();
+  txt(x,d.n.split(' ')[0],190,182,'bold 11px Hind Siliguri',tt>.5?'#333':'#fff');
+  if(H3.run||H3.done){for(var i=0;i<5;i++){var h=18+Math.sin(FR*.2+i*2)*7;x.fillStyle=i%2?ORG:'#f6c34a';x.beginPath();x.moveTo(125+i*30,222);x.lineTo(135+i*30,222-h);x.lineTo(145+i*30,222);x.fill();}}
+  if(d.t){x.fillStyle='#cdd6de';x.fillRect(16,138,90,24);x.strokeStyle='#8a97a4';x.strokeRect(16,138,90,24);
+    for(var k=0;k<3;k++){var ax=24+((FR*1.3+k*28)%72);x.fillStyle=H3.run?BLU:'#9ab';x.beginPath();x.moveTo(ax,143);x.lineTo(ax+10,150);x.lineTo(ax,157);x.fill();}
+    txt(x,'বাতাস (O₂) ঢুকছে',62,126,'bold 11px Hind Siliguri',BLU);}
+  else{x.fillStyle='#6b7480';x.fillRect(94,138,12,24);txt(x,'✖ বাতাস নেই',55,150,'bold 12px Hind Siliguri',RED);}
+  if(H3.T>.02&&H3.T<1.04){for(var j=0;j<10;j++){var ph=((FR*.006)+j/10)%1,gy=165-ph*140,gx=190+Math.sin(j*2+ph*6)*8;x.globalAlpha=1-ph*.6;circ(x,0,gx,gy,4+ph*3,d.gc,'rgba(0,0,0,.2)',1);x.globalAlpha=1;}
+    txt(x,d.g+' ↑',255,48,'bold 12px Hind Siliguri',NAVY);}
+}
+var H3Q=[['ZnCO₃ → ZnO + CO₂',0],['CaCO₃ → CaO + CO₂',0],['Fe₂O₃·3H₂O → Fe₂O₃ + 3H₂O',0],['2PbS + 3O₂ → 2PbO + 2SO₂',1],['2ZnS + 3O₂ → 2ZnO + 2SO₂',1]];
+mkGame('h3q','h3o','h3f','h3sc',function(){var g=pick(H3Q),ans=g[1]?'তাপজারণ':'ভস্মীকরণ';var why=g[1]?'বাতাসের (O₂) উপস্থিতিতে উত্তপ্ত করা হয়েছে, তাই তাপজারণ।':'বাতাস ছাড়া শুধু উত্তপ্ত করা হয়েছে, তাই ভস্মীকরণ।';return {q:'<b>'+g[0]+'</b><br>এটি কোন প্রক্রিয়া?',o:opts(ans,['তাপজারণ','ভস্মীকরণ','তড়িৎ বিশ্লেষণ'].filter(function(z){return z!==ans;})),good:why,bad:why};});
+/* ---------- ল্যাব ৪ ---------- */
+var M4D=[['K','পটাশিয়াম',0],['Na','সোডিয়াম',0],['Ca','ক্যালসিয়াম',0],['Mg','ম্যাগনেসিয়াম',0],['Al','অ্যালুমিনিয়াম',0],['Zn','জিংক',1],['Fe','আয়রন',1],['Pb','লেড',1],['Cu','কপার',2],['Hg','মার্কারি',2],['Ag','সিলভার',2],['Pt','প্ল্যাটিনাম',3],['Au','স্বর্ণ',3]];
+var M4Z=[['তড়িৎ বিশ্লেষণ','#f4b6b6'],['কার্বন বিজারণ','#f8d9a0'],['স্ববিজারণ','#b8d8f0'],['মুক্ত অবস্থায়','#f7e08a']];
+var M4X={0:'গলিত যৌগের তড়িৎ বিশ্লেষণে ক্যাথোডে ধাতু জমে। (Al: Al₂O₃ + ক্রায়োলাইট)',1:'ধাতব অক্সাইড + কার্বন → ধাতু + CO (যেমন ZnO + C → Zn + CO)',2:'কোনো বিজারক ছাড়া শুধু উত্তপ্ত করেই ধাতু পাওয়া যায়। যেমন HgS + O₂ → Hg + SO₂',3:'এরা এত অসক্রিয় যে বিশুদ্ধ অবস্থায়ই পাওয়া যায়।'};
+var M4={sel:-1,red:null,rt:0};
+function m4show(){if(M4.sel<0){$('m4t').innerHTML='সিঁড়ির একটি ধাতুতে ক্লিক করো।';return;}var m=M4D[M4.sel];$('m4t').innerHTML='<b>'+m[0]+' ('+m[1]+')</b><br>পদ্ধতি: <b>'+M4Z[m[2]][0]+'</b><br><small>'+M4X[m[2]]+(m[0]==='Cu'?'<br>কপার কার্বন দিয়েও বিজারিত হয়: CuO + C → Cu + CO।':'')+'</small>';}
+m4show();
+$('m4c').onclick=function(ev){var r=this.getBoundingClientRect(),sy=330/r.width,y=(ev.clientY-r.top)*sy,i=Math.floor((y-14)/24);if(i>=0&&i<M4D.length){M4.sel=i;m4show();}};
+var M4R={1:{ox:'ZnO',c:'#f1efe6',m:'#9aa6b2',eq:'ZnO + C → Zn + CO'},2:{ox:'FeO',c:'#2e2e2e',m:'#8a8f98',eq:'FeO + C → Fe + CO'},3:{ox:'PbO',c:'#e3b84a',m:'#5d6670',eq:'PbO + C → Pb + CO'}};
+[1,2,3].forEach(function(k){$('m4c'+k).onclick=function(){M4.red=M4R[k];M4.rt=0;$('m4t').innerHTML='<b>কার্বন বিজারণ:</b> '+M4R[k].eq+'<br><small>কার্বন অক্সিজেন কেড়ে নিয়ে CO হয়ে বেরিয়ে যায়। অক্সাইড ধাতুতে বিজারিত হয়।</small>';};});
+function m4draw(){var x=ctxOf('m4c');x.clearRect(0,0,380,330);
+  txt(x,'বেশি ↑',20,6,'bold 10px Hind Siliguri',RED);
+  var zs={},i;
+  for(i=0;i<M4D.length;i++){var m=M4D[i],y=14+i*24;x.fillStyle=M4Z[m[2]][1];x.fillRect(24,y,86,22);x.strokeStyle=i===M4.sel?NAVY:'rgba(0,0,0,.2)';x.lineWidth=i===M4.sel?3:1;x.strokeRect(24,y,86,22);txt(x,m[0]+' '+m[1],67,y+11,'bold 11px Hind Siliguri','#222');
+    if(!zs[m[2]])zs[m[2]]=[i,i];else zs[m[2]][1]=i;}
+  x.lineWidth=1;txt(x,'কম ↓',20,326,'bold 10px Hind Siliguri',BLU);
+  Object.keys(zs).forEach(function(z){var a=14+zs[z][0]*24,b=14+zs[z][1]*24+22;x.strokeStyle='#777';x.beginPath();x.moveTo(114,a+2);x.lineTo(118,a+2);x.lineTo(118,b-2);x.lineTo(114,b-2);x.stroke();
+    if(+z===3){txt(x,'মুক্ত',121,(a+b)/2-6,'bold 10px Hind Siliguri','#444','left');txt(x,'অবস্থায়',121,(a+b)/2+6,'bold 10px Hind Siliguri','#444','left');}else txt(x,M4Z[z][0],121,(a+b)/2,'bold 10.5px Hind Siliguri','#444','left');});
+  var r=M4.red;
+  if(!r){txt(x,'ডানের বোতাম চেপে',300,120,'11px Hind Siliguri','#789');txt(x,'কার্বন বিজারণ দেখো',300,138,'11px Hind Siliguri','#789');return;}
+  if(M4.rt<1)M4.rt=Math.min(1,M4.rt+.006);var t=ease(M4.rt);
+  x.fillStyle='#8a8f98';x.beginPath();x.moveTo(240,170);x.lineTo(360,170);x.lineTo(340,240);x.lineTo(260,240);x.closePath();x.fill();
+  x.fillStyle=mixc(r.c,r.m,t);x.beginPath();x.moveTo(250,200);x.lineTo(350,200);x.lineTo(340,238);x.lineTo(260,238);x.closePath();x.fill();
+  for(var c=0;c<6;c++)circ(x,0,265+c*15,196+Math.sin(c*3)*3,4,'#222','#000',1);
+  for(var f=0;f<5;f=f+1){var h=14+Math.sin(FR*.25+f*2)*5;x.fillStyle=f%2?ORG:'#f6c34a';x.beginPath();x.moveTo(262+f*16,262);x.lineTo(270+f*16,262-h);x.lineTo(278+f*16,262);x.fill();}
+  if(M4.rt<1)for(var g=0;g<6;g++){var ph=((FR*.01)+g/6)%1;x.globalAlpha=1-ph;circ(x,0,270+g*14,190-ph*60,4,'#999','#666',1);x.globalAlpha=1;txt(x,'CO ↑',300,110,'bold 11px Hind Siliguri','#555');}
+  txt(x,r.ox+' → ধাতু',300,160,'bold 12px Hind Siliguri',NAVY);txt(x,r.eq,300,282,'bold 11px Hind Siliguri','#444');
+  if(M4.rt>=1)txt(x,'✔ বিজারণ সম্পন্ন',300,300,'bold 11px Hind Siliguri','#2a7a3b');}
+mkGame('m4q','m4o','m4f','m4sc',function(){var L=M4D.filter(function(m){return m[0]!=='Cu';}),m=pick(L),ans=M4Z[m[2]][0];if(m[2]===3)ans='বিশুদ্ধ অবস্থায় পাওয়া যায়';var all=['তড়িৎ বিশ্লেষণ','কার্বন বিজারণ','স্ববিজারণ','বিশুদ্ধ অবস্থায় পাওয়া যায়'];var why=m[0]+' ('+m[1]+') সক্রিয়তা সিরিজে '+(m[2]===0?'ওপরের দিকে, খুব সক্রিয়। তাই তড়িৎ বিশ্লেষণ লাগে।':m[2]===1?'মাঝামাঝি। তাই কার্বন দিয়ে বিজারণ করা যায়।':m[2]===2?'নিচের দিকে, কম সক্রিয়। তাই শুধু উত্তপ্ত করেই (স্ববিজারণ) পাওয়া যায়।':'একেবারে নিচে, প্রায় অসক্রিয়। তাই বিশুদ্ধ অবস্থায় পাওয়া যায়।');return {q:'<b>'+m[0]+' ('+m[1]+')</b> কোন পদ্ধতিতে নিষ্কাশন করা হয়?',o:opts(ans,all.filter(function(z){return z!==ans;})),good:why,bad:why};});
+
+/* ---------- ল্যাব ৫ ---------- */
+var Z5={on:false,q:0};
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function z5info(){var m=+$('z5s').value;$('z5t').innerHTML=m===0?'<b>Al নিষ্কাশন:</b> Al₂O₃-এর গলনাঙ্ক ২০৫০°C, অনেক বেশি। <b>ক্রায়োলাইট (Na₃AlF₆)</b> মেশালে ৮০০–১০০০°C-এ গলে।<br>অ্যানোড (+): 6O²⁻ → 3O₂ + 12e⁻ (জারণ)<br>ক্যাথোড (−): 2Al³⁺ + 6e⁻ → 2Al (বিজারণ)<br><small>গলিত Al ভারী, তাই তলায় জমে।</small>':'<b>Cu বিশোধন:</b> ৯৮% বিশুদ্ধ কপার অ্যানোড (+), বিশুদ্ধ কপার পাত ক্যাথোড (−), তড়িৎ বিশ্লেষ্য CuSO₄ দ্রবণ।<br>অ্যানোড: Cu → Cu²⁺ + 2e⁻ (জারণ)<br>ক্যাথোড: Cu²⁺ + 2e⁻ → Cu (বিজারণ)<br><small>অবিশুদ্ধ দণ্ড ক্রমে সরু হয়, বিশুদ্ধ পাত মোটা হয়। বিশুদ্ধতা হয় ৯৯.৯%।</small>';}
+$('z5s').onchange=function(){Z5.on=false;Z5.q=0;z5info();};
+$('z5go').onclick=function(){Z5.on=!Z5.on;};
+$('z5rs').onclick=function(){Z5.on=false;Z5.q=0;};
+z5info();
+function z5draw(){var x=ctxOf('z5c'),m=+$('z5s').value,i;x.clearRect(0,0,380,300);if(Z5.on)Z5.q=Math.min(1,Z5.q+.0016);var q=Z5.q;
+  x.fillStyle='#fff';x.fillRect(150,12,80,24);x.strokeStyle='#333';x.lineWidth=2;x.strokeRect(150,12,80,24);
+  txt(x,'+',160,24,'bold 16px Hind Siliguri',RED);txt(x,'−',220,24,'bold 16px Hind Siliguri',BLU);txt(x,'ব্যাটারি',190,24,'11px Hind Siliguri','#333');
+  var wa,wb;
+  if(m===0){wa=[[150,24],[117,24],[117,56]];wb=[[230,24],[320,24],[320,180],[290,180]];
+    x.fillStyle='#8a8f98';x.fillRect(70,100,220,160);x.fillStyle='#3a3a3a';x.fillRect(80,100,200,150);
+    x.fillStyle='rgba(235,150,60,.75)';x.fillRect(80,140,200,110);
+    var ah=6+q*34;x.fillStyle='#d5dbe2';x.fillRect(80,250-ah,200,ah);x.strokeStyle='#8a97a4';x.lineWidth=1;x.strokeRect(80,250-ah,200,ah);txt(x,'গলিত Al (তলায় জমে)',180,250-ah/2,'bold 11px Hind Siliguri','#334');
+    x.fillStyle='#222';x.fillRect(110,56,14,110);x.fillRect(250,56,14,110);x.strokeStyle='#555';x.lineWidth=3;x.beginPath();x.moveTo(117,50);x.lineTo(257,50);x.stroke();
+    txt(x,'গলিত Al₂O₃',187,158,'bold 10.5px Hind Siliguri','#5b2d00');txt(x,'+ ক্রায়োলাইট',187,172,'bold 10.5px Hind Siliguri','#5b2d00');
+    if(Z5.on)for(i=0;i<8;i++){var ph=((FR*.012)+i/8)%1,bx=(i%2?117:257)+Math.sin(i*3+ph*7)*5;circ(x,0,bx,170-ph*40,3+ph*2,'rgba(255,255,255,.85)','#d8c',1);if(ph>.85)txt(x,'O₂',bx,128,'bold 9px Hind Siliguri','#fff');}
+    txt(x,'অ্যানোড (+)',187,76,'bold 10.5px Hind Siliguri',RED);txt(x,'কার্বন দণ্ড',187,90,'bold 10.5px Hind Siliguri',RED);
+    txt(x,'ক্যাথোড (−) গ্রাফাইট-আস্তরণ',178,276,'bold 10.5px Hind Siliguri',BLU);txt(x,'৮০০–১০০০°C',180,118,'bold 11px Hind Siliguri','#fff');}
+  else{wa=[[150,24],[135,24],[135,70]];wb=[[230,24],[224,24],[224,70]];
+    x.fillStyle='rgba(60,130,220,.45)';x.fillRect(70,130,220,120);x.strokeStyle='#6b7c8a';x.lineWidth=4;x.beginPath();x.moveTo(70,100);x.lineTo(70,250);x.lineTo(290,250);x.lineTo(290,100);x.stroke();
+    var aw=30-q*18,cw=8+q*16;x.fillStyle='#a8662a';x.fillRect(135-aw/2,70,aw,140);for(i=0;i<7;i++)circ(x,0,135-aw/2+3+(i*7)%Math.max(aw-6,4),84+i*17,2,'#5b3a1a',null);
+    x.fillStyle='#e58a4a';x.fillRect(224-cw/2,70,cw,140);x.strokeStyle='#b35a1e';x.lineWidth=1;x.strokeRect(224-cw/2,70,cw,140);
+    for(i=0;i<Math.floor(q*14);i++)circ(x,0,100+(i*11)%70,245,2.5,'#4a3a2a',null);
+    if(Z5.on)for(i=0;i<7;i++){var p2=((FR*.01)+i/7)%1;circ(x,0,lerp(150,212,p2),120+Math.sin(i*2)*38,4,'#2b6cb0','#fff',1);}
+    txt(x,'অ্যানোড (+)',105,56,'bold 10.5px Hind Siliguri',RED);txt(x,'অবিশুদ্ধ Cu (মোটা)',105,264,'bold 10px Hind Siliguri','#6b3a10');
+    txt(x,'ক্যাথোড (−)',254,56,'bold 10.5px Hind Siliguri',BLU);txt(x,'বিশুদ্ধ Cu',254,264,'bold 10px Hind Siliguri','#a04a10');txt(x,'CuSO₄ দ্রবণ',185,190,'bold 11px Hind Siliguri',NAVY);
+    if(q>.3)txt(x,'তলায় অপদ্রব্য জমছে',100,238,'9px Hind Siliguri','#fff');}
+  x.lineWidth=3;x.strokeStyle='#444';[wa,wb].forEach(function(w){x.beginPath();x.moveTo(w[0][0],w[0][1]);for(i=1;i<w.length;i++)x.lineTo(w[i][0],w[i][1]);x.stroke();});
+  if(Z5.on){wdots(x,wb,FR*.01,'#2b6cb0');wdots(x,wa.slice().reverse(),FR*.01,'#2b6cb0');txt(x,'e⁻ চলছে',190,44,'bold 10px Hind Siliguri','#2b6cb0');}
+  else txt(x,'বিদ্যুৎ বন্ধ',190,46,'10px Hind Siliguri','#888');}
+var Z5Q=[['অ্যালুমিনিয়াম নিষ্কাশনে ক্যাথোডে কী ঘটে?','Al³⁺ বিজারিত হয়ে Al জমে',['O²⁻ জারিত হয়ে O₂ হয়','Cu জারিত হয়','Al জারিত হয়'],'ক্যাথোডে (−) ধনাত্মক আয়ন ইলেকট্রন পায়: 2Al³⁺ + 6e⁻ → 2Al।'],
+ ['অ্যালুমিনিয়াম নিষ্কাশনে ক্রায়োলাইট মেশানো হয় কেন?','Al₂O₃-এর গলনাঙ্ক কমানোর জন্য',['Al-কে জারিত করার জন্য','O₂ তৈরি করার জন্য','তাপমাত্রা ২০৫০°C-এ তোলার জন্য'],'Al₂O₃ গলে ২০৫০°C-এ। ক্রায়োলাইট মেশালে ৮০০–১০০০°C-এ গলে।'],
+ ['কপার বিশোধনে অবিশুদ্ধ কপার কোথায় থাকে?','অ্যানোড (ব্যাটারির +)',['ক্যাথোড (ব্যাটারির −)','দ্রবণের ভেতরে','দুটোতেই সমান'],'অবিশুদ্ধ ধাতু অ্যানোডে, বিশুদ্ধ ধাতুর পাত ক্যাথোডে লাগানো হয়।'],
+ ['কপার বিশোধনে ক্যাথোডে কী জমে?','বিশুদ্ধ কপার',['অবিশুদ্ধ কপার','কপার সালফেট','হাইড্রোজেন গ্যাস'],'Cu²⁺ + 2e⁻ → Cu। বিশুদ্ধ কপার ক্যাথোডে জমে।'],
+ ['কপার বিশোধনের তড়িৎ বিশ্লেষ্য কোনটি?','CuSO₄ দ্রবণ',['NaCl দ্রবণ','ZnSO₄ দ্রবণ','গলিত Al₂O₃'],'তড়িৎ বিশ্লেষ্য হবে ঐ ধাতুরই লবণের দ্রবণ।'],
+ ['অ্যানোডে Cu → Cu²⁺ + 2e⁻ কী ধরনের বিক্রিয়া?','জারণ',['বিজারণ','প্রশমন','ভস্মীকরণ'],'ইলেকট্রন ত্যাগ করা মানেই জারণ। অ্যানোডে সবসময় জারণ ঘটে।']];
+mkGame('z5q','z5o','z5f','z5sc',function(){var g=pick(Z5Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});
+/* ---------- ল্যাব ৬ ---------- */
+var B6={on:false,fe:0,sl:0,P:[]};
+for(var bi=0;bi<26;bi++)B6.P.push({x:rnd(158,222),y:rnd(44,230),t:bi%3,s:rnd(.5,1)});
+var B6I={ore:['কোক + আকরিক','Fe₂O₃ + 3C → 2Fe + 3CO<br><small>কার্বন (কোক) বিজারক। Fe₂O₃ বিজারিত হয়ে আয়রন হয়।</small>'],lime:['চুনাপাথর','CaCO₃ → CaO + CO₂<br><small>চুনাপাথর ভেঙে CaO (ক্ষারীয় বিগালক) হয়।</small>'],slag:['ধাতুমল','CaO + SiO₂ → CaSiO₃<br><small>CaO খনিজমল SiO₂-এর সাথে মিলে ধাতুমল (CaSiO₃) হয়। এটি গলিত আয়রনের ওপরে ভাসে, আলাদা করা যায়।</small>'],air:['গরম বায়ু','নিচ থেকে গরম বায়ু ঢোকানো হয়। নিচের অংশে তাপমাত্রা সবচেয়ে বেশি।']};
+$('b6p').innerHTML=Object.keys(B6I).map(function(k){return '<button data-k="'+k+'">'+B6I[k][0]+'</button>';}).join('');
+$('b6p').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var d=B6I[b.getAttribute('data-k')];$('b6t').innerHTML='<b>'+d[0]+'</b><br>'+d[1];};
+$('b6t').innerHTML='ওপরের বোতামে চাপ দিয়ে বিক্রিয়া দেখো। লোহার আকরিক হেমাটাইট (Fe₂O₃)।';
+$('b6go').onclick=function(){B6.on=!B6.on;};$('b6rs').onclick=function(){B6.on=false;B6.fe=0;B6.sl=0;};
+function b6draw(){var x=ctxOf('b6c'),i;x.clearRect(0,0,380,330);
+  x.fillStyle='#b8c0c8';x.fillRect(165,6,50,18);txt(x,'আকরিক + কোক + চুনাপাথর',190,36,'bold 10px Hind Siliguri',NAVY);
+  x.fillStyle='#a85a3a';x.beginPath();x.moveTo(145,46);x.lineTo(235,46);x.lineTo(262,170);x.lineTo(242,262);x.lineTo(138,262);x.lineTo(118,170);x.closePath();x.fill();
+  x.fillStyle='#2b1d1a';x.beginPath();x.moveTo(155,50);x.lineTo(225,50);x.lineTo(250,170);x.lineTo(232,258);x.lineTo(148,258);x.lineTo(130,170);x.closePath();x.fill();
+  var g=x.createLinearGradient(0,50,0,258);g.addColorStop(0,'rgba(255,120,0,0)');g.addColorStop(1,'rgba(255,90,0,.45)');x.fillStyle=g;x.fill();
+  var cs=['#8b3a2b','#111','#f4f1e6'];
+  B6.P.forEach(function(p){if(B6.on){p.y+=p.s*.9;if(p.y>256-(10+B6.fe*24+B6.sl*14)){p.y=44;p.x=rnd(158,222);if(p.t===0)B6.fe=Math.min(1,B6.fe+.02);if(p.t===2)B6.sl=Math.min(1,B6.sl+.03);}}
+    var px=clamp(p.x,lerp(155,135,p.y/260),lerp(225,245,p.y/260));circ(x,0,px,p.y,4,cs[p.t],'rgba(0,0,0,.4)',1);});
+  var fh=8+B6.fe*24,sh=4+B6.sl*14;x.fillStyle='#ff8a2a';x.fillRect(148,258-fh,84,fh);x.fillStyle='#c9b99a';x.fillRect(148,258-fh-sh,84,sh);
+  txt(x,'গলিত আয়রন',190,258-fh/2,'bold 10px Hind Siliguri','#4a1d00');if(sh>8)txt(x,'ধাতুমল',190,258-fh-sh/2,'bold 9px Hind Siliguri','#444');
+  x.fillStyle='#555';x.fillRect(236,258-fh-sh+2,50,8);txt(x,'ধাতুমল বের',320,258-fh-sh+6,'bold 10px Hind Siliguri','#666');x.fillRect(236,252,50,8);txt(x,'আয়রন বের',324,258,'bold 10px Hind Siliguri','#a04a10');
+  for(i=0;i<3;i++){var ax=100+((FR*.8+i*12)%34);x.fillStyle=B6.on?RED:'#caa';x.beginPath();x.moveTo(ax,226+i*9);x.lineTo(ax+9,230+i*9);x.lineTo(ax,234+i*9);x.fill();}
+  txt(x,'গরম বায়ু →',58,250,'bold 10px Hind Siliguri',RED);
+  if(B6.on)for(i=0;i<4;i++){var gy=40-((FR*.5+i*10)%34);x.globalAlpha=.5;circ(x,0,180+i*10,gy+10,4,'#aaa',null);x.globalAlpha=1;}
+  txt(x,'গ্যাস (CO, CO₂) ↑',300,60,'bold 10px Hind Siliguri','#666');
+  txt(x,'কম তাপ',80,90,'10px Hind Siliguri',BLU);txt(x,'বেশি তাপ',72,200,'10px Hind Siliguri',RED);
+  x.fillStyle='#8b3a2b';circ(x,0,30,300,4,'#8b3a2b','#000',1);txt(x,'আকরিক',58,300,'10px Hind Siliguri','#333','left');circ(x,0,110,300,4,'#111','#000',1);txt(x,'কোক',122,300,'10px Hind Siliguri','#333','left');circ(x,0,180,300,4,'#f4f1e6','#000',1);txt(x,'চুনাপাথর',192,300,'10px Hind Siliguri','#333','left');}
+var B6Q=[['বাত্যা চুল্লিতে কোন আকরিক থেকে আয়রন পাওয়া যায়?','হেমাটাইট (Fe₂O₃)',['বক্সাইট','গ্যালেনা','ক্যালামাইন'],'লোহার গুরুত্বপূর্ণ আকরিক হেমাটাইট Fe₂O₃।'],
+ ['বাত্যা চুল্লিতে চুনাপাথর (CaCO₃) কেন দেওয়া হয়?','CaO তৈরি করে খনিজমল SiO₂ সরাতে',['আয়রনকে বিজারিত করতে','চুল্লি ঠাণ্ডা করতে','বাতাস ঢোকাতে'],'CaCO₃ → CaO + CO₂। CaO + SiO₂ → CaSiO₃ (ধাতুমল)।'],
+ ['ধাতুমল (CaSiO₃) কোথায় ভাসে?','গলিত আয়রনের ওপরে',['গলিত আয়রনের নিচে','চিমনির ভেতরে','আকরিকের স্তূপে'],'ধাতুমল হালকা, তাই গলিত আয়রনের ওপর ভাসে। আলাদা করা সহজ।'],
+ ['Fe₂O₃ + 3C → 2Fe + 3CO বিক্রিয়ায় বিজারক কোনটি?','কার্বন (C)',['Fe₂O₃','CO','Fe'],'কার্বন অক্সিজেন গ্রহণ করে (নিজে জারিত হয়), তাই বিজারক।'],
+ ['বাত্যা চুল্লিতে খনিজমল SiO₂ (এসিডিক)। কোন বিগালক লাগে?','ক্ষারীয় বিগালক (CaO)',['এসিডিক বিগালক (SiO₂)','কোনো বিগালক লাগে না','প্রভাবক V₂O₅'],'এসিডিক খনিজমলের জন্য ক্ষারীয় বিগালক CaO লাগে।'],
+ ['বাত্যা চুল্লিতে গরম বায়ু কোন দিক থেকে ঢোকানো হয়?','নিচ থেকে',['ওপর থেকে','চিমনি দিয়ে','কোনো বায়ু ঢোকানো হয় না'],'ওপর থেকে কাঁচামাল নামে, নিচ থেকে গরম বায়ু ঢোকে।']];
+mkGame('b6q','b6o','b6f','b6sc',function(){var g=pick(B6Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});
+
+/* ---------- ল্যাব ৭ ---------- */
+var A7=[
+ {n:'স্টিল',c:[['লোহা',99,'#8a8f98'],['কার্বন',1,'#222222']],u:'রেলের চাকা, ইঞ্জিন, জাহাজ, ছুরি, কাঁচি, কৃষি যন্ত্রপাতি'},
+ {n:'স্টেইনলেস স্টিল',c:[['লোহা',74,'#8a8f98'],['ক্রোমিয়াম',18,'#3ea29c'],['নিকেল',8,'#d8b13a']],u:'অস্ত্রোপচারের যন্ত্র, রান্নার সিঙ্ক, রসায়ন শিল্পের পাত্র'},
+ {n:'পিতল (ব্রাস)',c:[['কপার',65,'#d2783a'],['জিংক',35,'#8fa9c6']],u:'অলংকার, বৈদ্যুতিক সুইচ, দরজার হাতল'},
+ {n:'কাঁসা (ব্রোঞ্জ)',c:[['কপার',90,'#d2783a'],['টিন',10,'#c4c8cf']],u:'থালা, গ্লাস, যন্ত্রাংশ'},
+ {n:'ডুরালুমিন',c:[['অ্যালুমিনিয়াম',95,'#a9b8c8'],['কপার',4,'#d2783a'],['Mg, Mn, Fe',1,'#7a5a9a']],u:'উড়োজাহাজের বডি'}];
+$('y7s').innerHTML=A7.map(function(a,i){return '<option value="'+i+'">'+a.n+'</option>';}).join('');
+function y7info(){var a=A7[+$('y7s').value];$('y7t').innerHTML='<b>'+a.n+'</b><br>'+a.c.map(function(c){return c[0]+' <b>'+bn(c[1])+'%</b>';}).join(', ')+'<br>ব্যবহার: '+a.u+'<br><small>মূল ধাতু: '+a.c[0][0]+'। সংকর ধাতু সাধারণত মূল ধাতুর চেয়ে বেশি উপযোগী।</small>';}
+$('y7s').onchange=y7info;y7info();
+function y7draw(){var a=A7[+$('y7s').value],x=ctxOf('y7c');x.clearRect(0,0,380,200);
+  txt(x,a.n+' (প্রতিটি বিন্দু = ১%)',190,14,'bold 12px Hind Siliguri',NAVY);
+  var idx=0,cols=[];a.c.forEach(function(c){for(var k=0;k<c[1];k++)cols.push(c[2]);});
+  for(var r=0;r<5;r++)for(var cc=0;cc<20;cc++){var i=r*20+cc;circ(x,0,30+cc*16.5,40+r*17+Math.sin(FR*.05+i)*.8,6,cols[i],'rgba(0,0,0,.25)',1);}
+  var lx=20;a.c.forEach(function(c,i){var ly=148+(i>2?0:0);x.fillStyle=c[2];x.fillRect(lx,ly,12,12);var s=c[0]+' '+bn(c[1])+'%';txt(x,s,lx+16,ly+6,'bold 11px Hind Siliguri','#333','left');lx+=x.measureText(s).width+34;});
+  txt(x,'মূল ধাতু: '+a.c[0][0],190,184,'11px Hind Siliguri','#567');}
+function y7g(){var k=+$('y7k').value,p=k/24*100;$('y7kv').textContent=bn(k);$('y7g').innerHTML='<b>'+bn(k)+' ক্যারেট</b> = '+bn(k)+' ÷ ২৪ = <b>'+f(p,2)+'% স্বর্ণ</b>'+(k<24?', বাকি '+f(100-p,2)+'% কপার ও অন্য ধাতু':' (বিশুদ্ধ স্বর্ণ)')+'<div style="height:16px;background:#cfd6dc;border-radius:8px;overflow:hidden;margin-top:6px"><div style="width:'+p+'%;height:100%;background:#e6b422"></div></div><small>২৪ ক্যারেট = ১০০% স্বর্ণ (ডেন্টিস্ট্রি, মুদ্রা, ইলেকট্রনিক সংযোগ)। অলংকারে সাধারণত ২২ বা ২১ ক্যারেট।</small>';}
+$('y7k').oninput=y7g;y7g();
+var Y7Q=[['পিতল (ব্রাস) কোন কোন ধাতুর সংকর?','কপার ও জিংক',['কপার ও টিন','লোহা ও কার্বন','অ্যালুমিনিয়াম ও কপার'],'পিতল = কপার ৬৫% + জিংক ৩৫%।'],
+ ['কাঁসা (ব্রোঞ্জ) কোন কোন ধাতুর সংকর?','কপার ও টিন',['কপার ও জিংক','লোহা ও কার্বন','লোহা ও ক্রোমিয়াম'],'কাঁসা = কপার ৯০% + টিন ১০%।'],
+ ['স্টিলে কার্বন কত শতাংশ থাকে?','১%',['১০%','২৫%','৫০%'],'স্টিল = লোহা ৯৯% + কার্বন ১%।'],
+ ['উড়োজাহাজের বডি কোন সংকর ধাতু দিয়ে তৈরি?','ডুরালুমিন',['পিতল','কাঁসা','স্টিল'],'ডুরালুমিন হালকা। অ্যালুমিনিয়াম ৯৫%, কপার ৪%, Mg, Mn ও Fe ১%।'],
+ ['অস্ত্রোপচারের যন্ত্র কোন সংকর ধাতুর?','স্টেইনলেস স্টিল',['পিতল','কাঁসা','ডুরালুমিন'],'স্টেইনলেস স্টিল: লোহা ৭৪%, ক্রোমিয়াম ১৮%, নিকেল ৮%।'],
+ ['কত ক্যারেট স্বর্ণে স্বর্ণ ৯১.৬৭%?','২২ ক্যারেট',['২১ ক্যারেট','২৪ ক্যারেট','১৮ ক্যারেট'],'২২ ÷ ২৪ × ১০০ = ৯১.৬৭%।'],
+ ['২১ ক্যারেট স্বর্ণে স্বর্ণের শতকরা ভাগ কত?','৮৭.৫%',['৯১.৬৭%','১০০%','৭৫%'],'২১ ÷ ২৪ × ১০০ = ৮৭.৫%।'],
+ ['স্টেইনলেস স্টিলে ক্রোমিয়াম কত শতাংশ?','১৮%',['৮%','৭৪%','২৬%'],'লোহা ৭৪%, ক্রোমিয়াম ১৮%, নিকেল ৮%।']];
+mkGame('y7q','y7o','y7f','y7sc',function(){var g=pick(Y7Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});
+/* ---------- ল্যাব ৮ ---------- */
+var R8={auto:false};
+var R8T=[['১','শুকনো বায়ু','+ অনার্দ্র CaCl₂'],['২','ফুটানো পানি','(O₂ নেই)'],['৩','ফুটানো পানি','+ তেলের স্তর'],['৪','সাধারণ ঠাণ্ডা','পানি (O₂ আছে)']];
+function r8info(){var d=+$('r8d').value;$('r8dv').textContent=bn(d);
+  $('r8t').innerHTML=d===0?'প্রথম দিন: চারটি পেরেকই চকচকে। স্লাইডার ডানে নাড়াও।':d<=2?'<b>'+bn(d)+' দিন পর:</b> পার্থক্য এখনও কম। ৪ নম্বর টিউবের পেরেকে হালকা লালচে ভাব শুরু।':d<=5?'<b>'+bn(d)+' দিন পর:</b> ৪ নম্বর টিউবে মরিচা স্পষ্ট। বাকি তিনটিতে প্রায় নেই।':'<b>'+bn(d)+' দিন পর:</b> শুধু <b>৪ নম্বরে</b> বেশি মরিচা।<br>১ নম্বরে পানি নেই, ২ ও ৩ নম্বরে অক্সিজেন নেই। ৪ নম্বরে অক্সিজেন ও পানি <b>দুটোই</b> আছে। তাই মরিচার জন্য অক্সিজেন ও পানি দুটোই লাগে।';}
+$('r8d').oninput=r8info;r8info();
+$('r8p').onclick=function(){R8.auto=!R8.auto;if(R8.auto&&+$('r8d').value>=7){$('r8d').value=0;r8info();}$('r8p').textContent=R8.auto?'⏸ থামাও':'▶ অটো';};
+var R8I=[['মরিচার বিক্রিয়া','Fe → Fe²⁺ + 4e⁻ ... (জারণ)<br>O₂ + 4H⁺ + 4e⁻ → 2H₂O (বিজারণ)<br>4Fe²⁺ + 4H⁺ + O₂ → 4Fe³⁺ + 2H₂O<br>Fe³⁺ + 3OH⁻ → Fe(OH)₃<br>2Fe(OH)₃ → Fe₂O₃·3H₂O (মরিচা)'],['রং করা','লোহার জিনিসে রং করলে বাতাসের অক্সিজেন ও পানি লাগতে পারে না, তাই ক্ষয় হয় না।'],['ইলেকট্রোপ্লেটিং','প্রলেপের ধাতু (যেমন Cu) ব্যাটারির <b>+</b>, বস্তু (যেমন লোহা) <b>−</b>। CuSO₄ দ্রবণে: Cu → Cu²⁺ + 2e⁻, Cu²⁺ + 2e⁻ → Cu (লোহায় লাগে)।'],['গ্যালভানাইজিং','যেকোনো ধাতুর ওপর জিংকের প্রলেপ। তড়িৎ বিশ্লেষণ লাগে না।'],['পুনঃপ্রক্রিয়াজাতকরণ','পরিত্যক্ত ধাতু আবার ব্যবহারযোগ্য ধাতুতে পরিণত করা। আমেরিকায় ব্যবহৃত কপারের প্রায় ২১% এবং ইউরোপে ব্যবহৃত অ্যালুমিনিয়ামের ৬০% পুনঃপ্রক্রিয়াজাত।']];
+R8I[0][1]=R8I[0][1].replace('Fe → Fe²⁺ + 4e⁻ ... (জারণ)','2Fe → 2Fe²⁺ + 4e⁻ (জারণ)');
+$('r8p2').innerHTML=R8I.map(function(r,i){return '<button data-i="'+i+'">'+r[0]+'</button>';}).join('');
+$('r8p2').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var d=R8I[+b.getAttribute('data-i')];$('r8t').innerHTML='<b>'+d[0]+'</b><br>'+d[1];};
+function r8draw(){var x=ctxOf('r8c'),d=+$('r8d').value,rust=clamp(d/7,0,1),i;x.clearRect(0,0,380,290);
+  if(R8.auto&&FR%55===0){if(d<7){$('r8d').value=d+1;r8info();}else{R8.auto=false;$('r8p').textContent='▶ অটো';}}
+  for(i=0;i<4;i++){var cx=55+i*90;
+    x.fillStyle='rgba(235,245,252,.5)';x.fillRect(cx-22,64,44,146);
+    var wt=[0,64,140,150][i];
+    if(i>0){x.fillStyle=i===3?mixc('#cfe7f7','#d9b08a',rust*.75):'#cfe7f7';x.fillRect(cx-22,wt,44,210-wt);}
+    if(i===2){x.fillStyle='#c9a24a';x.fillRect(cx-22,132,44,8);txt(x,'তেল',cx,136,'bold 8px Hind Siliguri','#4a3200');}
+    if(i===0){for(var g=0;g<9;g++)circ(x,0,cx-18+g*4.5,203-(g%2)*3,2.4,'#fff','#bbb',1);}
+    x.strokeStyle='#7a8a99';x.lineWidth=2;x.beginPath();x.moveTo(cx-22,56);x.lineTo(cx-22,200);x.quadraticCurveTo(cx-22,214,cx,214);x.quadraticCurveTo(cx+22,214,cx+22,200);x.lineTo(cx+22,56);x.stroke();
+    x.fillStyle='#a0693a';x.fillRect(cx-25,44,50,16);
+    var nr=i===3?rust:0;x.strokeStyle=mixc('#9aa3ad','#a8421a',nr);x.lineWidth=4;x.beginPath();x.moveTo(cx+8,160);x.lineTo(cx-6,204);x.stroke();
+    if(nr>0.05)for(var k=0;k<6;k++){x.globalAlpha=nr;circ(x,0,cx+6-k*2.3,166+k*7,3.2,'#b4491b',null);x.globalAlpha=1;}
+    if(i===0||i===2||i===3)txt(x,i===3?'অক্সিজেন':'বায়ু',cx,90,'bold 9.5px Hind Siliguri','#567');
+    txt(x,R8T[i][0],cx,32,'bold 14px Hind Siliguri',NAVY);txt(x,R8T[i][1],cx,234,'bold 10px Hind Siliguri','#333');txt(x,R8T[i][2],cx,248,'10px Hind Siliguri','#555');
+    if(d>=6)txt(x,i===3?'🟧 মরিচা বেশি':'✔ মরিচা নেই',cx,270,'bold 10.5px Hind Siliguri',i===3?RED:'#2a7a3b');}
+}
+var R8Q=[['মরিচা পড়তে কী কী লাগে?','অক্সিজেন ও পানি দুটোই',['শুধু অক্সিজেন','শুধু পানি','শুধু কার্বন ডাই-অক্সাইড'],'লোহায় মরিচা পড়তে অক্সিজেন ও পানি দুটোই দরকার।'],
+ ['মরিচা পরীক্ষায় (১ শুকনো, ২ ফুটানো পানি, ৩ ফুটানো পানি + তেল, ৪ ঠাণ্ডা পানি) কোন টিউবে মরিচা সবচেয়ে বেশি?','৪ নম্বর',['১ নম্বর','২ নম্বর','৩ নম্বর'],'৪ নম্বরে পানি ও অক্সিজেন দুটোই আছে।'],
+ ['ফুটানো পানিতে রাখা পেরেকে মরিচা পড়ে না কেন?','ফোটালে দ্রবীভূত অক্সিজেন বেরিয়ে যায়',['ফোটালে পানি থাকে না','ফোটালে লোহা সক্রিয় হয়','ফোটালে পানি এসিড হয়'],'অক্সিজেন না থাকলে মরিচা পড়ে না।'],
+ ['১ নম্বর টিউবে (CaCl₂) মরিচা পড়ে না কেন?','পানি নেই',['অক্সিজেন নেই','পেরেক নেই','তাপমাত্রা বেশি'],'অনার্দ্র CaCl₂ জলীয় বাষ্প শুষে নেয়, তাই পানি থাকে না।'],
+ ['কপার, পিতল বা কাঁসায় পড়া কালো/সবুজ আস্তরণকে কী বলে?','তাম্রমল',['মরিচা','ধাতুমল','খনিজমল'],'কোনো কোনো তাম্রমলে Cu₂O বা Cu₂S থাকে। একে তাম্রমল বলে।'],
+ ['লোহার ওপর জিংকের প্রলেপ দেওয়াকে কী বলে?','গ্যালভানাইজিং',['ইলেকট্রোপ্লেটিং','ভস্মীকরণ','তাপজারণ'],'যেকোনো ধাতুর ওপর জিংকের প্রলেপকে গ্যালভানাইজিং বলে।'],
+ ['ইলেকট্রোপ্লেটিংয়ে যে বস্তুতে প্রলেপ দেওয়া হবে সেটি ব্যাটারির কোন প্রান্তে যুক্ত থাকে?','ঋণাত্মক (−) প্রান্তে',['ধনাত্মক (+) প্রান্তে','কোনো প্রান্তে নয়','দুই প্রান্তেই'],'প্রলেপের ধাতু +, প্রলেপ নেওয়া বস্তু −।']];
+mkGame('r8q','r8o','r8f','r8sc',function(){var g=pick(R8Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});
+
+/* ---------- ল্যাব ৯ক: ফ্রাশ ও স্পর্শ পদ্ধতি ---------- */
+var S9={st:0};
+var S9D=[
+ {lab:['১ পাইপ','২ গরম পানি','৩ বাতাস','৪ সালফার ওঠে'],t:['ভূগর্ভে সালফারের স্তর (সালফার ১১৫°C-এ গলে)। খনিতে <b>তিনটি এককেন্দ্রিক পাইপ</b> ঢোকানো হয়।','বাইরের পাইপ দিয়ে <b>সুপার হিটেড ওয়াটার</b> (১০০°C-এর বেশি গরম, চাপে তরল) যায়। এতে সালফার গলে যায়।','সবচেয়ে ভেতরের পাইপ দিয়ে <b>২০–২২ বায়ুমণ্ডল চাপের বাতাস</b> দেওয়া হয়।','গলিত সালফার <b>মাঝের পাইপ</b> দিয়ে ওপরে উঠে আসে। ঠাণ্ডা হলে কঠিন হলুদ সালফার।']},
+ {lab:['১ S → SO₂','২ SO₂ → SO₃','৩ অলিয়াম','৪ H₂SO₄'],t:['চুল্লিতে সালফার ও শুষ্ক বায়ু: <b>S + O₂ → SO₂</b>','SO₂ ও O₂ ৪৫০–৫৫০°C তাপমাত্রায় <b>V₂O₅ প্রভাবকের</b> ওপর দিয়ে যায়: <b>2SO₂ + O₂ → 2SO₃</b>','SO₃ সরাসরি পানিতে নয়, <b>গাঢ় H₂SO₄-এ শোষণ</b> করে অলিয়াম (ধূমায়মান H₂SO₄) বানানো হয়: <b>H₂SO₄ + SO₃ → H₂S₂O₇</b>','অলিয়ামে পানি মেশালে: <b>H₂S₂O₇ + H₂O → 2H₂SO₄</b><br><small>সরাসরি SO₃ + H₂O করলে ঘন কুয়াশা হয়, কাজ করা কঠিন।</small>']}];
+function s9show(){var m=+$('s9s').value,d=S9D[m];$('s9st').innerHTML=d.lab.map(function(l,i){return '<span class="'+(i<=S9.st?'on':'')+'">'+l+'</span>';}).join('');$('s9t').innerHTML=d.t[S9.st];}
+$('s9s').onchange=function(){S9.st=0;s9show();};
+$('s9n').onclick=function(){S9.st=(S9.st+1)%4;s9show();};$('s9r').onclick=function(){S9.st=0;s9show();};
+s9show();
+function s9draw(){var x=ctxOf('s9c'),m=+$('s9s').value,st=S9.st,i,k;x.clearRect(0,0,380,280);
+  if(m===0){x.fillStyle='#8a6a45';x.fillRect(0,60,380,50);x.fillStyle='#a8a8a0';x.fillRect(0,110,380,50);x.fillStyle='#e6d35a';x.fillRect(0,160,380,50);x.fillStyle='#8f8f88';x.fillRect(0,210,380,70);
+    txt(x,'সালফারের স্তর (ভূগর্ভে)',290,186,'bold 11px Hind Siliguri','#6a5a00');txt(x,'মাটি ও শিলা',320,85,'bold 11px Hind Siliguri','#fff');
+    x.fillStyle='#5d6b78';x.fillRect(172,30,36,172);x.fillStyle='#c5ced8';x.fillRect(177,30,26,172);x.fillStyle='#fff';x.fillRect(185,30,10,172);
+    if(st>=1){x.fillStyle='rgba(255,150,30,.55)';x.beginPath();x.ellipse(190,196,62,22,0,0,7);x.fill();}
+    for(k=0;k<6;k++){var yy=40+((FR*1.3+k*28)%150);if(st>=1)circ(x,0,174.5,yy,2.4,'#2b6cb0',null),circ(x,0,205.5,yy,2.4,'#2b6cb0',null);if(st>=2)circ(x,0,190,yy,2.4,'#9aa',null);
+      var yu=190-((FR*1.3+k*28)%150);if(st>=3)circ(x,0,181,yu,2.6,'#d4a017',null),circ(x,0,199,yu,2.6,'#d4a017',null);}
+    x.fillStyle='#d4a017';x.fillRect(203,36,80,8);x.fillStyle='#cfd8e0';x.fillRect(280,10,80,52);x.strokeStyle='#789';x.strokeRect(280,10,80,52);
+    x.fillStyle='#e6c200';var lv=st>=3?36:4;x.fillRect(281,61-lv,78,lv);txt(x,'সালফার ট্যাংক',320,22,'bold 9.5px Hind Siliguri','#345');
+    txt(x,'বাইরে: সুপার হিটেড ওয়াটার ↓',165,12,'bold 10px Hind Siliguri',BLU,'right');txt(x,'মাঝে: গলিত সালফার ↑',165,28,'bold 10px Hind Siliguri','#a07800','right');txt(x,'ভেতরে: বাতাস ↓',165,44,'bold 10px Hind Siliguri','#556','right');}
+  else{var bx=[12,144,276],nm=['সালফার চুল্লি','প্রভাবক V₂O₅ চেম্বার','শোষক ট্যাংক'];
+    for(i=0;i<3;i++){x.fillStyle='#eef2f6';x.fillRect(bx[i],70,92,130);x.strokeStyle=i===(st>=2?2:st)?ORG:'#6b7c8a';x.lineWidth=i===(st>=2?2:st)?4:2;x.strokeRect(bx[i],70,92,130);txt(x,nm[i],bx[i]+46,214,'bold 10.5px Hind Siliguri',NAVY);}
+    x.lineWidth=1;x.fillStyle='#cdd6de';x.fillRect(104,128,40,10);x.fillRect(236,128,40,10);
+    x.fillStyle='#e6d35a';x.fillRect(22,186,72,10);txt(x,'S',58,191,'bold 9px Hind Siliguri','#6a5a00');
+    if(st===0)for(i=0;i<4;i++){var fh=12+Math.sin(FR*.25+i*2)*5;x.fillStyle=i%2?ORG:'#f6c34a';x.beginPath();x.moveTo(26+i*17,186);x.lineTo(34+i*17,186-fh);x.lineTo(42+i*17,186);x.fill();}
+    for(i=0;i<3;i++){x.fillStyle='#444';x.fillRect(150,100+i*28,80,6);}txt(x,'৪৫০–৫৫০°C',190,82,'bold 9.5px Hind Siliguri',RED);
+    x.fillStyle=st>=2?'#d9a24a':'#e3c98a';x.fillRect(277,140,90,59);txt(x,st>=3?'H₂SO₄':st>=2?'অলিয়াম':'গাঢ় H₂SO₄',322,170,'bold 10px Hind Siliguri','#5a3a00');
+    for(k=0;k<5;k++){var ph=((FR*.012)+k/5)%1;if(st===0)circ(x,0,30+k*14,180-ph*70,3,'#b8a84a',null);if(st>=1)circ(x,0,lerp(108,140,ph),133,3,'#b5a96a',null);if(st>=2)circ(x,0,lerp(240,272,ph),133,3,'#9bb',null);}
+    if(st>=1)txt(x,'SO₂ + O₂',124,118,'bold 8.5px Hind Siliguri','#765');if(st>=2)txt(x,'SO₃',256,118,'bold 9px Hind Siliguri','#357');
+    if(st===0)txt(x,'শুষ্ক বায়ু →',58,58,'bold 10px Hind Siliguri',BLU);
+    if(st===3)for(k=0;k<3;k++){var dy=74+((FR*1.4+k*22)%64);circ(x,0,310+k*12,dy,3,'#4aa3e0','#fff',1);}
+    if(st===3)txt(x,'+ পানি',322,60,'bold 10px Hind Siliguri',BLU);}
+}
+mkGame('s9q','s9o','s9f','s9sc',function(){var Q=[['লঘু H₂SO₄-এ চুনের পানি ঘোলা হয় (CaSO₄ তৈরি)। এটি H₂SO₄-এর কোন ধর্ম?','এসিড ধর্ম',['জারণ ধর্ম','নিরুদন ধর্ম','বিজারণ ধর্ম'],'ক্ষারের সাথে বিক্রিয়া করে লবণ ও পানি দেওয়া এসিড ধর্ম।'],
+ ['KI-তে ঘন H₂SO₄ দিলে আয়োডিন (I₂) মুক্ত হয়। এটি কোন ধর্ম?','জারণ ধর্ম',['এসিড ধর্ম','নিরুদন ধর্ম','প্রশমন'],'I⁻ জারিত হয়ে I₂ হয়, অর্থাৎ H₂SO₄ জারক হিসেবে কাজ করেছে।'],
+ ['চিনিতে ঘন H₂SO₄ দিলে কালো কার্বন পড়ে থাকে। এটি কোন ধর্ম?','নিরুদন ধর্ম',['জারণ ধর্ম','এসিড ধর্ম','তাপ বিয়োজন'],'চিনি থেকে পানি শোষিত হয়ে শুধু C থাকে। এটি নিরুদন।'],
+ ['2H₂SO₄(গাঢ়) + Cu → CuSO₄ + SO₂ + 2H₂O বিক্রিয়ায় H₂SO₄-এর কোন ধর্ম দেখা যায়?','জারণ ধর্ম',['নিরুদন ধর্ম','এসিড ধর্ম (শুধু)','বিজারণ ধর্ম'],'Cu জারিত হয়ে Cu²⁺ হয়। গাঢ় H₂SO₄ জারক।'],
+ ['স্পর্শ পদ্ধতিতে 2SO₂ + O₂ → 2SO₃ বিক্রিয়ায় প্রভাবক কোনটি?','V₂O₅',['Fe','Ni','MnO₂'],'ভ্যানাডিয়াম পেন্টা-অক্সাইড (V₂O₅) প্রভাবক, ৪৫০–৫৫০°C তাপমাত্রায়।'],
+ ['ফ্রাশ পদ্ধতিতে সালফার গলাতে কী পাঠানো হয়?','সুপার হিটেড ওয়াটার',['ঠাণ্ডা পানি','গাঢ় H₂SO₄','চুনের পানি'],'বাইরের পাইপ দিয়ে সুপার হিটেড ওয়াটার যায়।'],
+ ['স্পর্শ পদ্ধতিতে SO₃ সরাসরি পানিতে না মিশিয়ে কীসে শোষণ করা হয়?','গাঢ় H₂SO₄',['চুনের পানি','NaOH দ্রবণ','লঘু HCl'],'সরাসরি পানিতে ঘন কুয়াশা হয়। তাই গাঢ় H₂SO₄-এ শোষণ করে অলিয়াম বানানো হয়।'],
+ ['H₂SO₄ লঘু করতে কীভাবে মেশাতে হয়?','পানিতে ফোঁটায় ফোঁটায় এসিড',['এসিডে ফোঁটায় ফোঁটায় পানি','এসিডে একসাথে পানি ঢেলে','একসাথে মিশিয়ে'],'হাইড্রেশনের তাপ অত্যধিক, তাই পানিতে ফোঁটায় ফোঁটায় এসিড মেশাতে হয়।'],
+ ['কোন H₂SO₄-এর জারণ ও নিরুদন ধর্ম আছে?','গাঢ় H₂SO₄',['লঘু H₂SO₄','দুটোতেই','কোনোটিতেই নয়'],'শুধু গাঢ় H₂SO₄-এর জারণ ও নিরুদন ধর্ম আছে।'],
+ ['রাবারকে টেকসই করার প্রক্রিয়াটির নাম কী?','ভলকানাইজিং',['গ্যালভানাইজিং','ভস্মীকরণ','তাপজারণ'],'সালফার দিয়ে রাবারের ভলকানাইজিং করা হয়।']];
+ var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});
+
+/* =================== কুইজ =================== */
+var QUIZ=[
+ {q:'কোন টেবিলের রেকর্ডটি সাধারণত ধাতুর বৈশিষ্ট্য প্রকাশ করে? (গলনাঙ্ক, স্ফুটনাঙ্ক, ঘনত্ব)',o:['১৫৩৯, ২৮৮৭, ৭.৮৬','−২১৯, ১৮৩, ০.০০২','−১১৩, ৪৫, ০.৭৯','১১৭, ৮৮৮, ১.৯৬'],a:0,fix:true,e:'ধাতুর গলনাঙ্ক, স্ফুটনাঙ্ক ও ঘনত্ব সাধারণত বেশি হয়। প্রথম রেকর্ডটি (১৫৩৯°C, ২৮৮৭°C, ৭.৮৬) আয়রনের মতো।'},
+ {q:'মরিচা পরীক্ষায় (১ শুকনো বায়ু + CaCl₂, ২ ফুটানো পানি, ৩ ফুটানো পানি + তেল, ৪ ঠাণ্ডা পানি ও অক্সিজেন) কোন টেস্টটিউবের পেরেকে সবচেয়ে বেশি মরিচা ধরবে?',o:['প্রথম','দ্বিতীয়','তৃতীয়','চতুর্থ'],a:3,fix:true,e:'চতুর্থ টেস্টটিউবে পানি ও অক্সিজেন দুটোই আছে। বাকিগুলোতে একটি করে অনুপস্থিত।'},
+ {q:'মরিচা পরীক্ষার ভিত্তিতে সিদ্ধান্ত: (i) মরিচা ধরার জন্য অক্সিজেন আবশ্যক (ii) লবণ প্রভাবক হিসেবে কাজ করছে (iii) কেবল অক্সিজেন উপস্থিত থাকলেই মরিচা ধরে না। কোনটি সঠিক?',o:['i ও ii','ii ও iii','i ও iii','i, ii ও iii'],a:2,fix:true,e:'(i) ঠিক: অক্সিজেন ছাড়া (২, ৩ নং) মরিচা ধরে না। (iii) ঠিক: ১ নং টিউবে বায়ু আছে কিন্তু পানি নেই, তাই মরিচা নেই। (ii) ভুল: CaCl₂ শুধু পানি শুষে নেওয়ার জন্য, প্রভাবক নয়।'},
+ {q:'গিনি সোনার কোন নমুনাটি সর্বোচ্চ দৃঢ় (শক্ত)?',o:['১৮ ক্যারেট','২১ ক্যারেট','২২ ক্যারেট','২৪ ক্যারেট'],a:0,fix:true,e:'বিশুদ্ধ স্বর্ণ (২৪ ক্যারেট) নরম। ক্যারেট যত কম, কপার ইত্যাদি তত বেশি মেশানো থাকে, ফলে তত শক্ত। এখানে ১৮ ক্যারেটে মেশানো ধাতু সবচেয়ে বেশি।'},
+ {q:'লঘুকরণের পানিতে ফোঁটায় ফোঁটায় সালফিউরিক এসিড যোগ করার কারণ, সালফিউরিক এসিড— (i) এর হাইড্রেশন তাপ অত্যধিক (ii) একটি দ্বিক্ষারকীয় এসিড (iii) ক্ষয়কারক পদার্থ',o:['i','i ও iii','ii ও iii','i, ii ও iii'],a:0,fix:true,e:'ফোঁটায় ফোঁটায় মেশানোর আসল কারণ হাইড্রেশনের তাপ অত্যধিক হওয়া। (ii) ও (iii) সত্য তথ্য, কিন্তু এটি মেশানোর পদ্ধতির কারণ নয়।'},
+ {q:'নিচের কোনটি খনিজমল?',o:['Al₂O₃','ZnS','SiO₂','PbS'],a:2,fix:true,e:'SiO₂ (বালি) আকরিকের সাথে মিশে থাকা অপদ্রব্য, তাই খনিজমল। বাকিগুলো আকরিক বা তার উপাদান।'},
+ {q:'সিনেবার কোন ধাতুর আকরিক?',o:['মার্কারি','কপার','জিংক','লেড'],a:0,fix:true,e:'সিনেবার (cinnabar) হলো HgS, যা থেকে মার্কারি (পারদ) পাওয়া যায়।'},
+ {q:'বিশুদ্ধ অ্যালুমিনা (Al₂O₃)-এর গলনাঙ্ক কত?',o:['২০৫০°C','২০০০°C','১০০০°C','৯৫০°C'],a:0,fix:true,e:'Al₂O₃-এর গলনাঙ্ক ২০৫০°C। ক্রায়োলাইট মেশালে ৮০০–১০০০°C-এ গলে। (বইয়ের প্রশ্নে "অ্যালুমিনিয়াম" লেখা আছে, আমি Al₂O₃ করে নিয়েছি।)'},
+ {q:'নিচের কোনটির সক্রিয়তা বেশি?',o:['Cu','Zn','Fe','Pb'],a:1,fix:true,e:'সক্রিয়তা সিরিজে Zn > Fe > Pb > Cu। তাই Zn সবচেয়ে সক্রিয়।'},
+ {q:'কাঁসাতে টিনের পরিমাণ কত?',o:['৯০%','৬৫%','৩৫%','১০%'],a:3,fix:true,e:'কাঁসা = কপার ৯০% + টিন ১০%।'},
+ {q:'কোনটি তরল খনিজ?',o:['পেট্রোলিয়াম','লোহা','প্রাকৃতিক গ্যাস','তামা'],a:0,e:'পেট্রোলিয়াম তরল। লোহা, তামা কঠিন এবং প্রাকৃতিক গ্যাস গ্যাসীয় খনিজ।'},
+ {q:'কোনটি আগ্নেয় শিলা?',o:['গ্রানাইট','বেলেপাথর','কয়লা','চুনাপাথর'],a:0,e:'আগ্নেয়গিরির গলিত ম্যাগমা ঠাণ্ডা হয়ে গ্রানাইটের মতো আগ্নেয় শিলা হয়। বেলেপাথর পাললিক শিলা।'},
+ {q:'ভূত্বকে সবচেয়ে বেশি পাওয়া যায় কোন মৌল?',o:['অক্সিজেন','সিলিকন','অ্যালুমিনিয়াম','আয়রন'],a:0,e:'অক্সিজেন ৪৬%, সিলিকন ২৭%, অ্যালুমিনিয়াম ৮.৪%, আয়রন ৫%।'},
+ {q:'ভূত্বকে সবচেয়ে বেশি পাওয়া যায় কোন ধাতু?',o:['অ্যালুমিনিয়াম','আয়রন','ক্যালসিয়াম','সোডিয়াম'],a:0,e:'ধাতুর মধ্যে অ্যালুমিনিয়াম (৮.৪%) সবচেয়ে বেশি।'},
+ {q:'গ্যালেনার সংকেত কোনটি?',o:['PbS','ZnS','FeS₂','HgS'],a:0,e:'গ্যালেনা = PbS, এ থেকে লেড পাওয়া যায়।'},
+ {q:'কাদামাটি সম্পর্কে কোনটি সঠিক?',o:['খনিজ, কিন্তু আকরিক নয়','আকরিক, কিন্তু খনিজ নয়','খনিজ ও আকরিক দুটোই','খনিজও নয়, আকরিকও নয়'],a:0,e:'কাদামাটিতে অ্যালুমিনিয়াম থাকলেও তা থেকে লাভজনকভাবে ধাতু পাওয়া যায় না। তাই খনিজ, আকরিক নয়।'},
+ {q:'সব আকরিক সম্পর্কে কোনটি সঠিক?',o:['সব আকরিকই খনিজ','সব খনিজই আকরিক','আকরিক শিলার চেয়ে বড়','আকরিক শুধু ভূগর্ভে থাকে'],a:0,e:'যে খনিজ থেকে লাভজনকভাবে ধাতু পাওয়া যায় সেটিই আকরিক, তাই আকরিক মাত্রই খনিজ। উল্টোটা সত্য নয়।'},
+ {q:'ধাতু নিষ্কাশনের প্রথম ধাপ কোনটি?',o:['আকরিক চূর্ণ-বিচূর্ণ করা','ঘনীকরণ','বিজারণ','বিশুদ্ধিকরণ'],a:0,e:'ক্রম: চূর্ণ-বিচূর্ণ → ঘনীকরণ → অক্সাইডে রূপান্তর → বিজারণ → বিশুদ্ধিকরণ।'},
+ {q:'সালফাইড আকরিকের ঘনীকরণ কোন পদ্ধতিতে করা হয়?',o:['ফেনা ভাসমান','হাইড্রোলাইটিক','চৌম্বকীয় পৃথকীকরণ','ভস্মীকরণ'],a:0,e:'সালফাইড আকরিক তেলে দ্রবীভূত হয়ে ফেনায় ভেসে ওঠে।'},
+ {q:'হাইড্রোলাইটিক পদ্ধতি কাজ করে কোন ধর্মের পার্থক্যে?',o:['ভারী আকরিক ও হালকা খনিজমল','চৌম্বক ধর্ম','বর্ণ','গলনাঙ্ক'],a:0,e:'পানির স্রোতে হালকা খনিজমল ধুয়ে যায়, ভারী আকরিক খাঁজে থাকে।'},
+ {q:'বক্সাইট থেকে বিশুদ্ধ Al₂O₃ পেতে কোন রাসায়নিক পদার্থ ব্যবহার করা হয়?',o:['NaOH','HCl','NaCl','H₂SO₄'],a:0,e:'বক্সাইটকে উত্তপ্ত NaOH-এ দিলে সোডিয়াম অ্যালুমিনেট দ্রবণ হয়, যা থেকে পরে Al₂O₃ পাওয়া যায়।'},
+ {q:'ভস্মীকরণ কাকে বলে?',o:['বাতাসের অনুপস্থিতিতে আকরিককে গলনাঙ্কের কম তাপমাত্রায় উত্তপ্ত করা','বাতাসের উপস্থিতিতে উত্তপ্ত করা','তড়িৎ বিশ্লেষণ করা','কার্বন দিয়ে বিজারণ'],a:0,e:'ভস্মীকরণে বাতাস থাকে না। বাতাসের উপস্থিতিতে হলে তাপজারণ।'},
+ {q:'PbS-কে তাপজারণ করলে কোন গ্যাস পাওয়া যায়?',o:['SO₂','CO₂','H₂S','O₂'],a:0,e:'2PbS + 3O₂ → 2PbO + 2SO₂।'},
+ {q:'ZnCO₃-কে ভস্মীকরণ করলে কী পাওয়া যায়?',o:['ZnO ও CO₂','Zn ও CO','ZnS ও O₂','ZnO ও SO₂'],a:0,e:'ZnCO₃ → ZnO + CO₂।'}];
+
+QUIZ=QUIZ.concat([
+ {q:'অ্যালুমিনিয়াম নিষ্কাশনের পদ্ধতি কোনটি?',o:['তড়িৎ বিশ্লেষণ','কার্বন বিজারণ','স্ববিজারণ','ফেনা ভাসমান'],a:0,e:'Al সক্রিয়তা সিরিজের ওপরের দিকে, তাই গলিত Al₂O₃-এর তড়িৎ বিশ্লেষণ করতে হয়।'},
+ {q:'ক্রায়োলাইটের সংকেত কোনটি?',o:['Na₃AlF₆','Al₂O₃','NaAlO₂','CaF₂'],a:0,e:'ক্রায়োলাইট = Na₃AlF₆।'},
+ {q:'Al নিষ্কাশনে ক্যাথোডে কোন বিক্রিয়া ঘটে?',o:['2Al³⁺ + 6e⁻ → 2Al','6O²⁻ → 3O₂ + 12e⁻','Al → Al³⁺ + 3e⁻','Cu²⁺ + 2e⁻ → Cu'],a:0,e:'ক্যাথোডে ধনাত্মক আয়ন ইলেকট্রন গ্রহণ করে বিজারিত হয়।'},
+ {q:'Zn, Fe ও Pb-এর অক্সাইড থেকে ধাতু পাওয়া যায় কোন পদ্ধতিতে?',o:['কার্বন বিজারণ','তড়িৎ বিশ্লেষণ','ফেনা ভাসমান','স্ববিজারণ'],a:0,e:'ZnO + C → Zn + CO, FeO + C → Fe + CO, PbO + C → Pb + CO।'},
+ {q:'মার্কারি (HgS থেকে) নিষ্কাশন হয় কোন পদ্ধতিতে?',o:['স্ববিজারণ','তড়িৎ বিশ্লেষণ','কার্বন বিজারণ','চৌম্বকীয় পৃথকীকরণ'],a:0,e:'কোনো বিজারক ছাড়া শুধু উত্তপ্ত করে: HgS + O₂ → Hg + SO₂।'},
+ {q:'বিগালক ও খনিজমলের বিক্রিয়ায় যা তৈরি হয় তাকে কী বলে?',o:['ধাতুমল','তাম্রমল','মরিচা','অলিয়াম'],a:0,e:'বিগালক + খনিজমল = ধাতুমল (স্ল্যাগ)। এটি গলিত ধাতুর ওপরে ভাসে।'},
+ {q:'খনিজমল এসিডিক হলে কোন বিগালক লাগে?',o:['ক্ষারীয় বিগালক (যেমন CaO)','এসিডিক বিগালক (যেমন SiO₂)','প্রভাবক','কোনোটিই নয়'],a:0,e:'এসিডিক খনিজমলের জন্য ক্ষারীয় বিগালক, ক্ষারীয় খনিজমলের জন্য এসিডিক বিগালক।'},
+ {q:'কপার বিশোধনে অ্যানোড কোনটি?',o:['অবিশুদ্ধ কপার','বিশুদ্ধ কপার','লোহা','কার্বন দণ্ড'],a:0,e:'অবিশুদ্ধ কপার অ্যানোড (ব্যাটারির +), বিশুদ্ধ কপার পাত ক্যাথোড (−)।'},
+ {q:'কপার বিশোধনে তড়িৎ বিশ্লেষ্য কোনটি?',o:['CuSO₄ দ্রবণ','NaCl দ্রবণ','ZnSO₄ দ্রবণ','গলিত Al₂O₃'],a:0,e:'ঐ ধাতুরই লবণের দ্রবণ ব্যবহার হয়।'},
+ {q:'বাত্যা চুল্লিতে তৈরি ধাতুমলের সংকেত কোনটি?',o:['CaSiO₃','CaCO₃','Fe₂O₃','SiO₂'],a:0,e:'CaO + SiO₂ → CaSiO₃ (ধাতুমল)।'},
+ {q:'লোহার গুরুত্বপূর্ণ আকরিক কোনটি?',o:['হেমাটাইট (Fe₂O₃)','বক্সাইট','গ্যালেনা','ক্যালামাইন'],a:0,e:'হেমাটাইট Fe₂O₃, এ থেকে বাত্যা চুল্লিতে আয়রন নিষ্কাশন হয়।'},
+ {q:'স্টিল কীসের সংকর ধাতু?',o:['লোহা (কার্বনসহ)','কপার','অ্যালুমিনিয়াম','জিংক'],a:0,e:'স্টিলে লোহা ৯৯%, কার্বন ১%। তাই স্টিল লোহার সংকর ধাতু।'},
+ {q:'ডুরালুমিনের প্রধান উপাদান কোনটি?',o:['অ্যালুমিনিয়াম','কপার','লোহা','টিন'],a:0,e:'ডুরালুমিন: অ্যালুমিনিয়াম ৯৫%, কপার ৪%, Mg, Mn ও Fe ১%।'},
+ {q:'২২ ক্যারেট স্বর্ণে স্বর্ণের শতকরা পরিমাণ কত?',o:['৯১.৬৭%','৮৭.৫%','৭৫%','১০০%'],a:0,e:'২২ ÷ ২৪ × ১০০ = ৯১.৬৭%।'},
+ {q:'লোহার মরিচা কী?',o:['আর্দ্র ফেরিক অক্সাইড (Fe₂O₃·nH₂O)','ফেরাস সালফেট','কিউপ্রাস অক্সাইড','জিংক অক্সাইড'],a:0,e:'লালচে বাদামি মরিচা আর্দ্র ফেরিক অক্সাইড।'},
+ {q:'লোহায় মরিচা পড়া কোন ধরনের বিক্রিয়া?',o:['জারণ-বিজারণ','প্রশমন','ভস্মীকরণ','তাপ বিয়োজন'],a:0,e:'এক ধাপে জারণ (Fe → Fe²⁺), আরেক ধাপে বিজারণ (O₂ → H₂O) ঘটে।'},
+ {q:'কোনো কোনো তাম্রমলে কোন যৌগ থাকে?',o:['Cu₂O','Fe₂O₃','NaCl','CaCO₃'],a:0,e:'কোনো কোনো তাম্রমলে কিউপ্রাস অক্সাইড (Cu₂O) বা কিউপ্রাস সালফাইড (Cu₂S) থাকে।'},
+ {q:'ইলেকট্রোপ্লেটিংয়ে লোহায় কপারের প্রলেপ দিতে ব্যাটারির ধনাত্মক প্রান্তে কী যুক্ত করা হয়?',o:['কপার দণ্ড','লোহার দণ্ড','কার্বন দণ্ড','জিংক দণ্ড'],a:0,e:'প্রলেপের ধাতু (Cu) ধনাত্মক প্রান্তে, প্রলেপ নেওয়া বস্তু (Fe) ঋণাত্মক প্রান্তে।'},
+ {q:'যেকোনো ধাতুর ওপর জিংকের প্রলেপ দেওয়াকে কী বলে?',o:['গ্যালভানাইজিং','ইলেকট্রোপ্লেটিং','ভলকানাইজিং','তাপজারণ'],a:0,e:'গ্যালভানাইজিংয়ে তড়িৎ বিশ্লেষণ লাগে না।'},
+ {q:'ইউরোপে ব্যবহৃত অ্যালুমিনিয়ামের কত শতাংশ পুনঃপ্রক্রিয়াজাত?',o:['৬০%','২১%','১০%','৯০%'],a:0,e:'বইয়ের তথ্য: ইউরোপে ৬০% অ্যালুমিনিয়াম, আমেরিকায় প্রায় ২১% কপার পুনঃপ্রক্রিয়াজাত।'},
+ {q:'ভূগর্ভ থেকে সালফার উত্তোলনের পদ্ধতির নাম কী?',o:['ফ্রাশ পদ্ধতি','স্পর্শ পদ্ধতি','বাত্যা চুল্লি পদ্ধতি','হল পদ্ধতি'],a:0,e:'ফ্রাশ (Frasch) পদ্ধতিতে সুপার হিটেড ওয়াটার ও বাতাস ব্যবহার হয়।'},
+ {q:'ফ্রাশ পদ্ধতিতে সবচেয়ে ভেতরের পাইপ দিয়ে কী যায়?',o:['২০–২২ বায়ুমণ্ডল চাপের বাতাস','সুপার হিটেড ওয়াটার','গলিত সালফার','গাঢ় H₂SO₄'],a:0,e:'বাইরের পাইপে সুপার হিটেড ওয়াটার, মাঝের পাইপ দিয়ে গলিত সালফার ওপরে ওঠে, ভেতরের পাইপে বাতাস।'},
+ {q:'স্পর্শ পদ্ধতিতে 2SO₂ + O₂ → 2SO₃ বিক্রিয়ার প্রভাবক কোনটি?',o:['V₂O₅','Fe','Ni','MnO₂'],a:0,e:'৪৫০–৫৫০°C তাপমাত্রায় ভ্যানাডিয়াম পেন্টা-অক্সাইড প্রভাবকের ওপর দিয়ে।'},
+ {q:'কোন এসিডকে "রাসায়নিক দ্রব্যের রাজা" বলা হয়?',o:['সালফিউরিক এসিড','HCl','HNO₃','অ্যাসিটিক এসিড'],a:0,e:'এটি সবচেয়ে বেশি ব্যবহৃত রাসায়নিক পদার্থ।'},
+ {q:'চিনিতে ঘন H₂SO₄ দিলে কালো কী পড়ে থাকে?',o:['কার্বন','সালফার','কপার','আয়রন'],a:0,e:'নিরুদন ধর্মে চিনি থেকে পানি সরে গিয়ে কার্বন (C) থাকে।'},
+ {q:'কোন খনিজ নেত্রকোনার বিজয়পুরে ভূপৃষ্ঠে পাওয়া যায়?',o:['সাদা মাটি (কেউলিন)','সালফার','হেমাটাইট','গ্যালেনা'],a:0,e:'বইয়ের তথ্য: সাদা মাটি নেত্রকোনার বিজয়পুরে ভূপৃষ্ঠে পাওয়া যায়।'},
+ {q:'কোন ধাতু বিশুদ্ধ অবস্থায় পাওয়া যায়?',o:['স্বর্ণ','সোডিয়াম','জিংক','অ্যালুমিনিয়াম'],a:0,e:'স্বর্ণ ও প্ল্যাটিনাম এত অসক্রিয় যে বিশুদ্ধ অবস্থায় থাকে।'}
+]);
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+/* =================== প্রশ্ন-উত্তর =================== */
+var QA=[
+ {h:'সৃজনশীল প্রশ্ন (বইয়ের অনুশীলনী)',items:[
+  ['প্রশ্ন ১: (চিত্রে ক্যালামাইনের তাপজারণে উৎপন্ন ZnO ও কোকের মিশ্রণ একটি রিটর্টে উত্তপ্ত করা হচ্ছে, পাশে শীতক ও প্রলং আছে। উৎপন্ন ধাতুকে তড়িৎ বিশ্লেষণে আরও বিশুদ্ধ করা হয়।) (ক) ক্যালামাইনের রাসায়নিক সংকেত লেখো। (খ) তাপজারণের ব্যাখ্যা দাও। (গ) রিটর্টে সংঘটিত মূল বিক্রিয়াটি ব্যাখ্যা করো। (ঘ) উদ্দীপকের ধাতু কেবল তড়িৎ বিশ্লেষণ প্রক্রিয়ায় নিষ্কাশন না করে তিন ধাপে করার কারণ মূল্যায়ন করো।',
+   '<b>(ক)</b> ক্যালামাইনের সংকেত <b>ZnCO₃</b>।<br><b>(খ)</b> সাধারণত সালফাইড আকরিককে গলনাঙ্কের কম তাপমাত্রায় <b>বাতাসের উপস্থিতিতে</b> উত্তপ্ত করে অক্সাইডে পরিণত করার প্রক্রিয়াকে তাপজারণ বলে। এতে সালফার, ফসফরাস, আর্সেনিক উদ্বায়ী অক্সাইড হয়ে বেরিয়ে যায়। যেমন: 2ZnS + 3O₂ → 2ZnO + 2SO₂।<br><small>দ্রষ্টব্য: বইয়ের চিত্রের ক্যাপশনে ক্যালামাইনের (ZnCO₃ → ZnO + CO₂) ক্ষেত্রেও "তাপজারণ" লেখা আছে। কিন্তু বইয়ের নিজের সংজ্ঞা অনুযায়ী কার্বনেট থেকে CO₂ বের করাকে ভস্মীকরণ বলে। পরীক্ষায় কী লিখবে তা শিক্ষককে জিজ্ঞেস করে নিও।</small><br><b>(গ)</b> রিটর্টে ZnO কোকের (কার্বন) সাথে উত্তপ্ত হয়। কার্বন ZnO থেকে অক্সিজেন নিয়ে নেয়, ফলে ZnO <b>বিজারিত</b> হয়ে Zn হয়। মূল বিক্রিয়া: <b>ZnO + C → Zn + CO</b>। এটি কার্বন বিজারণ। উৎপন্ন জিংক শীতকে ঠাণ্ডা হয়ে জমা হয়।<br><b>(ঘ)</b> জিংক সক্রিয়তা সিরিজের মাঝামাঝি ধাতু। এমন ধাতু কার্বন দিয়েই সহজে বিজারিত হয়। তড়িৎ বিশ্লেষণ অনেক বেশি বিদ্যুৎ ও খরচ লাগে এবং গলিত অবস্থায় করতে হয়, তাই সব ধাপে তা ব্যবহার করা লাভজনক নয়। এজন্য প্রথমে ক্যালামাইনকে অক্সাইডে (ZnO) রূপান্তর (তাপ দিয়ে), তারপর সস্তা কার্বন বিজারণ (ZnO + C → Zn + CO), সবশেষে শুধু বিশুদ্ধ করার জন্য তড়িৎ বিশ্লেষণ। এভাবে খরচ কম হয়, তবু বিশুদ্ধ ধাতু পাওয়া যায়। তাই তিন ধাপের পদ্ধতিটিই যুক্তিযুক্ত।'],
+  ['প্রশ্ন ২: একটি খনিতে বক্সাইট ও ক্যালামাইন মিশ্রিত কিছু খনিজের অস্তিত্ব পাওয়া গেল। প্রফেসর রহমানের নেতৃত্বে একদল রসায়নবিদ উক্ত খনিজ থেকে দুটি ভিন্ন পদ্ধতিতে ধাতু দুটি নিষ্কাশন করলেন। (ক) খনিজ কাকে বলে? (খ) "সকল খনিজই আকরিক নয়"—ব্যাখ্যা করো। (গ) দ্বিতীয় আকরিকটির বিয়োজন প্রাপ্ত অক্সাইডদ্বয়ের প্রকৃতি ব্যাখ্যা করো। (ঘ) ভিন্ন পদ্ধতিতে ধাতু দুটি নিষ্কাশনের কারণ যুক্তিসহ লেখো।',
+   '<b>(ক)</b> মাটির ওপরে বা তলদেশে যেসব পদার্থ থেকে প্রয়োজনীয় ধাতু বা অধাতু সংগ্রহ করা হয়, সেগুলোকে খনিজ বলে।<br><b>(খ)</b> যে খনিজ থেকে লাভজনকভাবে ধাতু নিষ্কাশন করা যায় সেটিই আকরিক। কিছু খনিজ থেকে ধাতু পাওয়া গেলেও তা লাভজনক নয়। যেমন কাদামাটিতে অ্যালুমিনিয়াম আছে, কিন্তু তা থেকে লাভজনকভাবে অ্যালুমিনিয়াম পাওয়া যায় না। তাই কাদামাটি খনিজ, আকরিক নয়। অর্থাৎ সব আকরিক খনিজ, কিন্তু সব খনিজ আকরিক নয়।<br><b>(গ)</b> দ্বিতীয় আকরিক ক্যালামাইন (ZnCO₃)। এটি তাপে বিয়োজিত হয়: <b>ZnCO₃ → ZnO + CO₂</b>। ZnO <b>উভধর্মী অক্সাইড</b>: এসিডের সাথেও (ZnO + 2HCl → ZnCl₂ + H₂O) আবার ক্ষারের সাথেও (ZnO + 2NaOH → Na₂ZnO₂ + H₂O) বিক্রিয়া করে। CO₂ <b>অম্লধর্মী অক্সাইড</b>: পানিতে মিশে কার্বনিক এসিড হয় ও ক্ষারের সাথে লবণ-পানি দেয়।<br><b>(ঘ)</b> অ্যালুমিনিয়াম সক্রিয়তা সিরিজের ওপরের দিকে, জিংক মাঝামাঝি। Al-এর অক্সিজেনের সাথে বন্ধন এত শক্ত যে কার্বন দিয়ে Al₂O₃ বিজারিত হয় না। তাই Al নিষ্কাশনে গলিত Al₂O₃ (ক্রায়োলাইটসহ) তড়িৎ বিশ্লেষণ করা হয়। কিন্তু Zn কম সক্রিয়, তাই ZnO + C → Zn + CO বিক্রিয়ায় কার্বন বিজারণ করা যায়, যা সস্তা ও সহজ। এজন্য দুটি ধাতু দুটি ভিন্ন পদ্ধতিতে নিষ্কাশিত হয়।'],
+  ['প্রশ্ন ৩: পর্যায় সারণির গ্রুপ-১৬ এর একটি মৌলিক পদার্থকে বায়ুতে পোড়ালে একটি অক্সাইড A পাওয়া যায়। অক্সাইডটি ঝাঁজালো গন্ধযুক্ত অত্যন্ত বিষাক্ত গ্যাস। লা-শাতেলিয়ার নীতি প্রয়োগ করে শিল্পক্ষেত্রে A থেকে একটি এসিড B তৈরি করা যায়। (ক) আকরিক কাকে বলে? (খ) A অক্সাইড অম্লধর্মী—ব্যাখ্যা করো। (গ) উদ্দীপকের B এসিডটি তৈরি করার প্রক্রিয়া বর্ণনা করো। (ঘ) উদ্দীপকের B এসিডটির গাঢ়ত্বের ওপর জারণ-ধর্ম নির্ভর করে—যুক্তি দ্বারা প্রমাণ করো।',
+   'এখানে মৌল = সালফার (S), A = <b>SO₂</b>, B = <b>H₂SO₄</b>।<br><b>(ক)</b> যে খনিজ থেকে লাভজনকভাবে ধাতু বা অধাতু নিষ্কাশন করা যায় তাকে আকরিক বলে।<br><b>(খ)</b> SO₂ পানিতে দ্রবীভূত হয়ে সালফিউরাস এসিড (H₂SO₃) দেয়: SO₂ + H₂O → H₂SO₃। এটি নীল লিটমাসকে লাল করে। আবার ক্ষারের সাথে লবণ ও পানি দেয়: SO₂ + 2NaOH → Na₂SO₃ + H₂O। তাই SO₂ অম্লধর্মী অক্সাইড।<br><b>(গ)</b> শিল্পে <b>স্পর্শ পদ্ধতিতে</b> H₂SO₄ তৈরি হয়:<br>১) সালফারকে শুষ্ক বায়ুতে পুড়িয়ে SO₂: S + O₂ → SO₂<br>২) SO₂ ও O₂ ৪৫০–৫৫০°C তাপমাত্রায় V₂O₅ প্রভাবকের ওপর দিয়ে চালনা করে SO₃: 2SO₂ + O₂ → 2SO₃। বিক্রিয়াটি উভমুখী। অতিরিক্ত বায়ু দিলে সাম্য ডানে সরে বেশি SO₃ পাওয়া যায় (লা-শাতেলিয়ার নীতি)। প্রভাবক শুধু বিক্রিয়ার গতি বাড়ায়।<br>৩) SO₃ সরাসরি পানিতে নয়, গাঢ় H₂SO₄-এ শোষণ করে অলিয়াম বানানো হয়: H₂SO₄ + SO₃ → H₂S₂O₇। তারপর পানি মেশালে: H₂S₂O₇ + H₂O → 2H₂SO₄। (সরাসরি পানিতে মেশালে ঘন কুয়াশা হয়।)<br><b>(ঘ)</b> জারণ ধর্ম শুধু <b>গাঢ়</b> H₂SO₄-এর আছে। প্রমাণ: কপার সক্রিয়তা সিরিজে হাইড্রোজেনের নিচে, তাই লঘু H₂SO₄-এর সাথে বিক্রিয়া করে না। কিন্তু গাঢ় H₂SO₄ উত্তপ্ত অবস্থায় Cu-কে জারিত করে Cu²⁺ বানায় এবং নিজে বিজারিত হয়ে SO₂ হয়: <b>2H₂SO₄(গাঢ়) + Cu → CuSO₄ + SO₂ + 2H₂O</b>। তাছাড়া KI-তে গাঢ় H₂SO₄ দিলে আয়োডিন মুক্ত হয়। লঘুতে এমন হয় না। অতএব জারণ ধর্ম এসিডের গাঢ়ত্বের ওপর নির্ভর করে।']]},
+ {h:'সংক্ষিপ্ত প্রশ্ন (অনুশীলনের জন্য, আমার বানানো)',items:[
+  ['খনিজ সম্পদ কাকে বলে? উদাহরণ দাও।','প্রয়োজনীয় ধাতু, অধাতু বা তাদের যৌগ যেগুলো প্রকৃতি (মাটি, পানি, বায়ুমণ্ডল) থেকে সংগ্রহ করা হয়, তাদের খনিজ সম্পদ বলে। এগুলো কঠিন (লোহা, তামা), তরল (পেট্রোলিয়াম) বা গ্যাসীয় (প্রাকৃতিক গ্যাস) হতে পারে।'],
+  ['শিলা কত প্রকার ও কী কী? প্রতিটির একটি করে উদাহরণ দাও।','তিন প্রকার: ১) <b>আগ্নেয় শিলা</b> (গলিত ম্যাগমা ঠাণ্ডা হয়ে, যেমন গ্রানাইট); ২) <b>পাললিক শিলা</b> (কাদা, বালি পলি হয়ে স্তরে স্তরে জমে, যেমন বেলেপাথর); ৩) <b>রূপান্তরিত শিলা</b> (আগ্নেয় বা পাললিক শিলা তাপ ও চাপে নতুন রূপ নিলে। বইয়ে উদাহরণ হিসেবে কয়লা দেওয়া আছে)।'],
+  ['খনিজ ও আকরিকের পার্থক্য লেখো।','<b>খনিজ:</b> মাটির ওপরে বা নিচে যেসব পদার্থ থেকে ধাতু বা অধাতু সংগ্রহ করা হয়। <b>আকরিক:</b> যে খনিজ থেকে লাভজনকভাবে ধাতু নিষ্কাশন করা যায়। সব আকরিকই খনিজ, কিন্তু সব খনিজ আকরিক নয়। যেমন গ্যালেনা আকরিক, কাদামাটি শুধু খনিজ।'],
+  ['ঘনীকরণ কাকে বলে? তিনটি ঘনীকরণ পদ্ধতি লেখো।','আকরিকের সাথে মিশে থাকা অপদ্রব্য (খনিজমল) সরিয়ে বিশুদ্ধ আকরিক পাওয়ার পদ্ধতিকে ঘনীকরণ বলে। পদ্ধতি: ১) <b>হাইড্রোলাইটিক</b> (অক্সাইড আকরিক, পানির স্রোতে হালকা খনিজমল ধুয়ে যায়); ২) <b>ফেনা ভাসমান</b> (সালফাইড আকরিক, তেল ও বায়ুপ্রবাহে ফেনায় ভাসে); ৩) <b>চৌম্বকীয় পৃথকীকরণ</b> (চৌম্বক আকরিক, যেমন ক্রোমাইট)। এছাড়া রাসায়নিক পদ্ধতি (যেমন বক্সাইট + NaOH)।'],
+  ['ভস্মীকরণ ও তাপজারণের পার্থক্য লেখো।','<b>ভস্মীকরণ:</b> গলনাঙ্কের কম তাপমাত্রায়, <b>বাতাসের অনুপস্থিতিতে</b> উত্তপ্ত করা। কার্বনেট বা হাইড্রোক্সাইড থেকে CO₂ বা পানি বেরোয়। যেমন CaCO₃ → CaO + CO₂। <b>তাপজারণ:</b> সাধারণত সালফাইড আকরিককে <b>বাতাসের উপস্থিতিতে</b> উত্তপ্ত করা। যেমন 2PbS + 3O₂ → 2PbO + 2SO₂।'],
+  ['বিগালক ও ধাতুমল বলতে কী বোঝো?','খনিজমল সরানোর জন্য যে পদার্থ যোগ করা হয় তা <b>বিগালক</b>। খনিজমল ক্ষারীয় হলে এসিডিক বিগালক (SiO₂), এসিডিক হলে ক্ষারীয় বিগালক (CaO) ব্যবহার করা হয়। বিগালক ও খনিজমলের বিক্রিয়ায় যে পদার্থ তৈরি হয় তা <b>ধাতুমল</b>। যেমন CaO + SiO₂ → CaSiO₃। এটি গলিত ধাতুর ওপরে ভাসে।'],
+  ['সক্রিয়তা অনুযায়ী ধাতু নিষ্কাশনের পদ্ধতিগুলো লেখো।','বেশি সক্রিয় (K, Na, Ca, Mg, Al): তড়িৎ বিশ্লেষণ। মধ্যম সক্রিয় (Zn, Fe, Pb): কার্বন বিজারণ (অক্সাইড + C → ধাতু + CO)। কম সক্রিয় (Cu, Hg, Ag): স্ববিজারণ (বিজারক ছাড়াই উত্তপ্ত করে)। প্রায় অসক্রিয় (Pt, Au): বিশুদ্ধ অবস্থায় পাওয়া যায়।']]}
+];
+
+QA[1].items.push(
+  ['অ্যালুমিনিয়াম নিষ্কাশনে ক্রায়োলাইট মেশানো হয় কেন? ইলেকট্রোডের বিক্রিয়া লেখো।','Al₂O₃-এর গলনাঙ্ক ২০৫০°C, অনেক বেশি। ক্রায়োলাইট (Na₃AlF₆) মেশালে ৮০০–১০০০°C-এ গলে, ফলে শক্তি ও খরচ কমে। অ্যানোড (কার্বন দণ্ড): 6O²⁻ → 3O₂ + 12e⁻ (জারণ)। ক্যাথোড (গ্রাফাইট-আস্তরণযুক্ত পাত্র): 2Al³⁺ + 6e⁻ → 2Al (বিজারণ)। গলিত Al তলায় জমে।'],
+  ['তড়িৎ বিশোধনে কপার কীভাবে বিশুদ্ধ করা হয়?','অবিশুদ্ধ কপার দণ্ড অ্যানোড (ব্যাটারির +), বিশুদ্ধ কপারের পাতলা পাত ক্যাথোড (−), তড়িৎ বিশ্লেষ্য CuSO₄ দ্রবণ। অ্যানোডে Cu → Cu²⁺ + 2e⁻ (জারণ), ক্যাথোডে Cu²⁺ + 2e⁻ → Cu (বিজারণ)। অবিশুদ্ধ দণ্ড ক্রমে ছোট হয়, বিশুদ্ধ পাত মোটা হয়। কপারের বিশুদ্ধতা ৯৮% থেকে ৯৯.৯% হয়।'],
+  ['বাত্যা চুল্লিতে আয়রন নিষ্কাশন সংক্ষেপে লেখো।','চুল্লির ওপর থেকে হেমাটাইট (Fe₂O₃), কোক ও চুনাপাথর দেওয়া হয়, নিচ থেকে গরম বায়ু ঢোকে। Fe₂O₃ + 3C → 2Fe + 3CO। চুনাপাথর ভেঙে CaO হয় (CaCO₃ → CaO + CO₂), CaO খনিজমল SiO₂-এর সাথে মিশে ধাতুমল CaSiO₃ হয় (CaO + SiO₂ → CaSiO₃)। নিচে গলিত আয়রন ও তার ওপরে ধাতুমল জমে, আলাদাভাবে বের করা হয়।'],
+  ['সংকর ধাতু কী? সংকর ধাতু তৈরির সুবিধা কী? দুটি উদাহরণ দাও।','গলিত ধাতুর মধ্যে অন্য ধাতু বা অধাতু মিশিয়ে ঠাণ্ডা করলে যে কঠিন পদার্থ পাওয়া যায় তা সংকর ধাতু। এটি সাধারণত মূল ধাতুর চেয়ে বেশি উপযোগী (যেমন তামা নরম, কিন্তু টিন মিশিয়ে কাঁসা তৈরি করলে শক্ত হয়)। উদাহরণ: স্টিল (লোহা ৯৯% + কার্বন ১%), পিতল (কপার ৬৫% + জিংক ৩৫%)।'],
+  ['২২ ক্যারেট স্বর্ণে কত শতাংশ স্বর্ণ থাকে? হিসাব করো।','স্বর্ণ = ২২ ÷ ২৪ × ১০০ = ৯১.৬৭%। বাকি ৮.৩৩% কপার ও অন্য ধাতু। (২১ ক্যারেটে ২১ ÷ ২৪ × ১০০ = ৮৭.৫%)।'],
+  ['লোহায় মরিচা পড়ার শর্ত ও বিক্রিয়া লেখো।','মরিচা পড়তে বায়ুমণ্ডলের অক্সিজেন (O₂) ও পানি (H₂O) দুটোই লাগে। এটি জারণ-বিজারণ বিক্রিয়া: 2Fe → 2Fe²⁺ + 4e⁻ (জারণ); O₂ + 4H⁺ + 4e⁻ → 2H₂O (বিজারণ); 4Fe²⁺ + 4H⁺ + O₂ → 4Fe³⁺ + 2H₂O; Fe³⁺ + 3OH⁻ → Fe(OH)₃; 2Fe(OH)₃ → Fe₂O₃·3H₂O (মরিচা)।'],
+  ['মরিচা সৃষ্টির পরীক্ষাটি বর্ণনা করো।','চারটি টেস্টটিউবে চারটি লোহার পেরেক: (১) বায়ু ও অনার্দ্র CaCl₂ (পানি নেই); (২) ফুটানো পানি (O₂ নেই); (৩) ফুটানো পানি, ওপরে তেলের স্তর (বায়ু ঢুকতে পারে না); (৪) ঠাণ্ডা পানি ও অক্সিজেন। এক সপ্তাহ পর শুধু ৪ নম্বরে মরিচা ধরে। সিদ্ধান্ত: মরিচার জন্য অক্সিজেন ও পানি দুটোই দরকার।'],
+  ['ধাতুর ক্ষয়রোধের তিনটি উপায় লেখো।','১) <b>রং করা:</b> বাতাসের অক্সিজেন ও পানি লাগতে দেয় না। ২) <b>ইলেকট্রোপ্লেটিং:</b> তড়িৎ বিশ্লেষণের মাধ্যমে প্রলেপ দেওয়া (যেমন লোহার ওপর কপার; প্রলেপের ধাতু ব্যাটারির +, বস্তু −)। ৩) <b>গ্যালভানাইজিং:</b> ধাতুর ওপর জিংকের প্রলেপ, তড়িৎ বিশ্লেষণ লাগে না।'],
+  ['ফ্রাশ পদ্ধতিতে সালফার উত্তোলন বর্ণনা করো।','খনিতে তিনটি এককেন্দ্রিক পাইপ ঢোকানো হয়। বাইরের পাইপ দিয়ে সুপার হিটেড ওয়াটার পাঠিয়ে সালফার (গলনাঙ্ক ১১৫°C) গলানো হয়। ভেতরের পাইপ দিয়ে ২০–২২ বায়ুমণ্ডল চাপের বাতাস দেওয়া হয়। গলিত সালফার মাঝের পাইপ দিয়ে ওপরে উঠে আসে।'],
+  ['সালফিউরিক এসিডের তিনটি ধর্ম পরীক্ষাসহ লেখো।','১) <b>এসিড ধর্ম:</b> লঘু H₂SO₄ চুনের পানিতে ঘোলা CaSO₄ দেয়। ২) <b>জারণ ধর্ম (গাঢ়):</b> KI-তে ঘন H₂SO₄ দিলে আয়োডিন মুক্ত হয়; 2H₂SO₄ + Cu → CuSO₄ + SO₂ + 2H₂O। ৩) <b>নিরুদন ধর্ম (গাঢ়):</b> চিনিতে ঘন H₂SO₄ দিলে পানি শোষিত হয়ে কালো কার্বন পড়ে থাকে: C₁₂H₂₂O₁₁ + H₂SO₄ → 12C + H₂SO₄·11H₂O।'],
+  ['H₂SO₄ লঘু করতে পানিতে ফোঁটায় ফোঁটায় এসিড মেশাতে হয় কেন?','পানিতে মেশানোর সময় হাইড্রেশনের তাপ অত্যধিক নির্গত হয়। ফোঁটায় ফোঁটায় না মেশালে অনেক তাপ হঠাৎ বের হয়ে ছিটকে পড়তে পারে, যা বিপজ্জনক।']
+);
+
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+/* ---------- ল্যাব ৯খ: H₂SO₄-এর ধর্ম ---------- */
+var A9={on:false,t:0,done:false};
+var A9D=[
+ {s:'টেস্টটিউবে চুনের পানি, ড্রপারে লঘু H₂SO₄।',r:'<b>এসিড ধর্ম:</b> চুনের পানি ঘোলা হয় (সাদা CaSO₄ তৈরি)।<br>H₂SO₄ + Ca(OH)₂ → CaSO₄ + 2H₂O'},
+ {s:'টেস্টটিউবে KI দ্রবণ, ড্রপারে ঘন H₂SO₄।',r:'<b>জারণ ধর্ম:</b> আয়োডিন (I₂) মুক্ত হয়, দ্রবণ বাদামি হয়। I⁻ জারিত হয়ে I₂ হয়।'},
+ {s:'বিকারে সাদা চিনি, ড্রপারে ঘন H₂SO₄।',r:'<b>নিরুদন ধর্ম:</b> চিনি থেকে পানি শোষিত হয়, কালো কার্বন পড়ে থাকে।<br>C₁₂H₂₂O₁₁ + H₂SO₄ → 12C + H₂SO₄·11H₂O'},
+ {s:'টেস্টটিউবে কপারের পাত ও গাঢ় H₂SO₄, নিচে বার্নার।',r:'<b>জারণ ধর্ম:</b> Cu জারিত হয়ে CuSO₄ (নীল দ্রবণ) হয়, ঝাঁজালো গন্ধের SO₂ বের হয়।<br>2H₂SO₄(গাঢ়) + Cu → CuSO₄ + SO₂ + 2H₂O'},
+ {s:'বিকারে পানি, ড্রপারে H₂SO₄।',r:'<b>লঘুকরণ:</b> পানিতে <b>ফোঁটায় ফোঁটায়</b> এসিড মেশাতে হয়, কারণ হাইড্রেশনের তাপ অত্যধিক। তাপমাত্রা বেড়ে যায়।'}];
+function a9info(){var d=A9D[+$('a9s').value];$('a9t').innerHTML=A9.done?d.r:(A9.on?'পরীক্ষা চলছে… লক্ষ করো কী ঘটে।':'<b>প্রস্তুতি:</b> '+d.s+'<br>"চালাও" চাপো।');}
+$('a9s').onchange=function(){A9.on=false;A9.t=0;A9.done=false;a9info();};
+$('a9go').onclick=function(){A9.t=0;A9.on=true;A9.done=false;a9info();};$('a9rs').onclick=function(){A9.t=0;A9.on=false;A9.done=false;a9info();};
+a9info();
+function a9draw(){var x=ctxOf('a9c'),m=+$('a9s').value,i;x.clearRect(0,0,380,290);
+  if(A9.on){A9.t=Math.min(1.02,A9.t+.0042);if(A9.t>=1&&!A9.done){A9.done=true;A9.on=false;a9info();}}
+  var t=ease(clamp(A9.t,0,1)),cx=190,beaker=(m===2||m===4);
+  var dtxt=m===0?'লঘু H₂SO₄':m===4?'H₂SO₄':m===3?'':'ঘন H₂SO₄';
+  if(m!==3&&A9.t<.45&&(A9.on||A9.t>0)){x.fillStyle='#d9e2ea';x.fillRect(cx-5,6,10,36);x.fillStyle='#8aa';x.fillRect(cx-3,42,6,12);txt(x,dtxt,cx+48,18,'bold 10.5px Hind Siliguri',NAVY,'left');
+    for(i=0;i<3;i++){var dy=56+((FR*2+i*28)%90);if(dy<150)circ(x,0,cx,dy,3,m===0?'#bcd':'#d9c9a0','#678',1);}}
+  if(!beaker){x.fillStyle='rgba(215,235,245,.55)';var lv=m===0?150:m===1?150:160;
+    if(m===0){x.fillStyle=mixc('#d6eaf5','#e4e1d6',t);x.fillRect(160,lv,60,90);for(i=0;i<Math.floor(t*22);i++)circ(x,0,166+(i*13)%48,lv+14+((i*29)%70),2.2,'#fafaf5','#aaa',1);txt(x,A9.t>.5?'ঘোলা (CaSO₄)':'চুনের পানি',cx,196,'bold 10px Hind Siliguri','#345');}
+    if(m===1){x.fillStyle=mixc('#e4f2f8','#7a3b14',t);x.fillRect(160,lv,60,90);txt(x,A9.t>.5?'I₂ মুক্ত':'KI দ্রবণ',cx,196,'bold 10.5px Hind Siliguri','#fff');if(A9.t>.5)for(i=0;i<4;i++){var vp=((FR*.01)+i/4)%1;x.globalAlpha=1-vp;circ(x,0,cx-12+i*8,150-vp*70,4,'#7a2fa0',null);x.globalAlpha=1;}}
+    if(m===3){x.fillStyle=mixc('#e4f2f8','#3a9bc9',t);x.fillRect(160,lv,60,80);txt(x,'গাঢ় H₂SO₄ + Cu',232,190,'bold 10.5px Hind Siliguri','#234','left');
+      x.fillStyle=mixc('#d2783a','#9a6a4a',t*.6);x.fillRect(cx-4,170,8,60*(1-t*.35));
+      if(A9.on||A9.t>0)for(i=0;i<8;i++){var fh=14+Math.sin(FR*.3+i*2)*6;x.fillStyle=i%2?ORG:'#f6c34a';x.beginPath();x.moveTo(158+i*8,264);x.lineTo(162+i*8,264-fh);x.lineTo(166+i*8,264);x.fill();}
+      if(A9.t>.3)for(i=0;i<5;i++){var gp=((FR*.012)+i/5)%1;x.globalAlpha=1-gp*.6;circ(x,0,cx-14+i*7,170-gp*100,2.5+gp*3,'#e8e8c8','#aa9',1);x.globalAlpha=1;}
+      if(A9.t>.3)txt(x,'SO₂ ↑ (ঝাঁজালো)',cx,40,'bold 10.5px Hind Siliguri',RED);}
+    x.strokeStyle='#7a8a99';x.lineWidth=2;x.beginPath();x.moveTo(160,120);x.lineTo(160,230);x.quadraticCurveTo(160,244,cx,244);x.quadraticCurveTo(220,244,220,230);x.lineTo(220,120);x.stroke();
+    if(m===3&&A9.t>.6)txt(x,'নীল CuSO₄ দ্রবণ',232,208,'bold 10.5px Hind Siliguri','#2a7ab0','left');}
+  else{x.strokeStyle='#7a8a99';x.lineWidth=2;x.beginPath();x.moveTo(130,130);x.lineTo(130,250);x.lineTo(250,250);x.lineTo(250,130);x.stroke();
+    if(m===2){x.fillStyle='#f4f4f0';x.fillRect(131,206,118,43);txt(x,'সাদা চিনি',cx,236,'bold 10.5px Hind Siliguri','#555');
+      var h=t*150;x.fillStyle=mixc('#f3e3a0','#111',clamp(t*1.6,0,1));x.fillRect(165,206-h,50,h+4);
+      if(A9.t>.25)for(i=0;i<6;i++){var sp=((FR*.01)+i/6)%1;x.globalAlpha=.7-sp*.6;circ(x,0,160+i*13,200-t*150-sp*50,5+sp*6,'#eee','#ccc',1);x.globalAlpha=1;}
+      if(A9.t>.5)txt(x,'কালো কার্বন (C)',cx,206-h-12,'bold 10.5px Hind Siliguri','#111');}
+    if(m===4){x.fillStyle='rgba(120,180,230,.55)';x.fillRect(131,170,118,79);txt(x,'পানি',cx,225,'bold 11px Hind Siliguri','#134');
+      x.fillStyle='#fff';x.fillRect(268,100,10,130);x.strokeStyle='#678';x.strokeRect(268,100,10,130);x.fillStyle=RED;var th=20+t*70;x.fillRect(270,226-th,6,th);circ(x,0,273,232,8,RED,'#678',1);txt(x,'তাপ বাড়ে',320,150,'bold 10.5px Hind Siliguri',RED);
+      if(A9.t>.4)for(i=0;i<4;i++){var wp=((FR*.01)+i/4)%1;x.globalAlpha=.5-wp*.4;circ(x,0,155+i*25,168-wp*30,6,'#fff',null);x.globalAlpha=1;}}}
+  x.lineWidth=1;
+}
+/* ---------- মূল ফ্রেম ---------- */
+function frame(){FR++;e1draw();c2draw();h3draw();m4draw();z5draw();b6draw();y7draw();r8draw();s9draw();a9draw();requestAnimationFrame(frame);}
+frame();
+
+</script>
+</body>
+</html>
