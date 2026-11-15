@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>এসিড-ক্ষারক সমতা (অধ্যায় ৯) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+</style>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#chemistry">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">🧪 রসায়ন &rsaquo; নবম অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">⚖️ এসিড-ক্ষারক সমতা (Balance of Acid-Base)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🎨 ল্যাব ১</a><a href="#lab2">🧪 ল্যাব ২</a><a href="#lab3">🥛 ল্যাব ৩</a><a href="#lab4">💡 ল্যাব ৪</a><a href="#lab5">🔬 ল্যাব ৫</a><a href="#lab6">⚖️ ল্যাব ৬</a><a href="#lab7">🌧️ ল্যাব ৭</a><a href="#lab8">💧 ল্যাব ৮</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> এসিড, ক্ষারক ও ক্ষারের ধর্ম বলতে; pH বুঝিয়ে মান বের করতে; প্রশমন বিক্রিয়া ও লবণের প্রকৃতি বলতে; এসিড বৃষ্টির কারণ ও ক্ষতি ব্যাখ্যা করতে; পানির খরতা, দূষণ ও বিশুদ্ধকরণ বুঝতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের (৯ম অধ্যায়ের) ক্রম মেনে সহজ ভাষায় লেখা। পরীক্ষায় লিখতে হলে বইয়ের ভাষা ও শিক্ষকের নির্দেশ মেনে লিখবে।</div>
+
+    <h3>৯.১ এসিড (Acid) ⭐⭐⭐</h3>
+    <ul>
+      <li><b>এসিড</b> এমন রাসায়নিক দ্রব্য যা পানিতে দ্রবীভূত হলে ভেঙে (বিয়োজিত হয়ে) <b>হাইড্রোজেন আয়ন (H⁺) বা প্রোটন</b> দান করে।</li>
+      <li><b>সবল এসিড:</b> পানিতে ১০০% বিয়োজিত হয়। একটি তীর (→) দিয়ে লেখা হয়। যেমন HCl ও H₂SO₄।</li>
+    </ul>
+    <p class="eq">HCl(aq) → H⁺(aq) + Cl⁻(aq)<br>H₂SO₄(aq) → 2H⁺(aq) + SO₄²⁻(aq)</p>
+    <ul>
+      <li><b>দুর্বল (মৃদু) এসিড:</b> পানিতে আংশিক বিয়োজিত হয়। উভমুখী তীর (⇌) দিয়ে লেখা হয়। যেমন H₂CO₃ ও CH₃COOH।</li>
+      <li>উদাহরণ: ২৫°C তাপমাত্রায় ১০০০টি CH₃COOH অণুর মধ্যে মাত্র <b>৪টি</b> ভাঙে, বাকি ৯৯৬টি অবিয়োজিত থাকে।</li>
+    </ul>
+    <p class="eq">H₂CO₃(aq) ⇌ 2H⁺(aq) + CO₃²⁻(aq)<br>CH₃COOH(aq) ⇌ H⁺(aq) + CH₃COO⁻(aq)</p>
+    <ul>
+      <li><b>গাঢ় এসিড</b> = পানি কম, এসিড বেশি। <b>লঘু এসিড</b> = পানি অনেক বেশি। (গাঢ়/লঘু আর সবল/দুর্বল এক জিনিস নয়।)</li>
+      <li>এসিড টক স্বাদের। এসিড নীল লিটমাসকে <b>লাল</b> করে।</li>
+      <li><b>খাবারের এসিড:</b> দুধে ল্যাকটিক, সফট ড্রিংকসে কার্বনিক, লেবুতে সাইট্রিক, তেঁতুলে টারটারিক, ভিনেগারে ইথানয়িক, চায়ে ট্যানিক এসিড। এগুলো খুব দুর্বল, তাই শরীরের ক্ষতি করে না।</li>
+      <li><b>পাকস্থলীর HCl:</b> খাবার ভাঙতে সাহায্য করে। বেশি হলে বা পেট বেশিক্ষণ খালি থাকলে পাকস্থলীর দেয়ালে ক্ষত হয়, একে <b>পেপটিক আলসার</b> বলে।</li>
+    </ul>
+
+    <h3>৯.১.১ লঘু এসিডের ধর্ম (৮টি) ⭐⭐⭐</h3>
+    <table class="t">
+      <tr><th>ধর্ম</th><th>কী ঘটে</th><th>সমীকরণ (উদাহরণ)</th></tr>
+      <tr><td>স্বাদ</td><td>টক (ল্যাবে কখনো চেখে দেখা যাবে না)</td><td>-</td></tr>
+      <tr><td>ক্ষয়কারী</td><td>লোহার পাত ঝাঁজরা হয়ে যায়</td><td>-</td></tr>
+      <tr><td>লিটমাস</td><td>নীল লিটমাস → লাল</td><td>-</td></tr>
+      <tr><td>সক্রিয় ধাতু</td><td>লবণ + H₂ গ্যাস</td><td>Mg + H₂SO₄ → MgSO₄ + H₂↑</td></tr>
+      <tr><td>ধাতব কার্বনেট</td><td>লবণ + পানি + CO₂ (বুদবুদ)</td><td>CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂↑</td></tr>
+      <tr><td>ধাতব বাইকার্বনেট</td><td>লবণ + পানি + CO₂</td><td>NaHCO₃ + HNO₃ → NaNO₃ + H₂O + CO₂</td></tr>
+      <tr><td>ক্ষার (হাইড্রোক্সাইড)</td><td>লবণ + পানি (প্রশমন)</td><td>NaOH + HCl → NaCl + H₂O</td></tr>
+      <tr><td>ধাতব অক্সাইড</td><td>লবণ + পানি (প্রশমন)</td><td>CaO + 2HCl → CaCl₂ + H₂O<br>H₂SO₄ + CuO → CuSO₄ + H₂O</td></tr>
+    </table>
+    <div class="key">🔎 <b>চুনের পানি পরীক্ষা:</b> CO₂ চুনের পানিতে চালনা করলে প্রথমে ঘোলা হয় (অদ্রবণীয় CaCO₃)। আরও CO₂ দিলে আবার স্বচ্ছ হয় (দ্রবণীয় ক্যালসিয়াম বাইকার্বনেট)।<br>Ca(OH)₂ + CO₂ → CaCO₃ + H₂O<br>CaCO₃ + CO₂ + H₂O → Ca(HCO₃)₂</div>
+    <p><b>একক কাজ (বইয়ের):</b> (১) লঘু H₂SO₄-এ আয়রন গুঁড়া দিলে বুদবুদ (H₂) হয়: <b>Fe + 2H⁺ → Fe²⁺ + H₂↑</b>। (২) লঘু HCl-এ কঠিন Na₂CO₃ দিলে CO₂ বুদবুদ হয়: <b>CO₃²⁻ + 2H⁺ → H₂O + CO₂↑</b>। (৩) CuSO₄ দ্রবণে অ্যামোনিয়া দ্রবণ দিলে হালকা নীল অধঃক্ষেপ: <b>Cu²⁺ + 2OH⁻ → Cu(OH)₂↓</b>।</p>
+
+    <h3>৯.১.২ এসিডের ধর্মে পানির ভূমিকা ⭐⭐</h3>
+    <ul>
+      <li>শুকনো (অনার্দ্র) অক্সালিক এসিডের দানায় নীল লিটমাস ছোঁয়ালে রং বদলায় না। কারণ এতে মুক্ত H⁺ নেই।</li>
+      <li>পানিতে দ্রবীভূত হলে এসিড বিয়োজিত হয়ে H⁺ দেয়। তখনই এসিডের ধর্ম দেখা যায় (লিটমাস লাল হয়, বিদ্যুৎ পরিবহন করে)।</li>
+      <li>বিশুদ্ধ H₂SO₄ ও HNO₃ বর্ণহীন তরল। এদের অণু আয়নিত নয়, তাই এসিডের ধর্ম দেখায় না, বিদ্যুৎও পরিবহন করে না। পানি মিশালে তবেই H⁺ তৈরি হয়।</li>
+      <li>সবল এসিডের দ্রবণে H⁺ বেশি, দুর্বল এসিডের দ্রবণে H⁺ কম।</li>
+    </ul>
+
+    <h3>৯.১.৩ গাঢ় এসিড ⭐⭐</h3>
+    <ul>
+      <li>গাঢ় HCl, H₂SO₄, HNO₃ হাতে, চোখে বা শরীরে পড়লে ক্ষত হয়। তাই গ্লাভস, গগলস, মাস্ক ও অ্যাপ্রন পরে কাজ করতে হয়।</li>
+      <li><b>গাঢ় HCl:</b> বোতল খুললে হালকা কুয়াশার মতো ধোঁয়া ও ঝাঁজালো গন্ধ। HCl(g) + H₂O → HCl(aq)</li>
+      <li><b>গাঢ় HNO₃:</b> 3NO₂ + H₂O → 2HNO₃ + NO। আলোতে ভেঙে যায়, তাই <b>বাদামি বোতলে</b> রাখা হয়।</li>
+      <li><b>গাঢ় H₂SO₄:</b> SO₃ + H₂O → H₂SO₄ (কম পানিতে বেশি SO₃ দ্রবীভূত করে)।</li>
+    </ul>
+
+    <h3>৯.২ ক্ষারক ও ক্ষার ⭐⭐⭐</h3>
+    <ul>
+      <li><b>ক্ষারক:</b> ধাতু বা ধাতুর মতো ক্রিয়াশীল যৌগমূলকের <b>অক্সাইড ও হাইড্রোক্সাইড</b>, যা এসিডের সাথে বিক্রিয়া করে লবণ ও পানি দেয়। (CaO, CuO, FeO, Na₂O, NaOH, Ca(OH)₂, Fe(OH)₂, NH₄OH)</li>
+      <li>অ্যামোনিয়াম আয়ন (NH₄⁺) ধাতুর মতো আচরণ করে, তাই ধাতব আয়নের মতো এর লবণও হয়।</li>
+      <li><b>প্রশমন বিক্রিয়া:</b> এসিডের সাথে ক্ষারকের বিক্রিয়ায় লবণ ও পানি তৈরি। এসিড ক্ষারককে, ক্ষারক এসিডকে প্রশমিত করে।</li>
+      <li><b>ক্ষার:</b> পানিতে <b>দ্রবণীয়</b> ক্ষারক। শর্ত দুটি: (i) OH⁻ মূলক থাকতে হবে, (ii) পানিতে দ্রবীভূত হতে হবে।</li>
+    </ul>
+    <table class="t">
+      <tr><th>পদার্থ</th><th>OH⁻ আছে?</th><th>পানিতে দ্রবণীয়?</th><th>ফল</th></tr>
+      <tr><td>NaOH</td><td>হ্যাঁ</td><td>হ্যাঁ</td><td><b>ক্ষার</b> (সাথে ক্ষারকও)</td></tr>
+      <tr><td>Fe(OH)₂</td><td>হ্যাঁ</td><td>না</td><td>শুধু ক্ষারক</td></tr>
+      <tr><td>CaO</td><td>না</td><td>-</td><td>শুধু ক্ষারক (বইয়ের নিয়মে)</td></tr>
+    </table>
+    <div class="key">⭐ <b>মনে রাখো:</b> সব ক্ষারই ক্ষারক, কিন্তু সব ক্ষারক ক্ষার নয়।</div>
+    <ul><li>ঘরে ক্ষার: টয়লেট ক্লিনারে NaOH, গ্লাস ক্লিনারে NH₄OH।</li></ul>
+
+    <h3>৯.২.১ লঘু ক্ষারের ধর্ম ⭐⭐</h3>
+    <ul>
+      <li><b>লিটমাস:</b> লাল লিটমাস → <b>নীল</b>। নীল লিটমাস নীলই থাকে।</li>
+      <li><b>অনুভব:</b> লঘু NaOH হাতে পিচ্ছিল লাগে।</li>
+    </ul>
+    <p><b>NaOH-এর সাথে ধাতব নাইট্রেট দ্রবণ:</b> ঐ ধাতুর হাইড্রোক্সাইডের অধঃক্ষেপ পড়ে।</p>
+    <table class="t">
+      <tr><th>দ্রবণ</th><th>অধঃক্ষেপ</th><th>সমীকরণ</th></tr>
+      <tr><td>Fe(NO₃)₃</td><td>লালচে বাদামি Fe(OH)₃</td><td>Fe(NO₃)₃ + 3NaOH → Fe(OH)₃↓ + 3NaNO₃</td></tr>
+      <tr><td>Cu(NO₃)₂</td><td>হালকা নীল Cu(OH)₂</td><td>Cu(NO₃)₂ + 2NaOH → Cu(OH)₂↓ + 2NaNO₃</td></tr>
+      <tr><td>Zn(NO₃)₂</td><td>সাদা Zn(OH)₂</td><td>Zn(NO₃)₂ + 2NaOH → Zn(OH)₂↓ + 2NaNO₃</td></tr>
+    </table>
+    <p><b>অ্যামোনিয়াম লবণ + ক্ষার</b> → <b>NH₃ গ্যাস</b> (এটা অ্যামোনিয়াম লবণের বৈশিষ্ট্যপূর্ণ বিক্রিয়া):</p>
+    <p class="eq">NH₄Cl + NaOH → NH₃↑ + NaCl + H₂O<br>NH₄Cl + KOH → NH₃ + KCl + H₂O<br>2NH₄Cl + Ca(OH)₂ → 2NH₃ + CaCl₂ + 2H₂O<br>2NH₄Cl + CaO → 2NH₃ + CaCl₂ + H₂O</p>
+
+    <h3>৯.২.৩ ক্ষারের ধর্মে পানির ভূমিকা ⭐⭐</h3>
+    <ul>
+      <li>KOH ও NaOH কঠিন অবস্থায় আয়নিক যৌগ, কিন্তু আয়ন মুক্ত নয়। পানিতে দিলে সম্পূর্ণ আয়নিত হয়ে মুক্ত OH⁻ দেয়।<br>NaOH(s) + পানি → Na⁺(aq) + OH⁻(aq)</li>
+      <li>ক্ষারের ধর্ম আসে ভ্রাম্যমাণ <b>OH⁻</b> আয়ন থেকে। শুধু OH⁻ আয়নই ঋণাত্মক আধান বহন করে।</li>
+      <li><b>সবল ক্ষার</b> (NaOH, KOH): সম্পূর্ণ আয়নিত। <b>দুর্বল ক্ষার</b> (NH₄OH): আংশিক আয়নিত। অ্যামোনিয়া গ্যাস পানিতে অল্প একটু বিক্রিয়া করে NH₄⁺ ও OH⁻ দেয়। তাই দ্রবণ ক্ষারীয়।</li>
+    </ul>
+
+    <h3>৯.৩ গাঢ় এসিড ও ক্ষারের ক্ষয়কারী ধর্ম ⭐⭐</h3>
+    <ul>
+      <li>গাঢ় এসিড ও গাঢ় ক্ষার কাপড়, ত্বক ও চোখের ক্ষতি করে। পানিতে অল্প অল্প করে মিশিয়ে লঘু করতে হয়।</li>
+      <li>অসাবধানে লেগে গেলে <b>পানি দিয়ে বারবার ধুতে হবে</b>, তারপর শিক্ষককে জানাতে হবে।</li>
+      <li><b>পরীক্ষা (বইয়ের একক কাজ):</b> দুটি বিকারে লঘু HCl ও ইথানয়িক এসিড নিয়ে গ্রাফাইট দণ্ড, ব্যাটারি ও বাল্ব লাগাও। HCl-এ বাল্ব বেশি উজ্জ্বল, ইথানয়িক এসিডে কম। কারণ HCl বেশি H⁺ দেয়, বেশি বিদ্যুৎ পরিবহন করে। একইভাবে NaOH সবল, NH₄OH দুর্বল ক্ষার।</li>
+    </ul>
+
+    <h3>৯.৪ pH-এর ধারণা ⭐⭐⭐</h3>
+    <ul>
+      <li>pH দিয়ে বোঝা যায় দ্রবণ অম্লীয়, ক্ষারীয় না নিরপেক্ষ।</li>
+      <li><b>pH = −log[H⁺]</b>। ([H⁺] মানে ১ লিটার দ্রবণে H⁺-এর মোল সংখ্যা। লেখার সময় p ছোট হাতের, H বড় হাতের।)</li>
+      <li>বিশুদ্ধ পানিতে [H⁺] = 10⁻⁷, তাই pH = 7।</li>
+      <li>এসিড মেশালে H⁺ বাড়ে, pH কমে। যেমন [H⁺] = 10⁻⁶ হলে pH = 6।</li>
+      <li>ক্ষার মেশালে OH⁻ বিশুদ্ধ পানির H⁺-এর সাথে বিক্রিয়া করে H⁺ কমে যায়। যেমন [H⁺] = 10⁻¹⁰ হলে pH = 10।</li>
+    </ul>
+    <div class="key"><b>pH &lt; ৭ → অম্লীয়</b> &nbsp;|&nbsp; <b>pH = ৭ → নিরপেক্ষ</b> &nbsp;|&nbsp; <b>pH &gt; ৭ → ক্ষারীয়</b><br>H⁺ যত বেশি, pH তত কম। pH ১ কমলে H⁺ ১০ গুণ বাড়ে।</div>
+    <p><b>৯.৪.১ pH স্কেল:</b> বাস্তবে ০ থেকে ১৪ পর্যন্ত ধরা হয়। সবচেয়ে শক্তিশালী এসিড pH ০, সবচেয়ে শক্তিশালী ক্ষার pH ১৪।</p>
+    <p><b>pH মাপার উপায়:</b> (১) <b>ইউনিভার্সাল নির্দেশক:</b> ফোঁটা দিলে pH অনুযায়ী রং হয়, কালার চার্টের সাথে মেলাও। (২) <b>pH পেপার:</b> টুকরা ডুবালে রং বদলায়, স্ট্যান্ডার্ড চার্টের সাথে মেলাও। (৩) <b>pH মিটার:</b> ইলেকট্রোড ডুবালে ডিজিটাল ডিসপ্লেতে সরাসরি pH দেখা যায়। (৪) <b>লিটমাস পেপার:</b> মোটামুটি অনুমান (pH ৭-এর কম হলে লাল, বেশি হলে নীল)।</p>
+    <p><b>৯.৪.২ pH-এর গুরুত্ব:</b></p>
+    <table class="t">
+      <tr><th>অঙ্গ</th><th>pH</th><th>অঙ্গ</th><th>pH</th></tr>
+      <tr><td>পাকস্থলী</td><td>১</td><td>রক্ত</td><td>৭.৪৩–৭.৪৫</td></tr>
+      <tr><td>মানুষের ত্বক</td><td>৪.৮–৫.৫</td><td>অগ্ন্যাশয় রস</td><td>৮.১</td></tr>
+      <tr><td>মূত্র</td><td>৬</td><td></td><td></td></tr>
+    </table>
+    <ul>
+      <li><b>কৃষি:</b> মাটির pH ৬.০–৮.০ হলে সবচেয়ে ভালো। pH ৩-এর কম বা ১০-এর বেশি হলে উপকারী অণুজীব মারা যায়। pH কমে গেলে পরিমাণমতো <b>চুন (CaO)</b>, বেড়ে গেলে <b>অ্যামোনিয়াম সালফেট (NH₄)₂SO₄</b> বা অ্যামোনিয়াম ফসফেট (NH₄)₃PO₄ সার দিতে হয়।</li>
+      <li><b>জৈব রাসায়নিক বিক্রিয়া:</b> শরীরের ভিন্ন অঙ্গে ভিন্ন pH লাগে।</li>
+      <li><b>প্রসাধনী:</b> ত্বকের pH ৪.৮–৫.৫ থাকলে জীবাণু বাড়তে পারে না। তাই প্রসাধনীর pH ৪.৮–৫.৫ ভালো।</li>
+    </ul>
+
+    <h3>৯.৫ প্রশমন বিক্রিয়া ⭐⭐⭐</h3>
+    <ul>
+      <li>এসিড H⁺ দেয়, ক্ষার OH⁻ দেয়। মিশালে H⁺ + OH⁻ → H₂O। বাকি আয়ন দিয়ে লবণ হয়।</li>
+      <li>বইয়ের সমীকরণ: <b>NaOH + HCl → NaCl + H₂O</b> এবং <b>2NaOH + H₂SO₄ → Na₂SO₄ + 2H₂O</b>।</li>
+      <li>১ মোল HCl ঠিক ১ মোল NaOH-কে প্রশমিত করে। ১ মোল H₂SO₄ প্রশমিত করে <b>২ মোল</b> NaOH। অর্থাৎ নির্দিষ্ট পরিমাণ এসিড নির্দিষ্ট পরিমাণ ক্ষারকে প্রশমিত করে।</li>
+    </ul>
+    <p><b>৯.৫.১ দৈনন্দিন জীবনে:</b></p>
+    <ul>
+      <li><b>পরিপাক:</b> পাকস্থলীতে বেশি HCl হলে অম্বল (এসিডিটি) হয়। <b>অ্যান্টাসিডে</b> Al(OH)₃ ও Mg(OH)₂ থাকে, এরা প্রশমিত করে। Al(OH)₃ + 3HCl → AlCl₃ + 3H₂O; Mg(OH)₂ + 2HCl → MgCl₂ + 2H₂O।</li>
+      <li><b>দাঁতের যত্ন:</b> মুখের ব্যাকটেরিয়া খাবার থেকে জৈব এসিড বানায়। এসিড দাঁতের এনামেল (ক্যালসিয়ামের যৌগ) ক্ষয় করে। টুথপেস্টের ক্ষারজাতীয় পদার্থ এসিড প্রশমিত করে দাঁত রক্ষা করে।</li>
+      <li><b>কৃষি:</b> গাছ Fe²⁺, Mg²⁺, Ca²⁺, K⁺ শোষণ করলে মাটি অম্লীয় হয়। <b>চুন (CaO)</b> অতিরিক্ত এসিড প্রশমিত করে উর্বরতা বাড়ায়।</li>
+    </ul>
+    <p><b>৯.৫.২ লবণ:</b> ধনাত্মক আয়ন (ক্ষারীয় মূলক) ক্ষার থেকে, ঋণাত্মক আয়ন (অম্লীয় মূলক) এসিড থেকে আসে।</p>
+    <table class="t">
+      <tr><th>এসিড + ক্ষারক</th><th>লবণের দ্রবণ</th><th>উদাহরণ</th></tr>
+      <tr><td>সবল এসিড + সবল ক্ষার</td><td>নিরপেক্ষ</td><td>NaCl, Na₂SO₄</td></tr>
+      <tr><td>সবল এসিড + দুর্বল ক্ষার</td><td>অম্লীয়</td><td>FeCl₃, Zn(NO₃)₂</td></tr>
+      <tr><td>দুর্বল এসিড + সবল ক্ষার</td><td>ক্ষারীয়</td><td>Na₂CO₃, CH₃COONa</td></tr>
+    </table>
+
+    <h3>৯.৬ এসিড বৃষ্টি ⭐⭐⭐</h3>
+    <ul>
+      <li>অধাতুর অক্সাইড পানির সাথে মিশে এসিড তৈরি করে। বাতাসে কিছু CO₂ ও নাইট্রোজেনের অক্সাইড থাকে। প্রাণী শ্বাসে CO₂ ছাড়ে।</li>
+      <li><b>বজ্রপাত:</b> বাতাসের তাপমাত্রা প্রায় ৩০০০°C হয়। তখন N₂ ও O₂ বিক্রিয়া করে <b>NO</b> হয়। NO বাতাসের O₂-এ জারিত হয়ে <b>NO₂</b> হয়।</li>
+      <li>বৃষ্টির পানিতে এসব অক্সাইড মিশে সামান্য এসিড হয়:<br><b>CO₂ + H₂O → H₂CO₃</b><br><b>2NO₂ + H₂O → HNO₂ + HNO₃</b></li>
+      <li>তাই স্বাভাবিক বৃষ্টির pH <b>৫ থেকে ৬</b>।</li>
+      <li>যানবাহন, বিদ্যুৎ কেন্দ্র ও কলকারখানা বেশি CO₂ ছাড়ে। ইটভাটায় বা বিদ্যুৎ কেন্দ্রে নাইট্রোজেন ও সালফারযুক্ত কয়লা বা পেট্রোলিয়াম পুড়লে নাইট্রোজেন ও সালফারের অক্সাইড তৈরি হয়। এগুলো বৃষ্টিতে মিশে এসিড হয়।</li>
+      <li>বৃষ্টির পানির pH <b>৪ বা তারও কম</b> হলে তাকে <b>এসিড বৃষ্টি</b> বলে।</li>
+      <li><b>ক্ষতি:</b> মাটির pH কমে ফসল ও গাছপালার ক্ষতি; জলাশয়ের pH কমে জলজ উদ্ভিদ ও প্রাণী মরে, মাছ উৎপাদন ব্যাহত; দালানকোঠা, ধাতব স্থাপনা, মার্বেল পাথরের ভাস্কর্য ক্ষতিগ্রস্ত হয়।</li>
+    </ul>
+
+    <h3>৯.৭ পানি (Water) ⭐⭐⭐</h3>
+    <p><b>৯.৭.১ পানির খরতা:</b> পানিতে Ca বা Mg-এর ক্লোরাইড, সালফেট, কার্বনেট, বাইকার্বনেট দ্রবীভূত থাকলে সাবানে সহজে ফেনা হয় না। একে <b>খর পানি</b> বলে। (আয়রন, ম্যাঙ্গানিজ লবণেও খর হতে পারে।)</p>
+    <ul>
+      <li>সাবান হলো উচ্চতর জৈব এসিডের Na বা K লবণ। যেমন সোডিয়াম স্টিয়ারেট (C₁₇H₃₅COONa)। খর পানিতে Ca/Mg লবণ থাকলে সাবান নষ্ট হয়ে সাদা অদ্রবণীয় তলানি দেয়, ফেনা হয় না।<br><b>2C₁₇H₃₅COONa + CaCl₂ → (C₁₇H₃₅COO)₂Ca + 2NaCl</b></li>
+      <li>বয়লার বা পাইপে খর পানি ব্যবহার করলে খনিজ লবণ জমে মোটা আস্তরণ পড়ে। পানির প্রবাহ বাধা পায়, বয়লারে তাপের অপচয় হয়, এমনকি বিস্ফোরণও ঘটতে পারে।</li>
+    </ul>
+    <table class="t">
+      <tr><th></th><th>অস্থায়ী খরতা</th><th>স্থায়ী খরতা</th></tr>
+      <tr><td>কারণ</td><td>Ca, Mg, Fe-এর <b>বাইকার্বনেট</b> (HCO₃⁻)</td><td>Ca, Mg, Fe-এর <b>ক্লোরাইড বা সালফেট</b></td></tr>
+      <tr><td>দূর করার উপায়</td><td><b>ফুটালেই</b> দূর হয়</td><td>শুধু ফুটালে দূর হয় না। <b>Na₂CO₃</b> যোগ করলে দূর হয়</td></tr>
+      <tr><td>সমীকরণ</td><td>Ca(HCO₃)₂ →(তাপ) CaCO₃↓ + CO₂↑ + H₂O</td><td>CaCl₂ + Na₂CO₃ → CaCO₃↓ + 2NaCl</td></tr>
+    </table>
+    <p>বন্ধ জলাশয়ের (পুকুর, ডোবা) পানি, বৃষ্টির পানি মৃদু পানি।</p>
+
+    <p><b>৯.৭.২ পানিদূষণ ও নিয়ন্ত্রণ:</b></p>
+    <ul>
+      <li><b>দূষণের কারণ:</b> গৃহস্থালি বর্জ্য ও মলমূত্র; হাসপাতাল ও ওষুধের বর্জ্য; কৃষিতে সার ও কীটনাশক; শিল্পকারখানার রাসায়নিক বর্জ্য ও যানবাহনের জ্বালানি বর্জ্য। এতে পানি দুর্গন্ধযুক্ত ও বিষাক্ত হয়, লেড, ক্যাডমিয়াম, মার্কারি, ক্রোমিয়াম ইত্যাদি ভারী ধাতু মেশে। ভারী ধাতু ক্যানসারের মতো কঠিন রোগ করতে পারে।</li>
+      <li><b>ভূ-গর্ভস্থ পানি:</b> অগভীর নলকূপে অতিরিক্ত পানি তোলায় ও অতিরিক্ত খননে আর্সেনিক মেশে। আর্সেনিক বিষাক্ত। বেশি মাত্রায় পান করলে মৃত্যুও হতে পারে।</li>
+      <li><b>নিয়ন্ত্রণ:</b> ছোট বায়োগ্যাস প্ল্যান্ট (মলমূত্র ও জৈব বর্জ্য থেকে গ্যাস ও জৈব সার), প্রতিটি শিল্পকারখানায় বর্জ্য পরিশোধনাগার বাধ্যতামূলক, বর্জ্য সরাসরি উন্মুক্ত জলাশয়ে না ফেলা, জনসচেতনতা।</li>
+    </ul>
+
+    <p><b>৯.৭.৩ পানির বিশুদ্ধতা পরীক্ষা:</b></p>
+    <ul>
+      <li><b>বর্ণ ও গন্ধ:</b> বিশুদ্ধ পানি বর্ণহীন ও গন্ধহীন। গন্ধ, ঘোলাটে ভাব বা ছাঁকনিতে তলানি থাকলে পানি দূষিত।</li>
+      <li><b>তাপমাত্রা:</b> যন্ত্রপাতি ঠাণ্ডা করা বা বয়লারের গরম পানি সরাসরি জলাশয়ে ফেললে <b>তাপ দূষণ</b> হয়। থার্মোমিটারে তাপমাত্রা মেপে বোঝা যায়।</li>
+      <li><b>pH:</b> pH ৪.৫-এর কম বা ৯.৫-এর বেশি হলে জীবের বসবাসের অযোগ্য।</li>
+      <li><b>BOD</b> (Biological Oxygen Demand, জৈব রাসায়নিক অক্সিজেন চাহিদা): ১ লিটার পানিতে পচনযোগ্য জৈব দূষককে ব্যাকটেরিয়া ভাঙতে যত অক্সিজেন লাগে। <b>BOD যত বেশি, পানি তত বেশি দূষিত।</b></li>
+      <li><b>COD</b> (Chemical Oxygen Demand, রাসায়নিক অক্সিজেন চাহিদা): ১ লিটার পানিতে জৈব ও অজৈব সব দূষককে রাসায়নিকভাবে সম্পূর্ণ জারিত করতে যত অক্সিজেন লাগে। <b>COD যত বেশি, পানি তত বেশি দূষিত।</b></li>
+      <li>একই পানির <b>COD-এর মান BOD-এর চেয়ে বেশি</b> হয়, কারণ COD সব দূষক ধরে।</li>
+    </ul>
+    <p><b>পানি বিশুদ্ধকরণ:</b></p>
+    <table class="t">
+      <tr><th>পদ্ধতি</th><th>কীভাবে</th><th>কী দূর হয়</th></tr>
+      <tr><td>ক্লোরিনেশন</td><td>প্রয়োজনীয় ব্লিচিং পাউডার মিশিয়ে ক্লোরিন তৈরি, ছেঁকে নিলে পানযোগ্য</td><td>জীবাণু ধ্বংস</td></tr>
+      <tr><td>ফুটানো</td><td>কমপক্ষে ১৫-২০ মিনিট ফুটাও</td><td>জীবাণু ধ্বংস (আর্সেনিক থাকলে আরও ক্ষতিকর!)</td></tr>
+      <tr><td>থিতানো</td><td>এক বালতি পানিতে ১ চামচ ফিটকিরি (K₂SO₄·Al₂(SO₄)₃·24H₂O) গুঁড়া, আধা ঘণ্টা রাখো, ওপর থেকে ঢেলে আলাদা করো</td><td>অদ্রবণীয় দূষক</td></tr>
+      <tr><td>ছাঁকন</td><td>বাজারের ফিল্টার দিয়ে ছেঁকে নাও</td><td>জীবাণু, আর্সেনিক ও অন্য দূষক</td></tr>
+    </table>
+
+    <h3>🧪 বইয়ের পরীক্ষণ: আপেলের অম্লীয়/ক্ষারীয় প্রকৃতি</h3>
+    <ul>
+      <li>আপেলের কুচি পিষে পেস্ট করো, ১০ mL পাতিত পানি মিশাও, ছেঁকে টেস্টটিউবে নাও।</li>
+      <li>নীল লিটমাস ডুবালে <b>লাল</b> হয়, লাল লিটমাস অপরিবর্তিত। তাই আপেল <b>অম্লীয়</b>।</li>
+      <li>বইয়ে বলা আছে ভাত নিরপেক্ষ (লিটমাসে রং বদলায় না)। শশাকে বইয়ে ক্ষারীয় বলা হয়েছে। পরীক্ষায় বইয়ের উত্তরই লিখবে (শশার আসল pH প্রায় ৫–৬, তাই শিক্ষককে একবার জিজ্ঞেস করে নিও)।</li>
+      <li><b>ঘরে pH পেপার বানানো:</b> লালশাক, লাল বাঁধাকপি, বিট বা রঙিন ফুল ছোট করে কেটে হালকা আঁচে ভাপে সিদ্ধ করো। রঙিন নির্যাসে ফিল্টার পেপার ডুবিয়ে শুকাও, চিকন করে কেটে নাও। জানা pH-এর দ্রবণে ডুবিয়ে রঙের চার্ট বানাও।</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🎨 ল্যাব ১: pH স্কেল ও ইউনিভার্সাল ইন্ডিকেটর</h2>
+    <div class="say">👉 তালিকা থেকে পদার্থ বেছে নাও অথবা pH স্লাইডার নাড়াও। দ্রবণের রং, লিটমাস কাগজ আর H⁺ ও OH⁻ আয়নের সংখ্যা কীভাবে বদলায় দেখো। pH = −log[H⁺]।</div>
+    <div class="ctl"><label>পদার্থ:</label><select id="p1s"></select><label>pH: <b id="p1v"></b></label><input type="range" id="p1r" min="0" max="14" step="0.1" value="7" style="flex:1;min-width:140px"></div>
+    <div class="row">
+      <div><canvas id="p1c" class="w" width="380" height="300"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="p1t"></div></div>
+    </div>
+    <h3>🎮 pH-এর খেলা</h3>
+    <div class="tlinfo" id="p1q"></div><div class="cls" id="p1o"></div><div class="fb" id="p1f"></div><small id="p1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🧪 ল্যাব ২: লঘু এসিডের সাথে বিক্রিয়া</h2>
+    <div class="say">👉 একটি এসিড ও একটি পদার্থ বেছে "যোগ করো" চাপো। কী কী পরিবর্তন দেখা যায়, গ্যাস বের হয় কিনা, আর সমীকরণ কী দেখো।</div>
+    <div class="ctl"><label>এসিড (লঘু):</label><select id="a2a"><option value="HCl">HCl (হাইড্রোক্লোরিক)</option><option value="H2SO4">H₂SO₄ (সালফিউরিক)</option><option value="HNO3">HNO₃ (নাইট্রিক)</option></select><label>যোগ করবে:</label><select id="a2r"></select><button class="btn" id="a2go">▶ যোগ করো</button><button class="btn alt" id="a2rs">↻ আবার</button></div>
+    <div class="row">
+      <div><canvas id="a2c" class="w" width="380" height="290"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="a2t"></div></div>
+    </div>
+    <h3>🎮 বিক্রিয়ার ফল বলো</h3>
+    <div class="tlinfo" id="a2q"></div><div class="cls" id="a2o"></div><div class="fb" id="a2f"></div><small id="a2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🥛 ল্যাব ৩: চুনের পানি ও CO₂</h2>
+    <div class="say">👉 বাম দিকের ফ্লাস্কে চুনাপাথর + HCl থেকে CO₂ তৈরি হচ্ছে। স্লাইডারে CO₂ গ্যাসের পরিমাণ বাড়াও, চুনের পানি কীভাবে বদলায় দেখো। অথবা "অটো" চাপো।</div>
+    <div class="ctl"><label>CO₂ পরিমাণ: <b id="l3v"></b></label><input type="range" id="l3r" min="0" max="100" value="0" style="flex:1;min-width:140px"><button class="btn" id="l3a">▶ অটো</button><button class="btn alt" id="l3z">↻ শুরু থেকে</button></div>
+    <div class="row">
+      <div><canvas id="l3c" class="w" width="380" height="270"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="l3t"></div></div>
+    </div>
+    <h3>🎮 চুনের পানির খেলা</h3>
+    <div class="tlinfo" id="l3q"></div><div class="cls" id="l3o"></div><div class="fb" id="l3f"></div><small id="l3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>💡 ল্যাব ৪: সবল ও দুর্বল এসিড-ক্ষার (বাল্বের পরীক্ষা)</h2>
+    <div class="say">👉 একটি পদার্থ বেছে নাও। বিকারে কয়টি অণু ভেঙে আয়ন হলো আর বাল্ব কত উজ্জ্বল জ্বলে দেখো। "পানি যোগ" স্লাইডারে লঘু করো, দেখো সবল এসিড লঘু হলেও সবলই থাকে (শুধু আয়ন কমে)।</div>
+    <div class="ctl"><label>পদার্থ:</label><select id="s4s"></select><label>পানি যোগ: <b id="s4wv"></b></label><input type="range" id="s4w" min="0" max="80" value="0" style="flex:1;min-width:120px"></div>
+    <div class="row">
+      <div><canvas id="s4c" class="w" width="380" height="300"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="s4t"></div></div>
+    </div>
+    <h3>🎮 সবল না দুর্বল?</h3>
+    <div class="tlinfo" id="s4q"></div><div class="cls" id="s4o"></div><div class="fb" id="s4f"></div><small id="s4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🔬 ল্যাব ৫: ক্ষারক, ক্ষার ও NaOH-এর পরীক্ষা</h2>
+    <div class="say">👉 <b>ক) ক্ষারক না ক্ষার?</b> একটি পদার্থ বেছে পানিতে ফেলো। দুটি শর্ত মেলাও: OH⁻ আছে? পানিতে দ্রবণীয়?</div>
+    <div class="ctl"><label>পদার্থ:</label><select id="k5s"></select><button class="btn" id="k5go">▶ পানিতে ফেলো</button></div>
+    <div class="row">
+      <div><canvas id="k5c" class="w" width="380" height="210"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="k5t"></div></div>
+    </div>
+    <div class="say">👉 <b>খ) NaOH-এর ফোঁটা:</b> একটি দ্রবণ বেছে লঘু NaOH-এর ফোঁটা যোগ করো। অধঃক্ষেপের রং ও গ্যাস দেখো।</div>
+    <div class="ctl"><label>দ্রবণ:</label><select id="n5s"></select><button class="btn" id="n5d">💧 NaOH-এর ফোঁটা +</button><button class="btn alt" id="n5r">↻ আবার</button></div>
+    <div class="row">
+      <div><canvas id="n5c" class="w" width="380" height="270"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="n5t"></div></div>
+    </div>
+    <h3>🎮 ক্ষারক-ক্ষার খেলা</h3>
+    <div class="tlinfo" id="k5q"></div><div class="cls" id="k5o"></div><div class="fb" id="k5f"></div><small id="k5sc"></small>
+    <h3>🎮 অধঃক্ষেপ চেনার খেলা</h3>
+    <div class="tlinfo" id="n5q"></div><div class="cls" id="n5o"></div><div class="fb" id="n5f"></div><small id="n5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>⚖️ ল্যাব ৬: প্রশমন বিক্রিয়া (এসিড + ক্ষার)</h2>
+    <div class="say">👉 ২০ mL এসিডে ০.১ M NaOH ধীরে ধীরে যোগ করো (স্লাইডার বা "ফোঁটা ফোঁটা" বোতাম)। রং, pH ও গ্রাফ বদলাতে দেখো। pH কখন ৭ হয়?</div>
+    <div class="ctl"><label>এসিড:</label><select id="t6a"><option value="1">HCl (০.১ M)</option><option value="2">H₂SO₄ (০.১ M)</option></select><label>NaOH যোগ: <b id="t6vv"></b> mL</label><input type="range" id="t6v" min="0" max="60" step="0.5" value="0" style="flex:1;min-width:140px"><button class="btn" id="t6p">▶ ফোঁটা ফোঁটা</button><button class="btn alt" id="t6z">↻</button></div>
+    <div class="row">
+      <div><canvas id="t6c" class="w" width="380" height="300"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="t6t"></div></div>
+    </div>
+    <h3>🎮 লবণের দ্রবণ কেমন?</h3>
+    <div class="tlinfo" id="t6q"></div><div class="cls" id="t6o"></div><div class="fb" id="t6f"></div><small id="t6sc"></small>
+    <h3>🎮 দৈনন্দিন জীবনে প্রশমন</h3>
+    <div class="tlinfo" id="u6q"></div><div class="cls" id="u6o"></div><div class="fb" id="u6f"></div><small id="u6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>🌧️ ল্যাব ৭: এসিড বৃষ্টি</h2>
+    <div class="say">👉 বজ্রপাত চালু করো আর মানুষের তৈরি দূষণ (যানবাহন, কলকারখানা, বিদ্যুৎ কেন্দ্র) বাড়াও। বৃষ্টির pH, জলাশয়ের মাছ, মার্বেলের ভাস্কর্য ও মাটির কী হয় দেখো।</div>
+    <div class="ctl"><label>মানুষের তৈরি দূষণ: <b id="r7av"></b></label><input type="range" id="r7a" min="0" max="100" value="0" style="flex:1;min-width:140px"><span class="sw"><label><input type="checkbox" id="r7l"> ⚡ বজ্রপাত</label></span></div>
+    <div class="row">
+      <div><canvas id="r7c" class="w" width="380" height="320"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="r7t"></div></div>
+    </div>
+    <div class="flow" id="r7fl"></div><button class="btn" id="r7pl">▶ বজ্রপাত থেকে বৃষ্টি: ধাপে ধাপে</button>
+    <h3>🎮 এসিড বৃষ্টির খেলা</h3>
+    <div class="tlinfo" id="r7q"></div><div class="cls" id="r7o"></div><div class="fb" id="r7f"></div><small id="r7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>💧 ল্যাব ৮: পানির খরতা ও বিশুদ্ধকরণ</h2>
+    <div class="say">👉 <b>ক) খরতা:</b> একটি পানি বেছে সাবান দাও। ফেনা হয় না কেন? তারপর ফুটাও বা Na₂CO₃ দিয়ে আবার সাবান দাও।</div>
+    <div class="ctl"><label>পানি:</label><select id="w8s"><option value="0">বৃষ্টির পানি (মৃদু)</option><option value="1">অস্থায়ী খর পানি Ca(HCO₃)₂</option><option value="2">স্থায়ী খর পানি CaCl₂</option></select><button class="btn" id="w8soap">🧼 সাবান দাও</button><button class="btn alt" id="w8boil">🔥 ফুটাও</button><button class="btn alt" id="w8na">Na₂CO₃ দাও</button><button class="btn alt" id="w8rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="w8c" class="w" width="380" height="280"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="w8t"></div></div>
+    </div>
+    <div class="say">👉 <b>খ) বিশুদ্ধকরণ:</b> ঘোলা, জীবাণুযুক্ত, আর্সেনিকযুক্ত পানি। যেকোনো ক্রমে পদ্ধতিগুলো চালাও। কোনটিতে কী দূর হয় দেখো।</div>
+    <div class="ctl"><button class="btn" id="q8a">ফিটকিরি + থিতানো</button><button class="btn" id="q8f">ছাঁকন (ফিল্টার)</button><button class="btn" id="q8h">ক্লোরিনেশন</button><button class="btn" id="q8b">ফুটানো</button><button class="btn alt" id="q8r">↻ নতুন পানি</button></div>
+    <div class="row">
+      <div><canvas id="q8c" class="w" width="380" height="250"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="q8t"></div></div>
+    </div>
+    <h3>🎮 পানির মানের খেলা</h3>
+    <div class="tlinfo" id="w8q"></div><div class="cls" id="w8o"></div><div class="fb" id="w8f"></div><small id="w8sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। সৃজনশীল প্রশ্ন ১ ও ২ বইয়ের অনুশীলনী থেকে নেওয়া। বাকি প্রশ্ন বইয়ের বিষয় ধরে আমার বানানো অনুশীলন। বইয়ে উত্তরমালা নেই, সব উত্তর আমার লেখা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; এসিড-ক্ষারক সমতা (অধ্যায় ৯)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var PHC=[[232,32,42],[242,106,42],[248,196,24],[240,235,43],[191,224,58],[140,198,63],[76,184,72],[43,168,74],[38,177,122],[18,181,176],[74,144,212],[51,85,168],[91,79,160],[107,63,160],[74,42,122]];
+function phRGB(p){p=clamp(p,0,14);var i=Math.min(13,Math.floor(p)),t=p-i,a=PHC[i],b=PHC[i+1];return [Math.round(lerp(a[0],b[0],t)),Math.round(lerp(a[1],b[1],t)),Math.round(lerp(a[2],b[2],t))];}
+function phCol(p,al){var c=phRGB(p);return 'rgba('+c[0]+','+c[1]+','+c[2]+','+(al===undefined?1:al)+')';}
+function phTxt(v){return bn(Math.abs(v-Math.round(v))<0.05?Math.round(v):v.toFixed(1));}
+function hpow(v){return Math.abs(v-Math.round(v))<0.05?'10⁻'+sup(Math.round(v)):'10^(−'+v.toFixed(1)+')';}
+function kind(p){return p<6.85?'অম্লীয়':(p>7.15?'ক্ষারীয়':'নিরপেক্ষ');}
+function chipK(p){var k=kind(p);return '<span class="chip" style="background:'+(k==='অম্লীয়'?'#fde0da':k==='ক্ষারীয়'?'#dbe8fb':'#d9f2ee')+'">'+k+'</span>';}
+/* ---------- ল্যাব ১: pH স্কেল ---------- */
+var PHS=[
+ {n:'নিজে ঠিক করো (স্লাইডার)',c:1},
+ {n:'পাকস্থলীর রস (pH ১)',v:1,note:'পাকস্থলীর দেয়াল থেকে HCl বের হয়, তাই খুব অম্লীয়।'},
+ {n:'মানুষের ত্বক (pH ৪.৮–৫.৫)',v:5.2,note:'সামান্য অম্লীয় ত্বক জীবাণুর বংশবৃদ্ধি আটকায়। তাই প্রসাধনীর pH ৪.৮–৫.৫ ভালো।'},
+ {n:'মূত্র (pH ৬)',v:6,note:'সামান্য অম্লীয়।'},
+ {n:'বিশুদ্ধ পানি (pH ৭)',v:7,note:'বিশুদ্ধ পানিতে [H⁺] = 10⁻⁷, নিরপেক্ষ।'},
+ {n:'রক্ত (pH ৭.৪৩–৭.৪৫)',v:7.4,note:'রক্ত সামান্য ক্ষারীয়।'},
+ {n:'অগ্ন্যাশয় রস (pH ৮.১)',v:8.1,note:'সামান্য ক্ষারীয়।'},
+ {n:'স্বাভাবিক বৃষ্টির পানি (pH ৫–৬)',v:5.5,note:'বাতাসের CO₂ ও নাইট্রোজেনের অক্সাইড মিশে সামান্য অম্লীয়।'},
+ {n:'এসিড বৃষ্টি (pH ৪ বা কম)',v:3.8,note:'pH ৪ বা তারও কম হলে এসিড বৃষ্টি। ফসল, মাছ ও ভাস্কর্যের ক্ষতি করে।'},
+ {n:'ভালো মাটি (pH ৬–৮)',v:7,note:'মাটির pH ৬.০–৮.০ হলে সবচেয়ে ভালো। ৩-এর কম বা ১০-এর বেশি হলে উপকারী অণুজীব মরে।'}];
+$('p1s').innerHTML=PHS.map(function(p,i){return '<option value="'+i+'">'+p.n+'</option>';}).join('');
+var P1={p:7,h:[],o:[]};
+function p1sync(arr,n){while(arr.length<n)arr.push({x:rnd(115,265),y:rnd(110,215),vx:rnd(-1,1)||.5,vy:rnd(-1,1)||.5});while(arr.length>n)arr.pop();}
+function p1set(from){
+  var pr=PHS[+$('p1s').value];
+  if(from==='s'){if(!pr.c)$('p1r').value=pr.v;}
+  else if(from==='r'){$('p1s').value=0;pr=PHS[0];}
+  var p=+$('p1r').value;P1.p=p;$('p1v').textContent=phTxt(p);
+  $('p1r').disabled=false;
+  var t='pH = <b>'+phTxt(p)+'</b> &nbsp;'+chipK(p)+'<br>[H⁺] = '+hpow(p)+' mol/L<br>';
+  t+='<span class="kv"><span>নীল লিটমাস → '+(p<6.85?'লাল':'নীল (বদলায়নি)')+'</span><span>লাল লিটমাস → '+(p>7.15?'নীল':'লাল (বদলায়নি)')+'</span></span>';
+  t+=p<6.85?'H⁺ বেশি, OH⁻ কম।':(p>7.15?'OH⁻ বেশি, H⁺ কম।':'H⁺ ও OH⁻ সমান।');
+  t+='<br><small>pH ১ কমলে H⁺ ১০ গুণ বাড়ে।</small>';
+  if(pr.note)t+='<p>📌 '+pr.note+'</p>';
+  $('p1t').innerHTML=t;
+}
+$('p1s').onchange=function(){p1set('s');};$('p1r').oninput=function(){p1set('r');};p1set('r');
+function p1draw(){
+  var x=ctxOf('p1c'),p=P1.p;x.clearRect(0,0,380,300);
+  var nh=p<=7?Math.round(3+(7-p)*6):Math.max(0,Math.round(3-(p-7)*.5)),no=p>=7?Math.round(3+(p-7)*6):Math.max(0,Math.round(3-(7-p)*.5));
+  p1sync(P1.h,nh);p1sync(P1.o,no);
+  x.fillStyle=phCol(p,.55);x.fillRect(105,100,170,125);
+  x.strokeStyle='#6b7c8a';x.lineWidth=4;x.beginPath();x.moveTo(105,60);x.lineTo(105,225);x.lineTo(275,225);x.lineTo(275,60);x.stroke();
+  var cr='#f0a0ac',cb='#7fb2ee',rW=(p>7.15),bW=(p<6.85);
+  function strip(px,top,orig,wet){x.fillStyle=orig;x.fillRect(px,top,22,100-top);x.fillStyle=wet;x.fillRect(px,100,22,80);x.strokeStyle='#999';x.lineWidth=1;x.strokeRect(px,top,22,180-top);}
+  strip(140,30,cr,rW?cb:cr);strip(225,30,cb,bW?cr:cb);
+  txt(x,'লাল',151,18,'bold 12px Hind Siliguri','#a33');txt(x,'নীল',236,18,'bold 12px Hind Siliguri','#236');
+  P1.h.concat(P1.o).forEach(function(q){q.x+=q.vx;q.y+=q.vy;if(q.x<113||q.x>267)q.vx*=-1;if(q.y<108||q.y>217)q.vy*=-1;});
+  P1.h.forEach(function(q){circ(x,0,q.x,q.y,7,'#ff8a8a','#c33',1);txt(x,'+',q.x,q.y+.5,'bold 11px Hind Siliguri','#fff');});
+  P1.o.forEach(function(q){circ(x,0,q.x,q.y,7,'#8ab4ff','#36c',1);txt(x,'−',q.x,q.y+.5,'bold 11px Hind Siliguri','#fff');});
+  txt(x,'🔴 H⁺   🔵 OH⁻',190,244,'12px Hind Siliguri','#456');
+  for(var i=0;i<340;i++){x.fillStyle=phCol(i/340*14);x.fillRect(20+i,262,1.5,20);}
+  var mx=20+p/14*340;x.fillStyle=NAVY;x.beginPath();x.moveTo(mx,260);x.lineTo(mx-6,250);x.lineTo(mx+6,250);x.fill();
+  txt(x,'০',20,293,'bold 12px Hind Siliguri',NAVY);txt(x,'৭',190,293,'bold 12px Hind Siliguri',NAVY);txt(x,'১৪',360,293,'bold 12px Hind Siliguri',NAVY);
+  txt(x,'এসিড',75,293,'11px Hind Siliguri','#a33');txt(x,'ক্ষার',305,293,'11px Hind Siliguri','#236');
+}
+mkGame('p1q','p1o','p1f','p1sc',function(){
+  var ty=Math.floor(Math.random()*5);
+  if(ty===0){var n=pick([1,2,3,4,5,6,7,8,9,10,11,12,13]);var k=n<7?'অম্লীয়':(n>7?'ক্ষারীয়':'নিরপেক্ষ');
+    return {q:'একটি দ্রবণের pH = <b>'+bn(n)+'</b>। দ্রবণটি কেমন?',o:opts(k,['অম্লীয়','ক্ষারীয়','নিরপেক্ষ'].filter(function(z){return z!==k;})),good:'pH ৭-এর কম হলে অম্লীয়, ৭ হলে নিরপেক্ষ, ৭-এর বেশি হলে ক্ষারীয়।',bad:'pH ৭-এর কম হলে অম্লীয়, ৭ হলে নিরপেক্ষ, ৭-এর বেশি হলে ক্ষারীয়।'};}
+  if(ty===1){var m=pick([1,2,3,4,5,6,8,9,10,11,12,13]);var w=[];while(w.length<3){var z=Math.floor(Math.random()*14);if(z!==m&&w.indexOf(z)<0)w.push(z);}
+    return {q:'যে দ্রবণে [H⁺] = 10⁻'+sup(m)+' mol/L, তার pH কত?',o:opts(bn(m),w.map(bn)),good:'pH = −log[H⁺] = −log(10⁻'+sup(m)+') = '+bn(m),bad:'pH = −log[H⁺]। 10⁻'+sup(m)+'-এর ঋণাত্মক লগারিদম '+bn(m)+'।'};}
+  if(ty===2){var a=pick([1,2,3,4,5,6]),b=a+pick([1,2,3,4,5,6,7]);if(b>14)b=14;var sw=Math.random()<.5;var A=sw?b:a,B=sw?a:b;
+    return {q:'pH '+bn(A)+' ও pH '+bn(B)+' দ্রবণের মধ্যে কোনটিতে H⁺ বেশি?',o:opts('pH '+bn(a),['pH '+bn(b),'দুটিতে সমান']),good:'pH যত কম, H⁺ তত বেশি। pH '+bn(a)+'-এ H⁺ বেশি।',bad:'pH যত কম, H⁺ তত বেশি। pH '+bn(a)+'-এ H⁺ বেশি।'};}
+  if(ty===3){var sp=pick([3,4,5,9,10,11]);var low=sp<6;
+    return {q:'চাষের মাটির pH = '+bn(sp)+'। ফসলের জন্য মাটির pH ঠিক করতে কী যোগ করবে?',o:opts(low?'চুন (CaO)':'অ্যামোনিয়াম সালফেট (NH₄)₂SO₄',[low?'অ্যামোনিয়াম সালফেট (NH₄)₂SO₄':'চুন (CaO)','খাবার লবণ (NaCl)']),good:low?'মাটির pH কম (অম্লীয়) হলে পরিমাণমতো চুন দিয়ে প্রশমিত করা হয়।':'মাটির pH বেশি হলে অ্যামোনিয়াম সালফেট বা ফসফেট সার দিয়ে কমানো হয়।',bad:low?'মাটির pH কম (অম্লীয়) হলে চুন (ক্ষারক) দিয়ে প্রশমিত করতে হয়।':'মাটির pH বেশি হলে অ্যামোনিয়াম সালফেটের মতো সার দিয়ে কমানো হয়।'};}
+  var u=pick([['পাকস্থলী','১'],['মানুষের ত্বক','৪.৮–৫.৫'],['রক্ত','৭.৪৩–৭.৪৫'],['অগ্ন্যাশয় রস','৮.১']]);
+  return {q:'বইয়ের তালিকা অনুযায়ী <b>'+u[0]+'</b>-এর pH কত?',o:opts(u[1],['১','৪.৮–৫.৫','৭.৪৩–৭.৪৫','৮.১','৬'].filter(function(z){return z!==u[1];}).slice(0,3)),good:u[0]+'-এর pH '+u[1]+'।',bad:u[0]+'-এর pH '+u[1]+'।'};
+});
+
+/* ---------- ল্যাব ২: এসিডের বিক্রিয়া ---------- */
+var AN={HCl:{a:'Cl',c:1,h:'HCl'},H2SO4:{a:'SO₄',c:2,h:'H₂SO₄'},HNO3:{a:'NO₃',c:1,h:'HNO₃'}};
+function sl(M,ch,A){if(ch===1)return A.c===1?M+A.a:M+'₂'+A.a;if(A.c===2)return M+A.a;return M+(A.a==='Cl'?'Cl₂':'(NO₃)₂');}
+var R2={
+ litmus:{n:'নীল লিটমাস কাগজ',k:'litmus'},
+ Mg:{n:'Mg (ম্যাগনেসিয়াম)',k:'metal',M:'Mg',ch:2,col:'#c8d0d8'},
+ Fe:{n:'Fe (আয়রন গুঁড়া)',k:'metal',M:'Fe',ch:2,col:'#4a4a4a',soln:'#cfe9b5'},
+ CaCO3:{n:'CaCO₃ (চুনাপাথর)',k:'carb',M:'Ca',ch:2,col:'#ececec'},
+ Na2CO3:{n:'Na₂CO₃ (কঠিন)',k:'carb1',M:'Na',ch:1,col:'#f4f4f4'},
+ NaHCO3:{n:'NaHCO₃ (বাইকার্বনেট)',k:'bicarb',M:'Na',ch:1,col:'#fafafa'},
+ NaOH:{n:'NaOH (লঘু দ্রবণ)',k:'base',M:'Na',ch:1},
+ CuO:{n:'CuO (কপার অক্সাইড)',k:'oxide',M:'Cu',ch:2,col:'#2a2a2a',soln:'#5ab4e8'},
+ CaO:{n:'CaO (চুন)',k:'oxide',M:'Ca',ch:2,col:'#f0f0f0'}};
+var BK=['H2SO4|Mg','H2SO4|Fe','HCl|CaCO3','HNO3|CaCO3','H2SO4|Na2CO3','HCl|Na2CO3','HNO3|NaHCO3','H2SO4|NaHCO3','HCl|NaOH','HCl|CaO','H2SO4|CuO','HNO3|CaO','HCl|litmus','H2SO4|litmus','HNO3|litmus'];
+function salt2(ac,rk){var A=AN[ac],R=R2[rk];return sl(R.M,R.ch,A);}
+function eq2(ac,rk){
+  var A=AN[ac],R=R2[rk],H=A.h,s=salt2(ac,rk),k=R.k,one=(A.c===1);
+  if(k==='metal')return one?R.M+' + 2'+H+' → '+s+' + H₂↑':R.M+' + '+H+' → '+s+' + H₂↑';
+  if(k==='carb')return one?'CaCO₃ + 2'+H+' → '+s+' + H₂O + CO₂↑':'CaCO₃ + '+H+' → '+s+' + H₂O + CO₂↑';
+  if(k==='carb1')return one?'Na₂CO₃ + 2'+H+' → 2'+s+' + H₂O + CO₂↑':'Na₂CO₃ + '+H+' → '+s+' + H₂O + CO₂↑';
+  if(k==='bicarb')return one?'NaHCO₃ + '+H+' → '+s+' + H₂O + CO₂↑':'2NaHCO₃ + '+H+' → '+s+' + 2H₂O + 2CO₂↑';
+  if(k==='base')return one?'NaOH + '+H+' → '+s+' + H₂O':'2NaOH + '+H+' → '+s+' + 2H₂O';
+  return one?R.M+'O + 2'+H+' → '+s+' + H₂O':R.M+'O + '+H+' → '+s+' + H₂O';
+}
+function badCombo(ac,rk){var R=R2[rk];return (R.k==='metal'&&ac==='HNO3')||((rk==='CaCO3'||rk==='CaO')&&ac==='H2SO4');}
+$('a2r').innerHTML=Object.keys(R2).map(function(k){return '<option value="'+k+'">'+R2[k].n+'</option>';}).join('');
+var A2={t:0,run:false,bub:[],gas:[]};
+function a2info(){
+  var ac=$('a2a').value,rk=$('a2r').value,A=AN[ac],R=R2[rk],t='<b>লঘু '+A.h+'</b> + <b>'+R.n+'</b><br>';
+  $('a2go').disabled=false;
+  if(R.k==='litmus'){t+='<p>🔎 নীল লিটমাস কাগজ ডোবালে <b>লাল</b> হয়।</p><p class="eq" style="font-size:15px">'+A.h+' → '+(A.c===2?'2H⁺ + SO₄²⁻':'H⁺ + '+A.a+'⁻')+'</p>এসিড দ্রবণে H⁺ আছে বলেই এটা হয়।';}
+  else if(R.k==='metal'&&ac==='HNO3'){t+='<p>⚠️ লঘু HNO₃ সাধারণত ধাতুর সাথে H₂ গ্যাস দেয় না। বইয়ে HCl ও H₂SO₄-এর উদাহরণ আছে। তাই এখানে বিক্রিয়া দেখানো হচ্ছে না।</p>';$('a2go').disabled=true;}
+  else{
+    var ty={metal:'সক্রিয় ধাতুর সাথে বিক্রিয়া',carb:'ধাতব কার্বনেটের সাথে বিক্রিয়া',carb1:'ধাতব কার্বনেটের সাথে বিক্রিয়া',bicarb:'ধাতব বাইকার্বনেটের সাথে বিক্রিয়া',base:'প্রশমন বিক্রিয়া (ক্ষার)',oxide:'প্রশমন বিক্রিয়া (ধাতব অক্সাইড)'}[R.k];
+    var ob={metal:'ধাতু ক্রমে ছোট হয়, বুদবুদ হয় (<b>H₂ গ্যাস</b>)।'+(rk==='Fe'?' দ্রবণ হালকা সবুজ (Fe²⁺)।':''),carb:'ফোঁসফোঁস করে বুদবুদ (<b>CO₂ গ্যাস</b>), কঠিন পদার্থ কমে যায়।',carb1:'ফোঁসফোঁস করে বুদবুদ (<b>CO₂ গ্যাস</b>), কঠিন পদার্থ কমে যায়।',bicarb:'ফোঁসফোঁস করে বুদবুদ (<b>CO₂ গ্যাস</b>)।',base:'চোখে বড় পরিবর্তন নেই। ইউনিভার্সাল ইন্ডিকেটর দিলে রং লালচে থেকে সবুজ (নিরপেক্ষ) হয়।',oxide:'কঠিন পদার্থ গলে দ্রবণে মিশে যায়।'+(rk==='CuO'?' দ্রবণ নীলচে হয় (Cu²⁺)।':'')}[R.k];
+    t+='<span class="chip">'+ty+'</span><p>👀 '+ob+'</p><p class="eq" style="font-size:16px">'+eq2(ac,rk)+'</p>';
+    t+='লবণ: <b>'+salt2(ac,rk)+'</b>';
+    if(badCombo(ac,rk))t+='<p><small>ℹ️ CaSO₄ অল্প দ্রবণীয়, তাই এই জুটিতে বিক্রিয়া ধীর হয়। বইয়ে এই জুটির উদাহরণ নেই।</small></p>';
+    else if(BK.indexOf(ac+'|'+rk)<0)t+='<p><small>ℹ️ বইয়ে এই জুটির উদাহরণ নেই, তবে একই ধরনের বিক্রিয়া।</small></p>';
+  }
+  $('a2t').innerHTML=t;
+}
+function a2reset(){A2.t=0;A2.run=false;A2.bub=[];a2info();}
+$('a2a').onchange=a2reset;$('a2r').onchange=a2reset;$('a2rs').onclick=a2reset;
+$('a2go').onclick=function(){A2.t=0;A2.run=true;A2.bub=[];A2.gas=[];};
+a2info();
+function a2draw(){
+  var x=ctxOf('a2c'),rk=$('a2r').value,R=R2[rk],ac=$('a2a').value,t=A2.t,k=R.k;x.clearRect(0,0,380,290);
+  if(A2.run&&t<1)A2.t=Math.min(1,t+.006);t=A2.t;
+  var gasName=k==='metal'?'H₂':(k==='carb'||k==='carb1'||k==='bicarb')?'CO₂':'';
+  var liq='rgba(190,225,245,.55)';
+  if(R.soln&&t>0){var c=R.soln,r=parseInt(c.substr(1,2),16),g=parseInt(c.substr(3,2),16),b=parseInt(c.substr(5,2),16);liq='rgba('+Math.round(lerp(190,r,t))+','+Math.round(lerp(225,g,t))+','+Math.round(lerp(245,b,t))+',.7)';}
+  if(k==='base')liq=phCol(lerp(1.5,7,ease(t)),.6);
+  x.fillStyle=liq;x.beginPath();x.moveTo(140,115);x.lineTo(240,115);x.lineTo(240,225);x.arc(190,225,50,0,Math.PI);x.lineTo(140,115);x.fill();
+  x.strokeStyle='#6b7c8a';x.lineWidth=4;x.beginPath();x.moveTo(140,40);x.lineTo(140,225);x.arc(190,225,50,Math.PI,0,true);x.lineTo(240,40);x.stroke();
+  txt(x,'লঘু '+AN[ac].h,190,16,'bold 14px Hind Siliguri',NAVY);
+  if(k==='litmus'){var wet=t>.25?lerp(0,1,Math.min(1,(t-.25)*3)):0;x.fillStyle='#7fb2ee';x.fillRect(180,30,20,85);var dip=Math.min(1,t*4);x.fillStyle='#7fb2ee';x.fillRect(180,115,20,70*dip);x.fillStyle='rgba(238,119,136,'+wet+')';x.fillRect(180,115,20,70*dip);x.strokeStyle='#888';x.lineWidth=1;x.strokeRect(180,30,20,85+70*dip);}
+  else if(k==='base'){if(A2.run&&t<.6)for(var d=0;d<3;d++){var py=40+((t*600+d*35)%75);circ(x,0,190,py,4,'#9ac','#468',1);}x.fillStyle='#ccd';x.fillRect(186,5,8,24);}
+  else{var sz=(1-t*.92);x.fillStyle=R.col;x.strokeStyle='#777';x.lineWidth=1;
+    if(k==='metal'){x.fillRect(178,258-40*sz,24,40*sz);x.strokeRect(178,258-40*sz,24,40*sz);}
+    else{for(var i=0;i<9;i++){var bx=158+(i%5)*13,by=262-Math.floor(i/5)*10*sz-4;if(sz>.1){x.beginPath();x.arc(bx,by,5*sz+1,0,7);x.fill();x.stroke();}}}
+    if(A2.run&&t<.05)txt(x,R.n,190,100,'12px Hind Siliguri','#555');}
+  if(gasName&&A2.run&&t<.97&&Math.random()<(k==='metal'?.3:.6))A2.bub.push({x:rnd(150,230),y:rnd(215,245),r:rnd(2,5),s:rnd(.8,1.8)});
+  A2.bub.forEach(function(b){b.y-=b.s;b.x+=Math.sin(b.y/9)*.5;circ(x,0,b.x,b.y,b.r,'rgba(255,255,255,.7)','#789',1);});
+  A2.bub=A2.bub.filter(function(b){if(b.y<115){if(Math.random()<.2)A2.gas.push({x:b.x,y:105,a:1});return false;}return true;});
+  A2.gas.forEach(function(g){g.y-=.8;g.a-=.02;txt(x,gasName,g.x,g.y,'bold 12px Hind Siliguri','rgba(60,90,120,'+Math.max(0,g.a)+')');});
+  A2.gas=A2.gas.filter(function(g){return g.a>0;});
+  if(t>=1){txt(x,k==='litmus'?'লিটমাস লাল ✔':(k==='base'||k==='oxide'?'প্রশমন সম্পন্ন ✔':gasName+' গ্যাস বেরিয়েছে ✔'),190,80,'bold 13px Hind Siliguri','#1d7a6f');}
+}
+mkGame('a2q','a2o','a2f','a2sc',function(){
+  var ks=Object.keys(R2).filter(function(z){return z!=='litmus';}),ac,rk,g=0;
+  do{ac=pick(Object.keys(AN));rk=pick(ks);}while(badCombo(ac,rk)&&++g<50);
+  var A=AN[ac],R=R2[rk],kk=R.k;
+  if(Math.random()<.5){
+    var gas=kk==='metal'?'হাইড্রোজেন (H₂)':(kk==='base'||kk==='oxide')?'কোনো গ্যাস নয়':'কার্বন ডাই-অক্সাইড (CO₂)';
+    return {q:'লঘু <b>'+A.h+'</b> + <b>'+R.n+'</b> বিক্রিয়ায় কোন গ্যাস বের হয়?',o:opts(gas,['হাইড্রোজেন (H₂)','কার্বন ডাই-অক্সাইড (CO₂)','কোনো গ্যাস নয়','অক্সিজেন (O₂)'].filter(function(z){return z!==gas;})),good:eq2(ac,rk),bad:eq2(ac,rk)};}
+  var s=salt2(ac,rk),w=[],all=[];
+  Object.keys(AN).forEach(function(a2){Object.keys(R2).forEach(function(r2){if(R2[r2].k!=='litmus'&&R2[r2].k!=='base'||r2==='NaOH'){var z=salt2(a2,r2);if(z!==s&&all.indexOf(z)<0)all.push(z);}});});
+  w=shuffle(all).slice(0,3);
+  return {q:'<b>'+R.n+'</b> + লঘু <b>'+A.h+'</b> বিক্রিয়ায় কোন লবণ তৈরি হয়?',o:opts(s,w),good:eq2(ac,rk),bad:eq2(ac,rk)};
+});
+/* ---------- ল্যাব ৩: চুনের পানি ---------- */
+var L3={v:0,auto:false,act:0,bub:[],sp:[]};
+function l3turb(v){if(v<8)return 0;if(v<40)return (v-8)/32;if(v<60)return 1;if(v<95)return 1-(v-60)/35;return 0;}
+function l3info(){
+  var v=L3.v,t='CO₂ পরিমাণ: <b>'+bn(Math.round(v))+'%</b><br>';
+  if(v<8)t+='<span class="chip">স্বচ্ছ</span><p>চুনের পানি Ca(OH)₂ দ্রবণ, স্বচ্ছ ও ক্ষারীয়।</p>';
+  else if(v<60)t+='<span class="chip" style="background:#fff4dc">ঘোলা হচ্ছে</span><p>অদ্রবণীয় সাদা CaCO₃ তৈরি হচ্ছে।</p><p class="eq" style="font-size:16px">Ca(OH)₂ + CO₂ → CaCO₃↓ + H₂O</p>';
+  else if(v<95)t+='<span class="chip" style="background:#dbe8fb">আবার স্বচ্ছ হচ্ছে</span><p>অতিরিক্ত CO₂ ও পানির সাথে CaCO₃ বিক্রিয়া করে দ্রবণীয় ক্যালসিয়াম বাইকার্বনেট হচ্ছে।</p><p class="eq" style="font-size:16px">CaCO₃ + CO₂ + H₂O → Ca(HCO₃)₂</p>';
+  else t+='<span class="chip">আবার স্বচ্ছ</span><p>দ্রবণীয় Ca(HCO₃)₂ তৈরি হয়ে গেছে।</p>';
+  t+='<small>CO₂ তৈরি: CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂↑</small>';
+  $('l3t').innerHTML=t;$('l3v').textContent=bn(Math.round(v))+'%';
+}
+$('l3r').oninput=function(){L3.v=+$('l3r').value;L3.act=1;L3.auto=false;l3info();};
+$('l3a').onclick=function(){if(L3.v>=100){L3.v=0;}L3.auto=true;};
+$('l3z').onclick=function(){L3.v=0;L3.auto=false;$('l3r').value=0;l3info();};
+l3info();
+function l3draw(){
+  var x=ctxOf('l3c');x.clearRect(0,0,380,270);
+  if(L3.auto){L3.v=Math.min(100,L3.v+.25);L3.act=1;$('l3r').value=L3.v;if(L3.v>=100)L3.auto=false;if(Math.floor(L3.v*4)%8===0)l3info();}
+  L3.act=Math.max(0,L3.act-.012);
+  var tb=l3turb(L3.v);
+  x.fillStyle='#d8e2ea';x.beginPath();x.moveTo(50,100);x.lineTo(80,100);x.lineTo(115,235);x.lineTo(15,235);x.closePath();x.fill();
+  x.fillStyle='rgba(120,180,220,.6)';x.beginPath();x.moveTo(30,190);x.lineTo(100,190);x.lineTo(115,235);x.lineTo(15,235);x.closePath();x.fill();
+  x.strokeStyle='#6b7c8a';x.lineWidth=3;x.beginPath();x.moveTo(50,100);x.lineTo(80,100);x.lineTo(115,235);x.lineTo(15,235);x.closePath();x.stroke();
+  x.strokeStyle='#789';x.lineWidth=3;x.beginPath();x.moveTo(65,100);x.lineTo(65,50);x.lineTo(235,50);x.lineTo(235,225);x.stroke();
+  txt(x,'CaCO₃ + HCl',65,258,'12px Hind Siliguri',NAVY);
+  x.fillStyle='rgba(210,235,250,.55)';x.fillRect(195,140,80,100);
+  x.fillStyle='rgba(255,255,255,'+(.85*tb)+')';x.fillRect(195,140,80,100);
+  x.strokeStyle='#6b7c8a';x.lineWidth=4;x.beginPath();x.moveTo(195,70);x.lineTo(195,235);x.arc(235,235,40,Math.PI,0,true);x.lineTo(275,70);x.stroke();
+  txt(x,'চুনের পানি',235,258,'bold 12px Hind Siliguri',NAVY);
+  if(L3.act>.05){if(Math.random()<.5)L3.bub.push({x:rnd(215,255),y:236,r:rnd(2,4)});if(Math.random()<.3)L3.sp.push({x:rnd(35,95),y:rnd(200,232),r:rnd(2,4)});}
+  L3.bub.forEach(function(b){b.y-=1.4;circ(x,0,b.x,b.y,b.r,'rgba(255,255,255,.8)','#789',1);});L3.bub=L3.bub.filter(function(b){return b.y>142;});
+  L3.sp.forEach(function(b){b.y-=1.3;circ(x,0,b.x,b.y,b.r,'rgba(255,255,255,.8)','#789',1);});L3.sp=L3.sp.filter(function(b){return b.y>192;});
+  txt(x,tb>.7?'ঘোলা':(tb>.05?'ঘোলা হচ্ছে...':'স্বচ্ছ'),235,120,'bold 14px Hind Siliguri',tb>.05?'#b86b00':'#1d7a6f');
+}
+mkGame('l3q','l3o','l3f','l3sc',function(){
+  if(Math.random()<.5)return {q:'কোন গ্যাস চুনের পানিকে ঘোলা করে?',o:opts('CO₂',shuffle(['NO₂','CO','H₂','O₂','N₂']).slice(0,3)),good:'CO₂ চুনের পানিতে অদ্রবণীয় CaCO₃ বানায়, তাই ঘোলা দেখায়।',bad:'চুনের পানি ঘোলা করে CO₂ (অদ্রবণীয় CaCO₃ তৈরি হয়)।'};
+  return {q:'ঘোলা চুনের পানিতে আরও অনেক CO₂ চালনা করলে কী হয়?',o:opts('আবার স্বচ্ছ হয় (Ca(HCO₃)₂ তৈরি হয়)',['আরও ঘোলা হয়','লাল রং হয়','কিছুই হয় না']),good:'CaCO₃ + CO₂ + H₂O → Ca(HCO₃)₂, এটা পানিতে দ্রবণীয়।',bad:'CaCO₃ + CO₂ + H₂O → Ca(HCO₃)₂, দ্রবণীয়, তাই আবার স্বচ্ছ।'};
+});
+
+/* ---------- ল্যাব ৪: সবল-দুর্বল ---------- */
+var S4D=[
+ {n:'HCl (সবল এসিড)',st:1,cat:'H⁺',an:'Cl⁻',ty:'এসিড',eq:'HCl → H⁺ + Cl⁻'},
+ {n:'H₂SO₄ (সবল এসিড)',st:1,cat:'H⁺',an:'SO₄²⁻',ty:'এসিড',eq:'H₂SO₄ → 2H⁺ + SO₄²⁻'},
+ {n:'CH₃COOH (দুর্বল এসিড)',st:0,cat:'H⁺',an:'CH₃COO⁻',ty:'এসিড',eq:'CH₃COOH ⇌ H⁺ + CH₃COO⁻',ratio:1},
+ {n:'H₂CO₃ (দুর্বল এসিড)',st:0,cat:'H⁺',an:'CO₃²⁻',ty:'এসিড',eq:'H₂CO₃ ⇌ 2H⁺ + CO₃²⁻'},
+ {n:'NaOH (সবল ক্ষার)',st:1,cat:'Na⁺',an:'OH⁻',ty:'ক্ষার',eq:'NaOH → Na⁺ + OH⁻'},
+ {n:'KOH (সবল ক্ষার)',st:1,cat:'K⁺',an:'OH⁻',ty:'ক্ষার',eq:'KOH → K⁺ + OH⁻'},
+ {n:'NH₄OH (দুর্বল ক্ষার)',st:0,cat:'NH₄⁺',an:'OH⁻',ty:'ক্ষার',eq:'NH₄OH ⇌ NH₄⁺ + OH⁻'}];
+$('s4s').innerHTML=S4D.map(function(p,i){return '<option value="'+i+'">'+p.n+'</option>';}).join('');
+var S4={perm:shuffle(Array.apply(null,Array(200)).map(function(_,i){return i;})),ion:Math.floor(Math.random()*200),ph:Array.apply(null,Array(200)).map(function(){return rnd(0,6.28);})};
+function s4vis(){return Math.round(200*(1-(+$('s4w').value)/100));}
+function s4bright(){var p=S4D[+$('s4s').value];return (p.st?1:.07)*s4vis()/200;}
+function s4info(){
+  var p=S4D[+$('s4s').value],w=+$('s4w').value,v=s4vis();$('s4wv').textContent=bn(w)+'%';
+  var t='<b>'+p.n+'</b><br>বিয়োজন: <span class="eq" style="display:block;font-size:17px;margin:6px 0">'+p.eq+'</span>';
+  if(p.st)t+='সম্পূর্ণ (১০০%) আয়নিত। তীর (→) একমুখী। আয়ন বেশি, তাই বাল্ব <b>উজ্জ্বল</b>।';
+  else t+='আংশিক আয়নিত। তীর (⇌) উভমুখী। আয়ন অল্প, তাই বাল্ব <b>ম্লান</b>।'+(p.ratio?'<br>বইয়ের মান: ১০০০টি অণুর মধ্যে মাত্র <b>৪টি</b> ভাঙে (২৫°C)।':'')+'<br><small>চিত্রে ২০০টি অণুর মধ্যে ১টি ভাঙা দেখানো হয়েছে (শুধু ধারণার জন্য)।</small>';
+  t+='<p>'+p.ty+' দ্রবণে '+(p.ty==='এসিড'?'H⁺':'OH⁻')+' আয়ন '+(p.st?'বেশি':'কম')+' থাকে।</p>';
+  if(w>0)t+='<p>💧 পানি যোগ করে <b>লঘু</b> করা হয়েছে। আয়নের ঘনমাত্রা কমেছে, তাই বাল্ব একটু ম্লান। কিন্তু সবল/দুর্বল পরিচয় বদলায়নি।</p>';
+  $('s4t').innerHTML=t;
+}
+$('s4s').onchange=function(){S4.ion=Math.floor(Math.random()*200);s4info();};$('s4w').oninput=s4info;s4info();
+function s4draw(){
+  var x=ctxOf('s4c'),p=S4D[+$('s4s').value],v=s4vis(),b=s4bright(),T=Date.now()/400;x.clearRect(0,0,380,300);
+  x.strokeStyle='#555';x.lineWidth=3;x.beginPath();x.moveTo(50,60);x.lineTo(50,30);x.lineTo(205,30);x.moveTo(255,30);x.lineTo(310,30);x.lineTo(310,265);x.moveTo(50,100);x.lineTo(50,115);x.lineTo(190,115);x.lineTo(190,265);x.stroke();
+  x.fillStyle='#dde6ee';x.fillRect(32,60,36,40);x.strokeStyle='#789';x.lineWidth=2;x.strokeRect(32,60,36,40);txt(x,'+',50,72,'bold 16px Hind Siliguri','#c33');txt(x,'−',50,90,'bold 16px Hind Siliguri','#36c');
+  var gr=x.createRadialGradient(230,30,2,230,30,18+34*b);gr.addColorStop(0,'rgba(255,240,120,'+(.15+.85*b)+')');gr.addColorStop(1,'rgba(255,240,120,0)');x.fillStyle=gr;x.beginPath();x.arc(230,30,18+34*b,0,7);x.fill();
+  circ(x,0,230,30,15,'rgba(255,248,170,'+(.2+.8*b)+')','#887',2);
+  txt(x,'💡',230,31,'18px Hind Siliguri','#000');
+  x.fillStyle='#444';x.fillRect(187,115,6,150);x.fillRect(307,115,6,150);
+  x.fillStyle='rgba(190,225,245,.35)';x.fillRect(150,135,200,135);
+  x.strokeStyle='#6b7c8a';x.lineWidth=4;x.beginPath();x.moveTo(150,125);x.lineTo(150,270);x.lineTo(350,270);x.lineTo(350,125);x.stroke();
+  for(var r=0;r<S4.perm.length;r++){var id=S4.perm[r];if(r>=v)continue;var cx=160+(id%20)*9.6,cy=146+Math.floor(id/20)*12,ion=p.st||id===S4.ion;
+    var ph=S4.ph[id];if(ion){var dx=Math.sin(T+ph)*3,dy=Math.cos(T*.8+ph)*2;circ(x,0,cx-4+dx,cy+dy,2.7,'#e57373');circ(x,0,cx+4-dx,cy-dy,2.7,'#64b5f6');if(!p.st)circ(x,0,cx,cy,9,0,'#f4a300',2);}
+    else{circ(x,0,cx-2.5,cy,2.7,'#e57373');circ(x,0,cx+2.5,cy,2.7,'#64b5f6');}}
+  txt(x,'🔴 '+p.cat+'  🔵 '+p.an+(p.st?'':'   ⭕ ভাঙা অণু'),250,288,'11px Hind Siliguri','#456');
+  txt(x,'উজ্জ্বলতা: '+bn(Math.round(b*100))+'%',105,138,'bold 12px Hind Siliguri',NAVY);
+}
+mkGame('s4q','s4o','s4f','s4sc',function(){
+  var ty=Math.floor(Math.random()*4);
+  if(ty===0){var p=pick(S4D),k=p.st?'সবল':'দুর্বল';return {q:'<b>'+p.n.split(' (')[0]+'</b> সবল না দুর্বল?',o:opts(k,[k==='সবল'?'দুর্বল':'সবল']),good:p.eq,bad:p.eq+(p.st?' (একমুখী তীর = সম্পূর্ণ আয়নিত)':' (উভমুখী তীর = আংশিক আয়নিত)')};}
+  if(ty===1){var weak=S4D.filter(function(z){return !z.st&&z.ty==='এসিড';}),w=pick(weak),st=S4D.filter(function(z){return z.st&&z.ty==='এসিড';});return {q:'কোনটি <b>দুর্বল এসিড</b>?',o:opts(w.n.split(' (')[0],['HCl','H₂SO₄','HNO₃']),good:'দুর্বল এসিড পানিতে আংশিক আয়নিত হয়।',bad:'HCl, H₂SO₄, HNO₃ সবল এসিড। দুর্বল এসিড আংশিক আয়নিত হয়।'};}
+  if(ty===2)return {q:'দুটি বিকারে HCl ও ইথানয়িক এসিড নিয়ে বাল্ব লাগানো হলো। HCl-এ বাল্ব বেশি উজ্জ্বল জ্বলল। এর কারণ কী?',o:opts('HCl বেশি H⁺ দেয়, বেশি বিদ্যুৎ পরিবহন করে',['HCl-এ পানি কম','ইথানয়িক এসিড বিদ্যুৎ পরিবাহী নয়','HCl-এ OH⁻ বেশি']),good:'সবল এসিডের দ্রবণে H⁺ বেশি, তাই বিদ্যুৎ বেশি যায়।',bad:'সবল এসিডের দ্রবণে H⁺ বেশি, তাই বিদ্যুৎ বেশি যায়।'};
+  return {q:'সবল এসিডে অনেক পানি মিশিয়ে লঘু করলে কী হয়?',o:opts('সবলই থাকে, শুধু আয়নের ঘনমাত্রা কমে',['দুর্বল এসিড হয়ে যায়','ক্ষার হয়ে যায','বিয়োজন বন্ধ হয়']),good:'গাঢ়/লঘু আর সবল/দুর্বল আলাদা ধারণা।',bad:'গাঢ়/লঘু আর সবল/দুর্বল আলাদা ধারণা। লঘু করলে সবল এসিড সবলই থাকে।'};
+});
+/* ---------- ল্যাব ৫ক: ক্ষারক না ক্ষার ---------- */
+var K5D=[
+ {n:'CaO',oh:0,c:'#f0f0f0',eq:'CaO + 2HCl → CaCl₂ + H₂O'},
+ {n:'CuO',oh:0,c:'#2a2a2a',eq:'CuO + H₂SO₄ → CuSO₄ + H₂O'},
+ {n:'FeO',oh:0,c:'#3a3a3a',eq:'FeO + 2HCl → FeCl₂ + H₂O'},
+ {n:'Na₂O',oh:0,c:'#f4f4f4',eq:'Na₂O + 2HCl → 2NaCl + H₂O'},
+ {n:'NaOH',oh:1,sol:1,cat:'Na⁺',c:'#f6f6f6',eq:'NaOH + HCl → NaCl + H₂O'},
+ {n:'KOH',oh:1,sol:1,cat:'K⁺',c:'#f6f6f6',eq:'2KOH + H₂SO₄ → K₂SO₄ + 2H₂O'},
+ {n:'Ca(OH)₂',oh:1,sol:1,cat:'Ca²⁺',c:'#fafafa',eq:'Ca(OH)₂ + 2HCl → CaCl₂ + 2H₂O',note:'অল্প দ্রবণীয়। চুনের পানি ক্ষারীয়, তাই ক্ষার ধরা হয়।'},
+ {n:'NH₄OH',oh:1,sol:1,cat:'NH₄⁺',c:'#dff',eq:'NH₄OH + HCl → NH₄Cl + H₂O',note:'দুর্বল ক্ষার।'},
+ {n:'Fe(OH)₂',oh:1,sol:0,c:'#8aa87a',eq:'Fe(OH)₂ + 2HCl → FeCl₂ + 2H₂O'},
+ {n:'Cu(OH)₂',oh:1,sol:0,c:'#7ab8e8',eq:'Cu(OH)₂ + H₂SO₄ → CuSO₄ + 2H₂O'}];
+$('k5s').innerHTML=K5D.map(function(p,i){return '<option value="'+i+'">'+p.n+'</option>';}).join('');
+var K5={t:0,run:false,ions:[]};
+function isAlk(p){return !!(p.oh&&p.sol);}
+function k5info(){
+  var p=K5D[+$('k5s').value],t='<b>'+p.n+'</b><br>✅ এসিডের সাথে বিক্রিয়া করে লবণ ও পানি দেয়, তাই <b>ক্ষারক</b>।<p class="eq" style="font-size:15px">'+p.eq+'</p>';
+  if(K5.t>=.7){t+='OH⁻ মূলক: <b>'+(p.oh?'আছে ✔':'নেই ✘')+'</b><br>পানিতে দ্রবণীয়: <b>'+(p.oh?(p.sol?'হ্যাঁ ✔':'না ✘'):'(OH⁻ নেই, তাই প্রশ্ন ওঠে না)')+'</b><br>';
+    t+=isAlk(p)?'<span class="chip">ক্ষার (এবং ক্ষারকও)</span>':'<span class="chip" style="background:#fff4dc">শুধু ক্ষারক, ক্ষার নয়</span>';
+    if(p.note)t+='<br><small>'+p.note+'</small>';
+    if(!p.oh)t+='<br><small>বইয়ের নিয়মে CaO-এর মতো অক্সাইডে OH⁻ নেই, তাই এরা ক্ষার নয়।</small>';}
+  else t+='<small>"পানিতে ফেলো" চাপো।</small>';
+  $('k5t').innerHTML=t;
+}
+$('k5s').onchange=function(){K5.t=0;K5.run=false;K5.ions=[];k5info();};
+$('k5go').onclick=function(){K5.t=0;K5.run=true;K5.ions=[];K5._u=0;};
+k5info();
+function k5draw(){
+  var x=ctxOf('k5c'),p=K5D[+$('k5s').value];x.clearRect(0,0,380,210);
+  if(K5.run&&K5.t<1){K5.t=Math.min(1,K5.t+.007);if(K5.t>=.7&&!K5._u){k5info();K5._u=1;}}
+  if(!K5.run)K5._u=0;
+  var t=K5.t;
+  x.fillStyle='rgba(180,220,245,.55)';x.fillRect(130,90,120,100);
+  var yy=t<.4?lerp(20,160,ease(t/.4)):170;
+  if(p.sol&&t>=.4){var d=ease((t-.4)/.5);if(K5.ions.length<14&&Math.random()<.4)K5.ions.push({x:rnd(138,242),y:rnd(100,182),vx:rnd(-.6,.6),vy:rnd(-.6,.6),k:K5.ions.length%2});
+    if(d<1&&t<.9){x.fillStyle=p.c;x.globalAlpha=1-d;x.fillRect(176,yy-6,28,18);x.globalAlpha=1;}}
+  else{x.fillStyle=p.c;x.strokeStyle='#777';x.lineWidth=1;x.fillRect(176,yy-6,28,18);x.strokeRect(176,yy-6,28,18);}
+  K5.ions.forEach(function(q){q.x+=q.vx;q.y+=q.vy;if(q.x<138||q.x>242)q.vx*=-1;if(q.y<98||q.y>184)q.vy*=-1;circ(x,0,q.x,q.y,6,q.k?'#8ab4ff':'#f0a0a0','#555',1);txt(x,q.k?'−':'+',q.x,q.y+.5,'bold 10px Hind Siliguri','#fff');});
+  x.strokeStyle='#6b7c8a';x.lineWidth=4;x.beginPath();x.moveTo(130,70);x.lineTo(130,190);x.lineTo(250,190);x.lineTo(250,70);x.stroke();
+  txt(x,p.n,190,14,'bold 14px Hind Siliguri',NAVY);
+  if(t>=.7){txt(x,'OH⁻: '+(p.oh?'✔':'✘'),70,60,'bold 14px Hind Siliguri',p.oh?'#1d7a6f':'#c33');txt(x,'দ্রবণীয়: '+(p.oh?(p.sol?'✔':'✘'):'—'),70,90,'bold 14px Hind Siliguri',p.sol?'#1d7a6f':'#c33');
+    txt(x,isAlk(p)?'ক্ষার ✔':'শুধু ক্ষারক',320,120,'bold 14px Hind Siliguri',isAlk(p)?'#1d7a6f':'#b86b00');}
+}
+mkGame('k5q','k5o','k5f','k5sc',function(){
+  if(Math.random()<.65){var p=pick(K5D),k=isAlk(p)?'ক্ষার (এবং ক্ষারকও)':'শুধু ক্ষারক';
+    return {q:'<b>'+p.n+'</b> কী?',o:opts(k,[isAlk(p)?'শুধু ক্ষারক':'ক্ষার (এবং ক্ষারকও)']),good:p.oh?(p.sol?'OH⁻ আছে ও পানিতে দ্রবণীয়, তাই ক্ষার।':'OH⁻ আছে কিন্তু পানিতে দ্রবণীয় নয়, তাই শুধু ক্ষারক।'):'OH⁻ মূলক নেই, তাই ক্ষার নয়, শুধু ক্ষারক।',bad:p.oh?(p.sol?'OH⁻ আছে ও পানিতে দ্রবণীয়, তাই ক্ষার।':'OH⁻ আছে কিন্তু পানিতে দ্রবণীয় নয়, তাই শুধু ক্ষারক।'):'OH⁻ মূলক নেই, তাই ক্ষার নয়, শুধু ক্ষারক।'};}
+  var no=K5D.filter(function(z){return !isAlk(z);}),yes=K5D.filter(function(z){return isAlk(z);}),a=pick(no);
+  return {q:'কোনটি <b>ক্ষারক কিন্তু ক্ষার নয়</b>?',o:opts(a.n,shuffle(yes).slice(0,3).map(function(z){return z.n;})),good:'সব ক্ষারই ক্ষারক, কিন্তু সব ক্ষারক ক্ষার নয়।',bad:'সব ক্ষারই ক্ষারক, কিন্তু সব ক্ষারক ক্ষার নয়। '+a.n+' ক্ষারক, কিন্তু ক্ষার নয়।'};
+});
+/* ---------- ল্যাব ৫খ: NaOH ফোঁটা ---------- */
+var N5D=[
+ {n:'Fe(NO₃)₃ দ্রবণ',liq:'rgba(235,205,100,.6)',ppt:'#b5532a',col:'লালচে বাদামি',pn:'লালচে বাদামি Fe(OH)₃',ion:'Fe³⁺',eq:'Fe(NO₃)₃ + 3NaOH → Fe(OH)₃↓ + 3NaNO₃'},
+ {n:'Cu(NO₃)₂ দ্রবণ',liq:'rgba(120,190,235,.55)',ppt:'#4f9be0',col:'হালকা নীল',pn:'হালকা নীল Cu(OH)₂',ion:'Cu²⁺',eq:'Cu(NO₃)₂ + 2NaOH → Cu(OH)₂↓ + 2NaNO₃'},
+ {n:'Zn(NO₃)₂ দ্রবণ',liq:'rgba(210,235,250,.5)',ppt:'#ffffff',col:'সাদা',pn:'সাদা Zn(OH)₂',ion:'Zn²⁺',eq:'Zn(NO₃)₂ + 2NaOH → Zn(OH)₂↓ + 2NaNO₃'},
+ {n:'NH₄Cl দ্রবণ',liq:'rgba(210,235,250,.5)',gas:1,pn:'অধঃক্ষেপ নেই, NH₃ গ্যাস',ion:'NH₄⁺',eq:'NH₄Cl + NaOH → NH₃↑ + NaCl + H₂O'}];
+$('n5s').innerHTML=N5D.map(function(p,i){return '<option value="'+i+'">'+p.n+'</option>';}).join('');
+var N5={d:0,drop:-1,bub:[]};
+function n5info(){
+  var p=N5D[+$('n5s').value],t='<b>'+p.n+'</b> + লঘু NaOH ('+bn(N5.d)+' ফোঁটা)<br>';
+  if(N5.d===0)t+='<small>"NaOH-এর ফোঁটা +" চাপো।</small>';
+  else{t+=p.gas?'<span class="chip">NH₃ গ্যাস বের হচ্ছে</span><p>অ্যামোনিয়াম লবণ + ক্ষার → NH₃ গ্যাস। এটা অ্যামোনিয়াম লবণের বৈশিষ্ট্যপূর্ণ বিক্রিয়া।</p>':'<span class="chip">'+p.pn+'</span><p>ধাতব নাইট্রেট + ক্ষার → ঐ ধাতুর হাইড্রোক্সাইডের অধঃক্ষেপ। সোডিয়াম নাইট্রেট NaNO₃ পানিতে দ্রবীভূত থাকে।</p>';
+    t+='<p class="eq" style="font-size:15px">'+p.eq+'</p>';}
+  $('n5t').innerHTML=t;
+}
+$('n5s').onchange=function(){N5.d=0;N5.bub=[];n5info();};
+$('n5r').onclick=function(){N5.d=0;N5.bub=[];n5info();};
+$('n5d').onclick=function(){if(N5.d<8){N5.d++;N5.drop=0;n5info();}};
+n5info();
+function n5draw(){
+  var x=ctxOf('n5c'),p=N5D[+$('n5s').value];x.clearRect(0,0,380,270);
+  var pl=p.gas?0:Math.min(1,N5.d/6)*55;
+  x.fillStyle=p.liq;x.beginPath();x.moveTo(150,110);x.lineTo(230,110);x.lineTo(230,220);x.arc(190,220,40,0,Math.PI);x.lineTo(150,110);x.fill();
+  if(pl>0){x.strokeStyle='#999';x.lineWidth=1;x.beginPath();x.moveTo(150,260-pl);x.lineTo(230,260-pl);x.stroke();x.fillStyle=p.ppt;x.globalAlpha=.9;x.beginPath();x.moveTo(150,260-pl);x.lineTo(230,260-pl);x.lineTo(230,220);x.arc(190,220,40,0,Math.PI);x.lineTo(150,260-pl);x.fill();x.globalAlpha=1;
+    for(var i=0;i<Math.min(12,N5.d*2);i++){var yy=110+((i*37+N5.d*11)%90);circ(x,0,155+((i*23)%70),yy,2.2,p.ppt,0);}}
+  x.strokeStyle='#6b7c8a';x.lineWidth=4;x.beginPath();x.moveTo(150,50);x.lineTo(150,220);x.arc(190,220,40,Math.PI,0,true);x.lineTo(230,50);x.stroke();
+  x.fillStyle='#ccd';x.fillRect(184,10,12,34);x.beginPath();x.moveTo(184,44);x.lineTo(196,44);x.lineTo(190,58);x.fill();
+  txt(x,'লঘু NaOH',250,28,'12px Hind Siliguri',NAVY);
+  if(N5.drop>=0){N5.drop+=4;var dy=58+N5.drop;if(dy>110){N5.drop=-1;}else circ(x,0,190,dy,4,'#9ac','#468',1);}
+  if(p.gas&&N5.d>0){if(Math.random()<.3+N5.d*.05)N5.bub.push({x:rnd(155,225),y:rnd(190,230),s:rnd(.6,1.4)});}
+  N5.bub.forEach(function(b){b.y-=b.s;circ(x,0,b.x,b.y,2.5,'rgba(255,255,255,.8)','#789',1);if(b.y<108){txt(x,'NH₃',b.x,b.y-10,'bold 11px Hind Siliguri','rgba(60,90,120,.8)');}});
+  N5.bub=N5.bub.filter(function(b){return b.y>70;});
+  txt(x,p.n,75,150,'bold 12px Hind Siliguri',NAVY);
+}
+mkGame('n5q','n5o','n5f','n5sc',function(){
+  var ty=Math.floor(Math.random()*3),D=N5D.slice(0,3);
+  if(ty===0){var p=pick(D);return {q:'লঘু NaOH যোগ করায় <b>'+p.col+'</b> অধঃক্ষেপ পড়ল। দ্রবণে কোন আয়ন ছিল?',o:opts(p.ion,D.filter(function(z){return z!==p;}).map(function(z){return z.ion;}).concat(['Na⁺'])),good:p.eq,bad:p.eq};}
+  if(ty===1){var q=pick(D);return {q:'<b>'+q.n+'</b>-এ NaOH দিলে কোন রঙের অধঃক্ষেপ পড়ে?',o:opts(q.pn,D.filter(function(z){return z!==q;}).map(function(z){return z.pn;}).concat(['কোনো অধঃক্ষেপ নেই'])),good:q.eq,bad:q.eq};}
+  return {q:'অ্যামোনিয়াম লবণের সাথে ক্ষার (যেমন NaOH) বিক্রিয়া করলে কোন গ্যাস পাওয়া যায়?',o:opts('NH₃',['CO₂','H₂','O₂']),good:'NH₄Cl + NaOH → NH₃↑ + NaCl + H₂O',bad:'অ্যামোনিয়াম লবণ + ক্ষার → NH₃ গ্যাস।'};
+});
+
+/* ---------- ল্যাব ৬: প্রশমন ---------- */
+var T6={v:0,auto:false,drop:0};
+function pH6(K,v){var d=2*K-0.1*v,V=20+v;if(Math.abs(d)<1e-6)return 7;if(d>0)return -Math.log(d/V)/Math.LN10;return 14+Math.log(-d/V)/Math.LN10;}
+function t6info(){
+  var K=+$('t6a').value,v=T6.v,nH=2*K,nO=0.1*v,d=nH-nO,pH=pH6(K,v),eqp=20*K;
+  $('t6vv').textContent=bn(v.toFixed(1));
+  var t='<b>'+(K===1?'HCl':'H₂SO₄')+'</b> (২০ mL, ০.১ M) + <b>NaOH</b> ('+bn(v.toFixed(1))+' mL, ০.১ M)<br>pH = <b>'+f(pH,1)+'</b> &nbsp;'+chipK(pH)+'<br>';
+  t+='<span class="kv"><span>H⁺ ছিল: '+f(nH,2)+' মিলিমোল</span><span>OH⁻ দিয়েছি: '+f(nO,2)+'</span></span>';
+  if(Math.abs(d)<1e-6)t+='<p>✅ ঠিক <b>প্রশমিত</b>! সব H⁺ ও OH⁻ মিলে পানি হয়েছে। দ্রবণে শুধু লবণ ও পানি। pH = ৭।</p>';
+  else if(d>0)t+='<p>এসিড এখনো বেশি ('+f(d,2)+' মিলিমোল H⁺ বাকি), তাই দ্রবণ <b>অম্লীয়</b>।</p>';
+  else t+='<p>ক্ষার বেশি হয়ে গেছে ('+f(-d,2)+' মিলিমোল OH⁻ বেশি), তাই দ্রবণ <b>ক্ষারীয়</b>।</p>';
+  t+='<p class="eq" style="font-size:15px">'+(K===1?'NaOH + HCl → NaCl + H₂O':'2NaOH + H₂SO₄ → Na₂SO₄ + 2H₂O')+'</p>';
+  t+='<small>'+(K===1?'১ মোল HCl-কে ১ মোল NaOH প্রশমিত করে।':'১ মোল H₂SO₄-কে ২ মোল NaOH প্রশমিত করে।')+' এই ক্ষেত্রে ঠিক '+bn(eqp)+' mL NaOH লাগে। লবণ: '+(K===1?'NaCl':'Na₂SO₄')+' (নিরপেক্ষ)।</small>';
+  $('t6t').innerHTML=t;
+}
+$('t6v').oninput=function(){T6.v=+$('t6v').value;T6.auto=false;t6info();};
+$('t6a').onchange=function(){t6info();};
+$('t6p').onclick=function(){if(T6.v>=60){T6.v=0;}T6.auto=true;};
+$('t6z').onclick=function(){T6.v=0;T6.auto=false;$('t6v').value=0;t6info();};
+t6info();
+function t6draw(){
+  var x=ctxOf('t6c'),K=+$('t6a').value;x.clearRect(0,0,380,300);
+  if(T6.auto){T6.v=Math.min(60,T6.v+.12);$('t6v').value=T6.v;if(T6.v>=60)T6.auto=false;if(Math.floor(T6.v*100)%6===0)t6info();T6.drop=(T6.drop+5)%40;}
+  var v=T6.v,pH=pH6(K,v);
+  x.fillStyle='#e8eef3';x.fillRect(55,10,26,90);x.strokeStyle='#789';x.lineWidth=2;x.strokeRect(55,10,26,90);
+  x.fillStyle='rgba(120,160,230,.7)';var lv=90*(1-v/60);x.fillRect(56,100-lv,24,lv);
+  txt(x,'NaOH',68,114,'bold 11px Hind Siliguri',NAVY);
+  if(T6.auto)circ(x,0,68,125+T6.drop*.6,3.5,'#78a0e6','#356',1);
+  var top=170-v*.5;x.fillStyle=phCol(pH,.75);x.fillRect(22,top,92,250-top);
+  x.strokeStyle='#6b7c8a';x.lineWidth=4;x.beginPath();x.moveTo(22,140);x.lineTo(22,250);x.lineTo(114,250);x.lineTo(114,140);x.stroke();
+  txt(x,'pH = '+f(pH,1),68,270,'bold 16px Hind Siliguri',NAVY);txt(x,'ইউনিভার্সাল ইন্ডিকেটর যুক্ত',68,290,'11px Hind Siliguri','#567');
+  var X0=180,Y0=235,W=180,H=200;
+  x.strokeStyle='#789';x.lineWidth=1.5;x.beginPath();x.moveTo(X0,Y0-H);x.lineTo(X0,Y0);x.lineTo(X0+W,Y0);x.stroke();
+  x.setLineDash([4,4]);x.strokeStyle='#2a9d8f';x.beginPath();x.moveTo(X0,Y0-H*7/14);x.lineTo(X0+W,Y0-H*7/14);x.stroke();
+  x.strokeStyle='#aaa';x.beginPath();x.moveTo(X0+W*20*K/60,Y0);x.lineTo(X0+W*20*K/60,Y0-H);x.stroke();x.setLineDash([]);
+  txt(x,'pH',X0-12,Y0-H-6,'bold 11px Hind Siliguri',NAVY);txt(x,'০',X0-9,Y0,'11px Hind Siliguri','#567');txt(x,'৭',X0-9,Y0-H/2,'11px Hind Siliguri','#2a9d8f');txt(x,'১৪',X0-12,Y0-H,'11px Hind Siliguri','#567');
+  txt(x,'NaOH (mL)',X0+W/2,Y0+18,'11px Hind Siliguri','#567');txt(x,'৬০',X0+W,Y0+8,'10px Hind Siliguri','#567');txt(x,bn(20*K),X0+W*20*K/60,Y0+8,'10px Hind Siliguri','#888');
+  x.strokeStyle=NAVY;x.lineWidth=2.5;x.beginPath();for(var i=0;i<=240;i++){var vv=i*.25,py=Y0-H*clamp(pH6(K,vv),0,14)/14,px=X0+W*vv/60;if(i===0)x.moveTo(px,py);else x.lineTo(px,py);}x.stroke();
+  circ(x,0,X0+W*v/60,Y0-H*clamp(pH,0,14)/14,6,RED,'#fff',2);
+}
+var SALTS=[['NaCl','নিরপেক্ষ','সবল এসিড HCl + সবল ক্ষার NaOH'],['Na₂SO₄','নিরপেক্ষ','সবল এসিড H₂SO₄ + সবল ক্ষার NaOH'],['FeCl₃','অম্লীয়','সবল এসিড HCl + দুর্বল ক্ষারক Fe(OH)₃'],['Zn(NO₃)₂','অম্লীয়','সবল এসিড HNO₃ + দুর্বল ক্ষারক Zn(OH)₂'],['Na₂CO₃','ক্ষারীয়','দুর্বল এসিড H₂CO₃ + সবল ক্ষার NaOH'],['CH₃COONa','ক্ষারীয়','দুর্বল এসিড CH₃COOH + সবল ক্ষার NaOH']];
+mkGame('t6q','t6o','t6f','t6sc',function(){var s=pick(SALTS);return {q:'<b>'+s[0]+'</b>-এর জলীয় দ্রবণ কেমন?',o:opts(s[1],['অম্লীয়','ক্ষারীয়','নিরপেক্ষ'].filter(function(z){return z!==s[1];})),good:s[0]+' = '+s[2]+'। তাই '+s[1]+'।',bad:s[0]+' = '+s[2]+'। তাই '+s[1]+'।'};});
+var DLY=[
+ ['পেটে অতিরিক্ত HCl হয়ে অম্বল (এসিডিটি) হলে কী খেতে হয়?','অ্যান্টাসিড (Al(OH)₃, Mg(OH)₂)',['আরও গাঢ় এসিড','খাবার লবণ','লেবুর রস'],'অ্যান্টাসিডে ক্ষারজাতীয় Al(OH)₃ ও Mg(OH)₂ আছে। এরা পেটের বাড়তি HCl প্রশমিত করে।'],
+ ['মাটি অতিরিক্ত অম্লীয় হয়ে উর্বরতা কমে গেছে। কী দিলে ভালো হবে?','চুন (CaO)',['ভিনেগার','অ্যাসিটিক এসিড','সাবান গুঁড়া'],'চুন (ক্যালসিয়াম অক্সাইড) ক্ষারক। এটা মাটির অতিরিক্ত এসিড প্রশমিত করে উর্বরতা বাড়ায়।'],
+ ['মিষ্টি খাবারের পর মুখ পরিষ্কার না করলে ব্যাকটেরিয়া এসিড বানায়, যা দাঁতের এনামেল ক্ষয় করে। কোনটি দাঁত রক্ষা করে?','ক্ষারজাতীয় পদার্থযুক্ত টুথপেস্ট',['আরও টক খাবার','গাঢ় HCl','চা'],'টুথপেস্টের ক্ষারজাতীয় পদার্থ মুখের এসিডকে প্রশমিত করে, ফলে এনামেল রক্ষা পায়।']];
+mkGame('u6q','u6o','u6f','u6sc',function(){var d=pick(DLY);return {q:d[0],o:opts(d[1],d[2]),good:d[3],bad:d[3]};});
+/* ---------- ল্যাব ৭: এসিড বৃষ্টি ---------- */
+var R7={t:0,smoke:[],drops:[],fl:0,fish:[],bites:[]};
+for(var ri=0;ri<8;ri++)R7.fish.push({x:rnd(200,340),y:rnd(262,300),v:rnd(.4,1)*(Math.random()<.5?1:-1)});
+for(var rb=0;rb<28;rb++)R7.bites.push({x:rnd(-14,14),y:rnd(-12,64),r:rnd(1.2,3)});
+function r7pH(){return clamp(5.6-(+$('r7a').value)*.021-($('r7l').checked?.2:0),3.4,5.6);}
+function r7info(){
+  var pH=r7pH(),pol=+$('r7a').value;$('r7av').textContent=bn(pol);
+  var ac=pH<=4.0,fish=Math.round(clamp((pH-3.6)/1.8,0,1)*8),er=clamp((5.2-pH)/1.8,0,1);
+  var t='বৃষ্টির pH = <b>'+f(pH,1)+'</b><br>'+(ac?'<span class="chip" style="background:#fde0da">🌧️ এসিড বৃষ্টি (pH ৪ বা কম)</span>':'<span class="chip">স্বাভাবিক বৃষ্টি (pH ৫–৬ এর কাছাকাছি)</span>');
+  t+='<span class="kv"><span>🐟 মাছ: '+bn(fish)+'/৮</span><span>🗿 ভাস্কর্য ক্ষয়: '+bn(Math.round(er*100))+'%</span></span>';
+  t+='<p>'+(pH>5?'বাতাসের CO₂ ও বজ্রপাতের NO₂ মিশে সামান্য এসিড হয়, তাই স্বাভাবিক বৃষ্টিও সামান্য অম্লীয়।':ac?'বেশি CO₂, নাইট্রোজেন ও সালফারের অক্সাইড মিশে pH অনেক কমেছে। মাটি ও জলাশয়ের pH-ও কমে ফসল, মাছ ও মার্বেলের ক্ষতি করছে।':'দূষণ বাড়ায় বৃষ্টির pH স্বাভাবিকের চেয়ে কমছে। আরও কমলে এসিড বৃষ্টি হবে।')+'</p>';
+  t+='<small>CO₂ + H₂O → H₂CO₃ &nbsp;|&nbsp; 2NO₂ + H₂O → HNO₂ + HNO₃</small>';
+  $('r7t').innerHTML=t;
+}
+$('r7a').oninput=r7info;$('r7l').onchange=r7info;r7info();
+var R7S=['⚡ বজ্রপাতে বাতাস ~৩০০০°C','N₂ + O₂ → 2NO','NO + বাতাসের O₂ → NO₂','2NO₂ + H₂O → HNO₂ + HNO₃','এসিডযুক্ত বৃষ্টি মাটিতে'];
+function r7flow(){$('r7fl').innerHTML=R7S.map(function(s,i){return (i?'<i>→</i>':'')+'<span id="rf'+i+'">'+s+'</span>';}).join('');}
+r7flow();
+$('r7pl').onclick=function(){r7flow();R7S.forEach(function(s,i){setTimeout(function(){$('rf'+i).classList.add('show');},i*700);});R7.fl=1;};
+function r7draw(){
+  var x=ctxOf('r7c'),pH=r7pH(),pol=+$('r7a').value/100,ac=clamp((5.6-pH)/2.2,0,1);R7.t++;x.clearRect(0,0,380,320);
+  var g=x.createLinearGradient(0,0,0,250);var sh=Math.round(lerp(190,130,pol));g.addColorStop(0,'rgb('+sh+','+(sh+20)+','+(sh+40)+')');g.addColorStop(1,'rgb(230,238,245)');x.fillStyle=g;x.fillRect(0,0,380,250);
+  [[70,40,50],[170,34,60],[290,44,55]].forEach(function(c){x.fillStyle='rgba('+Math.round(lerp(245,110,pol))+','+Math.round(lerp(245,110,pol))+','+Math.round(lerp(250,120,pol))+',.95)';x.beginPath();x.ellipse(c[0],c[1],c[2],20,0,0,7);x.ellipse(c[0]+28,c[1]+8,c[2]*.7,16,0,0,7);x.ellipse(c[0]-28,c[1]+8,c[2]*.7,16,0,0,7);x.fill();});
+  x.fillStyle='#8d6e63';x.fillRect(0,250,380,70);x.fillStyle='#7a5c52';x.fillRect(0,250,380,5);
+  x.fillStyle='#546e7a';x.fillRect(12,176,50,74);x.fillRect(48,136,14,40);x.fillStyle='#37474f';x.fillRect(46,132,18,6);
+  if(pol>.05&&R7.t%Math.max(3,Math.round(14-pol*11))===0)R7.smoke.push({x:55,y:130,r:5,a:.7});
+  R7.smoke.forEach(function(s){s.y-=.7;s.x+=.3;s.r+=.12;s.a-=.004;x.fillStyle='rgba(70,70,75,'+Math.max(0,s.a)+')';x.beginPath();x.arc(s.x,s.y,s.r,0,7);x.fill();});R7.smoke=R7.smoke.filter(function(s){return s.a>0&&s.y>10;});
+  if(pol>.2){var cx=((R7.t*1.1)%460)-40;x.fillStyle='#e53935';x.fillRect(cx,236,36,12);x.fillRect(cx+8,228,18,9);circ(x,0,cx+8,249,4,'#222');circ(x,0,cx+28,249,4,'#222');}
+  var gDrop=Math.round(2+pol*8)+14;
+  if(R7.t%2===0)R7.drops.push({x:rnd(0,380),y:62,v:rnd(3,5)});
+  var dc=ac>.5?'rgba(214,150,30,.8)':'rgba(70,130,210,.75)';
+  R7.drops.forEach(function(d){d.y+=d.v;x.strokeStyle=dc;x.lineWidth=1.5;x.beginPath();x.moveTo(d.x,d.y);x.lineTo(d.x-1,d.y+8);x.stroke();});R7.drops=R7.drops.filter(function(d){return d.y<250;});
+  if($('r7l').checked&&R7.t%110<8){x.strokeStyle='#ffe600';x.lineWidth=3;x.beginPath();x.moveTo(250,50);x.lineTo(238,95);x.lineTo(258,100);x.lineTo(236,150);x.lineTo(250,152);x.lineTo(232,205);x.stroke();x.fillStyle='rgba(255,255,200,.25)';x.fillRect(0,0,380,250);}
+  var er=clamp((5.2-pH)/1.8,0,1);
+  x.fillStyle='#bbb';x.fillRect(118,222,58,28);x.fillStyle='#f0eeea';x.fillRect(130,168,34,56);x.beginPath();x.arc(147,156,14,0,7);x.fill();x.fillRect(122,172,12,34);x.fillRect(160,172,12,34);
+  R7.bites.forEach(function(b,i){if(i/28<er){x.fillStyle='#8f857b';x.beginPath();x.arc(147+b.x,160+b.y,b.r+er*.8,0,7);x.fill();}});
+  txt(x,'মার্বেল ভাস্কর্য',147,240,'11px Hind Siliguri','#fff');
+  x.fillStyle='rgba(90,160,220,.8)';x.fillRect(190,258,190,62);
+  var nf=Math.round(clamp((pH-3.6)/1.8,0,1)*8);
+  R7.fish.forEach(function(fi,i){if(i<nf){fi.x+=fi.v;if(fi.x<198||fi.x>368)fi.v*=-1;var d=fi.v>0?1:-1;x.fillStyle='#ffb74d';x.beginPath();x.ellipse(fi.x,fi.y,8,4,0,0,7);x.fill();x.beginPath();x.moveTo(fi.x-d*8,fi.y);x.lineTo(fi.x-d*14,fi.y-4);x.lineTo(fi.x-d*14,fi.y+4);x.fill();}});
+  txt(x,nf===0?'জলাশয়: মাছ নেই 😢':'জলাশয়',285,310,'bold 11px Hind Siliguri','#fff');
+  for(var pi=0;pi<6;pi++){var gc=Math.round(lerp(150,110,ac)),rc=Math.round(lerp(60,150,ac)),bc=Math.round(lerp(130,60,ac));x.fillStyle='rgb('+rc+','+(gc+60-Math.round(ac*40))+','+bc+')';x.fillRect(10+pi*14,285-(18-ac*8),6,18-ac*8);}
+  txt(x,'ফসল',50,312,'11px Hind Siliguri','#fff');
+  x.fillStyle='rgba(255,255,255,.85)';x.fillRect(272,6,104,26);txt(x,'বৃষ্টির pH = '+f(pH,1),324,19,'bold 13px Hind Siliguri',ac>.5?'#c62828':NAVY);
+}
+mkGame('r7q','r7o','r7f','r7sc',function(){
+  var ty=Math.floor(Math.random()*4);
+  if(ty===0)return {q:'বৃষ্টির পানির pH কত বা তার চেয়ে কম হলে তাকে এসিড বৃষ্টি বলে?',o:opts('৪',['৫.৫','৭','৯']),good:'pH ৪ বা তারও কম হলে এসিড বৃষ্টি।',bad:'pH ৪ বা তারও কম হলে এসিড বৃষ্টি। স্বাভাবিক বৃষ্টির pH ৫–৬।'};
+  if(ty===1){var p=pick([3.5,3.8,4,5,5.5,6]);var ac=p<=4;return {q:'বৃষ্টির পানির pH = <b>'+phTxt(p)+'</b>। এটা কী?',o:opts(ac?'এসিড বৃষ্টি':'স্বাভাবিক বৃষ্টি',[ac?'স্বাভাবিক বৃষ্টি':'এসিড বৃষ্টি']),good:'pH ৪ বা কম হলে এসিড বৃষ্টি, ৫–৬ হলে স্বাভাবিক।',bad:'pH ৪ বা কম হলে এসিড বৃষ্টি, ৫–৬ হলে স্বাভাবিক।'};}
+  if(ty===2)return {q:'বজ্রপাতের সময় বাতাসের কোন দুটি গ্যাস বিক্রিয়া করে NO তৈরি করে?',o:opts('N₂ ও O₂',['CO₂ ও H₂','N₂ ও H₂','O₂ ও CO']),good:'প্রায় ৩০০০°C তাপমাত্রায় N₂ + O₂ → 2NO।',bad:'প্রায় ৩০০০°C তাপমাত্রায় N₂ ও O₂ বিক্রিয়া করে NO তৈরি করে।'};
+  return {q:'স্বাভাবিক বৃষ্টির পানির pH কত?',o:opts('৫ থেকে ৬',['১ থেকে ২','৭ থেকে ৮','১১ থেকে ১২']),good:'বাতাসের CO₂ ও NO₂ মিশে সামান্য এসিড হয়, তাই pH ৫–৬।',bad:'স্বাভাবিক বৃষ্টির pH ৫–৬ (সামান্য অম্লীয়)।'};
+});
+
+/* ---------- ল্যাব ৮ক: খরতা ---------- */
+var W8={T:0,P:0,drops:0,foam:0,scum:0,ppt:0,heat:0,bub:[],msg:''};
+function w8reset(){var ty=+$('w8s').value;W8.T=ty===1?4:0;W8.P=ty===2?4:0;W8.drops=0;W8.foam=0;W8.scum=0;W8.ppt=0;W8.heat=0;W8.bub=[];W8.msg='';w8info();}
+function w8info(){
+  var ty=+$('w8s').value,H=W8.T+W8.P;
+  var nm=['বৃষ্টির পানি (মৃদু পানি)','অস্থায়ী খর পানি (Ca(HCO₃)₂)','স্থায়ী খর পানি (CaCl₂)'][ty];
+  var t='<b>'+nm+'</b><br>সাবান দিয়েছি: '+bn(W8.drops)+' ফোঁটা<br>';
+  t+='<span class="kv"><span>খরতা (Ca²⁺): '+(H>0?'আছে':'নেই')+'</span><span>ফেনা: '+(W8.foam>0?'হয়েছে':'হয়নি')+'</span></span>';
+  if(W8.msg)t+='<p>'+W8.msg+'</p>';
+  else if(W8.drops===0)t+='<p>আগে "সাবান দাও" চাপো।</p>';
+  else if(W8.foam===0)t+='<p>সাবানের সোডিয়াম স্টিয়ারেট Ca²⁺-এর সাথে বিক্রিয়া করে সাদা অদ্রবণীয় তলানি (scum) দিচ্ছে, ফেনা হচ্ছে না।</p><p class="eq" style="font-size:15px">2C₁₇H₃₅COONa + CaCl₂ → (C₁₇H₃₅COO)₂Ca + 2NaCl</p>';
+  else t+='<p>Ca²⁺ শেষ হয়ে গেছে, তাই সাবানে ফেনা হচ্ছে।'+(ty===0?' মৃদু পানিতে সাবান সহজে ফেনা দেয়।':'')+'</p>';
+  $('w8t').innerHTML=t;
+}
+$('w8s').onchange=w8reset;$('w8rs').onclick=w8reset;
+$('w8soap').onclick=function(){W8.drops++;W8.msg='';if(W8.T+W8.P>0){if(W8.T>0)W8.T--;else W8.P--;W8.scum++;}else W8.foam++;w8info();};
+$('w8boil').onclick=function(){W8.heat=1;var ty=+$('w8s').value;
+  if(W8.T>0){W8.T=0;W8.ppt+=1;W8.msg='🔥 ফুটানোর পর অদ্রবণীয় CaCO₃ তলানি পড়েছে। অস্থায়ী খরতা দূর!<br><small>Ca(HCO₃)₂ →(তাপ) CaCO₃↓ + CO₂↑ + H₂O</small>';}
+  else if(W8.P>0)W8.msg='🔥 শুধু ফুটালে স্থায়ী খরতা দূর হয় না। Na₂CO₃ লাগবে।';
+  else W8.msg='🔥 এই পানিতে ফুটিয়ে দূর করার মতো খরতা নেই।';w8info();};
+$('w8na').onclick=function(){var had=W8.T+W8.P;if(had>0){W8.P=0;W8.T=0;W8.ppt+=1;W8.msg='Na₂CO₃ যোগ করায় Ca²⁺ অদ্রবণীয় CaCO₃ হয়ে তলানি পড়ল। খরতা দূর!<br><small>CaCl₂ + Na₂CO₃ → CaCO₃↓ + 2NaCl</small>';}else W8.msg='এই পানিতে আর খরতা নেই।';w8info();};
+w8reset();
+function w8draw(){
+  var x=ctxOf('w8c');x.clearRect(0,0,380,280);var H=W8.T+W8.P;W8.heat=Math.max(0,W8.heat-.004);
+  x.fillStyle='rgba(190,225,245,.6)';x.beginPath();x.moveTo(150,110);x.lineTo(230,110);x.lineTo(230,215);x.arc(190,215,40,0,Math.PI);x.lineTo(150,110);x.fill();
+  if(W8.ppt>0){x.fillStyle='#f4f4f4';var ph=Math.min(26,W8.ppt*12);x.beginPath();x.moveTo(150,255-ph);x.lineTo(230,255-ph);x.lineTo(230,215);x.arc(190,215,40,0,Math.PI);x.lineTo(150,255-ph);x.fill();txt(x,'CaCO₃ তলানি',190,246,'9px Hind Siliguri','#888');}
+  for(var i=0;i<H*3;i++){circ(x,0,158+((i*17+Date.now()/80)%64),122+((i*29)%90),3,'#f0a030');}
+  for(var s=0;s<W8.scum;s++){x.fillStyle='rgba(255,255,255,.95)';x.strokeStyle='#bbb';for(var k=0;k<3;k++){var sx=156+((s*31+k*19)%64),sy=120+((s*23+k*37)%80);x.fillRect(sx,sy,9,4);x.strokeRect(sx,sy,9,4);}}
+  var fh=Math.min(50,W8.foam*10);if(fh>0){for(var b=0;b<fh;b++){circ(x,0,152+((b*13)%76),110-(b%16)*(fh/16),5+(b%3),'rgba(255,255,255,.9)','#ccd',1);}}
+  x.strokeStyle='#6b7c8a';x.lineWidth=4;x.beginPath();x.moveTo(150,50);x.lineTo(150,215);x.arc(190,215,40,Math.PI,0,true);x.lineTo(230,50);x.stroke();
+  x.fillStyle='#dde';x.fillRect(268,60,50,70);x.strokeStyle='#789';x.lineWidth=2;x.strokeRect(268,60,50,70);txt(x,'সাবান',293,95,'bold 12px Hind Siliguri',NAVY);txt(x,'C₁₇H₃₅COONa',293,112,'9px Hind Siliguri','#567');
+  if(W8.heat>0){txt(x,'🔥',190,272,'26px Hind Siliguri','#000');if(Math.random()<.6)W8.bub.push({x:rnd(158,222),y:rnd(190,230),s:rnd(.8,1.8)});}
+  W8.bub.forEach(function(b){b.y-=b.s;circ(x,0,b.x,b.y,3,'rgba(255,255,255,.8)','#789',1);});W8.bub=W8.bub.filter(function(b){return b.y>105;});
+  txt(x,['মৃদু পানি','অস্থায়ী খর','স্থায়ী খর'][+$('w8s').value],190,30,'bold 14px Hind Siliguri',NAVY);
+}
+/* ---------- ল্যাব ৮খ: বিশুদ্ধকরণ ---------- */
+var Q8={dirt:1,bact:1,ars:1,sed:0,done:[],pts:[]};
+for(var qi=0;qi<40;qi++)Q8.pts.push({x:rnd(60,190),y:rnd(90,200),vx:rnd(-.4,.4),vy:rnd(-.3,.3)});
+function q8reset(){Q8.dirt=1;Q8.bact=1;Q8.ars=1;Q8.sed=0;Q8.done=[];q8info('নতুন পানি নেওয়া হলো: ঘোলা, জীবাণুযুক্ত ও আর্সেনিকযুক্ত।');}
+function q8safe(){return Q8.dirt===0&&Q8.bact===0&&Q8.ars===0;}
+function q8info(m){
+  var t='<p>'+m+'</p><span class="kv">'+Q8.done.map(function(d){return '<span>'+d+'</span>';}).join('')+'</span>';
+  t+=q8safe()?'<p class="big2" style="color:#1d7a6f">✅ পানযোগ্য পানি!</p>':'<p><b>এখনও পানযোগ্য নয়।</b> বাকি: '+(Q8.dirt?'ময়লা ':'')+(Q8.bact?'জীবাণু ':'')+(Q8.ars?'আর্সেনিক':'')+'</p>';
+  $('q8t').innerHTML=t;
+}
+$('q8a').onclick=function(){Q8.dirt=0;Q8.sed=1;Q8.done.push('ফিটকিরি+থিতানো');q8info('এক বালতি পানিতে ১ চামচ ফিটকিরি গুঁড়া মিশিয়ে আধা ঘণ্টা রাখলে অদ্রবণীয় ময়লা থিতিয়ে তলায় জমে। ওপর থেকে পানি ঢেলে আলাদা করা হয়। জীবাণু ও আর্সেনিক থেকেই যায়।');};
+$('q8f').onclick=function(){Q8.dirt=0;Q8.bact=0;Q8.ars=0;Q8.done.push('ছাঁকন');q8info('ফিল্টার দিয়ে ছাঁকলে জীবাণু, আর্সেনিক ও অন্য দূষক দূর হয়।');};
+$('q8h').onclick=function(){Q8.bact=0;Q8.done.push('ক্লোরিনেশন');q8info('ব্লিচিং পাউডার মিশিয়ে ক্লোরিন তৈরি হলো, জীবাণু ধ্বংস। কিন্তু ময়লা ও আর্সেনিক থেকে যায়।');};
+$('q8b').onclick=function(){Q8.bact=0;if(Q8.ars>0)Q8.ars=Math.min(2,Q8.ars*1.3);Q8.done.push('ফুটানো');q8info(Q8.ars>0?'১৫–২০ মিনিট ফুটালে জীবাণু মরে। কিন্তু আর্সেনিকযুক্ত পানি ফুটালে তা আরও ক্ষতিকর হয়! (আর্সেনিক বাড়ে, দূর হয় না)':'১৫–২০ মিনিট ফুটালে জীবাণু মরে।');};
+$('q8r').onclick=q8reset;
+q8info('ঘোলা, জীবাণুযুক্ত ও আর্সেনিকযুক্ত পানি। যেকোনো ক্রমে পদ্ধতি চালাও।');
+function q8draw(){
+  var x=ctxOf('q8c'),T=Date.now()/500;x.clearRect(0,0,380,250);
+  x.fillStyle='rgba(150,110,60,'+(.15+.5*Q8.dirt)+')';x.fillRect(40,70,170,150);
+  x.strokeStyle='#6b7c8a';x.lineWidth=4;x.beginPath();x.moveTo(40,60);x.lineTo(40,220);x.lineTo(210,220);x.lineTo(210,60);x.stroke();
+  if(Q8.sed){x.fillStyle='#7a5a30';x.fillRect(42,205,166,13);txt(x,'তলানি',125,212,'10px Hind Siliguri','#fff');}
+  if(Q8.dirt){Q8.pts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;if(p.x<50||p.x>200)p.vx*=-1;if(p.y<78||p.y>200)p.vy*=-1;circ(x,0,p.x,p.y,3,'#6b4a22');});}
+  if(Q8.bact){for(var i=0;i<9;i++){var bx=60+((i*47)%130)+Math.sin(T+i)*6,by=95+((i*31)%100)+Math.cos(T*.8+i)*5;x.fillStyle='#43a047';x.beginPath();x.ellipse(bx,by,6,3,i,0,7);x.fill();}}
+  if(Q8.ars>0){var na=Math.round(8*Q8.ars);for(var j=0;j<na;j++){var ax=55+((j*53)%140)+Math.sin(T*.7+j)*5,ay=85+((j*29)%110)+Math.cos(T+j)*4;circ(x,0,ax,ay,5,'#8e44ad');txt(x,'As',ax,ay+.5,'bold 7px Hind Siliguri','#fff');}}
+  function bar(y,l,v,c){txt(x,l,300,y-12,'bold 11px Hind Siliguri',NAVY);x.fillStyle='#e8eef3';x.fillRect(232,y-4,130,12);x.fillStyle=c;x.fillRect(232,y-4,130*Math.min(1,v/1.3),12);}
+  bar(90,'অদ্রবণীয় ময়লা',Q8.dirt,'#8d6e63');bar(130,'জীবাণু',Q8.bact,'#43a047');bar(170,'আর্সেনিক',Q8.ars,'#8e44ad');
+  txt(x,q8safe()?'✅ পানযোগ্য':'❌ এখনও নয়',300,215,'bold 14px Hind Siliguri',q8safe()?'#1d7a6f':'#c33');
+}
+mkGame('w8q','w8o','w8f','w8sc',function(){
+  var Qs=[
+   ['একই পানির BOD ও COD-এর মধ্যে কোনটির মান বেশি হয়?','COD',['BOD','দুটিই সমান','কোনোটিই নয়'],'COD সব জৈব ও অজৈব দূষক ধরে, তাই COD > BOD।'],
+   ['কোনো পানির BOD-এর মান যত বেশি হয়, সেই পানি-','তত বেশি দূষিত',['তত কম দূষিত','পানযোগ্য হয়','খর হয়'],'BOD বেশি মানে পচনযোগ্য জৈব দূষক বেশি। তাই পানি বেশি দূষিত।'],
+   ['পানির pH কত হলে তা জীবের বসবাসের অযোগ্য?','৪.৫-এর কম বা ৯.৫-এর বেশি',['৬ থেকে ৮','ঠিক ৭','৫ থেকে ৯'],'pH ৪.৫-এর কম বা ৯.৫-এর বেশি হলে জীব বাঁচতে পারে না।'],
+   ['কোন পদ্ধতিতে আর্সেনিক দূর করা যায়?','ফিল্টার দিয়ে ছাঁকা',['ফুটানো','ক্লোরিনেশন','শুধু থিতানো'],'ফুটালে আর্সেনিক আরও ক্ষতিকর হয়। ফিল্টার আর্সেনিক দূর করে।'],
+   ['স্থায়ী খরতা দূর করতে পানিতে কী যোগ করা হয়?','সোডিয়াম কার্বনেট (Na₂CO₃)',['শুধু তাপ','ব্লিচিং পাউডার','ফিটকিরি'],'CaCl₂ + Na₂CO₃ → CaCO₃↓ + 2NaCl।'],
+   ['কোন লবণ দ্রবীভূত থাকলে পানিতে অস্থায়ী খরতা হয়?','Ca(HCO₃)₂',['CaCl₂','CaSO₄','NaCl'],'বাইকার্বনেট লবণ অস্থায়ী খরতা দেয়। ফুটালে দূর হয়।'],
+   ['পানিকে জীবাণুমুক্ত করতে ক্লোরিনেশনে কী যোগ করা হয়?','ব্লিচিং পাউডার',['ফিটকিরি','চুনের পানি','Na₂CO₃'],'ব্লিচিং পাউডার থেকে ক্লোরিন জীবাণু ধ্বংস করে।']];
+  var q=pick(Qs);return {q:q[0],o:opts(q[1],q[2]),good:q[3],bad:q[3]};
+});
+
+/* =================== কুইজ =================== */
+var QUIZ=[
+ {q:'চুনাপাথরের সাথে লঘু নাইট্রিক এসিড যোগ করলে কোন গ্যাস উৎপন্ন হয়?',o:['CO₂','H₂','O₂','SO₂'],a:0,e:'CaCO₃ + 2HNO₃ → Ca(NO₃)₂ + H₂O + CO₂। ধাতব কার্বনেট + এসিড = লবণ + পানি + CO₂।'},
+ {q:'নিচের কোনটি ক্ষার?',o:['NaOH','NaCl','Na₂SO₄','HCl'],a:0,e:'NaOH-এ OH⁻ আছে ও পানিতে দ্রবণীয়, তাই ক্ষার। NaCl ও Na₂SO₄ লবণ, HCl এসিড।'},
+ {q:'কোন উপস্থিতির জন্য অ্যামোনিয়া গ্যাসের জলীয় দ্রবণ ক্ষারীয় হয়?',o:['NH₄⁺','OH⁻','NH₃','H₂O'],a:1,e:'NH₃ পানিতে সামান্য বিক্রিয়া করে NH₄⁺ ও OH⁻ দেয়। ক্ষারীয় ধর্ম আসে OH⁻ থেকে।'},
+ {q:'ইথানয়িক এসিড দ্রবণের pH = ৪। pH বাড়াতে এতে যোগ করতে হবে: (i) অ্যামোনিয়া দ্রবণ (ii) ঘন হাইড্রোক্লোরিক এসিড (iii) কঠিন ম্যাগনেসিয়াম কার্বনেট। কোনটি সঠিক?',o:['i ও ii','ii ও iii','i ও iii','i, ii ও iii'],a:2,fix:true,e:'pH বাড়াতে H⁺ কমাতে হয়। অ্যামোনিয়া (ক্ষার) ও MgCO₃ (এসিডের সাথে বিক্রিয়া করে H⁺ খরচ করে) pH বাড়ায়। ঘন HCl আরও H⁺ দেয়, pH কমে।'},
+ {q:'কোন গ্যাস চুনের পানিকে ঘোলা করে?',o:['NO₂','CO','H₂','CO₂'],a:3,e:'CO₂ চুনের পানির সাথে বিক্রিয়া করে অদ্রবণীয় CaCO₃ তৈরি করে, তাই ঘোলা হয়। (বইয়ে এই প্রশ্নের উত্তর CO₂। আমি এখানে SO₂ বাদ দিয়েছি, কারণ SO₂-ও ঘোলা করতে পারে, যা বইয়ে আলোচনা নেই।)'},
+ {q:'বিশুদ্ধ পানির pH কত?',o:['০','৭','১০','১৪'],a:1,e:'বিশুদ্ধ পানিতে [H⁺] = 10⁻⁷, তাই pH = −log(10⁻⁷) = ৭।'},
+ {q:'কোনো দ্রবণের [H⁺] = 10⁻⁴ mol/L। এর pH কত?',o:['৪','−৪','১০','১/৪'],a:0,e:'pH = −log[H⁺] = −log(10⁻⁴) = ৪। pH ৭-এর কম, তাই অম্লীয়।'},
+ {q:'pH ৩ ও pH ৬ দ্রবণের মধ্যে pH ৩ দ্রবণে H⁺ কতগুণ বেশি?',o:['৩ গুণ','১০ গুণ','১০০ গুণ','১০০০ গুণ'],a:3,e:'pH ১ কমলে H⁺ ১০ গুণ বাড়ে। ৩ কমলে 10×10×10 = ১০০০ গুণ।'},
+ {q:'কোনো দ্রবণের pH ৭-এর বেশি হলে দ্রবণটি-',o:['অম্লীয়','ক্ষারীয়','নিরপেক্ষ','এসিড বৃষ্টি'],a:1,e:'pH > ৭ → ক্ষারীয়, pH < ৭ → অম্লীয়, pH = ৭ → নিরপেক্ষ।'},
+ {q:'স্বাভাবিক বৃষ্টির পানির pH কত?',o:['১ থেকে ২','৫ থেকে ৬','৮ থেকে ৯','১১ থেকে ১২'],a:1,e:'বাতাসের CO₂ ও নাইট্রোজেনের অক্সাইড মিশে সামান্য এসিড হয়, তাই pH ৫–৬।'},
+ {q:'মানুষের পাকস্থলীর pH প্রায় কত?',o:['১','৪.৮','৭.৪৪','৮.১'],a:0,e:'পাকস্থলীতে HCl থাকে বলে pH প্রায় ১।'},
+ {q:'মানুষের রক্তের pH কত?',o:['১','৪.৮–৫.৫','৭.৪৩–৭.৪৫','১২'],a:2,e:'রক্ত সামান্য ক্ষারীয়, pH ৭.৪৩–৭.৪৫।'},
+ {q:'প্রসাধনীর pH কত হওয়া ভালো?',o:['১ থেকে ২','৪.৮ থেকে ৫.৫','৯ থেকে ১০','১২ থেকে ১৩'],a:1,e:'ত্বকের pH ৪.৮–৫.৫। প্রসাধনীর pH এর কাছাকাছি হলে জীবাণু বাড়তে পারে না।'},
+ {q:'মাটির pH কত থাকলে ফসলের জন্য সবচেয়ে ভালো?',o:['১ থেকে ২','৩ থেকে ৪','৬ থেকে ৮','১০ থেকে ১২'],a:2,e:'মাটির pH ৬.০–৮.০ হলে সবচেয়ে ভালো। ৩-এর কম বা ১০-এর বেশি হলে উপকারী অণুজীব মরে।'},
+ {q:'মাটির pH কমে গেলে (অম্লীয় হলে) কী দিতে হয়?',o:['চুন (CaO)','অ্যামোনিয়াম সালফেট','লবণ','ভিনেগার'],a:0,e:'চুন ক্ষারক। এটা অতিরিক্ত এসিড প্রশমিত করে মাটির pH বাড়ায়।'},
+ {q:'নিচের কোনটি সবল এসিড?',o:['CH₃COOH','H₂CO₃','HCl','তেঁতুলের টারটারিক এসিড'],a:2,e:'HCl পানিতে ১০০% আয়নিত হয়। বাকিগুলো দুর্বল।'},
+ {q:'নিচের কোনটি দুর্বল (মৃদু) এসিড?',o:['HCl','H₂SO₄','CH₃COOH','HNO₃'],a:2,e:'CH₃COOH আংশিক বিয়োজিত হয় (⇌)। HCl, H₂SO₄, HNO₃ সবল।'},
+ {q:'২৫°C তাপমাত্রায় ১০০০টি CH₃COOH অণুর মধ্যে কয়টি পানিতে বিয়োজিত হয় (বইয়ের মান)?',o:['৪টি','৫০টি','৫০০টি','সবগুলো'],a:0,e:'বইয়ে বলা আছে ১০০০টির মধ্যে মাত্র ৪টি বিয়োজিত হয়, ৯৯৬টি অবিয়োজিত থাকে।'},
+ {q:'নিচের কোনটি দুর্বল ক্ষার?',o:['NaOH','KOH','NH₄OH','Ca(OH)₂'],a:2,e:'NH₄OH পানিতে আংশিক আয়নিত হয়, তাই দুর্বল ক্ষার। NaOH, KOH সবল।'},
+ {q:'সবল এসিডের দ্রবণে বাল্ব বেশি উজ্জ্বল জ্বলে কারণ-',o:['H⁺ আয়ন বেশি থাকে','পানি কম থাকে','OH⁻ বেশি থাকে','এসিড গরম থাকে'],a:0,e:'সবল এসিড সম্পূর্ণ আয়নিত হয়ে বেশি H⁺ দেয়। আয়ন বেশি, তাই বিদ্যুৎ বেশি যায়।'},
+ {q:'তেঁতুলে কোন এসিড থাকে?',o:['টারটারিক এসিড','সাইট্রিক এসিড','ল্যাকটিক এসিড','ইথানয়িক এসিড'],a:0,e:'তেঁতুলে টারটারিক এসিড, লেবুতে সাইট্রিক, দুধে ল্যাকটিক, ভিনেগারে ইথানয়িক।'},
+ {q:'লেবুতে কোন এসিড থাকে?',o:['টারটারিক','সাইট্রিক','ল্যাকটিক','ট্যানিক'],a:1,e:'কমলালেবু ও লেবুতে সাইট্রিক এসিড থাকে।'},
+ {q:'Mg ধাতু লঘু H₂SO₄-এর সাথে বিক্রিয়া করলে কী উৎপন্ন হয়?',o:['MgSO₄ ও H₂','MgO ও H₂O','MgSO₄ ও CO₂','Mg(OH)₂ ও SO₂'],a:0,e:'Mg + H₂SO₄ → MgSO₄ + H₂↑। সক্রিয় ধাতু + এসিড = লবণ + H₂।'},
+ {q:'ধাতব কার্বনেটের সাথে লঘু এসিড বিক্রিয়া করলে বুদবুদ হয় কোন গ্যাসের?',o:['H₂','CO₂','O₂','N₂'],a:1,e:'ধাতব কার্বনেট + এসিড → লবণ + পানি + CO₂।'},
+ {q:'নিচের কোনটি ক্ষারক কিন্তু ক্ষার নয়?',o:['Fe(OH)₂','NaOH','KOH','NH₄OH'],a:0,e:'Fe(OH)₂-এ OH⁻ আছে কিন্তু পানিতে দ্রবণীয় নয়, তাই শুধু ক্ষারক।'},
+ {q:'কোনো যৌগের ক্ষার হওয়ার শর্ত-',o:['OH⁻ থাকতে হবে ও পানিতে দ্রবণীয় হতে হবে','শুধু পানিতে দ্রবণীয় হতে হবে','শুধু ধাতু থাকতে হবে','টক স্বাদ হতে হবে'],a:0,e:'ক্ষার হতে দুটি শর্ত: OH⁻ মূলক থাকা ও পানিতে দ্রবণীয় হওয়া।'},
+ {q:'বইয়ের নিয়মে CaO ক্ষার নয় কেন?',o:['এতে OH⁻ মূলক নেই','এটা এসিড','এটা ধাতু নয়','এটা পানিতে দ্রবণীয়'],a:0,e:'CaO অক্সাইড, এতে OH⁻ মূলক নেই। তাই এটা শুধু ক্ষারক।'},
+ {q:'"সব ক্ষারই ক্ষারক কিন্তু সব ক্ষারক ক্ষার নয়" কেন?',o:['ক্ষার হলো পানিতে দ্রবণীয় ক্ষারক','ক্ষারক পানিতেই গলে না','ক্ষার এসিডের অংশ','ক্ষারকে OH⁻ থাকে না'],a:0,e:'ক্ষার হলো ক্ষারকের একটি অংশ (যেগুলো পানিতে দ্রবণীয় ও OH⁻ যুক্ত)।'},
+ {q:'ফেরিক নাইট্রেট দ্রবণে NaOH দিলে কী অধঃক্ষেপ পড়ে?',o:['লালচে বাদামি Fe(OH)₃','হালকা নীল Cu(OH)₂','সাদা Zn(OH)₂','কোনো অধঃক্ষেপ নেই'],a:0,e:'Fe(NO₃)₃ + 3NaOH → Fe(OH)₃↓ + 3NaNO₃। Fe(OH)₃ লালচে বাদামি।'},
+ {q:'Cu(NO₃)₂ দ্রবণে লঘু NaOH দিলে অধঃক্ষেপের রং-',o:['লালচে বাদামি','হালকা নীল','সাদা','কালো'],a:1,e:'Cu(OH)₂ হালকা নীল অধঃক্ষেপ।'},
+ {q:'Zn(NO₃)₂ দ্রবণে লঘু NaOH দিলে কী পড়ে?',o:['সাদা Zn(OH)₂','নীল Cu(OH)₂','বাদামি Fe(OH)₃','সবুজ'],a:0,e:'Zn(NO₃)₂ + 2NaOH → Zn(OH)₂↓ + 2NaNO₃। Zn(OH)₂ সাদা।'},
+ {q:'অ্যামোনিয়াম লবণের সাথে ক্ষার বিক্রিয়া করলে কোন গ্যাস পাওয়া যায়?',o:['NH₃','CO₂','H₂','Cl₂'],a:0,e:'NH₄Cl + NaOH → NH₃↑ + NaCl + H₂O। এটা অ্যামোনিয়াম লবণের বৈশিষ্ট্যপূর্ণ বিক্রিয়া।'},
+ {q:'প্রশমন বিক্রিয়ায় কী উৎপন্ন হয়?',o:['লবণ ও পানি','লবণ ও হাইড্রোজেন','অক্সাইড ও CO₂','এসিড ও ক্ষার'],a:0,e:'এসিড + ক্ষারক → লবণ + পানি।'},
+ {q:'১ মোল H₂SO₄-কে সম্পূর্ণ প্রশমিত করতে কত মোল NaOH লাগে?',o:['১ মোল','২ মোল','৩ মোল','০.৫ মোল'],a:1,e:'2NaOH + H₂SO₄ → Na₂SO₄ + 2H₂O। ১ মোল H₂SO₄-এর জন্য ২ মোল NaOH।'},
+ {q:'NaCl-এর জলীয় দ্রবণ কেমন?',o:['অম্লীয়','ক্ষারীয়','নিরপেক্ষ','এসিড বৃষ্টি'],a:2,e:'সবল এসিড (HCl) ও সবল ক্ষার (NaOH) থেকে হওয়া লবণ নিরপেক্ষ।'},
+ {q:'FeCl₃-এর জলীয় দ্রবণ কেমন?',o:['অম্লীয়','ক্ষারীয়','নিরপেক্ষ','খর'],a:0,e:'সবল এসিড + দুর্বল ক্ষারক থেকে হওয়া লবণের দ্রবণ অম্লীয়।'},
+ {q:'Na₂CO₃-এর জলীয় দ্রবণ কেমন?',o:['অম্লীয়','ক্ষারীয়','নিরপেক্ষ','এসিড'],a:1,e:'দুর্বল এসিড (H₂CO₃) + সবল ক্ষার (NaOH) থেকে হওয়া লবণ ক্ষারীয়।'},
+ {q:'অ্যান্টাসিড ওষুধে কী থাকে?',o:['Al(OH)₃ ও Mg(OH)₂','HCl ও H₂SO₄','NaCl ও KCl','CaCO₃ ও HNO₃'],a:0,e:'অ্যান্টাসিডে ক্ষারজাতীয় Al(OH)₃ ও Mg(OH)₂ থাকে। এরা পাকস্থলীর বাড়তি HCl প্রশমিত করে।'},
+ {q:'পাকস্থলীর দেয়ালে অতিরিক্ত HCl ক্ষত তৈরি করলে তাকে কী বলে?',o:['পেপটিক আলসার','ডায়াবেটিস','অ্যানিমিয়া','জন্ডিস'],a:0,e:'বইয়ে একে পেপটিক আলসার বলা হয়েছে।'},
+ {q:'টুথপেস্ট দাঁত রক্ষা করে কীভাবে?',o:['মুখের এসিড প্রশমিত করে','দাঁতে এসিড মাখিয়ে','দাঁত গলিয়ে','ক্যালসিয়াম ক্ষয় করে'],a:0,e:'টুথপেস্টে ক্ষারজাতীয় পদার্থ থাকে, যা মুখের জৈব এসিডকে প্রশমিত করে এনামেল রক্ষা করে।'},
+ {q:'কোনো স্থানের বৃষ্টির পানির pH কত বা তার কম হলে তাকে এসিড বৃষ্টি বলে?',o:['৪','৫.৫','৭','৯'],a:0,e:'বৃষ্টির pH ৪ বা তারও কম হলে এসিড বৃষ্টি।'},
+ {q:'বজ্রপাতের সময় বাতাসে কোন গ্যাস তৈরি হয় যা এসিড বৃষ্টির কারণ?',o:['NO','NH₃','H₂','CH₄'],a:0,e:'প্রায় ৩০০০°C-এ N₂ + O₂ → 2NO। NO জারিত হয়ে NO₂ হয়, বৃষ্টির পানিতে HNO₂ ও HNO₃ তৈরি করে।'},
+ {q:'এসিড বৃষ্টির ক্ষতি কোনটি?',o:['মার্বেল পাথরের ভাস্কর্য ক্ষয়','ফসলের বৃদ্ধি দ্রুত','মাছের উৎপাদন বাড়ে','মাটির pH বাড়ে'],a:0,e:'এসিড বৃষ্টি মার্বেল ভাস্কর্য, ধাতব স্থাপনা, ফসল ও মাছের ক্ষতি করে।'},
+ {q:'পানিতে কোনটি দ্রবীভূত থাকলে সাবানে ফেনা হয় না?',o:['Ca বা Mg-এর লবণ','NaCl','KCl','সাবান'],a:0,e:'Ca ও Mg-এর লবণ সাবানের সাথে বিক্রিয়া করে অদ্রবণীয় তলানি দেয়। তাই ফেনা হয় না। একে খর পানি বলে।'},
+ {q:'সোডিয়াম স্টিয়ারেট (C₁₇H₃₅COONa) কী?',o:['সাবান','এসিড','ক্ষারক','খরতার কারণ'],a:0,e:'এটা স্টিয়ারিক এসিডের সোডিয়াম লবণ, সাবান হিসেবে ব্যবহৃত হয়।'},
+ {q:'পানির অস্থায়ী খরতার কারণ কোন লবণ?',o:['Ca, Mg-এর বাইকার্বনেট','Ca, Mg-এর ক্লোরাইড','Ca, Mg-এর সালফেট','Na-এর ক্লোরাইড'],a:0,e:'বাইকার্বনেট লবণ (HCO₃⁻) অস্থায়ী খরতা দেয়। ফুটালে দূর হয়।'},
+ {q:'কোন ধরনের খরতা শুধু ফুটালে দূর হয় না?',o:['স্থায়ী খরতা','অস্থায়ী খরতা','কোনোটিই নয়','দুটিই'],a:0,e:'ক্লোরাইড বা সালফেট লবণজনিত স্থায়ী খরতা ফুটালে যায় না। Na₂CO₃ দিতে হয়।'},
+ {q:'স্থায়ী খরতা দূর করতে কোন যৌগ যোগ করা হয়?',o:['Na₂CO₃','NaCl','HCl','ফিটকিরি'],a:0,e:'CaCl₂ + Na₂CO₃ → CaCO₃↓ + 2NaCl। Ca²⁺ অদ্রবণীয় CaCO₃ হয়ে তলানি পড়ে।'},
+ {q:'বয়লারে খর পানি ব্যবহার করলে কী সমস্যা হয়?',o:['গায়ে লবণ জমে আস্তরণ পড়ে, তাপের অপচয় হয়','বয়লার ঠাণ্ডা থাকে','পানি বেশি ফোটে','কোনো সমস্যা নেই'],a:0,e:'খনিজ লবণ জমে মোটা আস্তরণ পড়ে। প্রবাহ বাধা পায়, তাপের অপচয় হয়, বিস্ফোরণও হতে পারে।'},
+ {q:'BOD-এর পূর্ণরূপ কী?',o:['Biological Oxygen Demand','Basic Oxygen Data','Bio Organic Density','Boiling Oxygen Demand'],a:0,e:'BOD = Biological Oxygen Demand (জৈব রাসায়নিক অক্সিজেন চাহিদা)।'},
+ {q:'একই পানির BOD ও COD-এর মধ্যে সাধারণত কোনটি বেশি?',o:['COD','BOD','সমান','কোনোটিই নয়'],a:0,e:'COD জৈব ও অজৈব সব দূষক ধরে। তাই COD-এর মান BOD-এর চেয়ে বেশি হয়।'},
+ {q:'পানির pH কত হলে তা জীবের বসবাসের অযোগ্য হয়ে পড়ে?',o:['৪.৫-এর কম বা ৯.৫-এর বেশি','৬ থেকে ৮','৭','৫ থেকে ৯'],a:0,e:'পানির pH ৪.৫-এর কম এবং ৯.৫-এর বেশি হলে জীবের বসবাসের অযোগ্য।'},
+ {q:'পানিতে ব্লিচিং পাউডার মেশালে কী ঘটে?',o:['ক্লোরিন তৈরি হয়ে জীবাণু ধ্বংস হয়','পানি খর হয়','pH ১ হয়','আর্সেনিক দূর হয়'],a:0,e:'একে ক্লোরিনেশন বলে। ক্লোরিন জীবাণু ধ্বংস করে।'},
+ {q:'পানি ফুটিয়ে জীবাণুমুক্ত করতে কমপক্ষে কত সময় ফুটাতে হয়?',o:['১৫ থেকে ২০ মিনিট','১ মিনিট','৫ সেকেন্ড','৬ ঘণ্টা'],a:0,e:'বইয়ে বলা আছে কমপক্ষে ১৫ থেকে ২০ মিনিট।'},
+ {q:'আর্সেনিকযুক্ত পানি ফুটালে কী হয়?',o:['আরও ক্ষতিকর হয়','আর্সেনিক দূর হয়','পানি মিষ্টি হয়','পানি নিরপেক্ষ হয়'],a:0,e:'বইয়ে বলা আছে আর্সেনিকযুক্ত পানি ফুটালে তা আরও ক্ষতিকর হয়। ফিল্টার ব্যবহার করতে হবে।'},
+ {q:'গাঢ় নাইট্রিক এসিড বাদামি বোতলে রাখা হয় কেন?',o:['আলোতে HNO₃ ভেঙে যায়','দেখতে সুন্দর বলে','ঠাণ্ডা রাখতে','বোতল সস্তা বলে'],a:0,e:'বাদামি বোতলে আলো ঢুকতে পারে না, তাই HNO₃ ভাঙে না।'},
+ {q:'অসাবধানে গাঢ় এসিড শরীরে লাগলে প্রথমে কী করতে হবে?',o:['পানি দিয়ে বারবার ধুতে হবে','তেল মাখতে হবে','শুকিয়ে ফেলতে হবে','চুন লাগাতে হবে'],a:0,e:'বারবার পানি দিয়ে ধুয়ে তারপর শিক্ষককে জানাতে হবে।'}
+];
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+/* =================== প্রশ্ন-উত্তর =================== */
+var QA=[
+ {h:'সৃজনশীল প্রশ্ন (বইয়ের অনুশীলনী)',items:[
+  ['প্রশ্ন ১: (চিত্রে একটি টেস্টটিউবে NH₄Cl ও CaO গরম করা হচ্ছে, উপরে উল্টো করে ধরা একটি নলে \'X\' গ্যাস জমছে।) (ক) NO₂ গ্যাসের বর্ণ কী? (খ) চুনের পানির pH-এর মান ৭ থেকে বেশি না কম হবে? ব্যাখ্যা করো। (গ) \'X\' গ্যাসটির জলীয় দ্রবণের একটি রাসায়নিক ধর্ম ব্যাখ্যা করো। (ঘ) HCl গ্যাসের মধ্যে \'X\' গ্যাস চালনা করলে কী ঘটবে? সমীকরণসহ লেখো।',
+   '<b>(ক)</b> NO₂ গ্যাসের বর্ণ <b>লালচে বাদামি</b>।<br><b>(খ)</b> চুনের পানি Ca(OH)₂-এর জলীয় দ্রবণ। Ca(OH)₂ ক্ষারক, পানিতে দ্রবণীয় (অল্প), OH⁻ আয়ন দেয়। OH⁻ বেশি থাকায় দ্রবণ ক্ষারীয়, তাই pH <b>৭ থেকে বেশি</b> হবে।<br><b>(গ)</b> NH₄Cl ও CaO বিক্রিয়া করে NH₃ তৈরি হয়: 2NH₄Cl + CaO → 2NH₃ + CaCl₂ + H₂O। তাই X = <b>NH₃</b>। NH₃ পানিতে দ্রবীভূত হলে সামান্য অংশ বিক্রিয়া করে NH₄⁺ ও OH⁻ দেয়: NH₃ + H₂O ⇌ NH₄⁺ + OH⁻। OH⁻ থাকায় দ্রবণ <b>ক্ষারীয়</b>, তাই <b>লাল লিটমাসকে নীল</b> করে।<br><b>(ঘ)</b> NH₃ ক্ষারীয় গ্যাস, HCl এসিডীয়। দুটি বিক্রিয়া করে <b>সাদা ধোঁয়ার মতো</b> NH₄Cl তৈরি করে: <b>NH₃ + HCl → NH₄Cl</b> (প্রশমন)।<br><small>(ঘ-এর সমীকরণ বইয়ে সরাসরি নেই; এটা সাধারণ রসায়নের জানা বিক্রিয়া। বইয়ের মতো ক্ষার + এসিড → লবণ হিসেবেও লেখা যায়: NH₄OH + HCl → NH₄Cl + H₂O।)</small>'],
+  ['প্রশ্ন ২: টেক্সটাইল মিল ও ডায়িং শিল্প, রং ও সালফিউরিক এসিডযুক্ত বর্জ্য সরাসরি নিকটস্থ জলাশয়ে ফেলছে। ফলে ঐ সকল জলাশয় জলজ প্রাণীর বসবাসের অনুপযুক্ত হয়ে পড়ছে। (ক) তেঁতুলে কোন এসিড থাকে? (খ) উদ্দীপকের জলাশয়ে pH মান সম্পর্কে তোমার ধারণা ব্যাখ্যা করো। (গ) টেক্সটাইল মিল ও ডায়িং শিল্পের দূষণ নিয়ন্ত্রণ প্ল্যান্টে এসিড দূষণ নিয়ন্ত্রণে যৌক্তিক পরামর্শ দাও। (ঘ) টেক্সটাইল মিল ও ডায়িং শিল্পের আশপাশে এসিড বৃষ্টির সম্ভাবনা বিক্রিয়াসহ বিশ্লেষণ করো।',
+   '<b>(ক)</b> তেঁতুলে <b>টারটারিক এসিড</b> থাকে।<br><b>(খ)</b> বর্জ্যে H₂SO₄ (সবল এসিড) আছে, তাই জলাশয়ে H⁺ বেড়ে যায়। pH <b>৭-এর অনেক কম</b> হবে (সম্ভবত ৪.৫-এরও কম)। বইয়ের তথ্য: পানির pH ৪.৫-এর কম হলে তা জীবের বসবাসের অযোগ্য। তাই মাছ ও জলজ প্রাণী বাঁচছে না।<br><b>(গ)</b> বর্জ্য জলাশয়ে ফেলার আগে <b>বর্জ্য পরিশোধনাগারে</b> শোধন করতে হবে। বর্জ্যের এসিডকে ক্ষারক (যেমন চুন CaO বা Ca(OH)₂) দিয়ে <b>প্রশমিত</b> করে pH প্রায় ৭-এর কাছাকাছি আনতে হবে (H₂SO₄ + CaO → CaSO₄ + H₂O)। এরপর pH মেপে নিশ্চিত হয়ে তবেই ছাড়তে হবে। কখনো সরাসরি উন্মুক্ত জলাশয়ে ফেলা যাবে না, শিল্পকারখানায় পরিশোধনাগার বাধ্যতামূলক।<br><b>(ঘ)</b> এসব শিল্পে বয়লার ও যন্ত্রে কয়লা বা পেট্রোলিয়াম পোড়ানো হয়। এতে CO₂ এবং নাইট্রোজেন ও সালফারের অক্সাইড (NO₂ ইত্যাদি) বাতাসে মেশে। এগুলো বৃষ্টির পানিতে দ্রবীভূত হয়ে এসিড তৈরি করে:<br>CO₂ + H₂O → H₂CO₃<br>2NO₂ + H₂O → HNO₂ + HNO₃<br>(সালফারের অক্সাইডের ক্ষেত্রেও একই ধরনের এসিড হয়।) বৃষ্টির pH ৪ বা কম হলে এসিড বৃষ্টি হয়। তাই শিল্প এলাকার আশপাশে এসিড বৃষ্টির <b>সম্ভাবনা আছে</b>, বিশেষ করে যদি দূষণ নিয়ন্ত্রণ না থাকে। এতে ফসল, জলাশয়ের মাছ ও দালানকোঠার ক্ষতি হবে।']
+ ]},
+ {h:'সংক্ষিপ্ত ও বর্ণনামূলক প্রশ্ন (আমার বানানো)',items:[
+  ['এসিড কী? সবল ও দুর্বল এসিডের পার্থক্য লেখো।','<b>এসিড:</b> যে রাসায়নিক দ্রব্য পানিতে দ্রবীভূত হলে বিয়োজিত হয়ে H⁺ (প্রোটন) দান করে।<br><b>সবল এসিড:</b> পানিতে ১০০% বিয়োজিত হয়, একমুখী তীর (→)। যেমন HCl, H₂SO₄। দ্রবণে H⁺ বেশি।<br><b>দুর্বল এসিড:</b> আংশিক বিয়োজিত হয়, উভমুখী তীর (⇌)। যেমন CH₃COOH, H₂CO₃। ২৫°C-এ ১০০০টি CH₃COOH অণুর মধ্যে মাত্র ৪টি ভাঙে। দ্রবণে H⁺ কম।'],
+  ['লঘু এসিডের ধর্মগুলো লেখো (পরীক্ষাসহ)।','(১) টক স্বাদ। (২) ক্ষয়কারী (লোহার পাত ঝাঁজরা করে)। (৩) নীল লিটমাস → লাল। (৪) সক্রিয় ধাতুর সাথে লবণ + H₂: Mg + H₂SO₄ → MgSO₄ + H₂↑। (৫) ধাতব কার্বনেটের সাথে লবণ + পানি + CO₂: CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂↑। (৬) ধাতব বাইকার্বনেটের সাথে: NaHCO₃ + HNO₃ → NaNO₃ + H₂O + CO₂। (৭) ক্ষারের সাথে প্রশমন: NaOH + HCl → NaCl + H₂O। (৮) ধাতব অক্সাইডের সাথে: CuO + H₂SO₄ → CuSO₄ + H₂O।'],
+  ['চুনের পানিতে CO₂ চালনা করলে কী কী পরিবর্তন হয়? সমীকরণ লেখো।','প্রথমে চুনের পানি <b>ঘোলা</b> হয়, কারণ অদ্রবণীয় CaCO₃ তৈরি হয়: Ca(OH)₂ + CO₂ → CaCO₃↓ + H₂O। বেশি CO₂ চালনা করলে ঘোলাভাব কেটে আবার <b>স্বচ্ছ</b> হয়, কারণ দ্রবণীয় ক্যালসিয়াম বাইকার্বনেট তৈরি হয়: CaCO₃ + CO₂ + H₂O → Ca(HCO₃)₂।'],
+  ['পানি ছাড়া শুকনো এসিড কেন এসিডের ধর্ম দেখায় না?','শুকনো (অনার্দ্র) এসিডের দানায় মুক্ত H⁺ আয়ন নেই। যেমন শুকনো অক্সালিক এসিডে নীল লিটমাসের রং বদলায় না। পানিতে দ্রবীভূত হলে এসিড বিয়োজিত হয়ে H⁺ দেয়, তখনই লিটমাস লাল হয় ও বিদ্যুৎ পরিবহন করে। বিশুদ্ধ H₂SO₄ ও HNO₃ও (আয়নিত নয় বলে) পানি মেশানোর আগে এসিডের ধর্ম দেখায় না।'],
+  ['গাঢ় HNO₃ কেন বাদামি বোতলে রাখা হয়?','আলোর উপস্থিতিতে HNO₃ ভেঙে যায়। বাদামি বোতল দিয়ে আলো প্রবেশ করতে পারে না, তাই HNO₃ নিরাপদে থাকে। বইয়ে বলা আছে, নাইট্রিক এসিড কাচের বোতলে আলোর উপস্থিতিতে ভেঙে যায় বলে বোতলের বর্ণ বাদামি হয়।'],
+  ['ক্ষারক ও ক্ষারের পার্থক্য লেখো। "সব ক্ষারক ক্ষার নয়" উদাহরণসহ বোঝাও।','<b>ক্ষারক:</b> ধাতু বা ধাতুর মতো ক্রিয়াশীল যৌগমূলকের অক্সাইড ও হাইড্রোক্সাইড, যা এসিডের সাথে বিক্রিয়া করে লবণ ও পানি দেয়।<br><b>ক্ষার:</b> পানিতে দ্রবণীয় ক্ষারক। শর্ত: OH⁻ মূলক থাকা ও পানিতে দ্রবণীয় হওয়া।<br>উদাহরণ: NaOH ক্ষার (OH⁻ আছে, দ্রবণীয়)। Fe(OH)₂ ক্ষারক, কিন্তু পানিতে দ্রবণীয় নয় বলে ক্ষার নয়। CaO-তে OH⁻ নেই, তাই ক্ষার নয়। অতএব সব ক্ষারই ক্ষারক, কিন্তু সব ক্ষারক ক্ষার নয়।'],
+  ['তিনটি ধাতব নাইট্রেট দ্রবণ আলাদা আলাদা পরীক্ষানলে আছে: Fe(NO₃)₃, Cu(NO₃)₂, Zn(NO₃)₂। লঘু NaOH দিয়ে কীভাবে চিনবে?','প্রতিটিতে কয়েক ফোঁটা লঘু NaOH দিলে: <b>লালচে বাদামি</b> অধঃক্ষেপ → Fe(NO₃)₃ (Fe(OH)₃)। <b>হালকা নীল</b> অধঃক্ষেপ → Cu(NO₃)₂ (Cu(OH)₂)। <b>সাদা</b> অধঃক্ষেপ → Zn(NO₃)₂ (Zn(OH)₂)। সমীকরণ: M(NO₃)ₙ + nNaOH → M(OH)ₙ↓ + nNaNO₃।'],
+  ['অ্যামোনিয়াম লবণ কীভাবে চেনা যায়?','যেকোনো অ্যামোনিয়াম লবণের সাথে ক্ষার (NaOH, KOH বা Ca(OH)₂) বিক্রিয়া করালে <b>NH₃ গ্যাস</b> পাওয়া যায়। যেমন NH₄Cl + NaOH → NH₃↑ + NaCl + H₂O। এটা অ্যামোনিয়াম লবণের বৈশিষ্ট্যপূর্ণ বিক্রিয়া।'],
+  ['বইয়ের একক কাজের তিনটি পরিবর্তন ও আয়নিক সমীকরণ লেখো: (ক) লঘু H₂SO₄-এ আয়রন গুঁড়া (খ) লঘু HCl-এ কঠিন Na₂CO₃ (গ) CuSO₄ দ্রবণে অ্যামোনিয়া দ্রবণ।','<b>(ক)</b> বুদবুদ (H₂) বের হয়, লোহার গুঁড়া কমে যায়। Fe + 2H⁺ → Fe²⁺ + H₂↑।<br><b>(খ)</b> ফোঁসফোঁস করে CO₂ বুদবুদ হয়। CO₃²⁻ + 2H⁺ → H₂O + CO₂↑।<br><b>(গ)</b> হালকা নীল অধঃক্ষেপ পড়ে। Cu²⁺ + 2OH⁻ → Cu(OH)₂↓ (OH⁻ আসে অ্যামোনিয়া দ্রবণ থেকে)।'],
+  ['pH কী? pH স্কেল ব্যাখ্যা করো।','কোনো জলীয় দ্রবণের pH হলো ঐ দ্রবণে H⁺ আয়নের ঘনমাত্রার (mol/L) ঋণাত্মক লগারিদম: <b>pH = −log[H⁺]</b>। বিশুদ্ধ পানিতে [H⁺] = 10⁻⁷, তাই pH = ৭। বাস্তবে pH স্কেল ০ থেকে ১৪। pH < ৭ অম্লীয়, = ৭ নিরপেক্ষ, > ৭ ক্ষারীয়। সবচেয়ে শক্তিশালী এসিডের pH ০, সবচেয়ে শক্তিশালী ক্ষারের pH ১৪। H⁺ যত বেশি, pH তত কম।'],
+  ['pH মাপার চারটি উপায় লেখো।','(১) ইউনিভার্সাল নির্দেশক: ফোঁটা দিয়ে রঙ কালার চার্টের সাথে মেলানো। (২) pH পেপার: ডুবিয়ে রঙ স্ট্যান্ডার্ড চার্টের সাথে মেলানো। (৩) pH মিটার: ইলেকট্রোড ডুবিয়ে ডিজিটাল ডিসপ্লেতে মান দেখা। (৪) লিটমাস পেপার: মোটামুটি অনুমান (pH < ৭ হলে লাল, > ৭ হলে নীল)।'],
+  ['কৃষি, শরীর ও প্রসাধনীতে pH-এর গুরুত্ব লেখো।','<b>কৃষি:</b> মাটির pH ৬–৮ সবচেয়ে ভালো। ৩-এর কম বা ১০-এর বেশি হলে উপকারী অণুজীব মরে। pH কমলে চুন (CaO), বাড়লে (NH₄)₂SO₄ বা (NH₄)₃PO₄ সার দেওয়া হয়।<br><b>শরীর:</b> বিভিন্ন অঙ্গের জৈব রাসায়নিক বিক্রিয়ার জন্য ভিন্ন pH লাগে (পাকস্থলী ১, রক্ত ৭.৪৩–৭.৪৫, অগ্ন্যাশয় রস ৮.১)।<br><b>প্রসাধনী:</b> ত্বকের pH ৪.৮–৫.৫ থাকলে জীবাণুর বংশবৃদ্ধি আটকায়। তাই প্রসাধনীর pH ৪.৮–৫.৫ ভালো।'],
+  ['প্রশমন বিক্রিয়া কী? দৈনন্দিন জীবনে এর তিনটি গুরুত্ব লেখো।','এসিড ও ক্ষারক (ক্ষার) বিক্রিয়া করে লবণ ও পানি তৈরির বিক্রিয়াই প্রশমন বিক্রিয়া। এখানে এসিডের H⁺ ও ক্ষারের OH⁻ মিলে পানি হয়। যেমন NaOH + HCl → NaCl + H₂O।<br><b>গুরুত্ব:</b> (১) পরিপাক: অ্যান্টাসিড (Al(OH)₃, Mg(OH)₂) পাকস্থলীর অতিরিক্ত HCl প্রশমিত করে। (২) দাঁতের যত্ন: টুথপেস্টের ক্ষারজাতীয় পদার্থ মুখের জৈব এসিড প্রশমিত করে এনামেল রক্ষা করে। (৩) কৃষি: চুন (CaO) মাটির অতিরিক্ত এসিড প্রশমিত করে উর্বরতা বাড়ায়।'],
+  ['লবণ কত প্রকার (দ্রবণের প্রকৃতি অনুযায়ী)? উদাহরণ দাও।','(১) <b>নিরপেক্ষ:</b> সবল এসিড + সবল ক্ষার থেকে। যেমন NaCl, Na₂SO₄। (২) <b>অম্লীয়:</b> সবল এসিড + দুর্বল ক্ষারক থেকে। যেমন FeCl₃, Zn(NO₃)₂। (৩) <b>ক্ষারীয়:</b> দুর্বল এসিড + সবল ক্ষার থেকে। যেমন Na₂CO₃, CH₃COONa।'],
+  ['এসিড বৃষ্টি কী? এর কারণ ও ক্ষতি লেখো।','বৃষ্টির পানির pH ৪ বা তারও কম হলে তাকে এসিড বৃষ্টি বলে (স্বাভাবিক বৃষ্টির pH ৫–৬)।<br><b>কারণ:</b> বজ্রপাতে N₂ + O₂ → NO, তারপর NO₂; যানবাহন, বিদ্যুৎ কেন্দ্র ও কলকারখানা থেকে প্রচুর CO₂; নাইট্রোজেন ও সালফারযুক্ত কয়লা বা পেট্রোলিয়াম পোড়ানো। এসব অক্সাইড বৃষ্টির পানিতে মিশে এসিড হয় (CO₂ + H₂O → H₂CO₃; 2NO₂ + H₂O → HNO₂ + HNO₃)।<br><b>ক্ষতি:</b> মাটির pH কমে ফসল ও গাছপালার ক্ষতি; জলাশয়ের pH কমে মাছ ও জলজ প্রাণীর বসবাস অনুপযুক্ত; দালানকোঠা, ধাতব স্থাপনা, মার্বেল ভাস্কর্যের ক্ষয়।'],
+  ['পানির খরতা কী? অস্থায়ী ও স্থায়ী খরতার পার্থক্য লেখো।','যে ধর্মের জন্য পানিতে সাবান ভালোভাবে ময়লা পরিষ্কার করতে পারে না (ফেনা হয় না), তাকে পানির খরতা বলে। কারণ Ca, Mg-এর লবণ সাবানের সাথে বিক্রিয়া করে অদ্রবণীয় তলানি দেয়।<br><b>অস্থায়ী:</b> Ca, Mg, Fe-এর বাইকার্বনেটের জন্য। শুধু ফুটালেই দূর হয়: Ca(HCO₃)₂ → CaCO₃↓ + CO₂↑ + H₂O।<br><b>স্থায়ী:</b> Ca, Mg, Fe-এর ক্লোরাইড বা সালফেটের জন্য। শুধু ফুটালে দূর হয় না। Na₂CO₃ যোগ করলে দূর হয়: CaCl₂ + Na₂CO₃ → CaCO₃↓ + 2NaCl।'],
+  ['খর পানি ব্যবহারের ক্ষতি লেখো।','(১) সাবান নষ্ট হয়, ফেনা হয় না। (২) পাইপ ও বয়লারের গায়ে খনিজ লবণ জমে মোটা আস্তরণ পড়ে। (৩) পানির প্রবাহ বাধা পায়। (৪) বয়লারে তাপের অপচয় হয়, এমনকি বিস্ফোরণও হতে পারে। (৫) এসব কারণে আর্থিক ক্ষতি হয়।'],
+  ['পানিদূষণের কারণ ও নিয়ন্ত্রণের উপায় লেখো।','<b>কারণ:</b> গৃহস্থালি বর্জ্য ও মলমূত্র; হাসপাতাল ও ওষুধের বর্জ্য; কৃষির সার ও কীটনাশক; শিল্পকারখানার রাসায়নিক বর্জ্য; যানবাহনের জ্বালানি বর্জ্য; অগভীর নলকূপ ও অতিরিক্ত খননে ভূগর্ভস্থ পানিতে আর্সেনিক। এতে লেড, ক্যাডমিয়াম, মার্কারি, ক্রোমিয়ামের মতো ভারী ধাতু মেশে।<br><b>নিয়ন্ত্রণ:</b> ছোট বায়োগ্যাস প্ল্যান্ট; প্রত্যেক শিল্পকারখানায় বর্জ্য পরিশোধনাগার বাধ্যতামূলক; বর্জ্য সরাসরি জলাশয়ে না ফেলা; জনসচেতনতা ও পরিবেশ অধিদপ্তরকে তথ্য দিয়ে সাহায্য।'],
+  ['আর্সেনিকযুক্ত পানি পানের ক্ষতি কী?','আর্সেনিক বিষাক্ত পদার্থ। একটি নির্দিষ্ট মাত্রার বেশি আর্সেনিকযুক্ত পানি পান করলে মানুষের মৃত্যু পর্যন্ত হতে পারে। এই পানি ফুটালে আরও ক্ষতিকর হয়, তাই ফিল্টার ব্যবহার করতে হবে।'],
+  ['BOD ও COD কী? পার্থক্য লেখো।','<b>BOD (Biological Oxygen Demand):</b> ১ লিটার পানিতে পচনযোগ্য জৈব দূষককে ব্যাকটেরিয়ার মতো অণুজীব দিয়ে ভাঙতে যত অক্সিজেন লাগে।<br><b>COD (Chemical Oxygen Demand):</b> ১ লিটার পানিতে জৈব ও অজৈব সব দূষককে রাসায়নিকভাবে সম্পূর্ণ জারিত করতে যত অক্সিজেন লাগে।<br>দুটির মানই যত বেশি, পানি তত দূষিত। একই পানির COD > BOD, কারণ COD সব দূষক ধরে, BOD শুধু জৈব পচনযোগ্য দূষক ধরে।'],
+  ['পানির বিশুদ্ধতা কীভাবে পরীক্ষা করবে?','(১) বর্ণ ও গন্ধ: বিশুদ্ধ পানি বর্ণহীন, গন্ধহীন। (২) তাপমাত্রা: থার্মোমিটার দিয়ে মাপলে তাপ দূষণ ধরা যায়। (৩) pH: pH পেপার বা মিটারে মেপে দেখা (৪.৫–৯.৫-এর বাইরে হলে অযোগ্য)। (৪) BOD ও COD-এর মান: যত বেশি, পানি তত দূষিত।'],
+  ['পানি বিশুদ্ধ করার চারটি পদ্ধতি লেখো।','(১) <b>ক্লোরিনেশন:</b> ব্লিচিং পাউডার মিশিয়ে ক্লোরিন দিয়ে জীবাণু ধ্বংস। (২) <b>ফুটানো:</b> কমপক্ষে ১৫–২০ মিনিট ফুটিয়ে জীবাণু ধ্বংস (আর্সেনিক থাকলে ক্ষতিকর)। (৩) <b>থিতানো:</b> এক বালতি পানিতে ১ চামচ ফিটকিরি গুঁড়া, আধা ঘণ্টা রেখে ওপর থেকে ঢেলে আলাদা করা (অদ্রবণীয় দূষক দূর)। (৪) <b>ছাঁকন:</b> ফিল্টার দিয়ে ছাঁকলে জীবাণু, আর্সেনিক ও অন্য দূষক দূর হয়।'],
+  ['আপেলের অম্লীয়/ক্ষারীয় প্রকৃতি লিটমাস দিয়ে কীভাবে নির্ণয় করবে?','আপেলের কুচি পেষণ যন্ত্রে পিষে পেস্ট করো। ১০ mL পাতিত পানি মিশিয়ে ছাঁকন কাগজ ও ফানেল দিয়ে ছেঁকে টেস্টটিউবে জলীয় অংশ নাও। একবার নীল ও একবার লাল লিটমাস ডুবাও। নীল লিটমাস <b>লাল</b> হয়, লাল লিটমাস অপরিবর্তিত। অতএব আপেল <b>অম্লীয়</b> প্রকৃতির খাদ্য।'],
+  ['ঘরে pH পেপার কীভাবে বানাবে?','লালশাক, লাল বাঁধাকপি, বিট বা রঙিন ফুল (রক্তজবা, গোলাপ, ডালিয়া) ছোট করে কেটে হালকা আঁচে ভাপে সিদ্ধ করো। যে রঙিন নির্যাস পাওয়া যাবে তাতে ফিল্টার পেপার ডুবাও। বাতাসে শুকিয়ে চিকন করে কেটে নাও। এই পেপার জানা pH-এর দ্রবণে ডুবিয়ে রঙের চার্ট বানাও।'],
+  ['গাঢ় এসিড ও গাঢ় ক্ষার নিয়ে কাজ করার সময় কী কী সতর্কতা নেবে?','হাতে গ্লাভস, চোখে গগলস, মুখে মাস্ক, শরীরে অ্যাপ্রন পরবে। গাঢ় HCl-এর বোতল খোলার আগে নাকে-মুখে মাস্ক ও চোখে নিরাপদ চশমা পরবে। পানিতে অল্প অল্প করে মিশিয়ে লঘু করবে। শরীরে লাগলে পানি দিয়ে বারবার ধুয়ে শিক্ষককে জানাবে।']
+ ]}
+];
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+function frame(){p1draw();a2draw();l3draw();s4draw();k5draw();n5draw();t6draw();r7draw();w8draw();q8draw();requestAnimationFrame(frame);}
+frame();
+
+</script>
+</body>
+</html>
