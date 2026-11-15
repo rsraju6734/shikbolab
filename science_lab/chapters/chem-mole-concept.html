@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>মোলের ধারণা ও রাসায়নিক গণনা (অধ্যায় ৬) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+</style>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#chemistry">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">🧪 রসায়ন &rsaquo; ষষ্ঠ অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🧮 মোলের ধারণা ও রাসায়নিক গণনা (Mole &amp; Chemical Counting)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🧮 ল্যাব ১</a><a href="#lab2">🎈 ল্যাব ২</a><a href="#lab3">🧪 ল্যাব ৩</a><a href="#lab4">📊 ল্যাব ৪</a><a href="#lab5">⚖️ ল্যাব ৫</a><a href="#lab6">🔥 ল্যাব ৬</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+
+  <!-- ================= নোট ================= -->
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> মোলের ধারণা দিয়ে হিসাব করতে, নির্দিষ্ট ঘনমাত্রার দ্রবণ বানাতে, যৌগের মৌলের শতকরা সংযুতি বের করতে, স্থূল ও আণবিক সংকেত নির্ণয় করতে, রাসায়নিক সমীকরণ লিখে সমতা করতে, সমীকরণ থেকে ভরের হিসাব করতে, তুঁতের কেলাস পানির শতকরা পরিমাণ বের করতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের (৬ষ্ঠ অধ্যায়ের) ক্রম মেনে সহজ ভাষায় লেখা। পরীক্ষায় লিখতে হলে বইয়ের ভাষা ও শিক্ষকের নির্দেশ মেনে লিখবে।</div>
+
+    <h3>৬.১ মোল ⭐⭐⭐</h3>
+    <ul>
+      <li>মোল রাসায়নিক পদার্থ পরিমাপের একক। ১২টি = ১ ডজন, ১০০টি = ১ শতক, তেমনি <b>৬.০২৩ × ১০²³ টি</b> = ১ মোল।</li>
+      <li>১ মোল পরমাণুতে ৬.০২৩ × ১০²³ টি পরমাণু, ১ মোল অণুতে ঐ সংখ্যক অণু, ১ মোল আয়নে ঐ সংখ্যক আয়ন। এই সংখ্যাটিকে <b>অ্যাভোগেড্রোর সংখ্যা</b> বলে।</li>
+      <li>পারমাণবিক ভর বা আণবিক ভরকে <b>গ্রাম এককে</b> লিখলে যে পরিমাণ পাওয়া যায়, সেটাই ১ মোল। ১২ g C = ১ মোল C পরমাণু। ১৮ g H₂O = ১ মোল H₂O।</li>
+      <li><b>আণবিক ভর:</b> অণুর সব পরমাণুর পারমাণবিক ভর যোগ। Cl₂ = ২ × ৩৫.৫ = ৭১। NaCl = ২৩ + ৩৫.৫ = ৫৮.৫। CuSO₄·5H₂O = ৬৩.৫ + ৩২ + ৯ × ১৬ + ১০ × ১ = ২৪৯.৫।</li>
+      <li><b>উদাহরণ:</b> ১টি H₂O অণুর ভর = ১৮ ÷ ৬.০২৩ × ১০²³ = ২.৯৯ × ১০⁻²³ g। ১ g H₂SO₄-এ অণু = ৬.০২৩ × ১০²³ ÷ ৯৮ = ৬.১৪ × ১০²¹ টি। ৫ g H₂O = ৫/১৮ = ০.২৭৭ মোল।</li>
+    </ul>
+    <h4>৬.১.১ গ্যাসের মোলার আয়তন</h4>
+    <ul>
+      <li>১ মোল গ্যাসীয় পদার্থ যে আয়তন দখল করে তাকে মোলার আয়তন বলে। আদর্শ অবস্থায় (০°C ও ১ বায়ুমণ্ডল চাপ) ১ মোল গ্যাসের আয়তন <b>২২.৪ লিটার</b>।</li>
+      <li>n = মোল সংখ্যা, w = ভর (g), M = আণবিক ভর, V = আয়তন (লিটার), N = অণুর সংখ্যা হলে:<br><b>n = w / M = V / ২২.৪ = N / (৬.০২৩ × ১০²³)</b></li>
+      <li>উদাহরণ: ১ L CO₂-এ অণু = ৬.০২৩ × ১০²³ ÷ ২২.৪ = ২.৬৯ × ১০²² টি। ৫ মোল CO₂-এর আয়তন = ৫ × ২২.৪ = ১১২ L। ১০ g H₂-এর আয়তন: n = ১০/২ = ৫ মোল, V = ৫ × ২২.৪ = ১১২ L।</li>
+    </ul>
+    <h4>৬.১.২ মোল ও আণবিক সংকেত</h4>
+    <p>H₂O-এর আণবিক সংকেত থেকে জানা যায়: ১ অণু H₂O-তে ২টি H ও ১টি O পরমাণু। ১ মোল H₂O-তে ২ মোল H পরমাণু ও ১ মোল O পরমাণু। ১ মোল H₂O-এর ভর ২ + ১৬ = ১৮ g। ১ মোল H₂O-তে H পরমাণু ১.২০ × ১০²⁴ টি, O পরমাণু ৬.০২৩ × ১০²³ টি।</p>
+    <h4>৬.১.৩ মোলার দ্রবণ</h4>
+    <ul>
+      <li><b>দ্রবণ = দ্রব + দ্রাবক।</b> পানিতে লবণ গুলালে লবণ দ্রব, পানি দ্রাবক। পানি দ্রাবক হলে জলীয় দ্রবণ।</li>
+      <li>দ্রাবকের মধ্যে তুলনামূলক কম দ্রব থাকলে <b>লঘু দ্রবণ</b>, বেশি দ্রব থাকলে <b>গাঢ় দ্রবণ</b>। ২৫০ mL পানিতে ১০ g লবণ লঘু, ১৫ g লবণ গাঢ়। ২৫০ mL ও ২০০ mL পানিতে ১০ g করে লবণ দিলে ২০০ mL-এরটি গাঢ়।</li>
+      <li><b>মোলারিটি:</b> নির্দিষ্ট তাপমাত্রায় <b>১ লিটার দ্রবণে</b> যত মোল দ্রব দ্রবীভূত থাকে। ২ মোল থাকলে ২ মোলার, ০.৫ মোল থাকলে সেমিমোলার (০.৫ M), ০.১ মোল থাকলে ডেসিমোলার (০.১ M)।</li>
+      <li><b>ভরের সূত্র:</b> w = S × V × M / ১০০০<br>(w = দ্রবের ভর g, S = মোলারিটি, V = দ্রবণের আয়তন mL, M = দ্রবের আণবিক ভর)</li>
+      <li><b>বিভিন্ন মোলারিটির দ্রবণ বানানোর ধাপ:</b> (১) নির্দিষ্ট আয়তনের আয়তনিক ফ্লাস্ক নাও। (২) দ্রব সূত্র দিয়ে ওজন করে ফ্লাস্কে ঢালো। (৩) কিছু পানি দিয়ে ঝাঁকিয়ে গুলিয়ে নাও। (৪) সাবধানে দাগ পর্যন্ত পানি পূর্ণ করো।</li>
+      <li><b>উদাহরণ ১:</b> ২৫০ mL ০.২ M NaCl: w = ০.২ × ২৫০ × ৫৮.৫ / ১০০০ = ২.৯২৫ g।</li>
+      <li><b>উদাহরণ ২:</b> ২ লিটার ০.১ M Na₂CO₃ (M = ১০৬): w = ০.১ × ২০০০ × ১০৬ / ১০০০ = ২১.২ g।</li>
+      <li><b>উদাহরণ ৩:</b> ২৫০ mL দ্রবণে ২০ g Na₂CO₃ থাকলে: ২০ = S × ২৫০ × ১০৬ / ১০০০, S = ০.৭৫ মোলার।</li>
+      <li><b>উদাহরণ ৪:</b> ২০০ mL সেমিমোলার (০.৫ M) Na₂CO₃: w = ০.৫ × ২০০ × ১০৬ / ১০০০ = ১০.৬ g।</li>
+    </ul>
+
+    <h3>৬.২ যৌগে মৌলের শতকরা সংযুতি ⭐⭐⭐</h3>
+    <div class="key">যৌগের <b>১০০ গ্রামের মধ্যে</b> কোনো মৌল যত গ্রাম থাকে তাকে ঐ মৌলের শতকরা সংযুতি বলে।</div>
+    <p><b>মৌলের শতকরা সংযুতি = (মৌলের পারমাণবিক ভর × পরমাণুর সংখ্যা × ১০০) ÷ যৌগের আণবিক ভর %</b></p>
+    <ul>
+      <li>HCl (M = ৩৬.৫): H = ১ × ১০০ ÷ ৩৬.৫ = <b>২.৭৪%</b>; Cl = <b>৯৭.২৬%</b>।</li>
+      <li>H₂O (M = ১৮): H = ২ × ১০০ ÷ ১৮ = <b>১১.১১%</b>; O = <b>৮৮.৮৯%</b>।</li>
+      <li>H₂SO₄ (M = ৯৮): H = ২.০৪%, S = ৩২.৬৫%, O = ৬৫.৩০%।</li>
+      <li>Al₂(SO₄)₃ (M = ৩৪২): Al = ১৫.৭৮%, S = ২৮.০৭%, O = ৫৬.১৪%।</li>
+    </ul>
+    <h4>৬.২.১ শতকরা সংযুতি থেকে স্থূল সংকেত</h4>
+    <p>অণুতে পরমাণুগুলোর <b>সরলতম পূর্ণসংখ্যার অনুপাত</b> দেখানো সংকেতকে স্থূল সংকেত বলে। যেমন H₂O₂-এর স্থূল সংকেত HO।</p>
+    <p><b>ধাপ ১:</b> শতকরা সংযুতিকে পারমাণবিক ভর দিয়ে ভাগ করো। <b>ধাপ ২:</b> ভাগফলগুলোর ক্ষুদ্রতম সংখ্যা দিয়ে সবগুলোকে ভাগ করো (দরকার হলে পূর্ণসংখ্যা বানাতে গুণ করো)। <b>ধাপ ৩:</b> প্রতীকের নিচে ডানে এই সংখ্যাগুলো বসাও। <b>ধাপ ৪:</b> ১ লিখতে হয় না।</p>
+    <ul>
+      <li>C = ৯২.৩১%, H = ৭.৬৯%: C = ৯২.৩১ ÷ ১২ = ৭.৬৯, H = ৭.৬৯ ÷ ১ = ৭.৬৯ → অনুপাত ১ : ১ → স্থূল সংকেত <b>CH</b>।</li>
+      <li>H = ২.০৪%, S = ৩২.৬৫%, O = ৬৫.৩০%: ২.০৪, ১.০২, ৪.০৮ → ÷ ১.০২ → ২ : ১ : ৪ → <b>H₂SO₄</b>।</li>
+      <li>H = ১১.১১%, O = ৮৮.৮৯%: ১১.১১, ৫.৫৫ → ২ : ১ → <b>H₂O</b>।</li>
+    </ul>
+    <h4>৬.২.২ আণবিক সংকেত নির্ণয়</h4>
+    <p>স্থূল সংকেতের ভর যদি আণবিক ভরের সমান হয়, স্থূল সংকেতই আণবিক সংকেত। না হলে <b>n = যৌগের আণবিক ভর ÷ স্থূল সংকেতের ভর</b>, আণবিক সংকেত = (স্থূল সংকেত)ₙ।</p>
+    <p>উদাহরণ: C = ৯২.৩১%, H = ৭.৬৯%, আণবিক ভর ৭৮। স্থূল সংকেত CH (ভর ১৩)। n = ৭৮ ÷ ১৩ = ৬। আণবিক সংকেত = <b>C₆H₆</b>।</p>
+    <p><b>আণবিক সংকেত থেকে স্থূল সংকেত:</b> গ্লুকোজ C₆H₁₂O₆-এ C : H : O = ৬ : ১২ : ৬ = ১ : ২ : ১, তাই স্থূল সংকেত <b>CH₂O</b>।</p>
+
+    <h3>৬.৩ রাসায়নিক সমীকরণ ⭐⭐⭐</h3>
+    <ul>
+      <li>বিক্রিয়ক বাম পাশে, উৎপাদ ডান পাশে লিখে মাঝে সমান চিহ্ন (=) বা তীর (→) দিই। একাধিক হলে মাঝে + দিই।</li>
+      <li><b>সমতা:</b> বাম পাশের প্রতিটি মৌলের পরমাণু সংখ্যা ডান পাশের সমান করাকে সমতা বলে। যেমন 2H₂ + O₂ → 2H₂O।</li>
+      <li><b>ভৌত অবস্থা:</b> কঠিন (s), তরল (l), গ্যাস (g), জলীয় দ্রবণ (aq)। যেমন 2H₂(g) + O₂(g) → 2H₂O(l)।</li>
+      <li>তাপ দিলে তীরের উপরে ডেল্টা (Δ)। যেমন 2Mg(NO₃)₂(s) → 2MgO(s) + 4NO₂(g) + O₂(g)।</li>
+      <li>উদাহরণ: C(s) + O₂(g) → CO₂(g); CaCO₃(s) + HCl(aq) → CaCl₂(aq) + CO₂(g) + H₂O(l)।</li>
+    </ul>
+    <h4>৬.৩.১ সমতাকরণ</h4>
+    <p>বিক্রিয়ার সময় বিক্রিয়ক ও উৎপাদ <b>ভরের সংরক্ষণসূত্র</b> মেনে চলে, তাই দুই পাশে পরমাণু সংখ্যা সমান থাকে। সমতার কোনো নির্দিষ্ট নিয়ম নেই, তবে কৌশল:</p>
+    <ol>
+      <li>বিক্রিয়ক ও উৎপাদের সঠিক সংকেত লেখো।</li>
+      <li>সংকেতের সামনে ১, ২, ৩ … সংখ্যা বসিয়ে দুই পাশের পরমাণু সমান করো। <b>সংকেতের নিচের ছোট সংখ্যা বদলানো যাবে না।</b></li>
+      <li>আগে যৌগের পরমাণু মেলাও, পরে মৌলিক অণু (H₂, O₂)।</li>
+      <li>দুই পাশে প্রতিটি মৌল সমান হলে সমতা হলো।</li>
+    </ol>
+    <ul>
+      <li>Mg + HCl → MgCl₂ + H₂ ⟹ <b>Mg + 2HCl = MgCl₂ + H₂</b></li>
+      <li>Na₂CO₃ + HCl → NaCl + H₂O + CO₂ ⟹ <b>Na₂CO₃ + 2HCl = 2NaCl + H₂O + CO₂</b></li>
+      <li>Al₂O₃ + HCl → AlCl₃ + H₂O ⟹ <b>Al₂O₃ + 6HCl = 2AlCl₃ + 3H₂O</b></li>
+    </ul>
+    <h4>৬.৩.২ মোল ও রাসায়নিক সমীকরণ (স্টয়কিওমিতি)</h4>
+    <p>বিক্রিয়কের পরিমাণ থেকে উৎপাদের পরিমাণ (এবং উল্টোটা) হিসাব করাকে <b>স্টয়কিওমিতি</b> বলে। সমতাযুক্ত সমীকরণের নিচে মোল, কণা, ভর লেখা যায়।</p>
+    <table class="t">
+      <tr><th></th><th>2Mg(s)</th><th>O₂(g)</th><th>2MgO(s)</th></tr>
+      <tr><td>মোল</td><td>২ মোল</td><td>১ মোল</td><td>২ মোল</td></tr>
+      <tr><td>ভর</td><td>২ × ২৪ = ৪৮ g</td><td>১ × ৩২ = ৩২ g</td><td>২ × ৪০ = ৮০ g</td></tr>
+    </table>
+    <ul>
+      <li>৫ g Mg-এর জন্য O₂ লাগে ৩২ × ৫ ÷ ৪৮ = <b>৩.৩৩ g</b>।</li>
+      <li>২ g Mg থেকে MgO হয় ৮০ × ২ ÷ ৪৮ = <b>৩.৩৩ g</b>।</li>
+      <li>১০ g MgO-এর জন্য O₂ লাগে ৩২ × ১০ ÷ ৮০ = <b>৪ g</b>।</li>
+      <li>N₂ + 3H₂ → 2NH₃: ৫টি N₂ অণু থেকে ২ × ৫ = ১০টি NH₃ অণু হয়। সব গ্যাসীয় হলে প্রমাণ অবস্থায় ১ মোল = ২২.৪ L।</li>
+    </ul>
+
+    <h3>৬.৪ লিমিটিং বিক্রিয়ক ⭐⭐⭐</h3>
+    <div class="key">বিক্রিয়ায় যে বিক্রিয়ক <b>আগে শেষ হয়ে যায়</b> তাকে লিমিটিং বিক্রিয়ক বলে। বাকি বিক্রিয়ক কিছুটা <b>উদ্বৃত্ত</b> থাকে। উৎপাদের পরিমাণ লিমিটিং বিক্রিয়ক থেকে হিসাব করতে হয়।</div>
+    <ul>
+      <li>২Mg + O₂ → ২MgO। ৪টি Mg + ৪টি O₂: ৪টি Mg-এর জন্য লাগে ২টি O₂, তাই (৪ − ২) = ২টি O₂ উদ্বৃত্ত। <b>Mg লিমিটিং</b>।</li>
+      <li>৭০টি Mg + ৩০টি O₂: ৭০টি Mg-এর জন্য লাগে ৩৫টি O₂, কিন্তু আছে ৩০টি। <b>O₂ লিমিটিং</b>।</li>
+      <li>৫ g H₂ + ৭৫ g Cl₂ (H₂ + Cl₂ → 2HCl): ২ g H₂-এর জন্য ৭১ g Cl₂। ৫ g H₂-এর জন্য লাগে ৭১ × ৫ ÷ ২ = ১৭৭.৫ g, আছে ৭৫ g। <b>Cl₂ লিমিটিং</b>।</li>
+    </ul>
+
+    <h3>৬.৫ উৎপাদের শতকরা পরিমাণ ⭐⭐</h3>
+    <ul>
+      <li>বিক্রিয়ক সব সময় ১০০% বিশুদ্ধ হয় না। সবচেয়ে বিশুদ্ধ পদার্থকে <b>অ্যানালার</b> (অ্যানালার গ্রেড) বলে।</li>
+      <li>অবিশুদ্ধ পদার্থ বিশুদ্ধ করতে কেলাসন, পাতন, আংশিক পাতন, ক্রোমাটোগ্রাফি ইত্যাদি ব্যবহার হয়।</li>
+      <li><b>উৎপাদের শতকরা পরিমাণ = (প্রকৃত উৎপাদের পরিমাণ × ১০০) ÷ সমীকরণ থেকে হিসাবকৃত উৎপাদের পরিমাণ</b></li>
+      <li>উদাহরণ: ২ g Mg থেকে তাত্ত্বিক MgO = ৩.৩৩ g। প্রকৃতপক্ষে ৩.২৫ g পাওয়া গেলে শতকরা পরিমাণ = ৩.২৫ × ১০০ ÷ ৩.৩৩ = <b>৯৭.৬%</b>।</li>
+    </ul>
+
+    <h3>পরীক্ষণ ১: ০.১ মোলার Na₂CO₃ দ্রবণ (২৫০ mL) ⭐⭐</h3>
+    <ul>
+      <li>Na₂CO₃ একটি <b>প্রাইমারি স্ট্যান্ডার্ড</b> পদার্থ। কারণ একে বিশুদ্ধ ও শুষ্ক অবস্থায় পাওয়া যায়, নিক্তিতে সরাসরি ওজন করা যায়, আর দ্রবণের ঘনমাত্রা দীর্ঘদিন বদলায় না।</li>
+      <li>w = ০.১ × ২৫০ × ১০৬ ÷ ১০০০ = <b>২.৬৫ g</b>। কিন্তু ঠিক ২.৬৫ g মাপা কঠিন, তাই ০.১ মোলারের কাছাকাছি দ্রবণ তৈরি হয়।</li>
+      <li><b>যন্ত্রপাতি:</b> ২৫০ mL আয়তনিক ফ্লাস্ক, ফানেল, ওজন বোতল, রাসায়নিক নিক্তি, ওয়াশ বোতল।</li>
+      <li><b>ধাপ:</b> ফ্লাস্কের মুখে ফানেল বসাও → ওজন বোতলে সামান্য বেশি Na₂CO₃ নিয়ে নিক্তিতে ওজন নাও → ফানেল দিয়ে ফ্লাস্কে ঢালো → ওয়াশ বোতলের পাতিত পানি আস্তে আস্তে দাও, অর্ধেক হলে ছিপি এঁটে ঝাঁকিয়ে গুলাও → আরও পানি দিয়ে ২৫০ mL দাগ পর্যন্ত ভরো।</li>
+      <li><b>সতর্কতা:</b> শুষ্ক ও বিশুদ্ধ Na₂CO₃ নেওয়া, শুষ্ক ওজন বোতল নেওয়া, পাতিত পানি ব্যবহার।</li>
+    </ul>
+    <h3>পরীক্ষণ ২: তুঁতের কেলাস পানির শতকরা পরিমাণ ⭐⭐</h3>
+    <ul>
+      <li>তুঁতে = কপার সালফেট পেন্টাহাইড্রেট CuSO₄·5H₂O (ব্লু ভিট্রিয়ল)। ৫ অণু পানি কেলাসের ভেতরে থাকে, একে <b>কেলাস পানি</b> বলে। তাপ দিলে পানি বাষ্প হয়ে উড়ে যায়: CuSO₄·5H₂O → CuSO₄ (সাদা) + 5H₂O।</li>
+      <li><b>উপকরণ:</b> তুঁতে, পোর্সেলিন ক্রুসিবল, ডেসিকেটর, নিক্তি, ত্রিপদী স্ট্যান্ড, তারজালি, বুনসেন বার্নার বা স্পিরিট ল্যাম্প।</li>
+      <li><b>ধাপ:</b> খালি ক্রুসিবলের ওজন a g → তুঁতেসহ ওজন b g (তুঁতে = b − a) → ধীরে ধীরে সমানভাবে তাপ, নীল থেকে সাদা হলে বন্ধ → দ্রুত ডেসিকেটরে ঠান্ডা করে ওজন c g (না হলে আবার পানি শোষণ করে নীল হবে)।</li>
+      <li>অপসারিত পানি = (b − a) − (c − a) = <b>b − c</b>। কেলাস পানির শতকরা পরিমাণ = <b>(b − c) ÷ (b − a) × ১০০ %</b>।</li>
+      <li>তাত্ত্বিক মান: ৫H₂O = ৯০, CuSO₄·5H₂O = ২৪৯.৫, তাই ৯০ ÷ ২৪৯.৫ × ১০০ ≈ ৩৬.০৭%।</li>
+    </ul>
+    <div class="warn">📌 বইয়ের পৃষ্ঠায় শেষ সূত্রে হর (b − c) ছাপা হয়েছে, মনে হচ্ছে ছাপার ভুল। যুক্তি অনুযায়ী হর হবে তুঁতের মোট ওজন (b − a)। আমি সেটাই ধরেছি।</div>
+  </section>
+
+  <!-- ================= ল্যাব ১ ================= -->
+  <section class="panel" id="lab1">
+    <h2>🧮 ল্যাব ১: মোল কনভার্টার (গ্রাম ⇄ মোল ⇄ কণা ⇄ আয়তন)</h2>
+    <div class="say">👉 পদার্থ বেছে একটা মান বসাও। বাকি তিনটা সাথে সাথে বের হবে। নিচের জারে দেখো কত মোল।</div>
+    <div class="ctl"><label>পদার্থ:</label><select id="m1s"></select></div>
+    <div class="ctl"><label>আমি দিচ্ছি:</label><select id="m1u"><option value="g">ভর (গ্রাম)</option><option value="n">মোল সংখ্যা</option><option value="N">কণার সংখ্যা (× ১০²³ টি)</option><option value="V">আয়তন (লিটার, প্রমাণ অবস্থায় গ্যাস)</option></select><input type="number" id="m1v" value="18" step="any" min="0" style="width:110px;font-size:16px;padding:6px;border:2px solid #cfd9e1;border-radius:8px"></div>
+    <div class="row">
+      <div class="grow"><div class="tlinfo" id="m1r"></div></div>
+      <div style="min-width:200px"><div class="jars" id="m1j"></div><small id="m1jt"></small></div>
+    </div>
+    <h3>🎮 কতগুলো মোল?</h3>
+    <div class="tlinfo" id="m1q"></div><div class="cls" id="m1o"></div><div class="fb" id="m1f"></div><small id="m1sc"></small>
+  </section>
+
+  <!-- ================= ল্যাব ২ ================= -->
+  <section class="panel" id="lab2">
+    <h2>🎈 ল্যাব ২: গ্যাসের মোলার আয়তন (২২.৪ লিটার)</h2>
+    <div class="say">👉 গ্যাস বেছে মোল স্লাইডার নাড়াও। প্রমাণ অবস্থায় (০°C, ১ বায়ুমণ্ডল) সব গ্যাসের ১ মোল জায়গা নেয় ২২.৪ লিটার। শুধু ওজন আলাদা।</div>
+    <div class="ctl"><label>গ্যাস:</label><select id="g2s"></select><label>মোল: <b id="g2nv"></b></label><input type="range" id="g2n" min="0.25" max="5" step="0.25" value="1" style="flex:1;min-width:150px"></div>
+    <div class="row">
+      <div><canvas id="g2c" class="w" width="380" height="260"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="g2t"></div></div>
+    </div>
+    <h3>🎮 আয়তন বের করো</h3>
+    <div class="tlinfo" id="g2q"></div><div class="cls" id="g2o"></div><div class="fb" id="g2f"></div><small id="g2sc"></small>
+  </section>
+
+  <!-- ================= ল্যাব ৩ ================= -->
+  <section class="panel" id="lab3">
+    <h2>🧪 ল্যাব ৩: মোলার দ্রবণ বানাও</h2>
+    <h3>ক) লঘু না গাঢ়?</h3>
+    <div class="ctl"><label>তুলনা:</label><select id="d3p"><option value="0">২৫০ mL পানিতে ১০ g বনাম ২৫০ mL পানিতে ১৫ g</option><option value="1">২৫০ mL পানিতে ১০ g বনাম ২০০ mL পানিতে ১০ g</option></select></div>
+    <canvas id="d3" class="w" width="380" height="220"></canvas>
+    <div class="say" id="d3t"></div>
+
+    <h3>খ) দ্রবণ প্রস্তুত (আয়তনিক ফ্লাস্ক)</h3>
+    <div class="ctl"><label>দ্রব:</label><select id="s3s"></select><label>আয়তন:</label><select id="s3v"><option>100</option><option selected>250</option><option>500</option><option>1000</option></select><label>মোলারিটি S: <b id="s3mv"></b></label><input type="range" id="s3m" min="0.05" max="2" step="0.05" value="0.1" style="flex:1;min-width:140px"></div>
+    <div class="ctl"><button class="btn" id="s3go">▶ দ্রবণ বানাও</button><button class="btn alt" id="s3re">↻ আবার</button></div>
+    <div class="row">
+      <div><canvas id="s3c" class="w" width="380" height="280"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="s3t"></div></div>
+    </div>
+
+    <h3>গ) উল্টো হিসাব: মোলারিটি বের করো</h3>
+    <div class="tlinfo" id="r3q"></div><div class="cls" id="r3o"></div><div class="fb" id="r3f"></div><small id="r3s"></small>
+  </section>
+
+  <!-- ================= ল্যাব ৪ ================= -->
+  <section class="panel" id="lab4">
+    <h2>📊 ল্যাব ৪: শতকরা সংযুতি ও সংকেত</h2>
+    <h3>ক) যৌগে কোন মৌল কত শতাংশ?</h3>
+    <div class="ctl"><label>যৌগ:</label><select id="c4s"></select></div>
+    <div class="row">
+      <div class="grow"><div id="c4b"></div></div>
+      <div class="grow"><div class="tlinfo" id="c4t"></div></div>
+    </div>
+    <h3>খ) শতকরা সংযুতি থেকে সংকেত বের করো</h3>
+    <div class="ctl"><label>উদাহরণ:</label><select id="e4s"></select><button class="btn" id="e4n">পরের ধাপ ▶</button><button class="btn alt" id="e4r">↻ শুরু থেকে</button></div>
+    <div class="stepper" id="e4st"></div>
+    <div class="tlinfo" id="e4t"></div>
+  </section>
+
+  <!-- ================= ল্যাব ৫ ================= -->
+  <section class="panel" id="lab5">
+    <h2>⚖️ ল্যাব ৫: সমীকরণের সমতা ও স্টয়কিওমিতি</h2>
+    <h3>ক) সমতা করো</h3>
+    <div class="ctl"><label>সমীকরণ:</label><select id="b5s"></select><button class="btn alt" id="b5r">↻ রিসেট</button></div>
+    <div class="say">প্রতিটি পদার্থের আগে + / − বোতামে সংখ্যা বসাও। নিচের তালিকায় বাম আর ডান পাশের পরমাণু মিললে ✅ আসবে।</div>
+    <div class="beq" id="b5c"></div>
+    <div id="b5t"></div>
+    <div class="fb" id="b5m"></div>
+    <h3>খ) স্টয়কিওমিতি: একটার পরিমাণ জানলে বাকিগুলো বের করো</h3>
+    <div class="ctl"><label>বিক্রিয়া:</label><select id="t5s"></select></div>
+    <div class="ctl"><label>যার ভর জানি:</label><select id="t5x"></select><input type="number" id="t5w" value="5" min="0" step="any" style="width:100px;font-size:16px;padding:6px;border:2px solid #cfd9e1;border-radius:8px"> গ্রাম</div>
+    <div class="tlinfo" id="t5t"></div>
+  </section>
+
+  <!-- ================= ল্যাব ৬ ================= -->
+  <section class="panel" id="lab6">
+    <h2>🔥 ল্যাব ৬: লিমিটিং বিক্রিয়ক, উৎপাদের হার ও তুঁতের কেলাস পানি</h2>
+    <h3>ক) কে আগে শেষ হয়? (২Mg + O₂ → ২MgO)</h3>
+    <div class="ctl"><label>Mg পরমাণু: <b id="l6av"></b></label><input type="range" id="l6a" min="2" max="20" step="2" value="4" style="flex:1;min-width:120px"><label>O₂ অণু: <b id="l6bv"></b></label><input type="range" id="l6b" min="1" max="12" value="4" style="flex:1;min-width:120px"></div>
+    <div class="ctl"><button class="btn" id="l6go">▶ বিক্রিয়া ঘটাও</button><button class="btn alt" id="l6re">↻ আবার</button></div>
+    <canvas id="l6c" class="w" width="380" height="250"></canvas>
+    <div class="say" id="l6t"></div>
+    <div class="ctl"><label>H₂ (গ্রাম):</label><input type="number" id="l6h" value="5" min="0" step="any" style="width:90px;font-size:16px;padding:6px;border:2px solid #cfd9e1;border-radius:8px"><label>Cl₂ (গ্রাম):</label><input type="number" id="l6c2" value="75" min="0" step="any" style="width:90px;font-size:16px;padding:6px;border:2px solid #cfd9e1;border-radius:8px"></div>
+    <div class="tlinfo" id="l6m"></div>
+
+    <h3>খ) উৎপাদের শতকরা পরিমাণ</h3>
+    <div class="ctl"><label>Mg (গ্রাম): <b id="y6mv"></b></label><input type="range" id="y6m" min="1" max="10" step="0.5" value="2" style="flex:1;min-width:120px"></div>
+    <div class="ctl"><label>প্রকৃতপক্ষে MgO পেলাম (গ্রাম): <b id="y6av"></b></label><input type="range" id="y6a" min="0" max="16.7" step="0.05" value="3.25" style="flex:1;min-width:120px"></div>
+    <div class="tlinfo" id="y6t"></div>
+
+    <h3>গ) তুঁতের কেলাস পানি নির্ণয়</h3>
+    <div class="ctl"><label>তুঁতের ওজন (b − a): <b id="t6wv"></b> g</label><input type="range" id="t6w" min="1" max="5" step="0.1" value="2.5" style="flex:1;min-width:120px"></div>
+    <div class="ctl"><label>🔥 তাপ: <b id="t6hv"></b>%</label><input type="range" id="t6h" min="0" max="100" value="0" style="flex:1;min-width:150px"></div>
+    <div class="row">
+      <div><canvas id="t6c" class="w" width="380" height="250"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="t6t"></div></div>
+    </div>
+  </section>
+
+  <!-- ================= কুইজ ================= -->
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <!-- ================= প্রশ্ন-উত্তর ================= -->
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। সৃজনশীল প্রশ্ন ১ ও ২ বইয়ের অনুশীলনী থেকে নেওয়া। বাকি প্রশ্নগুলো বইয়ের বিষয় ধরে আমার বানানো অনুশীলন। উত্তরগুলো আমার হিসাব করে লেখা, বইয়ে উত্তরমালা নেই।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; মোলের ধারণা ও রাসায়নিক গণনা (অধ্যায় ৬)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+var SUBS=[
+ {n:'H'+sub(2)+'O (পানি)',M:18,g:0},{n:'C (কার্বন)',M:12,g:0},{n:'Mg',M:24,g:0},
+ {n:'NaCl',M:58.5,g:0},{n:'CaCO'+sub(3),M:100,g:0},{n:'H'+sub(2)+'SO'+sub(4),M:98,g:0},
+ {n:'Na'+sub(2)+'CO'+sub(3),M:106,g:0},{n:'H'+sub(2)+' (গ্যাস)',M:2,g:1},{n:'O'+sub(2)+' (গ্যাস)',M:32,g:1},
+ {n:'CO'+sub(2)+' (গ্যাস)',M:44,g:1},{n:'NH'+sub(3)+' (গ্যাস)',M:17,g:1}];
+var AV=6.023;
+function opts(el,list){el.innerHTML=list.map(function(s,i){return '<option value="'+i+'">'+s.n+' (M='+bn(s.M)+')</option>';}).join('');}
+/* ---------- ল্যাব ১ ---------- */
+opts($('m1s'),SUBS);
+function m1(){
+  var s=SUBS[+$('m1s').value],u=$('m1u').value,v=Math.max(0,parseFloat($('m1v').value)||0),n;
+  if(u==='g')n=v/s.M;else if(u==='n')n=v;else if(u==='N')n=v/AV;else n=v/22.4;
+  var h='<b>'+s.n+'</b>, আণবিক ভর M = '+bn(s.M)+'<br>';
+  h+='মোল সংখ্যা n = <b>'+f(n,4)+'</b> মোল<br>';
+  h+='ভর w = n × M = '+f(n,4)+' × '+bn(s.M)+' = <b>'+f(n*s.M)+' গ্রাম</b><br>';
+  h+='কণা N = n × ৬.০২৩ × ১০'+sup(23)+' = <b>'+f(n*AV)+' × ১০'+sup(23)+' টি</b><br>';
+  h+=s.g?'আয়তন V = n × ২২.৪ = <b>'+f(n*22.4)+' লিটার</b> (প্রমাণ অবস্থায়)':'<small>এটা গ্যাস নয়, তাই ২২.৪ লিটার নিয়ম খাটে না।</small>';
+  $('m1r').innerHTML=h;
+  var jh='',k=Math.min(10,Math.ceil(n)),i;
+  for(i=0;i<k;i++){var fr=clamp(n-i,0,1);jh+='<span><i style="height:'+(fr*100)+'%"></i></span>';}
+  $('m1j').innerHTML=jh;$('m1jt').textContent='প্রতিটি জার = ১ মোল'+(n>10?' (প্রথম ১০টি দেখানো হলো)':'');
+}
+['m1s','m1u','m1v'].forEach(function(id){$(id).addEventListener('input',m1);$(id).addEventListener('change',m1);});
+m1();
+var m1ok=0,m1t=0,m1a;
+function m1q(){
+  var s=pick(SUBS),n=pick([0.25,0.5,1,2,3,5]),w=n*s.M;m1a=n;
+  $('m1q').innerHTML='<b>'+f(w)+' গ্রাম '+s.n+'</b> কত মোল? (M = '+bn(s.M)+')';
+  var set=[n,n*2,n/2,w/10],o=[],i;
+  set.forEach(function(x){if(o.indexOf(x)<0&&x!==0)o.push(x);});
+  while(o.length<4)o.push(o[o.length-1]+1.5);
+  o=shuffle(o);
+  $('m1o').innerHTML=o.map(function(x){return '<button data-v="'+x+'">'+f(x,3)+' মোল</button>';}).join('');
+  $('m1f').textContent='';
+}
+$('m1o').addEventListener('click',function(ev){
+  var b=ev.target.closest('button');if(!b||b.disabled)return;
+  var all=$('m1o').querySelectorAll('button');m1t++;
+  if(+b.getAttribute('data-v')===m1a){b.classList.add('ok');m1ok++;$('m1f').textContent='✅ ঠিক! n = w ÷ M।';}
+  else{b.classList.add('no');$('m1f').textContent='❌ n = w ÷ M, অর্থাৎ ভরকে আণবিক ভর দিয়ে ভাগ।';}
+  for(var i=0;i<all.length;i++)all[i].disabled=true;
+  $('m1sc').textContent='স্কোর: '+bn(m1ok)+'/'+bn(m1t);
+  setTimeout(m1q,1700);
+});
+m1q();
+
+/* ---------- ল্যাব ২ : গ্যাসের আয়তন ---------- */
+var GAS=SUBS.filter(function(s){return s.g;});
+opts($('g2s'),GAS);
+var G2={p:[]};
+function g2set(){
+  var s=GAS[+$('g2s').value],n=parseFloat($('g2n').value);
+  $('g2nv').textContent=f(n,2);
+  var cnt=Math.round(n*8);G2.p=[];
+  for(var i=0;i<cnt;i++)G2.p.push({x:Math.random(),y:Math.random(),vx:rnd(-.012,.012),vy:rnd(-.012,.012)});
+  G2.n=n;G2.s=s;
+  $('g2t').innerHTML='গ্যাস: <b>'+s.n+'</b> (M = '+bn(s.M)+')<br>আয়তন = '+f(n,2)+' × ২২.৪ = <b>'+f(n*22.4,2)+' লিটার</b><br>ভর = '+f(n,2)+' × '+bn(s.M)+' = <b>'+f(n*s.M,2)+' গ্রাম</b><br>অণু = <b>'+f(n*AV,3)+' × ১০'+sup(23)+' টি</b><br><small>বাক্স বড় হলে আয়তন বেশি। ১ মোলের জায়গা সব গ্যাসেরই সমান।</small>';
+}
+$('g2s').addEventListener('change',g2set);$('g2n').addEventListener('input',g2set);g2set();
+function g2draw(){
+  var x=ctxOf('g2c');x.clearRect(0,0,380,260);
+  var w=60+G2.n*50,h=50+G2.n*30;w=Math.min(w,350);h=Math.min(h,230);
+  var ox=(380-w)/2,oy=(260-h)/2;
+  x.fillStyle='#eaf4fb';x.fillRect(ox,oy,w,h);x.strokeStyle=NAVY;x.lineWidth=3;x.strokeRect(ox,oy,w,h);
+  G2.p.forEach(function(p){
+    p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>1)p.vx*=-1;if(p.y<0||p.y>1)p.vy*=-1;p.x=clamp(p.x,0,1);p.y=clamp(p.y,0,1);
+    circ(x,0,ox+8+p.x*(w-16),oy+8+p.y*(h-16),5,BLU);
+  });
+  txt(x,f(G2.n*22.4,1)+' L',190,oy+h+12>250?250:oy+h+12,'bold 14px Hind Siliguri',NAVY);
+}
+var g2a,g2ok=0,g2t=0;
+function g2q(){
+  var s=pick(GAS),n=pick([0.5,1,2,3,0.25]);g2a=n*22.4;
+  $('g2q').innerHTML='প্রমাণ অবস্থায় <b>'+f(n*s.M)+' গ্রাম '+s.n+'</b> গ্যাসের আয়তন কত লিটার? (M = '+bn(s.M)+')';
+  var o=shuffle([n*22.4,n*s.M,n*44.8,n*11.2].filter(function(v,i,a){return a.indexOf(v)===i;}));
+  while(o.length<4)o.push(o[0]+7);
+  $('g2o').innerHTML=o.map(function(v){return '<button data-v="'+v+'">'+f(v,2)+' লিটার</button>';}).join('');$('g2f').textContent='';
+}
+$('g2o').addEventListener('click',function(ev){
+  var b=ev.target.closest('button');if(!b||b.disabled)return;g2t++;
+  var all=$('g2o').querySelectorAll('button');
+  if(Math.abs(+b.getAttribute('data-v')-g2a)<1e-9){b.classList.add('ok');g2ok++;$('g2f').textContent='✅ ঠিক! আগে n = w ÷ M, তারপর V = n × ২২.৪।';}
+  else{b.classList.add('no');$('g2f').textContent='❌ আগে মোল বের করো (w ÷ M), তারপর ২২.৪ দিয়ে গুণ।';}
+  for(var i=0;i<all.length;i++)all[i].disabled=true;
+  $('g2sc').textContent='স্কোর: '+bn(g2ok)+'/'+bn(g2t);setTimeout(g2q,1800);
+});
+g2q();
+/* ---------- ল্যাব ৩ক: লঘু/গাঢ় ---------- */
+function d3draw(){
+  var x=ctxOf('d3');x.clearRect(0,0,380,220);
+  var P=[[[250,10],[250,15]],[[250,10],[200,10]]][+$('d3p').value];
+  var labs=['A','B'];
+  for(var k=0;k<2;k++){
+    var vol=P[k][0],g=P[k][1],bx=40+k*190,bh=vol/250*130,by=190-bh;
+    x.strokeStyle=NAVY;x.lineWidth=3;x.strokeRect(bx,60,110,130);
+    x.fillStyle='rgba(75,150,230,.35)';x.fillRect(bx+2,by,106,bh);
+    for(var i=0;i<g*2;i++){circ(x,0,bx+14+(i*37)%84+((i*13)%7),by+10+((i*23)%Math.max(10,bh-20)),4,ORG);}
+    txt(x,labs[k]+': '+f(vol,0)+' mL, '+f(g,0)+' g',bx+55,40,'bold 14px Hind Siliguri',NAVY);
+  }
+}
+function d3text(){
+  var a=+$('d3p').value;
+  $('d3t').innerHTML=a===0?'পানি সমান (২৫০ mL), কিন্তু B-তে লবণ বেশি (১৫ g)। তাই <b>B গাঢ়</b>, A লঘু।':'লবণ সমান (১০ g), কিন্তু B-তে পানি কম (২০০ mL)। তাই <b>B গাঢ়</b>, A লঘু।';
+}
+$('d3p').addEventListener('change',d3text);d3text();
+
+/* ---------- ল্যাব ৩খ: দ্রবণ বানানো ---------- */
+var SOL=[{n:'Na'+sub(2)+'CO'+sub(3),M:106},{n:'NaCl',M:58.5},{n:'NaOH',M:40},{n:'H'+sub(2)+'SO'+sub(4),M:98},{n:'CaCO'+sub(3),M:100}];
+opts($('s3s'),SOL);
+var S3={t:0,run:false};
+function s3w(){return parseFloat($('s3m').value)*parseFloat($('s3v').value)*SOL[+$('s3s').value].M/1000;}
+function s3info(){
+  var s=SOL[+$('s3s').value],S=parseFloat($('s3m').value),V=parseFloat($('s3v').value);
+  $('s3mv').textContent=f(S,2);
+  var steps=['১) ওজন: নিক্তিতে মাপো','২) ফানেল দিয়ে ফ্লাস্কে ঢালো','৩) অর্ধেক পানি দিয়ে ঝাঁকাও','৪) দাগ পর্যন্ত পানি ভরো'];
+  var ph=S3.run||S3.t>0?Math.min(3,Math.floor(S3.t)):-1;
+  $('s3t').innerHTML='<b>সূত্র:</b> w = S × V × M ÷ ১০০০<br>w = '+f(S,2)+' × '+bn(V)+' × '+bn(s.M)+' ÷ ১০০০ = <b>'+f(s3w(),3)+' গ্রাম</b> '+s.n+'<br><br>'+(ph>=0?'<b>এখন:</b> '+steps[ph]+(S3.t>=4?'<br>✅ '+f(S,2)+' মোলার, '+bn(V)+' mL দ্রবণ তৈরি!':''):'▶ বোতাম চাপলে ধাপে ধাপে দেখাবে।');
+}
+['s3s','s3v','s3m'].forEach(function(id){$(id).addEventListener('input',function(){S3.t=0;S3.run=false;s3info();});$(id).addEventListener('change',function(){S3.t=0;S3.run=false;s3info();});});
+$('s3go').onclick=function(){S3.t=0;S3.run=true;};
+$('s3re').onclick=function(){S3.t=0;S3.run=false;s3info();};
+function s3draw(){
+  var x=ctxOf('s3c');x.clearRect(0,0,380,280);
+  if(S3.run){S3.t=Math.min(4,S3.t+0.006);if(S3.t>=4)S3.run=false;s3info();}
+  var t=S3.t,w=s3w();
+  /* নিক্তি */
+  x.fillStyle='#d5dde4';x.fillRect(20,230,120,16);x.fillRect(74,200,12,32);
+  x.fillStyle='#fff';x.fillRect(30,196,100,8);x.strokeStyle=NAVY;x.lineWidth=2;x.strokeRect(30,196,100,8);
+  var pile=t<1?1:(t<2?1-(t-1):0);
+  if(pile>0){x.fillStyle='#f4f1e8';x.beginPath();x.moveTo(60,196);x.lineTo(80,196-30*pile);x.lineTo(100,196);x.fill();}
+  txt(x,f(w,2)+' g',80,220,'bold 14px Hind Siliguri',NAVY);
+  /* ফ্লাস্ক */
+  var fx=270,fy=60;
+  x.strokeStyle=NAVY;x.lineWidth=3;x.beginPath();x.moveTo(fx-12,fy);x.lineTo(fx-12,fy+80);x.lineTo(fx-55,fy+190);x.lineTo(fx+55,fy+190);x.lineTo(fx+12,fy+80);x.lineTo(fx+12,fy);x.stroke();
+  var lvl=0;if(t>=2&&t<3)lvl=(t-2)*0.5;else if(t>=3&&t<3.5)lvl=0.5;else if(t>=3.5)lvl=0.5+(t-3.5);
+  if(t>=2){
+    var top=fy+190-lvl*(190-72);
+    var dis=t<3?0:clamp((t-3)*2,0,1);
+    x.fillStyle=dis>0?'rgba(46,160,200,'+(.25+dis*.15)+')':'rgba(75,150,230,.3)';
+    x.beginPath();x.moveTo(fx-55+(top>fy+80?(fy+190-top)*0:0)*0,fy+190);
+    var half=top>fy+80?12+(55-12)*(fy+190-top)/110:12;
+    if(top>fy+80){x.moveTo(fx-55,fy+190);x.lineTo(fx-half,top);x.lineTo(fx+half,top);x.lineTo(fx+55,fy+190);}else{x.moveTo(fx-55,fy+190);x.lineTo(fx-12,fy+80);x.lineTo(fx-12,top);x.lineTo(fx+12,top);x.lineTo(fx+12,fy+80);x.lineTo(fx+55,fy+190);}
+    x.fill();
+    if(dis<1){for(var i=0;i<14;i++)circ(x,0,fx-32+(i*17)%64,fy+182-(i%3)*4,3,'#f4f1e8');}
+  }
+  if(t>=1&&t<2){var u=t-1;for(var j=0;j<8;j++){var q=clamp(u*1.4-j*.05,0,1);circ(x,0,lerp(90,fx,q),lerp(190,fy-10,Math.sin(q*3.14)*-1+ q)-Math.sin(q*3.14)*40,3,'#f4f1e8');}}
+  x.strokeStyle=RED;x.lineWidth=2;x.beginPath();x.moveTo(fx-14,fy+30);x.lineTo(fx+14,fy+30);x.stroke();
+  txt(x,f(parseFloat($('s3v').value),0)+' mL দাগ',fx+48,fy+30,'12px Hind Siliguri',RED);
+  if(t>=3&&t<3.5){txt(x,'🔄 ঝাঁকাচ্ছি',fx,fy+215,'14px Hind Siliguri',NAVY);}
+}
+s3info();
+/* ---------- ল্যাব ৩গ: মোলারিটি বের করো ---------- */
+var r3a,r3ok=0,r3t=0;
+function r3q(){
+  var s=pick(SOL.concat([{n:'HCl',M:36.5}])),S=pick([0.1,0.2,0.5,0.75,1,2]),V=pick([250,500,1000]);
+  var w=S*V*s.M/1000;r3a=S;
+  $('r3q').innerHTML=bn(V)+' mL দ্রবণে <b>'+f(w,3)+' গ্রাম '+s.n+'</b> আছে (M = '+bn(s.M)+')। দ্রবণের মোলারিটি কত?';
+  var o=shuffle([S,S*2,S/2,S*10].filter(function(v,i,a){return a.indexOf(v)===i;}));
+  $('r3o').innerHTML=o.map(function(v){return '<button data-v="'+v+'">'+f(v,3)+' মোলার</button>';}).join('');$('r3f').textContent='';
+}
+$('r3o').addEventListener('click',function(ev){
+  var b=ev.target.closest('button');if(!b||b.disabled)return;r3t++;
+  var all=$('r3o').querySelectorAll('button');
+  if(Math.abs(+b.getAttribute('data-v')-r3a)<1e-9){b.classList.add('ok');r3ok++;$('r3f').textContent='✅ ঠিক! S = w × ১০০০ ÷ (V × M)।';}
+  else{b.classList.add('no');$('r3f').textContent='❌ w = SVM/১০০০ থেকে S = w × ১০০০ ÷ (V × M)।';}
+  for(var i=0;i<all.length;i++)all[i].disabled=true;
+  $('r3s').textContent='স্কোর: '+bn(r3ok)+'/'+bn(r3t);setTimeout(r3q,2000);
+});
+r3q();
+
+/* ---------- ল্যাব ৪ক: শতকরা সংযুতি ---------- */
+var CMP=[
+ {n:'H'+sub(2)+'O',a:[['H',1,2,'#4aa3df'],['O',16,1,'#e63946']]},
+ {n:'HCl',a:[['H',1,1,'#4aa3df'],['Cl',35.5,1,'#2a9d8f']]},
+ {n:'H'+sub(2)+'SO'+sub(4),a:[['H',1,2,'#4aa3df'],['S',32,1,'#e9a23b'],['O',16,4,'#e63946']]},
+ {n:'Al'+sub(2)+'(SO'+sub(4)+')'+sub(3),a:[['Al',27,2,'#7f8c8d'],['S',32,3,'#e9a23b'],['O',16,12,'#e63946']]},
+ {n:'CaCO'+sub(3),a:[['Ca',40,1,'#8e6bbf'],['C',12,1,'#333'],['O',16,3,'#e63946']]},
+ {n:'NaCl',a:[['Na',23,1,'#8e6bbf'],['Cl',35.5,1,'#2a9d8f']]},
+ {n:'Na'+sub(2)+'CO'+sub(3),a:[['Na',23,2,'#8e6bbf'],['C',12,1,'#333'],['O',16,3,'#e63946']]},
+ {n:'CuSO'+sub(4)+'·5H'+sub(2)+'O',a:[['Cu',63.5,1,'#c97b3d'],['S',32,1,'#e9a23b'],['O',16,9,'#e63946'],['H',1,10,'#4aa3df']]}];
+$('c4s').innerHTML=CMP.map(function(c,i){return '<option value="'+i+'">'+c.n+'</option>';}).join('');
+function cmass(c){return c.a.reduce(function(s,e){return s+e[1]*e[2];},0);}
+function c4(){
+  var c=CMP[+$('c4s').value],M=cmass(c),h='',t='<b>'+c.n+'</b>: আণবিক ভর M = '+f(M,2)+'<br>',sum=0;
+  c.a.forEach(function(e){
+    var p=e[1]*e[2]*100/M;sum+=p;
+    h+='<div class="bar"><div class="bl">'+e[0]+' '+f(p,2)+'%</div><div class="bt"><div class="bf" style="width:'+p+'%;background:'+e[3]+'"></div></div></div>';
+    t+=e[0]+' = ('+bn(e[1])+' × '+bn(e[2])+' × ১০০) ÷ '+f(M,2)+' = <b>'+f(p,2)+'%</b><br>';
+  });
+  $('c4b').innerHTML=h;$('c4t').innerHTML=t+'<small>সব শতাংশের যোগফল = '+f(sum,1)+'%</small>';
+}
+$('c4s').addEventListener('change',c4);c4();
+/* ---------- ল্যাব ৪খ: সংকেত নির্ণয় ---------- */
+var EX=[
+ {n:'উদাহরণ ১ (বেনজিন, M = ৭৮)',a:[['C',12,92.31],['H',1,7.69]],M:78},
+ {n:'উদাহরণ ২ (সালফিউরিক এসিড, M = ৯৮)',a:[['H',1,2.04],['S',32,32.65],['O',16,65.30]],M:98},
+ {n:'উদাহরণ ৩ (পানি, M = ১৮)',a:[['H',1,11.11],['O',16,88.89]],M:18}];
+$('e4s').innerHTML=EX.map(function(c,i){return '<option value="'+i+'">'+c.n+'</option>';}).join('');
+var E4=0,E4N=['১. শতকরা','২. ÷ পারমাণবিক ভর','৩. ÷ ক্ষুদ্রতম','৪. স্থূল সংকেত','৫. আণবিক সংকেত'];
+function e4(){
+  var c=EX[+$('e4s').value],h='',i,r=c.a.map(function(e){return e[2]/e[1];}),mn=Math.min.apply(null,r);
+  var ratio=r.map(function(v){return Math.round(v/mn);});
+  var emp=c.a.map(function(e,i){return e[0]+(ratio[i]>1?sub(ratio[i]):'');}).join('');
+  var em=c.a.reduce(function(s,e,i){return s+e[1]*ratio[i];},0),n=Math.round(c.M/em);
+  $('e4st').innerHTML=E4N.map(function(s,i){return '<span class="'+(i<E4?'done':(i===E4?'on':''))+'">'+s+'</span>';}).join('');
+  var t='<table class="at"><tr><th>মৌল</th><th>%</th>'+(E4>=1?'<th>% ÷ ভর</th>':'')+(E4>=2?'<th>অনুপাত</th>':'')+'</tr>';
+  c.a.forEach(function(e,i){t+='<tr><td>'+e[0]+'</td><td>'+f(e[2],2)+'</td>'+(E4>=1?'<td>'+f(r[i],2)+'</td>':'')+(E4>=2?'<td>'+f(r[i]/mn,2)+' ≈ '+bn(ratio[i])+'</td>':'')+'</tr>';});
+  t+='</table>';
+  if(E4>=3)t+='<b>স্থূল সংকেত = '+emp+'</b> (ভর '+f(em,1)+')<br>';
+  if(E4>=4)t+='n = '+bn(c.M)+' ÷ '+f(em,1)+' = '+bn(n)+'<br><b>আণবিক সংকেত = ('+emp+')'+sub(n)+'</b>'+(n===1?' (স্থূল ও আণবিক সংকেত একই)':'');
+  $('e4t').innerHTML=t;
+}
+$('e4n').onclick=function(){E4=Math.min(4,E4+1);e4();};
+$('e4r').onclick=function(){E4=0;e4();};
+$('e4s').addEventListener('change',function(){E4=0;e4();});e4();
+
+/* ---------- ল্যাব ৫ক: সমতা ---------- */
+var BAL=[
+ {L:[['Mg',{Mg:1}],['HCl',{H:1,Cl:1}]],R:[['MgCl'+sub(2),{Mg:1,Cl:2}],['H'+sub(2),{H:2}]],a:[1,2,1,1]},
+ {L:[['Na'+sub(2)+'CO'+sub(3),{Na:2,C:1,O:3}],['HCl',{H:1,Cl:1}]],R:[['NaCl',{Na:1,Cl:1}],['H'+sub(2)+'O',{H:2,O:1}],['CO'+sub(2),{C:1,O:2}]],a:[1,2,2,1,1]},
+ {L:[['Al'+sub(2)+'O'+sub(3),{Al:2,O:3}],['HCl',{H:1,Cl:1}]],R:[['AlCl'+sub(3),{Al:1,Cl:3}],['H'+sub(2)+'O',{H:2,O:1}]],a:[1,6,2,3]},
+ {L:[['H'+sub(2),{H:2}],['O'+sub(2),{O:2}]],R:[['H'+sub(2)+'O',{H:2,O:1}]],a:[2,1,2]},
+ {L:[['N'+sub(2),{N:2}],['H'+sub(2),{H:2}]],R:[['NH'+sub(3),{N:1,H:3}]],a:[1,3,2]}];
+var B5={eq:0,c:[]};
+$('b5s').innerHTML=BAL.map(function(e,i){return '<option value="'+i+'">সমীকরণ '+bn(i+1)+': '+e.L.map(function(x){return x[0];}).join(' + ')+' → '+e.R.map(function(x){return x[0];}).join(' + ')+'</option>';}).join('');
+function b5reset(){var e=BAL[+$('b5s').value];B5.eq=+$('b5s').value;B5.c=e.a.map(function(){return 1;});b5draw();}
+function b5sp(){var e=BAL[B5.eq];return e.L.concat(e.R);}
+function b5draw(){
+  var e=BAL[B5.eq],sp=b5sp(),nl=e.L.length,h='';
+  sp.forEach(function(s,i){
+    if(i===nl)h+='<span class="op">→</span>';else if(i>0)h+='<span class="op">+</span>';
+    h+='<span class="cf"><button data-i="'+i+'" data-d="-1">−</button><b>'+bn(B5.c[i])+'</b><button data-i="'+i+'" data-d="1">+</button> '+s[0]+'</span>';
+  });
+  $('b5c').innerHTML=h;
+  var els={},k;
+  sp.forEach(function(s,i){for(k in s[1]){if(!els[k])els[k]=[0,0];els[k][i<nl?0:1]+=s[1][k]*B5.c[i];}});
+  var t='<table class="at"><tr><th>মৌল</th><th>বাম</th><th>ডান</th><th></th></tr>',all=true;
+  for(k in els){var ok=els[k][0]===els[k][1];if(!ok)all=false;t+='<tr class="'+(ok?'okr':'bad')+'"><td>'+k+'</td><td>'+bn(els[k][0])+'</td><td>'+bn(els[k][1])+'</td><td>'+(ok?'✅':'❌')+'</td></tr>';}
+  $('b5t').innerHTML=t+'</table>';
+  var same=B5.c.every(function(v,i){return v===e.a[i];});
+  $('b5m').textContent=all?(same?'🎉 সমতা হয়েছে! ফলাফল: '+sp.map(function(s,i){return (B5.c[i]>1?bn(B5.c[i]):'')+s[0]+(i===nl-1?' → ':(i<sp.length-1?' + ':''));}).join(''):'✅ সব মৌল সমান। (সরলতম অনুপাত নয়, ছোট সংখ্যা চেষ্টা করো)'):'প্রতিটি মৌলের সারি ✅ করো।';
+}
+$('b5c').addEventListener('click',function(ev){var b=ev.target.closest('button');if(!b)return;var i=+b.getAttribute('data-i');B5.c[i]=clamp(B5.c[i]+(+b.getAttribute('data-d')),1,9);b5draw();});
+$('b5s').addEventListener('change',b5reset);$('b5r').onclick=b5reset;b5reset();
+/* ---------- ল্যাব ৫খ: স্টয়কিওমিতি ---------- */
+var STO=[
+ {t:'2Mg + O'+sub(2)+' → 2MgO',s:[['Mg',2,24],['O'+sub(2),1,32],['MgO',2,40]],g:[0,1,0]},
+ {t:'H'+sub(2)+' + Cl'+sub(2)+' → 2HCl',s:[['H'+sub(2),1,2],['Cl'+sub(2),1,71],['HCl',2,36.5]],g:[1,1,1]},
+ {t:'N'+sub(2)+' + 3H'+sub(2)+' → 2NH'+sub(3),s:[['N'+sub(2),1,28],['H'+sub(2),3,2],['NH'+sub(3),2,17]],g:[1,1,1]},
+ {t:'CaCO'+sub(3)+' → CaO + CO'+sub(2),s:[['CaCO'+sub(3),1,100],['CaO',1,56],['CO'+sub(2),1,44]],g:[0,0,1]}];
+$('t5s').innerHTML=STO.map(function(e,i){return '<option value="'+i+'">'+e.t+'</option>';}).join('');
+function t5x(){var e=STO[+$('t5s').value];$('t5x').innerHTML=e.s.map(function(s,i){return '<option value="'+i+'">'+s[0]+'</option>';}).join('');t5();}
+function t5(){
+  var e=STO[+$('t5s').value],xi=+$('t5x').value,w=Math.max(0,parseFloat($('t5w').value)||0),s0=e.s[xi],n=w/s0[2]/s0[1];
+  var h='<b>'+e.t+'</b><br>'+s0[0]+'-এর '+f(w)+' g = '+f(w/s0[2],3)+' মোল<br><table class="at"><tr><th>পদার্থ</th><th>সমীকরণে মোল</th><th>মোল</th><th>ভর (g)</th><th>গ্যাস (L)</th></tr>';
+  e.s.forEach(function(s,i){var mol=n*s[1];h+='<tr class="'+(i===xi?'okr':'')+'"><td>'+s[0]+'</td><td>'+bn(s[1])+'</td><td>'+f(mol,3)+'</td><td>'+f(mol*s[2],2)+'</td><td>'+(e.g[i]?f(mol*22.4,2):'—')+'</td></tr>';});
+  $('t5t').innerHTML=h+'</table><small>নিয়ম: (পদার্থের মোল) = জানা মোল × (ওর সংখ্যা ÷ জানার সংখ্যা)। গ্যাসের L প্রমাণ অবস্থার।</small>';
+}
+$('t5s').addEventListener('change',t5x);$('t5x').addEventListener('change',t5);$('t5w').addEventListener('input',t5);t5x();
+
+/* ---------- ল্যাব ৬ক: লিমিটিং ---------- */
+var L6={p:0,run:false,a:4,b:4,react:2};
+function l6set(){
+  var a=+$('l6a').value,b=+$('l6b').value;
+  $('l6av').textContent=bn(a);$('l6bv').textContent=bn(b);
+  L6.a=a;L6.b=b;L6.react=Math.min(a/2,b);L6.p=0;L6.run=false;
+  var need=a/2,t='২Mg + O'+sub(2)+' → ২MgO। '+bn(a)+'টি Mg-এর জন্য লাগে '+f(need,0)+'টি O'+sub(2)+', আছে '+bn(b)+'টি।<br>';
+  if(b>need)t+='👉 <b>Mg লিমিটিং</b> (আগে শেষ হবে)। উদ্বৃত্ত O'+sub(2)+' = '+bn(b-need)+'টি।';
+  else if(b<need)t+='👉 <b>O'+sub(2)+' লিমিটিং</b>। উদ্বৃত্ত Mg = '+bn(a-2*b)+'টি।';
+  else t+='👉 দুটোই ঠিক ঠিক শেষ হবে, কোনো লিমিটিং নেই।';
+  $('l6t').innerHTML=t+'<br>MgO তৈরি হবে '+bn(2*L6.react)+'টি।';
+}
+$('l6a').addEventListener('input',l6set);$('l6b').addEventListener('input',l6set);
+$('l6go').onclick=function(){L6.p=0;L6.run=true;};$('l6re').onclick=l6set;l6set();
+function l6draw(){
+  var x=ctxOf('l6c');x.clearRect(0,0,380,250);
+  if(L6.run){L6.p=Math.min(1,L6.p+0.012);if(L6.p>=1)L6.run=false;}
+  var a=L6.a,b=L6.b,r=L6.react,p=ease(L6.p),i;
+  function mg(i){return [24+(i%7)*50,22+Math.floor(i/7)*34];}
+  function oa(i){var m=Math.floor(i/2);return [24+(m%6)*58+(i%2)*22,162+Math.floor(m/6)*34];}
+  for(i=0;i<a;i++){var m=mg(i);circ(x,0,m[0],m[1],13,'#f4a6c0','#c2557f',2);txt(x,'Mg',m[0],m[1],'bold 11px Hind Siliguri',NAVY);}
+  for(i=0;i<2*b;i++){
+    var o=oa(i),px=o[0],py=o[1];
+    if(i<2*r){var t=mg(i);px=lerp(o[0],t[0]+23,p);py=lerp(o[1],t[1],p);}
+    if(i%2===0&&i+1<2*b&&!(i<2*r&&p>.3)){x.strokeStyle=NAVY;x.lineWidth=3;x.beginPath();x.moveTo(o[0],o[1]);x.lineTo(o[0]+22,o[1]);x.stroke();}
+    circ(x,0,px,py,9,'#9ccbea','#2b6cb0',2);
+  }
+  txt(x,L6.p>=1?'বিক্রিয়া শেষ: MgO = '+bn(2*r)+'টি':(L6.run?'বিক্রিয়া চলছে…':'শুরুর অবস্থা (ওপরে Mg, নিচে O'+sub(2)+')'),190,238,'bold 13px Hind Siliguri',NAVY);
+}
+function l6m(){
+  var h=Math.max(0,parseFloat($('l6h').value)||0),c=Math.max(0,parseFloat($('l6c2').value)||0),need=71*h/2,t='H'+sub(2)+' + Cl'+sub(2)+' → ২HCl (২ g : ৭১ g : ৭৩ g)<br>'+f(h)+' g H'+sub(2)+'-এর জন্য লাগে ৭১ × '+f(h)+' ÷ ২ = <b>'+f(need)+' g</b> Cl'+sub(2)+'। আছে '+f(c)+' g।<br>';
+  if(c<need){var used=c*2/71;t+='👉 <b>Cl'+sub(2)+' লিমিটিং</b>। H'+sub(2)+' খরচ = '+f(used)+' g, <b>উদ্বৃত্ত H'+sub(2)+' = '+f(h-used)+' g</b>। HCl = '+f(c*73/71)+' g।';}
+  else if(c>need){t+='👉 <b>H'+sub(2)+' লিমিটিং</b>। উদ্বৃত্ত Cl'+sub(2)+' = '+f(c-need)+' g। HCl = '+f(h*73/2)+' g।';}
+  else t+='👉 ঠিক ঠিক শেষ। HCl = '+f(h*73/2)+' g।';
+  $('l6m').innerHTML=t;
+}
+$('l6h').addEventListener('input',l6m);$('l6c2').addEventListener('input',l6m);l6m();
+function y6(){
+  var m=parseFloat($('y6m').value),th=parseFloat((m*80/48).toFixed(2)),raw=parseFloat($('y6a').value),a=Math.min(raw,th);
+  $('y6mv').textContent=f(m,1);$('y6av').textContent=f(a,2);
+  $('y6t').innerHTML='সমীকরণ থেকে তাত্ত্বিক MgO = '+f(m,1)+' × ৮০ ÷ ৪৮ = <b>'+f(th,2)+' g</b><br>প্রকৃত MgO = <b>'+f(a,2)+' g</b><br>শতকরা পরিমাণ = ('+f(a,2)+' × ১০০) ÷ '+f(th,2)+' = <b>'+f(a*100/th,1)+'%</b>'+(raw>th?'<br><small>প্রকৃত উৎপাদ তাত্ত্বিকের বেশি হতে পারে না, তাই সীমা ধরেছি।</small>':'');
+}
+$('y6m').addEventListener('input',y6);$('y6a').addEventListener('input',y6);y6();
+function t6info(){
+  var w=parseFloat($('t6w').value),h=parseFloat($('t6h').value),lost=w*90/249.5*h/100;
+  $('t6wv').textContent=f(w,1);$('t6hv').textContent=bn(Math.round(h));
+  $('t6t').innerHTML='তুঁতের ওজন (b − a) = '+f(w,1)+' g<br>তাপের পর ওজন (c − a) = '+f(w-lost,2)+' g<br>অপসারিত পানি (b − c) = <b>'+f(lost,2)+' g</b><br>কেলাস পানি = ('+f(lost,2)+' ÷ '+f(w,1)+') × ১০০ = <b>'+f(lost*100/w,1)+'%</b><br><small>পুরো তাপে (১০০%) ৯০ ÷ ২৪৯.৫ × ১০০ ≈ ৩৬.০৭%।</small>';
+}
+$('t6w').addEventListener('input',t6info);$('t6h').addEventListener('input',t6info);t6info();
+var T6={t:0};
+function t6draw(){
+  var x=ctxOf('t6c');x.clearRect(0,0,380,250);T6.t++;
+  var h=parseFloat($('t6h').value)/100,fx=190;
+  x.strokeStyle='#555';x.lineWidth=4;x.beginPath();x.moveTo(110,130);x.lineTo(100,230);x.moveTo(270,130);x.lineTo(280,230);x.stroke();
+  x.strokeStyle='#888';x.lineWidth=2;x.strokeRect(100,128,180,4);
+  if(h>0){x.font=(26+h*26*(1+Math.sin(T6.t/3)*.12))+'px sans-serif';x.textAlign='center';x.fillText('🔥',fx,205);}
+  x.fillStyle='#e9e4d8';x.strokeStyle='#8a8577';x.lineWidth=2;x.beginPath();x.moveTo(135,95);x.lineTo(245,95);x.quadraticCurveTo(190,150,135,95);x.fill();x.stroke();
+  var r=Math.round(lerp(40,250,h)),g=Math.round(lerp(120,250,h)),bl=Math.round(lerp(220,250,h));
+  for(var i=0;i<16;i++)circ(x,0,150+(i*37)%80,98+(i%3)*5,7,'rgb('+r+','+g+','+bl+')','#666',1);
+  if(h>0&&h<1){for(var j=0;j<6;j++)txt(x,'💨',160+j*14+Math.sin(T6.t/8+j)*5,85-((T6.t*1.5+j*14)%60),'14px sans-serif',NAVY);}
+  txt(x,'পোর্সেলিন ক্রুসিবল',190,60,'13px Hind Siliguri',NAVY);txt(x,'ত্রিপদী স্ট্যান্ড ও তারজালি',190,245,'12px Hind Siliguri',NAVY);
+}
+
+/* =================== কুইজ =================== */
+var QUIZ=[
+ {q:'প্রমাণ অবস্থায় ২ গ্রাম হাইড্রোজেন গ্যাসের আয়তন কত?',o:['২.২৪ লিটার','১১.২ লিটার','২২.৪ লিটার','৪৪.৮ লিটার'],a:2,e:'H₂-এর আণবিক ভর ২, তাই ২ g = ১ মোল। ১ মোল গ্যাস = ২২.৪ L।'},
+ {q:'নিচের কোনটি ক্যালসিয়াম ফসফেটের সংকেত?',o:['CaPO₄','Ca(PO₄)₂','Ca₂(PO₄)₃','Ca₃(PO₄)₂'],a:3,e:'Ca-এর যোজনী ২, PO₄-এর ৩। আড়াআড়ি বিনিময়ে Ca₃(PO₄)₂।'},
+ {q:'৫ গ্রাম H₂ গ্যাসকে ৭৫ গ্রাম Cl₂ গ্যাসের মধ্যে চালনা করা হলো। Cl পরমাণুর সংখ্যা কতটি?',o:['১.২৭×১০²⁴','২.৫৪×১০²⁴','৬.০২×১০²³','৬.৩৬×১০²³'],a:0,e:'৭৫ ÷ ৭১ = ১.০৫৬ মোল Cl₂ = ২.১১৩ মোল Cl পরমাণু। × ৬.০২৩×১০²³ = ১.২৭×১০²⁴ টি।'},
+ {q:'ঐ বিক্রিয়ায় (৫ g H₂ + ৭৫ g Cl₂) অবশিষ্ট থাকে-',o:['১.৪৪ মোল H₂','১.৪৪ মোল Cl₂','২.৮৯ মোল H₂','২.৮৯ মোল Cl₂'],a:0,e:'H₂ = ২.৫ মোল, Cl₂ = ১.০৫৬ মোল। Cl₂ লিমিটিং। H₂ খরচ ১.০৫৬ মোল, উদ্বৃত্ত ২.৫ − ১.০৫৬ = ১.৪৪ মোল।'},
+ {q:'প্রমাণ অবস্থায় ১৭ গ্রাম অ্যামোনিয়া (NH₃) গ্যাসের আয়তন কত?',o:['২৪.২ লিটার','২২.৪ লিটার','১২.২ লিটার','১১.৪ লিটার'],a:1,e:'NH₃-এর ভর ১৪ + ৩ = ১৭, তাই ১৭ g = ১ মোল = ২২.৪ L।'},
+ {q:'১০ g CaCO₃-এ কয়টি অণু আছে? (বইয়ের হিসাবে)',o:['৬.০২×১০²³','৬.০২×১০²²','৬.০২×১০²¹','২.৫৮×১০²²'],a:1,e:'M = ১০০, ১০ g = ০.১ মোল। ০.১ × ৬.০২৩×১০²³ = ৬.০২×১০²² টি।'},
+ {q:'১ মোল পদার্থে কণার সংখ্যা কত?',o:['৬.০২৩×১০²²','৬.০২৩×১০²³','৬.০২৩×১০²⁴','১২'],a:1,e:'এটাই অ্যাভোগেড্রোর সংখ্যা।'},
+ {q:'গ্যাসের মোলার আয়তন (০°C ও ১ বায়ুমণ্ডল চাপে) কত?',o:['১১.২ L','২২.৪ L','২৪ L','১ L'],a:1,e:'আদর্শ অবস্থায় ১ মোল যেকোনো গ্যাসের আয়তন ২২.৪ লিটার।'},
+ {q:'৩৬ গ্রাম পানি (H₂O) কত মোল?',o:['১','২','১৮','০.৫'],a:1,e:'n = w ÷ M = ৩৬ ÷ ১৮ = ২ মোল।'},
+ {q:'প্রমাণ অবস্থায় ৪৪ গ্রাম CO₂ গ্যাসের আয়তন কত?',o:['১১.২ L','২২.৪ L','৪৪ L','৪৪.৮ L'],a:1,e:'CO₂-এর M = ৪৪, তাই ৪৪ g = ১ মোল = ২২.৪ L।'},
+ {q:'মোলারিটি বলতে বোঝায়-',o:['১ কেজি দ্রাবকে দ্রবের মোল','১ লিটার দ্রবণে দ্রবের মোল','১০০ g দ্রবণে দ্রবের ভর','১ লিটার পানিতে দ্রবের ভর'],a:1,e:'নির্দিষ্ট তাপমাত্রায় ১ লিটার দ্রবণে যত মোল দ্রব থাকে, সেটাই মোলারিটি।'},
+ {q:'২৫০ mL ০.১ মোলার Na₂CO₃ দ্রবণ বানাতে কত গ্রাম Na₂CO₃ লাগে? (M = ১০৬)',o:['১.০৬','২.৬৫','১০.৬','২৬.৫'],a:1,e:'w = SVM ÷ ১০০০ = ০.১ × ২৫০ × ১০৬ ÷ ১০০০ = ২.৬৫ g।'},
+ {q:'২ লিটার ০.১ M Na₂CO₃ দ্রবণ বানাতে কত গ্রাম লাগবে?',o:['১০.৬','২১.২','২.১২','২১২'],a:1,e:'V = ২০০০ mL। w = ০.১ × ২০০০ × ১০৬ ÷ ১০০০ = ২১.২ g।'},
+ {q:'২৫০ mL দ্রবণে ২০ g Na₂CO₃ থাকলে মোলারিটি কত?',o:['০.৭৫ M','১.৫ M','০.১ M','০.৫ M'],a:0,e:'২০ = S × ২৫০ × ১০৬ ÷ ১০০০ থেকে S = ০.৭৫ মোলার।'},
+ {q:'H₂O-তে অক্সিজেনের শতকরা সংযুতি কত?',o:['১১.১১%','৮৮.৮৯%','৫০%','১৬%'],a:1,e:'(১৬ × ১০০) ÷ ১৮ = ৮৮.৮৯%।'},
+ {q:'H₂O₂-এর স্থূল সংকেত কোনটি?',o:['H₂O₂','H₂O','HO','HO₂'],a:2,e:'H : O = ২ : ২ = ১ : ১। সরলতম অনুপাতে স্থূল সংকেত HO।'},
+ {q:'C = ৯২.৩১%, H = ৭.৬৯% এবং আণবিক ভর ৭৮ হলে আণবিক সংকেত কী?',o:['CH','C₂H₂','C₆H₆','C₆H₁₂'],a:2,e:'স্থূল সংকেত CH (ভর ১৩)। n = ৭৮ ÷ ১৩ = ৬। আণবিক সংকেত C₆H₆।'},
+ {q:'গ্লুকোজ (C₆H₁₂O₆)-এর স্থূল সংকেত কোনটি?',o:['CHO','CH₂O','C₂H₄O₂','C₆H₁₂O₆'],a:1,e:'C : H : O = ৬ : ১২ : ৬ = ১ : ২ : ১, তাই CH₂O।'},
+ {q:'Mg + HCl → MgCl₂ + H₂ সমীকরণটির সমতা করলে হয়-',o:['Mg + HCl = MgCl₂ + H₂','Mg + 2HCl = MgCl₂ + H₂','2Mg + HCl = MgCl₂ + H₂','Mg + 2HCl = 2MgCl₂ + H₂'],a:1,e:'Cl মেলাতে HCl-এর আগে ২ দিলে দুই পাশে Mg ১, H ২, Cl ২ হয়।'},
+ {q:'Al₂O₃ + HCl → AlCl₃ + H₂O সমতা করলে HCl-এর আগে কত বসবে?',o:['২','৩','৪','৬'],a:3,e:'Al₂O₃ + 6HCl = 2AlCl₃ + 3H₂O। Cl মেলাতে HCl-এর আগে ৬।'},
+ {q:'রাসায়নিক সমীকরণে (aq) কী বোঝায়?',o:['কঠিন','তরল','গ্যাস','জলীয় দ্রবণ'],a:3,e:'(s) কঠিন, (l) তরল, (g) গ্যাস, (aq) জলীয় দ্রবণ।'},
+ {q:'সমীকরণের তীরের ওপর Δ চিহ্ন কী বোঝায়?',o:['চাপ দেওয়া','তাপ দেওয়া','অনুঘটক','ঠান্ডা করা'],a:1,e:'ডেল্টা (Δ) মানে বিক্রিয়ায় তাপ প্রয়োগ করা হয়েছে।'},
+ {q:'রাসায়নিক সমীকরণ দেখে বিক্রিয়ক ও উৎপাদের পরিমাণ হিসাব করার শাখাকে বলে-',o:['টাইট্রেশন','স্টয়কিওমিতি','কেলাসন','পাতন'],a:1,e:'এটাই স্টয়কিওমিতি (Stoichiometry)।'},
+ {q:'২Mg + O₂ → ২MgO। ৫ g Mg-এর সাথে কত গ্রাম O₂ বিক্রিয়া করে?',o:['৩.৩৩ g','৫ g','৩২ g','১.৬ g'],a:0,e:'৪৮ g Mg-এর সাথে ৩২ g O₂। ৫ g-এর জন্য ৩২ × ৫ ÷ ৪৮ = ৩.৩৩ g।'},
+ {q:'১০ g MgO বানাতে কত গ্রাম O₂ লাগে?',o:['২ g','৪ g','৩২ g','৮ g'],a:1,e:'৮০ g MgO-এর জন্য ৩২ g O₂। ১০ g-এর জন্য ৩২ × ১০ ÷ ৮০ = ৪ g।'},
+ {q:'N₂ + 3H₂ → 2NH₃। প্রমাণ অবস্থায় ৪ L N₂ থেকে কত L NH₃ পাওয়া যায়?',o:['৪ L','৮ L','১২ L','২ L'],a:1,e:'১ মোল N₂ থেকে ২ মোল NH₃। গ্যাসের ক্ষেত্রে আয়তনেও একই অনুপাত: ৪ × ২ = ৮ L।'},
+ {q:'২H₂ + O₂ → ২H₂O। ৬ মোল পানি তৈরিতে কত মোল O₂ লাগে?',o:['২','৩','৬','১২'],a:1,e:'২ মোল পানির জন্য ১ মোল O₂। ৬ মোলের জন্য ৩ মোল।'},
+ {q:'লিমিটিং বিক্রিয়ক কাকে বলে?',o:['যে বিক্রিয়ক বেশি থাকে','যে বিক্রিয়ক আগে শেষ হয়ে যায়','যে উৎপাদ কম হয়','যে অনুঘটক'],a:1,e:'যে বিক্রিয়ক সবার আগে শেষ হয়ে যায়, সেটাই লিমিটিং। অন্যটা কিছু উদ্বৃত্ত থাকে।'},
+ {q:'৪টি Mg পরমাণু ও ৪টি O₂ অণু মেশালে (২Mg + O₂ → ২MgO) লিমিটিং বিক্রিয়ক কোনটি?',o:['O₂','Mg','দুটোই','কোনোটিই নয়'],a:1,e:'৪টি Mg-এর জন্য লাগে ২টি O₂। ২টি O₂ বেঁচে যায়। তাই Mg লিমিটিং।'},
+ {q:'৭০টি Mg ও ৩০টি O₂ অণু মেশালে লিমিটিং বিক্রিয়ক কোনটি?',o:['Mg','O₂','MgO','কোনোটিই নয়'],a:1,e:'৭০টি Mg-এর জন্য লাগে ৩৫টি O₂, আছে ৩০টি। তাই O₂ লিমিটিং।'},
+ {q:'তাত্ত্বিক ৩.৩৩ g MgO-এর জায়গায় প্রকৃতপক্ষে ৩.২৫ g পাওয়া গেলে উৎপাদের শতকরা পরিমাণ কত?',o:['৯০%','৯৭.৬%','১০২.৪%','৩.২৫%'],a:1,e:'(৩.২৫ × ১০০) ÷ ৩.৩৩ = ৯৭.৬%।'},
+ {q:'৮০ g CaCO₃ তাপ দিলে ৩৯ g CaO পাওয়া গেল। উৎপাদের শতকরা পরিমাণ কত? (Ca = ৪০, C = ১২, O = ১৬)',o:['৪৮.৭%','৮৭.১%','৯৭.৬%','১০০%'],a:1,e:'০.৮ মোল CaCO₃ থেকে তাত্ত্বিক CaO = ০.৮ × ৫৬ = ৪৪.৮ g। ৩৯ ÷ ৪৪.৮ × ১০০ = ৮৭.১%।'},
+ {q:'সবচেয়ে বিশুদ্ধ রাসায়নিক পদার্থকে কী বলে?',o:['অ্যানালার','প্রাইমারি','লিমিটিং','অনুঘটক'],a:0,e:'সবচেয়ে বিশুদ্ধ পদার্থকে অ্যানালার (বা অ্যানালার গ্রেড) বলে।'},
+ {q:'Na₂CO₃ কে প্রাইমারি স্ট্যান্ডার্ড ধরা হয় কেন?',o:['এটা গ্যাস বলে','বিশুদ্ধ, শুষ্ক ও সরাসরি ওজন করা যায় এবং ঘনমাত্রা বদলায় না','এটা রঙিন বলে','এটা তরল বলে'],a:1,e:'বিশুদ্ধ ও শুষ্ক অবস্থায় পাওয়া যায়, সরাসরি ওজন করা যায়, দ্রবণের ঘনমাত্রা দীর্ঘদিন একই থাকে।'},
+ {q:'CuSO₄·5H₂O-এ কেলাস পানির শতকরা পরিমাণ প্রায় কত?',o:['১০%','২৫%','৩৬%','৫০%'],a:2,e:'৫H₂O = ৯০, আণবিক ভর ২৪৯.৫। ৯০ ÷ ২৪৯.৫ × ১০০ ≈ ৩৬.০৭%।'},
+ {q:'তুঁতে উত্তপ্ত করলে রং কেমন হয়?',o:['সাদা থেকে নীল','নীল থেকে সাদা','নীল থেকে কালো','কোনো পরিবর্তন নেই'],a:1,e:'কেলাস পানি বাষ্প হয়ে গেলে নীল CuSO₄·5H₂O সাদা CuSO₄ হয়।'},
+ {q:'তুঁতের কেলাস পানি নির্ণয়ে ক্রুসিবল দ্রুত ডেসিকেটরে নিয়ে ঠান্ডা করা হয় কেন?',o:['দ্রুত শুকাতে','যাতে আবার পানি শোষণ করে নীল না হয়','রং পাল্টাতে','ওজন বাড়াতে'],a:1,e:'সাদা CuSO₄ বাতাস থেকে আবার পানি শোষণ করে নীল হতে পারে, তাই দ্রুত ঠান্ডা ও ওজন করতে হয়।'}
+];
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+/* =================== প্রশ্ন-উত্তর =================== */
+var QA=[
+ {h:'সৃজনশীল প্রশ্ন (বইয়ের অনুশীলনী)',items:[
+  ['প্রশ্ন ১: দুটি বোতলে ১০০ mL করে দ্রবণ আছে: একটিতে ৪ g HCl, অন্যটিতে ৪ g NaOH। (ক) মোল কাকে বলে? (খ) স্থূল সংকেত ও আণবিক সংকেত বলতে কী বোঝ? (গ) দ্রবণদ্বয় মেশালে যে লবণ পাওয়া যায় তার সংযুতি নির্ণয় করো। (ঘ) দ্রবণ দুটির মোলারিটি সমান হবে কিনা গাণিতিক যুক্তি দাও।',
+   '<b>(ক)</b> ৬.০২৩ × ১০²³ টি কণার সমষ্টিকে ১ মোল বলে। পারমাণবিক বা আণবিক ভরকে গ্রামে লিখলে যে পরিমাণ পাওয়া যায়, তা ১ মোল।<br><b>(খ)</b> অণুতে পরমাণুগুলোর সরলতম পূর্ণসংখ্যার অনুপাত দেখানো সংকেত স্থূল সংকেত (যেমন H₂O₂-এর HO)। অণুর প্রকৃত পরমাণু সংখ্যা দেখানো সংকেত আণবিক সংকেত (H₂O₂)।<br><b>(গ)</b> HCl + NaOH → NaCl + H₂O। লবণ হলো NaCl (M = ২৩ + ৩৫.৫ = ৫৮.৫)। Na = ২৩ × ১০০ ÷ ৫৮.৫ = <b>৩৯.৩২%</b>, Cl = ৩৫.৫ × ১০০ ÷ ৫৮.৫ = <b>৬০.৬৮%</b>।<br><b>(ঘ)</b> HCl: n = ৪ ÷ ৩৬.৫ = ০.১১০ মোল, ০.১ লিটারে মোলারিটি = ০.১১০ ÷ ০.১ = <b>১.১০ M</b>। NaOH: n = ৪ ÷ ৪০ = ০.১ মোল, মোলারিটি = ০.১ ÷ ০.১ = <b>১ M</b>। অর্থাৎ <b>সমান নয়</b>, কারণ HCl-এর আণবিক ভর NaOH-এর চেয়ে কম, তাই একই ৪ g-এ HCl-এর মোল বেশি।'],
+  ['প্রশ্ন ২: ১০ g CaCO₃ প্রস্তুতির লক্ষ্যে ৪.৪ g CO₂ ও ৫ g CaO মেশানো হলো। প্রত্যাশিত উৎপাদ পাওয়া গেল না। (ক) রাসায়নিক সমীকরণ কাকে বলে? (খ) কার্বন ডাইঅক্সাইডের মোলার আয়তন ব্যাখ্যা করো। (গ) বিক্রিয়ায় কত মোল CO₂ ব্যবহৃত হয়েছিল নিরূপণ করো। (ঘ) প্রত্যাশিত উৎপাদ কম হওয়ার যৌক্তিক ব্যাখ্যা দাও।',
+   '<b>(ক)</b> বিক্রিয়ক ও উৎপাদের সংকেত দিয়ে রাসায়নিক বিক্রিয়াকে সংক্ষেপে প্রকাশ করাকে রাসায়নিক সমীকরণ বলে। যেমন 2H₂ + O₂ → 2H₂O।<br><b>(খ)</b> প্রমাণ অবস্থায় (০°C, ১ বায়ুমণ্ডল) ১ মোল (৪৪ g) CO₂ গ্যাস যে আয়তন দখল করে তাই মোলার আয়তন, অর্থাৎ ২২.৪ লিটার।<br><b>(গ)</b> সমীকরণ: CaO + CO₂ → CaCO₃। নেওয়া CO₂ = ৪.৪ ÷ ৪৪ = <b>০.১ মোল</b>। CaO = ৫ ÷ ৫৬ = ০.০৮৯ মোল। CaO কম, তাই বিক্রিয়া করেছে ০.০৮৯ মোল CO₂ (বাকি ০.০১১ মোল CO₂ উদ্বৃত্ত)। প্রশ্নে "ব্যবহৃত" বলতে নেওয়া না বিক্রিয়া করা কোনটা বোঝানো হয়েছে স্পষ্ট নয়, তাই দুটোই লিখলাম।<br><b>(ঘ)</b> ১০ g CaCO₃ (০.১ মোল) পেতে ০.১ মোল CaO (৫.৬ g) লাগে। কিন্তু দেওয়া হয়েছে মাত্র ৫ g। CaO <b>লিমিটিং বিক্রিয়ক</b>, আগে শেষ হয়ে গেছে। তাই CaCO₃ হয়েছে ০.০৮৯ × ১০০ = ৮.৯ g, ১০ g নয়।']
+ ]},
+ {h:'সংক্ষিপ্ত প্রশ্ন',items:[
+  ['মোল কাকে বলে? অ্যাভোগেড্রোর সংখ্যা কত?','৬.০২৩ × ১০²³ টি কণা (পরমাণু, অণু বা আয়ন) নিয়ে যে পরিমাণ হয় তাকে ১ মোল বলে। এই সংখ্যাকে অ্যাভোগেড্রোর সংখ্যা বলে।'],
+  ['মোলার আয়তন কাকে বলে?','১ মোল গ্যাসীয় পদার্থ যে আয়তন দখল করে। আদর্শ অবস্থায় (০°C, ১ বায়ুমণ্ডল) তা ২২.৪ লিটার।'],
+  ['মোলারিটি কাকে বলে? দ্রবের ভর বের করার সূত্র কী?','১ লিটার দ্রবণে যত মোল দ্রব থাকে। সূত্র: w = SVM ÷ ১০০০ (S = মোলারিটি, V = mL-এ আয়তন, M = আণবিক ভর)।'],
+  ['লঘু ও গাঢ় দ্রবণের পার্থক্য কী?','দ্রাবকের তুলনায় কম দ্রব থাকলে লঘু, বেশি দ্রব থাকলে গাঢ় দ্রবণ। যেমন ২৫০ mL পানিতে ১০ g লবণ লঘু, ১৫ g লবণ গাঢ়।'],
+  ['স্থূল সংকেত কী? স্থূল সংকেত থেকে আণবিক সংকেত কীভাবে পাওয়া যায়?','পরমাণুগুলোর সরলতম পূর্ণসংখ্যার অনুপাত দেখানো সংকেত স্থূল সংকেত। n = আণবিক ভর ÷ স্থূল সংকেতের ভর। আণবিক সংকেত = (স্থূল সংকেত)ₙ।'],
+  ['রাসায়নিক সমীকরণের সমতা কী? কেন প্রয়োজন?','সমীকরণের দুই পাশে প্রতিটি মৌলের পরমাণু সংখ্যা সমান করাকে সমতা বলে। ভরের সংরক্ষণসূত্র মানার জন্য এটা দরকার: বিক্রিয়ায় পরমাণু সৃষ্টি বা ধ্বংস হয় না।'],
+  ['স্টয়কিওমিতি কী?','রসায়নের যে শাখায় বিক্রিয়কের পরিমাণ থেকে উৎপাদের পরিমাণ (এবং উল্টোটা) সমতাযুক্ত সমীকরণ ধরে হিসাব করা হয়।'],
+  ['লিমিটিং বিক্রিয়ক কী?','যে বিক্রিয়ক বিক্রিয়ায় আগে শেষ হয়ে যায়। উৎপাদের পরিমাণ এই বিক্রিয়ক থেকেই হিসাব করতে হয়।'],
+  ['অ্যানালার কাকে বলে? অবিশুদ্ধ পদার্থ কীভাবে বিশুদ্ধ করা হয়?','সবচেয়ে বিশুদ্ধ পদার্থকে অ্যানালার (গ্রেড) বলে। কেলাসন, পাতন, আংশিক পাতন, ক্রোমাটোগ্রাফি ইত্যাদি পদ্ধতিতে বিশুদ্ধ করা হয়।'],
+  ['কেলাস পানি কী?','কেলাসের গঠনে যে নির্দিষ্ট সংখ্যক পানির অণু থাকে। যেমন CuSO₄·5H₂O-এর ৫ অণু পানি। তাপ দিলে এই পানি বাষ্প হয়ে যায় ও নীল তুঁতে সাদা CuSO₄ হয়।']
+ ]},
+ {h:'গাণিতিক অনুশীলন',items:[
+  ['৯ g পানিতে কত মোল ও কয়টি অণু আছে?','M = ১৮। n = ৯ ÷ ১৮ = <b>০.৫ মোল</b>। অণু = ০.৫ × ৬.০২৩ × ১০²³ = <b>৩.০১ × ১০²³ টি</b>।'],
+  ['প্রমাণ অবস্থায় ১১ g CO₂-এর আয়তন কত?','n = ১১ ÷ ৪৪ = ০.২৫ মোল। V = ০.২৫ × ২২.৪ = <b>৫.৬ লিটার</b>।'],
+  ['৫০০ mL ০.২ M NaOH দ্রবণ বানাতে কত গ্রাম NaOH লাগবে?','w = SVM ÷ ১০০০ = ০.২ × ৫০০ × ৪০ ÷ ১০০০ = <b>৪ গ্রাম</b>।'],
+  ['NH₄NO₃ (M = ৮০)-এ নাইট্রোজেনের শতকরা সংযুতি কত?','২টি N আছে। (১৪ × ২ × ১০০) ÷ ৮০ = ২৮০০ ÷ ৮০ = <b>৩৫%</b>।'],
+  ['C = ৪০%, H = ৬.৬৭%, O = ৫৩.৩৩% এবং আণবিক ভর ১৮০ হলে আণবিক সংকেত বের করো।','C: ৪০ ÷ ১২ = ৩.৩৩; H: ৬.৬৭ ÷ ১ = ৬.৬৭; O: ৫৩.৩৩ ÷ ১৬ = ৩.৩৩। ক্ষুদ্রতম ৩.৩৩ দিয়ে ভাগ: ১ : ২ : ১। স্থূল সংকেত CH₂O (ভর ৩০)। n = ১৮০ ÷ ৩০ = ৬। আণবিক সংকেত <b>C₆H₁₂O₆</b>।'],
+  ['Al + HCl → AlCl₃ + H₂ সমীকরণটির সমতা করো।','Al ১টি, তাই AlCl₃ ডানে। Cl মেলাতে HCl-এর আগে ৩ ও AlCl₃-এ ৩: H ৩টি, তাই H₂ দিয়ে হয় ১.৫। পূর্ণসংখ্যা করতে সবকিছু ২ দিয়ে গুণ: <b>2Al + 6HCl = 2AlCl₃ + 3H₂</b>।'],
+  ['২৪ g Mg পুড়ে কত গ্রাম MgO হয়?','২Mg + O₂ → ২MgO: ৪৮ g Mg থেকে ৮০ g MgO। ২৪ g Mg থেকে ৮০ × ২৪ ÷ ৪৮ = <b>৪০ গ্রাম</b>।'],
+  ['১০ g H₂ ও ১০ g Cl₂ মেশালে লিমিটিং বিক্রিয়ক কোনটি? কত গ্রাম HCl হবে?','H₂ + Cl₂ → ২HCl। ১০ g H₂-এর জন্য লাগে ৭১ × ১০ ÷ ২ = ৩৫৫ g Cl₂, আছে ১০ g। তাই <b>Cl₂ লিমিটিং</b>। HCl = ৭৩ × ১০ ÷ ৭১ = <b>১০.২৮ g</b>।'],
+  ['তুঁতের নমুনার ওজন ২.৫ g। তাপ দেওয়ার পর ১.৬ g হলো। কেলাস পানির শতকরা পরিমাণ কত?','অপসারিত পানি = ২.৫ − ১.৬ = ০.৯ g। শতকরা = (০.৯ ÷ ২.৫) × ১০০ = <b>৩৬%</b>। (তাত্ত্বিক মান ৩৬.০৭%, প্রায় সমান।)']
+ ]}
+];
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+/* =================== অ্যানিমেশন লুপ =================== */
+function frame(){g2draw();d3draw();s3draw();l6draw();t6draw();requestAnimationFrame(frame);}
+frame();
+
+</script>
+</body>
+</html>
