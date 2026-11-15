@@ -5,8 +5,10 @@
 window.CHAPTERS = [
   { subject:'chemistry', title:'রসায়নের ধারণা (অধ্যায় ১)', desc:'রসায়নের ইতিহাস, দৈনন্দিন জীবনে রসায়ন, গবেষণা ও ল্যাবের নিরাপত্তা: নিজে করে শেখো।', file:'chapters/chem-concepts-of-chemistry.html', status:'live' },
   { subject:'chemistry', title:'পদার্থের অবস্থা (অধ্যায় ২)', desc:'কণার গতি দেখো, ব্যাপন ও নিঃসরণ পরীক্ষা করো, বরফ থেকে বাষ্পের লেখচিত্র নিজে আঁকো।', file:'chapters/chem-states-of-matter.html', status:'live' },
+  { subject:'chemistry', title:'পদার্থের গঠন (অধ্যায় ৩)', desc:'প্রোটন-নিউট্রন-ইলেকট্রন দিয়ে পরমাণু গড়ো, রাদারফোর্ড ও বোর মডেল দেখো, ইলেকট্রন বিন্যাস ভরাও, আইসোটোপ ও আপেক্ষিক ভর হিসাব করো।', file:'chapters/chem-structure-of-matter.html', status:'live' },
   { subject:'chemistry', title:'পর্যায় সারণি (অধ্যায় ৪)', desc:'সব ১১৮টি মৌলের ঠিকানা খুঁজো: ইলেকট্রন ঘুরতে দেখো, পর্যায় ও গ্রুপ বের করো।', file:'chapters/chem-periodic-table.html', status:'live' },
   { subject:'chemistry', title:'রাসায়নিক বন্ধন (অধ্যায় ৫)', desc:'যোজ্যতা ইলেকট্রন গুনো, সংকেত বানাও, আয়নিক ও সমযোজী বন্ধন তৈরি হতে দেখো, দ্রাব্যতা ও বিদ্যুৎ পরিবাহিতা পরীক্ষা করো।', file:'chapters/chem-chemical-bond.html', status:'live' },
+  { subject:'chemistry', title:'মোলের ধারণা ও রাসায়নিক গণনা (অধ্যায় ৬)', desc:'গ্রাম-মোল-কণা-আয়তন কনভার্টার, ২২.৪ লিটার গ্যাসের বাক্স, মোলার দ্রবণ বানানো, শতকরা সংযুতি, সমীকরণের সমতা ও লিমিটিং বিক্রিয়ক।', file:'chapters/chem-mole-concept.html', status:'live' },
   { subject:'chemistry', title:'রাসায়নিক বিক্রিয়া (অধ্যায় ৭)', desc:'বিক্রিয়ার ধরন চেনো, ইলেকট্রন স্থানান্তর ও জারণ সংখ্যা নিজে করে দেখো।', file:'chapters/chem-chemical-reactions.html', status:'live' },
   { subject:'chemistry', title:'খনিজ সম্পদ: জীবাশ্ম (অধ্যায় ১১)', desc:'পেট্রোলিয়ামের আংশিক পাতন দেখো, হাইড্রোকার্বনের গঠন নিজে বানাও।', file:'chapters/chem-fossil-hydrocarbon.html', status:'live' },
   { subject:'chemistry', title:'⚗️ মৌল মেশানোর ল্যাব (বিশেষ)', desc:'১১৮টা মৌলের যেকোনো ২ থেকে ২০টা মিশিয়ে দেখো: আগুন, রং, বিস্ফোরণ আর ব্যবহার।', file:'chapters/chem-element-mixer.html', status:'live', extra:true },
