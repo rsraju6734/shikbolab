@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>রাসায়নিক বন্ধন (অধ্যায় ৫) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+</style>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#chemistry">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">🧪 রসায়ন &rsaquo; পঞ্চম অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🔗 রাসায়নিক বন্ধন (Chemical Bond)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">⚛️ ল্যাব ১</a><a href="#lab2">🧩 ল্যাব ২</a><a href="#lab3">⚡ ল্যাব ৩</a><a href="#lab4">🤝 ল্যাব ৪</a><a href="#lab5">🧪 ল্যাব ৫</a><a href="#lab6">🔩 ল্যাব ৬</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+
+  <!-- ================= নোট ================= -->
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> যোজ্যতা ইলেকট্রন ও যোজনী বলতে, যৌগের সংকেত লিখতে, অষ্টক ও দুইয়ের নিয়ম বোঝাতে, আয়নিক, সমযোজী ও ধাতব বন্ধন কীভাবে তৈরি হয় তা ব্যাখ্যা করতে, আর আয়নিক ও সমযোজী যৌগের ধর্ম (গলনাঙ্ক, দ্রাব্যতা, বিদ্যুৎ পরিবাহিতা) তুলনা করতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের (৫ম অধ্যায়ের) ক্রম মেনে সহজ ভাষায় লেখা। পরীক্ষায় লিখতে হলে বইয়ের ভাষা ও শিক্ষকের নির্দেশ মেনে লিখবে।</div>
+
+    <h3>৫.১ যোজ্যতা ইলেকট্রন ⭐⭐⭐</h3>
+    <div class="key">কোনো মৌলের ইলেকট্রন বিন্যাসে <b>সর্বশেষ কক্ষপথে</b> যে ইলেকট্রন থাকে তার সংখ্যাকে <b>যোজ্যতা ইলেকট্রন সংখ্যা</b> বলে।</div>
+    <table class="t">
+      <tr><th>মৌল</th><th>ইলেকট্রন বিন্যাস (K, L, M, N)</th><th>যোজ্যতা ইলেকট্রন</th></tr>
+      <tr><td>N (7)</td><td>২, ৫</td><td>৫</td></tr>
+      <tr><td>F (9)</td><td>২, ৭</td><td>৭</td></tr>
+      <tr><td>P (15)</td><td>২, ৮, ৫</td><td>৫</td></tr>
+      <tr><td>Cl (17)</td><td>২, ৮, ৭</td><td>৭</td></tr>
+      <tr><td>Ca (20)</td><td>২, ৮, ৮, ২</td><td>২</td></tr>
+    </table>
+    <p>পটাশিয়ামের যোজ্যতা ইলেকট্রন ১টি, অক্সিজেনের ৬টি।</p>
+
+    <h3>৫.২ যোজনী বা যোজ্যতা ⭐⭐⭐</h3>
+    <ul>
+      <li>কোনো মৌলের একটি পরমাণুর সাথে অপর মৌলের পরমাণু <b>যুক্ত হওয়ার ক্ষমতাকে</b> যোজনী বলে।</li>
+      <li><b>হাইড্রোজেনের যোজনী ১</b> ধরা হয়। একটি পরমাণু যতগুলো H পরমাণুর সাথে যুক্ত হতে পারে সেটাই তার যোজনী। যেমন HCl-এ Cl-এর যোজনী ১, H₂O-তে O-এর যোজনী ২, NaCl-এ Na-এর যোজনী ১।</li>
+      <li>অক্সিজেনের যোজনী ২। Ca-এর একটি পরমাণু একটি O-এর সাথে যুক্ত হয়ে CaO হয়, তাই Ca-এর যোজনী ২।</li>
+      <li><b>পরিবর্তনশীল যোজনী:</b> কিছু মৌলের একাধিক যোজনী থাকে। যেমন Fe-এর ২ ও ৩।</li>
+      <li><b>সুপ্ত যোজনী = সর্বোচ্চ যোজনী − সক্রিয় যোজনী।</b> FeCl₂-তে Fe-এর সক্রিয় যোজনী ২, সর্বোচ্চ ৩, তাই সুপ্ত যোজনী ৩−২ = ১। FeCl₃-তে ৩−৩ = ০।</li>
+    </ul>
+    <table class="t">
+      <tr><th>মৌল</th><th>যোজনী</th><th>মৌল</th><th>যোজনী</th><th>মৌল</th><th>যোজনী</th></tr>
+      <tr><td>H, F, Cl, Br, I</td><td>১</td><td>Na, K</td><td>১</td><td>Fe</td><td>২, ৩</td></tr>
+      <tr><td>Mg</td><td>২</td><td>Al</td><td>৩</td><td>Cu</td><td>১, ২</td></tr>
+      <tr><td>C</td><td>২, ৪</td><td>Zn</td><td>২</td><td>N, P</td><td>৩, ৫</td></tr>
+      <tr><td>O</td><td>২</td><td>Pb</td><td>২, ৪</td><td>S</td><td>২, ৪, ৬</td></tr>
+    </table>
+
+    <h3>৫.৩ যৌগমূলক ও তাদের যোজনী ⭐⭐</h3>
+    <div class="key">একাধিক মৌলের কতিপয় পরমাণু মিলে ধনাত্মক বা ঋণাত্মক আধানবিশিষ্ট একটি <b>পরমাণুগুচ্ছ</b> তৈরি করে, যেটা একটি মৌলের আয়নের মতো আচরণ করে। একে <b>যৌগমূলক</b> বলে। আধানের সংখ্যাটাই যোজনী।</div>
+    <table class="t">
+      <tr><th>নাম</th><th>সংকেত</th><th>আধান</th><th>যোজনী</th></tr>
+      <tr><td>অ্যামোনিয়াম</td><td>NH₄⁺</td><td>+১</td><td>১</td></tr>
+      <tr><td>কার্বনেট</td><td>CO₃²⁻</td><td>−২</td><td>২</td></tr>
+      <tr><td>হাইড্রোজেন কার্বনেট</td><td>HCO₃⁻</td><td>−১</td><td>১</td></tr>
+      <tr><td>সালফেট</td><td>SO₄²⁻</td><td>−২</td><td>২</td></tr>
+      <tr><td>হাইড্রোজেন সালফেট</td><td>HSO₄⁻</td><td>−১</td><td>১</td></tr>
+      <tr><td>সালফাইট</td><td>SO₃²⁻</td><td>−২</td><td>২</td></tr>
+      <tr><td>নাইট্রেট</td><td>NO₃⁻</td><td>−১</td><td>১</td></tr>
+      <tr><td>নাইট্রাইট</td><td>NO₂⁻</td><td>−১</td><td>১</td></tr>
+      <tr><td>ফসফেট</td><td>PO₄³⁻</td><td>−৩</td><td>৩</td></tr>
+      <tr><td>হাইড্রক্সাইড</td><td>OH⁻</td><td>−১</td><td>১</td></tr>
+      <tr><td>ফসফোনিয়াম</td><td>PH₄⁺</td><td>+১</td><td>১</td></tr>
+    </table>
+
+    <h3>৫.৪ যৌগের রাসায়নিক সংকেত লেখার নিয়ম ⭐⭐⭐</h3>
+    <ul>
+      <li><b>(ক)</b> অণুতে যতগুলো পরমাণু থাকে, সেই সংখ্যা প্রতীকের ডান পাশে নিচে ছোট করে লিখি। যেমন N₂, O₃। যৌগ ছাড়াও ধাতু ও নিষ্ক্রিয় গ্যাস শুধু প্রতীক দিয়ে লেখা হয় (Fe, He)।</li>
+      <li><b>(খ) যোজনী বিনিময় (criss-cross):</b> দুই মৌলের যোজনী সাধারণ সংখ্যা দিয়ে ভাগ না হলে এক মৌলের যোজনী অপর মৌলের প্রতীকের নিচে ডান পাশে লিখি। যেমন Al (৩) ও O (২) → <b>Al₂O₃</b>। Ca (২) ও Cl (১) → <b>CaCl₂</b>। যৌগমূলক একাধিক থাকলে বন্ধনীর মধ্যে রাখি: Mg₃(PO₄)₂, (NH₄)₃PO₄, Al₂(SO₄)₃। সংখ্যা ১ লিখতে হয় না।</li>
+      <li><b>(গ)</b> দুই মৌলের যোজনী একই সাধারণ সংখ্যা দিয়ে ভাগ করা গেলে ভাগ করে নিই। যেমন C (৪) ও O (২): দুটোকে ২ দিয়ে ভাগ করলে ২ ও ১, তাই <b>CO₂</b>। Fe (২) ও SO₄ (২) → ২ দিয়ে ভাগ করে <b>FeSO₄</b>। B (৩) ও N (৩) → <b>BN</b>।</li>
+    </ul>
+
+    <h3>৫.৫ আণবিক সংকেত ও গাঠনিক সংকেত ⭐⭐</h3>
+    <ul>
+      <li><b>আণবিক সংকেত:</b> অণুতে কোন মৌলের কয়টি পরমাণু আছে তা দেখায়। যেমন প্রোপেন C₃H₈।</li>
+      <li><b>গাঠনিক সংকেত:</b> পরমাণুগুলো কীভাবে সাজানো ও কোন বন্ধনে যুক্ত তা রেখা দিয়ে দেখায়। কার্বনের যোজনী ৪, তাই প্রতিটি C-তে চারটি রেখা (বন্ধন) থাকে।</li>
+    </ul>
+    <pre style="background:#f6f9fb;border-radius:10px;padding:10px;line-height:1.1;overflow:auto">  H H H                  O              H
+  | | |                 / \             |
+H–C–C–C–H              H   H        H–C–H
+  | | |                 পানি (H₂O)      |
+  H H H                                 H
+প্রোপেন (C₃H₈)                    মিথেন (CH₄)</pre>
+
+    <h3>৫.৬ অষ্টক ও দুইয়ের নিয়ম ⭐⭐⭐</h3>
+    <ul>
+      <li>হিলিয়াম ছাড়া সব নিষ্ক্রিয় গ্যাসের সর্বশেষ শক্তিস্তরে <b>৮টি</b> ইলেকট্রন থাকে। অণু গঠনের সময় মৌল ইলেকট্রন গ্রহণ, বর্জন বা ভাগাভাগি করে সর্বশেষ শক্তিস্তরে ৮টি ইলেকট্রন ধারণ করে নিষ্ক্রিয় গ্যাসের মতো বিন্যাস পেতে চায়। একে <b>অষ্টক নিয়ম</b> বলে।</li>
+      <li>অষ্টক নিয়মের কিছু সীমাবদ্ধতা আছে, তাই <b>দুইয়ের নিয়ম</b>: অণুতে যেকোনো পরমাণুর সর্বশেষ স্তরে <b>এক বা একাধিক জোড়া</b> ইলেকট্রন থাকবে।</li>
+      <li>উদাহরণ: BeCl₂-এ Be-এর ২ জোড়া (৪টি) ইলেকট্রন; BF₃-এ B-এর ৩ জোড়া (৬টি); CH₄-এ C-এর ৪ জোড়া (৮টি)। H-এর ১ জোড়া (২টি)।</li>
+      <li>পর্যায় সারণির ১-২০ নম্বর মৌলগুলো মূলত অষ্টক ও দুইয়ের নিয়ম ভালোভাবে মানে।</li>
+    </ul>
+
+    <h3>৫.৭ নিষ্ক্রিয় গ্যাস ও স্থিতিশীলতা ⭐⭐</h3>
+    <p>He (১s²), Ne (১s² ২s² ২p⁶), Ar (…৩s² ৩p⁶)। হিলিয়ামের সর্বশেষ স্তরে ২টি (দ্বিত্ব), বাকি নিষ্ক্রিয় গ্যাসের ৮টি (অষ্টক)। সর্বশেষ স্তর পূর্ণ থাকায় এরা অত্যন্ত <b>স্থিতিশীল</b>, অন্য মৌলের সাথে ইলেকট্রন গ্রহণ-বর্জন করে না। অন্য মৌলরা স্থিতিশীলতা পেতে ইলেকট্রন গ্রহণ, ত্যাগ বা ভাগাভাগি করে বন্ধন গঠন করে।</p>
+
+    <h3>৫.৮ রাসায়নিক বন্ধন ও গঠনের কারণ ⭐⭐⭐</h3>
+    <div class="key">যে <b>আকর্ষণ বলের মাধ্যমে</b> অণুতে দুটি পরমাণু পরস্পর যুক্ত থাকে তাকে <b>রাসায়নিক বন্ধন</b> বলে। এটা আয়নিক, সমযোজী বা ধাতব হতে পারে।</div>
+    <p><b>কারণ:</b> পরমাণুরা তাদের সর্বশেষ স্তরে নিষ্ক্রিয় গ্যাসের মতো স্থিতিশীল ইলেকট্রন বিন্যাস (দ্বিত্ব বা অষ্টক) পেতে চায়। তাই ইলেকট্রন গ্রহণ, বর্জন বা ভাগাভাগি করে বন্ধন গঠন করে।</p>
+
+    <h3>৫.৯ ক্যাটায়ন ও অ্যানায়ন ⭐⭐⭐</h3>
+    <ul>
+      <li><b>ক্যাটায়ন (ধনাত্মক আয়ন):</b> পরমাণু ইলেকট্রন ছেড়ে দিলে প্রোটন বেশি হয়ে ধনাত্মক আয়ন হয়। যেমন Li → Li⁺ + e⁻, Na → Na⁺ + e⁻।</li>
+      <li><b>অ্যানায়ন (ঋণাত্মক আয়ন):</b> পরমাণু ইলেকট্রন গ্রহণ করলে ঋণাত্মক আয়ন হয়। যেমন Cl + e⁻ → Cl⁻।</li>
+      <li><b>ধাতু কেন ক্যাটায়ন করে?</b> ধাতুর সর্বশেষ স্তরে সাধারণত ১, ২ বা ৩টি ইলেকট্রন থাকে। আকার বড় হওয়ায় এই ইলেকট্রনের প্রতি নিউক্লিয়াসের আকর্ষণ কম। তাই আয়নীকরণ শক্তি কম, সামান্য শক্তিতেই ইলেকট্রন ছেড়ে নিষ্ক্রিয় গ্যাসের বিন্যাস পায়।</li>
+      <li><b>অধাতু কেন অ্যানায়ন করে?</b> অধাতুর সর্বশেষ স্তরে সাধারণত ৫, ৬ বা ৭টি ইলেকট্রন থাকে। আকার ছোট, তাই আকর্ষণ বেশি। ইলেকট্রন ছাড়তে অনেক শক্তি লাগে, তাই ইলেকট্রন নিয়ে নিষ্ক্রিয় গ্যাসের বিন্যাস পায়।</li>
+    </ul>
+
+    <h3>৫.১০ আয়নিক বন্ধন ⭐⭐⭐</h3>
+    <div class="key">ধাতব পরমাণু থেকে অধাতব পরমাণুতে ইলেকট্রন স্থানান্তরের ফলে সৃষ্ট <b>ক্যাটায়ন ও অ্যানায়নের মধ্যে স্থির তড়িৎ আকর্ষণ</b> (ইলেকট্রোস্ট্যাটিক বা কুলম্ব আকর্ষণ) যে বন্ধন গঠন করে তাকে <b>আয়নিক বা তড়িৎযোজী বন্ধন</b> বলে। যে যৌগে এই বন্ধন আছে সেটি <b>আয়নিক যৌগ</b>।</div>
+    <ul>
+      <li><b>NaCl:</b> Na → Na⁺ + e⁻ (২,৮ — Ne-এর মতো); Cl + e⁻ → Cl⁻ (২,৮,৮ — Ar-এর মতো); Na⁺ + Cl⁻ = NaCl।</li>
+      <li><b>MgO:</b> Mg → Mg²⁺ + 2e⁻; O + 2e⁻ → O²⁻।</li>
+      <li><b>NaH:</b> Na → Na⁺ + e⁻; H + e⁻ → H⁻ (হিলিয়ামের মতো ২টি)।</li>
+      <li><b>CaO:</b> Ca → Ca²⁺ + 2e⁻; O + 2e⁻ → O²⁻।</li>
+      <li>সাধারণত পর্যায় সারণির ১ ও ২ নম্বর গ্রুপের ধাতু এবং ১৬ ও ১৭ নম্বর গ্রুপের অধাতু আয়নিক বন্ধন তৈরি করে। প্রতিটি নিয়মেই কিছু ব্যতিক্রম আছে (যেমন ১৩ নম্বর গ্রুপের Al-ও আয়নিক বন্ধন করে)।</li>
+    </ul>
+
+    <h3>৫.১১ সমযোজী বন্ধন ⭐⭐⭐</h3>
+    <div class="key">দুটি অধাতব পরমাণু পরস্পরের সাথে <b>ইলেকট্রন শেয়ার (ভাগাভাগি)</b> করে যে বন্ধন গঠন করে তাকে <b>সমযোজী বন্ধন</b> বলে। এক জোড়া ইলেকট্রন শেয়ার হলে <b>একক বন্ধন</b> (–), দুই জোড়ায় <b>দ্বিবন্ধন</b> (=)।</div>
+    <ul>
+      <li><b>Cl₂:</b> প্রতিটি Cl-এর সর্বশেষ স্তরে ৭টি ইলেকট্রন। দুটি Cl একটি করে ইলেকট্রন দিয়ে এক জোড়া শেয়ার করে, দুজনেই ৮টি ইলেকট্রন পায়। Cl–Cl।</li>
+      <li><b>H₂:</b> H·+·H → H–H, দুই H-ই ২টি ইলেকট্রন (দুইয়ের নিয়ম) পায়।</li>
+      <li><b>O₂:</b> প্রতিটি O-এ ৬টি ইলেকট্রন, দরকার আরও ২টি। তাই দুই জোড়া শেয়ার করে <b>O=O (দ্বিবন্ধন)</b>।</li>
+      <li><b>H₂O:</b> O প্রতিটি H-এর সাথে একটি করে ইলেকট্রন শেয়ার করে। দুটি O–H সমযোজী বন্ধন।</li>
+      <li>Na কখনো সমযোজী বন্ধন করে না। এটা সব সময় ইলেকট্রন ত্যাগ করে ক্যাটায়ন হয়। কিন্তু O আয়নিক ও সমযোজী দুই ধরনের যৌগই গঠন করে।</li>
+      <li>সমযোজী অণুর উদাহরণ: H₂, O₂, N₂, Cl₂, Br₂, I₂, CH₄, CO₂, HCl, NH₃।</li>
+      <li>অনেক সমযোজী অণু স্বাভাবিক অবস্থায় গ্যাস (CO₂, NH₃, O₂), কেউ তরল (H₂O, C₂H₅OH), কেউ কঠিন (ন্যাপথলিন, সালফার, আয়োডিন)। এদের মধ্যে দুর্বল <b>ভ্যানডারওয়ালস আকর্ষণ</b> কাজ করে।</li>
+    </ul>
+
+    <h3>৫.১২ আয়নিক ও সমযোজী যৌগের বৈশিষ্ট্য ⭐⭐⭐</h3>
+    <table class="t">
+      <tr><th>বৈশিষ্ট্য</th><th>আয়নিক যৌগ</th><th>সমযোজী যৌগ</th></tr>
+      <tr><td>গলনাঙ্ক ও স্ফুটনাঙ্ক</td><td>অনেক বেশি। ধনাত্মক ও ঋণাত্মক আয়নের শক্তিশালী আকর্ষণ ভাঙতে অনেক তাপ লাগে।</td><td>কম। অণুর মধ্যে শুধু দুর্বল ভ্যানডারওয়ালস আকর্ষণ।</td></tr>
+      <tr><td>দ্রাব্যতা (পানিতে)</td><td>প্রায় সব দ্রবীভূত হয় (ব্যতিক্রম: AgCl)</td><td>প্রায় সব দ্রবীভূত হয় না (ব্যতিক্রম: চিনি, গ্লুকোজ, ইথানল)</td></tr>
+      <tr><td>বিদ্যুৎ পরিবাহিতা (জলীয় দ্রবণে)</td><td>পরিবহন করে (বিচ্ছিন্ন ধনাত্মক ও ঋণাত্মক আয়ন আছে)</td><td>পরিবহন করে না (আয়ন নেই)</td></tr>
+      <tr><td>কেলাস</td><td>সাধারণত কেলাস আকারে থাকে</td><td>বেশির ভাগ কেলাস গঠন করে না (কিছু করে, যেমন চিনি)</td></tr>
+    </table>
+    <ul>
+      <li><b>পানি একটি পোলার যৌগ:</b> O পরমাণু H-এর চেয়ে বেশি তড়িৎ ঋণাত্মক, তাই শেয়ার করা ইলেকট্রন জোড় O-এর দিকে সামান্য সরে যায়। O আংশিক ঋণাত্মক (δ⁻), H আংশিক ধনাত্মক (δ⁺)। পোলার যৌগ পানিতে দ্রবীভূত হয়, তাই ইথানল (C₂H₅OH) পানিতে দ্রবীভূত। মিথেন (CH₄) পোলার নয়, তাই দ্রবীভূত হয় না।</li>
+      <li><b>আয়নিক যৌগ পানিতে দ্রবীভূত হয় কেন?</b> পানির ঋণাত্মক প্রান্ত ক্যাটায়নকে, ধনাত্মক প্রান্ত অ্যানায়নকে টানে। এই আকর্ষণ আয়ন-আয়নের আকর্ষণের চেয়ে বেশি হলে আয়ন বিচ্ছিন্ন হয়ে পানির অণু দিয়ে ঘেরা হয়ে যায়।</li>
+      <li><b>বিদ্যুৎ পরিবাহিতা:</b> NaCl-এর জলীয় দ্রবণে Na⁺ ও Cl⁻ আয়ন বিচ্ছিন্ন থাকে, তাই বিদ্যুৎ পরিবহন করে। চিনির দ্রবণে আয়ন হয় না, তাই করে না।</li>
+      <li><b>কেলাস গঠন (দলীয় কাজ):</b> খাদ্য লবণ ও চিনির সম্পৃক্ত দ্রবণে সুতা ঝুলিয়ে কয়েক দিন রাখলে সুতায় কেলাস জমে।</li>
+    </ul>
+
+    <h3>৫.১৩ ধাতব বন্ধন ⭐⭐⭐</h3>
+    <div class="key">এক খণ্ড ধাতুর ভেতরে পরমাণুগুলোকে যে বন্ধন যুক্ত করে রাখে তাকে <b>ধাতব বন্ধন</b> বলে।</div>
+    <ul>
+      <li>ধাতুর পরমাণু সর্বশেষ স্তরের এক বা একাধিক ইলেকট্রন ত্যাগ করে ধনাত্মক আয়ন (<b>পরমাণবিক শাঁস</b>, atomic core) তৈরি করে। এই শাঁসগুলো ত্রিমাত্রিকভাবে সাজানো থাকে।</li>
+      <li>ত্যাগ করা ইলেকট্রনগুলো শাঁসের মাঝে মুক্তভাবে ঘোরে, এদের <b>সঞ্চরণশীল ইলেকট্রন</b> (delocalized electron) বলে। ইলেকট্রনের "সাগরে" ধনাত্মক শাঁস ডুবে থাকে। শাঁস ও ইলেকট্রনের আকর্ষণই ধাতব বন্ধন।</li>
+      <li><b>বিদ্যুৎ পরিবাহিতা:</b> ধাতুর দুই প্রান্তে ব্যাটারি লাগালে সঞ্চরণশীল ইলেকট্রন ঋণাত্মক প্রান্ত থেকে ধনাত্মক প্রান্তের দিকে ছোটে, এতে বিদ্যুৎ প্রবাহিত হয়।</li>
+      <li><b>তাপ পরিবাহিতা:</b> এক প্রান্তে তাপ দিলে সেখানকার ইলেকট্রন শক্তি পেয়ে দ্রুত ছোটে। এরা বেশি তাপমাত্রার প্রান্ত থেকে কম তাপমাত্রার প্রান্তে তাপ নিয়ে যায়।</li>
+      <li>ধাতুর নমনীয়তা, ঘাতসহতা ও ঔজ্জ্বল্যও সঞ্চরণশীল ইলেকট্রনের কারণে।</li>
+    </ul>
+  </section>
+
+  <!-- ================= ল্যাব ১ ================= -->
+  <section class="panel" id="lab1">
+    <h2>⚛️ ল্যাব ১: যোজ্যতা ইলেকট্রন ও যোজনী</h2>
+    <div class="say">👉 নিচের বাটন থেকে একটা মৌল বেছে নাও। ইলেকট্রন ঘুরতে দেখো। <b style="color:#e9a23b">কমলা</b> ইলেকট্রনগুলো যোজ্যতা ইলেকট্রন (সর্বশেষ কক্ষপথে)।</div>
+    <div class="elgrid" id="elgrid"></div>
+    <div class="row">
+      <div><canvas id="at" class="w" width="380" height="300"></canvas></div>
+      <div class="grow">
+        <div class="tlinfo" id="atinfo"></div>
+        <h3 style="margin-top:12px">🎯 যোজ্যতা ইলেকট্রন গুনে বলো</h3>
+        <div id="vq" class="tlinfo"></div>
+        <div class="cls" id="vqo"></div>
+        <div class="fb" id="vqf"></div><small id="vqs"></small>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ল্যাব ২ ================= -->
+  <section class="panel" id="lab2">
+    <h2>🧩 ল্যাব ২: যৌগের সংকেত বানাও (আড়াআড়ি পদ্ধতি)</h2>
+    <div class="ctl"><label>ধনাত্মক অংশ:</label><select id="cs"></select><label>ঋণাত্মক অংশ:</label><select id="as"></select><button class="btn" id="cbuild">▶ সংকেত বানাও</button></div>
+    <div class="pills" id="cex"></div>
+    <div class="row">
+      <div class="grow">
+        <div id="cstep" class="tlinfo" style="min-height:230px"></div>
+      </div>
+      <div style="min-width:240px;text-align:center">
+        <svg id="csvg" viewBox="0 0 240 110" width="240" height="110"></svg>
+        <div class="formula" id="cform"></div>
+        <div class="say" id="cname"></div>
+      </div>
+    </div>
+    <h3>🎮 সংকেত চেনার গেম</h3>
+    <div class="tlinfo" id="fq"></div>
+    <div id="fqo"></div><div class="fb" id="fqf"></div><small id="fqs"></small>
+  </section>
+
+  <!-- ================= ল্যাব ৩ ================= -->
+  <section class="panel" id="lab3">
+    <h2>⚡ ল্যাব ৩: আয়নিক বন্ধন (ইলেকট্রন দান ও গ্রহণ)</h2>
+    <div class="ctl"><label>যৌগ:</label><select id="ic"></select><button class="btn" id="igo">▶ বন্ধন গঠন করো</button><button class="btn alt" id="ireset">↻ আবার</button></div>
+    <canvas id="ion" class="w" width="380" height="250" style="max-width:100%;width:100%;max-width:380px"></canvas>
+    <div class="tlinfo" id="iinfo"></div>
+  </section>
+
+  <!-- ================= ল্যাব ৪ ================= -->
+  <section class="panel" id="lab4">
+    <h2>🤝 ল্যাব ৪: সমযোজী বন্ধন (ইলেকট্রন শেয়ার)</h2>
+    <div class="ctl"><label>অণু:</label><select id="mc"></select><button class="btn" id="mgo">▶ বন্ধন গঠন করো</button><button class="btn alt" id="mreset">↻ আবার</button></div>
+    <div class="row">
+      <div><canvas id="cv" class="w" width="380" height="260"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="minfo"></div><div id="mchips" class="pills"></div></div>
+    </div>
+    <h3>🎮 আয়নিক না সমযোজী?</h3>
+    <div class="tlinfo" id="kq"></div>
+    <div class="cls" id="kqo"><button data-a="ion">⚡ আয়নিক</button><button data-a="cov">🤝 সমযোজী</button></div>
+    <div class="fb" id="kqf"></div><small id="kqs"></small>
+  </section>
+
+  <!-- ================= ল্যাব ৫ ================= -->
+  <section class="panel" id="lab5">
+    <h2>🧪 ল্যাব ৫: আয়নিক ও সমযোজী যৌগের ধর্ম</h2>
+    <h3>ক) পানিতে দ্রবীভূত হয় কি না</h3>
+    <div class="ctl"><label>পদার্থ:</label><select id="ss"></select><button class="btn" id="sgo">💧 পানিতে দাও</button><button class="btn alt" id="sreset">↻ আবার</button></div>
+    <div class="row">
+      <div><canvas id="sol" class="w" width="380" height="280"></canvas>
+      </div>
+      <div class="grow"><div class="say" id="stxt">পদার্থ বেছে "পানিতে দাও" চাপো।</div>
+        <div class="legend"><span class="lg" style="background:#e63946"></span> ক্যাটায়ন (+) &nbsp;<span class="lg" style="background:#2b6cb0"></span> অ্যানায়ন (−) &nbsp;<span class="lg" style="background:#9aa5ad"></span> সমযোজী অণু</div></div>
+    </div>
+
+    <h3>খ) জলীয় দ্রবণে বিদ্যুৎ পরিবহন</h3>
+    <div class="ctl"><label>দ্রবণ:</label><select id="cds"></select><button class="btn" id="cdsw">🔌 সুইচ অন</button></div>
+    <div class="row">
+      <div><canvas id="cdc" class="w" width="380" height="270"></canvas></div>
+      <div class="grow"><div class="say" id="cdtxt"></div></div>
+    </div>
+
+    <h3>গ) গলনাঙ্ক: কার কেলাস আগে গলে?</h3>
+    <div class="ctl"><label>🔥 তাপ:</label><input type="range" id="mh" min="0" max="100" value="0" style="flex:1;min-width:160px"></div>
+    <canvas id="mel" class="w" style="max-width:100%;width:100%;max-width:380px" width="380" height="210"></canvas>
+    <div class="say" id="mtxt"></div>
+    <small>🔎 বাড়তি তথ্য (বইয়ে নেই): NaCl প্রায় ৮০১°C-এ গলে, ন্যাপথলিন প্রায় ৮০°C-এ। ছবির তাপ স্কেল ধারণামূলক।</small>
+
+    <h3>🕵️ গোয়েন্দা: অজানা পদার্থ আয়নিক না সমযোজী?</h3>
+    <div class="tlinfo" id="dq"></div>
+    <div class="cls"><button id="dqI">⚡ আয়নিক</button><button id="dqC">🤝 সমযোজী</button><button class="btn alt" id="dqN" style="display:none">পরের নমুনা →</button></div>
+    <div class="fb" id="dqf"></div><small id="dqs"></small>
+  </section>
+
+  <!-- ================= ল্যাব ৬ ================= -->
+  <section class="panel" id="lab6">
+    <h2>🔩 ল্যাব ৬: ধাতব বন্ধন (ইলেকট্রনের সাগর)</h2>
+    <div class="say">👉 ধনাত্মক শাঁসের ফাঁকে নীল সঞ্চরণশীল ইলেকট্রন ছুটছে। ব্যাটারি লাগাও বা এক প্রান্তে তাপ দাও।</div>
+    <canvas id="mt" class="w" style="max-width:100%;width:100%;max-width:380px" width="380" height="250"></canvas>
+    <div class="btnrow"><button class="btn" id="mbat">🔋 ব্যাটারি চালু/বন্ধ</button><button class="btn alt" id="mheat">🔥 বাম প্রান্তে তাপ দাও</button><button class="btn alt" id="mcool">❄️ ঠান্ডা করো</button></div>
+    <div class="bar"><div class="bl">বাম প্রান্তের তাপমাত্রা</div><div class="bt"><div class="bf" id="tL" style="background:#e63946"></div></div></div>
+    <div class="bar"><div class="bl">ডান প্রান্তের তাপমাত্রা</div><div class="bt"><div class="bf" id="tR" style="background:#e9a23b"></div></div></div>
+    <div class="say" id="mttxt"></div>
+  </section>
+
+  <!-- ================= কুইজ ================= -->
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <!-- ================= প্রশ্ন-উত্তর ================= -->
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। প্রশ্নগুলো বইয়ের বিষয় ধরে আমার বানানো অনুশীলন, আর উত্তরগুলো বইয়ের তথ্য থেকে আমার লেখা সহজ রূপ। পরীক্ষায় শিক্ষকের নির্দেশনা মেনে লিখবে।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; রাসায়নিক বন্ধন (অধ্যায় ৫)</footer>
+
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+/* =================== ল্যাব ১: যোজ্যতা ইলেকট্রন =================== */
+var EL=[
+ {s:'H',n:'হাইড্রোজেন',sh:[1],m:'x'},{s:'He',n:'হিলিয়াম',sh:[2],m:'n'},
+ {s:'Li',n:'লিথিয়াম',sh:[2,1],m:'m'},{s:'Be',n:'বেরিলিয়াম',sh:[2,2],m:'m'},
+ {s:'B',n:'বোরন',sh:[2,3],m:'x'},{s:'C',n:'কার্বন',sh:[2,4],m:'x'},
+ {s:'N',n:'নাইট্রোজেন',sh:[2,5],m:'a'},{s:'O',n:'অক্সিজেন',sh:[2,6],m:'a'},
+ {s:'F',n:'ফ্লুরিন',sh:[2,7],m:'a'},{s:'Ne',n:'নিয়ন',sh:[2,8],m:'n'},
+ {s:'Na',n:'সোডিয়াম',sh:[2,8,1],m:'m'},{s:'Mg',n:'ম্যাগনেসিয়াম',sh:[2,8,2],m:'m'},
+ {s:'Al',n:'অ্যালুমিনিয়াম',sh:[2,8,3],m:'m'},{s:'Si',n:'সিলিকন',sh:[2,8,4],m:'x'},
+ {s:'P',n:'ফসফরাস',sh:[2,8,5],m:'a'},{s:'S',n:'সালফার',sh:[2,8,6],m:'a'},
+ {s:'Cl',n:'ক্লোরিন',sh:[2,8,7],m:'a'},{s:'Ar',n:'আর্গন',sh:[2,8,8],m:'n'},
+ {s:'K',n:'পটাশিয়াম',sh:[2,8,8,1],m:'m'},{s:'Ca',n:'ক্যালসিয়াম',sh:[2,8,8,2],m:'m'}
+];
+EL.forEach(function(e,i){e.z=i+1;e.v=e.sh[e.sh.length-1];e.val=(e.m==='n')?0:(e.v<=4?e.v:8-e.v);});
+var AT={i:10};
+(function(){
+  var h='';EL.forEach(function(e,i){h+='<button data-i="'+i+'"><b>'+e.s+'</b><small>'+bn(e.z)+'</small></button>';});
+  $('elgrid').innerHTML=h;
+  $('elgrid').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;AT.i=+b.getAttribute('data-i');atInfo();};
+})();
+function atInfo(){
+  var e=EL[AT.i];
+  $('elgrid').querySelectorAll('button').forEach(function(b,i){b.classList.toggle('on',i===AT.i);});
+  var hint;
+  if(e.m==='n')hint='সর্বশেষ স্তর পূর্ণ, তাই এটি নিষ্ক্রিয় ও স্থিতিশীল। সাধারণত বন্ধন করে না।';
+  else if(e.s==='H')hint='একটি ইলেকট্রন আছে, আরেকটি পেলে হিলিয়ামের মতো (২টি) হয়। সাধারণত ইলেকট্রন শেয়ার করে।';
+  else if(e.m==='m')hint='ধাতু: সর্বশেষ স্তরের ইলেকট্রন ছেড়ে দিয়ে ক্যাটায়ন (ধনাত্মক আয়ন) হতে পারে।';
+  else if(e.m==='a')hint='অধাতু: ইলেকট্রন নিয়ে অ্যানায়ন (ঋণাত্মক আয়ন) হতে পারে, অথবা ইলেকট্রন শেয়ার করে।';
+  else hint='সাধারণত ইলেকট্রন শেয়ার করে সমযোজী বন্ধন গঠন করে।';
+  $('atinfo').innerHTML='<b style="font-size:19px;color:var(--navy)">'+e.n+' ('+e.s+')</b> &nbsp;<small>পরমাণু সংখ্যা '+bn(e.z)+'</small><br>ইলেকট্রন বিন্যাস: <b>'+e.sh.map(bn).join(', ')+'</b><br>যোজ্যতা ইলেকট্রন: <b style="color:#c47f0a">'+bn(e.v)+'টি</b><br>সাধারণ যোজনী: <b>'+bn(e.val)+'</b><p style="margin:6px 0 0">'+hint+'</p>';
+}
+function atDraw(){
+  var x=ctxOf('at'),e=EL[AT.i],t=performance.now()/1000;x.clearRect(0,0,380,300);
+  var cx=190,cy=150;
+  e.sh.forEach(function(c,i){
+    var r=40+26*i;x.strokeStyle='#cfd9e1';x.lineWidth=1.2;x.setLineDash([4,4]);x.beginPath();x.arc(cx,cy,r,0,7);x.stroke();x.setLineDash([]);
+    var last=(i===e.sh.length-1),w=(i%2?-1:1)*(0.9-0.12*i);
+    for(var j=0;j<c;j++){
+      var a=j*6.2832/c+t*w;var px=cx+r*Math.cos(a),py=cy+r*Math.sin(a);
+      if(last)circ(x,0,px,py,7.5,ORG,'#fff',1.5);else circ(x,0,px,py,5,BLU,'#fff',1);
+    }
+  });
+  circ(x,0,cx,cy,19,'#e63946','#fff',2);txt(x,bn(e.z)+'+',cx,cy,'bold 13px Hind Siliguri,sans-serif','#fff');
+  txt(x,'কমলা = যোজ্যতা ইলেকট্রন',190,288,'bold 13px Hind Siliguri,sans-serif','#c47f0a');
+}
+var VQ={cur:0,tot:0,right:0,done:false};
+function vqNew(){
+  var prev=VQ.cur;do{VQ.cur=Math.floor(Math.random()*EL.length);}while(VQ.cur===prev);VQ.done=false;
+  var e=EL[VQ.cur];
+  $('vq').innerHTML='<b>'+e.n+' ('+e.s+')</b> এর ইলেকট্রন বিন্যাস <b>'+e.sh.map(bn).join(', ')+'</b>। এর যোজ্যতা ইলেকট্রন কয়টি?';
+  var opts=[e.v];shuffle([1,2,3,4,5,6,7,8]).forEach(function(n){if(opts.length<4&&n!==e.v)opts.push(n);});
+  var h='';shuffle(opts).forEach(function(n){h+='<button data-n="'+n+'">'+bn(n)+'টি</button>';});$('vqo').innerHTML=h;
+  $('vqf').textContent='';$('vqs').textContent=VQ.tot?('স্কোর: '+bn(VQ.right)+' / '+bn(VQ.tot)):'';
+}
+$('vqo').onclick=function(ev){var b=ev.target.closest('button');if(!b||VQ.done)return;VQ.done=true;VQ.tot++;
+  var e=EL[VQ.cur],n=+b.getAttribute('data-n');
+  $('vqo').querySelectorAll('button').forEach(function(x){if(+x.getAttribute('data-n')===e.v)x.classList.add('ok');});
+  if(n===e.v){VQ.right++;$('vqf').textContent='✅ ঠিক! সর্বশেষ কক্ষপথে '+bn(e.v)+'টি।';}
+  else{b.classList.add('no');$('vqf').textContent='❌ সর্বশেষ কক্ষপথে আছে '+bn(e.v)+'টি।';}
+  $('vqs').textContent='স্কোর: '+bn(VQ.right)+' / '+bn(VQ.tot);setTimeout(vqNew,1700);};
+atInfo();vqNew();
+
+/* =================== ল্যাব ২: যৌগের সংকেত =================== */
+var CAT=[
+ {s:'Na',c:1,n:'সোডিয়াম',p:0},{s:'K',c:1,n:'পটাশিয়াম',p:0},{s:'NH₄',c:1,n:'অ্যামোনিয়াম',p:1},
+ {s:'Mg',c:2,n:'ম্যাগনেসিয়াম',p:0},{s:'Ca',c:2,n:'ক্যালসিয়াম',p:0},{s:'Zn',c:2,n:'জিংক',p:0},
+ {s:'Fe',c:2,n:'আয়রন (II)',p:0},{s:'Al',c:3,n:'অ্যালুমিনিয়াম',p:0},{s:'Fe',c:3,n:'আয়রন (III)',p:0}
+];
+var AN=[
+ {s:'Cl',c:1,n:'ক্লোরাইড',p:0},{s:'OH',c:1,n:'হাইড্রক্সাইড',p:1},{s:'NO₃',c:1,n:'নাইট্রেট',p:1},
+ {s:'O',c:2,n:'অক্সাইড',p:0},{s:'SO₄',c:2,n:'সালফেট',p:1},{s:'CO₃',c:2,n:'কার্বনেট',p:1},{s:'PO₄',c:3,n:'ফসফেট',p:1}
+];
+function ionLbl(o,sign){return o.s+(o.c>1?sup(o.c):'')+sign;}
+function part(o,n){if(n===1)return o.s;return o.p?('('+o.s+')'+sub(n)):(o.s+sub(n));}
+function build(ci,ai){var c=CAT[ci],a=AN[ai],g=gcd(c.c,a.c);var nc=a.c/g,na=c.c/g;
+  return {c:c,a:a,g:g,nc:nc,na:na,f:part(c,nc)+part(a,na),name:c.n+' '+a.n};}
+var CS={step:0,timer:null,b:null};
+(function(){
+  var h='';CAT.forEach(function(o,i){h+='<option value="'+i+'">'+ionLbl(o,'⁺')+' ('+o.n+')</option>';});$('cs').innerHTML=h;
+  h='';AN.forEach(function(o,i){h+='<option value="'+i+'">'+ionLbl(o,'⁻')+' ('+o.n+')</option>';});$('as').innerHTML=h;
+  var EX=[[0,0],[4,0],[7,3],[3,3],[3,6],[2,6],[7,4],[6,4]];
+  h='';EX.forEach(function(p){h+='<button class="btn alt" style="padding:4px 12px" data-c="'+p[0]+'" data-a="'+p[1]+'">'+build(p[0],p[1]).f+'</button>';});$('cex').innerHTML=h;
+  $('cex').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;$('cs').value=b.getAttribute('data-c');$('as').value=b.getAttribute('data-a');cStart();};
+})();
+function cSvg(step){
+  var b=CS.b,c=b.c,a=b.a;var wc=c.s.length*(c.p?15:17)+4,wa=a.s.length*(a.p?15:17)+4;
+  var x1=18,x2=130;var s='<g font-family="Hind Siliguri,sans-serif">';
+  s+='<text x="'+x1+'" y="66" font-size="32" font-weight="700" fill="'+NAVY+'">'+c.s+'</text><text x="'+x2+'" y="66" font-size="32" font-weight="700" fill="'+NAVY+'">'+a.s+'</text>';
+  s+='<text x="'+(x1+wc)+'" y="38" font-size="20" font-weight="700" fill="'+RED+'">'+bn(c.c)+'</text><text x="'+(x2+wa)+'" y="38" font-size="20" font-weight="700" fill="'+BLU+'">'+bn(a.c)+'</text>';
+  if(step>=2){
+    s+='<line x1="'+(x1+wc+6)+'" y1="42" x2="'+(x2+wa+4)+'" y2="88" stroke="'+ORG+'" stroke-width="2" stroke-dasharray="4 3"/>';
+    s+='<line x1="'+(x2+wa+6)+'" y1="42" x2="'+(x1+wc+4)+'" y2="88" stroke="'+ORG+'" stroke-width="2" stroke-dasharray="4 3"/>';
+    s+='<text x="'+(x1+wc)+'" y="100" font-size="20" font-weight="700" fill="'+BLU+'">'+bn(a.c)+'</text><text x="'+(x2+wa)+'" y="100" font-size="20" font-weight="700" fill="'+RED+'">'+bn(c.c)+'</text>';
+  }
+  return s+'</g>';
+}
+function cRender(){
+  var b=CS.b,st=CS.step,c=b.c,a=b.a;var h='<div class="stepper">';
+  ['প্রতীক ও যোজনী','আড়াআড়ি বিনিময়','সরলীকরণ','সংকেত','নাম'].forEach(function(n,i){h+='<span class="'+(i+1===st?'on':(i+1<st?'done':''))+'">'+bn(i+1)+'. '+n+'</span>';});h+='</div>';
+  var t='';
+  if(st>=1)t+='<p><b>ধাপ ১:</b> ধনাত্মক অংশ <b>'+ionLbl(c,'⁺')+'</b> (যোজনী '+bn(c.c)+'), ঋণাত্মক অংশ <b>'+ionLbl(a,'⁻')+'</b> (যোজনী '+bn(a.c)+')।</p>';
+  if(st>=2)t+='<p><b>ধাপ ২:</b> '+c.s+'-এর যোজনী '+bn(c.c)+' যাবে '+a.s+'-এর নিচে, আর '+a.s+'-এর যোজনী '+bn(a.c)+' যাবে '+c.s+'-এর নিচে → <b>'+c.s+sub(a.c)+' '+a.s+sub(c.c)+'</b></p>';
+  if(st>=3){if(b.g>1)t+='<p><b>ধাপ ৩:</b> '+bn(a.c)+' ও '+bn(c.c)+' দুটোকেই '+bn(b.g)+' দিয়ে ভাগ করা যায়। ভাগ করলে '+bn(b.nc)+' ও '+bn(b.na)+'।</p>';else t+='<p><b>ধাপ ৩:</b> সংখ্যা দুটো একই সংখ্যা দিয়ে ভাগ করা যায় না, তাই যেমন আছে তেমনই থাকে।</p>';}
+  if(st>=4)t+='<p><b>ধাপ ৪:</b> সংখ্যা ১ লিখি না। যৌগমূলক একাধিক থাকলে বন্ধনী দিই। সংকেত: <b style="font-size:20px">'+b.f+'</b><br><small>মোট ধনাত্মক আধান '+bn(b.nc)+'×'+bn(c.c)+' = '+bn(b.nc*c.c)+', মোট ঋণাত্মক আধান '+bn(b.na)+'×'+bn(a.c)+' = '+bn(b.na*a.c)+'। দুটো সমান, তাই যৌগটি নিস্তড়িৎ।</small></p>';
+  if(st>=5)t+='<p><b>নাম:</b> '+b.name+'</p>';
+  $('cstep').innerHTML=h+t;$('csvg').innerHTML=cSvg(st);
+  $('cform').textContent=st>=4?b.f:'';$('cname').textContent=st>=5?b.name:'';$('cname').style.display=st>=5?'block':'none';
+}
+function cStart(){
+  if(CS.timer)clearInterval(CS.timer);
+  CS.b=build(+$('cs').value,+$('as').value);CS.step=1;cRender();
+  CS.timer=setInterval(function(){CS.step++;cRender();if(CS.step>=5){clearInterval(CS.timer);CS.timer=null;}},1300);
+}
+$('cbuild').onclick=cStart;$('cs').onchange=cStart;$('as').onchange=cStart;
+var FQ={cur:null,done:false,tot:0,right:0};
+function fqNew(){
+  var ci=Math.floor(Math.random()*CAT.length),ai=Math.floor(Math.random()*AN.length);var b=build(ci,ai);FQ.cur=b;FQ.done=false;
+  var c=b.c,a=b.a;var cand=[b.f,part(c,a.c)+part(a,c.c),c.s+a.s,part(c,c.c)+part(a,a.c),part(c,b.na)+part(a,b.nc)];
+  var opts=[b.f];cand.forEach(function(f){if(opts.indexOf(f)<0)opts.push(f);});
+  var tries=0;while(opts.length<4&&tries<50){tries++;var q=build(Math.floor(Math.random()*CAT.length),Math.floor(Math.random()*AN.length)).f;if(opts.indexOf(q)<0)opts.push(q);}
+  opts=shuffle(opts.slice(0,4).indexOf(b.f)<0?[b.f].concat(opts.slice(1,4)):opts.slice(0,4));
+  $('fq').innerHTML='<b>'+ionLbl(c,'⁺')+'</b> ('+c.n+') আর <b>'+ionLbl(a,'⁻')+'</b> ('+a.n+') মিলে যে যৌগ হয় তার সংকেত কোনটি?';
+  var h='<div class="cls">';opts.forEach(function(f){h+='<button data-f="'+f+'" style="font-size:18px">'+f+'</button>';});$('fqo').innerHTML=h+'</div>';
+  $('fqf').textContent='';$('fqs').textContent=FQ.tot?('স্কোর: '+bn(FQ.right)+' / '+bn(FQ.tot)):'';
+}
+$('fqo').onclick=function(ev){var b=ev.target.closest('button');if(!b||FQ.done)return;FQ.done=true;FQ.tot++;
+  var f=b.getAttribute('data-f');$('fqo').querySelectorAll('button').forEach(function(x){if(x.getAttribute('data-f')===FQ.cur.f)x.classList.add('ok');});
+  if(f===FQ.cur.f){FQ.right++;$('fqf').textContent='✅ ঠিক! আড়াআড়ি বিনিময়ে '+FQ.cur.f+' হয়।';}
+  else{b.classList.add('no');$('fqf').textContent='❌ সঠিক সংকেত: '+FQ.cur.f;}
+  $('fqs').textContent='স্কোর: '+bn(FQ.right)+' / '+bn(FQ.tot);setTimeout(fqNew,1900);};
+$('cs').value=7;$('as').value=3;cStart();fqNew();
+
+/* =================== ল্যাব ৩: আয়নিক বন্ধন =================== */
+var IC=[
+ {k:'NaCl',n:'সোডিয়াম ক্লোরাইড',M:{s:'Na',sh:[2,8,1]},X:{s:'Cl',sh:[2,8,7]},num:1,mN:'Ne',xN:'Ar'},
+ {k:'MgO',n:'ম্যাগনেসিয়াম অক্সাইড',M:{s:'Mg',sh:[2,8,2]},X:{s:'O',sh:[2,6]},num:2,mN:'Ne',xN:'Ne'},
+ {k:'NaH',n:'সোডিয়াম হাইড্রাইড',M:{s:'Na',sh:[2,8,1]},X:{s:'H',sh:[1]},num:1,mN:'Ne',xN:'He'},
+ {k:'CaO',n:'ক্যালসিয়াম অক্সাইড',M:{s:'Ca',sh:[2,8,8,2]},X:{s:'O',sh:[2,6]},num:2,mN:'Ar',xN:'Ne'},
+ {k:'LiF',n:'লিথিয়াম ফ্লুরাইড',M:{s:'Li',sh:[2,1]},X:{s:'F',sh:[2,7]},num:1,mN:'He',xN:'Ne'}
+];
+var IS={run:false,t0:0,last:-1};
+(function(){var h='';IC.forEach(function(c,i){h+='<option value="'+i+'">'+c.k+' ('+c.n+')</option>';});$('ic').innerHTML=h;})();
+function iReset(){IS.run=false;IS.last=-1;}
+$('igo').onclick=function(){IS.run=true;IS.t0=performance.now();IS.last=-1;};
+$('ireset').onclick=iReset;$('ic').onchange=iReset;
+function rr(i){return 18+12*i;}
+function ionDraw(){
+  var c=IC[+$('ic').value],x=ctxOf('ion'),now=performance.now()/1000;x.clearRect(0,0,380,250);
+  var tt=IS.run?(performance.now()-IS.t0)/1000:0;
+  var p1=IS.run?clamp((tt-1)/2.5,0,1):0,p2=IS.run?ease((tt-3.6)/2):0;
+  var n=c.num,my=118,mx=lerp(88,138,p2),xx=lerp(292,244,p2);
+  var mS=c.M.sh,xS=c.X.sh,mo=mS.length-1,xo=xS.length-1;
+  var phase=!IS.run?0:(tt<1?0:(tt<3.5?1:(tt<5.6?2:3)));
+  var done1=p1>=1;
+  // বৃত্তাকার ছায়া (আয়ন হলে)
+  if(done1){circ(x,0,mx,my,rr(mo-(mS[mo]-n===0?1:0))+10,'rgba(230,57,70,.12)',null);circ(x,0,xx,my,rr(xo)+10,'rgba(43,108,176,.14)',null);}
+  // ধাতু
+  mS.forEach(function(cnt,i){
+    var last=i===mo,keep=cnt;if(last){keep=cnt-n;}
+    if(last&&done1&&keep===0)return;
+    x.strokeStyle='#cfd9e1';x.setLineDash([4,4]);x.lineWidth=1.2;x.beginPath();x.arc(mx,my,rr(i),0,7);x.stroke();x.setLineDash([]);
+    var w=(i%2?-1:1)*(0.9-0.12*i);
+    for(var j=0;j<keep;j++){var a=j*6.2832/Math.max(keep,1)+now*w;circ(x,0,mx+rr(i)*Math.cos(a),my+rr(i)*Math.sin(a),last?6:4.5,last?ORG:'#7fa7d6','#fff',1);}
+  });
+  // অধাতু
+  xS.forEach(function(cnt,i){
+    var last=i===xo;var tot=cnt+(last&&done1?n:0);
+    x.strokeStyle='#cfd9e1';x.setLineDash([4,4]);x.lineWidth=1.2;x.beginPath();x.arc(xx,my,rr(i),0,7);x.stroke();x.setLineDash([]);
+    var w=(i%2?-1:1)*(0.9-0.12*i);
+    for(var j=0;j<tot;j++){var a=j*6.2832/tot+now*w;var own=!(last&&done1&&j>=cnt);
+      circ(x,0,xx+rr(i)*Math.cos(a),my+rr(i)*Math.sin(a),last?6:4.5,own?(last?BLU:'#7fa7d6'):ORG,'#fff',1);}
+  });
+  // স্থানান্তরিত ইলেকট্রন
+  if(p1>0&&p1<1){
+    for(var k=0;k<n;k++){
+      var off=n===1?0:(k?0.5:-0.5);
+      var sx=mx+rr(mo)*Math.cos(off*0.6),sy=my+rr(mo)*Math.sin(off*0.6);
+      var ex=xx+rr(xo)*Math.cos(Math.PI-off*0.6),ey=my+rr(xo)*Math.sin(Math.PI-off*0.6);
+      var q=ease(p1);var px=lerp(sx,ex,q),py=lerp(sy,ey,q)-Math.sin(Math.PI*q)*(24+off*14);
+      circ(x,0,px,py,7,ORG,'#fff',1.5);
+    }
+  }
+  // নিউক্লিয়াস
+  circ(x,0,mx,my,13,RED,'#fff',2);txt(x,c.M.s,mx,my,'bold 12px Hind Siliguri,sans-serif','#fff');
+  circ(x,0,xx,my,13,'#3d7fc4','#fff',2);txt(x,c.X.s,xx,my,'bold 12px Hind Siliguri,sans-serif','#fff');
+  // লেবেল
+  var mCfg=mS.slice();mCfg[mo]-=n;if(mCfg[mo]===0)mCfg.pop();
+  var xCfg=xS.slice();xCfg[xo]+=n;
+  if(done1){
+    txt(x,c.M.s+(n>1?sup(n):'')+'⁺',mx,26,'bold 20px Hind Siliguri,sans-serif',RED);txt(x,'('+mCfg.map(bn).join(',')+') '+c.mN+'-এর মতো',mx,205,'13px Hind Siliguri,sans-serif',NAVY);
+    txt(x,c.X.s+(n>1?sup(n):'')+'⁻',xx,26,'bold 20px Hind Siliguri,sans-serif',BLU);txt(x,'('+xCfg.map(bn).join(',')+') '+c.xN+'-এর মতো',xx,205,'13px Hind Siliguri,sans-serif',NAVY);
+  }else{
+    txt(x,c.M.s,mx,26,'bold 18px Hind Siliguri,sans-serif',NAVY);txt(x,'('+mS.map(bn).join(',')+')',mx,205,'13px Hind Siliguri,sans-serif',NAVY);
+    txt(x,c.X.s,xx,26,'bold 18px Hind Siliguri,sans-serif',NAVY);txt(x,'('+xS.map(bn).join(',')+')',xx,205,'13px Hind Siliguri,sans-serif',NAVY);
+  }
+  if(phase>=2){var al=0.5+0.5*Math.sin(now*6);txt(x,'⇄ আকর্ষণ',(mx+xx)/2,62,'bold 13px Hind Siliguri,sans-serif','rgba(31,58,95,'+(0.5+al*0.5)+')');}
+  if(phase===3){txt(x,c.k+' (আয়নিক বন্ধন)',190,232,'bold 17px Hind Siliguri,sans-serif','#1d7a6f');}
+  if(IS.last!==phase){IS.last=phase;
+    var mn=c.M.s,xn=c.X.s,ms=n>1?sup(n)+'⁺':'⁺',xs=n>1?sup(n)+'⁻':'⁻';
+    var e=n>1?(bn(n)+'e⁻'):'e⁻';
+    var T=[
+     '<b>'+c.M.s+'</b> ধাতু: সর্বশেষ স্তরে '+bn(mS[mo])+'টি ইলেকট্রন। <b>'+c.X.s+'</b> অধাতু: সর্বশেষ স্তরে '+bn(xS[xo])+'টি। "বন্ধন গঠন করো" চাপো।',
+     '<b>'+mn+'</b> তার সর্বশেষ স্তরের '+bn(n)+'টি ইলেকট্রন (কমলা) ছেড়ে দিচ্ছে, আর <b>'+xn+'</b> সেটা নিচ্ছে।<br>'+mn+' → '+mn+ms+' + '+e+'<br>'+xn+' + '+e+' → '+xn+xs,
+     mn+' হয়েছে ক্যাটায়ন <b>'+mn+ms+'</b> (ধনাত্মক), '+xn+' হয়েছে অ্যানায়ন <b>'+xn+xs+'</b> (ঋণাত্মক)। দুজনেরই সর্বশেষ স্তর এখন নিষ্ক্রিয় গ্যাসের মতো পূর্ণ। বিপরীত আধান পরস্পরকে টানছে।',
+     'ক্যাটায়ন আর অ্যানায়নের এই <b>স্থির তড়িৎ আকর্ষণই আয়নিক বন্ধন</b>। এভাবে তৈরি হলো <b>'+c.k+'</b> ('+c.n+')।<br>'+mn+ms+' + '+xn+xs+' → '+c.k
+    ];
+    $('iinfo').innerHTML=T[phase];
+  }
+}
+
+/* =================== ল্যাব ৪: সমযোজী বন্ধন =================== */
+var H1={s:'H',v:1};
+var MOL=[
+ {k:'H₂',n:'হাইড্রোজেন',c:{s:'H',v:1},L:[{s:'H',v:1,b:1}]},
+ {k:'Cl₂',n:'ক্লোরিন',c:{s:'Cl',v:7},L:[{s:'Cl',v:7,b:1}]},
+ {k:'O₂',n:'অক্সিজেন',c:{s:'O',v:6},L:[{s:'O',v:6,b:2}]},
+ {k:'HCl',n:'হাইড্রোজেন ক্লোরাইড',c:{s:'H',v:1},L:[{s:'Cl',v:7,b:1}]},
+ {k:'H₂O',n:'পানি',c:{s:'O',v:6},L:[{s:'H',v:1,b:1},{s:'H',v:1,b:1}]},
+ {k:'NH₃',n:'অ্যামোনিয়া',c:{s:'N',v:5},L:[{s:'H',v:1,b:1},{s:'H',v:1,b:1},{s:'H',v:1,b:1}]},
+ {k:'CH₄',n:'মিথেন',c:{s:'C',v:4},L:[{s:'H',v:1,b:1},{s:'H',v:1,b:1},{s:'H',v:1,b:1},{s:'H',v:1,b:1}]}
+];
+var MS={run:false,t0:0,last:-1};
+(function(){var h='';MOL.forEach(function(m,i){h+='<option value="'+i+'">'+m.k+' ('+m.n+')</option>';});$('mc').innerHTML=h;})();
+function mReset(){MS.run=false;MS.last=-1;}
+$('mgo').onclick=function(){MS.run=true;MS.t0=performance.now();MS.last=-1;};
+$('mreset').onclick=mReset;$('mc').onchange=mReset;
+var RR=36,DF=66;
+function lonePositions(blocked,pairs){
+  var out=[];var cand=[];for(var a=0;a<360;a+=15)cand.push(a*Math.PI/180);
+  var used=blocked.slice();
+  function dist(a,b){var d=Math.abs(a-b)%(2*Math.PI);return d>Math.PI?2*Math.PI-d:d;}
+  for(var k=0;k<pairs;k++){
+    var best=0,bd=-1;cand.forEach(function(a){var m=9;used.forEach(function(u){m=Math.min(m,dist(a,u));});if(m>bd){bd=m;best=a;}});
+    out.push(best);used.push(best);
+  }
+  return out;
+}
+function molLayout(m,prog1){
+  var n=m.L.length,ang;
+  if(n===1)ang=[0];else if(n===2)ang=[Math.PI/4,3*Math.PI/4];else if(n===3)ang=[-Math.PI/2,Math.PI/6,5*Math.PI/6];else ang=[0,Math.PI/2,Math.PI,-Math.PI/2];
+  var d=lerp(n===1?175:96,DF,ease(prog1));var cx,cy;
+  var pts=[];
+  if(n===1){cx=190-d/2;cy=135;pts.push({x:190+d/2,y:135});}
+  else{cx=190;cy=(n===3)?148:(n===2?100:135);ang.forEach(function(a){pts.push({x:cx+d*Math.cos(a),y:cy+d*Math.sin(a)});});}
+  return {c:{x:cx,y:cy},L:pts,ang:ang,d:d};
+}
+function molElectrons(m,lay,prog2,now){
+  // প্রতিটি পরমাণুর ইলেকট্রনের অবস্থান
+  var res=[];
+  function atomEls(at,pos,dirs,isC,col){
+    var bTot=0;dirs.forEach(function(d){bTot+=d.b;});
+    var lone=at.v-bTot,pairs=Math.floor(lone/2);
+    var finals=[];
+    dirs.forEach(function(d){
+      var mx=(pos.x+d.other.x)/2,my=(pos.y+d.other.y)/2;var ux=Math.cos(d.ang),uy=Math.sin(d.ang);var px=-uy,py=ux;
+      for(var q=0;q<d.b;q++){var o=(q-(d.b-1)/2)*11;var side=isC?-4:4;
+        finals.push({x:mx+px*o+ux*side,y:my+py*o+uy*side,bond:true});}
+    });
+    var lp=lonePositions(dirs.map(function(d){return isC?d.ang:d.ang+Math.PI;}),pairs);
+    lp.forEach(function(a){[-0.17,0.17].forEach(function(da){finals.push({x:pos.x+RR*Math.cos(a+da),y:pos.y+RR*Math.sin(a+da),bond:false});});});
+    for(var i=0;i<at.v;i++){
+      var a0=-Math.PI/2+i*2*Math.PI/at.v+now*0.7;
+      var ring={x:pos.x+RR*Math.cos(a0),y:pos.y+RR*Math.sin(a0)};
+      var f=finals[i]||ring;
+      res.push({x:lerp(ring.x,f.x,prog2),y:lerp(ring.y,f.y,prog2),col:col,bond:f.bond&&prog2>0.95});
+    }
+  }
+  // কেন্দ্র
+  var cd=[];m.L.forEach(function(L,j){cd.push({b:L.b,ang:lay.ang[j],other:lay.L[j]});});
+  atomEls(m.c,lay.c,cd,true,ORG);
+  m.L.forEach(function(L,j){atomEls(L,lay.L[j],[{b:L.b,ang:lay.ang[j],other:lay.c}],false,BLU);});
+  return res;
+}
+function molDraw(){
+  var m=MOL[+$('mc').value],x=ctxOf('cv'),now=performance.now()/1000;x.clearRect(0,0,380,260);
+  var tt=MS.run?(performance.now()-MS.t0)/1000:0;
+  var p1=MS.run?clamp((tt-0.8)/2,0,1):0,p2=MS.run?ease((tt-3)/1.8):0;
+  var phase=!MS.run?0:(tt<0.8?0:(tt<3?1:(tt<4.8?2:3)));
+  var lay=molLayout(m,p1);
+  // বন্ধন রেখা
+  if(phase>=3){
+    lay.L.forEach(function(p,j){var b=m.L[j].b;var ux=Math.cos(lay.ang[j]),uy=Math.sin(lay.ang[j]);
+      for(var q=0;q<b;q++){var o=(q-(b-1)/2)*7;x.strokeStyle='rgba(31,58,95,.55)';x.lineWidth=3;x.beginPath();x.moveTo(lay.c.x-uy*o,lay.c.y+ux*o);x.lineTo(p.x-uy*o,p.y+ux*o);x.stroke();}});
+  }
+  // রিং
+  function atomBody(pos,at,col){circ(x,0,pos.x,pos.y,RR,'rgba(255,255,255,.35)','#b9c6d1',1.4);circ(x,0,pos.x,pos.y,13,col,'#fff',2);txt(x,at.s,pos.x,pos.y,'bold 13px Hind Siliguri,sans-serif','#fff');}
+  atomBody(lay.c,m.c,'#c47f0a');lay.L.forEach(function(p,j){atomBody(p,m.L[j],'#3d7fc4');});
+  var els=molElectrons(m,lay,p2,now);
+  els.forEach(function(e){if(e.bond)circ(x,0,e.x,e.y,8,'rgba(42,157,143,.25)',null);circ(x,0,e.x,e.y,4.6,e.col,'#fff',1.2);});
+  if(MS.last!==phase){MS.last=phase;
+    var tb=0;m.L.forEach(function(L){tb+=L.b;});
+    var T=[
+     m.c.s+' পরমাণুর সর্বশেষ স্তরে '+bn(m.c.v)+'টি, প্রতিটি '+m.L[0].s+'-এর '+bn(m.L[0].v)+'টি ইলেকট্রন (কমলা = '+m.c.s+'-এর, নীল = '+m.L[0].s+'-এর)। "বন্ধন গঠন করো" চাপো।',
+     'পরমাণুগুলো কাছে আসছে। সর্বশেষ স্তরের (বৃত্তের) ইলেকট্রন ঘুরছে।',
+     'ইলেকট্রনগুলো দুই পরমাণুর মাঝে এসে জোড় বাঁধছে, দুজনেই ভাগাভাগি করে নিচ্ছে।',
+     '<b>'+m.k+'</b> ('+m.n+') তৈরি হলো। শেয়ার করা জোড়গুলো মাঝখানে, দুই পরমাণুই সেগুলো নিজের বলে গণনা করে। আয়ন তৈরি হয়নি, কোনো আধানও নেই।'
+    ];
+    $('minfo').innerHTML=T[phase];
+    var h='';
+    if(phase===3){
+      var seen={};function chip(at,tot,b){var key=at.s+tot;if(seen[key])return;seen[key]=1;h+='<span class="chip">'+at.s+': '+bn(tot)+'টি '+(tot===2?'(দুইয়ের নিয়ম ✔)':'(অষ্টক ✔)')+'</span>';}
+      chip(m.c,m.c.v-tb+2*tb,0);m.L.forEach(function(L){chip(L,L.v-L.b+2*L.b,0);});
+      var bt=m.L.map(function(L){return L.b;}),mx=Math.max.apply(null,bt);
+      h+='<span class="chip">'+(mx===1?'একক বন্ধন (–)':'দ্বিবন্ধন (=)')+'</span>';
+    }
+    $('mchips').innerHTML=h;
+  }
+  if(m.k==='CH₄'&&phase===3)txt(x,'ছবি সমতলে আঁকা, আসলে CH₄ ত্রিমাত্রিক',190,248,'12px Hind Siliguri,sans-serif','#5b6770');
+}
+var KQ=[
+ {k:'NaCl',a:'ion',w:'Na ধাতু + Cl অধাতু: ইলেকট্রন স্থানান্তর হয়।'},{k:'MgO',a:'ion',w:'Mg ধাতু + O অধাতু।'},{k:'CaO',a:'ion',w:'Ca ধাতু + O অধাতু।'},
+ {k:'KCl',a:'ion',w:'K ধাতু + Cl অধাতু।'},{k:'NaH',a:'ion',w:'Na ধাতু + H: Na ইলেকট্রন দেয়, H নেয় (H⁻)।'},{k:'CaCl₂',a:'ion',w:'Ca ধাতু + Cl অধাতু।'},
+ {k:'H₂O',a:'cov',w:'H ও O দুটোই অধাতু, ইলেকট্রন শেয়ার করে।'},{k:'CH₄',a:'cov',w:'C ও H দুটোই অধাতু।'},{k:'HCl',a:'cov',w:'H ও Cl দুটোই অধাতু।'},
+ {k:'NH₃',a:'cov',w:'N ও H দুটোই অধাতু।'},{k:'O₂',a:'cov',w:'একই অধাতুর দুই পরমাণু ইলেকট্রন শেয়ার করে (দ্বিবন্ধন)।'},{k:'Cl₂',a:'cov',w:'দুই Cl পরমাণু এক জোড়া ইলেকট্রন শেয়ার করে।'},
+ {k:'CO₂',a:'cov',w:'C ও O দুটোই অধাতু।'}
+];
+var KS={cur:-1,done:false,tot:0,right:0};
+function kqNew(){var p=KS.cur;do{KS.cur=Math.floor(Math.random()*KQ.length);}while(KS.cur===p);KS.done=false;
+  $('kq').innerHTML='<span style="font-size:22px;font-weight:700">'+KQ[KS.cur].k+'</span> এর বন্ধন কোন ধরনের?';
+  $('kqo').querySelectorAll('button').forEach(function(b){b.classList.remove('ok','no');});$('kqf').textContent='';}
+$('kqo').onclick=function(ev){var b=ev.target.closest('button');if(!b||KS.done)return;KS.done=true;KS.tot++;var q=KQ[KS.cur];
+  var a=b.getAttribute('data-a');$('kqo').querySelectorAll('button').forEach(function(x){if(x.getAttribute('data-a')===q.a)x.classList.add('ok');});
+  if(a===q.a){KS.right++;$('kqf').textContent='✅ ঠিক! '+q.w;}else{b.classList.add('no');$('kqf').textContent='❌ এটা '+(q.a==='ion'?'আয়নিক':'সমযোজী')+'। '+q.w;}
+  $('kqs').textContent='স্কোর: '+bn(KS.right)+' / '+bn(KS.tot);setTimeout(kqNew,2200);};
+kqNew();
+
+/* =================== ল্যাব ৫ক: দ্রাব্যতা =================== */
+var SOLS=[
+ {n:'খাদ্য লবণ NaCl (আয়নিক)',t:'ion',diss:true,say:'পানির অণুর ঋণাত্মক প্রান্ত (O) Na⁺-কে আর ধনাত্মক প্রান্ত (H) Cl⁻-কে টানে। এই আকর্ষণ আয়ন-আয়নের আকর্ষণের চেয়ে বেশি, তাই আয়নগুলো আলাদা হয়ে পানির অণুতে ঘেরা অবস্থায় ছড়িয়ে পড়ছে। দ্রবীভূত হলো ✅'},
+ {n:'চিনি (সমযোজী, পোলার)',t:'cov',diss:true,say:'চিনি সমযোজী যৌগ, কিন্তু পোলার, তাই পানিতে দ্রবীভূত হয়। এখানে আয়ন তৈরি হয় না, আস্ত অণুগুলো ছড়িয়ে যাচ্ছে। (বইয়ের ব্যতিক্রম: সমযোজী হলেও চিনি, গ্লুকোজ, ইথানল দ্রবীভূত হয়।) ✅'},
+ {n:'ন্যাপথলিন (সমযোজী)',t:'cov',diss:false,say:'ন্যাপথলিনের অণুগুলো পানির সাথে মিশতে পারে না। বেশির ভাগ সমযোজী যৌগ পানিতে দ্রবীভূত হয় না। ❌'},
+ {n:'AgCl (আয়নিক, ব্যতিক্রম)',t:'ion',diss:false,say:'বেশির ভাগ আয়নিক যৌগ দ্রবীভূত হয়, কিন্তু AgCl ব্যতিক্রম। এর আয়নগুলোর আকর্ষণ পানির টান ভাঙতে পারে না, তাই কেলাস থেকে যায়। ❌'}
+];
+var SS={run:false,t0:0,parts:[],water:[],rel:0};
+(function(){var h='';SOLS.forEach(function(s,i){h+='<option value="'+i+'">'+s.n+'</option>';});$('ss').innerHTML=h;
+  for(var i=0;i<26;i++)SS.water.push({x:rnd(55,325),y:rnd(105,240),vx:rnd(-.5,.5),vy:rnd(-.5,.5),a:rnd(0,6.28)});})();
+function sReset(){
+  var s=SOLS[+$('ss').value];SS.run=false;SS.parts=[];SS.rel=0;
+  for(var r=0;r<3;r++)for(var c=0;c<6;c++){
+    SS.parts.push({hx:190-35+c*14,hy:236-r*14,x:190-35+c*14,y:236-r*14,free:false,vx:0,vy:0,ty:s.t==='ion'?((r+c)%2?1:-1):0,ph:rnd(0,6.28)});}
+  SS.order=shuffle(SS.parts.map(function(_,i){return i;})).sort(function(a,b){return SS.parts[a].hy+rnd(0,10)-(SS.parts[b].hy+rnd(0,10));});
+  $('stxt').textContent='"পানিতে দাও" চাপো। '+s.n+' পানিতে দিলে কী হয় দেখো।';
+}
+$('sgo').onclick=function(){if(SS.run)return;SS.run=true;SS.t0=performance.now();SS.rel=0;var s=SOLS[+$('ss').value];$('stxt').textContent=s.diss?'পানিতে মেশানো হচ্ছে… দেখো কী হয়।':s.say;};
+$('sreset').onclick=sReset;$('ss').onchange=sReset;sReset();
+function solDraw(){
+  var x=ctxOf('sol'),s=SOLS[+$('ss').value],now=performance.now()/1000;x.clearRect(0,0,380,280);
+  x.fillStyle='rgba(120,180,235,.35)';x.fillRect(40,95,300,155);
+  x.strokeStyle='#5b6770';x.lineWidth=3;x.beginPath();x.moveTo(40,40);x.lineTo(40,250);x.lineTo(340,250);x.lineTo(340,40);x.stroke();
+  txt(x,'পানি',68,112,'bold 13px Hind Siliguri,sans-serif','#2b6cb0');
+  SS.water.forEach(function(w){w.x+=w.vx;w.y+=w.vy;w.a+=0.02;w.vx+=rnd(-.08,.08);w.vy+=rnd(-.08,.08);w.vx=clamp(w.vx,-.7,.7);w.vy=clamp(w.vy,-.7,.7);
+    if(w.x<52||w.x>328)w.vx*=-1;if(w.y<104||w.y>242)w.vy*=-1;
+    circ(x,0,w.x,w.y,4,'#a8cdf0',null);circ(x,0,w.x+5*Math.cos(w.a),w.y+5*Math.sin(w.a),2,'#e8eef3','#8fb4d8',.6);circ(x,0,w.x+5*Math.cos(w.a+1.9),w.y+5*Math.sin(w.a+1.9),2,'#e8eef3','#8fb4d8',.6);});
+  if(SS.run&&s.diss){var el=(performance.now()-SS.t0)/1000;var want=Math.min(SS.order.length,Math.floor(el/0.22));
+    while(SS.rel<want){var p=SS.parts[SS.order[SS.rel++]];p.free=true;p.vx=rnd(-1,1);p.vy=rnd(-1,1);}}
+  SS.parts.forEach(function(p){
+    if(p.free){p.vx+=rnd(-.18,.18);p.vy+=rnd(-.18,.18);p.vx=clamp(p.vx,-1.1,1.1);p.vy=clamp(p.vy,-1.1,1.1);p.x+=p.vx;p.y+=p.vy;
+      if(p.x<55||p.x>325)p.vx*=-1;if(p.y<108||p.y>240)p.vy*=-1;p.x=clamp(p.x,52,328);p.y=clamp(p.y,105,243);
+    }else{p.x=p.hx+Math.sin(now*5+p.ph)*0.8;p.y=p.hy+Math.cos(now*5+p.ph)*0.8;}
+    var col=p.ty>0?RED:(p.ty<0?BLU:(s.n.indexOf('ন্যাপ')===0?'#b8a9d9':'#9aa5ad'));
+    if(p.free&&p.ty!==0){for(var k=0;k<4;k++){var a=now*2+k*1.57;circ(x,0,p.x+12*Math.cos(a),p.y+12*Math.sin(a),3,'rgba(168,205,240,.9)','#7fa7d6',.8);}}
+    circ(x,0,p.x,p.y,p.ty?6.5:6,col,'#fff',1);
+    if(p.ty)txt(x,p.ty>0?'+':'−',p.x,p.y,'bold 10px sans-serif','#fff');
+  });
+}
+
+/* =================== ল্যাব ৫খ: বিদ্যুৎ পরিবাহিতা =================== */
+var CDS=[{n:'লবণের জলীয় দ্রবণ (NaCl)',t:'ion'},{n:'চিনির জলীয় দ্রবণ',t:'sug'},{n:'শুকনো কঠিন লবণের কেলাস',t:'sol'}];
+var CD={on:false,parts:[]};
+(function(){var h='';CDS.forEach(function(s,i){h+='<option value="'+i+'">'+s.n+'</option>';});$('cds').innerHTML=h;})();
+function cdSetup(){
+  var t=CDS[+$('cds').value].t;CD.parts=[];CD.on=false;$('cdsw').textContent='🔌 সুইচ অন';
+  if(t==='sol'){for(var r=0;r<3;r++)for(var c=0;c<6;c++)CD.parts.push({x:150+c*16,y:218-r*16,hx:150+c*16,hy:218-r*16,ty:(r+c)%2?1:-1,vx:0,vy:0});}
+  else for(var i=0;i<18;i++)CD.parts.push({x:rnd(125,255),y:rnd(145,222),vx:rnd(-1,1),vy:rnd(-1,1),ty:t==='ion'?(i%2?1:-1):0});
+  cdText();
+}
+function cdText(){var t=CDS[+$('cds').value].t;
+  if(!CD.on){$('cdtxt').textContent='সুইচ অন করে দেখো বাল্ব জ্বলে কি না।';return;}
+  $('cdtxt').textContent=t==='ion'?'বাল্ব জ্বলছে! জলীয় দ্রবণে Na⁺ আর Cl⁻ আয়ন মুক্তভাবে চলতে পারে। Na⁺ ঋণাত্মক (বাঁ) ইলেকট্রোডের দিকে, Cl⁻ ধনাত্মক (ডান) ইলেকট্রোডের দিকে যাচ্ছে। এভাবেই আয়নিক যৌগের দ্রবণ বিদ্যুৎ পরিবহন করে।':
+   (t==='sug'?'বাল্ব জ্বলছে না। চিনি সমযোজী যৌগ, দ্রবণে কোনো আয়ন নেই, শুধু আস্ত অণু আছে। চার্জ বহন করার মতো কিছু নেই।':
+   'বাল্ব জ্বলছে না। (বাড়তি তথ্য: কঠিন কেলাসে আয়নগুলো নিজ জায়গায় আটকে থাকে, চলতে পারে না। বইয়ে শুধু জলীয় দ্রবণের কথা আছে।)');}
+$('cds').onchange=cdSetup;$('cdsw').onclick=function(){CD.on=!CD.on;$('cdsw').textContent=CD.on?'🔌 সুইচ অফ':'🔌 সুইচ অন';cdText();};
+function polyAt(pts,s){var L=[],tot=0;for(var i=1;i<pts.length;i++){var d=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);L.push(d);tot+=d;}
+  s=((s%tot)+tot)%tot;for(var j=0;j<L.length;j++){if(s<=L[j]){var f=s/L[j];return [lerp(pts[j][0],pts[j+1][0],f),lerp(pts[j][1],pts[j+1][1],f)];}s-=L[j];}return pts[pts.length-1];}
+function cdDraw(){
+  var x=ctxOf('cdc'),t=CDS[+$('cds').value].t,now=performance.now()/1000;x.clearRect(0,0,380,270);
+  var conduct=CD.on&&t==='ion';
+  if(t!=='sol'){x.fillStyle='rgba(120,180,235,.35)';x.fillRect(72,128,236,110);}
+  x.strokeStyle='#5b6770';x.lineWidth=3;x.beginPath();x.moveTo(70,120);x.lineTo(70,240);x.lineTo(310,240);x.lineTo(310,120);x.stroke();
+  x.strokeStyle='#444';x.lineWidth=3;x.beginPath();x.moveTo(110,40);x.lineTo(110,90);x.moveTo(110,90);x.lineTo(110,90);x.stroke();
+  // তার
+  x.strokeStyle='#6b7680';x.lineWidth=2.5;x.beginPath();x.moveTo(110,205);x.lineTo(110,40);x.lineTo(170,40);x.moveTo(200,40);x.lineTo(216,40);x.moveTo(248,40);x.lineTo(270,40);x.lineTo(270,205);x.stroke();
+  // ইলেকট্রোড
+  x.fillStyle='#4a5560';x.fillRect(106,95,8,125);x.fillRect(266,95,8,125);
+  // ব্যাটারি
+  x.fillStyle='#2a9d8f';x.fillRect(170,28,30,24);txt(x,'−',178,40,'bold 16px sans-serif','#fff');txt(x,'+',193,40,'bold 16px sans-serif','#fff');
+  // বাল্ব
+  circ(x,0,232,40,16,conduct?'#ffe45e':'#f1f4f6','#6b7680',2.5);
+  if(conduct){for(var k=0;k<8;k++){var a=k*0.785;x.strokeStyle='#f4c430';x.lineWidth=2;x.beginPath();x.moveTo(232+21*Math.cos(a),40+21*Math.sin(a));x.lineTo(232+30*Math.cos(a),40+30*Math.sin(a));x.stroke();}}
+  txt(x,'বাল্ব',232,66,'12px Hind Siliguri,sans-serif',NAVY);
+  txt(x,'ঋণাত্মক',110,262,'bold 12px Hind Siliguri,sans-serif',BLU);txt(x,'ধনাত্মক',270,262,'bold 12px Hind Siliguri,sans-serif',RED);
+  if(conduct){
+    var P1=[[170,40],[110,40],[110,100]],P2=[[270,100],[270,40],[248,40]];
+    for(var q=0;q<4;q++){var a1=polyAt(P1,(now*50+q*28)%112),a2=polyAt(P2,(now*50+q*28)%112);circ(x,0,a1[0],a1[1],3.5,ORG,'#fff',1);circ(x,0,a2[0],a2[1],3.5,ORG,'#fff',1);}
+  }
+  CD.parts.forEach(function(p){
+    if(t==='sol'){circ(x,0,p.x,p.y,7,p.ty>0?RED:BLU,'#fff',1);txt(x,p.ty>0?'+':'−',p.x,p.y,'bold 11px sans-serif','#fff');return;}
+    var bias=CD.on&&t==='ion'?(p.ty>0?-0.6:0.6):0;
+    p.vx+=rnd(-.2,.2)+bias*0.05;p.vy+=rnd(-.2,.2);p.vx=clamp(p.vx,-1.2+bias,1.2+bias);p.vy=clamp(p.vy,-1.1,1.1);
+    p.x+=p.vx;p.y+=p.vy;if(p.x<122)p.x=122,p.vx=Math.abs(p.vx);if(p.x>258)p.x=258,p.vx=-Math.abs(p.vx);if(p.y<135)p.vy=Math.abs(p.vy);if(p.y>230)p.vy=-Math.abs(p.vy);
+    if(t==='ion'){circ(x,0,p.x,p.y,7,p.ty>0?RED:BLU,'#fff',1);txt(x,p.ty>0?'+':'−',p.x,p.y,'bold 11px sans-serif','#fff');}
+    else circ(x,0,p.x,p.y,6,'#9aa5ad','#fff',1);
+  });
+  if(t==='ion')txt(x,'লাল = Na⁺ , নীল = Cl⁻',190,255,'12px Hind Siliguri,sans-serif','#5b6770');
+}
+
+/* =================== ল্যাব ৫গ: গলনাঙ্ক =================== */
+var MEL={cov:[],ion:[]};
+(function(){
+  for(var r=0;r<4;r++)for(var c=0;c<6;c++){
+    var hy=170-r*24;
+    MEL.cov.push({hx:30+c*26,hy:hy,x:30+c*26,y:hy,vx:0,vy:0});
+    MEL.ion.push({hx:210+c*26,hy:hy,x:210+c*26,y:hy,vx:0,vy:0,ty:(r+c)%2?1:-1});
+  }
+})();
+function meltStep(arr,melted,amp,x0,x1,y0,y1){
+  arr.forEach(function(p){
+    if(!melted){p.x=lerp(p.x,p.hx+(Math.random()-.5)*amp*2,0.35);p.y=lerp(p.y,p.hy+(Math.random()-.5)*amp*2,0.35);p.vx=rnd(-1,1);p.vy=rnd(-1,1);}
+    else{p.vx+=rnd(-.35,.35);p.vy+=rnd(-.35,.35);p.vx=clamp(p.vx,-2,2);p.vy=clamp(p.vy,-2,2);p.x+=p.vx;p.y+=p.vy;
+      if(p.x<x0){p.x=x0;p.vx=Math.abs(p.vx);}if(p.x>x1){p.x=x1;p.vx=-Math.abs(p.vx);}if(p.y<y0){p.y=y0;p.vy=Math.abs(p.vy);}if(p.y>y1){p.y=y1;p.vy=-Math.abs(p.vy);}}
+  });
+}
+function melDraw(){
+  var h=+$('mh').value,x=ctxOf('mel');x.clearRect(0,0,380,210);
+  var cm=h>=25,im=h>=80;
+  meltStep(MEL.cov,cm,h/100*3.2,18,172,95,192);meltStep(MEL.ion,im,h/100*3.2,198,362,95,192);
+  x.strokeStyle='#cfd9e1';x.lineWidth=2;x.strokeRect(8,40,176,160);x.strokeRect(194,40,176,160);
+  txt(x,'ন্যাপথলিন (সমযোজী)',96,20,'bold 14px Hind Siliguri,sans-serif',NAVY);txt(x,'লবণ NaCl (আয়নিক)',282,20,'bold 14px Hind Siliguri,sans-serif',NAVY);
+  txt(x,cm?'💧 তরল':'🧊 কঠিন',96,48,'bold 13px Hind Siliguri,sans-serif',cm?BLU:'#5b6770');txt(x,im?'💧 তরল':'🧊 কঠিন',282,48,'bold 13px Hind Siliguri,sans-serif',im?BLU:'#5b6770');
+  MEL.cov.forEach(function(p){circ(x,0,p.x,p.y,8,'#b8a9d9','#fff',1);});
+  MEL.ion.forEach(function(p){circ(x,0,p.x,p.y,8,p.ty>0?RED:BLU,'#fff',1);txt(x,p.ty>0?'+':'−',p.x,p.y,'bold 11px sans-serif','#fff');});
+  var m;
+  if(h<25)m='তাপ কম: দুটোই কঠিন, কণাগুলো শুধু কাঁপছে।';
+  else if(h<80)m='ন্যাপথলিন গলে গেছে! সমযোজী অণুগুলোর মধ্যে আকর্ষণ দুর্বল (ভ্যানডারওয়ালস), তাই অল্প তাপেই আলগা হয়। NaCl এখনো কঠিন, কারণ আয়নগুলোর শক্তিশালী আকর্ষণ ভাঙতে অনেক বেশি তাপ লাগে।';
+  else m='এবার NaCl-ও গলেছে। আয়নিক যৌগের গলনাঙ্ক সমযোজী যৌগের চেয়ে অনেক বেশি।';
+  if($('mtxt').textContent!==m)$('mtxt').textContent=m;
+}
+
+/* =================== গোয়েন্দা =================== */
+var DS=[
+ {t:'<b>নমুনা A:</b> সাদা কেলাস। পানিতে দ্রবীভূত হয়, দ্রবণ বিদ্যুৎ পরিবহন করে, গলনাঙ্ক অনেক বেশি।',a:'ion',w:'দ্রবণে বিদ্যুৎ পরিবহন আর বেশি গলনাঙ্ক আয়নিক যৌগের লক্ষণ।'},
+ {t:'<b>নমুনা B:</b> সাদা কঠিন। পানিতে দ্রবীভূত হয়, কিন্তু দ্রবণ বিদ্যুৎ পরিবহন করে না। গলনাঙ্ক তুলনামূলক কম।',a:'cov',w:'আয়ন না থাকায় দ্রবণ বিদ্যুৎ পরিবহন করেনি। চিনির মতো সমযোজী যৌগ।'},
+ {t:'<b>নমুনা C:</b> সাদা কঠিন। পানিতে একদম দ্রবীভূত হয় না, অল্প তাপেই গলে যায়।',a:'cov',w:'পানিতে অদ্রবণীয় ও কম গলনাঙ্ক সমযোজী যৌগের (যেমন ন্যাপথলিন) বৈশিষ্ট্য।'},
+ {t:'<b>নমুনা D:</b> কেলাস। পানিতে দিলে ক্যাটায়ন ও অ্যানায়নে ভেঙে যায়, দ্রবণে বাল্ব জ্বলে।',a:'ion',w:'আয়ন তৈরি হয়ে দ্রবণ বিদ্যুৎ পরিবহন করে, তাই আয়নিক।'},
+ {t:'<b>নমুনা E:</b> কঠিন। দ্রবণে কোনো আয়ন পাওয়া যায় না, গলনাঙ্ক কম, বেশিরভাগ কেলাস গঠন করে না।',a:'cov',w:'আয়ন নেই, গলনাঙ্ক কম: সমযোজী যৌগ।'}
+];
+var DQ={cur:-1,done:false,tot:0,right:0,order:[],pos:0};
+function dqNew(){
+  if(DQ.pos>=DQ.order.length){DQ.order=shuffle(DS.map(function(_,i){return i;}));DQ.pos=0;}
+  DQ.cur=DQ.order[DQ.pos++];DQ.done=false;$('dq').innerHTML=DS[DQ.cur].t;$('dqf').textContent='';$('dqN').style.display='none';
+  $('dqI').classList.remove('ok','no');$('dqC').classList.remove('ok','no');
+}
+function dqAns(a){if(DQ.done)return;DQ.done=true;DQ.tot++;var q=DS[DQ.cur];
+  var btn={ion:$('dqI'),cov:$('dqC')};btn[q.a].classList.add('ok');
+  if(a===q.a){DQ.right++;$('dqf').textContent='✅ ঠিক! '+q.w;}else{btn[a].classList.add('no');$('dqf').textContent='❌ এটা '+(q.a==='ion'?'আয়নিক':'সমযোজী')+'। '+q.w;}
+  $('dqs').textContent='স্কোর: '+bn(DQ.right)+' / '+bn(DQ.tot);$('dqN').style.display='inline-block';}
+$('dqI').onclick=function(){dqAns('ion');};$('dqC').onclick=function(){dqAns('cov');};$('dqN').onclick=dqNew;dqNew();
+
+/* =================== ল্যাব ৬: ধাতব বন্ধন =================== */
+var MT={bat:false,heat:false,T:[],cores:[],el:[]};
+(function(){
+  for(var i=0;i<10;i++)MT.T.push(0);
+  for(var r=0;r<4;r++)for(var c=0;c<8;c++)MT.cores.push({x:62+c*36,y:75+r*34});
+  for(var k=0;k<44;k++)MT.el.push({x:rnd(40,340),y:rnd(55,200),vx:rnd(-1,1),vy:rnd(-1,1)});
+})();
+$('mbat').onclick=function(){MT.bat=!MT.bat;mtText();};
+$('mheat').onclick=function(){MT.heat=!MT.heat;$('mheat').textContent=MT.heat?'🔥 তাপ বন্ধ করো':'🔥 বাম প্রান্তে তাপ দাও';mtText();};
+$('mcool').onclick=function(){MT.heat=false;$('mheat').textContent='🔥 বাম প্রান্তে তাপ দাও';for(var i=0;i<10;i++)MT.T[i]=0;mtText();};
+function mtText(){
+  var s='ধনাত্মক শাঁসগুলো (লাল) নিজের জায়গায় আছে, আর নীল সঞ্চরণশীল ইলেকট্রনগুলো সবদিকে ঘুরছে।';
+  if(MT.bat)s+=' ব্যাটারি লাগানোয় ইলেকট্রনগুলো ঋণাত্মক প্রান্ত (বাঁ) থেকে ধনাত্মক প্রান্তের (ডান) দিকে ছুটছে, এটাই বিদ্যুৎ প্রবাহ।';
+  if(MT.heat)s+=' বাম প্রান্তে তাপ পেয়ে ইলেকট্রন দ্রুত ছুটছে এবং তাপ ডান প্রান্তে বয়ে নিয়ে যাচ্ছে।';
+  $('mttxt').textContent=s;
+}
+function mtDraw(){
+  var x=ctxOf('mt'),now=performance.now()/1000;x.clearRect(0,0,380,250);
+  if(MT.heat)MT.T[0]=100;
+  for(var s=0;s<2;s++){var N=MT.T.slice();for(var i=0;i<10;i++){var l=MT.T[Math.max(i-1,0)],r=MT.T[Math.min(i+1,9)];N[i]=MT.T[i]+0.09*(l+r-2*MT.T[i]);if(!MT.heat||i>0)N[i]=Math.max(0,N[i]-0.02);}if(MT.heat)N[0]=100;MT.T=N;}
+  $('tL').style.width=MT.T[0]+'%';$('tR').style.width=MT.T[9]+'%';
+  x.fillStyle='#eef2f5';x.fillRect(30,40,320,180);x.strokeStyle='#8a99a6';x.lineWidth=2;x.strokeRect(30,40,320,180);
+  // তাপের রঙ
+  for(var i=0;i<10;i++){x.fillStyle='rgba(230,57,70,'+(MT.T[i]/100*0.45)+')';x.fillRect(30+i*32,40,32,180);}
+  MT.cores.forEach(function(c){var cell=clamp(Math.floor((c.x-30)/32),0,9);var j=MT.T[cell]/100*1.6;
+    circ(x,0,c.x+Math.sin(now*9+c.y)*j,c.y+Math.cos(now*9+c.x)*j,11,'#e8737d','#fff',1.5);txt(x,'+',c.x,c.y,'bold 13px sans-serif','#fff');});
+  MT.el.forEach(function(e){
+    var cell=clamp(Math.floor((e.x-30)/32),0,9);var sp=0.7+MT.T[cell]/100*2.2;
+    e.vx+=rnd(-.3,.3);e.vy+=rnd(-.3,.3);var m=Math.hypot(e.vx,e.vy)||1;e.vx=e.vx/m*sp;e.vy=e.vy/m*sp;
+    var dr=MT.bat?1.3:0;e.x+=e.vx+dr;e.y+=e.vy;
+    if(e.x>346)e.x=34;if(e.x<34)e.x=MT.bat?34:36,e.vx=Math.abs(e.vx);
+    if(e.y<46){e.y=46;e.vy=Math.abs(e.vy);}if(e.y>214){e.y=214;e.vy=-Math.abs(e.vy);}
+    circ(x,0,e.x,e.y,4,BLU,'#fff',1);
+  });
+  if(MT.bat){txt(x,'− ঋণাত্মক',32,24,'bold 13px Hind Siliguri,sans-serif',BLU);txt(x,'ধনাত্মক +',348,24,'bold 13px Hind Siliguri,sans-serif',RED);txt(x,'ইলেকট্রনের প্রবাহ →',190,236,'bold 13px Hind Siliguri,sans-serif',NAVY);}
+  if(MT.heat)txt(x,'🔥',20,130,'24px sans-serif',NAVY);
+}
+
+/* =================== কুইজ =================== */
+var QUIZ=[
+ {q:'যোজ্যতা ইলেকট্রন কাকে বলে?',o:['নিউক্লিয়াসের প্রোটনকে','সর্বশেষ কক্ষপথের ইলেকট্রনকে','K কক্ষপথের ইলেকট্রনকে','পরমাণুর সব ইলেকট্রনকে'],a:1,e:'পরমাণুর ইলেকট্রন বিন্যাসে সর্বশেষ কক্ষপথে যতগুলো ইলেকট্রন থাকে, সেটাই যোজ্যতা ইলেকট্রন সংখ্যা।'},
+ {q:'ক্লোরিনের (Cl, পরমাণু সংখ্যা ১৭) যোজ্যতা ইলেকট্রন কয়টি?',o:['১','৫','৭','৮'],a:2,e:'Cl-এর ইলেকট্রন বিন্যাস ২, ৮, ৭। সর্বশেষ কক্ষপথে ৭টি।'},
+ {q:'ক্যালসিয়ামের (Ca, পরমাণু সংখ্যা ২০) যোজ্যতা ইলেকট্রন কয়টি?',o:['২','৪','৬','৮'],a:0,e:'Ca-এর বিন্যাস ২, ৮, ৮, ২। সর্বশেষ কক্ষপথে ২টি।'},
+ {q:'কোন মৌলের যোজনী ১ ধরে অন্য মৌলের যোজনী মাপা হয়?',o:['অক্সিজেন','কার্বন','হাইড্রোজেন','সোডিয়াম'],a:2,e:'হাইড্রোজেনের যোজনী ১ ধরা হয়। H₂O-তে ২টি H-এর সাথে যুক্ত বলে O-এর যোজনী ২।'},
+ {q:'Al ও O মিলে যে যৌগ হয়, তার সংকেত কোনটি?',o:['AlO','Al₂O₃','Al₃O₂','AlO₃'],a:1,e:'Al-এর যোজনী ৩, O-এর ২। আড়াআড়ি বিনিময়ে Al₂O₃।'},
+ {q:'কার্বনের যোজনী ৪ ও অক্সিজেনের ২ হলে CO₂ কীভাবে আসে?',o:['দুটোকে ২ দিয়ে ভাগ করে (২ ও ১)','দুটোকে গুণ করে','যোগ করে','যোজনী উল্টে দিয়ে'],a:0,e:'৪ ও ২ দুটোকেই ২ দিয়ে ভাগ করলে ২ ও ১ পাওয়া যায়, তাই CO₂ (C₁O₂)।'},
+ {q:'ম্যাগনেসিয়াম (Mg, যোজনী ২) ও ফসফেট (PO₄, যোজনী ৩) মিলে কী যৌগ হয়?',o:['MgPO₄','Mg₂PO₃','Mg₃(PO₄)₂','Mg₂(PO₄)₃'],a:2,e:'আড়াআড়ি বিনিময়ে Mg-এর নিচে ৩, PO₄-এর নিচে ২। যৌগমূলক একাধিক হলে বন্ধনী: Mg₃(PO₄)₂।'},
+ {q:'সালফেট মূলকের (SO₄²⁻) যোজনী কত?',o:['১','২','৩','৪'],a:1,e:'আধানের সংখ্যাই যোজনী। SO₄²⁻-এর আধান ২, তাই যোজনী ২।'},
+ {q:'FeCl₂ যৌগে Fe-এর সুপ্ত যোজনী কত? (Fe-এর সর্বোচ্চ যোজনী ৩)',o:['০','১','২','৩'],a:1,e:'সুপ্ত যোজনী = সর্বোচ্চ যোজনী − সক্রিয় যোজনী = ৩ − ২ = ১।'},
+ {q:'অষ্টক নিয়ম অনুযায়ী পরমাণুরা সর্বশেষ শক্তিস্তরে কয়টি ইলেকট্রন পেতে চায়?',o:['২','৪','৬','৮'],a:3,e:'নিষ্ক্রিয় গ্যাসের মতো স্থিতিশীল বিন্যাস পেতে সর্বশেষ স্তরে ৮টি ইলেকট্রন পেতে চায়। হাইড্রোজেন ২টিতেই স্থিতিশীল।'},
+ {q:'BF₃ অণুতে বোরনের (B) সর্বশেষ স্তরে কয়টি ইলেকট্রন থাকে?',o:['২','৪','৬','৮'],a:2,e:'B তিনটি F-এর সাথে ৩ জোড়া (৬টি) ইলেকট্রন শেয়ার করে। এটা দুইয়ের নিয়ম মানে (জোড়ায় জোড়ায়)।'},
+ {q:'পরমাণুরা রাসায়নিক বন্ধন তৈরি করে কেন?',o:['ভারী হওয়ার জন্য','স্থিতিশীল ইলেকট্রন বিন্যাস পাওয়ার জন্য','নিউক্লিয়াস ভাঙার জন্য','রং বদলানোর জন্য'],a:1,e:'ইলেকট্রন গ্রহণ, বর্জন বা শেয়ার করে নিষ্ক্রিয় গ্যাসের মতো স্থিতিশীল বিন্যাস (দ্বিত্ব বা অষ্টক) পেতে বন্ধন করে।'},
+ {q:'Na → Na⁺ + e⁻ বিক্রিয়ায় কী ঘটে?',o:['Na একটি ইলেকট্রন গ্রহণ করে','Na একটি ইলেকট্রন ত্যাগ করে ক্যাটায়ন হয়','Na-এর প্রোটন কমে','Na অ্যানায়ন হয়'],a:1,e:'Na ইলেকট্রন ত্যাগ করলে প্রোটন বেশি হয়ে যায়, তাই ধনাত্মক আয়ন (ক্যাটায়ন) হয়।'},
+ {q:'NaCl-এ Cl⁻ আয়নের ইলেকট্রন বিন্যাস কোনটি?',o:['২, ৮, ৭','২, ৮, ৮','২, ৮','২, ৮, ১'],a:1,e:'Cl একটি ইলেকট্রন নিয়ে ২, ৮, ৭ থেকে ২, ৮, ৮ হয়, যা আর্গনের (Ar) মতো।'},
+ {q:'আয়নিক বন্ধন কীভাবে তৈরি হয়?',o:['দুই পরমাণু ইলেকট্রন শেয়ার করে','ধাতু থেকে অধাতুতে ইলেকট্রন স্থানান্তর হয়ে ক্যাটায়ন-অ্যানায়নের স্থির তড়িৎ আকর্ষণে','নিউক্লিয়াস ভেঙে','ধাতুর সঞ্চরণশীল ইলেকট্রনে'],a:1,e:'ধাতু ইলেকট্রন ছেড়ে ক্যাটায়ন, অধাতু ইলেকট্রন নিয়ে অ্যানায়ন হয়। বিপরীত আধানের আকর্ষণই আয়নিক বন্ধন।'},
+ {q:'MgO গঠনের সময় Mg থেকে O-তে কয়টি ইলেকট্রন স্থানান্তরিত হয়?',o:['১','২','৩','৬'],a:1,e:'Mg → Mg²⁺ + 2e⁻ এবং O + 2e⁻ → O²⁻। মোট ২টি।'},
+ {q:'সমযোজী বন্ধন কীভাবে গঠিত হয়?',o:['ইলেকট্রন দান করে','ইলেকট্রন গ্রহণ করে','ইলেকট্রন শেয়ার (ভাগাভাগি) করে','প্রোটন শেয়ার করে'],a:2,e:'দুটি অধাতব পরমাণু ইলেকট্রন শেয়ার করে সমযোজী বন্ধন গঠন করে।'},
+ {q:'O₂ অণুতে দুটি অক্সিজেন পরমাণু কয় জোড়া ইলেকট্রন শেয়ার করে?',o:['১ জোড়া','২ জোড়া','৩ জোড়া','শেয়ার করে না'],a:1,e:'প্রতিটি O-এর আরও ২টি ইলেকট্রন দরকার, তাই দুই জোড়া শেয়ার করে দ্বিবন্ধন (O=O) হয়।'},
+ {q:'নিচের কোনটি সমযোজী যৌগ?',o:['NaCl','MgO','CH₄','KCl'],a:2,e:'CH₄-এ C ও H দুটোই অধাতু, ইলেকট্রন শেয়ার করে। বাকিগুলোতে ধাতু + অধাতু, তাই আয়নিক।'},
+ {q:'আয়নিক যৌগের গলনাঙ্ক বেশি হয় কেন?',o:['অণুগুলো ভারী বলে','ধনাত্মক ও ঋণাত্মক আয়নের মধ্যে শক্তিশালী আকর্ষণ থাকে বলে','পানিতে দ্রবীভূত হয় বলে','ইলেকট্রন শেয়ার হয় বলে'],a:1,e:'আয়নগুলোর শক্তিশালী স্থির তড়িৎ আকর্ষণ ভাঙতে অনেক তাপ লাগে।'},
+ {q:'নিচের কোনটি পানিতে দ্রবীভূত হয় না?',o:['খাদ্য লবণ','চিনি','মিথেন (CH₄)','ইথানল'],a:2,e:'মিথেন পোলার নয়, তাই দ্রবীভূত হয় না। চিনি ও ইথানল সমযোজী হলেও পোলার বলে দ্রবীভূত হয়।'},
+ {q:'NaCl-এর জলীয় দ্রবণ বিদ্যুৎ পরিবহন করে কেন?',o:['এতে মুক্ত ইলেকট্রন আছে','এতে বিচ্ছিন্ন Na⁺ ও Cl⁻ আয়ন আছে','এতে অণু আছে','এতে পানি আছে বলে'],a:1,e:'দ্রবণে আয়নগুলো মুক্তভাবে চলতে পারে, তাই বিদ্যুৎ পরিবহন করে।'},
+ {q:'পানির অণু পোলার কেন?',o:['O, H-এর চেয়ে বেশি তড়িৎ ঋণাত্মক, তাই ইলেকট্রন জোড় O-এর দিকে সরে যায়','দুটো H আয়ন আছে','পানি ধাতু','পানিতে ইলেকট্রন নেই'],a:0,e:'O আংশিক ঋণাত্মক (δ⁻), H আংশিক ধনাত্মক (δ⁺) হয়, তাই অণুটি পোলার।'},
+ {q:'ধাতব বন্ধনে "সঞ্চরণশীল ইলেকট্রন" কী?',o:['নিউক্লিয়াসের ভেতরের ইলেকট্রন','ধাতুর পরমাণুর ছেড়ে দেওয়া সর্বশেষ স্তরের ইলেকট্রন, যা ধাতুর ভেতরে মুক্তভাবে ঘোরে','ধনাত্মক শাঁস','প্রোটন'],a:1,e:'ধাতুর পরমাণু ইলেকট্রন ছেড়ে ধনাত্মক শাঁস হয়। ওই ইলেকট্রনগুলো শাঁসের ফাঁকে মুক্তভাবে চলে।'},
+ {q:'ধাতু বিদ্যুৎ পরিবহন করে কেন?',o:['এতে আয়ন থাকে','সঞ্চরণশীল ইলেকট্রন ঋণাত্মক প্রান্ত থেকে ধনাত্মক প্রান্তের দিকে ছোটে','এতে অণু থাকে','ধাতু ভারী বলে'],a:1,e:'ব্যাটারি লাগালে মুক্ত ইলেকট্রনগুলো এক দিকে ছুটে বিদ্যুৎ প্রবাহ তৈরি করে।'},
+ {q:'প্রোপেন (C₃H₈) অণুতে প্রতিটি কার্বনের চারটি বন্ধন থাকে। এর কারণ কী?',o:['কার্বনের যোজনী ৪','কার্বন ধাতু','কার্বনের ইলেকট্রন নেই','কার্বন আয়নিক বন্ধন করে'],a:0,e:'কার্বনের যোজনী ৪, তাই গাঠনিক সংকেতে প্রতিটি C-তে চারটি রেখা (বন্ধন) থাকে।'}
+];
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+/* =================== প্রশ্ন-উত্তর =================== */
+var QA=[
+ {h:'সংক্ষিপ্ত প্রশ্ন (জ্ঞান ও অনুধাবন)',items:[
+  ['যোজ্যতা ইলেকট্রন কাকে বলে?','পরমাণুর ইলেকট্রন বিন্যাসে সর্বশেষ কক্ষপথে যে ইলেকট্রন থাকে, তার সংখ্যাকে যোজ্যতা ইলেকট্রন সংখ্যা বলে। যেমন Cl (২, ৮, ৭)-এর যোজ্যতা ইলেকট্রন ৭টি।'],
+  ['যোজনী কাকে বলে? সুপ্ত যোজনী কী?','একটি মৌলের পরমাণুর সাথে অপর মৌলের পরমাণু যুক্ত হওয়ার ক্ষমতাকে যোজনী বলে। হাইড্রোজেনের যোজনী ১ ধরা হয়। সুপ্ত যোজনী = সর্বোচ্চ যোজনী − সক্রিয় যোজনী। যেমন FeCl₂-তে Fe-এর সুপ্ত যোজনী ৩−২ = ১।'],
+  ['অষ্টক নিয়ম বলতে কী বোঝায়?','মৌলের পরমাণু ইলেকট্রন গ্রহণ, বর্জন বা শেয়ার করে সর্বশেষ শক্তিস্তরে ৮টি ইলেকট্রন (নিষ্ক্রিয় গ্যাসের বিন্যাস) পেতে চায়। এই প্রবণতাকে অষ্টক নিয়ম বলে। হাইড্রোজেনের ক্ষেত্রে ২টিতেই স্থিতিশীল।'],
+  ['দুইয়ের নিয়ম বলতে কী বোঝায়?','অণুতে যেকোনো পরমাণুর সর্বশেষ স্তরে এক বা একাধিক জোড়া ইলেকট্রন থাকবে। এতে অষ্টক নিয়মের সীমাবদ্ধতাগুলো ব্যাখ্যা করা যায়। যেমন BF₃-এ B-এর ৩ জোড়া (৬টি) ইলেকট্রন।'],
+  ['রাসায়নিক বন্ধন কী? কেন গঠিত হয়?','যে আকর্ষণ বলের মাধ্যমে অণুতে দুটি পরমাণু যুক্ত থাকে, তাকে রাসায়নিক বন্ধন বলে। পরমাণুরা সর্বশেষ স্তরে নিষ্ক্রিয় গ্যাসের মতো স্থিতিশীল ইলেকট্রন বিন্যাস পেতে চায়, তাই ইলেকট্রন গ্রহণ, বর্জন বা শেয়ার করে বন্ধন গঠন করে।'],
+  ['ধাতু কেন ক্যাটায়ন এবং অধাতু কেন অ্যানায়ন গঠন করে?','ধাতুর সর্বশেষ স্তরে কম ইলেকট্রন (১-৩টি) থাকে ও আকার বড় হওয়ায় নিউক্লিয়াসের টান কম, তাই সামান্য শক্তিতেই ইলেকট্রন ছেড়ে ক্যাটায়ন হয়। অধাতুর সর্বশেষ স্তরে ৫-৭টি ইলেকট্রন থাকে ও আকার ছোট, ইলেকট্রন ছাড়তে অনেক শক্তি লাগে। তাই ইলেকট্রন নিয়ে অ্যানায়ন হয়।'],
+  ['আয়নিক বন্ধন কাকে বলে?','ধাতব পরমাণু থেকে অধাতব পরমাণুতে ইলেকট্রন স্থানান্তরের ফলে সৃষ্ট ক্যাটায়ন ও অ্যানায়নের মধ্যে স্থির তড়িৎ আকর্ষণে যে বন্ধন গঠিত হয়, তাকে আয়নিক বন্ধন বলে।'],
+  ['সমযোজী বন্ধন কাকে বলে?','দুটি অধাতব পরমাণু পরস্পরের সাথে ইলেকট্রন শেয়ার করে যে বন্ধন গঠন করে, তাকে সমযোজী বন্ধন বলে। এক জোড়া শেয়ার হলে একক বন্ধন, দুই জোড়া হলে দ্বিবন্ধন।'],
+  ['ধাতব বন্ধন কী? ধাতু কেন বিদ্যুৎ পরিবহন করে?','ধাতুর ভেতরে ধনাত্মক শাঁস ও সঞ্চরণশীল ইলেকট্রনের আকর্ষণে যে বন্ধন, তা ধাতব বন্ধন। ধাতুর দুই প্রান্তে বিভব পার্থক্য দিলে সঞ্চরণশীল ইলেকট্রনগুলো ঋণাত্মক প্রান্ত থেকে ধনাত্মক প্রান্তের দিকে ছোটে, এতে বিদ্যুৎ প্রবাহিত হয়।']
+ ]},
+ {h:'প্রয়োগ ও উচ্চতর দক্ষতার অনুশীলন',items:[
+  ['NaCl গঠনের প্রক্রিয়া লেখো।','Na-এর ইলেকট্রন বিন্যাস ২, ৮, ১; Cl-এর ২, ৮, ৭। Na তার একমাত্র সর্বশেষ ইলেকট্রন ছেড়ে Na⁺ (২, ৮, Ne-এর মতো) হয়: Na → Na⁺ + e⁻। Cl সেই ইলেকট্রন নিয়ে Cl⁻ (২, ৮, ৮, Ar-এর মতো) হয়: Cl + e⁻ → Cl⁻। বিপরীত আধানের Na⁺ ও Cl⁻ স্থির তড়িৎ আকর্ষণে যুক্ত হয়ে NaCl গঠন করে।'],
+  ['MgO যৌগে কীভাবে বন্ধন গঠিত হয়?','Mg (২, ৮, ২) ২টি ইলেকট্রন ছেড়ে Mg²⁺ (২, ৮) হয়। O (২, ৬) সেই ২টি ইলেকট্রন নিয়ে O²⁻ (২, ৮) হয়। Mg²⁺ ও O²⁻ স্থির তড়িৎ আকর্ষণে যুক্ত থাকে, এটি আয়নিক বন্ধন।'],
+  ['Cl₂ অণুতে বন্ধন কীভাবে গঠিত হয়?','প্রতিটি Cl-এর সর্বশেষ স্তরে ৭টি ইলেকট্রন। দুটি Cl পরমাণু একটি করে ইলেকট্রন দিয়ে এক জোড়া ইলেকট্রন শেয়ার করে। ফলে প্রত্যেকে ৮টি ইলেকট্রন (অষ্টক) পায়। এটি একক সমযোজী বন্ধন (Cl–Cl)।'],
+  ['O₂ অণুতে দ্বিবন্ধন কেন গঠিত হয়?','O-এর সর্বশেষ স্তরে ৬টি ইলেকট্রন, অষ্টক পূর্ণ করতে আরও ২টি দরকার। এক জোড়া শেয়ারে ৭টি হয়, তাই দুই জোড়া (৪টি ইলেকট্রন) শেয়ার করতে হয়। এতে O=O দ্বিবন্ধন গঠিত হয়।'],
+  ['NaCl ও CH₄-এর গলনাঙ্ক এত আলাদা কেন?','NaCl আয়নিক যৌগ। Na⁺ ও Cl⁻ আয়নের মধ্যে শক্তিশালী স্থির তড়িৎ আকর্ষণ ভাঙতে অনেক তাপ লাগে, তাই গলনাঙ্ক বেশি। CH₄ সমযোজী যৌগ। অণুগুলোর মধ্যে শুধু দুর্বল ভ্যানডারওয়ালস আকর্ষণ থাকায় গলনাঙ্ক খুব কম।'],
+  ['NaCl-এর জলীয় দ্রবণ বিদ্যুৎ পরিবহন করে, কিন্তু চিনির দ্রবণ করে না। কেন?','NaCl পানিতে Na⁺ ও Cl⁻ আয়নে ভেঙে যায়। এই মুক্ত আয়নগুলো আধান বহন করে, তাই বিদ্যুৎ পরিবহন করে। চিনি সমযোজী যৌগ, পানিতে আয়ন তৈরি করে না। দ্রবণে শুধু আস্ত অণু থাকে, তাই বিদ্যুৎ পরিবহন করে না।'],
+  ['মিথেন পানিতে দ্রবীভূত হয় না, কিন্তু ইথানল হয়। কারণ কী?','ইথানল (C₂H₅OH) পোলার যৌগ, পানির অণুর সাথে মিশতে পারে। মিথেন পোলার নয়, তাই পানির অণু একে আকর্ষণ করতে পারে না এবং এটি দ্রবীভূত হয় না।'],
+  ['আয়নিক যৌগ পানিতে দ্রবীভূত হয় কীভাবে?','পানির অণু পোলার। এর ঋণাত্মক প্রান্ত ক্যাটায়নকে এবং ধনাত্মক প্রান্ত অ্যানায়নকে আকর্ষণ করে। এই আকর্ষণ আয়ন-আয়নের আকর্ষণের চেয়ে বেশি হলে আয়নগুলো আলাদা হয়ে পানির অণু দিয়ে ঘেরা অবস্থায় দ্রবণে ছড়িয়ে পড়ে।'],
+  ['Mg₃(PO₄)₂ সংকেতটি কীভাবে পাওয়া যায় ব্যাখ্যা করো।','Mg-এর যোজনী ২, PO₄-এর যোজনী ৩। আড়াআড়ি বিনিময়ে Mg-এর নিচে ৩ ও PO₄-এর নিচে ২ বসে। PO₄ একটি যৌগমূলক, ২টি থাকায় বন্ধনীর মধ্যে রেখে ২ লিখতে হয়। তাই Mg₃(PO₄)₂।']
+ ]}
+];
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+/* =================== অ্যানিমেশন লুপ =================== */
+cdSetup();mtText();
+function frame(){atDraw();ionDraw();molDraw();solDraw();cdDraw();melDraw();mtDraw();requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>
