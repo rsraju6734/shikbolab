@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>আমাদের জীবনে রসায়ন (অধ্যায় ১২) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+</style>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#chemistry">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">🧪 রসায়ন &rsaquo; দ্বাদশ অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🏠 আমাদের জীবনে রসায়ন (Chemistry in Our Lives)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🧂 ল্যাব ১</a><a href="#lab2">🎂 ল্যাব ২</a><a href="#lab3">🥒 ল্যাব ৩</a><a href="#lab4">🧼 ল্যাব ৪</a><a href="#lab5">🧴 ল্যাব ৫</a><a href="#lab6">🧽 ল্যাব ৬</a><a href="#lab7">💨 ল্যাব ৭</a><a href="#lab8">🌱 ল্যাব ৮</a><a href="#lab9">🥭 ল্যাব ৯</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> খাদ্যলবণ, বেকিং পাউডার, ভিনেগারের ধর্ম ও ব্যবহার বলতে; সাবান, ডিটারজেন্ট, ব্লিচিং পাউডার, টয়লেট ও গ্লাস ক্লিনারের কাজ করার কৌশল ব্যাখ্যা করতে; অ্যামোনিয়া, ইউরিয়া, অ্যামোনিয়াম সালফেটের প্রস্তুতি ও ব্যবহার বলতে; খাদ্য সংরক্ষণ ও রাসায়নিক বর্জ্যের ক্ষতি বুঝতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের (১২শ অধ্যায়ের) ক্রম মেনে সহজ ভাষায় লেখা। <b>বইয়ের একটি অংশ ছাপা হয়নি:</b> পৃষ্ঠা ২৯৭ প্রায় ফাঁকা। সাবান প্রস্তুতির প্রথম ধাপ (a), (b) ও ত্বক-সংক্রান্ত একটি বাক্য সেখানে নেই। ওই অংশ আমি আন্দাজ করে লিখিনি।</div>
+
+    <h3>১২.১ গৃহস্থালির রসায়ন</h3>
+    <h4>খাদ্যলবণ (NaCl) ⭐⭐</h4>
+    <ul>
+      <li>সাগরের পানিতে অনেক NaCl দ্রবীভূত থাকে, সাথে সামান্য CaCl₂, MgCl₂ ও অন্য লবণ। মাটির তলদেশেও খনিজ হিসেবে NaCl পাওয়া যায়।</li>
+      <li><b>সল্ট হারভেস্টিং:</b> উপকূলে বাঁধ ঘেরা জমিতে জোয়ারের সময় সমুদ্রের পানি ঢোকে, তখন মুখ বন্ধ করে পানি আটকে দেওয়া হয়। সূর্যের তাপে পানি শুকিয়ে গেলে লবণ জমে থাকে।</li>
+      <li><b>শোধন:</b> এই লবণে বালু মিশে থাকে। পানিতে গুললে লবণ দ্রবীভূত হয়, বালু তলায় পড়ে। দ্রবণ ছেঁকে নিয়ে তাপ দিলে পানি বাষ্প হয়ে উড়ে যায়, লবণ পড়ে থাকে। এটিকে প্যাকেটে বিক্রি করা হয়।</li>
+      <li><b>NaCl-এর ব্যবহার:</b> (i) তরকারি সুস্বাদু করা; (ii) শিল্পে NaOH তৈরি; (iii) ডায়রিয়া বা পানিশূন্যতায় স্যালাইন তৈরি। শরীরে Na⁺, K⁺ আয়ন দরকার। Na⁺ কমে গেলে NaCl পানির সাথে খেলে ঘাটতি পূরণ হয়।</li>
+    </ul>
+    <h4>বেকিং পাউডার ⭐⭐⭐</h4>
+    <ul>
+      <li><b>বেকিং সোডা (খাবার সোডা)</b> = সোডিয়াম হাইড্রোজেন কার্বনেট বা বাই-কার্বনেট, সংকেত <b>NaHCO₃</b>।</li>
+      <li><b>বেকিং পাউডার</b> = বেকিং সোডা + টারটারিক এসিড (C₄H₆O₆)। সাধারণত কেক বানাতে লাগে।</li>
+      <li><b>বেকিং সোডা প্রস্তুতি:</b> NaCl-এর সম্পৃক্ত দ্রবণে প্রথমে NH₃, তারপর CO₂ চালনা করা হয়।</li>
+    </ul>
+    <p class="eq">CO₂ + NH₃ + H₂O → NH₄HCO₃<br>NH₄HCO₃ + NaCl → NaHCO₃ + NH₄Cl</p>
+    <ul>
+      <li><b>কেক ফোলা:</b> ময়দায় বেকিং পাউডার মিশিয়ে তাপ দিলে বেকিং সোডা টারটারিক এসিডের সাথে বিক্রিয়া করে CO₂ দেয়। এই CO₂-এর জন্য কেক ফুলে ওঠে।</li>
+    </ul>
+    <p class="eq">2NaHCO₃ + C₄H₆O₆ → C₄H₄Na₂O₆ + 2CO₂ + 2H₂O</p>
+    <ul>
+      <li><b>পাউরুটি ফোলা:</b> ইস্ট (ছত্রাক) ব্যবহার হয়। চিনির দ্রবণে ইস্ট মিশিয়ে ময়দা মাখা হয়, উষ্ণ জায়গায় রাখলে ইস্টের শ্বসনে CO₂ হয়ে রুটি ফোলে। ওভেনে বেক করলে উত্তাপে ইস্ট মারা যায়, তখন ফোলা বন্ধ হয়।</li>
+    </ul>
+    <h4>সিরকা বা ভিনেগার ⭐⭐⭐</h4>
+    <ul>
+      <li>ইথানয়িক এসিডের <b>৪%–১০%</b> জলীয় দ্রবণ। সাধারণত আচার বানাতে লাগে।</li>
+      <li><b>প্রস্তুতি:</b> ২৫°C–৩৫°C তাপমাত্রায় স্টিলের পাত্রে ইথানল ও অ্যাসিটোব্যাকটর ব্যাকটেরিয়া নিয়ে অক্সিজেনের বুদবুদ চালনা করা হয়। ব্যাকটেরিয়ার এনজাইম ইথানলকে O₂-এর সাথে বিক্রিয়া করতে সাহায্য করে।</li>
+    </ul>
+    <p class="eq">CH₃CH₂OH + O₂ →(অ্যাসিটোব্যাকটর) CH₃COOH + H₂O</p>
+    <ul>
+      <li><b>সংরক্ষণে ভূমিকা:</b> আচারে ব্যাকটেরিয়া আক্রমণ করলে পচে যায়। ভিনেগারের মূল উপাদান ইথানয়িক এসিড। এর ত্যাগ করা প্রোটন (H⁺) ব্যাকটেরিয়াকে ধ্বংস করে, তাই খাদ্য সংরক্ষিত থাকে।</li>
+    </ul>
+    <h4>কোমল পানীয় ⭐</h4>
+    <ul><li>ঠাণ্ডা অবস্থায় ও উচ্চ চাপে পানিতে CO₂ দ্রবীভূত করে তৈরি। CO₂ ও পানি বিক্রিয়া করে কার্বনিক এসিড (H₂CO₃) হয়। হজমে সাহায্য করে বলে মানুষ খায়, কিন্তু এর কোনো বৈজ্ঞানিক ভিত্তি নেই।</li></ul>
+
+    <h3>১২.২ পরিষ্কার-পরিচ্ছন্নতায় রসায়ন</h3>
+    <h4>কাপড় কাচা সোডা ⭐⭐</h4>
+    <ul>
+      <li>সোডিয়াম কার্বনেট (Na₂CO₃) = <b>সোডা অ্যাস</b>। এর ১ অণুর সাথে ১০ অণু পানি যুক্ত হলে <b>কাপড় কাচা সোডা (ওয়াশিং সোডা)</b>, Na₂CO₃·10H₂O।</li>
+      <li>প্রস্তুতি: গাঢ় NaOH-এর দ্রবণে অধিক CO₂ চালনা করলে Na₂CO₃ হয়, তারপর পানির সাথে যুক্ত হয়ে ওয়াশিং সোডা।</li>
+    </ul>
+    <p class="eq">2NaOH + CO₂ → Na₂CO₃ + H₂O<br>Na₂CO₃ + 10H₂O → Na₂CO₃·10H₂O</p>
+    <h4>টয়লেট ক্লিনার ⭐⭐⭐</h4>
+    <ul>
+      <li>মূল উপাদান <b>NaOH</b>, সাথে <b>NaOCl</b> (সোডিয়াম হাইপোক্লোরাইট)।</li>
+      <li>NaOH টয়লেটের চর্বি ও প্রোটিন জাতীয় ময়লার সাথে বিক্রিয়া করে। NaOCl রং (পিগমেন্ট) ও রোগজীবাণুর সাথে বিক্রিয়া করে এদের কার্যকারিতা নষ্ট করে।</li>
+    </ul>
+    <p class="eq">NaOCl + H₂O → NaOH + HOCl<br>HOCl → HCl + [O]<br>রঙিন পদার্থ + [O] → বর্ণহীন পদার্থ<br>জীবাণু + [O] → মৃত জীবাণু</p>
+    <div class="key">⭐ <b>জায়মান অক্সিজেন [O]</b> (nascent oxygen): সদ্য তৈরি হওয়া অস্থায়ী, খুব সক্রিয় অক্সিজেন পরমাণু, যা এখনো O₂ অণু তৈরি করেনি।</div>
+    <h4>সাবান ⭐⭐⭐</h4>
+    <ul>
+      <li>সাবান = উচ্চতর ফ্যাটি এসিডের <b>সোডিয়াম লবণ (R-COONa)</b> বা <b>পটাশিয়াম লবণ (R-COOK)</b>। R = অ্যালকাইল মূলক, CₙH₂ₙ₊₁ (n = ১২ থেকে ১৮)।</li>
+      <li>উদাহরণ: সোডিয়াম স্টিয়ারেট C₁₇H₃₅COONa; পটাশিয়াম স্টিয়ারেট C₁₇H₃₅COOK।</li>
+      <li><b>সাবানায়ন:</b> তেল বা চর্বি + NaOH (বা KOH) → <b>সাবান + গ্লিসারিন</b>।</li>
+      <li>মিশ্রণে NaCl দিলে গ্লিসারিন পাত্রের নিচে থাকে, আর সাবানের অণুগুলো NaCl-কে ঘিরে একত্র হয়ে ওপরে সোপ কেকের মতো ভেসে ওঠে। ছেঁকে ছাঁচে ঢেলে বিভিন্ন আকৃতির সাবান বানানো হয়।</li>
+      <li><b>দুই ভাগ:</b> প্রসাধনী সাবান (ত্বকের জন্য; ক্ষার ও অপদ্রব্য কম, সুগন্ধি/জীবাণুনাশক থাকে) এবং লন্ড্রি সাবান (কাপড়ের জন্য; ক্ষার বেশি, সুগন্ধি থাকে না)।</li>
+      <li>সাবানে বেশি <b>তেল/চর্বি</b> থেকে গেলে তৈলাক্ত ভাব থাকে, ফেনা হয় না। বেশি <b>ক্ষার</b> থাকলে ত্বকের ক্ষতি করে।</li>
+      <li><b>ফ্যাটি এসিড:</b> উচ্চতর ফ্যাটি এসিড ও গ্লিসারিনের ট্রাই এস্টার তরল হলে <b>তেল</b>, কঠিন হলে <b>চর্বি</b>। <b>স্টিয়ারিক এসিড</b> সম্পৃক্ত (C–C একক বন্ধন)। <b>অলিক এসিড</b> অসম্পৃক্ত (C=C দ্বিবন্ধন, জলপাইয়ের অলিভ অয়েল থেকে)।</li>
+    </ul>
+    <div class="warn">ℹ️ <b>বইয়ের ফাঁক:</b> সাবান তৈরির অনুসন্ধানের (a), (b) ধাপ ছাপা পাতায় নেই। আমরা শুধু (c) থেকে (f) ধাপগুলো পেয়েছি: স্টিম বাথে ৩০ মিনিট ফুটানো ও নাড়া; তাপ বন্ধ করে ঠাণ্ডা; ঠাণ্ডা মিশ্রণে ৫০ mL সম্পৃক্ত NaCl দ্রবণ দিয়ে সারা রাত রাখা; পরদিন ছেঁকে পরিস্রুত ফেলে সাবান শুকানো।</div>
+    <h4>ডিটারজেন্ট ⭐⭐⭐</h4>
+    <ul>
+      <li>সাবানের মতো পরিষ্কারক। পাউডার ও তরল দুই আকারে পাওয়া যায়।</li>
+      <li>প্রস্তুতি: লরাইল অ্যালকোহল (C₁₂H₂₆O) + H₂SO₄ → লরাইল হাইড্রোজেন সালফেট (C₁₂H₂₆SO₄) + H₂O; তারপর NaOH দিয়ে → <b>সোডিয়াম লরাইল সালফেট</b> (C₁₂H₂₅SO₄Na) + H₂O। এটিই ডিটারজেন্ট।</li>
+      <li>পাউডার আকৃতি দিতে সোডিয়াম সালফেট (Na₂SO₄) মেশানো হয়।</li>
+    </ul>
+    <p class="eq">C₁₂H₂₆O + H₂SO₄ → C₁₂H₂₆SO₄ + H₂O<br>C₁₂H₂₆SO₄ + NaOH → C₁₂H₂₅SO₄Na + H₂O</p>
+    <h4>সাবান ও ডিটারজেন্ট ময়লা কীভাবে পরিষ্কার করে ⭐⭐⭐</h4>
+    <ul>
+      <li>শরীরের তেল ও বাতাসের তৈলাক্ত পদার্থ কাপড়ে লাগে, তার ওপর ধুলাবালি আটকে ময়লা হয়। সাবান বা ডিটারজেন্টের কাজ তেল সরানো এবং পানি দিয়ে ধুলাবালি ধুয়ে ফেলা।</li>
+      <li>পানিতে সাবান (R-COO⁻) বা ডিটারজেন্ট (C₁₂H₂₅SO₄⁻) আয়ন ও Na⁺ আয়নে ভাগ হয়। আয়নের এক প্রান্তে ঋণাত্মক চার্জ, এটি পানিকে আকর্ষণ করে, তাই <b>হাইড্রোফিলিক</b> (পানি আকর্ষী)। অন্য প্রান্তটি (কার্বন শিকল) তেলে দ্রবীভূত হয়, এটি <b>হাইড্রোফোবিক</b> (পানি বিকর্ষী)।</li>
+      <li>তেলযুক্ত কাপড়ে হাইড্রোফোবিক প্রান্ত তেলের দিকে যায়, হাইড্রোফিলিক প্রান্ত পানির দিকে থাকে। ঘষলে তেলের কণা চারদিক থেকে ঋণাত্মক আয়ন দিয়ে ঢাকা পড়ে। ঋণাত্মক বলয় একে অপরকে বিকর্ষণ করে, তাই কণাগুলো আলাদা থাকে ও ফেনার সাথে মিশে যায়। পানি দিয়ে ধুলে ফেনা সরে যায়, তার সাথে তেল ও ধুলাবালিও বের হয়।</li>
+    </ul>
+    <table class="t">
+      <tr><th>সাবান</th><th>ডিটারজেন্ট</th></tr>
+      <tr><td>১. দীর্ঘ কার্বন শিকলবিশিষ্ট ফ্যাটি এসিডের সোডিয়াম বা পটাশিয়াম লবণ</td><td>১. দীর্ঘ কার্বন শিকলবিশিষ্ট বেনজিন সালফনিক এসিডের সোডিয়াম লবণ (বইয়ের লেখা)</td></tr>
+      <tr><td>২. খর পানিতে ভালো কাজ করতে পারে না</td><td>২. খর পানিতেও ভালো কাজ করতে পারে</td></tr>
+      <tr><td>৩. পরিষ্কারকরণের ক্ষমতা ডিটারজেন্টের চেয়ে কম</td><td>৩. পরিষ্কারকরণের ক্ষমতা সাবানের চেয়ে বেশি</td></tr>
+    </table>
+    <div class="warn">ℹ️ বইয়ের টেবিলে ডিটারজেন্টকে "বেনজিন সালফনিক এসিডের লবণ" বলা হয়েছে, কিন্তু একই বইয়ের উদাহরণ সোডিয়াম লরাইল সালফেট (লরাইল অ্যালকোহল থেকে তৈরি)। পরীক্ষায় বইয়ের কথাই লিখো, আর শিক্ষককে জিজ্ঞেস করে নিও।</div>
+    <p><b>অতিরিক্ত সাবান-ডিটারজেন্টের কুফল:</b></p>
+    <ul>
+      <li>সাবানের ক্ষার হাতের ক্ষতি করে।</li>
+      <li>পুকুর বা নদীর ধারে কাপড় কাচলে সাবানের ফেনা পানিতে দ্রবীভূত অক্সিজেনের সাথে বিক্রিয়া করে অক্সিজেন কমিয়ে দেয়। তখন জলজ উদ্ভিদ ও মাছ মারা যায়।</li>
+      <li>ডিটারজেন্টে ট্রাইসোডিয়াম ফসফেট (Na₃PO₄) থাকে, যা উদ্ভিদের সার হিসেবে কাজ করে। উদ্ভিদ বেড়ে গিয়ে পানির অক্সিজেন খরচ করে ফেলে, ফলে মাছ মরে।</li>
+    </ul>
+    <p><b>প্রসাধনী ও pH:</b> ত্বকের pH ৪.৮ থেকে ৫.৫, অর্থাৎ ত্বক অম্লীয়, যা জীবাণুর আক্রমণ বা বংশবৃদ্ধি প্রতিরোধ করে। প্রসাধনীর pH এর চেয়ে বেশি হলে ত্বকের স্বাভাবিক অম্লত্ব কমে যায়, ত্বকের সৌন্দর্য নষ্ট হয়। তাই প্রসাধনীর pH ও ত্বকের pH-এর সামঞ্জস্য থাকতে হয়।</p>
+    <h4>ব্লিচিং পাউডার ⭐⭐⭐</h4>
+    <ul>
+      <li>রাসায়নিক নাম <b>ক্যালসিয়াম ক্লোরো হাইপোক্লোরাইট</b>, Ca(OCl)Cl।</li>
+      <li>ব্যবহার: বলপেনের কালি বা সাবান-ডিটারজেন্টে না ওঠা রঙিন দাগ কাপড় থেকে তুলতে (বর্ণহীন করতে)। মেঝে, কমোড, বেসিন থেকে জীবাণু ধ্বংস করতেও লাগে।</li>
+      <li>প্রস্তুতি: ৪০°C তাপমাত্রায় কঠিন Ca(OH)₂-এর ওপর Cl₂ গ্যাস চালনা করা হয়।</li>
+    </ul>
+    <p class="eq">Ca(OH)₂ + Cl₂ →(Δ) Ca(OCl)Cl + H₂O</p>
+    <p><b>রং ওঠানোর কৌশল:</b> বিরঞ্জক = যা রঙিন দাগকে বর্ণহীন করে। দাগের ওপর ব্লিচিং পাউডার রেখে পানি দিলে:</p>
+    <p class="eq">Ca(OCl)Cl + H₂O → CaCl₂ + HOCl<br>HOCl → HCl + [O]<br>রঙিন পদার্থ + [O] → বর্ণহীন পদার্থ</p>
+    <p><b>জীবাণু ধ্বংসের কৌশল:</b> একই বিক্রিয়ায় [O] তৈরি হয়, যা জীবাণুকে মেরে ফেলে।</p>
+    <p class="eq">জীবাণু + [O] → মৃত জীবাণু</p>
+
+    <h4>গ্লাস ক্লিনার ⭐⭐⭐</h4>
+    <ul>
+      <li>কাচের গায়ে তেল, চর্বি বা গ্রিজ লাগলে ধুলাবালি পড়ে কাচ ময়লা হয়। গ্লাস ক্লিনার এমন হতে হবে যে তেল-চর্বি-গ্রিজের সাথে বিক্রিয়া করবে, কিন্তু কাচের উপাদান <b>সোডিয়াম সিলিকেট বা ক্যালসিয়াম সিলিকেটের</b> সাথে করবে না।</li>
+      <li>তৈরি: NH₃ গ্যাস পানিতে দ্রবীভূত করে <b>অ্যামোনিয়াম হাইড্রক্সাইড (NH₄OH)</b> বানানো হয়, এর সাথে <b>আইসো-প্রোপাইল অ্যালকোহল (CH₃CH(OH)CH₃)</b> মেশানো হয়। NH₄OH-কে <b>অ্যামোনিয়া দ্রবণ</b>ও বলে।</li>
+      <li>কাজ: NH₄OH তেল-চর্বি-গ্রিজের সাথে বিক্রিয়া করে সরিয়ে দেয়। কাচে জৈব পদার্থ লেগে থাকলে আইসো-প্রোপাইল অ্যালকোহল তা দ্রবীভূত করে সরিয়ে দেয়।</li>
+    </ul>
+    <div class="warn">😷 গ্লাস ক্লিনার দিয়ে কাচ পরিষ্কারের সময় নাক-মুখে মাস্ক পরতে হয়, কারণ NH₄OH থেকে অ্যামোনিয়া গ্যাস বের হয়ে নাকে-মুখে যেতে পারে।</div>
+
+    <h4>অ্যামোনিয়া গ্যাসের প্রস্তুতি ⭐⭐⭐</h4>
+    <p><b>পরীক্ষাগারে</b> দুই পদ্ধতি:</p>
+    <p class="eq">2NH₄Cl + CaO → 2NH₃ + CaCl₂ + H₂O<br>2NH₄Cl(s) + Ca(OH)₂ →(Δ) 2NH₃ + CaCl₂ + 2H₂O</p>
+    <p>টেস্টটিউবে NH₄Cl ও CaO (বা কলিচুন Ca(OH)₂) মিশিয়ে উত্তপ্ত করা হয়। গ্যাস নল দিয়ে উল্টো করে ধরা নলে জমা হয় (চিত্র ১২.০৪)।</p>
+    <p><b>শিল্পকারখানায় (হেবার পদ্ধতি):</b> N₂ ও H₂ গ্যাস <b>১ : ৩ অনুপাতে</b> মিশিয়ে Fe প্রভাবক দিয়ে ৪৫০–৫৫০°C তাপমাত্রায় উত্তপ্ত করা হয়। (১ : ৩ মানে N₂ যত লিটার, H₂ তার ৩ গুণ লিটার।)</p>
+    <p class="eq">N₂(g) + 3H₂(g) ⇌ 2NH₃ + ৯২ kJ<br>(Fe প্রভাবক, ২০০–২৫০ atm, ৪৫০–৫৫০°C)</p>
+    <ul>
+      <li>বিক্রিয়ায় কিছু তাপ উৎপন্ন হয়।</li>
+      <li>বিক্রিয়াটি <b>উভমুখী</b>: একদিকে N₂ ও H₂ থেকে NH₃ হয়, অন্যদিকে কিছু NH₃ ভেঙে আবার N₂ ও H₂ হয়। তাই উভমুখী তীর (⇌) ব্যবহার করা হয়।</li>
+    </ul>
+
+    <h3>১২.৩ কৃষি ও শিল্পক্ষেত্রে রসায়ন (Chemistry in Agriculture and Industries)</h3>
+    <h4>চুনাপাথর (CaCO₃) ⭐⭐</h4>
+    <ul>
+      <li>চুনাপাথর একটি মূল্যবান খনিজ সম্পদ। বাংলাদেশে <b>সুনামগঞ্জ জেলায়</b> এবং <b>সেন্টমার্টিন দ্বীপে</b> প্রচুর পাওয়া যায়।</li>
+      <li><b>সিমেন্ট</b> তৈরির প্রধান উপাদান চুনাপাথর।</li>
+      <li>মাটি অম্লীয় হলে (H⁺ বেড়ে গেলে) অম্লত্ব কমাতে চুনাপাথর দেওয়া হয়। এটি H⁺-এর সাথে বিক্রিয়া করে Ca²⁺, CO₂ ও পানি দেয়।</li>
+    </ul>
+    <p class="eq">CaCO₃ + 2H⁺ → Ca²⁺ + CO₂ + H₂O</p>
+
+    <h4>ইউরিয়া (Urea) ⭐⭐⭐</h4>
+    <ul>
+      <li>CO₂ ও NH₃-এর মিশ্রণকে উচ্চ চাপে ও <b>১৩০°–১৫০°C</b> তাপমাত্রায় উত্তপ্ত করলে প্রথমে <b>অ্যামোনিয়াম কার্বামেট</b> (NH₂COONH₄) হয়। এটি ভেঙে ইউরিয়া (NH₂–CO–NH₂) তৈরি হয়।</li>
+      <li>শিল্পক্ষেত্রে ইউরিয়া থেকে <b>ম্যালামাইন পলিমার</b> তৈরি হয়। কৃষিক্ষেত্রে ইউরিয়া <b>সার</b> হিসেবে ব্যবহৃত হয়।</li>
+      <li>উদ্ভিদ বায়ু থেকে সরাসরি N₂ গ্রহণ করে না, তাই জমিতে ইউরিয়া দিয়ে নাইট্রোজেন দেওয়া হয়। মাটিতে <b>ইউরিয়েজ</b> (urease) এনজাইমের উপস্থিতিতে ইউরিয়া পানির সাথে বিক্রিয়া করে NH₄⁺, OH⁻ ও CO₂ তৈরি করে। উদ্ভিদ এই <b>NH₄⁺ শোষণ</b> করে।</li>
+    </ul>
+    <p class="eq">CO₂ + 2NH₃ →(Δ) NH₂COONH₄<br>NH₂COONH₄ → NH₂–CO–NH₂ + H₂O<br>NH₂–CO–NH₂ + 3H₂O →(ইউরিয়েজ) 2NH₄⁺ + 2OH⁻ + CO₂</p>
+
+    <h4>অ্যামোনিয়াম সালফেট (NH₄)₂SO₄ ⭐⭐</h4>
+    <ul>
+      <li>অ্যামোনিয়া ও সালফিউরিক এসিড বিক্রিয়া করে অ্যামোনিয়াম সালফেট ও পানি দেয়।</li>
+      <li>কৃষিক্ষেত্রে সার হিসেবে ব্যাপক ব্যবহার। এটি ক্ষারকের সাথে বিক্রিয়া করতে পারে, তাই মাটিতে ক্ষারক বেড়ে গেলে প্রয়োগ করে ক্ষারক কমানো হয়।</li>
+      <li>উদ্ভিদ এ থেকে <b>নাইট্রোজেন ও সালফার</b> পায়, যা অতি প্রয়োজনীয় পুষ্টি উপাদান।</li>
+    </ul>
+    <p class="eq">2NH₃ + H₂SO₄ → (NH₄)₂SO₄ + H₂O</p>
+
+    <h4>কৃষিদ্রব্য প্রক্রিয়াকরণ ⭐⭐</h4>
+    <ul>
+      <li>ফলমূল, শাকসবজি, মাছ ইত্যাদিকে <b>কৃষিদ্রব্য</b> বলা হয়। কোনো রাসায়নিক পদার্থের মাধ্যমে এদের দীর্ঘদিন ভালো রাখাকে <b>কৃষিদ্রব্য প্রক্রিয়াকরণ</b> বলে। রাসায়নিক ব্যবহারের ভালো ও খারাপ দুই দিকই আছে।</li>
+      <li><b>আম পাকানো:</b> অসাধু ব্যবসায়ী কাঁচা আম কিনে অন্য জায়গায় নিয়ে যায় (যাতে আমের গায়ে দাগ না পড়ে), পরে ক্যালসিয়াম কার্বাইড (CaC₂) ব্যবহার করে পাকায়। CaC₂-এ পানি দিলে অ্যাসিটিলিন গ্যাস হয়, যা ফল পাকাতে সাহায্য করে।</li>
+    </ul>
+    <p class="eq">CaC₂ + 2H₂O → C₂H₂ + Ca(OH)₂</p>
+    <ul>
+      <li>ইথিলিন গ্যাস দ্বারাও কাঁচা আম পাকানো হয়। ইথিলিনও শরীরের ওপর বিরূপ প্রভাব ফেলে। কার্বাইড দিয়ে আম পাকানো বলতে অ্যাসিটিলিন দিয়ে পাকানোকেই বোঝায়।</li>
+      <li>সাধারণত পাকা ফল থেকে <b>ইথিলিন (প্রাকৃতিক হরমোন)</b> গ্যাস বের হয়ে আশপাশের কাঁচা ফলকেও পাকিয়ে ফেলে।</li>
+    </ul>
+
+    <h4>কৃষিদ্রব্য সংরক্ষণ ও ফুড প্রিজারভেটিভ ⭐⭐⭐</h4>
+    <ul>
+      <li>কৃষিদ্রব্য যাতে দুর্গন্ধ না হয় বা পচন না ধরে, সেজন্য <b>বরফ, খাদ্য লবণ, ভিনেগার</b> ইত্যাদি দিয়ে সংরক্ষণ করা হয়।</li>
+      <li><b>বরফ</b> দিয়ে মাছ সংরক্ষণ করা হয়। টমেটো, কাঁচা আম ইত্যাদি কৌটায় দীর্ঘদিন রাখতে <b>ভিনেগার</b> ব্যবহৃত হয়। খাবারের সাথে ভিনেগার শরীরে গেলে কোনো সমস্যা হয় না।</li>
+      <li><b>ফরমালিন</b> দিয়ে খাদ্য সংরক্ষণ করা হয় না, কারণ ফরমালিন মানুষ ও সকল প্রাণীর জন্য <b>বিষাক্ত</b>। এটি মৃত্যুর কারণও হতে পারে। গবেষণাগারে শুধু মৃত প্রাণীদেহ সংরক্ষণে ব্যবহার হয়।</li>
+      <li><b>ফুড প্রিজারভেটিভ:</b> যে রাসায়নিক খাদ্যে দিলে ব্যাকটেরিয়া জন্মাতে পারে না, দুর্গন্ধ হয় না, পচন হয় না।</li>
+      <li><b>অনুমোদিত</b> (শরীরের ক্ষতি করে না, WHO অনুমোদিত): সোডিয়াম বেনজোয়েট, বেনজোয়িক এসিড, ভিনেগার, লবণের দ্রবণ, চিনির দ্রবণ।</li>
+      <li><b>অননুমোদিত</b> (শরীরের ক্ষতি করে): ইথিলিন, অ্যাসিটিলিন ইত্যাদি।</li>
+    </ul>
+    <div class="warn">ℹ️ বইয়ের এই তালিকায় ইথিলিন-অ্যাসিটিলিনকে "অননুমোদিত ফুড প্রিজারভেটিভ" বলা হয়েছে। আমি বইয়ের কথাই লিখলাম।</div>
+
+    <h4>শিল্প বর্জ্য ও পরিবেশ দূষণ ⭐⭐</h4>
+    <ul>
+      <li>বাংলাদেশে <b>চামড়া শিল্প, রং শিল্প, কীটনাশক শিল্প</b> থেকে ভারী ধাতু বর্জ্য হিসেবে বের হয়: <b>ক্রোমিয়াম (Cr), লেড (Pb), মার্কারি (Hg), ক্যাডমিয়াম (Cd)</b>। এগুলো মাটি ও পানিতে মেশে।</li>
+      <li>সেই মাটিতে জন্মানো উদ্ভিদের ফলমূল খেলে এসব ধাতু শরীরে ঢুকে <b>কিডনি ও লিভারের ক্ষতি</b> করে, এমনকি মৃত্যুও ঘটাতে পারে।</li>
+      <li>সাবান ও ডিটারজেন্ট কারখানা থেকে প্রচুর <b>কস্টিক সোডা (NaOH)</b> মাটি ও পানিতে যায়। পানিতে NaOH গেলে ক্ষারকের মাত্রা বেড়ে যায়, ফলে জলজ প্রাণী ও উদ্ভিদ ভালোভাবে বাঁচতে পারে না।</li>
+    </ul>
+    <div class="key">🔑 <b>মনে রাখার ছক:</b> NaCl = লবণ | NaHCO₃ = বেকিং সোডা | Na₂CO₃·10H₂O = কাপড় কাচা সোডা | Ca(OCl)Cl = ব্লিচিং পাউডার | NH₄OH = গ্লাস ক্লিনারের মূল উপাদান | (NH₄)₂SO₄ = সার | NH₂–CO–NH₂ = ইউরিয়া | CaCO₃ = চুনাপাথর।</div>
+  </section>
+
+
+  <section class="panel" id="lab1">
+    <h2>🧂 ল্যাব ১: লবণ চাষ ও লবণ শোধন</h2>
+    <div class="say">👉 "পরের ধাপ" চাপো। প্রথমে সমুদ্র উপকূলে সল্ট হারভেস্টিং, তারপর বালুমিশ্রিত লবণ শোধনের ধাপগুলো দেখো।</div>
+    <div class="ctl"><button class="btn" id="l1n">পরের ধাপ ▶</button><button class="btn alt" id="l1r">↻</button></div>
+    <div class="row">
+      <div><canvas id="l1c" class="w" width="380" height="260"></canvas></div>
+      <div class="grow"><div class="stepper" id="l1st"></div><div class="tlinfo" id="l1t"></div></div>
+    </div>
+    <h3>🎮 লবণের খেলা</h3>
+    <div class="tlinfo" id="l1q"></div><div class="cls" id="l1o"></div><div class="fb" id="l1f"></div><small id="l1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🎂 ল্যাব ২: বেকিং সোডা, বেকিং পাউডার ও ইস্ট</h2>
+    <div class="say">👉 একটি মিশ্রণ বেছে স্লাইডার ঠিক করো, তারপর "ওভেনে দাও" চাপো। কোনটা ফোলে আর কেন, দেখো।</div>
+    <div class="ctl"><label>ময়দায় মেশাও:</label><select id="b2s"><option value="0">কিছু না (শুধু ময়দা)</option><option value="1">বেকিং পাউডার (কেক)</option><option value="2">ইস্ট + চিনি (পাউরুটি)</option></select><label>পরিমাণ: <b id="b2av"></b></label><input type="range" id="b2a" min="1" max="4" value="2" style="min-width:110px"><button class="btn" id="b2go">🔥 ওভেনে দাও</button><button class="btn alt" id="b2rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="b2c" class="w" width="380" height="260"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="b2t"></div><div class="pills" id="b2p"></div></div>
+    </div>
+    <h3>🎮 কেক-রুটির খেলা</h3>
+    <div class="tlinfo" id="b2q"></div><div class="cls" id="b2o"></div><div class="fb" id="b2f"></div><small id="b2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🥒 ল্যাব ৩: ভিনেগার তৈরি ও আচার সংরক্ষণ</h2>
+    <div class="say">👉 <b>ক)</b> তাপমাত্রা ঠিক করে "চালু" চাপো। ইথানল (নীল) ইথানয়িক এসিডে (কমলা) বদলায়। বইয়ের শর্ত ২৫°C–৩৫°C।</div>
+    <div class="ctl"><label>তাপমাত্রা: <b id="v3kv"></b>°C</label><input type="range" id="v3k" min="15" max="45" value="30" style="flex:1;min-width:130px"><button class="btn" id="v3go">▶ চালু/বন্ধ</button><button class="btn alt" id="v3rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="v3c" class="w" width="380" height="240"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="v3t"></div></div>
+    </div>
+    <div class="say">👉 <b>খ)</b> দিনের স্লাইডার নাড়িয়ে দেখো, আচারে ভিনেগার থাকলে ব্যাকটেরিয়ার কী হয়।</div>
+    <div class="ctl"><label>দিন: <b id="v3dv"></b></label><input type="range" id="v3dd" min="0" max="7" value="0" style="flex:1;min-width:130px"></div>
+    <div class="row">
+      <div><canvas id="v3d" class="w" width="380" height="240"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="v3u"></div></div>
+    </div>
+    <h3>🎮 ভিনেগারের খেলা</h3>
+    <div class="tlinfo" id="v3q"></div><div class="cls" id="v3o"></div><div class="fb" id="v3f"></div><small id="v3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🧼 ল্যাব ৪: সাবান ও ডিটারজেন্ট কীভাবে ময়লা পরিষ্কার করে</h2>
+    <div class="say">👉 "পরের ধাপ" চাপো। নীল বল হলো <b>হাইড্রোফিলিক মাথা (পানি আকর্ষী)</b>, কাঁটাতোলা লেজ <b>হাইড্রোফোবিক (পানি বিকর্ষী)</b>। শেষে নিচে নরম/খর পানিতে সাবান-ডিটারজেন্ট তুলনা করো।</div>
+    <div class="ctl"><button class="btn" id="w4n">পরের ধাপ ▶</button><button class="btn alt" id="w4r">↻</button></div>
+    <div class="row">
+      <div><canvas id="w4c" class="w" width="380" height="280"></canvas></div>
+      <div class="grow"><div class="stepper" id="w4st"></div><div class="tlinfo" id="w4t"></div></div>
+    </div>
+    <div class="ctl"><label>পরিষ্কারক:</label><select id="w4a"><option value="0">সাবান</option><option value="1">ডিটারজেন্ট</option></select><label>পানি:</label><select id="w4w"><option value="0">নরম পানি</option><option value="1">খর পানি (যেমন টিউবওয়েলের)</option></select></div>
+    <div class="tlinfo" id="w4res"></div>
+    <h3>🎮 সাবান-ডিটারজেন্টের খেলা</h3>
+    <div class="tlinfo" id="w4q"></div><div class="cls" id="w4o"></div><div class="fb" id="w4f"></div><small id="w4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🧴 ল্যাব ৫: সাবান তৈরি (সাবানায়ন)</h2>
+    <div class="say">👉 "পরের ধাপ" চাপো। তেল-চর্বি আর ক্ষার থেকে কীভাবে সাবান ও গ্লিসারিন হয় দেখো। নিচের বোতামে বইয়ের পরীক্ষাগুলো দেখো।</div>
+    <div class="ctl"><button class="btn" id="x5n">পরের ধাপ ▶</button><button class="btn alt" id="x5r">↻</button></div>
+    <div class="row">
+      <div><canvas id="x5c" class="w" width="380" height="280"></canvas></div>
+      <div class="grow"><div class="stepper" id="x5st"></div><div class="tlinfo" id="x5t"></div><div class="pills" id="x5p"></div></div>
+    </div>
+    <h3>🎮 সাবানের খেলা</h3>
+    <div class="tlinfo" id="x5q"></div><div class="cls" id="x5o"></div><div class="fb" id="x5f"></div><small id="x5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🧽 ল্যাব ৬: ব্লিচিং পাউডার, টয়লেট ক্লিনার ও গ্লাস ক্লিনার</h2>
+    <div class="say">👉 একটি পরিষ্কারক বেছে "পানি/ক্লিনার ঢালো" চাপো। লাল ছোট বিন্দু হলো <b>জায়মান অক্সিজেন [O]</b>। দাগ ও জীবাণুর কী হয় দেখো।</div>
+    <div class="ctl"><label>পরিষ্কারক:</label><select id="g6s"><option value="0">ব্লিচিং পাউডার</option><option value="1">টয়লেট ক্লিনার</option><option value="2">গ্লাস ক্লিনার</option></select><button class="btn" id="g6go">💧 পানি/ক্লিনার ঢালো</button><button class="btn alt" id="g6rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="g6c" class="w" width="380" height="280"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="g6t"></div></div>
+    </div>
+    <h3>🎮 ক্লিনারের খেলা</h3>
+    <div class="tlinfo" id="g6q"></div><div class="cls" id="g6o"></div><div class="fb" id="g6f"></div><small id="g6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>💨 ল্যাব ৭: অ্যামোনিয়া তৈরি (পরীক্ষাগার ও শিল্প)</h2>
+    <div class="say">👉 <b>ক)</b> পরীক্ষাগারে NH₄Cl ও CaO (বা Ca(OH)₂) গরম করে অ্যামোনিয়া জমাও। NH₃ হালকা, তাই উল্টো করে ধরা নলে ওপরে জমে।</div>
+    <div class="ctl"><label>মেশাও:</label><select id="n7s"><option value="0">NH₄Cl + CaO</option><option value="1">NH₄Cl + Ca(OH)₂</option></select><button class="btn" id="n7go">🔥 তাপ দাও</button><button class="btn alt" id="n7rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="n7c" class="w" width="380" height="260"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="n7t"></div></div>
+    </div>
+    <div class="say">👉 <b>খ)</b> হেবার পদ্ধতি: N₂ ও H₂ কতগুলো নেবে ঠিক করো। N₂ + 3H₂ → 2NH₃। কত NH₃ হবে আর কী বাকি থাকবে হিসাব করো, তারপর বিক্রিয়া ঘটাও।</div>
+    <div class="ctl"><label>N₂: <b id="n7nv"></b></label><input type="range" id="n7n" min="1" max="6" value="2" style="min-width:100px"><label>H₂: <b id="n7hv"></b></label><input type="range" id="n7h" min="1" max="12" value="6" style="min-width:100px"><button class="btn" id="n7rx">⚙️ বিক্রিয়া ঘটাও</button></div>
+    <div class="row">
+      <div><canvas id="n7d" class="w" width="380" height="230"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="n7u"></div></div>
+    </div>
+    <h3>🎮 অ্যামোনিয়ার খেলা</h3>
+    <div class="tlinfo" id="n7q"></div><div class="cls" id="n7o"></div><div class="fb" id="n7f"></div><small id="n7sc"></small>
+    <h3>🎮 হিসাবের খেলা (১ : ৩)</h3>
+    <div class="tlinfo" id="n7q2"></div><div class="cls" id="n7o2"></div><div class="fb" id="n7f2"></div><small id="n7sc2"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>🌱 ল্যাব ৮: মাটি ও সার (চুনাপাথর, ইউরিয়া, অ্যামোনিয়াম সালফেট)</h2>
+    <div class="say">👉 <b>ক)</b> অম্লীয় মাটিতে লাল H⁺ আয়ন বেশি। "চুনাপাথর দাও" চাপো। প্রতি টুকরা ২টি H⁺ শেষ করে।</div>
+    <div class="ctl"><button class="btn" id="s8add">🪨 চুনাপাথর দাও</button><button class="btn alt" id="s8rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="s8c" class="w" width="380" height="250"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="s8t"></div></div>
+    </div>
+    <div class="say">👉 <b>খ)</b> ইউরিয়া সার থেকে উদ্ভিদ কীভাবে নাইট্রোজেন পায়, ধাপে ধাপে দেখো।</div>
+    <div class="ctl"><button class="btn" id="s8n">পরের ধাপ ▶</button><button class="btn alt" id="s8r">↻</button></div>
+    <div class="row">
+      <div><canvas id="s8d" class="w" width="380" height="250"></canvas></div>
+      <div class="grow"><div class="stepper" id="s8st"></div><div class="tlinfo" id="s8u"></div><div class="pills" id="s8p"></div></div>
+    </div>
+    <h3>🎮 সারের খেলা</h3>
+    <div class="tlinfo" id="s8q"></div><div class="cls" id="s8o"></div><div class="fb" id="s8f"></div><small id="s8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>🥭 ল্যাব ৯: ফল পাকানো, খাদ্য সংরক্ষণ ও শিল্প বর্জ্য</h2>
+    <div class="say">👉 <b>ক)</b> ফল পাকানোর পদ্ধতি বেছে "চালু" চাপো। কার্বাইড দিয়ে পাকানোর সময় অ্যাসিটিলিন গ্যাস তৈরি হয়।</div>
+    <div class="ctl"><label>পদ্ধতি:</label><select id="p9s"><option value="0">প্রাকৃতিক (পাকা ফলের ইথিলিন)</option><option value="1">ক্যালসিয়াম কার্বাইড (CaC₂)</option></select><button class="btn" id="p9go">▶ চালু</button><button class="btn alt" id="p9rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="p9c" class="w" width="380" height="250"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="p9t"></div></div>
+    </div>
+    <h3>🎮 খেলা ১: খাদ্যের জন্য অনুমোদিত?</h3>
+    <div class="tlinfo" id="p9q"></div><div class="cls" id="p9o"></div><div class="fb" id="p9f"></div><small id="p9sc"></small>
+    <h3>🎮 খেলা ২: বর্জ্য ও পরিবেশ</h3>
+    <div class="tlinfo" id="p9r"></div><div class="cls" id="p9p"></div><div class="fb" id="p9g"></div><small id="p9sd"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। সৃজনশীল প্রশ্ন ১ ও ২ বইয়ের অনুশীলনী থেকে নেওয়া। বাকি প্রশ্ন বইয়ের বিষয় ধরে আমার বানানো অনুশীলন। বইয়ে উত্তরমালা নেই, সব উত্তর আমার লেখা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; আমাদের জীবনে রসায়ন (অধ্যায় ১২)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+/* ---------- ল্যাব ১: লবণ ---------- */
+var L1={st:0,t:0};
+var L1S=['১ জোয়ার','২ মুখ বন্ধ','৩ শুকানো','৪ গুলে নাও','৫ ছাঁকো','৬ তাপ দাও'];
+var L1T=['জোয়ারে সমুদ্রের পানি বাঁধ-ঘেরা খোলা জমিতে ঢোকে। সাগরের পানিতে NaCl-এর সাথে সামান্য CaCl₂, MgCl₂ও থাকে।','পানি ঢোকার মুখ বন্ধ করে জোয়ারের পানি আটকে দেওয়া হয়।','সূর্যের তাপে পানি শুকিয়ে যায়, লবণ জমে থাকে। এটি <b>সল্ট হারভেস্টিং</b>। এই লবণে বালু মিশে থাকে।','এবার শোধন: লবণ পানিতে গুললে লবণ দ্রবীভূত হয়, কিন্তু বালু তলায় পড়ে থাকে।','দ্রবণ ছেঁকে নিলে বালু ফিল্টারে আটকে থাকে, পরিষ্কার লবণের দ্রবণ নিচে পড়ে।','দ্রবণে তাপ দিলে পানি বাষ্প হয়ে উড়ে যায়, বিশুদ্ধ লবণ পড়ে থাকে। এটি প্যাকেটে বিক্রি হয়।'];
+function l1show(){stp('l1st',L1S,L1.st);$('l1t').innerHTML=L1T[L1.st];}
+$('l1n').onclick=function(){L1.st=(L1.st+1)%6;L1.t=0;l1show();};$('l1r').onclick=function(){L1.st=0;L1.t=0;l1show();};l1show();
+function l1draw(){var x=ctxOf('l1c'),st=L1.st,k;x.clearRect(0,0,380,260);L1.t=Math.min(1,L1.t+.008);var t=ease(L1.t);
+  if(st<=2){
+    circ(x,0,335,34,18,'#ffd84a','#f0a500',2);if(st===2)for(k=0;k<8;k++){var an=k*Math.PI/4;x.strokeStyle='#f0a500';x.lineWidth=2;x.beginPath();x.moveTo(335+Math.cos(an)*24,34+Math.sin(an)*24);x.lineTo(335+Math.cos(an)*32,34+Math.sin(an)*32);x.stroke();}
+    x.fillStyle='#5aa9e6';x.fillRect(0,100,100,120);txt(x,'সমুদ্র',50,160,'bold 12px Hind Siliguri','#fff');
+    x.fillStyle='#c9b38a';x.fillRect(100,100,270,120);
+    var px=135,py=118,pw=205,ph=84;x.fillStyle='#8a6a45';x.fillRect(px-8,py-8,pw+16,ph+16);x.fillStyle='#d9c9a0';x.fillRect(px,py,pw,ph);
+    var lv=st===0?.8*t:st===1?.8:.8*(1-t),wh=ph*lv;x.fillStyle='rgba(90,169,230,.85)';x.fillRect(px,py+ph-wh,pw,wh);
+    x.fillStyle='#5aa9e6';x.fillRect(100,150,34,14);
+    if(st===0){x.fillStyle='#8a6a45';x.fillRect(116,134,6,14);x.fillRect(116,166,6,14);txt(x,'মুখ খোলা',119,188,'bold 10px Hind Siliguri','#a33');}
+    else{x.fillStyle='#6b4a1f';x.fillRect(114,144,10,26);txt(x,'মুখ বন্ধ',119,188,'bold 10px Hind Siliguri','#a33');}
+    if(st===2){for(k=0;k<5;k++){var ey=py-12-((FR*.6+k*10)%34);x.globalAlpha=.7;txt(x,'↑',px+20+k*40,ey,'bold 14px Hind Siliguri','#6aa');x.globalAlpha=1;}
+      var n=Math.floor(t*46);for(k=0;k<n;k++){var sx=px+8+((k*37)%(pw-18)),sy=py+ph-8-((k*53)%22);x.fillStyle=k%3===0?'#c8a46a':'#fff';x.fillRect(sx,sy,6,6);x.strokeStyle='#aaa';x.strokeRect(sx,sy,6,6);}
+      if(t>.6)txt(x,'লবণ + বালু',px+pw/2,py+ph+22,'bold 11px Hind Siliguri','#543');txt(x,'↑ বাষ্প',px+pw/2,py-30,'bold 10px Hind Siliguri','#468');}
+    txt(x,'বাঁধ',px+pw/2,py-14,'bold 10px Hind Siliguri','#fff');
+  }else if(st===3){
+    x.fillStyle='#cfe7f7';x.fillRect(140,120,100,98);x.strokeStyle='#789';x.lineWidth=2;x.beginPath();x.moveTo(140,90);x.lineTo(140,218);x.lineTo(240,218);x.lineTo(240,90);x.stroke();
+    for(k=0;k<26;k++){var salt=k%2===0,sx=rp(k,150,230),y0=rp(k+3,100,150),y1=rp(k+5,196,212);if(salt){x.globalAlpha=1-t;circ(x,0,sx,lerp(y0,y1,t*.3),3.4,'#fff','#999',1);x.globalAlpha=1;}else circ(x,0,sx,lerp(y0,y1,t),3.4,'#c8a46a','#8a6a45',1);}
+    txt(x,'লবণ দ্রবীভূত (অদৃশ্য)',190,60,'bold 11px Hind Siliguri',BLU);txt(x,'বালু তলায়',190,236,'bold 11px Hind Siliguri','#8a6a45');txt(x,'পানি',190,150,'bold 11px Hind Siliguri','#345');
+  }else if(st===4){
+    x.fillStyle='#ddd';x.beginPath();x.moveTo(135,90);x.lineTo(245,90);x.lineTo(200,160);x.lineTo(180,160);x.closePath();x.fill();x.strokeStyle='#789';x.lineWidth=2;x.stroke();
+    x.fillStyle='#fffaf0';x.beginPath();x.moveTo(150,96);x.lineTo(230,96);x.lineTo(195,150);x.lineTo(185,150);x.closePath();x.fill();
+    for(k=0;k<8;k++)circ(x,0,rp(k,175,205),rp(k+2,128,146),3.2,'#c8a46a','#8a6a45',1);
+    for(k=0;k<3;k++){var dy=162+((FR*1.6+k*18)%46);circ(x,0,190,dy,2.5,'#9cc9ea',null);}
+    x.strokeStyle='#789';x.beginPath();x.moveTo(150,200);x.lineTo(150,250);x.lineTo(230,250);x.lineTo(230,200);x.stroke();x.fillStyle='#cfe7f7';var lh=40*t;x.fillRect(151,249-lh,78,lh);
+    txt(x,'ফিল্টারে বালু',100,128,'bold 10.5px Hind Siliguri','#8a6a45');txt(x,'পরিষ্কার লবণ-দ্রবণ',300,235,'bold 10.5px Hind Siliguri',BLU);
+  }else{
+    x.fillStyle='#bbb';x.beginPath();x.ellipse(190,175,80,24,0,0,Math.PI);x.fill();x.strokeStyle='#789';x.lineWidth=2;x.beginPath();x.ellipse(190,175,80,10,0,0,7);x.stroke();
+    var wl=14*(1-t);if(wl>.5){x.fillStyle='rgba(120,185,235,.85)';x.beginPath();x.ellipse(190,176,74,Math.max(wl/2,1),0,0,7);x.fill();}
+    var m=Math.floor(t*40);for(k=0;k<m;k++)circ(x,0,rp(k,130,250),rp(k+1,176,194),2.6,'#fff','#aaa',1);
+    for(k=0;k<7;k++){var fh=14+Math.sin(FR*.3+k*2)*6;x.fillStyle=k%2?ORG:'#f6c34a';x.beginPath();x.moveTo(140+k*10,220);x.lineTo(145+k*10,220-fh);x.lineTo(150+k*10,220);x.fill();}
+    if(t<.9)for(k=0;k<4;k++){var vp=((FR*.012)+k/4)%1;x.globalAlpha=1-vp;circ(x,0,160+k*20,150-vp*70,5+vp*5,'#eef',null);x.globalAlpha=1;}
+    txt(x,'পানি বাষ্প ↑',190,50,'bold 11px Hind Siliguri',BLU);txt(x,t>.6?'বিশুদ্ধ লবণ':'দ্রবণ',190,242,'bold 11px Hind Siliguri','#345');}
+}
+qgame('l1q','l1o','l1f','l1sc',[['সমুদ্র উপকূলে সূর্যের তাপে পানি শুকিয়ে লবণ সংগ্রহকে কী বলে?','সল্ট হারভেস্টিং',['সাবানায়ন','ভস্মীকরণ','ফ্রাশ পদ্ধতি'],'বাঁধ-ঘেরা জমিতে জোয়ারের পানি আটকে সূর্যের তাপে শুকানোই সল্ট হারভেস্টিং।'],
+ ['সল্ট হারভেস্টিংয়ের লবণ পানিতে গুললে বালু কোথায় থাকে?','পাত্রের তলায় পড়ে থাকে',['দ্রবীভূত হয়ে যায়','ওপরে ভাসে','বাষ্প হয়ে যায়'],'লবণ দ্রবীভূত হয়, বালু অদ্রবণীয় বলে তলায় পড়ে।'],
+ ['লবণের দ্রবণে তাপ দিলে কী ঘটে?','পানি বাষ্প হয়ে উড়ে যায়, লবণ থাকে',['লবণ বাষ্প হয়ে যায়','লবণ ভেঙে Na ও Cl গ্যাস হয়','কিছুই ঘটে না'],'পানির স্ফুটনাঙ্ক কম, তাই পানি বাষ্প হয়; লবণ পাত্রে পড়ে থাকে।'],
+ ['কারখানায় কোন যৌগ তৈরিতে NaCl ব্যবহৃত হয় (বইয়ের মতে)?','NaOH',['HNO₃','H₂SO₄','CuSO₄'],'শিল্পকারখানায় NaOH যৌগ প্রস্তুত করতে NaCl লাগে।'],
+ ['ডায়রিয়ায় পানিশূন্যতা পূরণের স্যালাইন তৈরিতে কোন লবণ লাগে?','NaCl',['CaCO₃','Na₂CO₃','MgCl₂'],'শরীরে Na⁺ আয়নের ঘাটতি পূরণে NaCl ব্যবহার হয়।']]);
+/* ---------- ল্যাব ২: বেকিং ---------- */
+var B2={t:0,run:false};
+function b2info(){var m=+$('b2s').value;$('b2av').textContent=bn($('b2a').value);
+  $('b2t').innerHTML=m===0?'<b>শুধু ময়দা:</b> কোনো CO₂ তৈরি হয় না, তাই ফোলে না, ঘন ও চ্যাপ্টা থাকে।':m===1?'<b>বেকিং পাউডার:</b> তাপে বেকিং সোডা টারটারিক এসিডের সাথে বিক্রিয়া করে CO₂ দেয়। এই CO₂-এর জন্য কেক ফুলে ওঠে।<br>2NaHCO₃ + C₄H₆O₆ → C₄H₄Na₂O₆ + 2CO₂ + 2H₂O':'<b>ইস্ট:</b> চিনির দ্রবণে ইস্ট মিশিয়ে উষ্ণ জায়গায় রাখলে ইস্টের শ্বসনে CO₂ হয়ে রুটি ফোলে। ওভেনে উত্তাপে ইস্ট মারা যায়, তখন ফোলা বন্ধ হয়।';}
+$('b2s').onchange=function(){B2.t=0;B2.run=false;b2info();};$('b2a').oninput=b2info;$('b2go').onclick=function(){B2.t=0;B2.run=true;};$('b2rs').onclick=function(){B2.t=0;B2.run=false;};b2info();
+var B2P=[['বেকিং সোডা কীভাবে তৈরি','NaCl-এর সম্পৃক্ত দ্রবণে প্রথমে NH₃, পরে CO₂ চালনা করা হয়।<br>CO₂ + NH₃ + H₂O → NH₄HCO₃<br>NH₄HCO₃ + NaCl → NaHCO₃ + NH₄Cl'],['বেকিং পাউডার কী','বেকিং সোডা (NaHCO₃) তৈরি করে তাতে টারটারিক এসিড (C₄H₆O₆) মেশালে বেকিং পাউডার হয়।']];
+$('b2p').innerHTML=B2P.map(function(p,i){return '<button data-i="'+i+'">'+p[0]+'</button>';}).join('');
+$('b2p').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var d=B2P[+b.getAttribute('data-i')];$('b2t').innerHTML='<b>'+d[0]+'</b><br>'+d[1];};
+function b2draw(){var x=ctxOf('b2c'),m=+$('b2s').value,a=+$('b2a').value,k;x.clearRect(0,0,380,260);if(B2.run){B2.t=Math.min(1,B2.t+.0035);if(B2.t>=1)B2.run=false;}var t=B2.t;
+  var warm=m===2&&t<.6;
+  x.fillStyle=(t>0)?(warm?'#fff1c9':'#e9c9b8'):'#f1f4f7';x.fillRect(20,30,340,190);x.strokeStyle='#789';x.lineWidth=3;x.strokeRect(20,30,340,190);
+  if(t>0)txt(x,warm?'উষ্ণ জায়গা (ঢাকা দেওয়া)':'ওভেন (বেক হচ্ছে)',190,48,'bold 12px Hind Siliguri',warm?'#8a6a00':RED);else txt(x,'"ওভেনে দাও" চাপো',190,48,'12px Hind Siliguri','#789');
+  var gain=m===0?0:m===1?a*13*ease(t):a*13*ease(clamp(t/.6,0,1));var h=36+gain;
+  x.fillStyle='#8a8f98';x.beginPath();x.moveTo(110,210);x.lineTo(270,210);x.lineTo(280,120);x.lineTo(100,120);x.closePath();x.fill();
+  x.fillStyle=mixc('#f3e2b3','#d6963a',m===2?clamp((t-.5)*2,0,1):t);x.beginPath();x.moveTo(113,208);x.lineTo(267,208);x.lineTo(267,208-h);x.quadraticCurveTo(190,208-h-gain*.5-4,113,208-h);x.closePath();x.fill();x.strokeStyle='rgba(0,0,0,.25)';x.lineWidth=1;x.stroke();
+  var nb=m===0?0:Math.floor(a*5*Math.min(1,t*3));var alive=m===1?t<1:(t<.6&&t>0);
+  for(k=0;k<nb;k++){var by=208-6-((k*29+(alive?FR*.4:0))%Math.max(h-10,10));circ(x,0,125+((k*47)%130),by,3+((k*3)%3)+gain/25,'rgba(255,255,255,.75)','rgba(120,90,40,.5)',1);}
+  if(nb>0)txt(x,m===2&&t>=.6?'ইস্ট মারা গেছে (ফোলা বন্ধ)':'CO₂ বুদবুদ',190,236,'bold 11px Hind Siliguri',m===2&&t>=.6?RED:'#555');
+  txt(x,'উচ্চতা: '+bn(Math.round(h))+' একক',320,242,'10px Hind Siliguri','#567');
+}
+qgame('b2q','b2o','b2f','b2sc',[['বেকিং সোডার রাসায়নিক নাম কী?','সোডিয়াম হাইড্রোজেন কার্বনেট (NaHCO₃)',['সোডিয়াম কার্বনেট (Na₂CO₃)','সোডিয়াম হাইড্রোক্সাইড (NaOH)','ক্যালসিয়াম কার্বনেট (CaCO₃)'],'বেকিং সোডা = সোডিয়াম বাই-কার্বনেট, NaHCO₃।'],
+ ['বেকিং পাউডার = বেকিং সোডা + ?','টারটারিক এসিড',['কাপড় কাচা সোডা','খাদ্য লবণ','চিনি'],'বেকিং সোডায় টারটারিক এসিড (C₄H₆O₆) মেশালে বেকিং পাউডার হয়।'],
+ ['কেক ফুলে ওঠে কোন গ্যাসের জন্য?','CO₂',['O₂','H₂','N₂'],'বেকিং সোডা ও টারটারিক এসিডের বিক্রিয়ায় CO₂ হয়, তাই কেক ফোলে।'],
+ ['পাউরুটি ফোলানোর জন্য কী ব্যবহার করা হয়?','ইস্ট',['কাপড় কাচা সোডা','ভিনেগার','ব্লিচিং পাউডার'],'ইস্টের শ্বসনে CO₂ হয়ে রুটি ফুলে ওঠে।'],
+ ['ওভেনে বেক করলে ইস্টের কী হয়?','উত্তাপে মারা যায়, ফোলা বন্ধ হয়',['আরও দ্রুত বাড়ে','CO₂ বেশি তৈরি করে','কিছুই হয় না'],'বেশি তাপে ইস্ট মরে যায়, তখন পাউরুটির ফোলা বন্ধ হয়।']]);
+
+/* ---------- ল্যাব ৩: ভিনেগার ---------- */
+var V3={p:0,run:false,M:[],B:[]};
+for(var vi=0;vi<20;vi++)V3.M.push({x:rp(vi,55,225),y:rp(vi+4,80,195),a:vi*1.3});
+for(var vj=0;vj<6;vj++)V3.B.push({x:rp(vj+9,60,220),y:rp(vj+2,90,190),a:vj*1.7});
+function v3info(){var k=+$('v3k').value;$('v3kv').textContent=bn(k);var ok=k>=25&&k<=35;
+  $('v3t').innerHTML='<b>'+bn(k)+'°C:</b> '+(ok?'বইয়ের শর্তের (২৫°C–৩৫°C) মধ্যে। অ্যাসিটোব্যাকটরের এনজাইম ইথানলকে O₂-এর সাথে বিক্রিয়া করতে সাহায্য করে।':'বইয়ের শর্তের (২৫°C–৩৫°C) বাইরে। <small>(আমার সরল মডেলে এখানে বিক্রিয়া ধীর দেখানো হয়েছে, বইয়ে এ নিয়ে কিছু লেখা নেই।)</small>')+'<br>CH₃CH₂OH + O₂ →(অ্যাসিটোব্যাকটর) CH₃COOH + H₂O';}
+$('v3k').oninput=v3info;$('v3go').onclick=function(){V3.run=!V3.run;};$('v3rs').onclick=function(){V3.p=0;V3.run=false;};v3info();
+function v3draw(){var x=ctxOf('v3c'),k=+$('v3k').value,i;x.clearRect(0,0,380,240);
+  if(V3.run){V3.p=Math.min(1,V3.p+((k>=25&&k<=35)?.0028:.0004));}
+  x.fillStyle='rgba(215,232,245,.7)';x.fillRect(40,70,200,140);x.strokeStyle='#6b7c8a';x.lineWidth=4;x.beginPath();x.moveTo(40,50);x.lineTo(40,210);x.lineTo(240,210);x.lineTo(240,50);x.stroke();
+  txt(x,'স্টিলের পাত্র',140,36,'bold 11px Hind Siliguri','#456');
+  var conv=Math.floor(V3.p*20);
+  V3.M.forEach(function(m,j){m.x+=Math.cos(FR*.03+m.a)*.35;m.y+=Math.sin(FR*.03+m.a*1.3)*.35;m.x=clamp(m.x,52,228);m.y=clamp(m.y,82,200);var acid=j<conv;circ(x,0,m.x,m.y,7,acid?'#f09a3e':'#4a8fd8','#fff',1);txt(x,acid?'A':'E',m.x,m.y,'bold 8px Hind Siliguri','#fff');});
+  V3.B.forEach(function(b){b.x+=Math.cos(FR*.02+b.a)*.4;b.y+=Math.sin(FR*.025+b.a)*.4;b.x=clamp(b.x,55,225);b.y=clamp(b.y,85,198);x.fillStyle='#4aa84a';x.beginPath();x.ellipse(b.x,b.y,8,4,b.a,0,7);x.fill();});
+  if(V3.run)for(i=0;i<8;i++){var ph=((FR*.012)+i/8)%1;circ(x,0,60+i*22,208-ph*130,2.5+ph*2,'rgba(255,255,255,.9)','#9bd',1);}
+  txt(x,'O₂ বুদবুদ ↑',140,226,'bold 10px Hind Siliguri','#468');
+  x.fillStyle='#4a8fd8';x.fillRect(258,80,12,12);txt(x,'E = ইথানল: '+bn(20-conv),276,86,'bold 11px Hind Siliguri','#234','left');
+  x.fillStyle='#f09a3e';x.fillRect(258,104,12,12);txt(x,'A = ইথানয়িক এসিড: '+bn(conv),276,110,'bold 11px Hind Siliguri','#234','left');
+  x.fillStyle='#4aa84a';x.beginPath();x.ellipse(264,134,8,4,0,0,7);x.fill();txt(x,'অ্যাসিটোব্যাকটর',276,134,'bold 10.5px Hind Siliguri','#234','left');
+  txt(x,V3.p>=1?'✔ ভিনেগার তৈরি':(V3.run?'চলছে…':'"চালু" চাপো'),300,180,'bold 11px Hind Siliguri',V3.p>=1?'#2a7a3b':'#567');
+}
+function v3u(){var d=+$('v3dd').value;$('v3dv').textContent=bn(d);$('v3u').innerHTML=d<2?'আচার তৈরির শুরু। দুই জারেই কিছু ব্যাকটেরিয়া আছে।':d<5?'<b>ভিনেগার ছাড়া:</b> ব্যাকটেরিয়া বাড়ছে। <b>ভিনেগার সহ:</b> ইথানয়িক এসিডের H⁺ ব্যাকটেরিয়াকে ধ্বংস করছে।':'<b>ভিনেগার ছাড়া আচার</b> ব্যাকটেরিয়ার আক্রমণে পচে গেছে। <b>ভিনেগার সহ আচারে</b> ব্যাকটেরিয়া মরে গেছে, আচার ভালো আছে।';}
+$('v3dd').oninput=v3u;v3u();
+function v3ddraw(){var x=ctxOf('v3d'),d=+$('v3dd').value,k;x.clearRect(0,0,380,240);
+  [[30,'ভিনেগার ছাড়া',0],[210,'ভিনেগার সহ',1]].forEach(function(J){var jx=J[0],vin=J[2];
+    x.fillStyle=vin?'rgba(240,180,90,.35)':'rgba(215,232,245,.55)';x.fillRect(jx,60,140,150);x.strokeStyle='#6b7c8a';x.lineWidth=3;x.strokeRect(jx,60,140,150);x.fillStyle='#8a6a45';x.fillRect(jx-4,50,148,12);
+    var rot=!vin&&d>=5;for(k=0;k<5;k++){x.fillStyle=mixc('#8bb34a','#6b5a3a',!vin?clamp((d-1)/5,0,1):0);x.fillRect(jx+14+k*24,140+((k*13)%30),18,14);}
+    if(vin){for(k=0;k<8;k++)txt(x,'H⁺',jx+14+((k*41)%110),80+((k*29)%110),'bold 9px Hind Siliguri',RED);}
+    var nb=vin?Math.max(0,6-d*2):Math.min(34,3+d*5);
+    for(k=0;k<nb;k++){var bx=jx+10+((k*37)%118),by=75+((k*53)%100);if(vin){x.fillStyle=d>=1?'#999':'#4aa84a';x.beginPath();x.ellipse(bx,by,6,3,k,0,7);x.fill();if(d>=1)txt(x,'×',bx,by,'bold 9px Hind Siliguri','#333');}else{x.fillStyle='#4aa84a';x.beginPath();x.ellipse(bx,by,6,3,k,0,7);x.fill();}}
+    txt(x,J[1],jx+70,38,'bold 12px Hind Siliguri',NAVY);txt(x,vin?(d>=3?'✔ ব্যাকটেরিয়া ধ্বংস':'ব্যাকটেরিয়া মরছে'):(rot?'✖ পচে গেছে':'ব্যাকটেরিয়া বাড়ছে'),jx+70,226,'bold 11px Hind Siliguri',vin?'#2a7a3b':(rot?RED:'#a60'));});
+}
+qgame('v3q','v3o','v3f','v3sc',[['ভিনেগার কী?','ইথানয়িক এসিডের ৪%–১০% জলীয় দ্রবণ',['ইথানলের ৪%–১০% দ্রবণ','কার্বনিক এসিডের দ্রবণ','NaOH-এর দ্রবণ'],'ইথানয়িক (অ্যাসিটিক) এসিডের ৪%–১০% জলীয় দ্রবণকে ভিনেগার বলে।'],
+ ['ভিনেগার তৈরিতে কোন ব্যাকটেরিয়া ব্যবহার হয়?','অ্যাসিটোব্যাকটর',['রাইজোবিয়াম','ই. কোলাই','নাইট্রোসোমোনাস'],'অ্যাসিটোব্যাকটর এমন এনজাইম দেয় যা ইথানলকে অক্সিজেনের সাথে বিক্রিয়া করতে সাহায্য করে।'],
+ ['ভিনেগার তৈরিতে ইথানলের সাথে কোন গ্যাসের বুদবুদ চালনা করা হয়?','অক্সিজেন',['কার্বন ডাই-অক্সাইড','হাইড্রোজেন','অ্যামোনিয়া'],'CH₃CH₂OH + O₂ → CH₃COOH + H₂O।'],
+ ['বইয়ের মতে ভিনেগার তৈরির তাপমাত্রা কত?','২৫°C–৩৫°C',['০°C–১০°C','৫০°C–৬০°C','১০০°C-এর বেশি'],'২৫°C–৩৫°C তাপমাত্রায় রাখা পাত্রে প্রস্তুত করা হয়।'],
+ ['আচারে ভিনেগার ব্যাকটেরিয়া ধ্বংস করে কীভাবে?','ইথানয়িক এসিডের ত্যাগ করা H⁺ দিয়ে',['O₂ যোগ করে','ইথানল দিয়ে','তাপ উৎপন্ন করে'],'ইথানয়িক এসিডের প্রোটন (H⁺) ব্যাকটেরিয়াকে ধ্বংস করে।'],
+ ['কোমল পানীয়ে CO₂ ও পানি বিক্রিয়া করে কোন এসিড তৈরি করে?','কার্বনিক এসিড (H₂CO₃)',['সালফিউরিক এসিড','ইথানয়িক এসিড','নাইট্রিক এসিড'],'CO₂ + H₂O → H₂CO₃।']]);
+/* ---------- ল্যাব ৪: সাবান ও ডিটারজেন্ট ---------- */
+var W4={st:0,t:0};
+var W4S=['১ ময়লা','২ আয়ন লাগে','৩ ঘষো','৪ ধোও'];
+var W4T=['কাপড়ে তেল বা গ্রিজ লেগে আছে, তার ওপর ধুলাবালি আটকে ময়লা তৈরি হয়েছে। পানিতে সাবান/ডিটারজেন্ট আয়ন (R-COO⁻ বা C₁₂H₂₅SO₄⁻) আছে।','আয়নের <b>হাইড্রোফোবিক লেজ</b> তেলে ঢোকে (তেলে দ্রবীভূত হয়)। <b>হাইড্রোফিলিক মাথা</b> (ঋণাত্মক চার্জ) পানির দিকে থাকে।','কাপড় ঘষলে বা মোচড়ালে তেলের কণা কাপড় থেকে আলাদা হয়। প্রতিটি কণা চারদিক থেকে ঋণাত্মক আয়নে ঢাকা পড়ে। ঋণাত্মক বলয় একে অপরকে বিকর্ষণ করে, তাই কণাগুলো একত্র হতে পারে না।','পানি দিয়ে ধুলে ফেনা সরে যায়। তার সাথে তেল ও ধুলাবালিও কাপড় থেকে বের হয়ে যায়। কাপড় পরিষ্কার হয়।'];
+function w4show(){stp('w4st',W4S,W4.st);$('w4t').innerHTML=W4T[W4.st];}
+$('w4n').onclick=function(){W4.st=(W4.st+1)%4;W4.t=0;w4show();};$('w4r').onclick=function(){W4.st=0;W4.t=0;w4show();};w4show();
+function w4res(){var a=+$('w4a').value,w=+$('w4w').value,lv=[[2,1],[3,3]][a][w],tx=[['সাবান + নরম পানি: কাজ করে (ক্ষমতা ডিটারজেন্টের চেয়ে কম)','সাবান + খর পানি: <b>ভালো কাজ করতে পারে না</b>'],['ডিটারজেন্ট + নরম পানি: ক্ষমতা সাবানের চেয়ে <b>বেশি</b>','ডিটারজেন্ট + খর পানি: <b>খর পানিতেও ভালো কাজ করে</b>']][a][w];
+  $('w4res').innerHTML=tx+'<div style="display:flex;gap:4px;margin:8px 0 2px">'+[1,2,3].map(function(i){return '<div style="flex:1;height:14px;border-radius:6px;background:'+(i<=lv?(lv===1?'#e63946':lv===2?'#e9a23b':'#2a9d8f'):'#dde3e8')+'"></div>';}).join('')+'</div><small>বইয়ের তুলনা-টেবিল অনুযায়ী। দণ্ডের মাপ শুধু তুলনার জন্য, মাপা সংখ্যা নয়।</small>';}
+$('w4a').onchange=w4res;$('w4w').onchange=w4res;w4res();
+function w4ion(x,hx0,hy0,ang,al){x.globalAlpha=al;x.strokeStyle='#666';x.lineWidth=1.6;x.beginPath();var px=hx0,py=hy0,k;x.moveTo(px,py);for(k=1;k<=4;k++){var off=(k%2?3:-3),nx=hx0+Math.cos(ang)*k*4-Math.sin(ang)*off*(k>0?1:0),ny=hy0+Math.sin(ang)*k*4+Math.cos(ang)*off;x.lineTo(nx,ny);}x.stroke();circ(x,0,hx0,hy0,4.6,'#2b6cb0','#fff',1);x.globalAlpha=1;}
+function w4draw(){var x=ctxOf('w4c'),st=W4.st,k;x.clearRect(0,0,380,280);W4.t=Math.min(1,W4.t+.01);var t=ease(W4.t);
+  x.fillStyle='#eaf4fb';x.fillRect(0,0,380,236);x.fillStyle='#e8d9c0';x.fillRect(30,236,320,18);for(k=0;k<16;k++){x.fillStyle='rgba(120,90,60,.25)';x.fillRect(30+k*20,236,10,18);}txt(x,'কাপড়',190,264,'bold 10px Hind Siliguri','#765');
+  function droplet(cx,cy,r,al){x.globalAlpha=al;x.fillStyle='#c7791f';x.beginPath();x.arc(cx,cy,r,0,7);x.fill();for(var q=0;q<4;q++)circ(x,0,cx-r*.5+q*r*.35,cy-r*.3+((q*7)%9)*.5,1.6,'#888',null);x.globalAlpha=1;}
+  if(st===0){x.fillStyle='#c7791f';x.beginPath();x.ellipse(190,230,54,14,0,0,7);x.fill();for(k=0;k<7;k++)circ(x,0,150+k*13,224+((k*5)%8),2.4,'#888',null);txt(x,'তেল/গ্রিজ + ধুলা',190,206,'bold 11px Hind Siliguri','#6b3a0a');
+    for(k=0;k<9;k++){var fx=rp(k,40,340)+Math.sin(FR*.03+k)*6,fy=rp(k+3,30,170)+Math.cos(FR*.03+k)*6;w4ion(x,fx,fy,k*.9+FR*.01,1);}}
+  else if(st===1){x.fillStyle='#c7791f';x.beginPath();x.ellipse(190,230,54,14,0,0,7);x.fill();for(k=0;k<7;k++)circ(x,0,150+k*13,224+((k*5)%8),2.4,'#888',null);
+    for(k=0;k<14;k++){var a0=Math.PI+k*(Math.PI/13),ox=190+Math.cos(a0)*(62),oy=230+Math.sin(a0)*(22);var fx2=rp(k,40,340),fy2=rp(k+3,30,170);var ix=lerp(fx2,ox,t),iy=lerp(fy2,oy,t),ang=lerp(k,a0+Math.PI,t);w4ion(x,ix,iy,ang,1);}
+    txt(x,'লেজ তেলে, মাথা পানিতে',190,160,'bold 11px Hind Siliguri',NAVY);}
+  else if(st===2){var C=[[110,150],[190,120],[270,150]];C.forEach(function(c,ci){var cx=lerp(190,c[0],t),cy=lerp(230,c[1],t),r=lerp(0,17,t);droplet(cx,cy,Math.max(r,3),1);for(var q=0;q<9;q++){var an=q*Math.PI*2/9+FR*.01;w4ion(x,cx+Math.cos(an)*(r+9),cy+Math.sin(an)*(r+9),an+Math.PI,t);}});
+    if(t>.5){txt(x,'↔ বিকর্ষণ',150,128,'bold 10px Hind Siliguri',RED);txt(x,'↔ বিকর্ষণ',230,128,'bold 10px Hind Siliguri',RED);}txt(x,'তেলের কণা ঋণাত্মক আয়নে ঢাকা',190,36,'bold 11px Hind Siliguri',NAVY);}
+  else{var C2=[[110,150],[190,120],[270,150]];C2.forEach(function(c,ci){var cx=lerp(c[0],c[0]+(ci-1)*50+60,t),cy=lerp(c[1],30,t),r=17;var al=1-t*.6;droplet(cx,cy,r,al);for(var q=0;q<9;q++){var an=q*Math.PI*2/9;w4ion(x,cx+Math.cos(an)*(r+9),cy+Math.sin(an)*(r+9),an+Math.PI,al);}});
+    for(k=0;k<14;k++){var bx=rp(k,120,350),by=lerp(rp(k+4,150,230),rp(k+4,20,120),t);x.globalAlpha=.8;circ(x,0,bx,by,5+(k%3)*2,'rgba(255,255,255,.9)','#9bd',1);x.globalAlpha=1;}
+    txt(x,'ফেনার সাথে তেল ও ধুলা বেরিয়ে যায়',190,200,'bold 11px Hind Siliguri',NAVY);txt(x,'✔ কাপড় পরিষ্কার',190,246,'bold 11px Hind Siliguri','#2a7a3b');}
+  circ(x,0,18,22,4.6,'#2b6cb0','#fff',1);txt(x,'হাইড্রোফিলিক মাথা',28,22,'9.5px Hind Siliguri','#234','left');w4ion(x,20,38,0,1);txt(x,'হাইড্রোফোবিক লেজ',46,38,'9.5px Hind Siliguri','#234','left');
+}
+qgame('w4q','w4o','w4f','w4sc',[['সাবান বা ডিটারজেন্ট আয়নের কোন প্রান্ত পানিকে আকর্ষণ করে?','ঋণাত্মক চার্জযুক্ত প্রান্ত (হাইড্রোফিলিক)',['কার্বন শিকল (হাইড্রোফোবিক)','Na⁺ আয়নের প্রান্ত','কোনো প্রান্তই নয়'],'ঋণাত্মক প্রান্ত পানি আকর্ষী, একে হাইড্রোফিলিক বলে।'],
+ ['হাইড্রোফোবিক প্রান্ত কোথায় দ্রবীভূত হয়?','তেল বা গ্রিজে',['পানিতে','NaCl-এ','বাতাসে'],'কার্বন শিকল পানি বিকর্ষী, তাই তেল বা গ্রিজে দ্রবীভূত হয়।'],
+ ['তেলের কণাগুলো আবার একত্র হয় না কেন?','ঋণাত্মক আয়নের বলয়ের পারস্পরিক বিকর্ষণ',['তেল পানিতে দ্রবীভূত হয় বলে','ধনাত্মক চার্জের আকর্ষণে','তাপের জন্য'],'প্রতিটি তেলের কণার চারদিকে ঋণাত্মক বলয়, তাই কণাগুলো একে অপরকে বিকর্ষণ করে।'],
+ ['কোনটি খর পানিতেও ভালো কাজ করে?','ডিটারজেন্ট',['সাবান','দুটোই খারাপ','কোনোটিই নয়'],'বইয়ের টেবিল অনুযায়ী সাবান খর পানিতে ভালো কাজ করতে পারে না।'],
+ ['কোনটির পরিষ্কারকরণ ক্ষমতা বেশি?','ডিটারজেন্ট',['সাবান','সমান','কোনোটিই নয়'],'ডিটারজেন্টের ক্ষমতা সাবানের চেয়ে বেশি।'],
+ ['ডিটারজেন্ট আয়নের সংকেত কোনটি?','C₁₂H₂₅SO₄⁻',['R-COO⁻','Na⁺','C₁₇H₃₅COO⁺'],'সোডিয়াম লরাইল সালফেট ভেঙে C₁₂H₂₅SO₄⁻ ও Na⁺ হয়।']]);
+
+/* ---------- ল্যাব ৫: সাবান তৈরি ---------- */
+var X5={st:0,t:0};
+var X5S=['১ মেশাও','২ ফুটাও','৩ আঠালো','৪ NaCl দাও','৫ ছেঁকে শুকাও'];
+var X5T=['তেল বা চর্বির সাথে NaOH (বা KOH) দ্রবণ নেওয়া হয়। <br><b>তেল/চর্বি + NaOH → সাবান + গ্লিসারিন</b> (সাবানায়ন)।<br><small>বইয়ের (a), (b) ধাপ ছাপা হয়নি, তাই এই ধাপটি তত্ত্বের বর্ণনা অনুযায়ী।</small>','মিশ্রণকে স্টিম বাথে ৩০ মিনিট ফুটানো হয়। নাড়ানি কাঠি দিয়ে একটু পর পর নাড়তে হয়। পানির ঘাটতি হলে পানি যোগ করতে হয়।','তেল বা চর্বি সম্পূর্ণ দ্রবীভূত হয়ে এক ধরনের আঠালো পদার্থ তৈরি হয়। তাপ বন্ধ করে ঠাণ্ডা হতে দেওয়া হয়।','ঠাণ্ডা মিশ্রণে ৫০ mL সম্পৃক্ত NaCl দ্রবণ যোগ করে সারা রাত রাখা হয়। গ্লিসারিন নিচে থাকে, সাবান ওপরে সোপ কেকের মতো ভেসে ওঠে।','পরদিন ফিল্টার পেপারে ছেঁকে পরিস্রুত অংশ ফেলে দেওয়া হয়। সাবানকে শুকোতে দেওয়া হয়। এবার ছাঁচে ঢেলে বিভিন্ন আকৃতি দেওয়া যায়।'];
+function x5show(){stp('x5st',X5S,X5.st);$('x5t').innerHTML=X5T[X5.st];}
+$('x5n').onclick=function(){X5.st=(X5.st+1)%5;X5.t=0;x5show();};$('x5r').onclick=function(){X5.st=0;X5.t=0;x5show();};x5show();
+var X5P=[['পরীক্ষা ১: ফেনা','টেস্টটিউবে তিন ভাগের এক ভাগ পানি ও তোমার তৈরি সাবানের নমুনা নাও। মুখ বন্ধ করে ঝাঁকাও। ফেনা উৎপন্ন হয় কি না লক্ষ করো।'],['পরীক্ষা ২: কেরোসিন','টেস্টটিউবে ২/৩ ফোঁটা কেরোসিন যোগ করে ঝাঁকাও ও পর্যবেক্ষণ করো। কেরোসিনকে গ্রিজ ধরে নিয়ে ফলাফল ব্যাখ্যা করো।'],['পরীক্ষা ৩: pH','তোমার তৈরি সাবানের pH মান নির্ণয় করো।'],['পরীক্ষা ৪: তুলনা','বাজার থেকে কিনে আনা সাবানের জন্যও উপরের তিনটি পরীক্ষা করো এবং নিজের সাবানের সাথে তুলনা করো।']];
+$('x5p').innerHTML=X5P.map(function(p,i){return '<button data-i="'+i+'">'+p[0]+'</button>';}).join('');
+$('x5p').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var d=X5P[+b.getAttribute('data-i')];$('x5t').innerHTML='<b>'+d[0]+'</b><br>'+d[1];};
+function x5draw(){var x=ctxOf('x5c'),st=X5.st,k;x.clearRect(0,0,380,280);X5.t=Math.min(1,X5.t+.008);var t=ease(X5.t);
+  if(st<=3){
+    var heat=st<=2&&st>=1;
+    x.fillStyle='#9aa4ae';x.beginPath();x.moveTo(80,200);x.lineTo(300,200);x.lineTo(290,262);x.lineTo(90,262);x.closePath();x.fill();x.fillStyle='rgba(140,200,240,.7)';x.fillRect(95,214,190,42);txt(x,'স্টিম বাথ (গরম পানি)',190,242,'bold 10.5px Hind Siliguri','#234');
+    if(heat||st===0)for(k=0;k<6;k++){var fh=10+Math.sin(FR*.3+k*2)*5;if(st>=1&&st<=2){x.fillStyle=k%2?ORG:'#f6c34a';x.beginPath();x.moveTo(110+k*30,272);x.lineTo(118+k*30,272-fh);x.lineTo(126+k*30,272);x.fill();}}
+    x.strokeStyle='#6b7c8a';x.lineWidth=3;x.beginPath();x.moveTo(135,70);x.lineTo(135,205);x.lineTo(245,205);x.lineTo(245,70);x.stroke();
+    if(st===0){x.fillStyle='#dff0fa';x.fillRect(137,140,106,63);x.fillStyle='#e8c04a';x.fillRect(137,110,106,30);txt(x,'তেল/চর্বি',190,125,'bold 10.5px Hind Siliguri','#5a4200');txt(x,'NaOH দ্রবণ',190,172,'bold 10.5px Hind Siliguri','#234');}
+    else if(st===1){x.fillStyle=mixc('#dff0fa','#efe0a8',t);x.fillRect(137,110,106,93);x.fillStyle=mixc('#e8c04a','#efe0a8',t);x.fillRect(137,110,106,30*(1-t)+1);
+      var ang=FR*.12;x.strokeStyle='#8a6a45';x.lineWidth=4;x.beginPath();x.moveTo(190+Math.cos(ang)*14,60);x.lineTo(190+Math.cos(ang)*8,190);x.stroke();for(k=0;k<6;k++){var ph=((FR*.014)+k/6)%1;circ(x,0,150+k*16,200-ph*80,3,'rgba(255,255,255,.8)','#bbb',1);}txt(x,'নাড়ো ও ফুটাও (৩০ মিনিট)',190,50,'bold 10.5px Hind Siliguri',RED);}
+    else if(st===2){x.fillStyle='#ecdfb2';x.fillRect(137,110,106,93);for(k=0;k<10;k++)circ(x,0,150+((k*37)%85),122+((k*23)%72),2.2,'#d9c88a',null);txt(x,'আঠালো পদার্থ',190,156,'bold 11px Hind Siliguri','#5a4200');}
+    else{var th=36*t;x.fillStyle='#e6eff4';x.fillRect(137,110,106,93);x.fillStyle='#f6efd8';x.fillRect(137,110,106,th+4);x.strokeStyle='#cbbf94';x.strokeRect(137,110,106,th+4);
+      if(t<.95)for(k=0;k<10;k++){var dy=60+((FR*1.5+k*14)%80);circ(x,0,rp(k,150,230),dy,2.4,'#fff','#999',1);}
+      txt(x,'সাবান (ওপরে ভাসে)',190,110+th/2+4,'bold 10.5px Hind Siliguri','#5a4200');txt(x,'গ্লিসারিন + পানি (নিচে)',190,185,'bold 10.5px Hind Siliguri','#234');txt(x,'+ সম্পৃক্ত NaCl',300,90,'bold 10.5px Hind Siliguri',BLU);}
+  }else{
+    x.fillStyle='#ddd';x.beginPath();x.moveTo(120,60);x.lineTo(260,60);x.lineTo(205,130);x.lineTo(175,130);x.closePath();x.fill();x.strokeStyle='#789';x.lineWidth=2;x.stroke();
+    x.fillStyle='#f6efd8';x.beginPath();x.moveTo(135,66);x.lineTo(245,66);x.lineTo(200,122);x.lineTo(180,122);x.closePath();x.fill();txt(x,'সোপ কেক',190,92,'bold 10.5px Hind Siliguri','#5a4200');
+    for(k=0;k<3;k++){var dy=134+((FR*1.5+k*20)%60);circ(x,0,190,dy,2.5,'#9cc9ea',null);}
+    x.strokeStyle='#789';x.beginPath();x.moveTo(150,200);x.lineTo(150,250);x.lineTo(230,250);x.lineTo(230,200);x.stroke();x.fillStyle='#e6eff4';x.fillRect(151,230,78,19);txt(x,'পরিস্রুত (ফেলে দাও)',190,262,'10px Hind Siliguri','#567');
+    if(t>.5){x.globalAlpha=(t-.5)*2;x.fillStyle='#f3ead0';x.fillRect(290,190,70,42);x.strokeStyle='#cbbf94';x.strokeRect(290,190,70,42);txt(x,'শুকনো সাবান',325,211,'bold 10.5px Hind Siliguri','#5a4200');x.globalAlpha=1;}}
+}
+qgame('x5q','x5o','x5f','x5sc',[['তেল বা চর্বি ও ক্ষারের বিক্রিয়ায় সাবানের সাথে আর কী তৈরি হয়?','গ্লিসারিন',['ইথানল','ইথানয়িক এসিড','CO₂'],'তেল/চর্বি + NaOH → সাবান + গ্লিসারিন।'],
+ ['তেল বা চর্বি থেকে সাবান তৈরির প্রক্রিয়াকে কী বলে?','সাবানায়ন',['ভস্মীকরণ','তাপজারণ','গ্যালভানাইজিং'],'সাবান ও গ্লিসারিন তৈরির এই প্রক্রিয়াই সাবানায়ন।'],
+ ['সাবানে NaCl মেশালে সাবান কোথায় যায়?','পাত্রের ওপরে সোপ কেকের মতো ভেসে ওঠে',['পাত্রের তলায় থাকে','দ্রবীভূত হয়ে যায়','বাষ্প হয়ে যায়'],'গ্লিসারিন নিচে থাকে, সাবান NaCl-কে ঘিরে ওপরে ভেসে ওঠে।'],
+ ['সোডিয়াম স্টিয়ারেটের সংকেত কোনটি?','C₁₇H₃₅COONa',['C₁₇H₃₅COOK','C₁₂H₂₅SO₄Na','CH₃COONa'],'সোডিয়াম স্টিয়ারেট = C₁₇H₃₅COONa (পটাশিয়ামের হলে C₁₇H₃₅COOK)।'],
+ ['সাবানে অতিরিক্ত ক্ষার থাকলে কী হয়?','ত্বকের ক্ষতি হয়',['ফেনা বেড়ে যায়','তৈলাক্ত ভাব আসে','কিছু হয় না'],'বেশি ক্ষার থাকলে সাবান ব্যবহারে ত্বকের ক্ষতি হয়।'],
+ ['স্টিয়ারিক ও অলিক এসিডের পার্থক্য কী?','স্টিয়ারিক সম্পৃক্ত, অলিক অসম্পৃক্ত',['স্টিয়ারিক অসম্পৃক্ত, অলিক সম্পৃক্ত','দুটোই সম্পৃক্ত','দুটোই অসম্পৃক্ত'],'স্টিয়ারিকে শুধু C–C একক বন্ধন, অলিকে C=C দ্বিবন্ধন আছে।']]);
+/* ---------- ল্যাব ৬: ব্লিচিং, টয়লেট, গ্লাস ক্লিনার ---------- */
+var G6={t:0,run:false};
+var G6E=[['Ca(OCl)Cl + H₂O','→ CaCl₂ + HOCl','HOCl → HCl + [O]'],['NaOCl + H₂O','→ NaOH + HOCl','HOCl → HCl + [O]'],['NH₄OH: তেল-গ্রিজ সরায়','আইসোপ্রোপাইল অ্যালকোহল: জৈব দাগ গলায়','কাচ (সিলিকেট) অক্ষত']];
+function g6info(){var m=+$('g6s').value,done=G6.t>=1;
+  $('g6t').innerHTML=!done?['<b>ব্লিচিং পাউডার</b> Ca(OCl)Cl। দাগের ওপর রেখে পানি দিলে বিক্রিয়া শুরু হয়। "ঢালো" চাপো।','<b>টয়লেট ক্লিনার:</b> মূল উপাদান NaOH, সাথে NaOCl। NaOH চর্বি-প্রোটিনের সাথে বিক্রিয়া করে, NaOCl রং ও জীবাণুর সাথে। "ঢালো" চাপো।','<b>গ্লাস ক্লিনার:</b> NH₄OH ও আইসোপ্রোপাইল অ্যালকোহল। "ঢালো" চাপো।'][m]:['Ca(OCl)Cl + H₂O → CaCl₂ + HOCl<br>HOCl → HCl + [O]<br><b>রঙিন পদার্থ + [O] → বর্ণহীন পদার্থ</b><br><b>জীবাণু + [O] → মৃত জীবাণু</b><br><small>এজন্য ব্লিচিং পাউডারকে বিরঞ্জক বলে।</small>','NaOH চর্বি ও প্রোটিন ময়লা সরায়।<br>NaOCl + H₂O → NaOH + HOCl; HOCl → HCl + [O]<br>[O] রং বর্ণহীন করে ও জীবাণু মারে।','NH₄OH কাচের তেল-গ্রিজ সরায়, কাচের সিলিকেট নষ্ট করে না। আইসোপ্রোপাইল অ্যালকোহল জৈব পদার্থ দ্রবীভূত করে।<br><b>মাস্ক পরো:</b> অ্যামোনিয়া গ্যাস নাকে-মুখে যেতে পারে।'][m];}
+$('g6s').onchange=function(){G6.t=0;G6.run=false;g6info();};$('g6go').onclick=function(){G6.t=0;G6.run=true;g6info();};$('g6rs').onclick=function(){G6.t=0;G6.run=false;g6info();};g6info();
+function g6draw(){var x=ctxOf('g6c'),m=+$('g6s').value,k;x.clearRect(0,0,380,280);if(G6.run){G6.t=Math.min(1,G6.t+.0045);if(G6.t>=1){G6.run=false;g6info();}}var t=G6.t;
+  var st=clamp((t-.4)/.5,0,1),gr=clamp((t-.45)/.45,0,1);
+  if(m<2){x.fillStyle=m===0?'#f3efe6':'#e9eef2';x.fillRect(20,150,210,100);x.strokeStyle='#9ab';x.strokeRect(20,150,210,100);txt(x,m===0?'কাপড়/মেঝে':'টয়লেট বেসিন',125,262,'bold 10.5px Hind Siliguri','#567');
+    x.globalAlpha=1-st;x.fillStyle='#7a3fa0';x.beginPath();x.ellipse(85,195,32,17,0,0,7);x.fill();x.globalAlpha=1;if(st<1)txt(x,'রঙিন দাগ',85,195,'bold 9.5px Hind Siliguri','#fff');
+    if(m===1){x.globalAlpha=1-clamp(t/.4,0,1);x.fillStyle='#c9a24a';x.beginPath();x.ellipse(170,175,24,12,0,0,7);x.fill();x.globalAlpha=1;if(t<.4)txt(x,'চর্বি',170,175,'bold 9px Hind Siliguri','#5a4200');}
+    for(k=0;k<5;k++){var gx=150+k*14,gy=212+((k*9)%20);x.globalAlpha=1-gr*.6;circ(x,0,gx,gy,5*(1-gr*.4),gr>.7?'#999':'#4aa84a','#2a6a2a',1);x.strokeStyle=gr>.7?'#999':'#2a6a2a';for(var q=0;q<6;q++){var an=q*Math.PI/3;x.beginPath();x.moveTo(gx+Math.cos(an)*5,gy+Math.sin(an)*5);x.lineTo(gx+Math.cos(an)*8,gy+Math.sin(an)*8);x.stroke();}x.globalAlpha=1;}
+    txt(x,gr>.7?'মৃত জীবাণু':'জীবাণু',190,242,'bold 9.5px Hind Siliguri',gr>.7?'#666':'#2a6a2a');
+    x.fillStyle='#cdd6de';x.fillRect(40,70,80,36);x.strokeStyle='#789';x.strokeRect(40,70,80,36);txt(x,m===0?'ব্লিচিং পাউডার':'টয়লেট ক্লিনার',80,88,'bold 10px Hind Siliguri','#234');
+    if(G6.run||t>0){for(k=0;k<3;k++){var dy=108+((FR*1.4+k*14)%34);circ(x,0,60+k*18,dy,2.6,'#6ab0e6',null);}}
+    if(t>.35)for(k=0;k<12;k++){var tg=k<6?[85,195]:[150+(k-6)*14,215],ph=((FR*.012)+k/12)%1;circ(x,0,lerp(80,tg[0],ph),lerp(110,tg[1],ph),3.2,RED,'#fff',1);}
+    if(t>.35)txt(x,'[O] জায়মান অক্সিজেন',140,135,'bold 10px Hind Siliguri',RED);
+  }else{x.fillStyle='rgba(215,235,248,.85)';x.fillRect(20,60,210,170);x.strokeStyle='#789';x.lineWidth=3;x.strokeRect(20,60,210,170);txt(x,'কাচ',125,244,'bold 10.5px Hind Siliguri','#567');
+    var al1=1-clamp((t-.1)/.5,0,1),al2=1-clamp((t-.3)/.5,0,1);
+    x.globalAlpha=al1;[[70,110,22],[150,140,26],[100,190,20]].forEach(function(s){x.fillStyle='#a88a52';x.beginPath();x.ellipse(s[0],s[1],s[2],s[2]*.6,.3,0,7);x.fill();});x.globalAlpha=1;if(al1>.2)txt(x,'তেল/গ্রিজের দাগ',110,160,'bold 9.5px Hind Siliguri','#5a4200');
+    x.globalAlpha=al2;x.fillStyle='#4a6a3a';x.beginPath();x.ellipse(180,100,18,10,0,0,7);x.fill();x.globalAlpha=1;if(al2>.2)txt(x,'জৈব দাগ',180,100,'bold 9px Hind Siliguri','#fff');
+    if(G6.run||t>0){x.fillStyle='#cdd6de';x.fillRect(120,20,90,28);x.strokeStyle='#789';x.strokeRect(120,20,90,28);txt(x,'গ্লাস ক্লিনার',165,34,'bold 10px Hind Siliguri','#234');}
+    if(t>=1)txt(x,'✔ কাচ পরিষ্কার',125,45,'bold 11px Hind Siliguri','#2a7a3b');
+    if(t>.2){txt(x,'😷',330,40,'bold 26px Hind Siliguri','#000');txt(x,'মাস্ক পরো',330,66,'bold 10px Hind Siliguri',RED);for(k=0;k<4;k++){var ph2=((FR*.01)+k/4)%1;x.globalAlpha=1-ph2;txt(x,'NH₃',250+ph2*60,100-ph2*30,'bold 9px Hind Siliguri','#a0a');x.globalAlpha=1;}}}
+  if(m<2||true){var E=G6E[m];x.fillStyle='rgba(255,255,255,.9)';x.fillRect(244,100,132,100);x.strokeStyle='#cdd';x.strokeRect(244,100,132,100);var sh=m<2?9.5:9;E.forEach(function(L,i){var tt=[.05,.2,.35][i];if(t>tt){var fz=(i===1&&m===2)?8.5:sh;if(m===2&&i<2){var parts=L.split(': ');txt(x,parts[0]+':',250,118+i*38,'bold '+fz+'px Hind Siliguri',NAVY,'left');txt(x,parts[1],250,130+i*38,fz+'px Hind Siliguri','#333','left');}else txt(x,L,250,120+i*28,'bold '+fz+'px Hind Siliguri',NAVY,'left');}});}
+}
+qgame('g6q','g6o','g6f','g6sc',[['জায়মান অক্সিজেন [O] কী কাজ করে?','রঙিন পদার্থকে বর্ণহীন করে ও জীবাণু ধ্বংস করে',['কাচের সিলিকেট গলায়','পানিকে বিশুদ্ধ করে','চর্বিকে সাবান করে'],'রঙিন পদার্থ + [O] → বর্ণহীন; জীবাণু + [O] → মৃত জীবাণু।'],
+ ['ব্লিচিং পাউডারের রাসায়নিক নাম কী?','ক্যালসিয়াম ক্লোরো হাইপোক্লোরাইট, Ca(OCl)Cl',['ক্যালসিয়াম কার্বনেট','সোডিয়াম হাইপোক্লোরাইট','ক্যালসিয়াম হাইড্রোক্সাইড'],'ব্লিচিং পাউডারের সংকেত Ca(OCl)Cl।'],
+ ['টয়লেট ক্লিনারের মূল উপাদান কোনটি?','সোডিয়াম হাইড্রোক্সাইড (NaOH)',['HCl','NH₄OH','Na₂CO₃'],'মূল উপাদান NaOH। সাথে NaOCl মেশানো থাকে।'],
+ ['গ্লাস ক্লিনারে কী কী থাকে?','NH₄OH ও আইসোপ্রোপাইল অ্যালকোহল',['NaOH ও NaOCl','Ca(OCl)Cl ও HCl','H₂SO₄ ও NaCl'],'অ্যামোনিয়াম হাইড্রোক্সাইডের সাথে আইসোপ্রোপাইল অ্যালকোহল মেশানো হয়।'],
+ ['গ্লাস ক্লিনার ব্যবহারে নাক-মুখে মাস্ক পরতে হয় কেন?','NH₃ গ্যাস বের হয়ে নাকে-মুখে যেতে পারে',['ক্লোরিন বের হয় বলে','CO₂ বের হয় বলে','তাপ উৎপন্ন হয় বলে'],'NH₄OH থেকে অ্যামোনিয়া গ্যাস বের হতে পারে।'],
+ ['ব্লিচিং পাউডার কীভাবে তৈরি হয়?','৪০°C-এ Ca(OH)₂-এর ওপর Cl₂ চালনা করে',['NaCl-এ NH₃ চালনা করে','CaCO₃ কে ভেঙে','NaOH ও CO₂ বিক্রিয়ায়'],'Ca(OH)₂ + Cl₂ → Ca(OCl)Cl + H₂O।'],
+ ['ব্লিচিং পাউডারকে বিরঞ্জক বলে কেন?','রঙিন দাগকে বর্ণহীন করে',['সুগন্ধ ছড়ায়','ফেনা তৈরি করে','পানি নরম করে'],'বিরঞ্জক = যা রং নষ্ট করে বর্ণহীন করে।']]);
+
+/* ---------- ল্যাব ৭ক: পরীক্ষাগারে অ্যামোনিয়া ---------- */
+var N7={on:false,q:0};
+function n7info(){var m=+$('n7s').value,e=m===0?'2NH₄Cl + CaO → 2NH₃ + CaCl₂ + H₂O':'2NH₄Cl(s) + Ca(OH)₂ →(Δ) 2NH₃ + CaCl₂ + 2H₂O';
+  $('n7t').innerHTML=(N7.q>=1?'<b>✔ নলে NH₃ জমেছে।</b><br>':'')+e+'<br><small>অ্যামোনিয়া বাতাসের চেয়ে হালকা, তাই উল্টো করে ধরা নলে ওপরে জমে।</small>';}
+$('n7s').onchange=function(){N7.on=false;N7.q=0;n7info();};$('n7go').onclick=function(){N7.on=!N7.on;};$('n7rs').onclick=function(){N7.on=false;N7.q=0;n7info();};n7info();
+function n7draw(){var x=ctxOf('n7c'),k;x.clearRect(0,0,380,260);if(N7.on){N7.q=Math.min(1,N7.q+.0028);if(N7.q>=1){N7.on=false;n7info();}}
+  x.fillStyle='rgba(160,100,200,.4)';x.fillRect(61,42,38,100*N7.q);x.strokeStyle='#6b7c8a';x.lineWidth=3;x.beginPath();x.moveTo(60,145);x.lineTo(60,40);x.lineTo(100,40);x.lineTo(100,145);x.stroke();
+  x.strokeStyle='#8a97a4';x.lineWidth=5;x.beginPath();x.moveTo(295,170);x.lineTo(80,170);x.lineTo(80,62);x.stroke();
+  x.fillStyle='rgba(235,245,252,.6)';x.fillRect(210,150,140,40);x.strokeStyle='#6b7c8a';x.lineWidth=3;x.strokeRect(210,150,140,40);x.fillStyle='#a0693a';x.fillRect(203,158,10,24);
+  x.fillStyle='#f1efe6';x.fillRect(292,152,56,36);txt(x,'NH₄Cl + '+(+$('n7s').value===0?'CaO':'Ca(OH)₂'),320,170,'bold 8.5px Hind Siliguri','#444');
+  if(N7.on||N7.q>0){for(k=0;k<6;k++){var fh=10+Math.sin(FR*.3+k*2)*5;x.fillStyle=k%2?ORG:'#f6c34a';x.beginPath();x.moveTo(296+k*8,215);x.lineTo(300+k*8,215-fh-4);x.lineTo(304+k*8,215);x.fill();}}
+  if(N7.on)wdots(x,[[290,170],[215,170],[80,170],[80,70]],FR*.006,'#a05cc8');
+  if(N7.on)for(k=0;k<5;k++)circ(x,0,232+k*24,153,1.8,'#7ab',null);
+  txt(x,'উল্টো করে ধরা নল',80,26,'bold 10.5px Hind Siliguri','#456');txt(x,'NH₃ (বাতাসের চেয়ে হালকা)',210,80,'bold 10px Hind Siliguri','#6a2a9a');
+  txt(x,'↑ ওপরে জমে',210,98,'10px Hind Siliguri','#6a2a9a');txt(x,'তাপ',320,235,'bold 11px Hind Siliguri',RED);
+}
+/* ---------- ল্যাব ৭খ: হেবার ---------- */
+var N7B={rx:false,t:0};
+function n7calc(){var n=+$('n7n').value,h=+$('n7h').value,r=Math.min(n,Math.floor(h/3));return {n:n,h:h,r:r,ln:n-r,lh:h-3*r,nh3:2*r};}
+function n7binfo(){var c=n7calc();$('n7nv').textContent=bn(c.n);$('n7hv').textContent=bn(c.h);
+  var msg=c.h===3*c.n?'✔ আদর্শ অনুপাত ১ : ৩। কিছুই বাকি থাকবে না।':c.h<3*c.n?'H₂ কম পড়েছে। N₂ বাকি থাকবে।':'N₂ কম পড়েছে। H₂ বাকি থাকবে।';
+  $('n7u').innerHTML='<b>N₂ = '+bn(c.n)+', H₂ = '+bn(c.h)+'</b><br>'+msg+'<br>হিসাব: ১টি N₂-এর জন্য ৩টি H₂ লাগে। বিক্রিয়া হবে '+bn(c.r)+' বার, NH₃ হবে <b>'+bn(c.nh3)+'টি</b>। বাকি N₂ = '+bn(c.ln)+', H₂ = '+bn(c.lh)+'।<br><small>আসল বিক্রিয়া উভমুখী (⇌), কিছু NH₃ আবার ভেঙে যায়। এই মডেলে সরলতার জন্য সবটাই বিক্রিয়া করেছে ধরা হয়েছে।</small>';}
+function n7breset(){N7B.rx=false;N7B.t=0;n7binfo();}
+$('n7n').oninput=n7breset;$('n7h').oninput=n7breset;$('n7rx').onclick=function(){N7B.rx=true;N7B.t=0;};n7binfo();
+function dN2(x,cx,cy,al){x.globalAlpha=al;circ(x,0,cx-6,cy,7,'#2b6cb0','#fff',1);circ(x,0,cx+6,cy,7,'#2b6cb0','#fff',1);x.globalAlpha=1;}
+function dH2(x,cx,cy,al){x.globalAlpha=al;circ(x,0,cx-4,cy,4.5,'#dfe6ec','#789',1);circ(x,0,cx+4,cy,4.5,'#dfe6ec','#789',1);x.globalAlpha=1;}
+function dNH3(x,cx,cy,al){x.globalAlpha=al;circ(x,0,cx-9,cy+8,4.5,'#dfe6ec','#789',1);circ(x,0,cx+9,cy+8,4.5,'#dfe6ec','#789',1);circ(x,0,cx,cy-9,4.5,'#dfe6ec','#789',1);circ(x,0,cx,cy,7,'#2b6cb0','#fff',1);x.globalAlpha=1;}
+function n7bdraw(){var x=ctxOf('n7d'),c=n7calc(),i;x.clearRect(0,0,380,230);if(N7B.rx)N7B.t=Math.min(1,N7B.t+.008);var t=ease(N7B.t);
+  x.strokeStyle='#6b7c8a';x.lineWidth=2;x.strokeRect(10,36,180,170);x.strokeRect(245,36,125,170);txt(x,'N₂ ও H₂ (Fe প্রভাবক)',100,24,'bold 10.5px Hind Siliguri',NAVY);txt(x,'NH₃',307,24,'bold 10.5px Hind Siliguri',NAVY);
+  txt(x,'৪৫০–৫৫০°C',217,100,'bold 9px Hind Siliguri',RED);txt(x,'→',217,118,'bold 20px Hind Siliguri','#444');txt(x,'২০০–২৫০ atm',217,138,'bold 8.5px Hind Siliguri',BLU);
+  for(i=0;i<c.n;i++){var px=35+(i%3)*50,py=70+Math.floor(i/3)*30,rea=i<c.r;var cx=lerp(px,100,t*(rea?1:0)),cy=lerp(py,120,t*(rea?1:0));dN2(x,cx,cy,rea?1-clamp((t-.3)/.4,0,1):1);}
+  for(i=0;i<c.h;i++){var qx=32+(i%4)*40,qy=130+Math.floor(i/4)*24,rea2=i<3*c.r;var cx2=lerp(qx,100,t*(rea2?1:0)),cy2=lerp(qy,120,t*(rea2?1:0));dH2(x,cx2,cy2,rea2?1-clamp((t-.3)/.4,0,1):1);}
+  for(i=0;i<c.nh3;i++)dNH3(x,268+(i%3)*38,70+Math.floor(i/3)*40,clamp((t-.5)/.4,0,1));
+  txt(x,t>=1?'বিক্রিয়ার পর: N₂ '+bn(c.ln)+', H₂ '+bn(c.lh)+', NH₃ '+bn(c.nh3):'বিক্রিয়ার আগে: N₂ '+bn(c.n)+', H₂ '+bn(c.h),190,222,'bold 11px Hind Siliguri','#345');
+}
+qgame('n7q','n7o','n7f','n7sc',[['শিল্পে NH₃ উৎপাদনে N₂ ও H₂ কোন অনুপাতে (N₂ : H₂) নেওয়া হয়?','১ : ৩',['১ : ২','৩ : ১','২ : ১'],'N₂ + 3H₂ ⇌ 2NH₃। ১ ভাগ N₂-এর জন্য ৩ ভাগ H₂।'],
+ ['হেবার পদ্ধতিতে NH₃ তৈরিতে কোন প্রভাবক ব্যবহার হয়?','Fe',['V₂O₅','Ni','Pt'],'Fe প্রভাবক, ৪৫০–৫৫০°C তাপমাত্রায়।'],
+ ['হেবার পদ্ধতিতে বিক্রিয়ার তাপমাত্রা কত?','৪৫০–৫৫০°C',['২৫–৩৫°C','১০০–১৫০°C','১০০০°C-এর বেশি'],'বইয়ে ৪৫০–৫৫০°C তাপমাত্রা ও ২০০–২৫০ atm চাপ দেওয়া আছে।'],
+ ['পরীক্ষাগারে NH₃ তৈরিতে NH₄Cl-এর সাথে কী মেশানো হয়?','CaO (বা Ca(OH)₂)',['NaOH ও CO₂','H₂SO₄','NaCl'],'2NH₄Cl + CaO → 2NH₃ + CaCl₂ + H₂O।'],
+ ['NH₃ উৎপাদনের হেবার বিক্রিয়াটি কী ধরনের?','উভমুখী ও তাপ উৎপন্নকারী',['একমুখী ও তাপহারী','উভমুখী ও তাপহারী','একমুখী ও তাপ উৎপন্নকারী'],'N₂ + 3H₂ ⇌ 2NH₃ + 92 kJ। উভমুখী তীর (⇌) ব্যবহার হয়।'],
+ ['NH₃ পরীক্ষাগারে উল্টো করে ধরা নলে জমে, কারণ NH₃ বাতাসের চেয়ে—','হালকা',['ভারী','সমান','অদ্রবণীয়'],'হালকা গ্যাস ওপরে ওঠে, তাই উল্টো নলে ওপরে জমে।']]);
+mkGame('n7q2','n7o2','n7f2','n7sc2',function(){var n=1+Math.floor(Math.random()*4),h=3*n,all=[n,2*h,h+3,h+6,h-1,n+1].filter(function(v,i,a){return a.indexOf(v)===i&&v!==h&&v>0;});var why=bn(n)+' লিটার N₂-এর জন্য ১ : ৩ অনুপাতে '+bn(h)+' লিটার H₂ লাগে।';return {q:'১ : ৩ অনুপাতে '+bn(n)+' লিটার N₂ নিলে কত লিটার H₂ লাগবে?',o:opts(bn(h)+' লিটার',all.slice(0,3).map(function(v){return bn(v)+' লিটার';})),good:why,bad:why};});
+
+/* ---------- ল্যাব ৮ক: মাটির অম্লত্ব ও চুনাপাথর ---------- */
+var S8={hp:16,H:[],ch:[],g:[]};
+for(var si=0;si<16;si++)S8.H.push({x:rp(si,20,360),y:rp(si+5,135,235),a:si});
+function s8info(){$('s8t').innerHTML=(S8.hp===0?'<b>✔ সব H⁺ শেষ।</b> মাটির অম্লত্ব কমে গেছে।<br>':'H⁺ বাকি: <b>'+bn(S8.hp)+'</b><br>')+'CaCO₃ + 2H⁺ → Ca²⁺ + CO₂ + H₂O<br><small>চুনাপাথর সুনামগঞ্জ ও সেন্টমার্টিনে পাওয়া যায়।</small>';}
+$('s8add').onclick=function(){S8.ch.push({x:rp(FR+S8.ch.length,50,330),y:34});};$('s8rs').onclick=function(){S8.hp=16;S8.ch=[];S8.g=[];s8info();};s8info();
+function s8draw(){var x=ctxOf('s8c'),i;x.clearRect(0,0,380,250);x.fillStyle='#9a7a52';x.fillRect(0,120,380,130);txt(x,'অম্লীয় মাটি',320,238,'bold 11px Hind Siliguri','#fff');
+  for(i=0;i<S8.hp;i++){var h=S8.H[i];h.x+=Math.cos(FR*.03+h.a)*.3;h.y+=Math.sin(FR*.03+h.a*1.4)*.3;h.x=clamp(h.x,12,368);h.y=clamp(h.y,132,240);circ(x,0,h.x,h.y,8,'#e63946','#fff',1);txt(x,'H⁺',h.x,h.y,'bold 8px Hind Siliguri','#fff');}
+  for(i=S8.ch.length-1;i>=0;i--){var c=S8.ch[i];c.y+=2.6;x.fillStyle='#f4f1e6';x.fillRect(c.x-12,c.y-9,24,18);x.strokeStyle='#999';x.strokeRect(c.x-12,c.y-9,24,18);txt(x,'CaCO₃',c.x,c.y,'bold 8px Hind Siliguri','#444');
+    if(c.y>=150){S8.ch.splice(i,1);if(S8.hp>0){S8.hp=Math.max(0,S8.hp-2);s8info();for(var q=0;q<5;q++)S8.g.push({x:c.x+rp(q,-12,12),y:150,v:rp(q+2,.8,1.8)});}}}
+  for(i=S8.g.length-1;i>=0;i--){var g=S8.g[i];g.y-=g.v;circ(x,0,g.x,g.y,4,'rgba(255,255,255,.85)','#999',1);if(g.y<60)S8.g.splice(i,1);}
+  if(S8.g.length)txt(x,'CO₂ ↑',190,70,'bold 11px Hind Siliguri','#555');
+  txt(x,'অম্লত্ব (H⁺)',70,16,'bold 11px Hind Siliguri',NAVY);x.fillStyle='#dde3e8';x.fillRect(120,8,140,14);x.fillStyle='#e63946';x.fillRect(120,8,140*S8.hp/16,14);
+}
+/* ---------- ল্যাব ৮খ: ইউরিয়া ---------- */
+var S8B={st:0,t:0};
+var S8S=['১ ইউরিয়া সার','২ ইউরিয়েজ ও পানি','৩ NH₄⁺ তৈরি','৪ উদ্ভিদ শোষণ'];
+var S8U=['জমিতে ইউরিয়া (NH₂–CO–NH₂) সার দেওয়া হয়। উদ্ভিদ বায়ু থেকে সরাসরি N₂ নিতে পারে না, তাই নাইট্রোজেন পেতে সার লাগে।','মাটিতে <b>ইউরিয়েজ</b> এনজাইম থাকে। এর উপস্থিতিতে ইউরিয়া পানির সাথে বিক্রিয়া করে।','NH₂–CO–NH₂ + 3H₂O → 2NH₄⁺ + 2OH⁻ + CO₂<br>CO₂ বেরিয়ে যায়।','উদ্ভিদ এই <b>NH₄⁺</b> শোষণ করে প্রয়োজনীয় নাইট্রোজেন পায়।'];
+function s8show(){stp('s8st',S8S,S8B.st);$('s8u').innerHTML=S8U[S8B.st];}
+$('s8n').onclick=function(){S8B.st=(S8B.st+1)%4;S8B.t=0;s8show();};$('s8r').onclick=function(){S8B.st=0;S8B.t=0;s8show();};s8show();
+var S8P=[['অ্যামোনিয়াম সালফেট','2NH₃ + H₂SO₄ → (NH₄)₂SO₄ + H₂O<br>সার হিসেবে ব্যবহৃত। ক্ষারকের সাথে বিক্রিয়া করে, তাই মাটিতে ক্ষারক বেশি হলে দিয়ে কমানো হয়। উদ্ভিদ এ থেকে নাইট্রোজেন ও সালফার পায়।'],['ইউরিয়া তৈরি','CO₂ + 2NH₃ →(Δ) NH₂COONH₄<br>NH₂COONH₄ → NH₂–CO–NH₂ + H₂O<br>উচ্চ চাপে ও ১৩০°–১৫০°C-এ। শিল্পে ইউরিয়া থেকে ম্যালামাইন পলিমার হয়।']];
+$('s8p').innerHTML=S8P.map(function(p,i){return '<button data-i="'+i+'">'+p[0]+'</button>';}).join('');
+$('s8p').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var d=S8P[+b.getAttribute('data-i')];$('s8u').innerHTML='<b>'+d[0]+'</b><br>'+d[1];};
+function s8ddraw(){var x=ctxOf('s8d'),st=S8B.st,i;x.clearRect(0,0,380,250);S8B.t=Math.min(1,S8B.t+.01);var t=ease(S8B.t);
+  x.fillStyle='#9a7a52';x.fillRect(0,120,380,130);
+  x.strokeStyle='#2f6b2f';x.lineWidth=4;x.beginPath();x.moveTo(310,120);x.lineTo(310,40);x.stroke();x.fillStyle=mixc('#9fc66a','#2f9a3f',st===3?t:0);[[290,60,-.5],[330,75,.5],[292,92,-.4]].forEach(function(l){x.beginPath();x.ellipse(l[0],l[1],22,9,l[2],0,7);x.fill();});
+  x.strokeStyle='#c9ab74';x.lineWidth=2;[[270,205],[310,222],[350,205]].forEach(function(r){x.beginPath();x.moveTo(310,120);x.lineTo(r[0],r[1]);x.stroke();});txt(x,'শিকড়',310,238,'bold 10px Hind Siliguri','#fff');
+  for(i=0;i<5;i++){var ux=40+i*38,uy=170+(i%2)*26;
+    if(st<=1){x.fillStyle='#d9d9d9';x.fillRect(ux-9,uy-9,18,18);x.strokeStyle='#777';x.strokeRect(ux-9,uy-9,18,18);txt(x,'ইউ',ux,uy,'bold 8px Hind Siliguri','#333');}
+    else{var tx=st===3?lerp(ux,310+(i%3-1)*40,t):ux,ty=st===3?lerp(uy,205,t):uy,al=st===3?1-clamp((t-.7)/.3,0,1):1;x.globalAlpha=al;circ(x,0,tx-8,ty,8,'#2b6cb0','#fff',1);txt(x,'NH₄⁺',tx-8,ty,'bold 6px Hind Siliguri','#fff');circ(x,0,tx+9,ty+8,5,'#e63946','#fff',1);x.globalAlpha=1;}}
+  if(st===1)for(i=0;i<3;i++){x.fillStyle='#8a4fbf';x.beginPath();x.ellipse(60+i*70,150,18,8,0,0,7);x.fill();txt(x,'ইউরিয়েজ',60+i*70,150,'bold 7px Hind Siliguri','#fff');circ(x,0,rp(i+9,40,230),rp(i+3,190,235),4,'#6ab0e6','#fff',1);}
+  if(st===2)for(i=0;i<4;i++){var ph=((FR*.01)+i/4)%1;x.globalAlpha=1-ph;circ(x,0,60+i*40,150-ph*80,5,'#eee','#999',1);x.globalAlpha=1;txt(x,'CO₂',60+i*40,135-ph*80,'bold 8px Hind Siliguri','#555');}
+  if(st===3&&t>.7)txt(x,'শোষণ ✔',230,95,'bold 11px Hind Siliguri','#2a7a3b');
+  txt(x,'ইউ = ইউরিয়া',50,16,'bold 10px Hind Siliguri','#333');
+}
+qgame('s8q','s8o','s8f','s8sc',[['অম্লীয় মাটির অম্লত্ব কমাতে কী প্রয়োগ করা হয়?','চুনাপাথর (CaCO₃)',['ব্লিচিং পাউডার','ফরমালিন','NaCl'],'CaCO₃ + 2H⁺ → Ca²⁺ + CO₂ + H₂O।'],
+ ['জমিতে ইউরিয়া সার দিলে উদ্ভিদ কোন আয়ন শোষণ করে?','NH₄⁺',['OH⁻','H⁺','ইউরিয়া অণু'],'ইউরিয়েজ এনজাইমের কাজে ইউরিয়া ভেঙে NH₄⁺ হয়, উদ্ভিদ তা শোষণ করে।'],
+ ['কোন এনজাইম ইউরিয়াকে ভেঙে NH₄⁺ দেয়?','ইউরিয়েজ',['অ্যামাইলেজ','ইনভার্টেজ','পেপসিন'],'ইউরিয়া + পানি →(ইউরিয়েজ) NH₄⁺ + OH⁻ + CO₂।'],
+ ['শিল্পে ইউরিয়া থেকে কোন পলিমার তৈরি হয়?','ম্যালামাইন',['পলিথিন','নাইলন','পিভিসি'],'বইয়ের তথ্য: শিল্পক্ষেত্রে ইউরিয়া থেকে ম্যালামাইন পলিমার তৈরি হয়।'],
+ ['অ্যামোনিয়াম সালফেট সার উদ্ভিদকে কোন দুটি পুষ্টি উপাদান দেয়?','নাইট্রোজেন ও সালফার',['ফসফরাস ও পটাশিয়াম','ক্যালসিয়াম ও ম্যাগনেসিয়াম','কার্বন ও হাইড্রোজেন'],'(NH₄)₂SO₄ থেকে উদ্ভিদ নাইট্রোজেন ও সালফার পায়।'],
+ ['ইউরিয়ার সংকেত কোনটি?','NH₂–CO–NH₂',['NH₂COONH₄','(NH₄)₂SO₄','NH₄OH'],'NH₂COONH₄ হলো অ্যামোনিয়াম কার্বামেট, যা ভেঙে ইউরিয়া হয়।'],
+ ['বাংলাদেশের কোথায় চুনাপাথর প্রচুর পাওয়া যায়?','সুনামগঞ্জ ও সেন্টমার্টিন দ্বীপ',['বিজয়পুর (নেত্রকোনা)','কক্সবাজার সৈকত','সুন্দরবন'],'বইয়ের তথ্য: সুনামগঞ্জ জেলা ও সেন্টমার্টিন দ্বীপ।']]);
+
+/* =================== কুইজ =================== */
+var QUIZ=[
+ {q:'অ্যামোনিয়া গ্যাস উৎপাদনে ব্যবহৃত হাইড্রোজেন ও নাইট্রোজেনের অনুপাত কত?',o:['১ : ২','১ : ৩','২ : ১','৩ : ১'],a:3,fix:true,e:'N₂ : H₂ = ১ : ৩, অর্থাৎ হাইড্রোজেন ও নাইট্রোজেনের (H₂ : N₂) অনুপাত ৩ : ১। (প্রশ্নে হাইড্রোজেনের নাম আগে, তাই উত্তর ৩ : ১।)'},
+ {q:'NH₃ + H₂SO₄ বিক্রিয়াটি— (i) একটি প্রশমন বিক্রিয়া (ii) উৎপাদ উদ্ভিদের একটি গুরুত্বপূর্ণ পুষ্টি উপাদান (iii) উৎপাদের জলীয় দ্রবণের pH-এর মান ৭-এর চেয়ে বেশি। কোনটি সঠিক?',o:['i ও ii','ii ও iii','i ও iii','i, ii ও iii'],a:0,fix:true,e:'(i) ঠিক: এসিড ও ক্ষারক বিক্রিয়া করে লবণ (NH₄)₂SO₄ ও পানি দিয়েছে। (ii) ঠিক: উদ্ভিদ এ থেকে নাইট্রোজেন ও সালফার পায়। (iii) ভুল: সবল এসিড ও দুর্বল ক্ষারকের লবণ বলে দ্রবণ অম্লীয়, pH ৭-এর কম।'},
+ {q:'কোনটি রঙিন পদার্থকে বর্ণহীন করে?',o:['NaOH','Ca(OCl)Cl','HCl','CH₃COOH'],a:1,fix:true,e:'ব্লিচিং পাউডার Ca(OCl)Cl পানির সাথে বিক্রিয়া করে জায়মান অক্সিজেন [O] দেয়, যা রং বর্ণহীন করে। (বইয়ের প্রশ্নে প্রথম অপশনে "Na(OH)₂" ছাপা আছে, আমি NaOH লিখেছি।)'},
+ {q:'জমিতে ইউরিয়া প্রয়োগ করলে কোন আয়ন উদ্ভিদ দ্বারা পরিশোষিত হয়?',o:['OH⁻','NH₄⁺','H⁺','ইউরিয়া'],a:1,fix:true,e:'ইউরিয়েজ এনজাইমের কাজে ইউরিয়া ভেঙে NH₄⁺ হয়। উদ্ভিদ এই NH₄⁺ শোষণ করে।'},
+ {q:'খাদ্যলবণের রাসায়নিক নাম কী?',o:['সোডিয়াম ক্লোরাইড (NaCl)','সোডিয়াম কার্বনেট','সোডিয়াম হাইড্রোক্সাইড','ক্যালসিয়াম ক্লোরাইড'],a:0,e:'খাদ্যলবণ হলো সোডিয়াম ক্লোরাইড, NaCl।'},
+ {q:'সল্ট হারভেস্টিংয়ে লবণ পাওয়া যায় কীভাবে?',o:['সমুদ্রের পানি সূর্যের তাপে শুকিয়ে','সমুদ্রের পানি ফিল্টার করে','সমুদ্রের পানি ঠাণ্ডা করে','তড়িৎ বিশ্লেষণ করে'],a:0,e:'বাঁধ-ঘেরা জমিতে জোয়ারের পানি আটকে সূর্যের তাপে শুকিয়ে লবণ পাওয়া যায়।'},
+ {q:'সাগরের পানিতে NaCl-এর সাথে সামান্য পরিমাণে কোন লবণ থাকে?',o:['CaCl₂ ও MgCl₂','Na₂CO₃ ও K₂SO₄','CuSO₄','AgNO₃'],a:0,e:'সাগরের পানিতে CaCl₂, MgCl₂সহ কিছু লবণ সামান্য থাকে।'},
+ {q:'সল্ট হারভেস্টিংয়ের লবণ শোধনে কোন ধাপে বালু আলাদা হয়?',o:['পানিতে গুলে ছাঁকলে','তাপ দিলে','ঠাণ্ডা করলে','চুম্বক দিয়ে'],a:0,e:'লবণ পানিতে দ্রবীভূত হয়, বালু তলায় পড়ে। ছেঁকে বালু আলাদা করা যায়।'},
+ {q:'বেকিং সোডার সংকেত কোনটি?',o:['NaHCO₃','Na₂CO₃','NaOH','NaCl'],a:0,e:'বেকিং সোডা = সোডিয়াম হাইড্রোজেন কার্বনেট, NaHCO₃।'},
+ {q:'কাপড় কাচা সোডার সংকেত কোনটি?',o:['Na₂CO₃·10H₂O','NaHCO₃','Na₂CO₃','NaOH'],a:0,e:'সোডা অ্যাস Na₂CO₃-এর ১ অণুর সাথে ১০ অণু পানি যুক্ত হলে কাপড় কাচা সোডা।'},
+ {q:'বেকিং পাউডার তৈরিতে বেকিং সোডায় কী মেশানো হয়?',o:['টারটারিক এসিড','HCl','ভিনেগার','NaOH'],a:0,e:'বেকিং সোডা + টারটারিক এসিড (C₄H₆O₆) = বেকিং পাউডার।'},
+ {q:'বেকিং সোডা তৈরিতে NaCl-এর সম্পৃক্ত দ্রবণে প্রথমে কোন গ্যাস চালনা করা হয়?',o:['NH₃','CO₂','Cl₂','O₂'],a:0,e:'প্রথমে NH₃ দিয়ে সম্পৃক্ত করা হয়, তারপর CO₂ চালনা করা হয়।'},
+ {q:'NH₄HCO₃ + NaCl বিক্রিয়ায় কী কী উৎপন্ন হয়?',o:['NaHCO₃ ও NH₄Cl','Na₂CO₃ ও HCl','NaOH ও NH₃','CaCO₃ ও NaCl'],a:0,e:'NH₄HCO₃ + NaCl → NaHCO₃ + NH₄Cl।'},
+ {q:'পাউরুটি ফোলাতে ইস্ট কোন গ্যাস উৎপন্ন করে?',o:['CO₂','O₂','H₂','NH₃'],a:0,e:'ইস্টের শ্বসনে CO₂ হয়, তাই রুটি ফোলে।'},
+ {q:'ভিনেগারে ইথানয়িক এসিডের পরিমাণ কত?',o:['৪%–১০%','১০%–৩০%','৫০%–৭০%','১০০%'],a:0,e:'ইথানয়িক এসিডের ৪%–১০% জলীয় দ্রবণ ভিনেগার।'},
+ {q:'ভিনেগার তৈরির বিক্রিয়া কোনটি?',o:['CH₃CH₂OH + O₂ → CH₃COOH + H₂O','CH₃COOH → CH₃CH₂OH','CO₂ + H₂O → H₂CO₃','NaCl → Na + Cl'],a:0,e:'অ্যাসিটোব্যাকটরের এনজাইমের উপস্থিতিতে ইথানল O₂-এর সাথে বিক্রিয়া করে ইথানয়িক এসিড দেয়।'},
+ {q:'কোমল পানীয়তে CO₂ দ্রবীভূত করা হয় কীভাবে?',o:['ঠাণ্ডা অবস্থায় ও উচ্চ চাপে','গরম অবস্থায় ও কম চাপে','শুধু ঝাঁকিয়ে','তড়িৎ বিশ্লেষণে'],a:0,e:'ঠাণ্ডা অবস্থায় ও উচ্চ চাপে পানিতে CO₂ দ্রবীভূত করে কোমল পানীয় তৈরি হয়।'},
+ {q:'কাপড় কাচা সোডা তৈরিতে গাঢ় NaOH-এর দ্রবণে কোন গ্যাস অধিক পরিমাণে চালনা করা হয়?',o:['CO₂','NH₃','Cl₂','H₂'],a:0,e:'2NaOH + CO₂ → Na₂CO₃ + H₂O।'},
+ {q:'জায়মান অক্সিজেন [O] বলতে কী বোঝায়?',o:['সদ্য তৈরি অস্থায়ী সক্রিয় অক্সিজেন পরমাণু','O₂ অণু','O₃ অণু','পানির অক্সিজেন'],a:0,e:'যে অক্সিজেন পরমাণু এখনো O₂ অণু তৈরি করেনি, তাকে জায়মান অক্সিজেন বলে।'},
+ {q:'সাবান কিসের লবণ?',o:['উচ্চতর ফ্যাটি এসিডের সোডিয়াম বা পটাশিয়াম লবণ','HCl-এর সোডিয়াম লবণ','ইথানয়িক এসিডের ক্যালসিয়াম লবণ','কার্বনিক এসিডের লবণ'],a:0,e:'সাবান = R-COONa বা R-COOK।'}
+];
+
+QUIZ=QUIZ.concat([
+ {q:'সাবানায়ন প্রক্রিয়ায় তেল বা চর্বির সাথে ক্ষারের বিক্রিয়ায় কী পাওয়া যায়?',o:['সাবান ও গ্লিসারিন','সাবান ও ইথানল','ডিটারজেন্ট ও পানি','শুধু গ্লিসারিন'],a:0,e:'তেল/চর্বি + NaOH → সাবান + গ্লিসারিন।'},
+ {q:'কোনটি ডিটারজেন্ট নামে পরিচিত?',o:['সোডিয়াম লরাইল সালফেট','সোডিয়াম স্টিয়ারেট','সোডিয়াম কার্বনেট','ক্যালসিয়াম কার্বনেট'],a:0,e:'সোডিয়াম লরাইল সালফেট (C₁₂H₂₅SO₄Na) ডিটারজেন্ট নামে পরিচিত।'},
+ {q:'ডিটারজেন্টকে পাউডার আকৃতির করতে কী যোগ করা হয়?',o:['সোডিয়াম সালফেট (Na₂SO₄)','NaCl','CaCO₃','NaOH'],a:0,e:'পাউডার আকৃতি দিতে Na₂SO₄ মেশানো হয়।'},
+ {q:'লরাইল অ্যালকোহলের সংকেত কোনটি?',o:['C₁₂H₂₆O','C₁₂H₂₅SO₄Na','C₁₇H₃₅COONa','CH₃CH₂OH'],a:0,e:'লরাইল অ্যালকোহল C₁₂H₂₆O।'},
+ {q:'সাবান আয়নের হাইড্রোফোবিক অংশ কোনটি?',o:['দীর্ঘ কার্বন শিকল (অ্যালকাইল মূলক)','ঋণাত্মক চার্জযুক্ত -COO⁻','Na⁺','পানির অণু'],a:0,e:'কার্বন শিকল পানি বিকর্ষী ও তেলে দ্রবণীয়।'},
+ {q:'লন্ড্রি সাবান সম্পর্কে কোনটি সঠিক?',o:['ক্ষার তুলনামূলক বেশি, সুগন্ধি থাকে না','ক্ষার কম, সুগন্ধি থাকে','ক্ষার একেবারে থাকে না','শুধু ত্বকের জন্য'],a:0,e:'লন্ড্রি সাবানে ক্ষার বেশি থাকে এবং সুগন্ধি বা জীবাণুনাশক যোগ করা হয় না।'},
+ {q:'ত্বকের pH-এর মান কত?',o:['৪.৮ থেকে ৫.৫','৭.০','৮.৫ থেকে ১০','১.০ থেকে ২.০'],a:0,e:'ত্বক অম্লীয় (pH ৪.৮–৫.৫), যা জীবাণুর বংশবৃদ্ধি প্রতিরোধ করে।'},
+ {q:'পুকুরের ধারে অতিরিক্ত সাবান ব্যবহারে মাছ মরে কেন?',o:['ফেনা দ্রবীভূত অক্সিজেন কমিয়ে দেয়','সাবান মাছ খেয়ে ফেলে','পানি গরম হয়ে যায়','পানি অম্লীয় হয়'],a:0,e:'সাবানের ফেনা পানির দ্রবীভূত অক্সিজেনের সাথে বিক্রিয়া করে অক্সিজেন কমিয়ে দেয়।'},
+ {q:'ব্লিচিং পাউডার পানির সাথে বিক্রিয়া করে প্রথমে কী দেয়?',o:['CaCl₂ ও HOCl','CaCO₃ ও Cl₂','Ca(OH)₂ ও HCl','NaOH ও Cl₂'],a:0,e:'Ca(OCl)Cl + H₂O → CaCl₂ + HOCl।'},
+ {q:'গ্লাস ক্লিনারে আইসোপ্রোপাইল অ্যালকোহলের কাজ কী?',o:['জৈব পদার্থ দ্রবীভূত করে কাচ থেকে সরানো','কাচকে গলানো','গন্ধ দেওয়া','কাচের রং করা'],a:0,e:'কাচে জৈব পদার্থ লেগে থাকলে আইসোপ্রোপাইল অ্যালকোহল তা দ্রবীভূত করে।'},
+ {q:'পরীক্ষাগারে NH₃ তৈরির সঠিক সমীকরণ কোনটি?',o:['2NH₄Cl + CaO → 2NH₃ + CaCl₂ + H₂O','NH₄Cl + NaOH → NaCl + NH₄OH','N₂ + O₂ → 2NO','NH₃ + HCl → NH₄Cl'],a:0,e:'NH₄Cl ও CaO মিশিয়ে উত্তপ্ত করলে NH₃ পাওয়া যায়।'},
+ {q:'শিল্পে অ্যামোনিয়া উৎপাদনের পদ্ধতির নাম কী?',o:['হেবার পদ্ধতি','স্পর্শ পদ্ধতি','ফ্রাশ পদ্ধতি','সল্ট হারভেস্টিং'],a:0,e:'হেবার পদ্ধতিতে N₂ ও H₂ থেকে Fe প্রভাবকে NH₃ তৈরি হয়।'},
+ {q:'হেবার পদ্ধতিতে বিক্রিয়ার চাপ কত?',o:['২০০–২৫০ atm','১ atm','১০ atm','৫০০০ atm'],a:0,e:'বইয়ে ৪৫০–৫৫০°C তাপমাত্রা ও ২০০–২৫০ atm চাপ দেওয়া আছে।'},
+ {q:'ইউরিয়া তৈরির কাঁচামাল কোনগুলো?',o:['CO₂ ও NH₃','N₂ ও O₂','H₂ ও Cl₂','CaCO₃ ও NH₃'],a:0,e:'CO₂ + 2NH₃ → NH₂COONH₄, তারপর ইউরিয়া।'},
+ {q:'ইউরিয়া তৈরির সময় মাঝের যৌগটি কোনটি?',o:['অ্যামোনিয়াম কার্বামেট','অ্যামোনিয়াম সালফেট','অ্যামোনিয়াম ক্লোরাইড','সোডিয়াম কার্বনেট'],a:0,e:'NH₂COONH₄ ভেঙে ইউরিয়া ও পানি হয়।'},
+ {q:'অ্যামোনিয়াম সালফেট তৈরির বিক্রিয়া কোনটি?',o:['2NH₃ + H₂SO₄ → (NH₄)₂SO₄ + H₂O','NH₃ + HCl → NH₄Cl','NH₄OH → NH₃ + H₂O','CO₂ + 2NH₃ → NH₂COONH₄'],a:0,e:'অ্যামোনিয়া ও সালফিউরিক এসিড বিক্রিয়া করে অ্যামোনিয়াম সালফেট ও পানি দেয়।'},
+ {q:'উদ্ভিদ বায়ু থেকে সরাসরি কী গ্রহণ করতে পারে না?',o:['নাইট্রোজেন (N₂)','CO₂','O₂','জলীয় বাষ্প'],a:0,e:'উদ্ভিদ বায়ু থেকে সরাসরি N₂ নিতে পারে না, তাই ইউরিয়ার মতো সার লাগে।'},
+ {q:'সিমেন্ট তৈরির প্রধান উপাদান কোনটি?',o:['চুনাপাথর','NaCl','ইউরিয়া','কার্বাইড'],a:0,e:'চুনাপাথর (CaCO₃) সিমেন্ট তৈরির প্রধান উপাদান।'},
+ {q:'ক্যালসিয়াম কার্বাইডে পানি দিলে কোন গ্যাস তৈরি হয়?',o:['অ্যাসিটিলিন (C₂H₂)','মিথেন (CH₄)','অ্যামোনিয়া','ক্লোরিন'],a:0,e:'CaC₂ + 2H₂O → C₂H₂ + Ca(OH)₂।'},
+ {q:'মাছ সংরক্ষণে কী ব্যবহার করা হয়?',o:['বরফ','ফরমালিন','কার্বাইড','ব্লিচিং পাউডার'],a:0,e:'বরফ দিয়ে মাছ সংরক্ষণ করা হয়। ফরমালিন বিষাক্ত, তাই নয়।'},
+ {q:'কোনটি অনুমোদিত ফুড প্রিজারভেটিভ?',o:['সোডিয়াম বেনজোয়েট','ইথিলিন','অ্যাসিটিলিন','ফরমালিন'],a:0,e:'সোডিয়াম বেনজোয়েট, বেনজোয়িক এসিড, ভিনেগার, লবণ ও চিনির দ্রবণ অনুমোদিত।'},
+ {q:'কোনটি অননুমোদিত ফুড প্রিজারভেটিভ?',o:['ইথিলিন','ভিনেগার','চিনির দ্রবণ','বেনজোয়িক এসিড'],a:0,e:'বইয়ে ইথিলিন ও অ্যাসিটিলিনকে অননুমোদিত প্রিজারভেটিভ বলা হয়েছে।'},
+ {q:'কোনটি শিল্প বর্জ্যে থাকা ভারী ধাতু?',o:['ক্রোমিয়াম (Cr)','সোডিয়াম (Na)','ক্যালসিয়াম (Ca)','পটাশিয়াম (K)'],a:0,e:'ক্রোমিয়াম, লেড, মার্কারি ও ক্যাডমিয়াম ভারী ধাতু।'},
+ {q:'ভারী ধাতু শরীরে ঢুকলে কোন অঙ্গের ক্ষতি হয়?',o:['কিডনি ও লিভার','চোখ','কান','দাঁত'],a:0,e:'বইয়ের মতে কিডনি ও লিভারের ক্ষতি হয়।'},
+ {q:'পানিতে NaOH মিশলে কী ঘটে?',o:['ক্ষারকের মাত্রা বাড়ে, জলজ প্রাণী বাঁচতে পারে না','অম্লত্ব বাড়ে','পানি বিশুদ্ধ হয়','কিছুই হয় না'],a:0,e:'সাবান ও ডিটারজেন্ট কারখানার NaOH পানির ক্ষারকত্ব বাড়িয়ে ফেলে।'},
+ {q:'সাবান ও ডিটারজেন্টের মধ্যে কোনটি খর পানিতেও ভালো কাজ করে?',o:['ডিটারজেন্ট','সাবান','দুটোই','কোনোটিই নয়'],a:0,e:'বইয়ের টেবিল অনুযায়ী ডিটারজেন্ট খর পানিতেও ভালো কাজ করে।'},
+ {q:'টয়লেট ক্লিনারের NaOCl পানির সাথে বিক্রিয়া করে প্রথমে কী দেয়?',o:['NaOH ও HOCl','NaCl ও O₂','Na₂CO₃ ও Cl₂','NaCl ও H₂O'],a:0,e:'NaOCl + H₂O → NaOH + HOCl।'},
+ {q:'অলিভ অয়েল থেকে কোন ফ্যাটি এসিড পাওয়া যায়?',o:['অলিক এসিড (অসম্পৃক্ত)','স্টিয়ারিক এসিড (সম্পৃক্ত)','ইথানয়িক এসিড','কার্বনিক এসিড'],a:0,e:'জলপাইয়ের তেল (অলিভ অয়েল) থেকে অলিক এসিড, যা অসম্পৃক্ত।'},
+ {q:'কোমল পানীয়তে কোন এসিড তৈরি হয়?',o:['কার্বনিক এসিড (H₂CO₃)','সালফিউরিক এসিড','ইথানয়িক এসিড','নাইট্রিক এসিড'],a:0,e:'CO₂ ও পানি বিক্রিয়া করে H₂CO₃ হয়।'}
+]);
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+var QA=[
+ {h:'📝 সৃজনশীল প্রশ্ন ১ (শাওন ও রিয়াদ)',items:[
+  ['<b>উদ্দীপক:</b> দশম শ্রেণির ছাত্র শাওন টিউবওয়েলের পানিতে সাবান দিয়ে কাপড় ধুয়ে দেখল সেটি তেমন পরিষ্কার হয়নি এবং ফেনাও ভালো হয়নি। বন্ধু রিয়াদকে জানালে রিয়াদ তাকে ডিটারজেন্ট ব্যবহারের পরামর্শ দিলো।<br><br><b>(ক)</b> সাবান কী?',
+   '<b>উত্তর:</b> উচ্চতর ফ্যাটি এসিডের সোডিয়াম বা পটাশিয়াম লবণকে সাবান বলে। (সংকেত R–COONa বা R–COOK, যেমন C₁₇H₃₅COONa)। তেল বা চর্বির সাথে NaOH/KOH-এর বিক্রিয়ায় (সাবানায়ন) সাবান ও গ্লিসারিন তৈরি হয়।'],
+  ['<b>(খ)</b> গ্লাস ক্লিনার কী?',
+   '<b>উত্তর:</b> কাচের জানালা, আয়না ইত্যাদি পরিষ্কার করার তরল পরিষ্কারক পদার্থই গ্লাস ক্লিনার। এর মূল উপাদান <b>অ্যামোনিয়াম হাইড্রক্সাইড (NH₄OH)</b>। এর সাথে আইসোপ্রোপাইল অ্যালকোহল থাকে, যা কাচে লেগে থাকা জৈব পদার্থ দ্রবীভূত করে।'],
+  ['<b>(গ)</b> শাওন প্রথমে যে পদার্থ (সাবান) দিয়ে কাপড় পরিষ্কার করার চেষ্টা করেছিল তার পরিষ্কারক কৌশল বর্ণনা করো।',
+   '<b>উত্তর:</b> সাবান আয়নের দুটি অংশ থাকে:<br>• <b>হাইড্রোফোবিক (পানিবিকর্ষী) অংশ:</b> দীর্ঘ কার্বন শিকল, যা তেল-ময়লায় দ্রবীভূত হয়।<br>• <b>হাইড্রোফিলিক (পানিআকর্ষী) অংশ:</b> ঋণাত্মক চার্জযুক্ত –COO⁻, যা পানির দিকে থাকে।<br><br><b>কৌশল:</b> কাপড়ের তেল-চর্বিযুক্ত ময়লার চারপাশে সাবান আয়ন এমনভাবে সাজায় যে কার্বন শিকল ময়লার ভেতরে ঢোকে আর –COO⁻ প্রান্ত বাইরে পানির দিকে থাকে। এতে ময়লাকে ঘিরে একটি বলয় তৈরি হয়। সব বলয়ের বাইরে ঋণাত্মক চার্জ থাকায় বলয়গুলো একে অপরকে বিকর্ষণ করে, তাই ময়লা একত্র হয়ে জমে না। ঘষা বা নাড়া দিলে ময়লার কণা কাপড় থেকে আলাদা হয়ে পানির সাথে ধুয়ে যায়।'],
+  ['<b>(ঘ)</b> রিয়াদ কাপড় পরিষ্কারের জন্য শাওনকে যে পরিষ্কারক (ডিটারজেন্ট) পরামর্শ দিয়েছিল সেটি কার্যকর হওয়ার কারণ যুক্তিসহ ব্যাখ্যা করো।',
+   '<b>উত্তর:</b> টিউবওয়েলের পানি সাধারণত খর পানি (Ca²⁺, Mg²⁺ আয়নযুক্ত)। বইয়ের তুলনামূলক টেবিল অনুযায়ী সাবান খর পানিতে ভালো কাজ করে না, কিন্তু <b>ডিটারজেন্ট খর পানিতেও ভালো কাজ করে</b>। এ কারণে রিয়াদের পরামর্শ কার্যকর।<br>ডিটারজেন্ট (যেমন সোডিয়াম লরাইল সালফেট, C₁₂H₂₅SO₄Na) ঋণাত্মক হাইড্রোফিলিক মাথা ও হাইড্রোফোবিক লেজের কারণে সাবানের মতোই ময়লা ঘিরে ফেলে, ফলে কাপড় ভালো পরিষ্কার হয় ও ভালো ফেনা হয়।<br><small>নোট: খর পানিতে সাবান কেন কাজ করে না তার রাসায়নিক ব্যাখ্যা (অদ্রবণীয় লবণ তৈরি) বইয়ের এই অংশে সরাসরি দেওয়া নেই। পরীক্ষায় বইয়ের টেবিলের কথাই লেখো।</small>']
+ ]},
+ {h:'📝 সৃজনশীল প্রশ্ন ২ (ডা. চন্দ্রার গৃহকর্মী)',items:[
+  ['<b>উদ্দীপক:</b> ডা. চন্দ্রার গৃহকর্মীর বদহজম হওয়ায় গৃহকর্মী বিশ্রাম নিচ্ছেন। হঠাৎ ফ্রিজটি বিকল হওয়ায় ডা. চন্দ্রা বাজার থেকে আনা কাঁচা মাছ-মাংস, লবণ, হলুদ, বেকিং পাউডার ও ভিনেগার নিয়ে চিন্তায় পড়লেন। ইতোমধ্যে গৃহকর্মী গোপনে বেকিং পাউডার খেয়ে সুস্থবোধ করলেন। ডা. চন্দ্রা ঘটনাটি জেনে ভবিষ্যতে তাকে এটি খেতে নিষেধ করলেন।<br><br><b>(ক)</b> গ্লাস ক্লিনারের মূল উপাদান কী?',
+   '<b>উত্তর:</b> গ্লাস ক্লিনারের মূল উপাদান <b>অ্যামোনিয়াম হাইড্রক্সাইড (NH₄OH)</b>। এর সাথে আইসোপ্রোপাইল অ্যালকোহল থাকে।'],
+  ['<b>(খ)</b> আমাদের দেশের অ্যামোনিয়া শিল্পে বাতাসের ভূমিকা কোথায়?',
+   '<b>উত্তর:</b> অ্যামোনিয়া (NH₃) তৈরির হেবার পদ্ধতিতে N₂ ও H₂ লাগে। এর <b>নাইট্রোজেন (N₂) আসে বাতাস থেকে</b>। বাতাসের প্রায় ৭৮% নাইট্রোজেন। বিক্রিয়া হয় N₂ + 3H₂ ⇌ 2NH₃, Fe প্রভাবকে, ৪৫০–৫৫০°C তাপমাত্রায় ও ২০০–২৫০ atm চাপে।<br><small>নোট: বাতাসই N₂-এর উৎস, এটা সাধারণ রসায়নের জ্ঞান। বইয়ের এই অংশে সরাসরি লেখা নেই।</small>'],
+  ['<b>(গ)</b> তাৎক্ষণিক ব্যবস্থা নিতে ডা. চন্দ্রা মাছ-মাংস সংরক্ষণের জন্য গৃহকর্মীকে উদ্দীপকের কোনটিকে ব্যবহার করতে বলবেন? ব্যাখ্যা করো।',
+   '<b>উত্তর:</b> ডা. চন্দ্রা <b>লবণ</b> (এবং চাইলে ভিনেগার) ব্যবহার করতে বলবেন।<br>• লবণ ও ভিনেগার অনুমোদিত ফুড প্রিজারভেটিভ। বইয়ে সোডিয়াম বেনজোয়েট, বেনজোয়িক এসিড, ভিনেগার, লবণের দ্রবণ ও চিনির দ্রবণ অনুমোদিত বলা হয়েছে।<br>• লবণ খাদ্যের পানি টেনে নেয়, ফলে জীবাণু বাড়তে পারে না। ভিনেগারের এসিডীয় পরিবেশেও জীবাণু বাঁচে না।<br>• ফরমালিন ব্যবহার করা চলবে না, কারণ তা বিষাক্ত। (উদ্দীপকে ফরমালিন নেই, তবু এটা মনে রাখা ভালো।)<br>• হলুদ ও বেকিং পাউডার প্রিজারভেটিভ হিসেবে বইয়ে অনুমোদিত তালিকায় নেই।'],
+  ['<b>(ঘ)</b> উদ্দীপকের গৃহকর্মীর বদহজম থেকে মুক্তি পাওয়ার রসায়ন সমীকরণসমূহ ব্যাখ্যা করো।',
+   '<b>উত্তর:</b> বদহজমে পাকস্থলীতে অতিরিক্ত এসিড (HCl) থাকে। বেকিং পাউডারে থাকে বেকিং সোডা (NaHCO₃) ও টারটারিক এসিড (C₄H₆O₆)।<br><br>১) পানি পেলে বেকিং পাউডারের বিক্রিয়া:<br><span class="eq">2NaHCO₃ + C₄H₆O₆ → C₄H₄Na₂O₆ + 2CO₂ + 2H₂O</span><br>২) পাকস্থলীর HCl-এর সাথে NaHCO₃-এর প্রশমন বিক্রিয়া:<br><span class="eq">NaHCO₃ + HCl → NaCl + H₂O + CO₂</span><br>NaHCO₃ মৃদু ক্ষারকীয়, তাই বাড়তি অম্ল প্রশমিত হয়ে বদহজমের কষ্ট কমে।<br><small>⚠️ নোট: বইয়ে বেকিং পাউডারের ঘটনাটি দেওয়া আছে, কিন্তু এই সমীকরণ ২টি বইয়ে সরাসরি লেখা নেই। আমি নিজে সাধারণ রসায়ন থেকে লিখেছি। পরীক্ষার আগে স্যার বা গাইড বইয়ের সাথে মিলিয়ে নিও।</small>']
+ ]},
+
+ {h:'✍️ সংক্ষিপ্ত প্রশ্ন ও উত্তর',items:[
+  ['খাদ্যলবণ কী? এটি কীভাবে সংগ্রহ করা হয়?','<b>খাদ্যলবণ</b> = সোডিয়াম ক্লোরাইড (NaCl)। সমুদ্রের পানি থেকে <b>সল্ট হারভেস্টিং</b> পদ্ধতিতে পাওয়া যায়: বাঁধ-ঘেরা জমিতে জোয়ারের পানি আটকে সূর্যের তাপে শুকানো হয়। এতে CaCl₂, MgCl₂ ও বালু মেশানো থাকে। পানিতে গুলে ছেঁকে বালু সরানো হয়, তারপর শোধন করে খাবার লবণ হয়।'],
+  ['বেকিং সোডা ও বেকিং পাউডারের পার্থক্য কী?','<b>বেকিং সোডা</b> = শুধু NaHCO₃।<br><b>বেকিং পাউডার</b> = বেকিং সোডা + টারটারিক এসিড। পানি পেলে এসিড ও সোডা বিক্রিয়া করে CO₂ ছাড়ে, ফলে কেক, পাউরুটি ফোলে।'],
+  ['বেকিং সোডা শিল্পে কীভাবে তৈরি হয়?','NaCl-এর সম্পৃক্ত দ্রবণে প্রথমে NH₃, পরে CO₂ চালনা করা হয়। NH₃ + CO₂ + H₂O → NH₄HCO₃, তারপর <span class="eq">NH₄HCO₃ + NaCl → NaHCO₃ + NH₄Cl</span>NaHCO₃ কম দ্রবণীয়, তাই আলাদা হয়ে যায়।'],
+  ['ভিনেগার কী? এটি কীভাবে তৈরি হয়?','ইথানয়িক এসিড (CH₃COOH)-এর ৪%–১০% জলীয় দ্রবণ হলো ভিনেগার। অ্যাসিটোব্যাকটর এনজাইমের উপস্থিতিতে ইথানল O₂-এর সাথে বিক্রিয়া করে: <span class="eq">CH₃CH₂OH + O₂ → CH₃COOH + H₂O</span>'],
+  ['কোমল পানীয় তৈরিতে CO₂ কীভাবে দ্রবীভূত করা হয়? কেন কিছুক্ষণ পরে ঢাকনা খুললে ফেনা বের হয়?','ঠাণ্ডা অবস্থায় ও উচ্চ চাপে পানিতে CO₂ দ্রবীভূত করা হয়, যা কিছুটা H₂CO₃ হয়। ঢাকনা খুললে চাপ কমে যায়, তখন দ্রবীভূত CO₂ গ্যাস হয়ে বুদবুদ আকারে বের হয়।'],
+  ['কাপড় কাচা সোডা কী? এটি কীভাবে তৈরি হয়?','Na₂CO₃·10H₂O হলো কাপড় কাচা সোডা। গাঢ় NaOH দ্রবণে অতিরিক্ত CO₂ চালনা করে Na₂CO₃ তৈরি হয়, পরে স্ফটিক করলে ১০ অণু পানিসহ স্ফটিক পাওয়া যায়।<span class="eq">2NaOH + CO₂ → Na₂CO₃ + H₂O</span>'],
+  ['সাবানায়ন কী?','তেল বা চর্বিকে NaOH বা KOH-এর সাথে ফুটিয়ে সাবান ও গ্লিসারিন তৈরির বিক্রিয়াকে সাবানায়ন বলে। (বইয়ের ছাপা পাতায় সাবান তৈরির ধাপ (ক), (খ) অংশ অস্পষ্ট, তাই এখানে সংক্ষেপে লিখলাম।)'],
+  ['সাবান ও ডিটারজেন্টের মধ্যে ২টি পার্থক্য লেখো।','• <b>সাবান:</b> উচ্চতর ফ্যাটি এসিডের Na/K লবণ, খর পানিতে ভালো কাজ করে না।<br>• <b>ডিটারজেন্ট:</b> লরাইল অ্যালকোহল থেকে তৈরি সালফেট লবণ (যেমন সোডিয়াম লরাইল সালফেট), খর পানিতেও ভালো কাজ করে।'],
+  ['ব্লিচিং পাউডার কীভাবে রং নষ্ট করে?','Ca(OCl)Cl পানির সাথে বিক্রিয়া করে HOCl দেয়, যা থেকে জায়মান অক্সিজেন [O] পাওয়া যায়। এই [O] রঙিন পদার্থকে জারিত করে বর্ণহীন করে। <span class="eq">Ca(OCl)Cl + H₂O → CaCl₂ + HOCl, HOCl → HCl + [O]</span>'],
+  ['জায়মান অক্সিজেন বলতে কী বোঝায়?','সদ্য তৈরি যে অক্সিজেন পরমাণু (O) এখনও অন্য O-এর সাথে যুক্ত হয়ে O₂ অণু তৈরি করেনি, তাকে জায়মান অক্সিজেন বলে। এটি খুব সক্রিয়।'],
+  ['টয়লেট ক্লিনারের মূল উপাদান কী? এটি কীভাবে কাজ করে?','মূল উপাদান NaOCl (সোডিয়াম হাইপোক্লোরাইট)। পানির সাথে NaOH ও HOCl দেয়। HOCl থেকে [O] পাওয়া যায়, যা দাগ ও জীবাণু নষ্ট করে। <span class="eq">NaOCl + H₂O → NaOH + HOCl</span>'],
+  ['পরীক্ষাগারে অ্যামোনিয়া কীভাবে তৈরি করা হয়?','NH₄Cl-এর সাথে CaO (বা Ca(OH)₂) মিশিয়ে উত্তপ্ত করে। <span class="eq">2NH₄Cl + CaO → 2NH₃ + CaCl₂ + H₂O</span>NH₃ বাতাসের চেয়ে হালকা, তাই উল্টো করে ধরা নলে ওপরে জমা করা হয়।'],
+  ['হেবার পদ্ধতিতে NH₃ তৈরির শর্ত লেখো।','<span class="eq">N₂ + 3H₂ ⇌ 2NH₃</span>N₂ : H₂ = ১ : ৩, Fe প্রভাবক, তাপমাত্রা ৪৫০–৫৫০°C, চাপ ২০০–২৫০ atm।'],
+  ['ইউরিয়া সার কীভাবে তৈরি হয়?','CO₂ ও NH₃ উচ্চ চাপে ও ১৩০–১৫০°C তাপমাত্রায় বিক্রিয়া করে প্রথমে অ্যামোনিয়াম কার্বামেট দেয়। এটি ভেঙে ইউরিয়া ও পানি হয়। <span class="eq">CO₂ + 2NH₃ → NH₂COONH₄</span><span class="eq">NH₂COONH₄ → NH₂–CO–NH₂ + H₂O</span>'],
+  ['ইউরিয়া জমিতে দিলে উদ্ভিদ কীভাবে নাইট্রোজেন পায়?','মাটিতে ইউরিয়েজ এনজাইম থাকে। এর কাজে ইউরিয়া পানির সাথে বিক্রিয়া করে NH₄⁺, OH⁻ ও CO₂ দেয়। উদ্ভিদ NH₄⁺ শোষণ করে। <span class="eq">NH₂–CO–NH₂ + 3H₂O → 2NH₄⁺ + 2OH⁻ + CO₂</span>'],
+  ['অ্যামোনিয়াম সালফেট কীভাবে তৈরি হয়? এর ব্যবহার লেখো।','<span class="eq">2NH₃ + H₂SO₄ → (NH₄)₂SO₄ + H₂O</span>সার হিসেবে ব্যবহৃত হয়, উদ্ভিদ নাইট্রোজেন ও সালফার পায়।'],
+  ['অম্লীয় মাটির অম্লত্ব কমাতে কী করা হয়?','চুনাপাথর (CaCO₃) প্রয়োগ করা হয়। <span class="eq">CaCO₃ + 2H⁺ → Ca²⁺ + CO₂ + H₂O</span>বাংলাদেশে সুনামগঞ্জ ও সেন্টমার্টিন দ্বীপে চুনাপাথর পাওয়া যায়।'],
+  ['কার্বাইড দিয়ে আম পাকানো কেন ঠিক নয়?','CaC₂ পানির সাথে অ্যাসিটিলিন গ্যাস দেয়। <span class="eq">CaC₂ + 2H₂O → C₂H₂ + Ca(OH)₂</span>এভাবে ফল পাকানো শরীরের ওপর বিরূপ প্রভাব ফেলে, তাই ঠিক নয়।'],
+  ['অনুমোদিত ও অননুমোদিত ফুড প্রিজারভেটিভ কী? উদাহরণ দাও।','যেসব প্রিজারভেটিভ শরীরে গেলে ক্ষতি করে না সেগুলো <b>অনুমোদিত</b>: সোডিয়াম বেনজোয়েট, বেনজোয়িক এসিড, ভিনেগার, লবণ ও চিনির দ্রবণ। যেগুলো শরীরের ক্ষতি করে সেগুলো <b>অননুমোদিত</b>: ইথিলিন, অ্যাসিটিলিন ইত্যাদি (বইয়ের তালিকা অনুযায়ী)।'],
+  ['শিল্প বর্জ্য কীভাবে পরিবেশ দূষণ করে?','চামড়া, রং ও কীটনাশক শিল্প থেকে Cr, Pb, Hg, Cd ভারী ধাতু মাটি ও পানিতে মেশে। এসব মাটির উদ্ভিদের ফলমূল খেলে কিডনি ও লিভারের ক্ষতি হয়, মৃত্যুও হতে পারে। সাবান ও ডিটারজেন্ট কারখানার NaOH পানিতে গেলে ক্ষারকের মাত্রা বেড়ে জলজ প্রাণী ও উদ্ভিদ ভালোভাবে বাঁচতে পারে না।'],
+  ['কসমেটিক্সে pH কেন গুরুত্বপূর্ণ?','ত্বকের pH ৪.৮ থেকে ৫.৫ (মৃদু অম্লীয়), যা জীবাণু প্রতিরোধ করে। তাই ত্বকে ব্যবহারের পণ্যের pH-ও এই সীমার কাছাকাছি হওয়া ভালো।']
+ ]}
+];
+
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+/* ---------- ল্যাব ৯: ফল পাকানো, প্রিজারভেটিভ, বর্জ্য ---------- */
+var P9={r:0,run:false};
+function p9info(){var m=+$('p9s').value;$('p9t').innerHTML=(P9.r>=1?'<b>✔ ফল পেকেছে।</b><br>':'')+(m===0?'পাকা ফল থেকে <b>ইথিলিন</b> (প্রাকৃতিক হরমোন গ্যাস) বের হয়ে আশপাশের কাঁচা ফলকেও পাকায়।<br><small>বইয়ের মতে ইথিলিন দিয়ে কাঁচা আম পাকানোও শরীরের ওপর বিরূপ প্রভাব ফেলে এবং ইথিলিন অননুমোদিত প্রিজারভেটিভের তালিকায়।</small>':'<b>ক্যালসিয়াম কার্বাইড (CaC₂)</b>-এ পানি দিলে অ্যাসিটিলিন গ্যাস হয়, যা ফল পাকাতে সাহায্য করে।<br>CaC₂ + 2H₂O → C₂H₂ + Ca(OH)₂<br><b>⚠️ এটি স্বাস্থ্যের ওপর বিরূপ প্রভাব ফেলে।</b>');}
+$('p9s').onchange=function(){P9.r=0;P9.run=false;p9info();};$('p9go').onclick=function(){P9.run=!P9.run;};$('p9rs').onclick=function(){P9.r=0;P9.run=false;p9info();};p9info();
+function p9draw(){var x=ctxOf('p9c'),m=+$('p9s').value,i;x.clearRect(0,0,380,250);if(P9.run){P9.r=Math.min(1,P9.r+.0035);if(P9.r>=1){P9.run=false;p9info();}}
+  x.fillStyle='#c49a62';x.fillRect(15,120,210,110);x.strokeStyle='#8a6a3a';x.lineWidth=3;x.strokeRect(15,120,210,110);txt(x,'আমের ক্রেট',120,244,'bold 10.5px Hind Siliguri','#543');
+  for(i=0;i<6;i++){var mx=55+(i%3)*68,my=158+Math.floor(i/3)*44,rr=(m===0&&i===1)?1:P9.r;x.fillStyle=mixc('#6fae3a','#f0b429',rr);x.beginPath();x.ellipse(mx,my,22,16,.3,0,7);x.fill();x.strokeStyle='rgba(0,0,0,.25)';x.stroke();}
+  if(m===0){if(P9.run||P9.r>0)for(i=0;i<6;i++){var ph=((FR*.01)+i/6)%1;x.globalAlpha=1-ph;txt(x,'C₂H₄',123+Math.cos(i*1.7)*50,150-ph*70,'bold 9px Hind Siliguri','#a60');x.globalAlpha=1;}
+    txt(x,'পাকা আম → ইথিলিন',120,46,'bold 11px Hind Siliguri','#a60');}
+  else{x.fillStyle='rgba(120,185,235,.7)';x.fillRect(255,170,95,60);x.strokeStyle='#6b7c8a';x.lineWidth=3;x.beginPath();x.moveTo(255,140);x.lineTo(255,230);x.lineTo(350,230);x.lineTo(350,140);x.stroke();
+    for(i=0;i<4;i++){x.fillStyle='#888';x.beginPath();x.ellipse(275+i*22,222,9,6,0,0,7);x.fill();}txt(x,'CaC₂ + পানি',302,196,'bold 10px Hind Siliguri','#234');
+    if(P9.run||P9.r>0){for(i=0;i<6;i++){var p2=((FR*.012)+i/6)%1;circ(x,0,275+i*12,215-p2*80,3+p2*2,'rgba(255,255,255,.85)','#9ab',1);}txt(x,'C₂H₂ ↑',302,120,'bold 11px Hind Siliguri',RED);}
+    txt(x,'⚠️ স্বাস্থ্যের জন্য ক্ষতিকর',262,46,'bold 12px Hind Siliguri',RED);}
+  txt(x,P9.r>=1?'✔ পেকে গেছে':(P9.run?'পাকছে…':'"চালু" চাপো'),120,18,'bold 11px Hind Siliguri',P9.r>=1?'#2a7a3b':'#567','center');
+}
+mkGame('p9q','p9o','p9f','p9sc',function(){var Q=[['সোডিয়াম বেনজোয়েট',1],['বেনজোয়িক এসিড',1],['ভিনেগার',1],['লবণের দ্রবণ',1],['চিনির দ্রবণ',1],['ইথিলিন',0],['অ্যাসিটিলিন',0],['ফরমালিন',0]],g=pick(Q);
+  var A='খাদ্যের জন্য অনুমোদিত',B='খাদ্যের জন্য অনুমোদিত নয়';var ans=g[1]?A:B;var why=g[0]+(g[1]?' অনুমোদিত ফুড প্রিজারভেটিভ।':(g[0]==='ফরমালিন'?' বিষাক্ত, খাদ্য সংরক্ষণে ব্যবহার করা উচিত নয়।':' অননুমোদিত প্রিজারভেটিভ।'));
+  return {q:'<b>'+g[0]+'</b> কি খাদ্য সংরক্ষণে অনুমোদিত?',o:opts(ans,[g[1]?B:A]),good:why,bad:why};});
+qgame('p9r','p9p','p9g','p9sd',[['চামড়া, রং ও কীটনাশক শিল্পের বর্জ্যে কোন ভারী ধাতুগুলো থাকে?','Cr, Pb, Hg, Cd',['Na, K, Ca, Mg','Au, Pt, Ag','Al, Zn, Fe'],'বইয়ে ক্রোমিয়াম, লেড, মার্কারি ও ক্যাডমিয়ামের কথা বলা আছে।'],
+ ['ভারী ধাতুযুক্ত উদ্ভিদের ফলমূল খেলে মানুষের কোন অঙ্গের ক্ষতি হয়?','কিডনি ও লিভার',['চোখ ও কান','হাড় ও দাঁত','ফুসফুস ও হৃদয়'],'এসব ধাতু শরীরে ঢুকে কিডনি ও লিভারের ক্ষতি করে।'],
+ ['সাবান ও ডিটারজেন্ট কারখানার NaOH পানিতে গেলে কী হয়?','ক্ষারকের মাত্রা বেড়ে জলজ প্রাণী ও উদ্ভিদ ভালোভাবে বাঁচতে পারে না',['পানি বেশি অম্লীয় হয়','পানি বিশুদ্ধ হয়','কিছুই হয় না'],'পানিতে NaOH গেলে ক্ষারকের মাত্রা বেড়ে যায়।'],
+ ['ডিটারজেন্টের Na₃PO₄ পুকুরে মাছ মরার কারণ হয় কীভাবে?','উদ্ভিদ বেড়ে পানির দ্রবীভূত অক্সিজেন খরচ করে ফেলে',['পানি ক্ষারীয় করে ফেলে','মাছ সরাসরি Na₃PO₄ খেয়ে ফেলে','পানি জমে যায়'],'Na₃PO₄ সারের মতো কাজ করে, উদ্ভিদ বাড়ে ও অক্সিজেন কমে যায়, ফলে মাছ মরে।'],
+ ['কার্বাইড দিয়ে আম পাকানোর সময় কোন গ্যাস তৈরি হয়?','অ্যাসিটিলিন (C₂H₂)',['অ্যামোনিয়া (NH₃)','কার্বন ডাই-অক্সাইড','ক্লোরিন'],'CaC₂ + 2H₂O → C₂H₂ + Ca(OH)₂।'],
+ ['ফরমালিন দিয়ে কৃষিপণ্য সংরক্ষণ করা উচিত নয় কেন?','এটি বিষাক্ত, মৃত্যুর কারণও হতে পারে',['খুব দামি বলে','রং নষ্ট করে বলে','এটি ফেনা করে'],'ফরমালিন মানুষ ও প্রাণীর জন্য বিষাক্ত।']]);
+/* ---------- ফ্রেম লুপ ---------- */
+function frame(){FR++;l1draw();b2draw();v3draw();v3ddraw();w4draw();x5draw();g6draw();n7draw();n7bdraw();s8draw();s8ddraw();p9draw();requestAnimationFrame(frame);}
+frame();
+
+</script>
+</body>
+</html>
