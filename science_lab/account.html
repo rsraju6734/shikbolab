@@ -42,6 +42,7 @@
   q('logo').onchange=function(){SL.logoFromFile(this.files[0],function(u){logoData=u;});};
   q('fs').onsubmit=function(e){e.preventDefault();
    SL.signup({kind:kind(),school:q('school').value,logo:logoData,name:q('nm').value,email:q('em').value,pass:q('pw').value}).then(function(r){if(!r.ok)return msg('e1',r.err);location.hash='';location.reload();});};
+  try{var pf=sessionStorage.getItem('sl_prefill');if(pf){q('lem').value=pf;sessionStorage.removeItem('sl_prefill');}}catch(e){}
   q('fl').onsubmit=function(e){e.preventDefault();SL.login(q('lem').value,q('lpw').value).then(function(r){if(!r.ok)return msg('e2',r.err);location.hash='';location.reload();});};
  }
  /* ---- ড্যাশবোর্ড ---- */
@@ -49,7 +50,7 @@
  function chTitle(f){var L=window.CHAPTERS||[];for(var i=0;i<L.length;i++)if(L[i].file.split('/').pop()===f+'.html')return L[i].title;return f;}
  function dash(){
   var a=SL.acc(),s=SL.status(a),P=C.PLANS[a.kind],c=SL.counts(a),pl=SL.profiles(a),pg=SL.progress(a.email);
-  var st=s.state==='active'?'✅ চালু':s.state==='trial'?'🎁 ফ্রি ট্রায়াল':'⛔ মেয়াদ শেষ';
+  var st=s.state==='active'?'✅ চালু':s.state==='trial'?'🎁 ফ্রি ট্রায়াল':s.state==='suspended'?'🚫 বন্ধ':'⛔ মেয়াদ শেষ';
   var h='<div class="sl-hero" style="margin-bottom:8px"><span class="sl-chip">'+P.emoji+' '+P.name+'</span><h1>'+(a.kind==='school'&&a.school?esc(a.school):'হ্যালো, '+esc(a.name)+' 👋')+'</h1></div>'+DEMO;
   h+='<div class="sl-box"><h2>📌 প্ল্যানের অবস্থা</h2><div class="sl-stat"><div><small>অবস্থা</small><b>'+st+'</b></div><div><small>বাকি দিন</small><b>'+bn(s.left)+' দিন</b></div><div><small>মেয়াদ শেষ</small><b style="font-size:19px">'+(s.until?fd(s.until):'—')+'</b></div><div><small>ডিভাইস লিমিট</small><b>'+bn(P.devices)+'টি/জন</b></div></div></div>';
   /* সদস্য */
@@ -74,14 +75,17 @@
   var optPlan=Object.keys(C.PLANS).map(function(k){return '<option value="'+k+'"'+(k===a.kind?' selected':'')+'>'+C.PLANS[k].emoji+' '+C.PLANS[k].name+'</option>';}).join('');
   h+='<div class="sl-box" id="pay"><h2>💳 প্ল্যান নাও / নবায়ন করো</h2><div class="sl-note">বিকাশ <b>'+esc(C.PAY.bkash)+'</b> বা নগদ <b>'+esc(C.PAY.nagad)+'</b> নম্বরে টাকা পাঠাও (Send Money), তারপর TrxID নিচে লেখো। (ডেমোতে যেকোনো ৬+ অক্ষর চলবে।)</div>'
   +'<form id="fp" class="sl-f" style="grid-template-columns:1fr 1fr 1fr;align-items:end"><div><label>প্ল্যান</label><select id="pp">'+optPlan+'</select></div><div><label>সময়</label><select id="pd"><option value="month">মাসিক (৩০ দিন)</option><option value="week">সাপ্তাহিক (৭ দিন)</option></select></div><div><label>TrxID</label><input id="pt" placeholder="যেমন 9AB3XYZ12"></div></form>'
-  +'<p id="pr" style="font-size:20px;font-weight:700;color:#1f3a5f;margin:12px 0"></p><div id="e4" class="sl-err"></div><div id="o4" class="sl-ok"></div><button class="slb o" id="pb" style="margin-top:8px">✅ পেমেন্ট নিশ্চিত করো (ডেমো)</button>';
-  if(a.pays.length)h+='<h3 style="margin:22px 0 6px;color:#1f3a5f">পেমেন্টের ইতিহাস</h3><div class="sl-scroll"><table class="sl-tbl"><tr><th>তারিখ</th><th>প্ল্যান</th><th>সময়</th><th>টাকা</th><th>TrxID</th></tr>'+a.pays.map(function(x){return '<tr><td>'+fd(x.t)+'</td><td>'+C.PLANS[x.plan].name.replace(' প্ল্যান','')+'</td><td>'+(x.period==='week'?'সাপ্তাহিক':'মাসিক')+'</td><td>৳'+bn(x.price)+'</td><td>'+esc(x.trx)+'</td></tr>';}).join('')+'</table></div>';
+  +'<p id="pr" style="font-size:20px;font-weight:700;color:#1f3a5f;margin:12px 0"></p><div id="e4" class="sl-err"></div><div id="o4" class="sl-ok"></div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">'+(C.INSTANT?'<button class="slb o" id="pb">✅ পেমেন্ট নিশ্চিত করো (ডেমো)</button>':'')+'<button class="slb p" id="wa">📲 অ্যাডমিনকে WhatsApp-এ পাঠাও</button></div><p style="color:#5b6b78;font-size:14.5px;margin:8px 0 0">'+(C.INSTANT?'ডেমোতে সাথে সাথে চালু হয়। আসল মোডে অ্যাডমিন TrxID যাচাই করে প্ল্যান চালু করেন।':'পেমেন্টের পর WhatsApp বাটনে চাপো। অ্যাডমিন যাচাই করে প্ল্যান চালু করে একটা লিংক পাঠাবেন।')+'</p>';
+  h+='<div class="sl-note" style="margin-top:16px">🔑 <b>তোমার অ্যাকাউন্ট কোড</b> (অ্যাডমিন চাইলে এটা পাঠাও):<br><textarea id="mycode" readonly rows="2" style="width:100%;margin-top:6px;border:2px solid #e3eaf0;border-radius:12px;padding:8px;font:13px monospace"></textarea><button class="slb s" id="cpc" style="margin-top:6px;padding:6px 16px;font-size:14px">📋 কপি করো</button></div>';
+  if(a.pays.length)h+='<h3 style="margin:22px 0 6px;color:#1f3a5f">পেমেন্টের ইতিহাস</h3><div class="sl-scroll"><table class="sl-tbl"><tr><th>তারিখ</th><th>প্ল্যান</th><th>সময়</th><th>টাকা</th><th>TrxID</th></tr>'+a.pays.map(function(x){return '<tr><td>'+fd(x.t)+'</td><td>'+(C.PLANS[x.plan]||{name:x.plan}).name.replace(' প্ল্যান','')+'</td><td>'+(x.period==='week'?'সাপ্তাহিক':x.period==='manual'?'ম্যানুয়াল (অ্যাডমিন)':'মাসিক')+'</td><td>৳'+bn(x.price)+'</td><td>'+esc(x.trx)+'</td></tr>';}).join('')+'</table></div>';
   h+='</div>';
   h+='<div style="text-align:center;margin-top:10px"><button class="slb s" id="lo">লগআউট</button> <button class="slb r" id="wipe">ডেমো ডাটা মুছে ফেলো</button></div>';
   app.innerHTML=h;
   function price(){var p=C.PLANS[q('pp').value];q('pr').textContent='মোট: ৳'+bn(p.price[q('pd').value]);}
   q('pp').onchange=q('pd').onchange=price;price();
-  q('pb').onclick=function(){msg('e4','');msg('o4','');var r=SL.pay(q('pp').value,q('pd').value,q('pt').value);if(!r.ok)return msg('e4',r.err);msg('o4','পেমেন্ট গৃহীত! প্ল্যান চালু হয়েছে 🎉',1);setTimeout(function(){location.reload();},900);};
+  q('mycode').value=SL.pack(a,true);q('cpc').onclick=function(){q('mycode').select();try{document.execCommand('copy');}catch(e){}this.textContent='✅ কপি হয়েছে';};
+  q('wa').onclick=function(){var p=C.PLANS[q('pp').value],pd=q('pd').value,t=q('pt').value.trim();var m='আসসালামু আলাইকুম, ShikboLab-এ প্ল্যান নিতে চাই।\nইমেইল: '+a.email+'\nপ্ল্যান: '+p.name+' ('+(pd==='week'?'সাপ্তাহিক':'মাসিক')+')\nটাকা: ৳'+bn(p.price[pd])+'\nTrxID: '+(t||'—');window.open('https://wa.me/'+C.PAY.wa+'?text='+encodeURIComponent(m),'_blank');};
+  var pb=q('pb');if(pb)pb.onclick=function(){msg('e4','');msg('o4','');var r=SL.pay(q('pp').value,q('pd').value,q('pt').value);if(!r.ok)return msg('e4',r.err);msg('o4','পেমেন্ট গৃহীত! প্ল্যান চালু হয়েছে 🎉',1);setTimeout(function(){location.reload();},900);};
   q('lo').onclick=function(){SL.logout();location.reload();};
   q('wipe').onclick=function(){if(confirm('এই ব্রাউজারের সব ডেমো অ্যাকাউন্ট ও অগ্রগতি মুছে যাবে। নিশ্চিত?')){localStorage.removeItem('sl_demo_v1');location.reload();}};
   var fm=q('fm');if(fm)fm.onsubmit=function(e){e.preventDefault();var r=SL.addMember(q('mn').value,q('mr').value);if(!r.ok)return msg('e3',r.err);location.reload();};
@@ -89,8 +93,14 @@
   [].forEach.call(app.querySelectorAll('[data-rm]'),function(b){b.onclick=function(){if(confirm('এই সদস্যকে মুছে ফেলবে?')){SL.removeMember(b.dataset.rm);location.reload();}};});
   if(location.hash==='#pay')q('pay').scrollIntoView();
  }
- if(SL.acc())dash();else authView();
- window.addEventListener('hashchange',function(){if(!SL.acc())authView();});
+ function importView(o){
+  var st=SL.status({trialEnd:o.te,paidUntil:o.pu,suspended:o.su}),P=C.PLANS[o.k]||C.PLANS.student;
+  app.innerHTML='<div class="sl-hero"><h1>অ্যাডমিন তোমার অ্যাকাউন্ট তৈরি করেছেন 🎉</h1></div><div class="sl-box" style="max-width:520px;margin:0 auto;text-align:center"><div style="font-size:50px">'+P.emoji+'</div><h2>'+esc(o.s?o.s:o.n)+'</h2><p>'+P.name+' · '+(st.state==='suspended'?'🚫 বন্ধ':st.state==='expired'?'⛔ মেয়াদ শেষ':bn(st.left)+' দিন বাকি')+'<br><small>ইমেইল: '+esc(o.e)+'</small></p><button class="slb o" id="go">✅ অ্যাকাউন্ট চালু করো</button><p style="color:#5b6b78;font-size:14.5px">চালু করার পর অ্যাডমিনের দেওয়া পাসওয়ার্ড দিয়ে লগইন করো।</p></div>';
+  q('go').onclick=function(){var r=SL.mergeIn(o,false);try{sessionStorage.setItem('sl_prefill',o.e);}catch(e){}if(SL.get().ses!==o.e)SL.logout();history.replaceState(null,'','account.html#login');location.reload();};
+ }
+ var imp=location.hash.indexOf('#a=')===0?SL.unpack(location.hash):null;
+ if(imp)importView(imp);else if(SL.acc())dash();else authView();
+ window.addEventListener('hashchange',function(){if(location.hash.indexOf('#a=')===0)location.reload();else if(!SL.acc())authView();});
 })();
 </script>
 <style>@media(max-width:640px){#fm,#fp{grid-template-columns:1fr!important}}</style>

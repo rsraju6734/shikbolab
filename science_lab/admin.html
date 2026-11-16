@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>সুপার অ্যাডমিন — ShikboLab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="js/chapters.js"></script>
+<script src="js/demo-saas.js"></script>
+<style>
+.ad-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 16px}
+.ad-tabs button{padding:10px 18px;border-radius:999px;border:2px solid #e3eaf0;background:#fff;font:700 15.5px 'Hind Siliguri',sans-serif;cursor:pointer;color:#1f3a5f;transition:all .25s}
+.ad-tabs button.on{background:linear-gradient(135deg,#1f3a5f,#3f6fd1);color:#fff;border-color:transparent;box-shadow:0 8px 18px -8px #3f6fd1}
+.ad-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0;border-bottom:1px dashed #dbe4ea}
+.ad-row .nm{flex:1;min-width:170px;font-weight:700;color:#1f3a5f}.ad-row .nm small{display:block;color:#5b6b78;font-weight:500;word-break:break-all}
+.bdg{display:inline-block;padding:2px 12px;border-radius:999px;font-size:13px;font-weight:700;background:#e1f5ee;color:#16705f}
+.bdg.t{background:#fff1d6;color:#9a6a12}.bdg.x{background:#fde7e1;color:#b5391f}.bdg.s{background:#e8eaf1;color:#444}
+.ad-panel{background:#f7fafc;border:1px solid #e3eaf0;border-radius:18px;padding:16px;margin:8px 0 12px;display:grid;gap:14px}
+.ad-panel h4{margin:0 0 6px;color:#1f3a5f}
+.ad-inl{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ad-inl input,.ad-inl select,.ad-f input,.ad-f select,.ad-f textarea{padding:9px 12px;border:2px solid #e3eaf0;border-radius:12px;font:500 15.5px 'Hind Siliguri',sans-serif;background:#fff;min-width:0}
+.ad-inl input[type=number]{width:100px}
+.ad-sm{padding:7px 14px!important;font-size:14px!important}
+.ad-f{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.ad-f label{display:block;font-weight:700;color:#1f3a5f;font-size:14.5px;margin-bottom:4px}.ad-f input,.ad-f select{width:100%}
+.ad-out{background:#e1f5ee;border-radius:16px;padding:14px;margin-top:14px;display:none}.ad-out textarea{width:100%;border:2px solid #bfe3d8;border-radius:12px;padding:10px;font:14.5px 'Hind Siliguri',sans-serif;margin:6px 0}
+.ad-big{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+.ad-big div{background:#fff;border:1px solid #e3eaf0;border-radius:20px;padding:16px;box-shadow:0 8px 20px rgba(31,58,95,.06)}
+.ad-big small{color:#5b6b78;font-weight:600;display:block}.ad-big b{font-size:30px;color:#1f3a5f;line-height:1.2}
+.ad-lock{max-width:440px;margin:40px auto}
+</style>
+</head>
+<body class="sl-page" data-nobar>
+<header class="sl-top"><a class="brand" href="index.html">Shikbo<span>Lab</span></a><nav><a href="index.html">হোম</a><a href="plans.html">প্ল্যান</a><a class="on" href="admin.html">👑 অ্যাডমিন</a></nav></header>
+<main class="sl-wrap" id="app"></main>
+<div class="sl-foot">ডেমো মোড · ডাটা এই ব্রাউজারে থাকে, তাই নিয়মিত ব্যাকআপ নাও</div>
+<script>
+(function(){
+ var C=SL.cfg,bn=SL.bn,esc=SL.esc,DAY=864e5,app=document.getElementById('app'),tab='ov',openId=null,search='',last=null;
+ function q(i){return document.getElementById(i);}
+ function fd(t){return t?new Date(t).toLocaleDateString('bn-BD',{day:'numeric',month:'short',year:'numeric'}):'—';}
+ function money(n){return '৳'+bn(Math.round(n));}
+ function admHash(){try{return JSON.parse(localStorage.getItem('sl_admin')||'null');}catch(e){return null;}}
+ function toast(t){var e=document.createElement('div');e.textContent=t;e.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1f3a5f;color:#fff;padding:11px 22px;border-radius:999px;font-weight:700;z-index:9999;box-shadow:0 10px 24px rgba(0,0,0,.25)';document.body.appendChild(e);setTimeout(function(){e.remove();},2200);}
+ function copy(id){var e=q(id);e.select();try{document.execCommand('copy');toast('✅ কপি হয়েছে');}catch(x){toast('হাতে কপি করো');}}
+ function stat(a){var s=SL.status(a);return s;}
+ function badge(a){var s=stat(a);return s.state==='active'?'<span class="bdg">✅ চালু · '+bn(s.left)+' দিন</span>':s.state==='trial'?'<span class="bdg t">🎁 ট্রায়াল · '+bn(s.left)+' দিন</span>':s.state==='suspended'?'<span class="bdg s">🚫 বন্ধ</span>':'<span class="bdg x">⛔ মেয়াদ শেষ</span>';}
+ function link(a,mem){return new URL('account.html',location.href).href+'#a='+SL.pack(a,!!mem);}
+ function mut(email,fn){var x=SL.get(),a=x.acc[email];if(!a)return;fn(a,x);SL.put(x);}
+ function addPay(a,price,trx,days){if(price>0||trx)a.pays.unshift({t:Date.now(),plan:a.kind,period:'manual',price:+price||0,trx:trx||'ম্যানুয়াল',days:days});}
+ function adjust(a,days){ /* দিন যোগ/কমানো */
+  var n=Date.now(),s=SL.status(a),base=(s.state==='trial'||s.state==='active')?Math.max(a.trialEnd||0,a.paidUntil||0):n;
+  var ne=base+days*DAY;a.paidUntil=ne;if(days<0||ne<=n)a.trialEnd=Math.min(a.trialEnd||0,ne);if(days>0&&(a.trialEnd||0)<n)a.trialEnd=n;
+ }
+ /* ---------- লগইন / সেটআপ ---------- */
+ function gateView(){
+  var has=admHash();
+  app.innerHTML='<div class="sl-box ad-lock"><div style="text-align:center;font-size:52px">👑</div><h2 style="text-align:center">'+(has?'সুপার অ্যাডমিন লগইন':'প্রথমবার সেটআপ')+'</h2>'+(has?'':'<p style="color:#5b6b78">এই ব্রাউজারের জন্য তোমার সুপার অ্যাডমিন পাসওয়ার্ড বানাও। মনে রেখো, এটা ভুলে গেলে ডাটা ব্যাকআপ ছাড়া ফেরত পাবে না।</p>')
+  +'<form id="gf" class="sl-f"><div><label>পাসওয়ার্ড'+(has?'':' (কমপক্ষে ৬ অক্ষর)')+'</label><input type="password" id="ap" autocomplete="'+(has?'current-password':'new-password')+'"></div>'+(has?'':'<div><label>আবার লেখো</label><input type="password" id="ap2"></div>')+'<div id="ge" class="sl-err"></div><button class="slb p" type="submit">'+(has?'🔓 ঢোকো':'✅ সেট করো')+'</button></form></div>';
+  q('gf').onsubmit=function(e){e.preventDefault();var p=q('ap').value,ge=q('ge');function er(t){ge.textContent=t;ge.style.display='block';}
+   if(has){SL.hash('adm|'+p).then(function(h){if(h!==has.h)return er('পাসওয়ার্ড ভুল।');enter();});}
+   else{if(p.length<6)return er('কমপক্ষে ৬ অক্ষর দাও।');if(p!==q('ap2').value)return er('দুটো পাসওয়ার্ড মেলেনি।');SL.hash('adm|'+p).then(function(h){localStorage.setItem('sl_admin',JSON.stringify({h:h,t:Date.now()}));enter();});}};
+ }
+ function enter(){localStorage.setItem('sl_admin_until',String(Date.now()+8*3600*1000));render();}
+ function exit(){localStorage.removeItem('sl_admin_until');gateView();}
+ /* ---------- মূল ---------- */
+ function render(){
+  if(!SL.isAdmin())return gateView();
+  var T=[['ov','📊 ওভারভিউ'],['ac','👥 অ্যাকাউন্ট'],['nw','➕ নতুন অ্যাকাউন্ট'],['pm','💰 পেমেন্ট'],['st','⚙️ সেটিংস ও ব্যাকআপ']];
+  app.innerHTML='<div class="sl-hero" style="margin-bottom:6px"><span class="sl-chip">👑 সুপার অ্যাডমিন · সব ফ্রি</span><h1>অ্যাডমিন প্যানেল</h1></div>'
+   +'<div class="ad-tabs">'+T.map(function(t){return '<button data-t="'+t[0]+'" class="'+(t[0]===tab?'on':'')+'">'+t[1]+'</button>';}).join('')+'<button id="lo" style="margin-left:auto">🚪 লগআউট</button></div><div id="body"></div>';
+  [].forEach.call(app.querySelectorAll('.ad-tabs [data-t]'),function(b){b.onclick=function(){tab=b.dataset.t;render();};});
+  q('lo').onclick=exit;
+  ({ov:vOv,ac:vAc,nw:vNw,pm:vPm,st:vSt})[tab]();
+ }
+ function list(){var x=SL.get();return Object.keys(x.acc).map(function(k){return x.acc[k];}).sort(function(a,b){return (b.created||0)-(a.created||0);});}
+ /* ওভারভিউ */
+ function vOv(){
+  var L=list(),c={active:0,trial:0,expired:0,suspended:0},rev=0,pays=[];
+  L.forEach(function(a){c[stat(a).state]++;(a.pays||[]).forEach(function(p){rev+=+p.price||0;pays.push([a,p]);});});
+  var soon=L.filter(function(a){var s=stat(a);return (s.state==='active'||s.state==='trial')&&s.left<=3;});
+  var h='<div class="ad-big"><div><small>মোট অ্যাকাউন্ট</small><b>'+bn(L.length)+'</b></div><div><small>✅ চালু (পেইড)</small><b>'+bn(c.active)+'</b></div><div><small>🎁 ট্রায়াল</small><b>'+bn(c.trial)+'</b></div><div><small>⛔ মেয়াদ শেষ</small><b>'+bn(c.expired)+'</b></div><div><small>🚫 বন্ধ</small><b>'+bn(c.suspended)+'</b></div><div><small>💰 মোট আয়</small><b>'+money(rev)+'</b></div></div>';
+  h+='<div class="sl-box"><h2>⏰ ৩ দিনের মধ্যে মেয়াদ শেষ হবে</h2>'+(soon.length?soon.map(function(a){return '<div class="ad-row"><div class="nm">'+esc(a.school||a.name)+'<small>'+esc(a.email)+'</small></div>'+badge(a)+'<button class="slb s ad-sm" data-go="'+esc(a.email)+'">পরিচালনা করো</button></div>';}).join(''):'<p style="color:#5b6b78;margin:0">কেউ নেই ✨</p>')+'</div>';
+  pays.sort(function(a,b){return b[1].t-a[1].t;});
+  h+='<div class="sl-box"><h2>🧾 সাম্প্রতিক পেমেন্ট</h2>'+(pays.length?pays.slice(0,6).map(function(x){return '<div class="ad-row"><div class="nm">'+esc(x[0].school||x[0].name)+'<small>'+fd(x[1].t)+' · TrxID: '+esc(x[1].trx)+'</small></div><b>'+money(x[1].price)+'</b></div>';}).join(''):'<p style="color:#5b6b78;margin:0">এখনও কোনো পেমেন্ট নেই।</p>')+'</div>';
+  h+='<div class="sl-note">💡 <b>মনে রেখো:</b> এখানে শুধু <u>এই ব্রাউজারে</u> থাকা অ্যাকাউন্ট দেখা যায়। গ্রাহকের নিজে খোলা অ্যাকাউন্ট দেখতে তার "অ্যাকাউন্ট কোড" নিয়ে <b>👥 অ্যাকাউন্ট → কোড ইমপোর্ট</b> করো।</div>';
+  q('body').innerHTML=h;
+  [].forEach.call(q('body').querySelectorAll('[data-go]'),function(b){b.onclick=function(){tab='ac';openId=b.dataset.go;render();};});
+ }
+ /* অ্যাকাউন্ট তালিকা */
+ function vAc(){
+  var L=list().filter(function(a){var t=(search||'').toLowerCase();return !t||(a.name+' '+a.email+' '+(a.school||'')).toLowerCase().indexOf(t)>-1;});
+  var h='<div class="sl-box"><div class="ad-inl" style="margin-bottom:6px"><input id="sq" placeholder="🔍 নাম/ইমেইল/স্কুল খোঁজো" value="'+esc(search)+'" style="flex:1;min-width:200px"><button class="slb p ad-sm" id="imp">📥 কোড ইমপোর্ট</button></div><div id="impbox" style="display:none" class="ad-panel"><h4>গ্রাহকের অ্যাকাউন্ট কোড বা লিংক পেস্ট করো</h4><textarea id="impt" rows="3" style="width:100%;border:2px solid #e3eaf0;border-radius:12px;padding:8px;font:13px monospace"></textarea><div class="ad-inl"><button class="slb o ad-sm" id="impgo">✅ ইমপোর্ট করো</button></div></div>';
+  h+=L.length?L.map(function(a){return rowHTML(a);}).join(''):'<p style="color:#5b6b78">কোনো অ্যাকাউন্ট নেই। "➕ নতুন অ্যাকাউন্ট" থেকে বানাও।</p>';
+  h+='</div>';q('body').innerHTML=h;
+  q('sq').oninput=function(){search=this.value;var p=this.selectionStart;vAc();var n=q('sq');n.focus();n.setSelectionRange(p,p);};
+  q('imp').onclick=function(){var b=q('impbox');b.style.display=b.style.display==='none'?'grid':'none';};
+  q('impgo').onclick=function(){var o=SL.unpack(q('impt').value);if(!o)return toast('❌ কোডটা ঠিক নেই');var r=SL.mergeIn(o,true);toast(r.isNew?'✅ নতুন অ্যাকাউন্ট যোগ হয়েছে':'✅ আপডেট হয়েছে');openId=o.e;vAc();};
+  bindRows();
+ }
+ function rowHTML(a){
+  var P=C.PLANS[a.kind]||C.PLANS.student,o=openId===a.email,c=SL.counts(a);
+  var h='<div class="ad-row"><div class="nm">'+P.emoji+' '+esc(a.school||a.name)+'<small>'+esc(a.name)+' · '+esc(a.email)+'</small></div><span class="bdg s">'+P.name.replace(' প্ল্যান','')+'</span>'+badge(a)+'<span style="color:#5b6b78;font-size:14px">👥 '+bn((a.members||[]).length+1)+'</span><button class="slb s ad-sm" data-open="'+esc(a.email)+'">'+(o?'▲ বন্ধ করো':'⚙️ পরিচালনা')+'</button></div>';
+  if(!o)return h;
+  var s=stat(a),exp=Math.max(a.trialEnd||0,a.paidUntil||0);
+  h+='<div class="ad-panel" data-e="'+esc(a.email)+'">'
+  +'<div><h4>📅 মেয়াদ: '+fd(exp)+(s.state==='expired'?' (শেষ)':'')+'</h4><div class="ad-inl"><button class="slb o ad-sm" data-d="7">+৭ দিন</button><button class="slb o ad-sm" data-d="30">+৩০ দিন</button><button class="slb o ad-sm" data-d="365">+১ বছর</button><button class="slb r" data-d="-7">−৭ দিন</button><button class="slb r" data-x="now">আজই মেয়াদ শেষ</button></div>'
+  +'<div class="ad-inl" style="margin-top:8px"><input type="number" id="cd" placeholder="দিন" value="10"> দিন <button class="slb p ad-sm" data-cd="1">যোগ করো</button><button class="slb r" data-cd="-1">কমাও</button></div>'
+  +'<div class="ad-inl" style="margin-top:8px"><input type="number" id="amt" placeholder="টাকা পেয়েছি (ঐচ্ছিক)" style="width:190px"><input id="trx" placeholder="TrxID (ঐচ্ছিক)" style="width:160px"><small style="color:#5b6b78">টাকা লিখলে "যোগ" করার সময় পেমেন্টের খাতায় উঠবে</small></div></div>'
+  +'<div class="ad-inl"><b>প্ল্যান:</b><select id="pk">'+Object.keys(C.PLANS).map(function(k){return '<option value="'+k+'"'+(k===a.kind?' selected':'')+'>'+C.PLANS[k].name+'</option>';}).join('')+'</select><button class="slb s ad-sm" data-pk="1">বদলাও</button>'
+  +'<b style="margin-left:10px">পাসওয়ার্ড:</b><input id="np" placeholder="নতুন পাসওয়ার্ড"><button class="slb s ad-sm" data-pw="1">রিসেট</button></div>'
+  +'<div><h4>👥 সদস্য ('+bn(c.students)+' শিক্ষার্থী, '+bn(c.teachers)+' শিক্ষক)</h4>'+((a.members||[]).length?(a.members.map(function(m){return '<div class="ad-inl" style="padding:3px 0"><span>'+esc(m.name)+' <small style="color:#5b6b78">('+SL.ROLE[m.role]+')</small></span><button class="slb r" data-rm="'+m.id+'">মুছো</button></div>';}).join('')):'<small style="color:#5b6b78">কেউ নেই</small>')
+  +'<div class="ad-inl" style="margin-top:6px"><input id="mn" placeholder="সদস্যের নাম"><select id="mr"><option value="student">শিক্ষার্থী</option>'+(a.kind==='school'?'<option value="teacher">শিক্ষক</option>':'')+'</select><button class="slb s ad-sm" data-am="1">➕ যোগ</button></div></div>'
+  +'<div class="ad-inl"><button class="slb p ad-sm" data-lk="1">🔗 আপডেট লিংক তৈরি করো</button><button class="slb s ad-sm" data-sp="1">'+(a.suspended?'✅ চালু করো (বন্ধ ছিল)':'🚫 সাময়িক বন্ধ করো')+'</button><button class="slb r" data-del="1">🗑 মুছে ফেলো</button></div>'
+  +'<div class="ad-out" id="lkout"><b>এই লিংক গ্রাহককে পাঠাও (WhatsApp/মেসেজে):</b><textarea id="lkt" rows="5" readonly></textarea><div class="ad-inl"><button class="slb o ad-sm" id="lkc">📋 কপি করো</button></div></div></div>';
+  return h;
+ }
+ function bindRows(){
+  var b=q('body');
+  [].forEach.call(b.querySelectorAll('[data-open]'),function(e){e.onclick=function(){openId=openId===e.dataset.open?null:e.dataset.open;vAc();};});
+  var P=b.querySelector('.ad-panel[data-e]');if(!P)return;var em=P.dataset.e;
+  function amt(){return +(q('amt').value||0);}
+  function days(n){mut(em,function(a){adjust(a,n);if(n>0)addPay(a,amt(),q('trx').value.trim(),n);});toast('✅ মেয়াদ বদলানো হয়েছে');vAc();}
+  [].forEach.call(P.querySelectorAll('[data-d]'),function(e){e.onclick=function(){days(+e.dataset.d);};});
+  var xn=P.querySelector('[data-x]');if(xn)xn.onclick=function(){mut(em,function(a){a.trialEnd=Date.now()-1000;a.paidUntil=0;});toast('মেয়াদ শেষ করা হয়েছে');vAc();};
+  [].forEach.call(P.querySelectorAll('[data-cd]'),function(e){e.onclick=function(){var n=Math.abs(+q('cd').value||0)*(+e.dataset.cd);if(!n)return toast('দিন লেখো');days(n);};});
+  P.querySelector('[data-pk]').onclick=function(){mut(em,function(a){a.kind=q('pk').value;});toast('✅ প্ল্যান বদলেছে');vAc();};
+  P.querySelector('[data-pw]').onclick=function(){var p=q('np').value;if(p.length<6)return toast('কমপক্ষে ৬ অক্ষর');SL.hash(p).then(function(h){mut(em,function(a){a.hash=h;});toast('✅ পাসওয়ার্ড রিসেট। নতুন লিংক পাঠাও।');});};
+  [].forEach.call(P.querySelectorAll('[data-rm]'),function(e){e.onclick=function(){mut(em,function(a){a.members=a.members.filter(function(m){return m.id!==e.dataset.rm;});});vAc();};});
+  P.querySelector('[data-am]').onclick=function(){var n=q('mn').value.trim();if(!n)return toast('নাম লেখো');mut(em,function(a){a.members.push({id:'m'+Date.now().toString(36)+Math.floor(Math.random()*99),name:n,role:q('mr').value});});vAc();};
+  P.querySelector('[data-sp]').onclick=function(){mut(em,function(a){a.suspended=!a.suspended;});vAc();};
+  P.querySelector('[data-del]').onclick=function(){if(!confirm('এই অ্যাকাউন্ট চিরতরে মুছে যাবে। নিশ্চিত?'))return;var x=SL.get();delete x.acc[em];delete x.prog[em];if(x.ses===em)x.ses=null;SL.put(x);openId=null;vAc();};
+  P.querySelector('[data-lk]').onclick=function(){var a=SL.get().acc[em];q('lkt').value=msgFor(a,link(a,false),null);q('lkout').style.display='block';};
+  var lc=q('lkc');if(lc)lc.onclick=function(){copy('lkt');};
+ }
+ function msgFor(a,lk,pw){var P=C.PLANS[a.kind]||C.PLANS.student,s=stat(a);
+  return 'আসসালামু আলাইকুম! ShikboLab 🎉\nপ্ল্যান: '+P.name+'\nমেয়াদ: '+(s.state==='suspended'?'বন্ধ':fd(Math.max(a.trialEnd||0,a.paidUntil||0))+' পর্যন্ত ('+bn(s.left)+' দিন)')+'\nইমেইল: '+a.email+(pw?'\nপাসওয়ার্ড: '+pw:'')+'\n\nএই লিংকে একবার ক্লিক করুন, তারপর লগইন করুন:\n'+lk;}
+ /* নতুন অ্যাকাউন্ট */
+ function vNw(){
+  q('body').innerHTML='<div class="sl-box"><h2>➕ নতুন অ্যাকাউন্ট বানাও (ম্যানুয়াল)</h2><p style="color:#5b6b78;margin-top:0">তুমি অ্যাকাউন্ট বানিয়ে লিংক পাঠাবে। গ্রাহক লিংকে ক্লিক করে তোমার দেওয়া পাসওয়ার্ড দিয়ে লগইন করবে।</p>'
+  +'<form id="nf" class="ad-f"><div><label>ধরন</label><select id="k">'+Object.keys(C.PLANS).map(function(k){return '<option value="'+k+'">'+C.PLANS[k].emoji+' '+C.PLANS[k].name+'</option>';}).join('')+'</select></div>'
+  +'<div id="sw"><label>স্কুল/প্রতিষ্ঠানের নাম</label><input id="sc"></div><div><label>গ্রাহকের নাম *</label><input id="n"></div><div><label>ইমেইল *</label><input id="e" type="email"></div>'
+  +'<div><label>পাসওয়ার্ড *</label><div class="ad-inl" style="flex-wrap:nowrap"><input id="p" style="flex:1"><button type="button" class="slb s ad-sm" id="rp">🎲</button></div></div>'
+  +'<div><label>শুরুতে কত দিন?</label><input id="dd" type="number" value="30"></div><div><label>ধরন</label><select id="ty"><option value="paid">✅ পেইড/গিফট (সব ফিচার)</option><option value="trial">🎁 ফ্রি ট্রায়াল</option></select></div>'
+  +'<div><label>টাকা পেয়েছি (ঐচ্ছিক)</label><input id="am" type="number" placeholder="০"></div><div><label>TrxID (ঐচ্ছিক)</label><input id="tx"></div>'
+  +'<div style="grid-column:1/-1"><div id="ne" class="sl-err"></div><button class="slb o" type="submit">✅ অ্যাকাউন্ট বানাও</button></div></form>'
+  +'<div class="ad-out" id="nout"><b>🎉 তৈরি! এই বার্তা গ্রাহককে পাঠাও:</b><textarea id="nt" rows="9" readonly></textarea><button class="slb o ad-sm" id="nc">📋 কপি করো</button></div></div>';
+  function sync(){q('sw').style.display=q('k').value==='school'?'block':'none';}q('k').onchange=sync;sync();
+  q('rp').onclick=function(){var c='abcdefghjkmnpqrstuvwxyz23456789',r='';for(var i=0;i<8;i++)r+=c[Math.floor(Math.random()*c.length)];q('p').value=r;};
+  q('nf').onsubmit=function(e){e.preventDefault();var ne=q('ne');function er(t){ne.textContent=t;ne.style.display='block';}ne.style.display='none';
+   var em=q('e').value.trim().toLowerCase(),pw=q('p').value,nm=q('n').value.trim(),k=q('k').value,sc=q('sc').value.trim(),dd=Math.max(0,+q('dd').value||0);
+   if(!nm)return er('নাম লেখো।');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))return er('সঠিক ইমেইল লেখো।');if(pw.length<6)return er('পাসওয়ার্ড কমপক্ষে ৬ অক্ষর।');if(k==='school'&&!sc)return er('স্কুলের নাম লেখো।');
+   if(SL.get().acc[em])return er('এই ইমেইলে অ্যাকাউন্ট আগেই আছে।');
+   SL.hash(pw).then(function(h){var x=SL.get(),n=Date.now(),paid=q('ty').value==='paid';
+    var a=x.acc[em]={email:em,hash:h,name:nm,kind:k,school:sc,logo:'',created:n,trialEnd:paid?n:n+dd*DAY,paidUntil:paid?n+dd*DAY:0,suspended:false,members:[],active:'owner',pays:[]};
+    addPay(a,+q('am').value||0,q('tx').value.trim(),dd);SL.put(x);
+    q('nt').value=msgFor(a,link(a,false),pw);q('nout').style.display='block';q('nout').scrollIntoView({behavior:'smooth'});toast('✅ অ্যাকাউন্ট তৈরি হয়েছে');});};
+  q('nc').onclick=function(){copy('nt');};
+ }
+ /* পেমেন্ট খাতা */
+ function vPm(){
+  var L=list(),rows=[],tot=0;L.forEach(function(a){(a.pays||[]).forEach(function(p){rows.push([a,p]);tot+=+p.price||0;});});rows.sort(function(a,b){return b[1].t-a[1].t;});
+  var mo=0,now=new Date();rows.forEach(function(r){var t=new Date(r[1].t);if(t.getMonth()===now.getMonth()&&t.getFullYear()===now.getFullYear())mo+=+r[1].price||0;});
+  q('body').innerHTML='<div class="ad-big"><div><small>মোট আয়</small><b>'+money(tot)+'</b></div><div><small>এই মাসের আয়</small><b>'+money(mo)+'</b></div><div><small>মোট পেমেন্ট</small><b>'+bn(rows.length)+'</b></div></div>'
+  +'<div class="sl-box"><h2>🧾 পেমেন্টের খাতা</h2>'+(rows.length?'<div class="sl-scroll"><table class="sl-tbl"><tr><th>তারিখ</th><th>গ্রাহক</th><th>প্ল্যান</th><th>ধরন</th><th>টাকা</th><th>TrxID</th></tr>'+rows.map(function(r){return '<tr><td>'+fd(r[1].t)+'</td><td>'+esc(r[0].school||r[0].name)+'</td><td>'+((C.PLANS[r[1].plan]||{name:r[1].plan}).name.replace(' প্ল্যান',''))+'</td><td>'+(r[1].period==='manual'?'ম্যানুয়াল':r[1].period==='week'?'সাপ্তাহিক':'মাসিক')+'</td><td>'+money(r[1].price)+'</td><td>'+esc(r[1].trx)+'</td></tr>';}).join('')+'</table></div>':'<p style="color:#5b6b78;margin:0">কোনো পেমেন্ট নেই।</p>')+'</div>';
+ }
+ /* সেটিংস */
+ function vSt(){
+  q('body').innerHTML='<div class="sl-box"><h2>💾 ব্যাকআপ ও রিস্টোর</h2><p style="color:#5b6b78;margin-top:0">ব্রাউজারের ডাটা মুছে গেলে সব অ্যাকাউন্ট হারাবে। তাই নিয়মিত ব্যাকআপ ফাইল নামিয়ে রাখো (যেমন সপ্তাহে একবার)।</p><div class="ad-inl"><button class="slb p" id="ex">⬇️ ব্যাকআপ নামাও</button><label class="slb s" style="cursor:pointer">⬆️ ব্যাকআপ থেকে ফেরাও<input type="file" id="im" accept=".json" style="display:none"></label></div></div>'
+  +'<div class="sl-box"><h2>🔑 অ্যাডমিন পাসওয়ার্ড বদলাও</h2><div class="ad-inl"><input type="password" id="op" placeholder="বর্তমান"><input type="password" id="n1" placeholder="নতুন (৬+)"><button class="slb s ad-sm" id="cp">বদলাও</button></div></div>'
+  +'<div class="sl-box"><h2>📋 বর্তমান কনফিগ (js/demo-saas.js ফাইলে বদলাও)</h2><div class="sl-scroll"><table class="sl-tbl"><tr><th></th><th>মাসিক</th><th>সাপ্তাহিক</th><th>শিক্ষার্থী</th><th>শিক্ষক</th></tr>'+Object.keys(C.PLANS).map(function(k){var p=C.PLANS[k];return '<tr><td>'+p.emoji+' '+p.name+'</td><td>'+money(p.price.month)+'</td><td>'+money(p.price.week)+'</td><td>'+bn(p.students)+'</td><td>'+bn(p.teachers)+'</td></tr>';}).join('')+'</table></div><p style="margin:10px 0 0;color:#5b6b78">ট্রায়াল: '+bn(C.TRIAL_DAYS)+' দিন · বিকাশ: '+esc(C.PAY.bkash)+' · নগদ: '+esc(C.PAY.nagad)+' · WhatsApp: '+esc(C.PAY.wa)+' · ইনস্ট্যান্ট ডেমো পেমেন্ট: '+(C.INSTANT?'চালু':'বন্ধ')+'</p></div>'
+  +'<div class="sl-box"><h2>🧹 ডেঞ্জার জোন</h2><button class="slb r" id="wp">সব ডেমো ডাটা মুছে ফেলো</button></div>';
+  q('ex').onclick=function(){var x={v:1,t:Date.now(),data:SL.get(),admin:admHash()};var b=new Blob([JSON.stringify(x)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='shikbolab-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('✅ ব্যাকআপ নামছে');};
+  q('im').onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var x=JSON.parse(r.result);if(!x.data||!x.data.acc)throw 0;if(!confirm('বর্তমান সব ডাটা এই ব্যাকআপ দিয়ে বদলে যাবে। নিশ্চিত?'))return;SL.put(x.data);if(x.admin)localStorage.setItem('sl_admin',JSON.stringify(x.admin));toast('✅ ফেরানো হয়েছে');render();}catch(e){toast('❌ ফাইলটা ঠিক নেই');}};r.readAsText(f);};
+  q('cp').onclick=function(){var o=q('op').value,n=q('n1').value;if(n.length<6)return toast('নতুন পাসওয়ার্ড ৬+ অক্ষর');SL.hash('adm|'+o).then(function(h){if(h!==admHash().h)return toast('❌ বর্তমান পাসওয়ার্ড ভুল');SL.hash('adm|'+n).then(function(nh){localStorage.setItem('sl_admin',JSON.stringify({h:nh,t:Date.now()}));toast('✅ বদলেছে');q('op').value=q('n1').value='';});});};
+  q('wp').onclick=function(){if(prompt('নিশ্চিত হতে "মুছো" লেখো')==='মুছো'){localStorage.removeItem('sl_demo_v1');toast('মুছে গেছে');render();}};
+ }
+ render();
+})();
+</script>
+</body>
+</html>
