@@ -87,3 +87,9 @@ details.sl-q summary{cursor:pointer;font-weight:700;color:#1f3a5f}details.sl-q p
 @media(max-width:560px){.sl-bar .hide-m{display:none}.sl-top nav a{padding:6px 10px;font-size:14px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .sl-kinds label{position:relative;display:block}
+
+.sl-old{text-decoration:line-through;color:#98a4ae;font-size:20px;font-weight:600;margin-right:6px}
+.sl-off{display:inline-block;background:#e76f51;color:#fff;font-weight:700;font-size:13.5px;padding:3px 12px;border-radius:999px;margin:0 0 8px;animation:slbob 2.4s ease-in-out infinite}
+.sl-until{display:block;color:#b5391f;font-weight:600;font-size:13.5px;margin-top:4px}
+.sl-plan .sl-off{align-self:flex-start;animation:slpulse 2s ease-in-out infinite;margin:2px 0 10px}
+@keyframes slpulse{50%{transform:scale(1.06)}}
