@@ -48,8 +48,45 @@
  function copy(id){var e=q(id);e.select();try{document.execCommand('copy');toast('✅ কপি হয়েছে');}catch(x){toast('হাতে কপি করো');}}
  function stat(a){var s=SL.status(a);return s;}
  function badge(a){var s=stat(a);return s.state==='active'?'<span class="bdg">✅ চালু · '+bn(s.left)+' দিন</span>':s.state==='trial'?'<span class="bdg t">🎁 ট্রায়াল · '+bn(s.left)+' দিন</span>':s.state==='suspended'?'<span class="bdg s">🚫 বন্ধ</span>':'<span class="bdg x">⛔ মেয়াদ শেষ</span>';}
- function link(a,mem){return new URL('account.html',location.href).href+'#a='+SL.pack(a,!!mem);}
- function mut(email,fn){var x=SL.get(),a=x.acc[email];if(!a)return;fn(a,x);SL.put(x);}
+ var CLOUD=SL.cloud,TOK='',CACHE={acc:{},prog:{}},loaded=false;
+ try{TOK=localStorage.getItem('sl_admin_token')||'';}catch(e){}
+ function link(a,mem){var b=new URL('account.html',location.href).href;return CLOUD?b:b+'#a='+SL.pack(a,!!mem);}
+ function accMap(){return CLOUD?CACHE.acc:SL.get().acc;}
+ function dbLoad(){
+  if(!CLOUD)return Promise.resolve(true);
+  return SL.api({a:'adm_list',k:TOK}).then(function(r){
+   if(!r.ok){toast('❌ '+(r.err||'ক্লাউড থেকে লোড হয়নি'));return false;}
+   CACHE={acc:{},prog:r.prog||{}};(r.acc||[]).forEach(function(a){a.members=a.members||[];a.pays=a.pays||[];a.reqs=a.reqs||[];CACHE.acc[a.email]=a;});loaded=true;return true;
+  });
+ }
+ function dbSave(email){
+  if(!CLOUD)return;
+  SL.api({a:'adm_put',k:TOK,email:email,rec:CACHE.acc[email]}).then(function(r){
+   if(!r.ok)return toast('❌ ক্লাউডে সেভ হয়নি: '+(r.err||''));
+   var a=CACHE.acc[email];if(a&&r.acc){a.reqs=r.acc.reqs;a.members=r.acc.members;a.mv=r.acc.mv;}
+  });
+ }
+ function dbDel(email){
+  if(!CLOUD){var x=SL.get();delete x.acc[email];delete x.prog[email];if(x.ses===email)x.ses=null;SL.put(x);return;}
+  delete CACHE.acc[email];SL.api({a:'adm_del',k:TOK,email:email}).then(function(r){if(!r.ok)toast('❌ মুছতে পারেনি: '+(r.err||''));});
+ }
+ function dbCreate(a){if(CLOUD){CACHE.acc[a.email]=a;dbSave(a.email);}else{var x=SL.get();x.acc[a.email]=a;SL.put(x);}}
+ function dbProg(email){return CLOUD?(CACHE.prog[email]||{}):SL.progress(email);}
+ function mut(email,fn){
+  if(CLOUD){var a=CACHE.acc[email];if(!a)return;fn(a);dbSave(email);return;}
+  var x=SL.get(),a=x.acc[email];if(!a)return;fn(a,x);SL.put(x);
+ }
+ function approveReq(em,rid){mut(em,function(a){var r=(a.reqs||[]).filter(function(x){return x.id===rid;})[0];if(!r||r.status!=='pending')return;a.kind=r.plan;adjust(a,r.period==='week'?7:30);a.pays.unshift({t:Date.now(),plan:r.plan,period:r.period,price:r.price,trx:r.trx,req:rid});r.status='approved';});toast('✅ অনুমোদিত, প্ল্যান চালু হয়েছে');}
+ function rejectReq(em,rid){mut(em,function(a){var r=(a.reqs||[]).filter(function(x){return x.id===rid;})[0];if(r&&r.status==='pending')r.status='rejected';});toast('অনুরোধ বাতিল করা হয়েছে');}
+ function pendList(){var o=[];list().forEach(function(a){(a.reqs||[]).forEach(function(r){if(r.status==='pending')o.push([a,r]);});});return o;}
+ function pendBadge(a){var n=(a.reqs||[]).filter(function(r){return r.status==='pending';}).length;return n?'<span class="bdg x">🔔 '+bn(n)+' অনুরোধ</span>':'';}
+ function reqLine(a,r,pre){return '<div class="ad-row"><div class="nm">'+esc(a.school||a.name)+' · '+((C.PLANS[r.plan]||{name:r.plan}).name)+' ('+(r.period==='week'?'সাপ্তাহিক':'মাসিক')+')<small>'+esc(a.email)+' · TrxID: '+esc(r.trx)+' · '+fd(r.t)+'</small></div><b>'+money(r.price)+'</b><button class="slb o ad-sm" data-'+pre+'a="'+esc(a.email)+'|'+r.id+'">✅ অনুমোদন</button><button class="slb r" data-'+pre+'r="'+esc(a.email)+'|'+r.id+'">বাতিল</button></div>';}
+ function reqPanel(a){var p=(a.reqs||[]).filter(function(r){return r.status==='pending';});return p.length?'<div><h4>🔔 পেমেন্ট অনুরোধ</h4>'+p.map(function(r){return reqLine(a,r,'p');}).join('')+'</div>':'';}
+ function progHTML(a){
+  var pg=dbProg(a.email),pl=SL.profiles(a),h='',any=false;
+  pl.forEach(function(p){var o=pg[p.id]||{},ks=Object.keys(o);if(!ks.length)return;any=true;var avg=Math.round(ks.reduce(function(x,k){return x+o[k].pc;},0)/ks.length);h+='<div style="padding:2px 0">'+esc(p.name)+': <b>'+bn(ks.length)+'টি অধ্যায়, গড় '+bn(avg)+'%</b></div>';});
+  return '<div><h4>📈 অগ্রগতি</h4>'+(any?h:'<small style="color:#5b6b78">এখনও কুইজ দেয়নি</small>')+'</div>';
+ }
  function addPay(a,price,trx,days){if(price>0||trx)a.pays.unshift({t:Date.now(),plan:a.kind,period:'manual',price:+price||0,trx:trx||'ম্যানুয়াল',days:days});}
  function adjust(a,days){ /* দিন যোগ/কমানো */
   var n=Date.now(),s=SL.status(a),base=(s.state==='trial'||s.state==='active')?Math.max(a.trialEnd||0,a.paidUntil||0):n;
@@ -59,36 +96,44 @@
  function gateView(){
   var has=admHash();
   app.innerHTML='<div class="sl-box ad-lock"><div style="text-align:center;font-size:52px">👑</div><h2 style="text-align:center">'+(has?'সুপার অ্যাডমিন লগইন':'প্রথমবার সেটআপ')+'</h2>'+(has?'':'<p style="color:#5b6b78">এই ব্রাউজারের জন্য তোমার সুপার অ্যাডমিন পাসওয়ার্ড বানাও। মনে রেখো, এটা ভুলে গেলে ডাটা ব্যাকআপ ছাড়া ফেরত পাবে না।</p>')
-  +'<form id="gf" class="sl-f"><div><label>পাসওয়ার্ড'+(has?'':' (কমপক্ষে ৬ অক্ষর)')+'</label><input type="password" id="ap" autocomplete="'+(has?'current-password':'new-password')+'"></div>'+(has?'':'<div><label>আবার লেখো</label><input type="password" id="ap2"></div>')+'<div id="ge" class="sl-err"></div><button class="slb p" type="submit">'+(has?'🔓 ঢোকো':'✅ সেট করো')+'</button></form></div>';
+  +'<form id="gf" class="sl-f"><div><label>পাসওয়ার্ড'+(has?'':' (কমপক্ষে ৬ অক্ষর)')+'</label><input type="password" id="ap" autocomplete="'+(has?'current-password':'new-password')+'"></div>'+(has?'':'<div><label>আবার লেখো</label><input type="password" id="ap2"></div>')+''+(CLOUD?'<div><label>☁️ ক্লাউড টোকেন (Code.gs-এ যেটা দিয়েছ)</label><input id="tk" value="'+esc(TOK)+'" autocomplete="off"></div>':'')+'<div id="ge" class="sl-err"></div><button class="slb p" type="submit">'+(has?'🔓 ঢোকো':'✅ সেট করো')+'</button></form></div>';
   q('gf').onsubmit=function(e){e.preventDefault();var p=q('ap').value,ge=q('ge');function er(t){ge.textContent=t;ge.style.display='block';}
-   if(has){SL.hash('adm|'+p).then(function(h){if(h!==has.h)return er('পাসওয়ার্ড ভুল।');enter();});}
-   else{if(p.length<6)return er('কমপক্ষে ৬ অক্ষর দাও।');if(p!==q('ap2').value)return er('দুটো পাসওয়ার্ড মেলেনি।');SL.hash('adm|'+p).then(function(h){localStorage.setItem('sl_admin',JSON.stringify({h:h,t:Date.now()}));enter();});}};
+   if(has){SL.hash('adm|'+p).then(function(h){if(h!==has.h)return er('পাসওয়ার্ড ভুল।');enter(er);});}
+   else{if(p.length<6)return er('কমপক্ষে ৬ অক্ষর দাও।');if(p!==q('ap2').value)return er('দুটো পাসওয়ার্ড মেলেনি।');SL.hash('adm|'+p).then(function(h){localStorage.setItem('sl_admin',JSON.stringify({h:h,t:Date.now()}));enter(er);});}};
  }
- function enter(){localStorage.setItem('sl_admin_until',String(Date.now()+8*3600*1000));render();}
+ function enter(er){
+  var go=function(){localStorage.setItem('sl_admin_until',String(Date.now()+8*3600*1000));if(CLOUD)localStorage.setItem('sl_admin_token',TOK);render();};
+  if(!CLOUD)return go();
+  var t=q('tk')?q('tk').value.trim():TOK;if(!t)return er&&er('ক্লাউড টোকেন লেখো।');TOK=t;
+  dbLoad().then(function(ok){if(ok)go();else if(er)er('টোকেন ভুল, বা ইন্টারনেট/ক্লাউড URL-এ সমস্যা।');});
+ }
  function exit(){localStorage.removeItem('sl_admin_until');gateView();}
  /* ---------- মূল ---------- */
  function render(){
   if(!SL.isAdmin())return gateView();
+  if(CLOUD&&!loaded){app.innerHTML='<p style="text-align:center;padding:60px;color:#5b6b78;font-size:18px">☁️ ক্লাউড থেকে লোড হচ্ছে...</p>';dbLoad().then(function(ok){if(ok)render();else{localStorage.removeItem('sl_admin_until');gateView();}});return;}
   var T=[['ov','📊 ওভারভিউ'],['ac','👥 অ্যাকাউন্ট'],['nw','➕ নতুন অ্যাকাউন্ট'],['pm','💰 পেমেন্ট'],['pr','🏷️ প্রাইস ও ছাড়'],['st','⚙️ সেটিংস ও ব্যাকআপ']];
   app.innerHTML='<div class="sl-hero" style="margin-bottom:6px"><span class="sl-chip">👑 সুপার অ্যাডমিন · সব ফ্রি</span><h1>অ্যাডমিন প্যানেল</h1></div>'
-   +'<div class="ad-tabs">'+T.map(function(t){return '<button data-t="'+t[0]+'" class="'+(t[0]===tab?'on':'')+'">'+t[1]+'</button>';}).join('')+'<button id="lo" style="margin-left:auto">🚪 লগআউট</button></div><div id="body"></div>';
-  [].forEach.call(app.querySelectorAll('.ad-tabs [data-t]'),function(b){b.onclick=function(){tab=b.dataset.t;render();};});
-  q('lo').onclick=exit;
+   +'<div class="ad-tabs">'+T.map(function(t){return '<button data-t="'+t[0]+'" class="'+(t[0]===tab?'on':'')+'">'+t[1]+'</button>';}).join('')+(CLOUD?'<button id="rf" style="margin-left:auto">🔄 রিফ্রেশ</button>':'')+'<button id="lo"'+(CLOUD?'':' style="margin-left:auto"')+'>🚪 লগআউট</button></div><div id="body"></div>';
+  [].forEach.call(app.querySelectorAll('.ad-tabs [data-t]'),function(b){b.onclick=function(){tab=b.dataset.t;if(CLOUD&&(tab==='ov'||tab==='ac'||tab==='pm'))dbLoad().then(render);else render();};});
+  q('lo').onclick=exit;if(q('rf'))q('rf').onclick=function(){dbLoad().then(function(ok){if(ok)toast('✅ ক্লাউড থেকে নতুন তথ্য এসেছে');render();});};
   ({ov:vOv,ac:vAc,nw:vNw,pm:vPm,pr:vPr,st:vSt})[tab]();
  }
- function list(){var x=SL.get();return Object.keys(x.acc).map(function(k){return x.acc[k];}).sort(function(a,b){return (b.created||0)-(a.created||0);});}
+ function list(){var x={acc:accMap()};return Object.keys(x.acc).map(function(k){return x.acc[k];}).sort(function(a,b){return (b.created||0)-(a.created||0);});}
  /* ওভারভিউ */
  function vOv(){
   var L=list(),c={active:0,trial:0,expired:0,suspended:0},rev=0,pays=[];
   L.forEach(function(a){c[stat(a).state]++;(a.pays||[]).forEach(function(p){rev+=+p.price||0;pays.push([a,p]);});});
   var soon=L.filter(function(a){var s=stat(a);return (s.state==='active'||s.state==='trial')&&s.left<=3;});
   var h='<div class="ad-big"><div><small>মোট অ্যাকাউন্ট</small><b>'+bn(L.length)+'</b></div><div><small>✅ চালু (পেইড)</small><b>'+bn(c.active)+'</b></div><div><small>🎁 ট্রায়াল</small><b>'+bn(c.trial)+'</b></div><div><small>⛔ মেয়াদ শেষ</small><b>'+bn(c.expired)+'</b></div><div><small>🚫 বন্ধ</small><b>'+bn(c.suspended)+'</b></div><div><small>💰 মোট আয়</small><b>'+money(rev)+'</b></div></div>';
+  var pend=pendList();h+='<div class="sl-box" style="'+(pend.length?'border:2px solid #e76f51':'')+'"><h2>🔔 পেমেন্ট অনুরোধ ('+bn(pend.length)+')</h2>'+(pend.length?pend.map(function(x){return reqLine(x[0],x[1],'o');}).join(''):'<p style="color:#5b6b78;margin:0">কোনো অপেক্ষমাণ অনুরোধ নেই ✨</p>')+'</div>';
   h+='<div class="sl-box"><h2>⏰ ৩ দিনের মধ্যে মেয়াদ শেষ হবে</h2>'+(soon.length?soon.map(function(a){return '<div class="ad-row"><div class="nm">'+esc(a.school||a.name)+'<small>'+esc(a.email)+'</small></div>'+badge(a)+'<button class="slb s ad-sm" data-go="'+esc(a.email)+'">পরিচালনা করো</button></div>';}).join(''):'<p style="color:#5b6b78;margin:0">কেউ নেই ✨</p>')+'</div>';
   pays.sort(function(a,b){return b[1].t-a[1].t;});
   h+='<div class="sl-box"><h2>🧾 সাম্প্রতিক পেমেন্ট</h2>'+(pays.length?pays.slice(0,6).map(function(x){return '<div class="ad-row"><div class="nm">'+esc(x[0].school||x[0].name)+'<small>'+fd(x[1].t)+' · TrxID: '+esc(x[1].trx)+'</small></div><b>'+money(x[1].price)+'</b></div>';}).join(''):'<p style="color:#5b6b78;margin:0">এখনও কোনো পেমেন্ট নেই।</p>')+'</div>';
-  h+='<div class="sl-note">💡 <b>মনে রেখো:</b> এখানে শুধু <u>এই ব্রাউজারে</u> থাকা অ্যাকাউন্ট দেখা যায়। গ্রাহকের নিজে খোলা অ্যাকাউন্ট দেখতে তার "অ্যাকাউন্ট কোড" নিয়ে <b>👥 অ্যাকাউন্ট → কোড ইমপোর্ট</b> করো।</div>';
+  h+=CLOUD?'<div class="sl-note" style="background:#e1f5ee;border-left-color:#2a9d8f">☁️ <b>ক্লাউড চালু:</b> গ্রাহক যেখানেই অ্যাকাউন্ট খুলুক, সাথে সাথে এখানে আসে। 🔄 রিফ্রেশ চাপলে নতুন তথ্য আসবে।</div>':'<div class="sl-note">💡 <b>মনে রেখো:</b> এখানে শুধু <u>এই ব্রাউজারে</u> থাকা অ্যাকাউন্ট দেখা যায়। গ্রাহকের নিজে খোলা অ্যাকাউন্ট দেখতে তার "অ্যাকাউন্ট কোড" নিয়ে <b>👥 অ্যাকাউন্ট → কোড ইমপোর্ট</b> করো।</div>';
   q('body').innerHTML=h;
   [].forEach.call(q('body').querySelectorAll('[data-go]'),function(b){b.onclick=function(){tab='ac';openId=b.dataset.go;render();};});
+  [].forEach.call(q('body').querySelectorAll('[data-oa],[data-or]'),function(b){b.onclick=function(){var ap=b.hasAttribute('data-oa'),k=(b.getAttribute('data-oa')||b.getAttribute('data-or')).split('|');if(ap)approveReq(k[0],k[1]);else rejectReq(k[0],k[1]);vOv();};});
  }
  /* অ্যাকাউন্ট তালিকা */
  function vAc(){
@@ -97,13 +142,14 @@
   h+=L.length?L.map(function(a){return rowHTML(a);}).join(''):'<p style="color:#5b6b78">কোনো অ্যাকাউন্ট নেই। "➕ নতুন অ্যাকাউন্ট" থেকে বানাও।</p>';
   h+='</div>';q('body').innerHTML=h;
   q('sq').oninput=function(){search=this.value;var p=this.selectionStart;vAc();var n=q('sq');n.focus();n.setSelectionRange(p,p);};
-  q('imp').onclick=function(){var b=q('impbox');b.style.display=b.style.display==='none'?'grid':'none';};
-  q('impgo').onclick=function(){var o=SL.unpack(q('impt').value);if(!o)return toast('❌ কোডটা ঠিক নেই');var r=SL.mergeIn(o,true);toast(r.isNew?'✅ নতুন অ্যাকাউন্ট যোগ হয়েছে':'✅ আপডেট হয়েছে');openId=o.e;vAc();};
+  if(CLOUD){var ib=q('imp');if(ib)ib.style.display='none';}
+  if(q('imp'))q('imp').onclick=function(){var b=q('impbox');b.style.display=b.style.display==='none'?'grid':'none';};
+  if(q('impgo'))q('impgo').onclick=function(){var o=SL.unpack(q('impt').value);if(!o)return toast('❌ কোডটা ঠিক নেই');var r=SL.mergeIn(o,true);toast(r.isNew?'✅ নতুন অ্যাকাউন্ট যোগ হয়েছে':'✅ আপডেট হয়েছে');openId=o.e;vAc();};
   bindRows();
  }
  function rowHTML(a){
   var P=C.PLANS[a.kind]||C.PLANS.student,o=openId===a.email,c=SL.counts(a);
-  var h='<div class="ad-row"><div class="nm">'+P.emoji+' '+esc(a.school||a.name)+'<small>'+esc(a.name)+' · '+esc(a.email)+'</small></div><span class="bdg s">'+P.name.replace(' প্ল্যান','')+'</span>'+badge(a)+'<span style="color:#5b6b78;font-size:14px">👥 '+bn((a.members||[]).length+1)+'</span><button class="slb s ad-sm" data-open="'+esc(a.email)+'">'+(o?'▲ বন্ধ করো':'⚙️ পরিচালনা')+'</button></div>';
+  var h='<div class="ad-row"><div class="nm">'+P.emoji+' '+esc(a.school||a.name)+'<small>'+esc(a.name)+' · '+esc(a.email)+'</small></div><span class="bdg s">'+P.name.replace(' প্ল্যান','')+'</span>'+badge(a)+pendBadge(a)+'<span style="color:#5b6b78;font-size:14px">👥 '+bn((a.members||[]).length+1)+'</span><button class="slb s ad-sm" data-open="'+esc(a.email)+'">'+(o?'▲ বন্ধ করো':'⚙️ পরিচালনা')+'</button></div>';
   if(!o)return h;
   var s=stat(a),exp=Math.max(a.trialEnd||0,a.paidUntil||0);
   h+='<div class="ad-panel" data-e="'+esc(a.email)+'">'
@@ -114,8 +160,8 @@
   +'<b style="margin-left:10px">পাসওয়ার্ড:</b><input id="np" placeholder="নতুন পাসওয়ার্ড"><button class="slb s ad-sm" data-pw="1">রিসেট</button></div>'
   +'<div><h4>👥 সদস্য ('+bn(c.students)+' শিক্ষার্থী, '+bn(c.teachers)+' শিক্ষক)</h4>'+((a.members||[]).length?(a.members.map(function(m){return '<div class="ad-inl" style="padding:3px 0"><span>'+esc(m.name)+' <small style="color:#5b6b78">('+SL.ROLE[m.role]+')</small></span><button class="slb r" data-rm="'+m.id+'">মুছো</button></div>';}).join('')):'<small style="color:#5b6b78">কেউ নেই</small>')
   +'<div class="ad-inl" style="margin-top:6px"><input id="mn" placeholder="সদস্যের নাম"><select id="mr"><option value="student">শিক্ষার্থী</option>'+(a.kind==='school'?'<option value="teacher">শিক্ষক</option>':'')+'</select><button class="slb s ad-sm" data-am="1">➕ যোগ</button></div></div>'
-  +'<div class="ad-inl"><button class="slb p ad-sm" data-lk="1">🔗 আপডেট লিংক তৈরি করো</button><button class="slb s ad-sm" data-sp="1">'+(a.suspended?'✅ চালু করো (বন্ধ ছিল)':'🚫 সাময়িক বন্ধ করো')+'</button><button class="slb r" data-del="1">🗑 মুছে ফেলো</button></div>'
-  +'<div class="ad-out" id="lkout"><b>এই লিংক গ্রাহককে পাঠাও (WhatsApp/মেসেজে):</b><textarea id="lkt" rows="5" readonly></textarea><div class="ad-inl"><button class="slb o ad-sm" id="lkc">📋 কপি করো</button></div></div></div>';
+  +reqPanel(a)+progHTML(a)+'<div class="ad-inl"><button class="slb p ad-sm" data-lk="1">'+(CLOUD?'📋 গ্রাহকের বার্তা তৈরি করো':'🔗 আপডেট লিংক তৈরি করো')+'</button><button class="slb s ad-sm" data-sp="1">'+(a.suspended?'✅ চালু করো (বন্ধ ছিল)':'🚫 সাময়িক বন্ধ করো')+'</button><button class="slb r" data-del="1">🗑 মুছে ফেলো</button></div>'
+  +'<div class="ad-out" id="lkout"><b>এই বার্তা গ্রাহককে পাঠাও (WhatsApp/মেসেজে):</b><textarea id="lkt" rows="5" readonly></textarea><div class="ad-inl"><button class="slb o ad-sm" id="lkc">📋 কপি করো</button></div></div></div>';
   return h;
  }
  function bindRows(){
@@ -128,16 +174,17 @@
   var xn=P.querySelector('[data-x]');if(xn)xn.onclick=function(){mut(em,function(a){a.trialEnd=Date.now()-1000;a.paidUntil=0;});toast('মেয়াদ শেষ করা হয়েছে');vAc();};
   [].forEach.call(P.querySelectorAll('[data-cd]'),function(e){e.onclick=function(){var n=Math.abs(+q('cd').value||0)*(+e.dataset.cd);if(!n)return toast('দিন লেখো');days(n);};});
   P.querySelector('[data-pk]').onclick=function(){mut(em,function(a){a.kind=q('pk').value;});toast('✅ প্ল্যান বদলেছে');vAc();};
-  P.querySelector('[data-pw]').onclick=function(){var p=q('np').value;if(p.length<6)return toast('কমপক্ষে ৬ অক্ষর');SL.hash(p).then(function(h){mut(em,function(a){a.hash=h;});toast('✅ পাসওয়ার্ড রিসেট। নতুন লিংক পাঠাও।');});};
-  [].forEach.call(P.querySelectorAll('[data-rm]'),function(e){e.onclick=function(){mut(em,function(a){a.members=a.members.filter(function(m){return m.id!==e.dataset.rm;});});vAc();};});
-  P.querySelector('[data-am]').onclick=function(){var n=q('mn').value.trim();if(!n)return toast('নাম লেখো');mut(em,function(a){a.members.push({id:'m'+Date.now().toString(36)+Math.floor(Math.random()*99),name:n,role:q('mr').value});});vAc();};
+  P.querySelector('[data-pw]').onclick=function(){var p=q('np').value;if(p.length<6)return toast('কমপক্ষে ৬ অক্ষর');SL.hash(p).then(function(h){mut(em,function(a){a.hash=h;});toast(CLOUD?'✅ পাসওয়ার্ড রিসেট। গ্রাহককে নতুন পাসওয়ার্ড জানাও।':'✅ পাসওয়ার্ড রিসেট। নতুন লিংক পাঠাও।');});};
+  [].forEach.call(P.querySelectorAll('[data-rm]'),function(e){e.onclick=function(){mut(em,function(a){a.mv=Date.now();a.members=a.members.filter(function(m){return m.id!==e.dataset.rm;});});vAc();};});
+  P.querySelector('[data-am]').onclick=function(){var n=q('mn').value.trim();if(!n)return toast('নাম লেখো');mut(em,function(a){a.mv=Date.now();a.members.push({id:'m'+Date.now().toString(36)+Math.floor(Math.random()*99),name:n,role:q('mr').value});});vAc();};
   P.querySelector('[data-sp]').onclick=function(){mut(em,function(a){a.suspended=!a.suspended;});vAc();};
-  P.querySelector('[data-del]').onclick=function(){if(!confirm('এই অ্যাকাউন্ট চিরতরে মুছে যাবে। নিশ্চিত?'))return;var x=SL.get();delete x.acc[em];delete x.prog[em];if(x.ses===em)x.ses=null;SL.put(x);openId=null;vAc();};
-  P.querySelector('[data-lk]').onclick=function(){var a=SL.get().acc[em];q('lkt').value=msgFor(a,link(a,false),null);q('lkout').style.display='block';};
+  P.querySelector('[data-del]').onclick=function(){if(!confirm('এই অ্যাকাউন্ট চিরতরে মুছে যাবে। নিশ্চিত?'))return;dbDel(em);openId=null;vAc();};
+  P.querySelector('[data-lk]').onclick=function(){var a=accMap()[em];q('lkt').value=msgFor(a,link(a,false),null);q('lkout').style.display='block';};
+  [].forEach.call(P.querySelectorAll('[data-pa],[data-pr]'),function(e){e.onclick=function(){var ap=e.hasAttribute('data-pa'),k=(e.getAttribute('data-pa')||e.getAttribute('data-pr')).split('|');if(ap)approveReq(k[0],k[1]);else rejectReq(k[0],k[1]);vAc();};});
   var lc=q('lkc');if(lc)lc.onclick=function(){copy('lkt');};
  }
  function msgFor(a,lk,pw){var P=C.PLANS[a.kind]||C.PLANS.student,s=stat(a);
-  return 'আসসালামু আলাইকুম! ShikboLab 🎉\nপ্ল্যান: '+P.name+'\nমেয়াদ: '+(s.state==='suspended'?'বন্ধ':fd(Math.max(a.trialEnd||0,a.paidUntil||0))+' পর্যন্ত ('+bn(s.left)+' দিন)')+'\nইমেইল: '+a.email+(pw?'\nপাসওয়ার্ড: '+pw:'')+'\n\nএই লিংকে একবার ক্লিক করুন, তারপর লগইন করুন:\n'+lk;}
+  return 'আসসালামু আলাইকুম! ShikboLab 🎉\nপ্ল্যান: '+P.name+'\nমেয়াদ: '+(s.state==='suspended'?'বন্ধ':fd(Math.max(a.trialEnd||0,a.paidUntil||0))+' পর্যন্ত ('+bn(s.left)+' দিন)')+'\nইমেইল: '+a.email+(pw?'\nপাসওয়ার্ড: '+pw:'')+(CLOUD?'\n\nএই লিংকে গিয়ে ইমেইল ও পাসওয়ার্ড দিয়ে লগইন করুন:\n':'\n\nএই লিংকে একবার ক্লিক করুন, তারপর লগইন করুন:\n')+lk;}
  /* নতুন অ্যাকাউন্ট */
  function vNw(){
   q('body').innerHTML='<div class="sl-box"><h2>➕ নতুন অ্যাকাউন্ট বানাও (ম্যানুয়াল)</h2><p style="color:#5b6b78;margin-top:0">তুমি অ্যাকাউন্ট বানিয়ে লিংক পাঠাবে। গ্রাহক লিংকে ক্লিক করে তোমার দেওয়া পাসওয়ার্ড দিয়ে লগইন করবে।</p>'
@@ -153,10 +200,10 @@
   q('nf').onsubmit=function(e){e.preventDefault();var ne=q('ne');function er(t){ne.textContent=t;ne.style.display='block';}ne.style.display='none';
    var em=q('e').value.trim().toLowerCase(),pw=q('p').value,nm=q('n').value.trim(),k=q('k').value,sc=q('sc').value.trim(),dd=Math.max(0,+q('dd').value||0);
    if(!nm)return er('নাম লেখো।');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))return er('সঠিক ইমেইল লেখো।');if(pw.length<6)return er('পাসওয়ার্ড কমপক্ষে ৬ অক্ষর।');if(k==='school'&&!sc)return er('স্কুলের নাম লেখো।');
-   if(SL.get().acc[em])return er('এই ইমেইলে অ্যাকাউন্ট আগেই আছে।');
-   SL.hash(pw).then(function(h){var x=SL.get(),n=Date.now(),paid=q('ty').value==='paid';
-    var a=x.acc[em]={email:em,hash:h,name:nm,kind:k,school:sc,logo:'',created:n,trialEnd:paid?n:n+dd*DAY,paidUntil:paid?n+dd*DAY:0,suspended:false,members:[],active:'owner',pays:[]};
-    addPay(a,+q('am').value||0,q('tx').value.trim(),dd);SL.put(x);
+   if(accMap()[em])return er('এই ইমেইলে অ্যাকাউন্ট আগেই আছে।');
+   SL.hash(pw).then(function(h){var n=Date.now(),paid=q('ty').value==='paid';
+    var a={email:em,hash:h,name:nm,kind:k,school:sc,logo:'',created:n,trialEnd:paid?n:n+dd*DAY,paidUntil:paid?n+dd*DAY:0,suspended:false,members:[],mv:0,active:'owner',pays:[],reqs:[]};
+    addPay(a,+q('am').value||0,q('tx').value.trim(),dd);dbCreate(a);
     q('nt').value=msgFor(a,link(a,false),pw);q('nout').style.display='block';q('nout').scrollIntoView({behavior:'smooth'});toast('✅ অ্যাকাউন্ট তৈরি হয়েছে');});};
   q('nc').onclick=function(){copy('nt');};
  }
@@ -192,7 +239,8 @@
   +'<div class="sl-box"><h2>🔑 অ্যাডমিন পাসওয়ার্ড বদলাও</h2><div class="ad-inl"><input type="password" id="op" placeholder="বর্তমান"><input type="password" id="n1" placeholder="নতুন (৬+)"><button class="slb s ad-sm" id="cp">বদলাও</button></div></div>'
   +'<div class="sl-box"><h2>📋 বর্তমান কনফিগ (দাম বদলাতে 🏷️ প্রাইস ট্যাব)</h2><div class="sl-scroll"><table class="sl-tbl"><tr><th></th><th>মাসিক</th><th>সাপ্তাহিক</th><th>শিক্ষার্থী</th><th>শিক্ষক</th></tr>'+Object.keys(C.PLANS).map(function(k){var p=C.PLANS[k],m=SL.price(k,'month'),w=SL.price(k,'week');return '<tr><td>'+p.emoji+' '+p.name+'</td><td>'+(m.disc?'<s>'+money(m.base)+'</s> ':'')+money(m.eff)+'</td><td>'+(w.disc?'<s>'+money(w.base)+'</s> ':'')+money(w.eff)+'</td><td>'+bn(p.students)+'</td><td>'+bn(p.teachers)+'</td></tr>';}).join('')+'</table></div><p style="margin:10px 0 0;color:#5b6b78">ট্রায়াল: '+bn(C.TRIAL_DAYS)+' দিন · বিকাশ: '+esc(C.PAY.bkash)+' · নগদ: '+esc(C.PAY.nagad)+' · WhatsApp: '+esc(C.PAY.wa)+' · ইনস্ট্যান্ট ডেমো পেমেন্ট: '+(C.INSTANT?'চালু':'বন্ধ')+'</p></div>'
   +'<div class="sl-box"><h2>🧹 ডেঞ্জার জোন</h2><button class="slb r" id="wp">সব ডেমো ডাটা মুছে ফেলো</button></div>';
-  q('ex').onclick=function(){var x={v:1,t:Date.now(),data:SL.get(),admin:admHash()};var b=new Blob([JSON.stringify(x)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='shikbolab-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('✅ ব্যাকআপ নামছে');};
+  if(CLOUD){q('im').parentNode.style.display='none';var wpb=q('wp');if(wpb)wpb.parentNode.style.display='none';}
+  q('ex').onclick=function(){var x={v:1,t:Date.now(),data:CLOUD?{acc:CACHE.acc,prog:CACHE.prog,ses:null}:SL.get(),admin:admHash()};var b=new Blob([JSON.stringify(x)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='shikbolab-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('✅ ব্যাকআপ নামছে');};
   q('im').onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var x=JSON.parse(r.result);if(!x.data||!x.data.acc)throw 0;if(!confirm('বর্তমান সব ডাটা এই ব্যাকআপ দিয়ে বদলে যাবে। নিশ্চিত?'))return;SL.put(x.data);if(x.admin)localStorage.setItem('sl_admin',JSON.stringify(x.admin));toast('✅ ফেরানো হয়েছে');render();}catch(e){toast('❌ ফাইলটা ঠিক নেই');}};r.readAsText(f);};
   q('cp').onclick=function(){var o=q('op').value,n=q('n1').value;if(n.length<6)return toast('নতুন পাসওয়ার্ড ৬+ অক্ষর');SL.hash('adm|'+o).then(function(h){if(h!==admHash().h)return toast('❌ বর্তমান পাসওয়ার্ড ভুল');SL.hash('adm|'+n).then(function(nh){localStorage.setItem('sl_admin',JSON.stringify({h:nh,t:Date.now()}));toast('✅ বদলেছে');q('op').value=q('n1').value='';});});};
   q('wp').onclick=function(){if(prompt('নিশ্চিত হতে "মুছো" লেখো')==='মুছো'){localStorage.removeItem('sl_demo_v1');toast('মুছে গেছে');render();}};
