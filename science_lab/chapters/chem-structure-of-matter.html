@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>পদার্থের গঠন (অধ্যায় ৩) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+
+.orbrow{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.orb{border:2px solid #cfd9e1;border-radius:10px;padding:5px 8px;text-align:center;background:#fff;min-width:64px}
+.orb.on{border-color:var(--teal);background:#eaf7f5}
+.orb b{display:block;color:var(--navy)}
+.orb .sl{display:flex;flex-wrap:wrap;gap:2px;justify-content:center;max-width:90px;margin:3px auto}
+.orb .sl i{width:9px;height:9px;border-radius:50%;background:#e3e8ec;display:inline-block}
+.orb .sl i.f{background:#2b6cb0}
+.orb small{color:var(--muted);font-size:11px}
+.dotgrid{display:grid;grid-template-columns:repeat(10,16px);gap:3px;margin:6px 0}
+.dotgrid i{width:16px;height:16px;border-radius:50%;display:block}
+.tlinfo sup,.tlinfo sub{line-height:0}
+table.t{display:block;overflow-x:auto;max-width:100%}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#chemistry">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">🧪 রসায়ন &rsaquo; তৃতীয় অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">⚛️ পদার্থের গঠন (Structure of Matter)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">⚛️ ল্যাব ১</a><a href="#lab2">🔤 ল্যাব ২</a><a href="#lab3">🌀 ল্যাব ৩</a><a href="#lab4">📦 ল্যাব ৪</a><a href="#lab5">⚖️ ল্যাব ৫</a><a href="#lab6">☢️ ল্যাব ৬</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+
+  <!-- ================= নোট ================= -->
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> মৌলের প্রতীক লিখতে, মৌলিক কণা (ইলেকট্রন, প্রোটন, নিউট্রন) চিনতে, পারমাণবিক সংখ্যা, ভরসংখ্যা ও আপেক্ষিক পারমাণবিক ভর ব্যাখ্যা করতে, আপেক্ষিক আণবিক ভর হিসাব করতে, আইসোটোপের ব্যবহার বলতে, রাদারফোর্ড ও বোর মডেল বোঝাতে এবং ইলেকট্রন বিন্যাস লিখতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের (৩য় অধ্যায়ের) ক্রম মেনে সহজ ভাষায় লেখা। পরীক্ষায় লিখতে হলে বইয়ের ভাষা ও শিক্ষকের নির্দেশ মেনে লিখবে।</div>
+
+    <h3>৩.১ মৌলিক ও যৌগিক পদার্থ ⭐⭐⭐</h3>
+    <ul>
+      <li><b>মৌলিক পদার্থ (মৌল):</b> যে পদার্থকে ভাঙলে সেই পদার্থ ছাড়া অন্য কোনো পদার্থ পাওয়া যায় না। যেমন সোনা, রুপা, লোহা, নাইট্রোজেন, কার্বন, অক্সিজেন, হিলিয়াম।</li>
+      <li>এ পর্যন্ত <b>১১৮টি</b> মৌল আবিষ্কৃত হয়েছে। এর মধ্যে <b>৯৪টি</b> প্রকৃতিতে পাওয়া যায়। বাকিগুলো গবেষণাগারে তৈরি, এদের <b>কৃত্রিম মৌল</b> বলে। মানব শরীরে মোট <b>২৬</b> ধরনের মৌল আছে।</li>
+      <li><b>যৌগিক পদার্থ (যৌগ):</b> যে পদার্থকে ভাঙলে দুই বা তার বেশি মৌল পাওয়া যায়। যেমন পানি ভাঙলে হাইড্রোজেন ও অক্সিজেন, লেখার চক ভাঙলে ক্যালসিয়াম, কার্বন ও অক্সিজেন।</li>
+      <li>যৌগে মৌলগুলোর অনুপাত সব সময় একই থাকে। পানিতে হাইড্রোজেন : অক্সিজেনের পরমাণুর অনুপাত সবসময় <b>২ : ১</b>।</li>
+      <li>যৌগের ধর্ম মৌলের ধর্ম থেকে সম্পূর্ণ আলাদা। হাইড্রোজেন ও অক্সিজেন গ্যাস, কিন্তু পানি সাধারণ তাপমাত্রায় তরল।</li>
+    </ul>
+
+    <h3>৩.২ পরমাণু ও অণু ⭐⭐⭐</h3>
+    <ul>
+      <li><b>পরমাণু:</b> মৌলিক পদার্থের ক্ষুদ্রতম কণা, যার মধ্যে মৌলের গুণাগুণ থাকে।</li>
+      <li><b>অণু:</b> দুই বা তার বেশি পরমাণু রাসায়নিক বন্ধনে যুক্ত থাকলে তাকে অণু বলে। দুটি অক্সিজেন পরমাণু যুক্ত হয়ে অক্সিজেন অণু (O₂) হয়।</li>
+      <li><b>মৌলের অণু:</b> একই মৌলের একাধিক পরমাণু যুক্ত হলে। যেমন O₂।</li>
+      <li><b>যৌগের অণু:</b> ভিন্ন ভিন্ন মৌলের পরমাণু যুক্ত হলে। যেমন CO₂।</li>
+    </ul>
+
+    <h3>৩.৩ মৌলের প্রতীক ⭐⭐⭐</h3>
+    <div class="key">কোনো মৌলের ইংরেজি বা ল্যাটিন নামের সংক্ষিপ্ত রূপকে তার <b>প্রতীক</b> বলে।</div>
+    <ul>
+      <li><b>(ক)</b> নামের প্রথম অক্ষর (বড় হাতের) দিয়ে লিখি: হাইড্রোজেন H, কার্বন C, অক্সিজেন O, নাইট্রোজেন N।</li>
+      <li><b>(খ)</b> দুই মৌলের প্রথম অক্ষর এক হলে একটিকে এক অক্ষরে, অন্যগুলোকে দুই অক্ষরে লিখি। প্রথমটি বড় হাতের, দ্বিতীয়টি ছোট হাতের। যেমন ক্লোরিন Cl, ক্যালসিয়াম Ca, কোবাল্ট Co, ক্যাডমিয়াম Cd, ক্রোমিয়াম Cr (কার্বন C)।</li>
+      <li><b>(গ)</b> কিছু মৌলের প্রতীক <b>ল্যাটিন নাম</b> থেকে এসেছে:</li>
+    </ul>
+    <table class="t">
+      <tr><th>মৌল</th><th>ল্যাটিন নাম</th><th>প্রতীক</th><th>মৌল</th><th>ল্যাটিন নাম</th><th>প্রতীক</th></tr>
+      <tr><td>সোডিয়াম</td><td>Natrium</td><td>Na</td><td>গোল্ড</td><td>Aurum</td><td>Au</td></tr>
+      <tr><td>কপার</td><td>Cuprum</td><td>Cu</td><td>লেড</td><td>Plumbum</td><td>Pb</td></tr>
+      <tr><td>পটাশিয়াম</td><td>Kalium</td><td>K</td><td>টাংস্টেন</td><td>Wolfram</td><td>W</td></tr>
+      <tr><td>সিলভার</td><td>Argentum</td><td>Ag</td><td>আয়রন</td><td>Ferrum</td><td>Fe</td></tr>
+      <tr><td>টিন</td><td>Stannum</td><td>Sn</td><td>মারকারি</td><td>Hydrurgyrum</td><td>Hg</td></tr>
+      <tr><td>এন্টিমনি</td><td>Stibium</td><td>Sb</td><td></td><td></td><td></td></tr>
+    </table>
+
+    <h3>৩.৪ সংকেত ⭐⭐</h3>
+    <p>হাইড্রোজেনের একটি অণুকে H₂ দিয়ে প্রকাশ করা হয়। এর মানে একটি অণুতে দুটি H পরমাণু আছে। পানির অণু H₂O: দুটি H ও একটি O পরমাণু।</p>
+    <table class="t">
+      <tr><th>অণুর নাম</th><th>সংকেত</th></tr>
+      <tr><td>নাইট্রোজেন</td><td>N₂</td></tr><tr><td>অ্যামোনিয়া</td><td>NH₃</td></tr>
+      <tr><td>ক্লোরিন</td><td>Cl₂</td></tr><tr><td>সালফিউরিক এসিড</td><td>H₂SO₄</td></tr>
+      <tr><td>হাইড্রোক্লোরিক এসিড</td><td>HCl</td></tr>
+    </table>
+
+    <h3>৩.৫ পরমাণুর সাংগঠনিক (মৌলিক) কণা ⭐⭐⭐</h3>
+    <p>একমাত্র হাইড্রোজেন (¹H) ছাড়া সব পরমাণুই <b>ইলেকট্রন, প্রোটন ও নিউট্রন</b> দিয়ে তৈরি। কেন্দ্রের নিউক্লিয়াসে প্রোটন ও নিউট্রন থাকে, আর ইলেকট্রন নিউক্লিয়াসকে ঘিরে ঘোরে।</p>
+    <table class="t">
+      <tr><th>কণা</th><th>প্রতীক</th><th>প্রকৃত আধান</th><th>প্রকৃত ভর</th><th>আপেক্ষিক আধান</th><th>আপেক্ষিক ভর</th></tr>
+      <tr><td>ইলেকট্রন</td><td>e</td><td>−১.৬০ × ১০⁻¹⁹ কুলম্ব</td><td>৯.১১০ × ১০⁻²⁸ g</td><td>−১</td><td>০</td></tr>
+      <tr><td>প্রোটন</td><td>p</td><td>+১.৬০ × ১০⁻¹⁹ কুলম্ব</td><td>১.৬৭৩ × ১০⁻²⁴ g</td><td>+১</td><td>১</td></tr>
+      <tr><td>নিউট্রন</td><td>n</td><td>০</td><td>১.৬৭৫ × ১০⁻²⁴ g</td><td>০</td><td>১</td></tr>
+    </table>
+    <ul>
+      <li>ইলেকট্রনের ভর প্রোটন ও নিউট্রনের ভরের তুলনায় ১৮৪০ গুণ কম, তাই আপেক্ষিক ভর শূন্য ধরা হয়।</li>
+      <li>নিউট্রনের ভর প্রোটনের চেয়ে সামান্য বেশি।</li>
+    </ul>
+    <h3>৩.৫.১ পারমাণবিক সংখ্যা (Z) ⭐⭐⭐</h3>
+    <p>কোনো মৌলের একটি পরমাণুর নিউক্লিয়াসে উপস্থিত <b>প্রোটনের সংখ্যাকে</b> ঐ মৌলের পারমাণবিক সংখ্যা বলে, <b>Z</b> দিয়ে লেখা হয়। হিলিয়ামের Z = ২, অক্সিজেনের Z = ৮। এটাই মৌলের আইডি নম্বর। পরমাণু চার্জ নিরপেক্ষ, তাই <b>ইলেকট্রন সংখ্যা = প্রোটন সংখ্যা</b>।</p>
+    <h3>৩.৫.২ ভরসংখ্যা (A) ⭐⭐⭐</h3>
+    <p>নিউক্লিয়াসের <b>প্রোটন ও নিউট্রনের সংখ্যার যোগফলকে</b> ভরসংখ্যা (A) বলে। <b>নিউট্রন সংখ্যা = A − Z</b>। উদাহরণ: Na-এর A = ২৩, Z = ১১, তাই নিউট্রন = ২৩ − ১১ = ১২।</p>
+    <p>প্রতীক লেখার নিয়ম: ভরসংখ্যা প্রতীকের বাম পাশে উপরে, পারমাণবিক সংখ্যা বাম পাশে নিচে। যেমন <sup>২৩</sup><sub>১১</sub>Na।</p>
+
+    <h3>৩.৬ পরমাণুর মডেল ⭐⭐⭐</h3>
+    <h4>রাদারফোর্ডের মডেল (১৯১১)</h4>
+    <ul>
+      <li>প্রতিটি পরমাণুর একটি কেন্দ্র আছে, নাম <b>নিউক্লিয়াস</b>। এর ভেতরে প্রোটন ও নিউট্রন। বাইরে ইলেকট্রন।</li>
+      <li>নিউক্লিয়াস খুব ক্ষুদ্র, পরমাণুর ভেতরে বেশির ভাগ জায়গা ফাঁকা।</li>
+      <li>সৌরজগতের গ্রহের মতো ইলেকট্রনগুলো নিউক্লিয়াসকে ঘিরে বিভিন্ন কক্ষপথে ঘোরে। তাই একে <b>সোলার সিস্টেম মডেল</b> বা <b>নিউক্লিয়ার মডেলও</b> বলে।</li>
+      <li>ধনাত্মক নিউক্লিয়াস ও ঋণাত্মক ইলেকট্রনের আকর্ষণ বল কেন্দ্রমুখী, এ কারণেই ইলেকট্রন ঘোরে।</li>
+      <li><b>সীমাবদ্ধতা:</b> (ক) ইলেকট্রনের কক্ষপথের আকার ও আকৃতি বলতে পারেনি। (খ) চার্জহীন সূর্য-গ্রহের সাথে চার্জযুক্ত নিউক্লিয়াস-ইলেকট্রনের তুলনা ঠিক নয়। (গ) একাধিক ইলেকট্রন কীভাবে ঘোরে তা বলা হয়নি। (ঘ) <b>ম্যাক্সওয়েলের তত্ত্ব</b> অনুযায়ী ঘূর্ণনের সময় ইলেকট্রন ক্রমাগত শক্তি হারাবে, কক্ষপথ ছোট হতে থাকবে, শেষে নিউক্লিয়াসে পড়ে যাবে। অর্থাৎ পরমাণুর অস্তিত্ব থাকার কথা না, কিন্তু বাস্তবে তা ঘটে না।</li>
+    </ul>
+    <h4>বোরের মডেল (১৯১৩, নীলস বোর)</h4>
+    <ul>
+      <li>ইলেকট্রন ইচ্ছামতো যেকোনো কক্ষপথে ঘোরে না। শুধু নির্দিষ্ট ব্যাসার্ধের কিছু বৃত্তাকার কক্ষপথে ঘোরে। এদের <b>প্রধান শক্তিস্তর / শেল / স্থির কক্ষপথ</b> বলে। স্থির কক্ষপথে ঘুরলে ইলেকট্রন শক্তি শোষণ বা বিকিরণ করে না।</li>
+      <li>শক্তিস্তরকে n দিয়ে প্রকাশ করা হয়। n = ১ হলে K, n = ২ হলে L, n = ৩ হলে M, n = ৪ হলে N শক্তিস্তর।</li>
+      <li>ইলেকট্রনের কৌণিক ভরবেগ mvr = nh/2π।</li>
+      <li>ইলেকট্রন <b>নিম্ন থেকে উচ্চ শক্তিস্তরে</b> গেলে শক্তি <b>শোষণ</b> করে। <b>উচ্চ থেকে নিম্ন শক্তিস্তরে</b> নামলে শক্তি <b>বিকিরণ</b> করে। শোষিত বা বিকিরিত শক্তি hν = hc/λ।</li>
+      <li>উচ্চ থেকে নিম্ন স্তরে নামার সময় যে আলো বের হয় তাকে প্রিজমের মধ্য দিয়ে পাঠালে <b>পারমাণবিক বর্ণালি</b> সৃষ্টি হয়।</li>
+      <li><b>সাফল্য:</b> শক্তিস্তরের আকার বৃত্তাকার বলেছে, শক্তি শোষণ-বিকিরণে ইলেকট্রনের স্তর বদল ব্যাখ্যা করেছে, এক ইলেকট্রনবিশিষ্ট পরমাণুর (H) বর্ণালি ব্যাখ্যা করেছে।</li>
+      <li><b>সীমাবদ্ধতা:</b> একাধিক ইলেকট্রনের পরমাণুর বর্ণালি ব্যাখ্যা করতে পারেনি। শক্তিশালী যন্ত্রে প্রতিটি বর্ণালি রেখা অনেকগুলো ক্ষুদ্র রেখার সমষ্টি, তার ব্যাখ্যা নেই। পরে প্রমাণিত হয়েছে ইলেকট্রন উপবৃত্তাকার কক্ষপথেও ঘোরে।</li>
+    </ul>
+
+    <h3>৩.৭ পরমাণুর শক্তিস্তরে ইলেকট্রন বিন্যাস ⭐⭐⭐</h3>
+    <ul>
+      <li>প্রতিটি প্রধান শক্তিস্তরে সর্বোচ্চ ইলেকট্রন ধারণ ক্ষমতা <b>2n²</b>: K = ২, L = ৮, M = ১৮, N = ৩২।</li>
+      <li>হাইড্রোজেন (১) থেকে আর্গন (১৮) পর্যন্ত K, L, M ক্রমে ভরে। যেমন Na (১১): ২, ৮, ১।</li>
+      <li>ব্যতিক্রম: পটাশিয়াম (K, ১৯) ও ক্যালসিয়াম (Ca, ২০) M স্তর অপূর্ণ রেখে N স্তরে ইলেকট্রন দেয়। K = ২, ৮, ৮, ১। Ca = ২, ৮, ৮, ২।</li>
+    </ul>
+    <h4>৩.৭.১ উপশক্তিস্তর (অরবিটাল)</h4>
+    <ul>
+      <li>প্রতিটি প্রধান শক্তিস্তর n-কে উপশক্তিস্তরে ভাগ করা যায়, যাদের <b>l</b> দিয়ে চিহ্নিত করা হয়। l-এর মান ০ থেকে (n−১) পর্যন্ত। l = ০, ১, ২, ৩ যথাক্রমে <b>s, p, d, f</b>।</li>
+      <li>n = ১ → ১s। n = ২ → ২s, ২p। n = ৩ → ৩s, ৩p, ৩d। n = ৪ → ৪s, ৪p, ৪d, ৪f।</li>
+      <li>উপশক্তিস্তরে ইলেকট্রন ধারণ ক্ষমতা: <b>s = ২, p = ৬, d = ১০, f = ১৪</b>।</li>
+      <li>উপশক্তিস্তরের সংখ্যা প্রতি স্তরে n-টি। N শেলে ৪টি উপশক্তিস্তর (৪s, ৪p, ৪d, ৪f)।</li>
+    </ul>
+    <h4>৩.৭.২ বিন্যাসের নীতি</h4>
+    <ul>
+      <li>তিনটি নীতি: <b>পাউলির বর্জন নীতি, আউফ-বাউ নীতি, হুন্ডের সূত্র</b> (এগুলো বিস্তারিত উচ্চ মাধ্যমিকে)।</li>
+      <li>ইলেকট্রন আগে <b>কম শক্তির অরবিটালে</b> ঢোকে। শক্তি নির্ভর করে <b>(n + l)</b>-এর মানের উপর। যার (n + l) কম, তার শক্তি কম, ইলেকট্রন আগে ঢোকে।</li>
+      <li>(n + l) সমান হলে <b>যার n কম</b>, সেটার শক্তি কম। যেমন 3d (৩+২ = ৫) আর 4p (৪+১ = ৫): 3d আগে ভরে। আবার 4s (৪+০ = ৪) < 3d (৫), তাই 4s আগে ভরে।</li>
+      <li><b>শক্তির ক্রম:</b> 1s &lt; 2s &lt; 2p &lt; 3s &lt; 3p &lt; 4s &lt; 3d &lt; 4p &lt; 5s &lt; 4d &lt; 5p &lt; 6s &lt; 4f &lt; 5d &lt; 6p &lt; 7s &lt; 5f &lt; 6d &lt; 7p &lt; 8s</li>
+      <li>উদাহরণ: K(১৯) → 1s² 2s² 2p⁶ 3s² 3p⁶ 4s¹। Ca(২০) → …3p⁶ 4s²। Sc(২১) → …3p⁶ 3d¹ 4s²। Fe(২৬) → 1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁶ 4s²।</li>
+      <li>লেখার সময় একই প্রধান শক্তিস্তরের উপশক্তিস্তর পাশাপাশি লিখতে হয়।</li>
+    </ul>
+    <h4>৩.৭.৩ ব্যতিক্রম</h4>
+    <p>একই উপশক্তিস্তরের p ও d অরবিটাল <b>অর্ধেক পূর্ণ (p³, d⁵)</b> বা <b>সম্পূর্ণ পূর্ণ (p⁶, d¹⁰)</b> হলে ইলেকট্রন বিন্যাস সুস্থিত হয়।</p>
+    <ul>
+      <li><b>Cr (২৪)</b>: স্বাভাবিকভাবে 3d⁴ 4s², কিন্তু 3d⁵ অর্ধপূর্ণ হতে 4s থেকে একটি ইলেকট্রন 3d-তে আসে। তাই Cr(২৪) → 1s² 2s² 2p⁶ 3s² 3p⁶ <b>3d⁵ 4s¹</b>।</li>
+      <li><b>Cu (২৯)</b>: স্বাভাবিকভাবে 3d⁹ 4s², কিন্তু 3d¹⁰ সম্পূর্ণ পূর্ণ হতে একটি ইলেকট্রন 4s থেকে 3d-তে আসে। তাই Cu(২৯) → …3p⁶ <b>3d¹⁰ 4s¹</b>।</li>
+    </ul>
+
+    <h3>৩.৮ আইসোটোপ ⭐⭐⭐</h3>
+    <div class="key">যে সকল পরমাণুর <b>প্রোটন সংখ্যা সমান</b> কিন্তু <b>ভরসংখ্যা ও নিউট্রন সংখ্যা ভিন্ন</b>, তাদের একে অপরের আইসোটোপ বলে।</div>
+    <table class="t">
+      <tr><th>নাম</th><th>প্রতীক</th><th>প্রোটন Z</th><th>ভরসংখ্যা A</th><th>নিউট্রন A−Z</th></tr>
+      <tr><td>প্রোটিয়াম</td><td><sup>১</sup><sub>১</sub>H</td><td>১</td><td>১</td><td>০</td></tr>
+      <tr><td>ডিউটেরিয়াম</td><td><sup>২</sup><sub>১</sub>D</td><td>১</td><td>২</td><td>১</td></tr>
+      <tr><td>ট্রিটিয়াম</td><td><sup>৩</sup><sub>১</sub>T</td><td>১</td><td>৩</td><td>২</td></tr>
+    </table>
+    <p>হাইড্রোজেনের সাতটি আইসোটোপ আছে (¹H থেকে ⁷H)। এর মধ্যে মাত্র তিনটি প্রকৃতিতে পাওয়া যায়, বাকিগুলো ল্যাবরেটরিতে তৈরি।</p>
+
+    <h3>৩.৯ আপেক্ষিক পারমাণবিক ভর ⭐⭐⭐</h3>
+    <ul>
+      <li>একটি পরমাণুর প্রকৃত ভর খুব ক্ষুদ্র (F = ৩.১৬ × ১০⁻²³ g, Al = ৪.৪৮২ × ১০⁻²³ g)। তাই <b>কার্বন-১২ আইসোটোপের ভরের ১/১২ অংশকে</b> একক ধরে মাপা হয়। এই ১/১২ অংশ = ১.৬৬ × ১০⁻²⁴ g।</li>
+      <li><b>আপেক্ষিক পারমাণবিক ভর = মৌলের একটি পরমাণুর ভর ÷ (C-১২ পরমাণুর ভরের ১/১২ অংশ)</b>।</li>
+      <li>উদাহরণ: Al = ৪.৪৮২ × ১০⁻²³ ÷ ১.৬৬ × ১০⁻²⁴ = <b>২৭</b>।</li>
+      <li>এটি দুটি ভরের অনুপাত, তাই এর কোনো একক নেই।</li>
+      <li>পর্যায় সারণিতে লেখা পারমাণবিক ভর হলো <b>গড়</b> আপেক্ষিক পারমাণবিক ভর। যেমন কপার ৬৩.৫, ক্লোরিন ৩৫.৫।</li>
+    </ul>
+    <h4>৩.৯.১ আইসোটোপের শতকরা হার থেকে গড় ভর</h4>
+    <p><b>ধাপ ১:</b> প্রতিটি আইসোটোপের ভরসংখ্যাকে তার শতকরা পরিমাণ দিয়ে গুণ করো। <b>ধাপ ২:</b> গুণফলগুলো যোগ করো। <b>ধাপ ৩:</b> যোগফলকে ১০০ দিয়ে ভাগ করো।</p>
+    <p><b>উদাহরণ:</b> কপারের দুটি আইসোটোপ ⁶³Cu ও ⁶⁵Cu, গড় ৬৩.৫। ⁶³Cu = x% হলে (x × ৬৩ + (১০০ − x) × ৬৫) / ১০০ = ৬৩.৫। সমাধান করলে x = ৭৫%। অতএব ⁶³Cu = ৭৫%, ⁶⁵Cu = ২৫%।</p>
+    <h4>৩.৯.২ আপেক্ষিক আণবিক ভর</h4>
+    <p>অণুর প্রতিটি পরমাণুর আপেক্ষিক পারমাণবিক ভরকে পরমাণু সংখ্যা দিয়ে গুণ করে যোগ করলে আপেক্ষিক আণবিক ভর পাওয়া যায়।</p>
+    <ul>
+      <li>H₂ = ১ × ২ = <b>২</b></li>
+      <li>H₂SO₄ = ১ × ২ + ৩২ × ১ + ১৬ × ৪ = <b>৯৮</b></li>
+    </ul>
+
+    <h3>৩.১০ তেজস্ক্রিয় আইসোটোপ ও তাদের ব্যবহার ⭐⭐</h3>
+    <p>কিছু আইসোটোপের নিউক্লিয়াস নিজে নিজেই ভেঙে আলফা, বিটা, গামা রশ্মি ছাড়ে। এদের <b>তেজস্ক্রিয় আইসোটোপ</b> বলে। এমন আইসোটোপ ৩০০০টির বেশি।</p>
+    <ul>
+      <li><b>চিকিৎসা (রোগ নির্ণয়):</b> টেকনেশিয়াম-৯৯ (⁹⁹Tc) ইঞ্জেকশনে দিলে শরীরের নির্দিষ্ট জায়গায় জমে গামা রশ্মি ছাড়ে, ক্যামেরায় ছবি তোলা যায়। এর লাইফটাইম ৬ ঘণ্টা, তাই নিরাপদ।</li>
+      <li><b>চিকিৎসা (রোগ নিরাময়):</b> থাইরয়েড ক্যান্সারে ¹³¹I (বিটা রশ্মি)। ব্রেইন ক্যান্সারে ইরিডিয়াম। টিউমার ও ক্যান্সারে ⁶⁰Co (গামা রশ্মি)। রক্তের লিউকোমিয়ায় ³²P-এর ফসফেট।</li>
+      <li><b>কৃষি:</b> সারের সঠিক পরিমাণ জানতে তেজস্ক্রিয় নাইট্রোজেন ও ফসফরাস (গাইগার মুলার কাউন্টারে মাপা হয়)। কীটনাশকের ন্যূনতম পরিমাণ জানতে। উন্নত মানের ফসলের জন্য জিনগত পরিবর্তনে।</li>
+      <li><b>বিদ্যুৎ উৎপাদন:</b> ফিশন বিক্রিয়ায় প্রচুর তাপ, তা দিয়ে জেনারেটরে বিদ্যুৎ। পাবনার রূপপুরে ২৪০০ মেগাওয়াটের পারমাণবিক বিদ্যুৎকেন্দ্র হচ্ছে।</li>
+      <li><b>ক্ষতিকর প্রভাব:</b> আলফা, বিটা, গামা রশ্মি কোষের জিনগত পরিবর্তন ঘটিয়ে ক্যান্সার করতে পারে। হিরোশিমা-নাগাসাকির বোমা, ১৯৮৬ সালের চেরোনোবিল দুর্ঘটনা।</li>
+    </ul>
+  </section>
+
+  <!-- ================= ল্যাব ১ ================= -->
+  <section class="panel" id="lab1">
+    <h2>⚛️ ল্যাব ১: পরমাণু গড়ো (প্রোটন, নিউট্রন, ইলেকট্রন)</h2>
+    <div class="say">👉 প্রোটন (Z) আর নিউট্রন স্লাইডার নাড়াও। দেখো কোন মৌল তৈরি হয়, ভরসংখ্যা কত হয়, ইলেকট্রন কোন শক্তিস্তরে বসে।</div>
+    <div class="ctl"><label>প্রোটন সংখ্যা Z: <b id="z1v"></b></label><input type="range" id="z1" min="1" max="30" value="11" style="flex:1;min-width:150px"></div>
+    <div class="ctl"><label>নিউট্রন সংখ্যা: <b id="n1v"></b></label><input type="range" id="n1" min="0" max="45" value="12" style="flex:1;min-width:150px"><button class="btn alt" id="bdef">স্বাভাবিক নিউট্রন</button></div>
+    <div class="row">
+      <div><canvas id="at3" class="w" width="380" height="300"></canvas>
+        <div class="legend"><span class="lg" style="background:#e63946"></span> প্রোটন (+) &nbsp;<span class="lg" style="background:#9aa5ad"></span> নিউট্রন (০) &nbsp;<span class="lg" style="background:#2b6cb0"></span> ইলেকট্রন (−)</div></div>
+      <div class="grow"><div class="tlinfo" id="ai"></div></div>
+    </div>
+    <h3>🎮 নিউট্রন কয়টি?</h3>
+    <div class="tlinfo" id="nq"></div><div class="cls" id="nqo"></div><div class="fb" id="nqf"></div><small id="nqs"></small>
+  </section>
+
+  <!-- ================= ল্যাব ২ ================= -->
+  <section class="panel" id="lab2">
+    <h2>🔤 ল্যাব ২: প্রতীক, মৌল ও যৌগ</h2>
+    <h3>ক) প্রতীকের নিয়ম মেনে চেনো</h3>
+    <div class="say">নামের প্রথম অক্ষর (H, C, O), দুই অক্ষর (Cl, Ca, Co) আর ল্যাটিন নাম (Na, Cu, Fe…) এই তিন নিয়মে প্রতীক হয়। নিচে চেপে ল্যাটিন নাম দেখো।</div>
+    <div class="pills" id="lat"></div>
+    <div class="tlinfo" id="latinfo" style="min-height:50px">কোনো ল্যাটিন-নামের মৌল চাপো।</div>
+    <div class="tlinfo" id="sgq" style="margin-top:10px"></div><div class="cls" id="sgo"></div><div class="fb" id="sgf"></div><small id="sgs"></small>
+
+    <h3>খ) পানি ভাঙো: যৌগ ভাঙলে মৌল পাওয়া যায়</h3>
+    <div class="ctl"><button class="btn" id="wgo">⚡ রাসায়নিকভাবে বিশ্লেষণ করো</button><button class="btn alt" id="wreset">↻ আবার</button></div>
+    <div class="row">
+      <div><canvas id="ws" class="w" width="380" height="230"></canvas></div>
+      <div class="grow"><div class="say" id="wtxt">প্রতিটি পানির অণুতে ২টি H আর ১টি O।</div>
+        <div class="legend"><span class="lg" style="background:#e63946"></span> O (অক্সিজেন) &nbsp;<span class="lg" style="background:#8ab4d8"></span> H (হাইড্রোজেন)</div></div>
+    </div>
+
+    <h3>গ) মৌলের অণু না যৌগের অণু?</h3>
+    <div class="pills" id="mlist"></div>
+    <div class="tlinfo" id="mview" style="min-height:60px">একটা অণু চাপো।</div>
+    <div class="tlinfo" id="mqq" style="margin-top:10px"></div>
+    <div class="cls"><button id="mqE">মৌলের অণু</button><button id="mqC">যৌগের অণু</button><button class="btn alt" id="mqN" style="display:none">পরের →</button></div>
+    <div class="fb" id="mqf"></div><small id="mqs"></small>
+  </section>
+
+  <!-- ================= ল্যাব ৩ ================= -->
+  <section class="panel" id="lab3">
+    <h2>🌀 ল্যাব ৩: রাদারফোর্ড বনাম বোর মডেল</h2>
+    <h3>ক) রাদারফোর্ডের মডেল ও ম্যাক্সওয়েলের আপত্তি</h3>
+    <div class="ctl"><button class="btn" id="rgo">🔬 ম্যাক্সওয়েলের তত্ত্ব প্রয়োগ করো</button><button class="btn alt" id="rreset">↻ আবার</button></div>
+    <canvas id="ru" class="w" width="380" height="260"></canvas>
+    <div class="say" id="rtxt"></div>
+    <h3>খ) বোরের মডেল: স্থির কক্ষপথ ও শক্তির লাফ</h3>
+    <div class="ctl"><button class="btn" id="bup">⬆ শক্তি শোষণ করাও</button><button class="btn alt" id="bdn">⬇ শক্তি বিকিরণ করাও</button></div>
+    <canvas id="bo" class="w" width="380" height="300"></canvas>
+    <div class="say" id="btxt"></div>
+    <div class="tlinfo" id="binfo"></div>
+  </section>
+
+  <!-- ================= ল্যাব ৪ ================= -->
+  <section class="panel" id="lab4">
+    <h2>📦 ল্যাব ৪: ইলেকট্রন বিন্যাস (শক্তিস্তর ও উপশক্তিস্তর)</h2>
+    <div class="say">👉 স্লাইডারে মৌলের Z বেছে "আবার ভরাও" চাপো। ইলেকট্রনগুলো কম শক্তির অরবিটাল থেকে ক্রমে ভরবে।</div>
+    <div class="ctl"><label>পারমাণবিক সংখ্যা Z: <b id="z4v"></b></label><input type="range" id="z4" min="1" max="30" value="19" style="flex:1;min-width:150px"><button class="btn" id="fgo">▶ আবার ভরাও</button></div>
+    <div id="orb" class="orbrow"></div>
+    <div class="tlinfo" id="cfgbox"></div>
+    <h3>🎮 কোন অরবিটাল আগে ভরবে? ((n + l) নিয়ম)</h3>
+    <div class="tlinfo" id="ec"></div><div class="cls" id="eco"></div><div class="fb" id="ecf"></div><small id="ecs"></small>
+  </section>
+
+  <!-- ================= ল্যাব ৫ ================= -->
+  <section class="panel" id="lab5">
+    <h2>⚖️ ল্যাব ৫: আইসোটোপ ও আপেক্ষিক ভর</h2>
+    <h3>ক) হাইড্রোজেনের তিন আইসোটোপ</h3>
+    <canvas id="iso" class="w" width="380" height="170"></canvas>
+    <div class="say">তিনটিতেই প্রোটন ১টি (Z সমান), কিন্তু নিউট্রন ০, ১, ২। তাই ভরসংখ্যা ১, ২, ৩। এরা আইসোটোপ।</div>
+
+    <h3>খ) গড় আপেক্ষিক পারমাণবিক ভর বের করো</h3>
+    <div class="ctl"><label>মৌল:</label><select id="ael"></select></div>
+    <div class="ctl"><label id="alab"></label><input type="range" id="apct" min="0" max="100" value="50" style="flex:1;min-width:160px"></div>
+    <div class="row">
+      <div><div id="adots" class="dotgrid"></div></div>
+      <div class="grow"><div class="tlinfo" id="ares"></div></div>
+    </div>
+
+    <h3>গ) আপেক্ষিক আণবিক ভর</h3>
+    <div class="ctl"><label>অণু:</label><select id="mol"></select></div>
+    <div class="tlinfo" id="mres"></div>
+
+    <h3>ঘ) পরমাণুর প্রকৃত ভর থেকে আপেক্ষিক ভর</h3>
+    <div class="ctl"><label>মৌল:</label><select id="ram"><option value="0">অ্যালুমিনিয়াম (৪.৪৮২ × ১০⁻²³ g)</option><option value="1">ফ্লুরিন (৩.১৬ × ১০⁻²³ g)</option></select></div>
+    <div class="tlinfo" id="rres"></div>
+  </section>
+
+  <!-- ================= ল্যাব ৬ ================= -->
+  <section class="panel" id="lab6">
+    <h2>☢️ ল্যাব ৬: তেজস্ক্রিয় আইসোটোপের ব্যবহার</h2>
+    <div class="pills" id="rtabs"></div>
+    <div class="tlinfo" id="rcards"></div>
+    <h3>🎮 কোন আইসোটোপ কোন কাজে?</h3>
+    <div class="tlinfo" id="rgq"></div><div id="rgo2"></div><div class="fb" id="rgf"></div><small id="rgs"></small>
+    <h3>⏳ ক্ষয় দেখো: টেকনেশিয়াম-৯৯ (সময় বাড়াও)</h3>
+    <div class="ctl"><label>সময়: <b id="dkv"></b> ঘণ্টা</label><input type="range" id="dkt" min="0" max="24" step="0.5" value="0" style="flex:1;min-width:160px"></div>
+    <canvas id="dkc" class="w" width="380" height="170"></canvas>
+    <div class="say" id="dktx"></div>
+    <small>🔎 বাড়তি তথ্য (বইয়ে নেই): বইয়ে বলা আছে Tc-৯৯-এর "লাইফটাইম ৬ ঘণ্টা"। আমি ছবিতে একে অর্ধায়ু (প্রতি ৬ ঘণ্টায় অর্ধেক বাকি) ধরে দেখিয়েছি। কোন পরমাণু কখন ভাঙবে তা আসলে এলোমেলো।</small>
+  </section>
+
+  <!-- ================= কুইজ ================= -->
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <!-- ================= প্রশ্ন-উত্তর ================= -->
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। সৃজনশীল প্রশ্ন ১ ও ২ বইয়ের অনুশীলনী থেকে নেওয়া। বাকি প্রশ্নগুলো বইয়ের বিষয় ধরে আমার বানানো অনুশীলন। উত্তরগুলো বইয়ের তথ্য থেকে আমার লেখা সহজ রূপ।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; পদার্থের গঠন (অধ্যায় ৩)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+/* =================== ল্যাব ১: পরমাণু গড়ো =================== */
+var ELS=[
+ ['H','হাইড্রোজেন',[1],1],['He','হিলিয়াম',[2],4],['Li','লিথিয়াম',[2,1],7],['Be','বেরিলিয়াম',[2,2],9],['B','বোরন',[2,3],11],
+ ['C','কার্বন',[2,4],12],['N','নাইট্রোজেন',[2,5],14],['O','অক্সিজেন',[2,6],16],['F','ফ্লুরিন',[2,7],19],['Ne','নিয়ন',[2,8],20],
+ ['Na','সোডিয়াম',[2,8,1],23],['Mg','ম্যাগনেসিয়াম',[2,8,2],24],['Al','অ্যালুমিনিয়াম',[2,8,3],27],['Si','সিলিকন',[2,8,4],28],['P','ফসফরাস',[2,8,5],31],
+ ['S','সালফার',[2,8,6],32],['Cl','ক্লোরিন',[2,8,7],35],['Ar','আর্গন',[2,8,8],40],['K','পটাশিয়াম',[2,8,8,1],39],['Ca','ক্যালসিয়াম',[2,8,8,2],40],
+ ['Sc','স্ক্যান্ডিয়াম',[2,8,9,2],45],['Ti','টাইটানিয়াম',[2,8,10,2],48],['V','ভ্যানাডিয়াম',[2,8,11,2],51],['Cr','ক্রোমিয়াম',[2,8,13,1],52],['Mn','ম্যাঙ্গানিজ',[2,8,13,2],55],
+ ['Fe','আয়রন',[2,8,14,2],56],['Co','কোবাল্ট',[2,8,15,2],59],['Ni','নিকেল',[2,8,16,2],59],['Cu','কপার',[2,8,18,1],64],['Zn','জিংক',[2,8,18,2],65]
+];
+function nucPts(n){var pts=[];var g=2.39996;for(var i=0;i<n;i++){var r=3.4*Math.sqrt(i+0.5),a=i*g;pts.push([r*Math.cos(a),r*Math.sin(a)]);}return pts;}
+var A1={z:11,n:12,pts:[]};
+function a1Update(){
+  var e=ELS[A1.z-1];A1.n=+$('n1').value;$('z1v').textContent=bn(A1.z);$('n1v').textContent=bn(A1.n);
+  var A=A1.z+A1.n,def=e[3]-A1.z;
+  var kinds=[];for(var i=0;i<A;i++)kinds.push(i<A1.z?1:0);
+  A1.kinds=shuffle(kinds);A1.pts=nucPts(A);
+  var h='<div style="font-size:34px;font-weight:700;color:var(--navy)"><sup style="font-size:20px">'+bn(A)+'</sup><sub style="font-size:20px;margin-left:-14px">'+bn(A1.z)+'</sub>'+e[0]+'</div>';
+  h+='<b>'+e[1]+' ('+e[0]+')</b><br>প্রোটন সংখ্যা Z = <b style="color:#e63946">'+bn(A1.z)+'</b> (পারমাণবিক সংখ্যা)<br>নিউট্রন সংখ্যা = <b>'+bn(A1.n)+'</b><br>ভরসংখ্যা A = '+bn(A1.z)+' + '+bn(A1.n)+' = <b>'+bn(A)+'</b><br>ইলেকট্রন সংখ্যা = <b style="color:#2b6cb0">'+bn(A1.z)+'</b> (পরমাণু চার্জ নিরপেক্ষ)<br>ইলেকট্রন বিন্যাস: <b>'+e[2].map(bn).join(', ')+'</b>';
+  if(A1.n!==def)h+='<p style="margin:8px 0 0;color:#c47f0a"><b>এটা '+e[1]+'-এর স্বাভাবিক সংখ্যা নয়।</b> প্রোটন সংখ্যা একই কিন্তু নিউট্রন ভিন্ন, তাই এটি '+e[1]+'-এর একটি আইসোটোপ ধরা যায়।</p>';
+  $('ai').innerHTML=h;
+}
+$('z1').oninput=function(){A1.z=+this.value;$('n1').value=ELS[A1.z-1][3]-A1.z;a1Update();};
+$('n1').oninput=a1Update;
+$('bdef').onclick=function(){$('n1').value=ELS[A1.z-1][3]-A1.z;a1Update();};
+function a1Draw(){
+  var x=ctxOf('at3'),t=performance.now()/1000,e=ELS[A1.z-1];x.clearRect(0,0,380,300);var cx=190,cy=150;
+  e[2].forEach(function(c,i){var r=48+24*i;x.strokeStyle='#cfd9e1';x.setLineDash([4,4]);x.lineWidth=1.2;x.beginPath();x.arc(cx,cy,r,0,7);x.stroke();x.setLineDash([]);
+    var w=(i%2?-1:1)*(0.9-0.15*i);for(var j=0;j<c;j++){var a=j*6.2832/c+t*w;circ(x,0,cx+r*Math.cos(a),cy+r*Math.sin(a),5,BLU,'#fff',1);}});
+  var sc=A1.pts.length>40?0.78:1,rad=A1.pts.length>40?3.2:4;
+  A1.pts.forEach(function(p,i){var jx=Math.sin(t*9+i)*0.5,jy=Math.cos(t*8+i*2)*0.5;circ(x,0,cx+p[0]*sc*1.3+jx,cy+p[1]*sc*1.3+jy,rad,A1.kinds[i]?RED:'#9aa5ad','#fff',0.8);});
+}
+var NQ={cur:null,done:false,tot:0,right:0};
+function nqNew(){
+  var z=1+Math.floor(Math.random()*30),e=ELS[z-1],A=e[3],n=A-z;NQ.cur={z:z,A:A,n:n,e:e};NQ.done=false;
+  $('nq').innerHTML='<span style="font-size:24px;font-weight:700"><sup>'+bn(A)+'</sup><sub style="margin-left:-12px">'+bn(z)+'</sub>'+e[0]+'</span> &nbsp;এ মৌলের নিউট্রন সংখ্যা কত?';
+  var opts=[n];[A,z,A+z,n+1,n-1].forEach(function(v){if(v>=0&&opts.indexOf(v)<0&&opts.length<4)opts.push(v);});
+  var h='';shuffle(opts).forEach(function(v){h+='<button data-n="'+v+'">'+bn(v)+'</button>';});$('nqo').innerHTML=h;$('nqf').textContent='';$('nqs').textContent=NQ.tot?('স্কোর: '+bn(NQ.right)+' / '+bn(NQ.tot)):'';
+}
+$('nqo').onclick=function(ev){var b=ev.target.closest('button');if(!b||NQ.done)return;NQ.done=true;NQ.tot++;var v=+b.getAttribute('data-n'),c=NQ.cur;
+  $('nqo').querySelectorAll('button').forEach(function(x){if(+x.getAttribute('data-n')===c.n)x.classList.add('ok');});
+  if(v===c.n){NQ.right++;$('nqf').textContent='✅ ঠিক! নিউট্রন = A − Z = '+bn(c.A)+' − '+bn(c.z)+' = '+bn(c.n);}else{b.classList.add('no');$('nqf').textContent='❌ নিউট্রন = A − Z = '+bn(c.A)+' − '+bn(c.z)+' = '+bn(c.n);}
+  $('nqs').textContent='স্কোর: '+bn(NQ.right)+' / '+bn(NQ.tot);setTimeout(nqNew,2100);};
+a1Update();nqNew();
+
+/* =================== ল্যাব ২: প্রতীক ও যৌগ =================== */
+var LAT=[['সোডিয়াম','Natrium','Na'],['কপার','Cuprum','Cu'],['পটাশিয়াম','Kalium','K'],['সিলভার','Argentum','Ag'],['টিন','Stannum','Sn'],['এন্টিমনি','Stibium','Sb'],['গোল্ড','Aurum','Au'],['লেড','Plumbum','Pb'],['টাংস্টেন','Wolfram','W'],['আয়রন','Ferrum','Fe'],['মারকারি','Hydrurgyrum','Hg']];
+(function(){var h='';LAT.forEach(function(l,i){h+='<button class="btn alt" style="padding:4px 12px" data-i="'+i+'">'+l[0]+'</button>';});$('lat').innerHTML=h;
+  $('lat').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var l=LAT[+b.getAttribute('data-i')];$('latinfo').innerHTML='<b>'+l[0]+'</b>: ল্যাটিন নাম <b>'+l[1]+'</b> → প্রতীক <b style="font-size:22px;color:var(--teal)">'+l[2]+'</b>';};})();
+var SY=[['হাইড্রোজেন','H','প্রথম অক্ষর (Hydrogen)'],['কার্বন','C','প্রথম অক্ষর (Carbon)'],['অক্সিজেন','O','প্রথম অক্ষর (Oxygen)'],['নাইট্রোজেন','N','প্রথম অক্ষর (Nitrogen)'],
+ ['ক্লোরিন','Cl','C কার্বনের, তাই দুই অক্ষর: Cl'],['ক্যালসিয়াম','Ca','C কার্বনের, তাই দুই অক্ষর: Ca'],['কোবাল্ট','Co','দুই অক্ষর: Co'],['ক্যাডমিয়াম','Cd','দুই অক্ষর: Cd'],['ক্রোমিয়াম','Cr','দুই অক্ষর: Cr']];
+LAT.forEach(function(l){SY.push([l[0],l[2],'ল্যাটিন নাম '+l[1]+' থেকে']);});
+var SG={cur:null,done:false,tot:0,right:0};
+function sgNew(){var p=SG.cur;do{SG.cur=SY[Math.floor(Math.random()*SY.length)];}while(SG.cur===p);SG.done=false;
+  $('sgq').innerHTML='<b>'+SG.cur[0]+'</b>-এর প্রতীক কোনটি?';
+  var opts=[SG.cur[1]];shuffle(SY).forEach(function(s){if(opts.length<4&&opts.indexOf(s[1])<0)opts.push(s[1]);});
+  var h='';shuffle(opts).forEach(function(o){h+='<button data-s="'+o+'" style="font-size:18px">'+o+'</button>';});$('sgo').innerHTML=h;$('sgf').textContent='';$('sgs').textContent=SG.tot?('স্কোর: '+bn(SG.right)+' / '+bn(SG.tot)):'';}
+$('sgo').onclick=function(ev){var b=ev.target.closest('button');if(!b||SG.done)return;SG.done=true;SG.tot++;var s=b.getAttribute('data-s');
+  $('sgo').querySelectorAll('button').forEach(function(x){if(x.getAttribute('data-s')===SG.cur[1])x.classList.add('ok');});
+  if(s===SG.cur[1]){SG.right++;$('sgf').textContent='✅ ঠিক! '+SG.cur[2];}else{b.classList.add('no');$('sgf').textContent='❌ সঠিক: '+SG.cur[1]+' ('+SG.cur[2]+')';}
+  $('sgs').textContent='স্কোর: '+bn(SG.right)+' / '+bn(SG.tot);setTimeout(sgNew,2000);};sgNew();
+/* পানি ভাঙা */
+var WS={run:false,t0:0,at:[]};
+function wsReset(){
+  WS.run=false;WS.at=[];
+  for(var i=0;i<4;i++){var x=55+i*90;WS.at.push({k:'O',sx:x,sy:55,tx:262+Math.floor(i/2)*60+(i%2?14:-14),ty:178,x:x,y:55});
+    WS.at.push({k:'H',sx:x-14,sy:68,tx:30+i*44-8,ty:178,x:x-14,y:68});WS.at.push({k:'H',sx:x+14,sy:68,tx:30+i*44+8,ty:178,x:x+14,y:68});}
+  $('wtxt').textContent='প্রতিটি পানির অণুতে ২টি H আর ১টি O। পানি একটি যৌগ।';
+}
+$('wgo').onclick=function(){if(!WS.run){WS.run=true;WS.t0=performance.now();}};$('wreset').onclick=wsReset;wsReset();
+function wsDraw(){
+  var x=ctxOf('ws'),tt=WS.run?(performance.now()-WS.t0)/1000:0,p=ease((tt-0.3)/2.2);x.clearRect(0,0,380,230);
+  txt(x,WS.run&&p>0.95?'ভাঙার পর (মৌল)':'পানির অণু (H₂O)',190,16,'bold 14px Hind Siliguri,sans-serif',NAVY);
+  WS.at.forEach(function(a){a.x=lerp(a.sx,a.tx,p);a.y=lerp(a.sy,a.ty,p);
+    if(a.k==='O')circ(x,0,a.x,a.y,12,RED,'#fff',1.5);else circ(x,0,a.x,a.y,7,'#8ab4d8','#fff',1.5);
+    txt(x,a.k,a.x,a.y,(a.k==='O'?'bold 12px':'bold 10px')+' sans-serif','#fff');});
+  if(p>0.95){for(var i=0;i<4;i++)txt(x,'H₂',30+i*44,204,'bold 14px sans-serif','#2b6cb0');txt(x,'O₂',262,204,'bold 14px sans-serif',RED);txt(x,'O₂',322,204,'bold 14px sans-serif',RED);
+    var m='পানি ভাঙলে দুটি মৌল পাওয়া গেল: হাইড্রোজেন ও অক্সিজেন। এখানে H : O = ৮ : ৪ = ২ : ১ (পানির অনুপাতই এটা)।';if($('wtxt').textContent!==m)$('wtxt').textContent=m;}
+  else if(WS.run){$('wtxt').textContent='রাসায়নিকভাবে বিশ্লেষণ হচ্ছে… পরমাণুগুলো আলাদা হয়ে নতুন জোড় বাঁধছে।';}
+}
+/* অণু */
+var MQ=[['H₂',[['H',2]],'E'],['O₂',[['O',2]],'E'],['N₂',[['N',2]],'E'],['Cl₂',[['Cl',2]],'E'],['CO₂',[['C',1],['O',2]],'C'],['H₂O',[['H',2],['O',1]],'C'],['NH₃',[['N',1],['H',3]],'C'],['HCl',[['H',1],['Cl',1]],'C'],['H₂SO₄',[['H',2],['S',1],['O',4]],'C']];
+var CLR={H:'#8ab4d8',O:'#e63946',N:'#2a9d8f',Cl:'#7bc47f',C:'#555',S:'#e9a23b'};
+function ballsHtml(m){var h='<span style="display:inline-flex;flex-wrap:wrap;gap:3px;vertical-align:middle">';m[1].forEach(function(p){for(var i=0;i<p[1];i++)h+='<span style="display:inline-block;width:28px;height:28px;border-radius:50%;background:'+CLR[p[0]]+';color:#fff;text-align:center;line-height:28px;font-weight:700;font-size:13px">'+p[0]+'</span>';});return h+'</span>';}
+(function(){var h='';MQ.forEach(function(m,i){h+='<button class="btn alt" style="padding:4px 12px" data-i="'+i+'">'+m[0]+'</button>';});$('mlist').innerHTML=h;
+  $('mlist').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var m=MQ[+b.getAttribute('data-i')];
+    $('mview').innerHTML='<b style="font-size:20px">'+m[0]+'</b> &nbsp;'+ballsHtml(m)+'<br>'+(m[2]==='E'?'একই মৌলের একাধিক পরমাণু → <b>মৌলের অণু</b>':'ভিন্ন ভিন্ন মৌলের ('+bn(m[1].length)+'টি মৌল) পরমাণু → <b>যৌগের অণু</b>');};})();
+var MS2={cur:null,done:false,tot:0,right:0};
+function mqNew(){var p=MS2.cur;do{MS2.cur=MQ[Math.floor(Math.random()*MQ.length)];}while(MS2.cur===p);MS2.done=false;
+  $('mqq').innerHTML='<b style="font-size:22px">'+MS2.cur[0]+'</b> '+ballsHtml(MS2.cur);$('mqf').textContent='';$('mqN').style.display='none';$('mqE').classList.remove('ok','no');$('mqC').classList.remove('ok','no');}
+function mqAns(a){if(MS2.done)return;MS2.done=true;MS2.tot++;var c=MS2.cur[2],bt={E:$('mqE'),C:$('mqC')};bt[c].classList.add('ok');
+  if(a===c){MS2.right++;$('mqf').textContent='✅ ঠিক!';}else{bt[a].classList.add('no');$('mqf').textContent='❌ এটা '+(c==='E'?'মৌলের অণু (একই মৌল)':'যৌগের অণু (ভিন্ন মৌল)')+'।';}
+  $('mqs').textContent='স্কোর: '+bn(MS2.right)+' / '+bn(MS2.tot);$('mqN').style.display='inline-block';}
+$('mqE').onclick=function(){mqAns('E');};$('mqC').onclick=function(){mqAns('C');};$('mqN').onclick=mqNew;mqNew();
+
+/* =================== ল্যাব ৩: মডেল =================== */
+var RS={dec:false,t0:0,trail:[],last:''};
+function rReset(){RS.dec=false;RS.trail=[];RS.last='';}
+$('rgo').onclick=function(){if(!RS.dec){RS.dec=true;RS.t0=performance.now();RS.trail=[];}};$('rreset').onclick=rReset;
+function ruDraw(){
+  var x=ctxOf('ru'),now=performance.now()/1000,cx=190,cy=130;x.clearRect(0,0,380,260);
+  var R=95,ang=now*1.6,state='ok';
+  if(RS.dec){var tt=(performance.now()-RS.t0)/1000;var f=clamp(tt/7,0,1);R=95*(1-f)+9*f;ang=now*1.6*(1+3*f*f);if(R<=10)state='dead';else state='dec';}
+  x.strokeStyle='#cfd9e1';x.setLineDash([4,4]);x.lineWidth=1.2;x.beginPath();x.arc(cx,cy,95,0,7);x.stroke();x.setLineDash([]);
+  var ex=cx+R*Math.cos(ang),ey=cy+R*Math.sin(ang);
+  if(state==='dec'){RS.trail.push([ex,ey]);if(RS.trail.length>700)RS.trail.shift();x.strokeStyle='rgba(43,108,176,.5)';x.lineWidth=1.4;x.beginPath();RS.trail.forEach(function(p,i){if(i)x.lineTo(p[0],p[1]);else x.moveTo(p[0],p[1]);});x.stroke();}
+  if(state==='dead'){x.strokeStyle='rgba(43,108,176,.4)';x.beginPath();RS.trail.forEach(function(p,i){if(i)x.lineTo(p[0],p[1]);else x.moveTo(p[0],p[1]);});x.stroke();}
+  circ(x,0,cx,cy,state==='dead'?16:9,RED,'#fff',2);txt(x,'+',cx,cy,'bold 12px sans-serif','#fff');
+  if(state!=='dead')circ(x,0,ex,ey,6,BLU,'#fff',1.5);
+  if(state==='dead')txt(x,'💥',cx,cy-28,'26px sans-serif',NAVY);
+  var m=state==='ok'?'রাদারফোর্ডের মডেল: নিউক্লিয়াসের চারদিকে ইলেকট্রন কক্ষপথে ঘুরছে, গ্রহের মতো। "ম্যাক্সওয়েলের তত্ত্ব প্রয়োগ করো" চাপো।':(state==='dec'?'ম্যাক্সওয়েলের তত্ত্ব: ঘুরতে ঘুরতে ইলেকট্রন ক্রমাগত শক্তি হারাচ্ছে, তাই কক্ষপথ ছোট হচ্ছে (সর্পিল পথ)…':'ইলেকট্রন নিউক্লিয়াসে পড়ে গেল! তত্ত্ব অনুযায়ী পরমাণু টিকে থাকার কথা না। কিন্তু বাস্তবে এমন হয় না। এটাই রাদারফোর্ড মডেলের সীমাবদ্ধতা।');
+  if(RS.last!==m){RS.last=m;$('rtxt').textContent=m;}
+}
+var BS={n:2,from:2,to:2,t0:0,photon:0,msg:''};
+var BR=[0,32,66,100,134],BNM=['','K','L','M','N'];
+function bInfo(){var h='<table class="t"><tr><th>n</th><th>শক্তিস্তর</th><th>সর্বোচ্চ ইলেকট্রন 2n²</th></tr>';
+  for(var i=1;i<=4;i++){h+='<tr'+(i===BS.n?' style="background:#fff4dc;font-weight:700"':'')+'><td>'+bn(i)+'</td><td>'+BNM[i]+'</td><td>2 × '+bn(i)+'² = '+bn(2*i*i)+'</td></tr>';}
+  $('binfo').innerHTML=h+'</table>';}
+function bMove(d){if(BS.to!==BS.from&&performance.now()-BS.t0<1000)return;
+  var nn=BS.n+d;if(nn<1||nn>4){$('btxt').textContent=d>0?'ছবিতে N (n = ৪)-ই সবচেয়ে উপরের স্তর।':'n = ১ (K) সবচেয়ে নিচের স্তর, এর নিচে নামা যায় না।';return;}
+  BS.from=BS.n;BS.to=nn;BS.n=nn;BS.t0=performance.now();BS.photon=d;
+  $('btxt').textContent=d>0?'নিম্ন থেকে উচ্চ শক্তিস্তরে যেতে ইলেকট্রন শক্তি শোষণ করছে।':'উচ্চ থেকে নিম্ন শক্তিস্তরে নেমে ইলেকট্রন শক্তি বিকিরণ (আলো) করছে।';bInfo();}
+$('bup').onclick=function(){bMove(1);};$('bdn').onclick=function(){bMove(-1);};
+$('btxt').textContent='ইলেকট্রন L শেলে (n = ২) ঘুরছে। স্থির কক্ষপথে ঘুরলে শক্তি শোষণ বা বিকিরণ হয় না।';bInfo();
+function boDraw(){
+  var x=ctxOf('bo'),now=performance.now()/1000,cx=190,cy=150;x.clearRect(0,0,380,300);
+  for(var i=1;i<=4;i++){x.strokeStyle=(i===BS.n?'#2a9d8f':'#cfd9e1');x.lineWidth=i===BS.n?2:1.2;x.beginPath();x.arc(cx,cy,BR[i],0,7);x.stroke();txt(x,'n='+bn(i)+' ('+BNM[i]+')',cx+BR[i]*0.72+14,cy-BR[i]*0.72-4,'11px Hind Siliguri,sans-serif','#5b6770');}
+  circ(x,0,cx,cy,10,RED,'#fff',2);txt(x,'+',cx,cy,'bold 12px sans-serif','#fff');
+  var p=ease((performance.now()-BS.t0)/800),r=lerp(BR[BS.from],BR[BS.to],p);var a=now*(2.2/BS.n);
+  var ex=cx+r*Math.cos(a),ey=cy+r*Math.sin(a);
+  if(p<1&&BS.photon){var q=p;var ang=a;
+    // ফোটন তরঙ্গ
+    var d0=q*160;var s=BS.photon>0?(170-d0):(30+d0);
+    x.strokeStyle=BS.photon>0?'#e9a23b':'#e63946';x.lineWidth=2.4;x.beginPath();
+    for(var k=0;k<=40;k++){var u=s+k*1.5;var px=ex+(u)*Math.cos(ang)+Math.sin(k*0.9)*4*(-Math.sin(ang)),py=ey+(u)*Math.sin(ang)+Math.sin(k*0.9)*4*Math.cos(ang);if(k)x.lineTo(px,py);else x.moveTo(px,py);}x.stroke();
+    txt(x,BS.photon>0?'শক্তি শোষিত':'শক্তি বিকিরিত',ex+(s)*Math.cos(ang)+20,ey+(s)*Math.sin(ang)-12,'bold 12px Hind Siliguri,sans-serif',BS.photon>0?'#c47f0a':RED);}
+  circ(x,0,ex,ey,7,BLU,'#fff',1.5);
+}
+
+/* =================== ল্যাব ৪: ইলেকট্রন বিন্যাস =================== */
+var ORD=[['1s',1,0,2],['2s',2,0,2],['2p',2,1,6],['3s',3,0,2],['3p',3,1,6],['4s',4,0,2],['3d',3,2,10],['4p',4,1,6]];
+var SUPD='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bnS(n){return sup(n);}
+function cfgFor(z){var c=ORD.map(function(){return 0;});var left=z;for(var i=0;i<ORD.length&&left>0;i++){var t=Math.min(ORD[i][3],left);c[i]=t;left-=t;}
+  var exc=null;if(z===24){c[5]=1;c[6]=5;exc='Cr';}if(z===29){c[5]=1;c[6]=10;exc='Cu';}return {c:c,exc:exc};}
+var F4={z:19,shown:0,timer:null};
+function orbDraw(arr){
+  var h='';ORD.forEach(function(o,i){var cnt=arr[i],cap=o[3];h+='<div class="orb'+(cnt?' on':'')+'"><b>'+o[0]+'</b><div class="sl">';for(var k=0;k<cap;k++)h+='<i class="'+(k<cnt?'f':'')+'"></i>';h+='</div><small>'+bn(cnt)+' / '+bn(cap)+'</small></div>';});
+  $('orb').innerHTML=h;
+}
+function f4Start(){
+  if(F4.timer)clearInterval(F4.timer);F4.z=+$('z4').value;$('z4v').textContent=bn(F4.z);
+  var normal=ORD.map(function(){return 0;}),k=0,z=F4.z,final=cfgFor(z),e=ELS[z-1];
+  orbDraw(normal);$('cfgbox').innerHTML='ইলেকট্রন ভরা হচ্ছে…';
+  F4.timer=setInterval(function(){
+    if(k<z){var left=k+1;for(var i=0;i<ORD.length;i++)normal[i]=0;for(var i2=0;i2<ORD.length&&left>0;i2++){var t=Math.min(ORD[i2][3],left);normal[i2]=t;left-=t;}k++;orbDraw(normal);}
+    else{clearInterval(F4.timer);F4.timer=null;
+      if(final.exc){var d=document.createElement('div');orbDraw(final.c);}
+      var ord2=ORD.map(function(o,i){return {n:o[1],l:o[2],lab:o[0],c:final.c[i]};}).filter(function(o){return o.c>0;}).sort(function(a,b){return a.n-b.n||a.l-b.l;});
+      var s=ord2.map(function(o){return o.lab+bnS(o.c);}).join(' ');
+      var sh=[0,0,0,0];ord2.forEach(function(o){sh[o.n-1]+=o.c;});var shS=sh.filter(function(v){return v>0;}).map(bn).join(', ');
+      var h='<b>'+e[1]+' ('+e[0]+', Z = '+bn(z)+')</b> →<br><span style="font-size:19px;font-weight:700;color:var(--navy)">'+s+'</span><br>শেল অনুযায়ী (K, L, M, N): <b>'+shS+'</b>';
+      if(z===19||z===20)h+='<p style="margin:6px 0 0">৪s-এর শক্তি ৩d-এর চেয়ে কম (৪+০ = ৪ &lt; ৩+২ = ৫), তাই ইলেকট্রন M শেল অপূর্ণ রেখে আগে ৪s-এ ঢুকেছে।</p>';
+      if(z>=21&&z<=30&&!final.exc)h+='<p style="margin:6px 0 0">৪s ভরে যাওয়ার পর পরের ইলেকট্রনগুলো ৩d-এ ঢুকছে।</p>';
+      if(final.exc==='Cr')h+='<p style="margin:6px 0 0;color:#c47f0a"><b>ব্যতিক্রম:</b> স্বাভাবিক হিসাবে ৩d⁴ ৪s²। কিন্তু ৩d⁵ অর্ধপূর্ণ হলে বিন্যাস বেশি সুস্থিত, তাই ৪s থেকে একটি ইলেকট্রন ৩d-তে এসেছে।</p>';
+      if(final.exc==='Cu')h+='<p style="margin:6px 0 0;color:#c47f0a"><b>ব্যতিক্রম:</b> স্বাভাবিক হিসাবে ৩d⁹ ৪s²। কিন্তু ৩d¹⁰ সম্পূর্ণ পূর্ণ হলে বিন্যাস সুস্থিত, তাই ৪s থেকে একটি ইলেকট্রন ৩d-তে এসেছে।</p>';
+      $('cfgbox').innerHTML=h;}
+  },z>12?90:140);
+}
+$('z4').oninput=f4Start;$('fgo').onclick=f4Start;
+var EO=['1s','2s','2p','3s','3p','3d','4s','4p','4d','4f','5s','5p'];
+function nl(o){return {n:+o[0],l:'spdf'.indexOf(o[1])};}
+var EC={a:null,b:null,done:false,tot:0,right:0};
+function ecNew(){var a,b;do{a=EO[Math.floor(Math.random()*EO.length)];b=EO[Math.floor(Math.random()*EO.length)];}while(a===b||(nl(a).n+nl(a).l===nl(b).n+nl(b).l&&nl(a).n===nl(b).n));
+  EC.a=a;EC.b=b;EC.done=false;$('ec').innerHTML='<b>'+a+'</b> আর <b>'+b+'</b>: কোনটিতে ইলেকট্রন আগে ঢুকবে?';
+  $('eco').innerHTML='<button data-o="'+a+'">'+a+'</button><button data-o="'+b+'">'+b+'</button>';$('ecf').textContent='';$('ecs').textContent=EC.tot?('স্কোর: '+bn(EC.right)+' / '+bn(EC.tot)):'';}
+$('eco').onclick=function(ev){var bt=ev.target.closest('button');if(!bt||EC.done)return;EC.done=true;EC.tot++;
+  var A=nl(EC.a),B=nl(EC.b),sa=A.n+A.l,sb=B.n+B.l,win=(sa<sb||(sa===sb&&A.n<B.n))?EC.a:EC.b;
+  $('eco').querySelectorAll('button').forEach(function(x){if(x.getAttribute('data-o')===win)x.classList.add('ok');});
+  var why=EC.a+': '+bn(A.n)+' + '+bn(A.l)+' = '+bn(sa)+', '+EC.b+': '+bn(B.n)+' + '+bn(B.l)+' = '+bn(sb)+(sa===sb?' (সমান, তাই n কম যার সেটা আগে)':'')+' → '+win+' আগে ভরবে।';
+  if(bt.getAttribute('data-o')===win){EC.right++;$('ecf').textContent='✅ ঠিক! '+why;}else{bt.classList.add('no');$('ecf').textContent='❌ '+why;}
+  $('ecs').textContent='স্কোর: '+bn(EC.right)+' / '+bn(EC.tot);setTimeout(ecNew,2800);};
+ecNew();f4Start();
+
+/* =================== ল্যাব ৫: আইসোটোপ ও ভর =================== */
+var ISO=[['প্রোটিয়াম ¹H',1,0],['ডিউটেরিয়াম ²D',1,1],['ট্রিটিয়াম ³T',1,2]];
+var ISP=[[[0,0]],[[-5,0],[5,0]],[[-6,-3],[6,-3],[0,6]]];
+function isoDraw(){
+  var x=ctxOf('iso'),t=performance.now()/1000;x.clearRect(0,0,380,170);
+  ISO.forEach(function(it,i){var cx=65+i*125,cy=70;x.strokeStyle='#cfd9e1';x.setLineDash([4,4]);x.beginPath();x.arc(cx,cy,36,0,7);x.stroke();x.setLineDash([]);
+    var a=t*1.5+i;circ(x,0,cx+36*Math.cos(a),cy+36*Math.sin(a),4.5,BLU,'#fff',1);
+    ISP[i].forEach(function(p,k){circ(x,0,cx+p[0]+Math.sin(t*8+k)*0.5,cy+p[1],6.5,k<1?RED:'#9aa5ad','#fff',1);});
+    txt(x,it[0],cx,128,'bold 13px Hind Siliguri,sans-serif',NAVY);txt(x,'Z = '+bn(it[1])+', A = '+bn(it[1]+it[2])+', n = '+bn(it[2]),cx,148,'12px Hind Siliguri,sans-serif','#5b6770');});
+}
+var AV=[{n:'কপার (Cu): ⁶³Cu ও ⁶⁵Cu',a:63,b:65,ref:63.5},{n:'ক্লোরিন (Cl): ³⁵Cl ও ³⁷Cl (এই ভরসংখ্যা বইয়ে নেই, বাড়তি তথ্য)',a:35,b:37,ref:35.5},{n:'কাল্পনিক মৌল X: ¹⁴⁶X ও ¹⁵⁴X (অনুশীলনী)',a:146,b:154,ref:null}];
+(function(){var h='';AV.forEach(function(v,i){h+='<option value="'+i+'">'+v.n+'</option>';});$('ael').innerHTML=h;})();
+function trim(v){return bn(Number(v.toFixed(2)));}
+function avUpdate(){
+  var v=AV[+$('ael').value],x=+$('apct').value;var avg=(x*v.a+(100-x)*v.b)/100;
+  $('alab').textContent=bn(v.a)+'-এর শতকরা পরিমাণ x = '+bn(x)+'%';
+  var h='';for(var i=0;i<100;i++)h+='<i style="background:'+(i<x?'#e63946':'#2b6cb0')+'"></i>';$('adots').innerHTML=h;
+  var s='<span style="color:#e63946"><b>●</b></span> '+bn(v.a)+' ('+bn(x)+'%) &nbsp;<span style="color:#2b6cb0"><b>●</b></span> '+bn(v.b)+' ('+bn(100-x)+'%)<br>গড় = ('+bn(x)+' × '+bn(v.a)+' + '+bn(100-x)+' × '+bn(v.b)+') ÷ ১০০<br>= '+bn(x*v.a+(100-x)*v.b)+' ÷ ১০০ = <b style="font-size:22px;color:var(--navy)">'+trim(avg)+'</b>';
+  if(v.ref!==null){s+='<br>পর্যায় সারণির গড়: <b>'+trim(v.ref)+'</b>';if(Math.abs(avg-v.ref)<0.005)s+='<p style="color:#1d7a6f;font-weight:700;margin:6px 0 0">🎯 মিলে গেছে! এটাই প্রকৃতিতে পাওয়া অনুপাত।</p>';else s+='<p style="margin:6px 0 0">স্লাইডার সরিয়ে '+trim(v.ref)+' মেলাও।</p>';}
+  else s+='<p style="margin:6px 0 0">স্লাইডার ২৫%-এ আনলে গড় কত হয় দেখো।</p>';
+  $('ares').innerHTML=s;
+}
+$('ael').onchange=function(){$('apct').value=50;avUpdate();};$('apct').oninput=avUpdate;avUpdate();
+var RAM={H:1,C:12,N:14,O:16,S:32,Cl:35.5};
+var MOLS=[['H₂',[['H',2]]],['H₂O',[['H',2],['O',1]]],['CO₂',[['C',1],['O',2]]],['NH₃',[['N',1],['H',3]]],['HCl',[['H',1],['Cl',1]]],['H₂SO₄',[['H',2],['S',1],['O',4]]]];
+(function(){var h='';MOLS.forEach(function(m,i){h+='<option value="'+i+'">'+m[0]+'</option>';});$('mol').innerHTML=h;$('mol').value=5;})();
+function molUpdate(){var m=MOLS[+$('mol').value],tot=0,parts=[],terms=[];
+  m[1].forEach(function(p){var v=RAM[p[0]]*p[1];tot+=v;parts.push(p[0]+': '+trim(RAM[p[0]])+' × '+bn(p[1])+' = '+trim(v));terms.push(trim(RAM[p[0]])+' × '+bn(p[1]));});
+  $('mres').innerHTML='<b style="font-size:20px">'+m[0]+'</b> &nbsp;'+ballsHtml([m[0],m[1]])+'<br>'+parts.join('<br>')+'<br>আপেক্ষিক আণবিক ভর = '+terms.join(' + ')+' = <b style="font-size:22px;color:var(--navy)">'+trim(tot)+'</b><br><small>H = ১, S = ৩২, O = ১৬, Cl = ৩৫.৫ বইয়ে আছে। C = ১২ (C-১২ একক)। N = ১৪ বইয়ে নেই, বাড়তি তথ্য।</small>';}
+$('mol').onchange=molUpdate;molUpdate();
+function ramUpdate(){var i=+$('ram').value,m=i?3.16:4.482,r=m*1e-23/1.66e-24;
+  $('rres').innerHTML='একটি পরমাণুর ভর = <b>'+bn(m)+' × ১০⁻²³ g</b><br>C-১২ পরমাণুর ১/১২ অংশ = <b>১.৬৬ × ১০⁻²⁴ g</b><br>আপেক্ষিক পারমাণবিক ভর = ('+bn(m)+' × ১০⁻²³) ÷ (১.৬৬ × ১০⁻²⁴) = '+bn(r.toFixed(2))+' ≈ <b style="font-size:22px;color:var(--navy)">'+bn(Math.round(r))+'</b><br><small>দুটি ভরের অনুপাত, তাই কোনো একক নেই।</small>';}
+$('ram').onchange=ramUpdate;ramUpdate();
+
+/* =================== ল্যাব ৬: তেজস্ক্রিয় আইসোটোপ =================== */
+var RC=[
+ {t:'🏥 চিকিৎসা',h:'<b>রোগ নির্ণয়:</b> ⁹⁹Tc ইঞ্জেকশনে দিলে শরীরের নির্দিষ্ট জায়গায় জমে গামা রশ্মি ছাড়ে। ক্যামেরায় সেই জায়গার ছবি তোলা যায়। লাইফটাইম ৬ ঘণ্টা, তাই নিরাপদ।<br><b>রোগ নিরাময়:</b> থাইরয়েড ক্যান্সারে ¹³¹I (বিটা রশ্মি), ব্রেইন ক্যান্সারে ইরিডিয়াম, টিউমারে ⁶⁰Co (গামা রশ্মি), লিউকোমিয়ায় ³²P-এর ফসফেট।'},
+ {t:'🌾 কৃষি',h:'<b>ফসলের পুষ্টি:</b> তেজস্ক্রিয় নাইট্রোজেন ও ফসফরাস দিয়ে জানা যায় জমিতে কতটা সার দরকার। গাইগার মুলার কাউন্টারে রশ্মি মাপা হয়।<br><b>পোকামাকড় নিয়ন্ত্রণ:</b> কীটনাশকের ন্যূনতম পরিমাণ জানা যায়।<br><b>ফসলের মানোন্নয়ন:</b> রশ্মির নিয়ন্ত্রিত ব্যবহারে জিনগত পরিবর্তন ঘটিয়ে উন্নত ফসল।'},
+ {t:'⚡ বিদ্যুৎ',h:'কিছু পরমাণু ভেঙে ক্ষুদ্র পরমাণুতে পরিণত করলে (ফিশন) প্রচুর তাপ বের হয়। সেই তাপে জেনারেটর চালিয়ে বিদ্যুৎ হয়, একে নিউক্লিয়ার বিদ্যুৎকেন্দ্র বলে। পাবনার রূপপুরে ২৪০০ মেগাওয়াট বিদ্যুৎকেন্দ্র হচ্ছে।'},
+ {t:'⚠️ ক্ষতি',h:'আলফা, বিটা ও গামা রশ্মি কোষের জিনগত পরিবর্তন ঘটাতে পারে, ফলে ক্যান্সারের মতো রোগ হতে পারে। দ্বিতীয় বিশ্বযুদ্ধে হিরোশিমা ও নাগাসাকির বোমায় কয়েক লক্ষ জীবন ধ্বংস হয়েছে। ১৯৮৬ সালে চেরোনোবিল দুর্ঘটনায় অনেক প্রাণহানি ও পরিবেশ দূষণ ঘটে।'}
+];
+(function(){var h='';RC.forEach(function(c,i){h+='<button class="btn alt" style="padding:4px 14px" data-i="'+i+'">'+c.t+'</button>';});$('rtabs').innerHTML=h;
+  $('rtabs').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;$('rcards').innerHTML=RC[+b.getAttribute('data-i')].h;};$('rcards').innerHTML=RC[0].h;})();
+var RG=[['⁹⁹Tc (টেকনেশিয়াম-৯৯)','রোগ নির্ণয়ের জন্য শরীরের ছবি তোলা'],['¹³¹I (আয়োডিন-১৩১)','থাইরয়েড ক্যান্সারের চিকিৎসা'],['⁶⁰Co (কোবাল্ট-৬০)','টিউমার ও ক্যান্সারের কোষ ধ্বংস করা'],['³²P (ফসফরাস-৩২)','রক্তের লিউকোমিয়া রোগের চিকিৎসা'],['তেজস্ক্রিয় নাইট্রোজেন ও ফসফরাস','জমিতে সারের সঠিক পরিমাণ জানা']];
+var RGS={cur:null,done:false,tot:0,right:0};
+function rgNew(){var p=RGS.cur;do{RGS.cur=RG[Math.floor(Math.random()*RG.length)];}while(RGS.cur===p);RGS.done=false;
+  $('rgq').innerHTML='<b>'+RGS.cur[0]+'</b> কোন কাজে ব্যবহার হয়?';var opts=[RGS.cur[1]];shuffle(RG).forEach(function(r){if(opts.length<4&&opts.indexOf(r[1])<0)opts.push(r[1]);});
+  var h='';shuffle(opts).forEach(function(o){h+='<button class="opt" data-u="'+o+'">'+o+'</button>';});$('rgo2').innerHTML=h;$('rgf').textContent='';$('rgs').textContent=RGS.tot?('স্কোর: '+bn(RGS.right)+' / '+bn(RGS.tot)):'';}
+$('rgo2').onclick=function(ev){var b=ev.target.closest('.opt');if(!b||RGS.done)return;RGS.done=true;RGS.tot++;var u=b.getAttribute('data-u');
+  $('rgo2').querySelectorAll('.opt').forEach(function(x){if(x.getAttribute('data-u')===RGS.cur[1])x.classList.add('ok');});
+  if(u===RGS.cur[1]){RGS.right++;$('rgf').textContent='✅ ঠিক!';}else{b.classList.add('no');$('rgf').textContent='❌ সঠিক: '+RGS.cur[1];}
+  $('rgs').textContent='স্কোর: '+bn(RGS.right)+' / '+bn(RGS.tot);setTimeout(rgNew,1900);};rgNew();
+var DK=[];for(var di=0;di<100;di++)DK.push(6*(-Math.log((di+0.5)/100)/Math.LN2));DK=shuffle(DK);
+function dkDraw(){
+  var t=+$('dkt').value;$('dkv').textContent=bn(t);var x=ctxOf('dkc');x.clearRect(0,0,380,170);var left=0;
+  DK.forEach(function(td,i){var cx=24+(i%20)*17,cy=24+Math.floor(i/20)*24,alive=td>t;if(alive)left++;
+    circ(x,0,cx,cy,6,alive?'#e9a23b':'#e3e8ec',alive?'#fff':'#cfd9e1',1.2);});
+  txt(x,'☢ বাকি তেজস্ক্রিয় পরমাণু: '+bn(left)+' / ১০০',190,148,'bold 15px Hind Siliguri,sans-serif',NAVY);
+  var m=t===0?'শুরুতে সব ১০০টি পরমাণু তেজস্ক্রিয়। সময় বাড়াও।':(t<6?'সময়ের সাথে তেজস্ক্রিয় পরমাণু কমছে।':(t<12?'৬ ঘণ্টায় প্রায় অর্ধেক পরমাণু ভেঙে গেছে (অর্ধায়ু ধরলে)।':'অনেক কম বাকি। তাই Tc-৯৯ শরীরে বেশিক্ষণ ক্ষতি করে না, এজন্য নিরাপদ।'));
+  if($('dktx').textContent!==m)$('dktx').textContent=m;
+}
+
+/* =================== কুইজ =================== */
+var QUIZ=[
+ {q:'Z একটি মৌল, প্রোটন সংখ্যা ১১১ ও ভরসংখ্যা ২৫২। পরমাণুটিকে কোনটি দিয়ে প্রকাশ করা যায়?',o:['<sup>১১১</sup>Z','<sup>১১১</sup><sub>২৫২</sub>Z','<sup>২৫২</sup>Z','<sup>২৫২</sup><sub>১১১</sub>Z'],a:3,e:'ভরসংখ্যা উপরে, প্রোটন (পারমাণবিক) সংখ্যা নিচে বসে। তাই <sup>২৫২</sup><sub>১১১</sub>Z।'},
+ {q:'¹⁴⁶X-এর পরিমাণ ২৫% এবং ¹⁵⁴X-এর পরিমাণ ৭৫%। X মৌলের আপেক্ষিক পারমাণবিক ভর কত?',o:['১৪৮','১৫০','১৫২','১৫৩'],a:2,e:'(২৫ × ১৪৬ + ৭৫ × ১৫৪) ÷ ১০০ = (৩৬৫০ + ১১৫৫০) ÷ ১০০ = ১৫২।'},
+ {q:'একটি পরমাণুর প্রকৃত ভর ৪.৪৮২ × ১০⁻²³ g হলে এর আপেক্ষিক পারমাণবিক ভর কত?',o:['২৫','৪০','২৯','২৭'],a:3,e:'৪.৪৮২ × ১০⁻²³ ÷ ১.৬৬ × ১০⁻²⁴ = ২৭ (অ্যালুমিনিয়াম)।'},
+ {q:'<sup>২৭</sup><sub>১৩</sub>Al সংকেত থেকে বোঝা যায়, (i) প্রোটন সংখ্যা ১৩, (ii) ভরসংখ্যা ২৭, (iii) ইলেকট্রন সংখ্যা ১০। কোনটি সঠিক?',o:['i ও ii','ii ও iii','i ও iii','i, ii ও iii'],a:0,e:'প্রোটন ১৩ ও ভরসংখ্যা ২৭ সঠিক। পরমাণু নিরপেক্ষ, তাই ইলেকট্রনও ১৩টি, ১০ নয়।'},
+ {q:'পটাশিয়ামের পারমাণবিক সংখ্যা কত?',o:['১৫','১৭','১৯','২১'],a:2,e:'পটাশিয়ামের (K) প্রোটন সংখ্যা ১৯, ইলেকট্রন বিন্যাস ২, ৮, ৮, ১।'},
+ {q:'N শেলে কয়টি উপশক্তিস্তর থাকে?',o:['১','২','৩','৪'],a:3,e:'N শেল মানে n = ৪। l = ০, ১, ২, ৩ অর্থাৎ ৪s, ৪p, ৪d, ৪f, মোট ৪টি।'},
+ {q:'Sc-এর পারমাণবিক সংখ্যা ২১। Sc-এর সঠিক ইলেকট্রন বিন্যাস কোনটি?',o:['1s² 2s² 2p⁶ 3s² 3p⁶ 4s¹','1s² 2s² 2p⁶ 3s² 3p⁶ 4s²','1s² 2s² 2p⁶ 3s² 3p⁶ 3d¹ 4s²','1s² 2s² 2p⁶ 3s² 3p⁶'],a:2,e:'৪s ভরে ২টি, ২১তম ইলেকট্রন ৩d-তে যায়। তাই …3p⁶ 3d¹ 4s²।'},
+ {q:'যে পদার্থকে ভাঙলে সেই পদার্থ ছাড়া অন্য কিছু পাওয়া যায় না তাকে কী বলে?',o:['যৌগ','মিশ্রণ','মৌল','অণু'],a:2,e:'এমন পদার্থকে মৌল বা মৌলিক পদার্থ বলে। যেমন সোনা, লোহা, হিলিয়াম।'},
+ {q:'পানিতে হাইড্রোজেন ও অক্সিজেন পরমাণুর অনুপাত কত?',o:['১ : ২','২ : ১','১ : ১','৩ : ১'],a:1,e:'পানির (H₂O) অণুতে ২টি H ও ১টি O, অনুপাত ২ : ১।'},
+ {q:'সোডিয়ামের প্রতীক Na কোন নাম থেকে এসেছে?',o:['Sodium','Natrium','Nitrium','Nauram'],a:1,e:'সোডিয়ামের ল্যাটিন নাম Natrium, তাই প্রতীক Na।'},
+ {q:'আয়রনের (Fe) ল্যাটিন নাম কোনটি?',o:['Ferrum','Aurum','Plumbum','Argentum'],a:0,e:'Ferrum থেকে Fe। Aurum = Au (গোল্ড), Plumbum = Pb (লেড), Argentum = Ag (সিলভার)।'},
+ {q:'নিচের কোনটি যৌগের অণু?',o:['O₂','N₂','CO₂','Cl₂'],a:2,e:'CO₂ তে ভিন্ন দুটি মৌল (C ও O) আছে, তাই যৌগের অণু।'},
+ {q:'ইলেকট্রনের আপেক্ষিক ভর ধরা হয়—',o:['১','০','১৮৪০','−১'],a:1,e:'ইলেকট্রনের ভর প্রোটনের তুলনায় ১৮৪০ গুণ কম, তাই আপেক্ষিক ভর শূন্য।'},
+ {q:'নিউট্রনের আধান কত?',o:['+১','−১','০','+২'],a:2,e:'নিউট্রনের কোনো আধান নেই, আপেক্ষিক আধান ০।'},
+ {q:'সোডিয়ামের (Na) ভরসংখ্যা ২৩, প্রোটন ১১। নিউট্রন কয়টি?',o:['১১','১২','২৩','৩৪'],a:1,e:'নিউট্রন = A − Z = ২৩ − ১১ = ১২।'},
+ {q:'রাদারফোর্ডের মডেলকে সোলার সিস্টেম মডেল বলা হয় কেন?',o:['এতে সূর্য আছে বলে','ইলেকট্রন নিউক্লিয়াসকে ঘিরে ঘোরে, যেমন গ্রহ সূর্যকে ঘিরে ঘোরে','এটি সূর্য থেকে আবিষ্কৃত','নিউক্লিয়াস গরম বলে'],a:1,e:'সৌরজগতের সাথে তুলনা করা হয়েছে বলেই এই নাম।'},
+ {q:'রাদারফোর্ড মডেল ম্যাক্সওয়েলের তত্ত্ব অনুযায়ী সঠিক নয় কেন?',o:['নিউক্লিয়াস নেই বলে','ইলেকট্রন ক্রমাগত শক্তি হারিয়ে নিউক্লিয়াসে পড়ে যাওয়ার কথা','প্রোটন নেই বলে','ইলেকট্রন স্থির বলে'],a:1,e:'ম্যাক্সওয়েলের মতে ইলেকট্রন শক্তি হারাবে ও সর্পিল পথে নিউক্লিয়াসে পড়বে। কিন্তু বাস্তবে তা হয় না।'},
+ {q:'বোরের মডেলে স্থির কক্ষপথে ঘুরলে ইলেকট্রন—',o:['শক্তি বিকিরণ করে','শক্তি শোষণ করে','শক্তি শোষণ বা বিকিরণ কিছুই করে না','নিউক্লিয়াসে পড়ে'],a:2,e:'স্থির কক্ষপথে ঘুরলে শক্তির কোনো পরিবর্তন হয় না।'},
+ {q:'ইলেকট্রন উচ্চ শক্তিস্তর থেকে নিম্ন শক্তিস্তরে নামলে কী ঘটে?',o:['শক্তি শোষণ','শক্তি বিকিরণ','কিছুই না','প্রোটন বাড়ে'],a:1,e:'উচ্চ থেকে নিম্ন স্তরে নামলে শক্তি (আলো) বিকিরণ করে, যা থেকে পারমাণবিক বর্ণালি হয়।'},
+ {q:'M শেলে সর্বোচ্চ কয়টি ইলেকট্রন থাকতে পারে?',o:['২','৮','১৮','৩২'],a:2,e:'2n² = ২ × ৩² = ১৮।'},
+ {q:'ক্যালসিয়ামের (Ca, Z = ২০) ইলেকট্রন বিন্যাস কোনটি?',o:['২, ৮, ১০','২, ৮, ৮, ২','২, ৮, ৯, ১','২, ১৮'],a:1,e:'৪s-এর শক্তি কম, তাই M শেল (৮) রেখে N শেলে ২টি ঢোকে: ২, ৮, ৮, ২।'},
+ {q:'কোন অরবিটালে ইলেকট্রন আগে ঢুকবে?',o:['3d','4s','4p','4d'],a:1,e:'4s: ৪+০ = ৪ সবচেয়ে কম, তাই আগে ভরে।'},
+ {q:'3d ও 4p-এর (n + l) সমান (৫)। কোনটিতে ইলেকট্রন আগে ঢোকে?',o:['3d, কারণ এর n কম','4p, কারণ এর n বেশি','সমান সময়ে','কোনটিই না'],a:0,e:'(n + l) সমান হলে যার n কম তার শক্তি কম। 3d-এর n = ৩ < 4p-এর n = ৪।'},
+ {q:'p উপশক্তিস্তরে সর্বোচ্চ কয়টি ইলেকট্রন থাকতে পারে?',o:['২','৬','১০','১৪'],a:1,e:'s = ২, p = ৬, d = ১০, f = ১৪।'},
+ {q:'Cr (২৪)-এর ইলেকট্রন বিন্যাসে ৩d⁵ ৪s¹ হয় কেন?',o:['৩d অর্ধপূর্ণ হলে বিন্যাস বেশি সুস্থিত','৪s ফাঁকা থাকে বলে','ক্রোমিয়াম ধাতু নয় বলে','নিউট্রন বেশি বলে'],a:0,e:'৩d⁵ অর্ধপূর্ণ হওয়ায় সুস্থিত, তাই ৪s থেকে একটি ইলেকট্রন ৩d-তে আসে।'},
+ {q:'যে সব পরমাণুর প্রোটন সংখ্যা সমান কিন্তু ভরসংখ্যা ভিন্ন তাদের কী বলে?',o:['আইসোবার','আইসোটোপ','অণু','আয়ন'],a:1,e:'এদের একে অপরের আইসোটোপ বলে।'},
+ {q:'ডিউটেরিয়াম (²D)-এ নিউট্রন কয়টি?',o:['০','১','২','৩'],a:1,e:'A − Z = ২ − ১ = ১।'},
+ {q:'আপেক্ষিক পারমাণবিক ভর মাপার একক কোনটির ভরের ১/১২ অংশ?',o:['H-১','O-১৬','C-১২','N-১৪'],a:2,e:'কার্বন-১২ আইসোটোপের ভরের ১/১২ অংশ (১.৬৬ × ১০⁻²⁴ g) একক ধরা হয়।'},
+ {q:'কপারের (Cu) দুটি আইসোটোপ ⁶³Cu (৭৫%) ও ⁶⁵Cu (২৫%)। গড় আপেক্ষিক পারমাণবিক ভর কত?',o:['৬৩','৬৩.৫','৬৪','৬৫'],a:1,e:'(৭৫ × ৬৩ + ২৫ × ৬৫) ÷ ১০০ = ৬৩.৫।'},
+ {q:'H₂SO₄-এর আপেক্ষিক আণবিক ভর কত? (H = ১, S = ৩২, O = ১৬)',o:['৪৯','৯৮','৬৪','৮২'],a:1,e:'১ × ২ + ৩২ × ১ + ১৬ × ৪ = ২ + ৩২ + ৬৪ = ৯৮।'},
+ {q:'থাইরয়েড ক্যান্সারের চিকিৎসায় কোন তেজস্ক্রিয় আইসোটোপ ব্যবহার হয়?',o:['¹³¹I','⁹⁹Tc','³²P','⁶⁰Co'],a:0,e:'¹³¹I থেকে বিটা রশ্মি বের হয়ে থাইরয়েডের ক্যান্সার কোষ ধ্বংস করে।'},
+ {q:'রোগ নির্ণয়ে শরীরের ছবি তুলতে কোন আইসোটোপ ব্যবহার হয়?',o:['⁶⁰Co','¹³¹I','⁹⁹Tc','³²P'],a:2,e:'টেকনেশিয়াম-৯৯ গামা রশ্মি ছাড়ে, লাইফটাইম ৬ ঘণ্টা, তাই নিরাপদ।'},
+ {q:'সারের সঠিক পরিমাণ জানতে কৃষিতে কী কাজে লাগে?',o:['তেজস্ক্রিয় নাইট্রোজেন ও ফসফরাস','তেজস্ক্রিয় সোনা','পানি','লবণ'],a:0,e:'গাছ তেজস্ক্রিয় N ও P শোষণ করে, রশ্মি মেপে সারের পরিমাণ বোঝা যায়।'},
+ {q:'পাবনার রূপপুরে কী হচ্ছে?',o:['সার কারখানা','পারমাণবিক বিদ্যুৎকেন্দ্র','চিনিকল','সিমেন্ট কারখানা'],a:1,e:'রূপপুরে ২৪০০ মেগাওয়াট ক্ষমতার পারমাণবিক বিদ্যুৎকেন্দ্র হচ্ছে।'}
+];
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});if(!item.fix)ord=shuffle(ord);item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+/* =================== প্রশ্ন-উত্তর =================== */
+var QA=[
+ {h:'সৃজনশীল ১ (বইয়ের অনুশীলনী: ফরিদের আঁকা পরমাণু মডেল)',items:[
+  ['(ক) পারমাণবিক সংখ্যা কাকে বলে? [জ্ঞান]','কোনো মৌলের একটি পরমাণুর নিউক্লিয়াসে যতগুলো প্রোটন থাকে, তার সংখ্যাকে ঐ মৌলের পারমাণবিক সংখ্যা বলে। একে Z দিয়ে প্রকাশ করা হয়।'],
+  ['(খ) ⁶⁴₂₉X এবং ⁶⁴₃₀Y পরমাণু দুটির নিউক্লিয়ন সংখ্যা সমান কিন্তু নিউট্রন সংখ্যা ভিন্ন, ব্যাখ্যা করো। [অনুধাবন]','নিউক্লিয়ন সংখ্যা মানে প্রোটন ও নিউট্রনের যোগফল, অর্থাৎ ভরসংখ্যা। দুটিরই ভরসংখ্যা ৬৪, তাই নিউক্লিয়ন সংখ্যা সমান। নিউট্রন সংখ্যা = A − Z। X-এর নিউট্রন = ৬৪ − ২৯ = ৩৫। Y-এর নিউট্রন = ৬৪ − ৩০ = ৩৪। ভরসংখ্যা সমান কিন্তু প্রোটন সংখ্যা ভিন্ন, তাই নিউট্রন সংখ্যাও ভিন্ন।'],
+  ['(গ) ফরিদের আঁকা চিত্রটি যে পরমাণু মডেলের সীমাবদ্ধতা নির্দেশ করে সেই মডেলটি বর্ণনা করো। [প্রয়োগ]','চিত্রে ইলেকট্রন সর্পিল পথে নিউক্লিয়াসে পড়ছে। এটি রাদারফোর্ডের পরমাণু মডেলের সীমাবদ্ধতা। এই মডেলে (১) পরমাণুর কেন্দ্রে নিউক্লিয়াস থাকে, যার ভেতরে প্রোটন ও নিউট্রন। (২) নিউক্লিয়াস অত্যন্ত ক্ষুদ্র, পরমাণুর বেশির ভাগ জায়গা ফাঁকা। (৩) ইলেকট্রন সৌরজগতের গ্রহের মতো বিভিন্ন কক্ষপথে নিউক্লিয়াসকে ঘিরে ঘোরে। (৪) প্রোটন ও ইলেকট্রনের সংখ্যা সমান, তাই পরমাণু চার্জ নিরপেক্ষ। (৫) নিউক্লিয়াস ও ইলেকট্রনের আকর্ষণ বল কেন্দ্রমুখী।'],
+  ['(ঘ) অঙ্কিত চিত্র অনুসারে পরমাণু কেন স্থায়ী হবে না, আলোচনা করো। [উচ্চতর দক্ষতা]','ম্যাক্সওয়েলের তত্ত্ব অনুসারে নিউক্লিয়াসকে ঘিরে ঘোরার সময় ইলেকট্রন ক্রমাগত শক্তি হারাবে। শক্তি কমলে ইলেকট্রনের ঘূর্ণন পথ ছোট হতে থাকবে, ফলে সর্পিল পথে এক সময় ইলেকট্রন নিউক্লিয়াসে পড়ে যাবে। তাহলে পরমাণুর অস্তিত্বই বিলুপ্ত হয়ে যাওয়ার কথা। কিন্তু বাস্তবে পরমাণু স্থায়ী। তাই চিত্র অনুযায়ী পরমাণু স্থায়ী হবে না, আর এই কারণে রাদারফোর্ডের মডেল ত্রুটিপূর্ণ।']
+ ]},
+ {h:'সৃজনশীল ২ (বইয়ের অনুশীলনী: A = ⁶⁰Co, B = ³²P, C = H₂SO₄)',items:[
+  ['(ক) প্রতীক কাকে বলে? [জ্ঞান]','কোনো মৌলের ইংরেজি বা ল্যাটিন নামের সংক্ষিপ্ত রূপকে ঐ মৌলের প্রতীক বলে। যেমন হাইড্রোজেনের H, সোডিয়ামের Na।'],
+  ['(খ) পরমাণুতে কখন বর্ণালির সৃষ্টি হয়? ব্যাখ্যা করো। [অনুধাবন]','বোরের মডেল অনুযায়ী ইলেকট্রন যখন উচ্চ শক্তিস্তর থেকে নিম্ন শক্তিস্তরে নামে, তখন শক্তি বিকিরণ করে (hν = hc/λ)। এই বিকিরিত আলোকে প্রিজমের মধ্য দিয়ে পাঠালে পারমাণবিক বর্ণালি (atomic spectra) সৃষ্টি হয়।'],
+  ['(গ) C যৌগের আপেক্ষিক আণবিক ভর বের করো। [প্রয়োগ]','C = H₂SO₄। H = ১, S = ৩২, O = ১৬। আপেক্ষিক আণবিক ভর = ১ × ২ + ৩২ × ১ + ১৬ × ৪ = ২ + ৩২ + ৬৪ = ৯৮।'],
+  ['(ঘ) A এবং B-এর আইসোটোপগুলো আমাদের জীবনে গুরুত্বপূর্ণ ভূমিকা রাখে, ব্যাখ্যা করো। [উচ্চতর দক্ষতা]','A = ⁶⁰Co (কোবাল্ট-৬০)। এর গামা রশ্মি টিউমার ও ক্যান্সারের কোষ ধ্বংস করে, তাই ক্যান্সার চিকিৎসায় কাজে লাগে। B = ³²P (ফসফরাস-৩২)। এর ফসফেট রক্তের লিউকোমিয়া রোগের চিকিৎসায় ব্যবহার হয়। কৃষিতেও তেজস্ক্রিয় ফসফরাস দিয়ে জমিতে সারের সঠিক পরিমাণ জানা যায়। এভাবে এই তেজস্ক্রিয় আইসোটোপগুলো চিকিৎসা ও কৃষিতে মানুষের জীবন সহজ করেছে। তবে এদের রশ্মি অনিয়ন্ত্রিতভাবে শরীরে লাগলে ক্ষতিও করে, তাই নিয়ন্ত্রিতভাবে ব্যবহার করতে হয়।']
+ ]},
+ {h:'সংক্ষিপ্ত প্রশ্ন (আমার বানানো অনুশীলন)',items:[
+  ['মৌল ও যৌগের পার্থক্য লেখো।','মৌলকে ভাঙলে সেই মৌল ছাড়া অন্য কিছু পাওয়া যায় না (যেমন সোনা, অক্সিজেন)। যৌগকে ভাঙলে দুই বা তার বেশি মৌল পাওয়া যায় (যেমন পানি ভাঙলে H ও O)। যৌগে মৌলের অনুপাত সব সময় একই থাকে এবং যৌগের ধর্ম মৌলের ধর্ম থেকে আলাদা।'],
+  ['মৌলের প্রতীক লেখার নিয়মগুলো লেখো।','(ক) নামের প্রথম অক্ষর বড় হাতে, যেমন H, C, O। (খ) প্রথম অক্ষর এক হলে একটি মৌল এক অক্ষরে, বাকিগুলো দুই অক্ষরে (প্রথমটি বড়, দ্বিতীয়টি ছোট হাতের), যেমন Cl, Ca, Co। (গ) কিছু মৌলের প্রতীক ল্যাটিন নাম থেকে, যেমন Natrium → Na, Ferrum → Fe।'],
+  ['মৌলিক কণা তিনটির আধান ও আপেক্ষিক ভর লেখো।','ইলেকট্রন: আধান −১, আপেক্ষিক ভর ০। প্রোটন: আধান +১, আপেক্ষিক ভর ১। নিউট্রন: আধান ০, আপেক্ষিক ভর ১।'],
+  ['ভরসংখ্যা ও পারমাণবিক সংখ্যা কাকে বলে? নিউট্রন সংখ্যা কীভাবে বের করবে?','প্রোটন সংখ্যাকে পারমাণবিক সংখ্যা (Z) এবং প্রোটন ও নিউট্রনের যোগফলকে ভরসংখ্যা (A) বলে। নিউট্রন সংখ্যা = A − Z। যেমন Na: ২৩ − ১১ = ১২।'],
+  ['বোরের মডেলের মূল কথাগুলো লেখো।','ইলেকট্রন নির্দিষ্ট ব্যাসার্ধের বৃত্তাকার স্থির কক্ষপথে (n = ১, ২, ৩ …) ঘোরে। স্থির কক্ষপথে ঘুরলে শক্তি শোষণ বা বিকিরণ করে না। নিম্ন থেকে উচ্চ স্তরে গেলে শক্তি শোষণ, উচ্চ থেকে নিম্ন স্তরে নামলে শক্তি বিকিরণ করে। mvr = nh/2π।'],
+  ['বোর মডেল রাদারফোর্ড মডেলের চেয়ে বেশি গ্রহণযোগ্য কেন?','বোর মডেলে ইলেকট্রনের শক্তিস্তরের আকার (বৃত্তাকার) বলা হয়েছে, শক্তি শোষণ-বিকিরণে স্তর বদলের ব্যাখ্যা আছে, আর হাইড্রোজেনের মতো এক ইলেকট্রন পরমাণুর বর্ণালি ব্যাখ্যা করা গেছে। রাদারফোর্ড মডেল এগুলো পারেনি। তবে বোর মডেলেরও সীমাবদ্ধতা আছে: একাধিক ইলেকট্রনের পরমাণুর বর্ণালি ব্যাখ্যা করতে পারেনি।'],
+  ['ইলেকট্রন বিন্যাসের (n + l) নিয়ম লেখো। 4s আগে ভরে কেন?','যে অরবিটালের (n + l) মান কম, তার শক্তি কম, তাই ইলেকট্রন আগে ঢোকে। (n + l) সমান হলে যার n কম সেটি আগে। 4s-এ n + l = ৪ + ০ = ৪, আর 3d-তে ৩ + ২ = ৫। তাই 4s-এর শক্তি কম, ইলেকট্রন আগে 4s-এ ঢোকে।'],
+  ['Cu(২৯)-এর ইলেকট্রন বিন্যাস ৩d¹⁰ ৪s¹ হয় কেন? (বইয়ের "নিজে করো")','স্বাভাবিক হিসাবে বিন্যাস হতো ৩d⁹ ৪s²। কিন্তু d অরবিটাল সম্পূর্ণ পূর্ণ (d¹⁰) বা অর্ধপূর্ণ (d⁵) হলে বিন্যাস বেশি সুস্থিত। তাই ৪s থেকে একটি ইলেকট্রন ৩d-তে এসে ৩d¹⁰ ৪s¹ হয়।'],
+  ['আইসোটোপ কী? হাইড্রোজেনের তিনটি প্রাকৃতিক আইসোটোপের নাম ও নিউট্রন সংখ্যা লেখো।','যে পরমাণুগুলোর প্রোটন সংখ্যা সমান কিন্তু ভরসংখ্যা ও নিউট্রন সংখ্যা ভিন্ন তারা পরস্পরের আইসোটোপ। হাইড্রোজেনের তিনটি: প্রোটিয়াম ¹H (নিউট্রন ০), ডিউটেরিয়াম ²D (নিউট্রন ১), ট্রিটিয়াম ³T (নিউট্রন ২)।'],
+  ['আপেক্ষিক পারমাণবিক ভরের কোনো একক নেই কেন? এর দরকার কী?','এটি একটি পরমাণুর ভর ও C-১২ এর ১/১২ অংশের ভরের অনুপাত, তাই একক নেই। পরমাণুর প্রকৃত ভর এত ক্ষুদ্র (যেমন ৪.৪৮২ × ১০⁻²³ g) যে ব্যবহার করা কঠিন, তাই সাপেক্ষ ভর ব্যবহার করা হয়।'],
+  ['কপারের গড় আপেক্ষিক পারমাণবিক ভর ৬৩.৫। ⁶³Cu ও ⁶⁵Cu-এর শতকরা পরিমাণ কত?','⁶³Cu = x% ধরলে (x × ৬৩ + (১০০ − x) × ৬৫) ÷ ১০০ = ৬৩.৫। সমাধান করলে x = ৭৫। অতএব ⁶³Cu = ৭৫% আর ⁶⁵Cu = ২৫%।'],
+  ['তেজস্ক্রিয় আইসোটোপ চিকিৎসায় কীভাবে কাজে লাগে?','রোগ নির্ণয়ে ⁹⁹Tc গামা রশ্মি ছেড়ে শরীরের ছবি তুলতে সাহায্য করে (লাইফটাইম ৬ ঘণ্টা বলে নিরাপদ)। নিরাময়ে ¹³¹I থাইরয়েড ক্যান্সারে, ⁶⁰Co টিউমার ও ক্যান্সারে, ³²P লিউকোমিয়ায় ব্যবহার হয়।'],
+  ['তেজস্ক্রিয় আইসোটোপের ক্ষতিকর দিকগুলো কী?','আলফা, বিটা ও গামা রশ্মি কোষের জিনগত পরিবর্তন ঘটিয়ে ক্যান্সারের মতো রোগ ঘটাতে পারে। হিরোশিমা-নাগাসাকির বোমা ও ১৯৮৬ সালের চেরোনোবিল দুর্ঘটনায় বহু প্রাণহানি ও পরিবেশ দূষণ ঘটেছে।']
+ ]}
+];
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+/* =================== লুপ =================== */
+function frame(){a1Draw();wsDraw();ruDraw();boDraw();isoDraw();dkDraw();requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>
