@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>অ্যাকাউন্ট — ShikboLab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="js/chapters.js"></script>
+<script src="js/demo-saas.js"></script>
+</head>
+<body class="sl-page">
+<header class="sl-top"><a class="brand" href="index.html">Shikbo<span>Lab</span></a><nav><a href="index.html">হোম</a><a href="plans.html">প্ল্যান</a><a class="on" href="account.html">অ্যাকাউন্ট</a></nav></header>
+<main class="sl-wrap" id="app"></main>
+<div class="sl-foot">ডেমো মোড · ডাটা শুধু এই ব্রাউজারে থাকে</div>
+<script>
+(function(){
+ var C=SL.cfg,bn=SL.bn,esc=SL.esc,app=document.getElementById('app'),logoData='';
+ var DEMO='<div class="sl-note">⚠️ <b>ডেমো মোড:</b> তোমার তথ্য শুধু এই ব্রাউজারে সেভ হয়। পেমেন্টে আসল টাকা কাটে না। আসল বিক্রির সময় সার্ভার-সংস্করণ ব্যবহার হবে।</div>';
+ function q(id){return document.getElementById(id);}
+ function msg(id,t,ok){var e=q(id);if(!e)return;e.className=ok?'sl-ok':'sl-err';e.textContent=t;e.style.display=t?'block':'none';}
+ function fd(t){return new Date(t).toLocaleDateString('bn-BD',{day:'numeric',month:'long',year:'numeric'});}
+ /* ---- লগইন/সাইন আপ ---- */
+ function authView(){
+  var pre=(new URLSearchParams(location.search).get('plan'))||'student',tab=location.hash==='#login'?'login':'signup';
+  if(!C.PLANS[pre])pre='student';
+  app.innerHTML='<div class="sl-hero"><h1>'+(tab==='login'?'আবার স্বাগতম 👋':'ফ্রি ট্রায়াল শুরু করো 🎁')+'</h1><p>'+bn(C.TRIAL_DAYS)+' দিন সব অধ্যায় ও ল্যাব খোলা, কার্ড লাগে না।</p></div>'+DEMO
+  +'<div class="sl-box" style="max-width:560px;margin:18px auto"><div class="sl-tabs"><button data-t="signup" class="'+(tab==='signup'?'on':'')+'">নতুন অ্যাকাউন্ট</button><button data-t="login" class="'+(tab==='login'?'on':'')+'">লগইন</button></div>'
+  +'<form id="fs" class="sl-f" style="'+(tab==='signup'?'':'display:none')+'"><div><label>তুমি কে?</label><div class="sl-kinds">'
+  +Object.keys(C.PLANS).map(function(k){var p=C.PLANS[k];return '<label><input type="radio" name="kind" value="'+k+'"'+(k===pre?' checked':'')+'><span><em>'+p.emoji+'</em>'+p.name.replace(' প্ল্যান','')+'<small>'+p.desc+'</small></span></label>';}).join('')
+  +'</div></div><div id="sw" style="display:none"><label>স্কুলের নাম *</label><input id="school" placeholder="যেমন: নারায়ণগঞ্জ আদর্শ স্কুল"></div>'
+  +'<div id="lw" style="display:none"><label>স্কুলের লোগো (ঐচ্ছিক)</label><input id="logo" type="file" accept="image/*"></div>'
+  +'<div><label>তোমার নাম *</label><input id="nm" autocomplete="name"></div><div><label>ইমেইল *</label><input id="em" type="email" autocomplete="email"></div><div><label>পাসওয়ার্ড * (কমপক্ষে ৬ অক্ষর)</label><input id="pw" type="password" autocomplete="new-password"></div>'
+  +'<div id="e1" class="sl-err"></div><button class="slb o" type="submit">🎁 ফ্রি ট্রায়াল শুরু করো</button></form>'
+  +'<form id="fl" class="sl-f" style="'+(tab==='login'?'':'display:none')+'"><div><label>ইমেইল</label><input id="lem" type="email" autocomplete="email"></div><div><label>পাসওয়ার্ড</label><input id="lpw" type="password" autocomplete="current-password"></div><div id="e2" class="sl-err"></div><button class="slb p" type="submit">লগইন</button></form></div>';
+  var tabs=app.querySelectorAll('.sl-tabs button');
+  [].forEach.call(tabs,function(b){b.onclick=function(){location.hash='#'+b.dataset.t;authView();};});
+  function kind(){return app.querySelector('input[name=kind]:checked').value;}
+  function sync(){q('sw').style.display=q('lw').style.display=kind()==='school'?'block':'none';}
+  [].forEach.call(app.querySelectorAll('input[name=kind]'),function(r){r.onchange=sync;});sync();
+  q('logo').onchange=function(){SL.logoFromFile(this.files[0],function(u){logoData=u;});};
+  q('fs').onsubmit=function(e){e.preventDefault();
+   SL.signup({kind:kind(),school:q('school').value,logo:logoData,name:q('nm').value,email:q('em').value,pass:q('pw').value}).then(function(r){if(!r.ok)return msg('e1',r.err);location.hash='';location.reload();});};
+  q('fl').onsubmit=function(e){e.preventDefault();SL.login(q('lem').value,q('lpw').value).then(function(r){if(!r.ok)return msg('e2',r.err);location.hash='';location.reload();});};
+ }
+ /* ---- ড্যাশবোর্ড ---- */
+ function meter(u,t,lab){return '<div><small style="color:#5b6b78;font-weight:600">'+lab+'</small><div class="sl-meter"><i style="width:'+Math.min(100,t?u*100/t:0)+'%"></i></div><b>'+bn(u)+' / '+bn(t)+'</b></div>';}
+ function chTitle(f){var L=window.CHAPTERS||[];for(var i=0;i<L.length;i++)if(L[i].file.split('/').pop()===f+'.html')return L[i].title;return f;}
+ function dash(){
+  var a=SL.acc(),s=SL.status(a),P=C.PLANS[a.kind],c=SL.counts(a),pl=SL.profiles(a),pg=SL.progress(a.email);
+  var st=s.state==='active'?'✅ চালু':s.state==='trial'?'🎁 ফ্রি ট্রায়াল':'⛔ মেয়াদ শেষ';
+  var h='<div class="sl-hero" style="margin-bottom:8px"><span class="sl-chip">'+P.emoji+' '+P.name+'</span><h1>'+(a.kind==='school'&&a.school?esc(a.school):'হ্যালো, '+esc(a.name)+' 👋')+'</h1></div>'+DEMO;
+  h+='<div class="sl-box"><h2>📌 প্ল্যানের অবস্থা</h2><div class="sl-stat"><div><small>অবস্থা</small><b>'+st+'</b></div><div><small>বাকি দিন</small><b>'+bn(s.left)+' দিন</b></div><div><small>মেয়াদ শেষ</small><b style="font-size:19px">'+(s.until?fd(s.until):'—')+'</b></div><div><small>ডিভাইস লিমিট</small><b>'+bn(P.devices)+'টি/জন</b></div></div></div>';
+  /* সদস্য */
+  h+='<div class="sl-box" id="members"><h2>👥 সদস্য</h2><div class="sl-stat" style="margin-bottom:10px">'+meter(c.students,P.students,'শিক্ষার্থী')+(P.teachers?meter(c.teachers,P.teachers,'শিক্ষক'):'')+'</div>';
+  h+=pl.map(function(p){var on=(a.active||'owner')===p.id;
+   return '<div class="sl-mem"><div class="av">'+esc(p.name.charAt(0))+'</div><div class="nm">'+esc(p.name)+'<small>'+SL.ROLE[p.role]+(p.id==='owner'?' (তুমি)':'')+'</small></div>'
+   +(on?'<span class="on">এখন পড়ছে</span>':'<button class="slb s" style="padding:5px 14px;font-size:14px" data-act="'+p.id+'">এই প্রোফাইলে পড়ো</button>')
+   +(p.id!=='owner'?'<button class="slb r" data-rm="'+p.id+'">মুছো</button>':'')+'</div>';}).join('');
+  if(a.kind==='student')h+='<p style="color:#5b6b78">স্টুডেন্ট প্ল্যানে শুধু তুমি। আরও সদস্য যোগ করতে ফ্যামিলি/স্কুল প্ল্যান নাও।</p>';
+  else h+='<form id="fm" class="sl-f" style="grid-template-columns:2fr 1fr auto;align-items:end;margin-top:14px"><div><label>নতুন সদস্যের নাম</label><input id="mn"></div><div><label>ভূমিকা</label><select id="mr"><option value="student">শিক্ষার্থী</option>'+(a.kind==='school'?'<option value="teacher">শিক্ষক</option>':'')+'</select></div><button class="slb p" type="submit">➕ যোগ করো</button></form><div id="e3" class="sl-err" style="margin-top:10px"></div>';
+  h+='</div>';
+  /* অগ্রগতি */
+  h+='<div class="sl-box"><h2>📈 অগ্রগতি রিপোর্ট</h2>';
+  var any=false;
+  pl.forEach(function(p){var o=pg[p.id]||{},ks=Object.keys(o);if(!ks.length&&pl.length>1){h+='<details class="sl-q"><summary>'+esc(p.name)+' — এখনও কুইজ দেয়নি</summary></details>';return;}
+   any=any||ks.length>0;var avg=ks.length?Math.round(ks.reduce(function(x,k){return x+o[k].pc;},0)/ks.length):0;
+   if(!ks.length)return;
+   h+='<details class="sl-q"'+(pl.length===1?' open':'')+'><summary>'+esc(p.name)+' — '+bn(ks.length)+'টি অধ্যায়, গড় '+bn(avg)+'%</summary>'+ks.map(function(k){return '<div class="sl-pg"><span style="flex:1.4">'+esc(chTitle(k))+'</span><div class="sl-meter meter"><i style="width:'+o[k].pc+'%"></i></div><b>'+bn(o[k].s)+'/'+bn(o[k].t)+'</b></div>';}).join('')+'</details>';});
+  if(!any)h+='<p style="color:#5b6b78;margin:0">কুইজ দিলে এখানে স্কোর জমা হবে। যেকোনো অধ্যায়ের কুইজ শেষ করে দেখো।</p>';
+  h+='</div>';
+  /* পেমেন্ট */
+  var optPlan=Object.keys(C.PLANS).map(function(k){return '<option value="'+k+'"'+(k===a.kind?' selected':'')+'>'+C.PLANS[k].emoji+' '+C.PLANS[k].name+'</option>';}).join('');
+  h+='<div class="sl-box" id="pay"><h2>💳 প্ল্যান নাও / নবায়ন করো</h2><div class="sl-note">বিকাশ <b>'+esc(C.PAY.bkash)+'</b> বা নগদ <b>'+esc(C.PAY.nagad)+'</b> নম্বরে টাকা পাঠাও (Send Money), তারপর TrxID নিচে লেখো। (ডেমোতে যেকোনো ৬+ অক্ষর চলবে।)</div>'
+  +'<form id="fp" class="sl-f" style="grid-template-columns:1fr 1fr 1fr;align-items:end"><div><label>প্ল্যান</label><select id="pp">'+optPlan+'</select></div><div><label>সময়</label><select id="pd"><option value="month">মাসিক (৩০ দিন)</option><option value="week">সাপ্তাহিক (৭ দিন)</option></select></div><div><label>TrxID</label><input id="pt" placeholder="যেমন 9AB3XYZ12"></div></form>'
+  +'<p id="pr" style="font-size:20px;font-weight:700;color:#1f3a5f;margin:12px 0"></p><div id="e4" class="sl-err"></div><div id="o4" class="sl-ok"></div><button class="slb o" id="pb" style="margin-top:8px">✅ পেমেন্ট নিশ্চিত করো (ডেমো)</button>';
+  if(a.pays.length)h+='<h3 style="margin:22px 0 6px;color:#1f3a5f">পেমেন্টের ইতিহাস</h3><div class="sl-scroll"><table class="sl-tbl"><tr><th>তারিখ</th><th>প্ল্যান</th><th>সময়</th><th>টাকা</th><th>TrxID</th></tr>'+a.pays.map(function(x){return '<tr><td>'+fd(x.t)+'</td><td>'+C.PLANS[x.plan].name.replace(' প্ল্যান','')+'</td><td>'+(x.period==='week'?'সাপ্তাহিক':'মাসিক')+'</td><td>৳'+bn(x.price)+'</td><td>'+esc(x.trx)+'</td></tr>';}).join('')+'</table></div>';
+  h+='</div>';
+  h+='<div style="text-align:center;margin-top:10px"><button class="slb s" id="lo">লগআউট</button> <button class="slb r" id="wipe">ডেমো ডাটা মুছে ফেলো</button></div>';
+  app.innerHTML=h;
+  function price(){var p=C.PLANS[q('pp').value];q('pr').textContent='মোট: ৳'+bn(p.price[q('pd').value]);}
+  q('pp').onchange=q('pd').onchange=price;price();
+  q('pb').onclick=function(){msg('e4','');msg('o4','');var r=SL.pay(q('pp').value,q('pd').value,q('pt').value);if(!r.ok)return msg('e4',r.err);msg('o4','পেমেন্ট গৃহীত! প্ল্যান চালু হয়েছে 🎉',1);setTimeout(function(){location.reload();},900);};
+  q('lo').onclick=function(){SL.logout();location.reload();};
+  q('wipe').onclick=function(){if(confirm('এই ব্রাউজারের সব ডেমো অ্যাকাউন্ট ও অগ্রগতি মুছে যাবে। নিশ্চিত?')){localStorage.removeItem('sl_demo_v1');location.reload();}};
+  var fm=q('fm');if(fm)fm.onsubmit=function(e){e.preventDefault();var r=SL.addMember(q('mn').value,q('mr').value);if(!r.ok)return msg('e3',r.err);location.reload();};
+  [].forEach.call(app.querySelectorAll('[data-act]'),function(b){b.onclick=function(){SL.setActive(b.dataset.act);location.reload();};});
+  [].forEach.call(app.querySelectorAll('[data-rm]'),function(b){b.onclick=function(){if(confirm('এই সদস্যকে মুছে ফেলবে?')){SL.removeMember(b.dataset.rm);location.reload();}};});
+  if(location.hash==='#pay')q('pay').scrollIntoView();
+ }
+ if(SL.acc())dash();else authView();
+ window.addEventListener('hashchange',function(){if(!SL.acc())authView();});
+})();
+</script>
+<style>@media(max-width:640px){#fm,#fp{grid-template-columns:1fr!important}}</style>
+</body>
+</html>
