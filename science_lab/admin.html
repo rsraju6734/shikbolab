@@ -68,12 +68,12 @@
  /* ---------- মূল ---------- */
  function render(){
   if(!SL.isAdmin())return gateView();
-  var T=[['ov','📊 ওভারভিউ'],['ac','👥 অ্যাকাউন্ট'],['nw','➕ নতুন অ্যাকাউন্ট'],['pm','💰 পেমেন্ট'],['st','⚙️ সেটিংস ও ব্যাকআপ']];
+  var T=[['ov','📊 ওভারভিউ'],['ac','👥 অ্যাকাউন্ট'],['nw','➕ নতুন অ্যাকাউন্ট'],['pm','💰 পেমেন্ট'],['pr','🏷️ প্রাইস ও ছাড়'],['st','⚙️ সেটিংস ও ব্যাকআপ']];
   app.innerHTML='<div class="sl-hero" style="margin-bottom:6px"><span class="sl-chip">👑 সুপার অ্যাডমিন · সব ফ্রি</span><h1>অ্যাডমিন প্যানেল</h1></div>'
    +'<div class="ad-tabs">'+T.map(function(t){return '<button data-t="'+t[0]+'" class="'+(t[0]===tab?'on':'')+'">'+t[1]+'</button>';}).join('')+'<button id="lo" style="margin-left:auto">🚪 লগআউট</button></div><div id="body"></div>';
   [].forEach.call(app.querySelectorAll('.ad-tabs [data-t]'),function(b){b.onclick=function(){tab=b.dataset.t;render();};});
   q('lo').onclick=exit;
-  ({ov:vOv,ac:vAc,nw:vNw,pm:vPm,st:vSt})[tab]();
+  ({ov:vOv,ac:vAc,nw:vNw,pm:vPm,pr:vPr,st:vSt})[tab]();
  }
  function list(){var x=SL.get();return Object.keys(x.acc).map(function(k){return x.acc[k];}).sort(function(a,b){return (b.created||0)-(a.created||0);});}
  /* ওভারভিউ */
@@ -166,11 +166,30 @@
   q('body').innerHTML='<div class="ad-big"><div><small>মোট আয়</small><b>'+money(tot)+'</b></div><div><small>এই মাসের আয়</small><b>'+money(mo)+'</b></div><div><small>মোট পেমেন্ট</small><b>'+bn(rows.length)+'</b></div></div>'
   +'<div class="sl-box"><h2>🧾 পেমেন্টের খাতা</h2>'+(rows.length?'<div class="sl-scroll"><table class="sl-tbl"><tr><th>তারিখ</th><th>গ্রাহক</th><th>প্ল্যান</th><th>ধরন</th><th>টাকা</th><th>TrxID</th></tr>'+rows.map(function(r){return '<tr><td>'+fd(r[1].t)+'</td><td>'+esc(r[0].school||r[0].name)+'</td><td>'+((C.PLANS[r[1].plan]||{name:r[1].plan}).name.replace(' প্ল্যান',''))+'</td><td>'+(r[1].period==='manual'?'ম্যানুয়াল':r[1].period==='week'?'সাপ্তাহিক':'মাসিক')+'</td><td>'+money(r[1].price)+'</td><td>'+esc(r[1].trx)+'</td></tr>';}).join('')+'</table></div>':'<p style="color:#5b6b78;margin:0">কোনো পেমেন্ট নেই।</p>')+'</div>';
  }
+
+ /* প্রাইস ও ডিসকাউন্ট */
+ function curPrices(){var o={plans:{}};Object.keys(C.PLANS).forEach(function(k){var p=C.PLANS[k];o.plans[k]={month:p.price.month,week:p.price.week,disc:p.disc||0,label:p.dlabel||'',until:p.duntil||0};});return o;}
+ function readForm(){var o={plans:{}};Object.keys(C.PLANS).forEach(function(k){var u=q('u_'+k).value;o.plans[k]={month:Math.max(0,+q('m_'+k).value||0),week:Math.max(0,+q('w_'+k).value||0),disc:Math.min(90,Math.max(0,+q('d_'+k).value||0)),label:q('l_'+k).value.trim(),until:u?new Date(u+'T23:59:59').getTime():0};});return o;}
+ function vPr(){
+  var cur=curPrices(),h='<div class="sl-box"><h2>🏷️ প্রাইস ও ডিসকাউন্ট</h2><p style="color:#5b6b78;margin-top:0">দাম আর ছাড়ের % বদলাও। ছাড় দিলে প্ল্যান পেজে পুরোনো দামে দাগ কেটে "🔥 X% ছাড়" ব্যাজ দেখাবে। শেষ তারিখ দিলে ওই দিনের পর ছাড় নিজে থেকে উঠে যাবে।</p>'
+  +'<div class="ad-inl" style="margin-bottom:12px"><b>সব প্ল্যানে একসাথে ছাড়:</b><input type="number" id="all" min="0" max="90" placeholder="%" style="width:90px"><button class="slb o ad-sm" id="alla">প্রয়োগ করো</button><button class="slb r" id="allx">সব ছাড় বন্ধ করো</button></div><div class="sl-scroll"><table class="sl-tbl" style="min-width:760px"><tr><th>প্ল্যান</th><th>মাসিক ৳</th><th>সাপ্তাহিক ৳</th><th>ছাড় %</th><th>অফারের নাম</th><th>শেষ তারিখ</th><th>নতুন দাম (মাসিক / সাপ্তাহিক)</th></tr>';
+  Object.keys(C.PLANS).forEach(function(k){var p=C.PLANS[k],o=cur.plans[k],ud=o.until?new Date(o.until).toISOString().slice(0,10):'';
+   h+='<tr><td style="white-space:nowrap">'+p.emoji+' '+p.name.replace(' প্ল্যান','')+'</td><td><input type="number" id="m_'+k+'" value="'+o.month+'" style="width:90px"></td><td><input type="number" id="w_'+k+'" value="'+o.week+'" style="width:90px"></td><td><input type="number" id="d_'+k+'" value="'+o.disc+'" min="0" max="90" style="width:70px"></td><td><input id="l_'+k+'" value="'+esc(o.label)+'" placeholder="যেমন: ঈদ অফার" style="width:140px"></td><td><input type="date" id="u_'+k+'" value="'+ud+'"></td><td id="v_'+k+'" style="font-weight:700;color:#1f3a5f"></td></tr>';});
+  h+='</table></div><div class="ad-inl" style="margin-top:14px"><button class="slb p" id="psv">💾 সেভ করো (এই ব্রাউজারে প্রিভিউ)</button><button class="slb o" id="pdl">⬇️ prices.js ফাইল নামাও (সবার জন্য লাইভ)</button></div>'
+  +'<div class="sl-note" style="margin-top:14px"><b>সবার জন্য লাইভ করতে:</b><br>১) ওপরের "⬇️ prices.js ফাইল নামাও" চাপো।<br>২) ফাইলটা প্রজেক্টের <b>js</b> ফোল্ডারে আগের <code>prices.js</code>-এর জায়গায় রাখো (Replace)।<br>৩) টার্মিনালে: <code>git add .</code> → <code>git commit -m "Price update"</code> → <code>git push</code><br>১–২ মিনিট পর সবাই নতুন দাম দেখবে। (শুধু সেভ করলে নতুন দাম কেবল এই ব্রাউজারে দেখা যায়।)</div></div>';
+  q('body').innerHTML=h;
+  function prev(){var o=readForm();Object.keys(C.PLANS).forEach(function(k){var p=o.plans[k],d=p.disc,f=function(b){return d?Math.round(b*(1-d/100)):b;};q('v_'+k).innerHTML=(d?'<s style="color:#98a4ae;font-weight:500">৳'+bn(p.month)+'</s> ':'')+'৳'+bn(f(p.month))+' / '+(d?'<s style="color:#98a4ae;font-weight:500">৳'+bn(p.week)+'</s> ':'')+'৳'+bn(f(p.week));});}
+  q('body').addEventListener('input',prev);prev();
+  q('alla').onclick=function(){var v=Math.min(90,Math.max(0,+q('all').value||0));Object.keys(C.PLANS).forEach(function(k){q('d_'+k).value=v;});prev();};
+  q('allx').onclick=function(){Object.keys(C.PLANS).forEach(function(k){q('d_'+k).value=0;q('l_'+k).value='';q('u_'+k).value='';});prev();};
+  q('psv').onclick=function(){var o=readForm();localStorage.setItem('sl_prices',JSON.stringify(o));SL.applyPrices(o);toast('✅ সেভ হয়েছে (প্রিভিউ)। সবার জন্য লাইভ করতে ফাইল নামাও।');};
+  q('pdl').onclick=function(){var o=readForm(),t='/* ShikboLab দাম ও ডিসকাউন্ট (js/prices.js) */\nwindow.SL_PRICES='+JSON.stringify(o)+';\n';var b=new Blob([t],{type:'text/javascript'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='prices.js';a.click();localStorage.setItem('sl_prices',JSON.stringify(o));SL.applyPrices(o);toast('✅ prices.js নামছে। js ফোল্ডারে বসাও।');};
+ }
  /* সেটিংস */
  function vSt(){
   q('body').innerHTML='<div class="sl-box"><h2>💾 ব্যাকআপ ও রিস্টোর</h2><p style="color:#5b6b78;margin-top:0">ব্রাউজারের ডাটা মুছে গেলে সব অ্যাকাউন্ট হারাবে। তাই নিয়মিত ব্যাকআপ ফাইল নামিয়ে রাখো (যেমন সপ্তাহে একবার)।</p><div class="ad-inl"><button class="slb p" id="ex">⬇️ ব্যাকআপ নামাও</button><label class="slb s" style="cursor:pointer">⬆️ ব্যাকআপ থেকে ফেরাও<input type="file" id="im" accept=".json" style="display:none"></label></div></div>'
   +'<div class="sl-box"><h2>🔑 অ্যাডমিন পাসওয়ার্ড বদলাও</h2><div class="ad-inl"><input type="password" id="op" placeholder="বর্তমান"><input type="password" id="n1" placeholder="নতুন (৬+)"><button class="slb s ad-sm" id="cp">বদলাও</button></div></div>'
-  +'<div class="sl-box"><h2>📋 বর্তমান কনফিগ (js/demo-saas.js ফাইলে বদলাও)</h2><div class="sl-scroll"><table class="sl-tbl"><tr><th></th><th>মাসিক</th><th>সাপ্তাহিক</th><th>শিক্ষার্থী</th><th>শিক্ষক</th></tr>'+Object.keys(C.PLANS).map(function(k){var p=C.PLANS[k];return '<tr><td>'+p.emoji+' '+p.name+'</td><td>'+money(p.price.month)+'</td><td>'+money(p.price.week)+'</td><td>'+bn(p.students)+'</td><td>'+bn(p.teachers)+'</td></tr>';}).join('')+'</table></div><p style="margin:10px 0 0;color:#5b6b78">ট্রায়াল: '+bn(C.TRIAL_DAYS)+' দিন · বিকাশ: '+esc(C.PAY.bkash)+' · নগদ: '+esc(C.PAY.nagad)+' · WhatsApp: '+esc(C.PAY.wa)+' · ইনস্ট্যান্ট ডেমো পেমেন্ট: '+(C.INSTANT?'চালু':'বন্ধ')+'</p></div>'
+  +'<div class="sl-box"><h2>📋 বর্তমান কনফিগ (দাম বদলাতে 🏷️ প্রাইস ট্যাব)</h2><div class="sl-scroll"><table class="sl-tbl"><tr><th></th><th>মাসিক</th><th>সাপ্তাহিক</th><th>শিক্ষার্থী</th><th>শিক্ষক</th></tr>'+Object.keys(C.PLANS).map(function(k){var p=C.PLANS[k],m=SL.price(k,'month'),w=SL.price(k,'week');return '<tr><td>'+p.emoji+' '+p.name+'</td><td>'+(m.disc?'<s>'+money(m.base)+'</s> ':'')+money(m.eff)+'</td><td>'+(w.disc?'<s>'+money(w.base)+'</s> ':'')+money(w.eff)+'</td><td>'+bn(p.students)+'</td><td>'+bn(p.teachers)+'</td></tr>';}).join('')+'</table></div><p style="margin:10px 0 0;color:#5b6b78">ট্রায়াল: '+bn(C.TRIAL_DAYS)+' দিন · বিকাশ: '+esc(C.PAY.bkash)+' · নগদ: '+esc(C.PAY.nagad)+' · WhatsApp: '+esc(C.PAY.wa)+' · ইনস্ট্যান্ট ডেমো পেমেন্ট: '+(C.INSTANT?'চালু':'বন্ধ')+'</p></div>'
   +'<div class="sl-box"><h2>🧹 ডেঞ্জার জোন</h2><button class="slb r" id="wp">সব ডেমো ডাটা মুছে ফেলো</button></div>';
   q('ex').onclick=function(){var x={v:1,t:Date.now(),data:SL.get(),admin:admHash()};var b=new Blob([JSON.stringify(x)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='shikbolab-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('✅ ব্যাকআপ নামছে');};
   q('im').onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var x=JSON.parse(r.result);if(!x.data||!x.data.acc)throw 0;if(!confirm('বর্তমান সব ডাটা এই ব্যাকআপ দিয়ে বদলে যাবে। নিশ্চিত?'))return;SL.put(x.data);if(x.admin)localStorage.setItem('sl_admin',JSON.stringify(x.admin));toast('✅ ফেরানো হয়েছে');render();}catch(e){toast('❌ ফাইলটা ঠিক নেই');}};r.readAsText(f);};

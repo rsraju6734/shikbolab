@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="js/chapters.js"></script>
+<script src="js/prices.js"></script>
 <script src="js/demo-saas.js"></script>
 </head>
 <body class="sl-page">
@@ -43,17 +44,18 @@
   school:[['সব অধ্যায় ও ল্যাব',1],[bn(100)+' শিক্ষার্থী + '+bn(5)+' শিক্ষক',1],['স্কুলের নাম ও লোগো সব পেজে',1],['শিক্ষার্থীদের অগ্রগতি রিপোর্ট',1],['অগ্রাধিকার সাপোর্ট',1]]
  };
  function draw(){
-  g.innerHTML=Object.keys(C.PLANS).map(function(k){var p=C.PLANS[k];
+  g.innerHTML=Object.keys(C.PLANS).map(function(k){var p=C.PLANS[k],pr=SL.price(k,per);
    return '<div class="sl-plan'+(k==='family'?' hot':'')+'" style="--c:'+p.color+'">'+(k==='family'?'<span class="tag">জনপ্রিয়</span>':'')
    +'<span class="em">'+p.emoji+'</span><h3>'+p.name+'</h3><p class="ds">'+p.desc+'</p>'
-   +'<div class="pr">৳'+bn(p.price[per])+' <small>/ '+(per==='month'?'মাস':'সপ্তাহ')+'</small></div>'
+   +(pr.disc?'<span class="sl-off">🔥 '+bn(pr.disc)+'% ছাড়'+(pr.label?' · '+SL.esc(pr.label):'')+'</span>':'')
+   +'<div class="pr">'+(pr.disc?'<span class="sl-old">৳'+bn(pr.base)+'</span>':'')+'৳'+bn(pr.eff)+' <small>/ '+(per==='month'?'মাস':'সপ্তাহ')+'</small></div>'+(pr.until?'<span class="sl-until">অফার শেষ: '+new Date(pr.until).toLocaleDateString('bn-BD',{day:'numeric',month:'long'})+'</span>':'')
    +'<ul>'+FEAT[k].map(function(f){return '<li'+(f[1]?'':' class="no"')+'>'+f[0]+'</li>';}).join('')+'</ul>'
    +'<a class="slb '+(k==='family'?'o':'p')+'" href="account.html?plan='+k+'#signup">🎁 ফ্রি ট্রায়াল শুরু করো</a></div>';
   }).join('');
  }
  document.getElementById('tog').onclick=function(e){var b=e.target.closest('button');if(!b)return;per=b.dataset.p;[].forEach.call(this.children,function(x){x.classList.toggle('on',x===b);});draw();};
  draw();
- var rows=[['সর্বোচ্চ শিক্ষার্থী',function(p){return bn(p.students)+' জন';}],['শিক্ষক অ্যাকাউন্ট',function(p){return p.teachers?bn(p.teachers)+' জন':'—';}],['ডিভাইস (প্রতি জন)',function(p){return bn(p.devices)+'টি';}],['মাসিক',function(p){return '৳'+bn(p.price.month);}],['সাপ্তাহিক',function(p){return '৳'+bn(p.price.week);}],['স্কুলের লোগো ও নাম',function(p){return p===C.PLANS.school?'✅':'—';}],['অগ্রগতি রিপোর্ট',function(p){return p===C.PLANS.student?'নিজের':'সবার';}]];
+ var rows=[['সর্বোচ্চ শিক্ষার্থী',function(p){return bn(p.students)+' জন';}],['শিক্ষক অ্যাকাউন্ট',function(p){return p.teachers?bn(p.teachers)+' জন':'—';}],['ডিভাইস (প্রতি জন)',function(p){return bn(p.devices)+'টি';}],['মাসিক',function(p){var r=SL.price(p.key,'month');return (r.disc?'<s style="color:#98a4ae">৳'+bn(r.base)+'</s> ':'')+'৳'+bn(r.eff);}],['সাপ্তাহিক',function(p){var r=SL.price(p.key,'week');return (r.disc?'<s style="color:#98a4ae">৳'+bn(r.base)+'</s> ':'')+'৳'+bn(r.eff);}],['স্কুলের লোগো ও নাম',function(p){return p===C.PLANS.school?'✅':'—';}],['অগ্রগতি রিপোর্ট',function(p){return p===C.PLANS.student?'নিজের':'সবার';}]];
  var ks=Object.keys(C.PLANS);
  document.getElementById('cmp').innerHTML='<tr><th></th>'+ks.map(function(k){return '<th>'+C.PLANS[k].emoji+' '+C.PLANS[k].name.replace(' প্ল্যান','')+'</th>';}).join('')+'</tr>'
   +rows.map(function(r){return '<tr><td>'+r[0]+'</td>'+ks.map(function(k){return '<td>'+r[1](C.PLANS[k])+'</td>';}).join('')+'</tr>';}).join('');

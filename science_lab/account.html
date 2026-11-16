@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="js/chapters.js"></script>
+<script src="js/prices.js"></script>
 <script src="js/demo-saas.js"></script>
 </head>
 <body class="sl-page">
@@ -81,10 +82,10 @@
   h+='</div>';
   h+='<div style="text-align:center;margin-top:10px"><button class="slb s" id="lo">লগআউট</button> <button class="slb r" id="wipe">ডেমো ডাটা মুছে ফেলো</button></div>';
   app.innerHTML=h;
-  function price(){var p=C.PLANS[q('pp').value];q('pr').textContent='মোট: ৳'+bn(p.price[q('pd').value]);}
+  function price(){var r=SL.price(q('pp').value,q('pd').value);q('pr').innerHTML='মোট: '+(r.disc?'<span class="sl-old">৳'+bn(r.base)+'</span>':'')+'৳'+bn(r.eff)+(r.disc?' <span class="sl-off" style="animation:none">🔥 '+bn(r.disc)+'% ছাড়</span>':'');}
   q('pp').onchange=q('pd').onchange=price;price();
   q('mycode').value=SL.pack(a,true);q('cpc').onclick=function(){q('mycode').select();try{document.execCommand('copy');}catch(e){}this.textContent='✅ কপি হয়েছে';};
-  q('wa').onclick=function(){var p=C.PLANS[q('pp').value],pd=q('pd').value,t=q('pt').value.trim();var m='আসসালামু আলাইকুম, ShikboLab-এ প্ল্যান নিতে চাই।\nইমেইল: '+a.email+'\nপ্ল্যান: '+p.name+' ('+(pd==='week'?'সাপ্তাহিক':'মাসিক')+')\nটাকা: ৳'+bn(p.price[pd])+'\nTrxID: '+(t||'—');window.open('https://wa.me/'+C.PAY.wa+'?text='+encodeURIComponent(m),'_blank');};
+  q('wa').onclick=function(){var p=C.PLANS[q('pp').value],pd=q('pd').value,t=q('pt').value.trim(),rp=SL.price(q('pp').value,pd);var m='আসসালামু আলাইকুম, ShikboLab-এ প্ল্যান নিতে চাই।\nইমেইল: '+a.email+'\nপ্ল্যান: '+p.name+' ('+(pd==='week'?'সাপ্তাহিক':'মাসিক')+')\nটাকা: ৳'+bn(rp.eff)+(rp.disc?' ('+bn(rp.disc)+'% ছাড়সহ)':'')+'\nTrxID: '+(t||'—');window.open('https://wa.me/'+C.PAY.wa+'?text='+encodeURIComponent(m),'_blank');};
   var pb=q('pb');if(pb)pb.onclick=function(){msg('e4','');msg('o4','');var r=SL.pay(q('pp').value,q('pd').value,q('pt').value);if(!r.ok)return msg('e4',r.err);msg('o4','পেমেন্ট গৃহীত! প্ল্যান চালু হয়েছে 🎉',1);setTimeout(function(){location.reload();},900);};
   q('lo').onclick=function(){SL.logout();location.reload();};
   q('wipe').onclick=function(){if(confirm('এই ব্রাউজারের সব ডেমো অ্যাকাউন্ট ও অগ্রগতি মুছে যাবে। নিশ্চিত?')){localStorage.removeItem('sl_demo_v1');location.reload();}};
