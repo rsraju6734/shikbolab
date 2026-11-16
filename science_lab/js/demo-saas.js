@@ -9,12 +9,14 @@
   FREE:['chem-concepts-of-chemistry','phy-physical-quantities','math-functions-graphs','bio-heredity-mendel','chem-x-lab-safety'],
   PAY:{bkash:'01XXXXXXXXX',nagad:'01XXXXXXXXX',wa:'8801XXXXXXXXX'},
   INSTANT:true, /* true = ডেমোতে পেমেন্ট দিলেই সাথে সাথে চালু। false = শুধু অ্যাডমিনকে অনুরোধ পাঠানো যাবে (আসল ম্যানুয়াল মোড) */
+  CLOUD_URL:'https://script.google.com/macros/s/AKfycby-xoc8oyYNvTK5xUGjCg3QdyI7xVTuF3Z1uuakmFoxkZOFvJnbzTw5UMqAs5MFwuR7mA/exec', /* ক্লাউড চালু করতে এখানে Google Apps Script-এর Web App URL বসাও। খালি থাকলে আগের মতো শুধু ব্রাউজারে সেভ হবে */
   PLANS:{
    student:{key:'student',name:'স্টুডেন্ট প্ল্যান',emoji:'🎒',desc:'একজন শিক্ষার্থীর জন্য',students:1,teachers:0,devices:2,price:{month:99,week:35},color:'#2a9d8f'},
    family:{key:'family',name:'ফ্যামিলি প্ল্যান',emoji:'👨‍👩‍👧‍👦',desc:'পরিবারের ৪ জন পর্যন্ত',students:4,teachers:0,devices:2,price:{month:249,week:89},color:'#3f6fd1'},
    school:{key:'school',name:'স্কুল প্ল্যান',emoji:'🏫',desc:'স্কুল ও কোচিং সেন্টারের জন্য',students:100,teachers:5,devices:1,price:{month:1999,week:699},color:'#e76f51'}
   }
  };
+ var CLOUD=CFG.CLOUD_URL||'';if(CLOUD)CFG.INSTANT=false;
  function applyPrices(src){if(!src||!src.plans)return;Object.keys(src.plans).forEach(function(k){var p=CFG.PLANS[k],o=src.plans[k];if(!p||!o)return;if(o.month>=0)p.price.month=+o.month;if(o.week>=0)p.price.week=+o.week;p.disc=Math.min(90,Math.max(0,+o.disc||0));p.dlabel=o.label||'';p.duntil=+o.until||0;});}
  applyPrices(window.SL_PRICES);try{if(isAdmin())applyPrices(JSON.parse(localStorage.getItem('sl_prices')||'null'));}catch(e){}
  function price(k,per){var p=CFG.PLANS[k],b=p.price[per==='week'?'week':'month'],on=p.disc>0&&(!p.duntil||p.duntil>Date.now()),e=on?Math.round(b*(1-p.disc/100)):b;return {base:b,eff:e,disc:on?p.disc:0,label:on?(p.dlabel||''):'',until:on?(p.duntil||0):0};}
@@ -58,6 +60,36 @@
  }
  var ROLE={admin:'স্কুল অ্যাডমিন',parent:'অভিভাবক',student:'শিক্ষার্থী',teacher:'শিক্ষক'};
  function mut(fn){var x=get(),a=x.ses&&x.acc[x.ses];if(!a)return {ok:false,err:'আগে লগইন করো।'};var r=fn(a,x)||{ok:true};if(r.ok)put(x);return r;}
+ /* ====== ক্লাউড সিঙ্ক ====== */
+ function api(body){
+  return fetch(CLOUD,{method:'POST',body:JSON.stringify(body),redirect:'follow'}).then(function(r){return r.json();}).catch(function(){return {ok:false,net:1,err:'ইন্টারনেট/সার্ভারে সমস্যা। একটু পরে আবার চেষ্টা করো।'};});
+ }
+ function applyServer(rec,prog){
+  var x=get(),a=x.acc[rec.email];
+  if(!a)a=x.acc[rec.email]={email:rec.email,hash:'',logo:'',members:[],active:'owner',pays:[],reqs:[],mv:0};
+  ['name','kind','school','trialEnd','paidUntil','suspended','pays','reqs','created','logo'].forEach(function(k){if(rec[k]!==undefined)a[k]=rec[k];});
+  if((rec.mv||0)>=(a.mv||0)){a.members=rec.members||[];a.mv=rec.mv||0;}
+  if(a.active!=='owner'&&!(a.members||[]).some(function(m){return m.id===a.active;}))a.active='owner';
+  if(prog){x.prog[rec.email]=prog;var dd=x.dirty&&x.dirty[rec.email];if(dd)Object.keys(dd).forEach(function(pid){Object.keys(dd[pid]).forEach(function(f){x.prog[rec.email][pid]=x.prog[rec.email][pid]||{};x.prog[rec.email][pid][f]=dd[pid][f];});});}
+  put(x);return a;
+ }
+ function finishLogin(rec,prog,h){applyServer(rec,prog);var x=get();x.acc[rec.email].hash=h;x.ses=rec.email;put(x);}
+ function cloudSignup(o,em){return hash(o.pass).then(function(h){return api({a:'signup',email:em,hash:h,name:o.name,kind:o.kind,school:o.school||'',logo:o.logo||''}).then(function(r){if(!r.ok)return r;finishLogin(r.acc,{},h);return {ok:true};});});}
+ function cloudLogin(em,pw){return hash(pw).then(function(h){return api({a:'login',email:em,hash:h}).then(function(r){if(!r.ok)return r;finishLogin(r.acc,r.prog,h);return {ok:true};});});}
+ function cloudSync(){
+  if(!CLOUD)return Promise.resolve({ok:false,off:1});
+  var x=get(),a=x.ses&&x.acc[x.ses];if(!a||!a.hash)return Promise.resolve({ok:false});
+  var dirty=JSON.parse(JSON.stringify((x.dirty&&x.dirty[a.email])||{}));
+  return api({a:'sync',email:a.email,hash:a.hash,mv:a.mv||0,members:a.members||[],prog:dirty}).then(function(r){
+   if(r.ok){
+    var y=get();if(y.dirty&&y.dirty[a.email])Object.keys(dirty).forEach(function(pid){Object.keys(dirty[pid]).forEach(function(f){var c=y.dirty[a.email][pid]&&y.dirty[a.email][pid][f];if(c&&c.w===dirty[pid][f].w)delete y.dirty[a.email][pid][f];});});
+    put(y);applyServer(r.acc,r.prog);
+   }else if(r.err==='পাসওয়ার্ড ভুল'||r.err==='এই ইমেইলে অ্যাকাউন্ট নেই'){var z=get();z.ses=null;put(z);r.loggedOut=true;}
+   return r;
+  });
+ }
+ var syncT=null;
+ function schedSync(ms){if(!CLOUD)return;clearTimeout(syncT);syncT=setTimeout(cloudSync,ms||1500);}
  function pack(a,withMem){var o={e:a.email,h:a.hash,n:a.name,k:a.kind,s:a.school||'',te:a.trialEnd,pu:a.paidUntil||0,su:a.suspended?1:0,c:a.created,v:Date.now()};if(withMem)o.m=a.members||[];return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
  function unpack(c){try{c=String(c).trim();var i=c.indexOf('#a=');if(i>-1)c=c.slice(i+3);c=c.replace(/-/g,'+').replace(/_/g,'/');while(c.length%4)c+='=';var o=JSON.parse(decodeURIComponent(escape(atob(c))));return o&&o.e&&o.h?o:null;}catch(e){return null;}}
  function mergeIn(o,useMem){var x=get(),a=x.acc[o.e],nw=!a;
@@ -71,6 +103,7 @@
    if((o.pass||'').length<6)return Promise.resolve({ok:false,err:'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।'});
    if(!(o.name||'').trim())return Promise.resolve({ok:false,err:'নাম লেখো।'});
    if(o.kind==='school'&&!(o.school||'').trim())return Promise.resolve({ok:false,err:'স্কুলের নাম লেখো।'});
+   if(CLOUD)return cloudSignup(o,em);
    var x=get();if(x.acc[em])return Promise.resolve({ok:false,err:'এই ইমেইলে আগেই অ্যাকাউন্ট আছে। লগইন করো।'});
    return hash(o.pass).then(function(h){
     var n=Date.now();
@@ -79,7 +112,7 @@
    });
   },
   login:function(em,pw){
-   em=(em||'').trim().toLowerCase();var x=get(),a=x.acc[em];
+   em=(em||'').trim().toLowerCase();if(CLOUD)return cloudLogin(em,pw);var x=get(),a=x.acc[em];
    if(!a)return Promise.resolve({ok:false,err:'এই ইমেইলে অ্যাকাউন্ট নেই।'});
    return hash(pw).then(function(h){if(h!==a.hash)return {ok:false,err:'পাসওয়ার্ড ভুল।'};x.ses=em;put(x);return {ok:true};});
   },
@@ -90,9 +123,9 @@
    if(a.kind==='student')return {ok:false,err:'স্টুডেন্ট প্ল্যানে আর কাউকে যোগ করা যায় না। ফ্যামিলি প্ল্যান নাও।'};
    if(role==='teacher'){if(a.kind!=='school')return {ok:false,err:'শুধু স্কুল প্ল্যানে শিক্ষক যোগ করা যায়।'};if(c.teachers>=L.teachers)return {ok:false,err:'শিক্ষকের লিমিট ('+bn(L.teachers)+' জন) শেষ।'};}
    else{role='student';if(c.students>=L.students)return {ok:false,err:'শিক্ষার্থীর লিমিট ('+bn(L.students)+' জন) শেষ। বড় প্ল্যান নাও।'};}
-   a.members.push({id:'m'+Date.now().toString(36)+Math.floor(Math.random()*99),name:name,role:role});return {ok:true};
+   a.mv=Date.now();a.members.push({id:'m'+Date.now().toString(36)+Math.floor(Math.random()*99),name:name,role:role});return {ok:true};
   });},
-  removeMember:function(id){return mut(function(a,x){a.members=a.members.filter(function(m){return m.id!==id;});if(a.active===id)a.active='owner';if(x.prog[a.email])delete x.prog[a.email][id];return {ok:true};});},
+  removeMember:function(id){return mut(function(a,x){a.mv=Date.now();a.members=a.members.filter(function(m){return m.id!==id;});if(a.active===id)a.active='owner';if(x.prog[a.email])delete x.prog[a.email][id];return {ok:true};});},
   setActive:function(id){return mut(function(a){a.active=id;return {ok:true};});},
   pay:function(plan,period,trx){return mut(function(a){
    trx=(trx||'').trim();if(trx.length<6)return {ok:false,err:'ট্রানজেকশন আইডি (TrxID) লেখো (কমপক্ষে ৬ অক্ষর)।'};
@@ -108,14 +141,17 @@
    var x=get(),a=x.ses&&x.acc[x.ses];if(!a||!t)return;var p=a.active||'owner';
    x.prog[a.email]=x.prog[a.email]||{};x.prog[a.email][p]=x.prog[a.email][p]||{};
    var o=x.prog[a.email][p][file],pc=Math.round(s*100/t);
-   if(!o||pc>=o.pc)x.prog[a.email][p][file]={s:s,t:t,pc:pc,w:Date.now()};
-   put(x);
+   if(!o||pc>=o.pc){var rc=x.prog[a.email][p][file]={s:s,t:t,pc:pc,w:Date.now()};if(CLOUD){x.dirty=x.dirty||{};x.dirty[a.email]=x.dirty[a.email]||{};(x.dirty[a.email][p]=x.dirty[a.email][p]||{})[file]=rc;}}
+   put(x);if(CLOUD)schedSync(1500);
   },
   logoFromFile:function(f,cb){
    if(!f)return cb('');var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var c=d.createElement('canvas'),m=Math.min(1,128/Math.max(im.width,im.height));c.width=Math.max(1,im.width*m);c.height=Math.max(1,im.height*m);c.getContext('2d').drawImage(im,0,0,c.width,c.height);cb(c.toDataURL('image/png'));};im.onerror=function(){cb('');};im.src=r.result;};r.onerror=function(){cb('');};r.readAsDataURL(f);
   }
  };
  window.SL=SL;
+ SL.api=function(b){return api(b);};SL.cloud=!!CLOUD;SL.cloudSync=cloudSync;
+ SL.payReq=function(plan,period,trx){var x=get(),a=x.ses&&x.acc[x.ses];if(!a)return Promise.resolve({ok:false,err:'আগে লগইন করো।'});return api({a:'pay',email:a.email,hash:a.hash,plan:plan,period:period,price:price(plan,period).eff,trx:trx}).then(function(r){if(r.ok)applyServer(r.acc,null);return r;});};
+ ['addMember','removeMember'].forEach(function(k){var f=SL[k];SL[k]=function(){var r=f.apply(SL,arguments);if(r&&r.ok)schedSync(300);return r;};});
  /* CSS লোড */
  var lk=d.createElement('link');lk.rel='stylesheet';lk.href=B+'css/saas.css';d.head.appendChild(lk);
  function ready(f){d.readyState==='loading'?d.addEventListener('DOMContentLoaded',f):f();}
@@ -160,6 +196,7 @@
   new MutationObserver(function(){var m=en(sc.textContent||'').match(/(\d+)\s*\/\s*(\d+)/);if(m&&+m[2]>0)SL.record(f,+m[1],+m[2]);}).observe(sc,{childList:true,characterData:true,subtree:true});
  }
  /* হোমপেজে কার্ডে 🔒/ফ্রি ব্যাজ */
+ var markFn=null;
  function badges(){
   function mark(){
    var ok=hasAccess();
@@ -171,11 +208,21 @@
     el.appendChild(s);
    });
   }
-  mark();new MutationObserver(mark).observe(d.body,{childList:true,subtree:true});
+  markFn=mark;mark();new MutationObserver(mark).observe(d.body,{childList:true,subtree:true});
+ }
+ function refreshUI(){
+  var b=d.querySelector('.sl-bar');if(b)b.remove();bar();
+  if(inCh){var g=d.querySelector('.sl-gate');if(g)g.remove();d.documentElement.style.overflow='';d.body.style.overflow='';gate();}
+  else if(markFn){[].forEach.call(d.querySelectorAll('.sl-lock'),function(e){e.remove();});[].forEach.call(d.querySelectorAll('[data-sl]'),function(e){e.removeAttribute('data-sl');});markFn();}
  }
  ready(function(){
   bar();
   if(inCh){gate();track();}
   else if(/index\.html$|\/$/.test(location.pathname)||location.pathname.split('/').pop()==='')badges();
+  if(CLOUD&&!isAdmin()&&acc()&&!/account\.html$/.test(location.pathname)){
+   var x=get(),dd=x.dirty&&x.dirty[x.ses],hasD=dd&&Object.keys(dd).some(function(k){return Object.keys(dd[k]).length;}),last=0;
+   try{last=+sessionStorage.getItem('sl_ls')||0;}catch(e){}
+   if(hasD||Date.now()-last>60000){try{sessionStorage.setItem('sl_ls',String(Date.now()));}catch(e){}cloudSync().then(function(r){if(r&&(r.ok||r.loggedOut))refreshUI();});}
+  }
  });
 })();
