@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🧪 দ্রবণ তৈরি ও লঘুকরণ ল্যাব - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+</style>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#chemistry">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">🧪 রসায়ন &rsaquo; বোনাস এক্সট্রা ল্যাব</div>
+  <h1 class="title">🧪 দ্রবণ তৈরি ও লঘুকরণ ল্যাব</h1>
+  <nav class="tabs"><a href="#note">📝 ধারণা</a><a href="#lab1">🔬 ল্যাব ১</a><a href="#lab2">🔬 ল্যাব ২</a><a href="#lab3">🎮 হিসাবের খেলা</a><a href="#quiz">❓ কুইজ</a></nav>
+  <section class="panel" id="note">
+    <h2>📝 ধারণা</h2>
+    <div class="key">🎯 ল্যাবের প্রায় সব পরীক্ষার আগে নির্দিষ্ট ঘনমাত্রার দ্রবণ বানাতে হয়। <b>মোলারিটি (M)</b> = ১ লিটার দ্রবণে দ্রবের মোল সংখ্যা।</div>
+    <p class="eq">দ্রবের ভর (g) = M × V (লিটার) × মোলার ভর<br>লঘুকরণ: M₁V₁ = M₂V₂</p>
+    <ul>
+      <li><b>আয়তনিক ফ্লাস্ক</b>-এর গলায় একটি দাগ থাকে। ঠিক সেই দাগ পর্যন্ত দ্রবণ ভরলে আয়তন নির্ভুল হয়।</li>
+      <li>দ্রব আগে অল্প পানিতে গলিয়ে ফ্লাস্কে ঢালতে হয়, তারপর পানি দিয়ে দাগ পর্যন্ত ভরতে হয়। আগে ১ লিটার পানি নিয়ে তাতে দ্রব দিলে আয়তন ১ লিটারের বেশি হয়ে যায়।</li>
+      <li><b>লঘুকরণে</b> দ্রবের মোল একই থাকে, শুধু পানি বাড়ে, তাই ঘনমাত্রা কমে।</li>
+    </ul>
+    <div class="warn">⚠️ গাঢ় এসিড লঘু করার সময় সবসময় <b>পানিতে ধীরে ধীরে এসিড</b> ঢালতে হয়, এসিডে পানি নয়।</div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🔬 ল্যাব ১: নির্দিষ্ট মোলারিটির দ্রবণ বানাও</h2>
+    <div class="say">👉 দ্রব, ঘনমাত্রা ও ফ্লাস্কের আয়তন ঠিক করো। তারপর "পরের ধাপ" চেপে ধাপগুলো দেখো।</div>
+    <div class="ctl"><label>দ্রব:</label><select id="s1s"></select><label>ফ্লাস্ক:</label><select id="s1v"><option value="100">১০০ mL</option><option value="250" selected>২৫০ mL</option><option value="500">৫০০ mL</option><option value="1000">১০০০ mL</option></select></div>
+    <div class="ctl"><label>ঘনমাত্রা: <span id="s1mv"></span> M</label><input type="range" id="s1m" min="0.05" max="1" step="0.05" value="0.1" style="flex:1;min-width:140px"><button class="btn" id="s1n">পরের ধাপ ▶</button><button class="btn alt" id="s1r">↻</button></div>
+    <div class="row">
+      <div><canvas id="s1c" class="w" width="380" height="280"></canvas></div>
+      <div class="grow"><div class="stepper" id="s1st"></div><div class="tlinfo" id="s1t"></div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🔬 ল্যাব ২: লঘুকরণ (M₁V₁ = M₂V₂)</h2>
+    <div class="say">👉 গাঢ় (স্টক) দ্রবণ থেকে কিছুটা নিয়ে পানি মিশিয়ে লঘু করো। রং কতটা হালকা হয় দেখো।</div>
+    <div class="ctl"><label>স্টক M₁: <span id="d2mv"></span> M</label><input type="range" id="d2m" min="0.5" max="2" step="0.1" value="1" style="min-width:110px">
+      <label>নিলাম V₁: <span id="d2vv"></span> mL</label><input type="range" id="d2v" min="5" max="50" step="5" value="25" style="min-width:110px">
+      <label>মোট V₂:</label><select id="d2f"><option value="100">১০০ mL</option><option value="250" selected>২৫০ mL</option><option value="500">৫০০ mL</option></select></div>
+    <div class="row">
+      <div><canvas id="d2c" class="w" width="380" height="240"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="d2t"></div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🎮 হিসাবের খেলা</h2>
+    <div class="tlinfo" id="s3q"></div><div class="cls" id="s3o"></div><div class="fb" id="s3f"></div><small id="s3sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; 🧪 দ্রবণ তৈরি ও লঘুকরণ ল্যাব</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+var SOL=[['NaCl',58.5,'#eef5fa'],['NaOH',40,'#eef5fa'],['Na₂CO₃',106,'#eef5fa'],['গ্লুকোজ (C₆H₁₂O₆)',180,'#eef5fa'],['CuSO₄·5H₂O',249.5,'#2f86d6'],['KMnO₄',158,'#8e2fb3']];
+var S1={st:0,t:0};
+$('s1s').innerHTML=SOL.map(function(s,i){return '<option value="'+i+'">'+s[0]+' (মোলার ভর '+f(s[1],1)+')</option>';}).join('');
+var S1L=['১ ওজন করো','২ বিকারে গলাও','৩ ফ্লাস্কে ঢালো','৪ দাগ পর্যন্ত ভরো'];
+function s1mass(){var s=SOL[+$('s1s').value];return +$('s1m').value*(+$('s1v').value/1000)*s[1];}
+function s1show(){var s=SOL[+$('s1s').value],M=+$('s1m').value,V=+$('s1v').value,m=s1mass();$('s1mv').textContent=f(M,2);stp('s1st',S1L,S1.st);
+  var T=['<b>ভর = M × V × মোলার ভর</b><br>= '+f(M,2)+' × '+f(V/1000,3)+' × '+f(s[1],1)+' = <b>'+f(m,2)+' g</b><br>ব্যালেন্সে ঠিক এই পরিমাণ '+s[0]+' মেপে নাও।','দ্রবটুকু বিকারে নিয়ে <b>অল্প</b> পাতিত পানিতে কাচের দণ্ড দিয়ে নেড়ে সম্পূর্ণ গলাও।','ফানেল দিয়ে দ্রবণ '+bn(V)+' mL আয়তনিক ফ্লাস্কে ঢালো। বিকার ও দণ্ড পানি দিয়ে ধুয়ে সেই পানিও ফ্লাস্কে দাও, যাতে একটুও দ্রব না হারায়।','পাতিত পানি দিয়ে ঠিক <b>দাগ পর্যন্ত</b> ভরো (মেনিসকাসের নিচের অংশ দাগে মিলবে)। ছিপি লাগিয়ে উল্টে-পাল্টে মেশাও।<br>✔ তৈরি হলো <b>'+f(M,2)+' M '+s[0]+'</b> দ্রবণ, '+bn(V)+' mL।'];
+  $('s1t').innerHTML=T[S1.st];}
+$('s1n').onclick=function(){S1.st=(S1.st+1)%4;S1.t=0;s1show();};$('s1r').onclick=function(){S1.st=0;S1.t=0;s1show();};
+['s1s','s1v'].forEach(function(i){$(i).onchange=function(){S1.st=0;S1.t=0;s1show();};});$('s1m').oninput=function(){S1.st=0;S1.t=0;s1show();};s1show();
+function vflask(x,cx,by,lev,col,lab){// lev 0..1 (1 = mark)
+  var r=52,cy=by-r;x.save();x.beginPath();x.arc(cx,cy,r-2,0,7);x.rect(cx-9,cy-r-70,18,72);x.clip();x.fillStyle=col;var top=lerp(by,cy-r-45,lev);x.fillRect(cx-r,top,2*r,by-top);x.restore();
+  x.strokeStyle='#5b6b7a';x.lineWidth=2.5;x.beginPath();x.arc(cx,cy,r,-Math.PI/2+.2,Math.PI*1.5-.2);x.stroke();x.beginPath();x.moveTo(cx-10,cy-r+2);x.lineTo(cx-10,cy-r-72);x.moveTo(cx+10,cy-r+2);x.lineTo(cx+10,cy-r-72);x.stroke();
+  x.strokeStyle=RED;x.lineWidth=2;x.beginPath();x.moveTo(cx-14,cy-r-45);x.lineTo(cx+14,cy-r-45);x.stroke();txt(x,'দাগ',cx+32,cy-r-45,'bold 10px Hind Siliguri',RED);if(lab)txt(x,lab,cx,by+14,'bold 11px Hind Siliguri',NAVY);}
+function tint(c,M,mx){return mixc('#eef5fa',c,clamp(M/mx,0.08,1));}
+DRAWS.push(function(){var x=ctxOf('s1c'),s=SOL[+$('s1s').value],M=+$('s1m').value,V=+$('s1v').value,st=S1.st,i;x.clearRect(0,0,380,280);S1.t=Math.min(1,S1.t+.012);var t=ease(S1.t),col=tint(s[2],M,1);
+  if(st===0){x.fillStyle='#55606c';x.fillRect(110,200,160,40);x.fillStyle='#bfe3c0';x.fillRect(140,208,100,24);txt(x,f(s1mass()*t,2)+' g',190,220,'bold 15px Hind Siliguri','#143');
+    x.fillStyle='#cfd6dd';x.fillRect(120,190,140,10);x.fillStyle=s[2]==='#eef5fa'?'#fff':s[2];x.strokeStyle='#999';x.beginPath();x.ellipse(190,188,45*t+2,14*t+1,0,Math.PI,0);x.fill();x.stroke();
+    txt(x,'ডিজিটাল ব্যালেন্স',190,256,'bold 11px Hind Siliguri',NAVY);txt(x,s[0],190,150,'bold 13px Hind Siliguri',NAVY);}
+  if(st===1){x.fillStyle=tint(s[2],M*t,1);x.fillRect(122,170,136,68);x.strokeStyle='#5b6b7a';x.lineWidth=3;x.beginPath();x.moveTo(120,110);x.lineTo(120,240);x.lineTo(260,240);x.lineTo(260,110);x.stroke();
+    x.strokeStyle='#9ab';x.lineWidth=4;x.beginPath();x.moveTo(230+Math.sin(FR*.15)*14,80);x.lineTo(180+Math.sin(FR*.15)*26,232);x.stroke();
+    for(i=0;i<10;i++){x.globalAlpha=1-t;circ(x,0,140+rp(i,0,100),232-rp(i+3,0,10),4,s[2]==='#eef5fa'?'#fff':s[2],'#999',1);x.globalAlpha=1;}
+    txt(x,'অল্প পানিতে গলানো হচ্ছে',190,258,'bold 11px Hind Siliguri',NAVY);}
+  if(st===2){vflask(x,250,250,.35*t,col,bn(V)+' mL আয়তনিক ফ্লাস্ক');x.strokeStyle='#5b6b7a';x.lineWidth=2;x.beginPath();x.moveTo(228,58);x.lineTo(246,84);x.lineTo(246,100);x.moveTo(272,58);x.lineTo(254,84);x.lineTo(254,100);x.stroke();
+    x.save();x.translate(120,90);x.rotate(.6);x.fillStyle=col;x.fillRect(-30,-10,60,40*(1-t));x.strokeStyle='#5b6b7a';x.lineWidth=3;x.strokeRect(-32,-40,64,72);x.restore();
+    if(t<1){x.strokeStyle=s[2]==='#eef5fa'?'#9cc7ea':col;x.lineWidth=3;x.beginPath();x.moveTo(160,86);x.quadraticCurveTo(220,50,250,70);x.stroke();}
+    txt(x,'ফানেল',300,64,'10px Hind Siliguri','#456');}
+  if(st===3){vflask(x,190,250,lerp(.35,1,t),col,f(M,2)+' M '+s[0]);if(t<1){x.strokeStyle='#9cc7ea';x.lineWidth=3;x.beginPath();x.moveTo(190,20);x.lineTo(190,90);x.stroke();txt(x,'পাতিত পানি',240,30,'10px Hind Siliguri','#456');}else txt(x,'✔ দাগ পর্যন্ত ভরা',300,120,'bold 12px Hind Siliguri','#2a7a3b');}
+});
+function d2calc(){var M1=+$('d2m').value,V1=+$('d2v').value,V2=+$('d2f').value;return {M1:M1,V1:V1,V2:V2,M2:M1*V1/V2};}
+function d2info(){var c=d2calc();$('d2mv').textContent=f(c.M1,1);$('d2vv').textContent=bn(c.V1);
+  $('d2t').innerHTML='<b>M₂ = M₁V₁ ÷ V₂</b><br>= ('+f(c.M1,1)+' × '+bn(c.V1)+') ÷ '+bn(c.V2)+' = <b>'+f(c.M2,3)+' M</b><br>যোগ করা পানি = '+bn(c.V2-c.V1)+' mL<br>দ্রবণ <b>'+f(c.V2/c.V1,1)+' গুণ</b> লঘু হয়েছে।<br><small>দ্রবের মোল আগে ও পরে একই: '+f(c.M1*c.V1/1000,4)+' mol।</small>';}
+['d2m','d2v'].forEach(function(i){$(i).oninput=d2info;});$('d2f').onchange=d2info;d2info();
+DRAWS.push(function(){var x=ctxOf('d2c'),c=d2calc();x.clearRect(0,0,380,240);
+  x.fillStyle=tint('#2f86d6',c.M1,2);x.fillRect(32,90,76,120);x.strokeStyle='#5b6b7a';x.lineWidth=3;x.strokeRect(30,70,80,140);x.fillStyle='#5b6b7a';x.fillRect(52,52,36,18);
+  txt(x,'স্টক '+f(c.M1,1)+' M',70,226,'bold 11px Hind Siliguri',NAVY);
+  x.fillStyle=tint('#2f86d6',c.M1,2);x.fillRect(150,60,10,c.V1*1.6);x.strokeStyle='#5b6b7a';x.lineWidth=1.5;x.strokeRect(150,50,10,100);txt(x,'পিপেট: '+bn(c.V1)+' mL',155,36,'bold 10px Hind Siliguri',NAVY);
+  txt(x,'→ + পানি →',190,170,'bold 11px Hind Siliguri','#456');
+  vflask(x,300,210,1,tint('#2f86d6',c.M2,2),f(c.M2,3)+' M, '+bn(c.V2)+' mL');
+});
+mkGame('s3q','s3o','s3f','s3sc',function(){if(Math.random()<.5){var s=pick(SOL.slice(0,4)),M=pick([0.1,0.2,0.5,1]),V=pick([100,250,500,1000]),m=M*V/1000*s[1];var why='ভর = '+f(M,1)+' × '+f(V/1000,3)+' × '+f(s[1],1)+' = '+f(m,2)+' g';
+    return {q:bn(V)+' mL '+f(M,1)+' M '+s[0]+' দ্রবণ বানাতে কত গ্রাম দ্রব লাগবে? (মোলার ভর '+f(s[1],1)+')',o:opts(f(m,2)+' g',[f(m*2,2)+' g',f(m/2,2)+' g',f(M*s[1],2)+' g'].filter(function(v,i,a){return v!==f(m,2)+' g'&&a.indexOf(v)===i;})),good:why,bad:why};}
+  var M1=pick([1,2]),V1=pick([10,20,25,50]),V2=pick([100,250,500]),M2=M1*V1/V2,why2='M₂ = ('+bn(M1)+' × '+bn(V1)+') ÷ '+bn(V2)+' = '+f(M2,3)+' M';
+  return {q:bn(M1)+' M দ্রবণের '+bn(V1)+' mL নিয়ে পানি মিশিয়ে মোট '+bn(V2)+' mL করা হলো। নতুন ঘনমাত্রা কত?',o:opts(f(M2,3)+' M',[f(M2*2,3)+' M',f(M2/2,3)+' M',f(M1*V1/(V2+V1),3)+' M']),good:why2,bad:why2};});
+var QUIZ=[
+ {q:'মোলারিটি বলতে কী বোঝায়?',o:['১ লিটার দ্রবণে দ্রবের মোল সংখ্যা','১ কেজি দ্রাবকে দ্রবের মোল সংখ্যা','১০০ g দ্রবণে দ্রবের ভর','১ লিটার দ্রাবকে দ্রবের ভর'],a:0,e:'M = দ্রবের মোল ÷ দ্রবণের আয়তন (লিটার)।'},
+ {q:'২৫০ mL ০.১ M NaOH দ্রবণ বানাতে কত গ্রাম NaOH লাগবে? (মোলার ভর ৪০)',o:['১ g','৪ g','১০ g','০.১ g'],a:0,e:'ভর = ০.১ × ০.২৫ × ৪০ = ১ g।'},
+ {q:'১ লিটার ১ M NaCl দ্রবণে কত গ্রাম NaCl থাকে? (মোলার ভর ৫৮.৫)',o:['৫৮.৫ g','৫.৮৫ g','১১৭ g','১ g'],a:0,e:'১ মোল NaCl = ৫৮.৫ g।'},
+ {q:'নির্ভুল আয়তনের দ্রবণ বানাতে কোন পাত্র ব্যবহার করা হয়?',o:['আয়তনিক ফ্লাস্ক','বিকার','টেস্টটিউব','কনিক্যাল ফ্লাস্ক'],a:0,e:'আয়তনিক ফ্লাস্কের গলার দাগ পর্যন্ত ভরলে আয়তন নির্ভুল হয়।'},
+ {q:'২ M দ্রবণের ২৫ mL-কে লঘু করে ২৫০ mL করলে ঘনমাত্রা কত হবে?',o:['০.২ M','০.৫ M','২০ M','০.০২ M'],a:0,e:'M₂ = (২ × ২৫) ÷ ২৫০ = ০.২ M।'},
+ {q:'লঘুকরণের সময় কোনটি অপরিবর্তিত থাকে?',o:['দ্রবের মোল সংখ্যা','দ্রবণের আয়তন','ঘনমাত্রা','দ্রাবকের পরিমাণ'],a:0,e:'শুধু পানি বাড়ে, দ্রবের পরিমাণ একই থাকে। তাই M₁V₁ = M₂V₂।'},
+ {q:'গাঢ় এসিড লঘু করার সঠিক নিয়ম কোনটি?',o:['পানিতে ধীরে ধীরে এসিড ঢালা','এসিডে দ্রুত পানি ঢালা','দুটো একসাথে ঢালা','গরম পানিতে এসিড ঢালা'],a:0,e:'এসিডে পানি দিলে হঠাৎ প্রচুর তাপে এসিড ছিটকে উঠতে পারে।'},
+ {q:'আয়তনিক ফ্লাস্কে তরলের কোন অংশ দাগের সাথে মেলাতে হয়?',o:['মেনিসকাসের নিচের অংশ','মেনিসকাসের ওপরের কিনারা','ফ্লাস্কের তলা','ছিপির নিচ'],a:0,e:'পানি ও জলীয় দ্রবণের বাঁকা তলের সবচেয়ে নিচের বিন্দু চোখ বরাবর রেখে মেলাতে হয়।'}
+];
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+function frame(){FR++;for(var i=0;i<DRAWS.length;i++)DRAWS[i]();requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>

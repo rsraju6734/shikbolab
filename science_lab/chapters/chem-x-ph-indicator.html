@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🌈 pH ও নির্দেশক ল্যাব - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+</style>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#chemistry">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">🧪 রসায়ন &rsaquo; বোনাস এক্সট্রা ল্যাব</div>
+  <h1 class="title">🌈 pH ও নির্দেশক ল্যাব</h1>
+  <nav class="tabs"><a href="#note">📝 ধারণা</a><a href="#lab1">🔬 ল্যাব ১</a><a href="#lab2">🔬 ল্যাব ২</a><a href="#lab3">🎮 রং চেনার খেলা</a><a href="#quiz">❓ কুইজ</a></nav>
+  <section class="panel" id="note">
+    <h2>📝 ধারণা</h2>
+    <div class="key">🎯 <b>pH</b> দিয়ে বোঝা যায় একটি দ্রবণ কতটা অম্লীয় বা ক্ষারীয়। pH = −log[H⁺]। ২৫°C-এ pH ৭ নিরপেক্ষ, ৭-এর কম অম্লীয়, ৭-এর বেশি ক্ষারীয়।</div>
+    <ul>
+      <li>pH ১ কমলে [H⁺] <b>১০ গুণ</b> বাড়ে। তাই pH ৩-এর দ্রবণ pH ৫-এর চেয়ে ১০০ গুণ বেশি অম্লীয়।</li>
+      <li><b>নির্দেশক</b> এমন পদার্থ যা pH অনুযায়ী রং বদলায়।</li>
+      <li><b>pH মিটার</b> সরাসরি সংখ্যায় pH দেখায়, তাই এটি সবচেয়ে সূক্ষ্ম।</li>
+    </ul>
+    <table class="t"><tr><th>নির্দেশক</th><th>অম্লে</th><th>ক্ষারে</th><th>রং বদলের pH</th></tr>
+      <tr><td>লিটমাস</td><td>লাল</td><td>নীল</td><td>প্রায় ৫ থেকে ৮</td></tr>
+      <tr><td>মিথাইল অরেঞ্জ</td><td>লাল</td><td>হলুদ</td><td>৩.১ থেকে ৪.৪</td></tr>
+      <tr><td>ফেনলফথ্যালিন</td><td>বর্ণহীন</td><td>গোলাপি</td><td>৮.২ থেকে ১০</td></tr>
+      <tr><td>ইউনিভার্সাল</td><td>লাল-কমলা</td><td>নীল-বেগুনি</td><td>পুরো ০ থেকে ১৪</td></tr></table>
+    <div class="warn">ℹ️ ল্যাবের জিনিসগুলোর pH আনুমানিক গড় মান। আসল মান ব্র্যান্ড, ঘনমাত্রা ও তাপমাত্রা ভেদে একটু কমবেশি হয়।</div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🔬 ল্যাব ১: নির্দেশক ও pH মিটার</h2>
+    <div class="say">👉 একটি জিনিস ও একটি নির্দেশক বেছে নাও। বিকারের রং আর pH মিটারের পাঠ মিলিয়ে দেখো।</div>
+    <div class="ctl"><label>জিনিস:</label><select id="p1s"></select><label>নির্দেশক:</label><select id="p1i"><option value="0">ইউনিভার্সাল</option><option value="1">লিটমাস</option><option value="2">মিথাইল অরেঞ্জ</option><option value="3">ফেনলফথ্যালিন</option></select></div>
+    <div class="row">
+      <div><canvas id="p1c" class="w" width="380" height="290"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="p1t"></div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🔬 ল্যাব ২: pH আর [H⁺]-এর সম্পর্ক</h2>
+    <div class="say">👉 স্লাইডার নেড়ে pH বদলাও। H⁺ ও OH⁻ আয়নের সংখ্যা কীভাবে বদলায় দেখো।</div>
+    <div class="ctl"><label>pH: <span id="p2v"></span></label><input type="range" id="p2r" min="0" max="14" step="1" value="7" style="flex:1;min-width:150px"></div>
+    <div class="row">
+      <div><canvas id="p2c" class="w" width="380" height="220"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="p2t"></div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🎮 রং চেনার খেলা</h2>
+    <div class="tlinfo" id="p3q"></div><div class="cls" id="p3o"></div><div class="fb" id="p3f"></div><small id="p3sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; 🌈 pH ও নির্দেশক ল্যাব</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+var SUBS=[['লঘু HCl (০.১ M)',1.0],['লেবুর রস',2.3],['ভিনেগার',2.9],['কোমল পানীয়',3.0],['টমেটোর রস',4.2],['বৃষ্টির পানি',5.6],['দুধ',6.6],['বিশুদ্ধ পানি',7.0],['রক্ত',7.4],['বেকিং সোডার দ্রবণ',8.3],['সাবান-পানি',10.0],['অ্যামোনিয়া দ্রবণ',11.5],['লঘু NaOH (০.১ M)',13.0]];
+var UNI=[[0,'#d7263d'],[2,'#f0592b'],[4,'#f7a72b'],[6,'#f2e03a'],[7,'#56b93f'],[8,'#2fa58a'],[10,'#2b6cb0'],[12,'#4a3fb0'],[14,'#6a2a9a']];
+function unic(p){for(var i=0;i<UNI.length-1;i++)if(p<=UNI[i+1][0])return mixc(UNI[i][1],UNI[i+1][1],(p-UNI[i][0])/(UNI[i+1][0]-UNI[i][0]));return UNI[8][1];}
+function indc(k,p){if(k===0)return [unic(p),p<3?'লাল':p<6?'কমলা-হলুদ':p<8?'সবুজ':p<11?'নীল':'বেগুনি'];
+  if(k===1)return p<5?['#e0484f','লাল']:p>8?['#3566c9','নীল']:[mixc('#e0484f','#3566c9',(p-5)/3),'বেগুনি (মাঝামাঝি)'];
+  if(k===2)return p<3.1?['#e0393e','লাল']:p>4.4?['#f4d21f','হলুদ']:[mixc('#e0393e','#f4d21f',(p-3.1)/1.3),'কমলা (মাঝামাঝি)'];
+  return p<8.2?['#eef5fa','বর্ণহীন']:p>10?['#e0428a','গোলাপি']:[mixc('#fbe3ee','#e0428a',(p-8.2)/1.8),'হালকা গোলাপি'];}
+var INM=['ইউনিভার্সাল নির্দেশক','লিটমাস','মিথাইল অরেঞ্জ','ফেনলফথ্যালিন'];
+$('p1s').innerHTML=SUBS.map(function(s,i){return '<option value="'+i+'">'+s[0]+'</option>';}).join('');$('p1s').value='1';
+function nat(p){return p<6.95?'অম্লীয়':p>7.05?'ক্ষারীয়':'নিরপেক্ষ';}
+function p1info(){var s=SUBS[+$('p1s').value],k=+$('p1i').value,c=indc(k,s[1]);
+  $('p1t').innerHTML='<b>'+s[0]+'</b><br>pH মিটারের পাঠ: <b>'+f(s[1],1)+'</b> ('+nat(s[1])+')<br>'+INM[k]+' দিলে রং: <b>'+c[1]+'</b><br><small>'+(k===3&&s[1]<8.2?'ফেনলফথ্যালিন pH ৮.২-এর নিচে বর্ণহীন থাকে, তাই এটি দিয়ে অম্ল ও নিরপেক্ষ আলাদা করা যায় না।':k===2&&s[1]>4.4?'মিথাইল অরেঞ্জ pH ৪.৪-এর ওপরে সবসময় হলুদ, তাই এটি দিয়ে দুর্বল অম্ল ও ক্ষার আলাদা করা যায় না।':k===0?'ইউনিভার্সাল নির্দেশক অনেক নির্দেশকের মিশ্রণ, তাই প্রতিটি pH-এ আলাদা রং দেয়।':'')+'</small>';}
+$('p1s').onchange=p1info;$('p1i').onchange=p1info;p1info();
+DRAWS.push(function(){var x=ctxOf('p1c'),s=SUBS[+$('p1s').value],k=+$('p1i').value,c=indc(k,s[1]),i;x.clearRect(0,0,380,290);
+  // beaker
+  x.fillStyle=c[0];x.fillRect(62,120,136,98);x.strokeStyle='#5b6b7a';x.lineWidth=3;x.beginPath();x.moveTo(60,70);x.lineTo(60,220);x.lineTo(200,220);x.lineTo(200,70);x.stroke();
+  txt(x,s[0],130,236,'bold 11px Hind Siliguri',NAVY);
+  // probe + meter
+  x.strokeStyle='#333';x.lineWidth=2;x.beginPath();x.moveTo(150,200);x.lineTo(150,50);x.bezierCurveTo(150,20,250,20,262,50);x.stroke();x.fillStyle='#444';x.fillRect(145,130,10,72);
+  x.fillStyle='#2c3e50';x.fillRect(228,50,130,80);x.fillStyle='#bfe3c0';x.fillRect(240,62,106,40);txt(x,f(s[1],1),293,83,'bold 26px Hind Siliguri','#143');txt(x,'pH মিটার',293,116,'bold 11px Hind Siliguri','#fff');
+  txt(x,'রং: '+c[1],293,160,'bold 13px Hind Siliguri',NAVY);txt(x,nat(s[1]),293,182,'bold 13px Hind Siliguri',s[1]<6.95?RED:s[1]>7.05?BLU:'#2a7a3b');
+  // dropper bubbles
+  for(i=0;i<4;i++)circ(x,0,80+i*26+Math.sin(FR*.03+i)*3,200-((FR*.4+i*20)%70),2.5,'rgba(255,255,255,.6)',null);
+  // scale
+  for(i=0;i<140;i++){x.fillStyle=unic(i/10);x.fillRect(30+i*2.3,254,2.4,14);}
+  for(i=0;i<=14;i+=2)txt(x,bn(i),30+i*23,280,'10px Hind Siliguri','#345');
+  var mx=30+s[1]*23;x.fillStyle=NAVY;x.beginPath();x.moveTo(mx,252);x.lineTo(mx-6,242);x.lineTo(mx+6,242);x.fill();
+});
+function p2info(){var p=+$('p2r').value;$('p2v').textContent=bn(p);
+  $('p2t').innerHTML='<b>pH = '+bn(p)+'</b> ('+nat(p)+')<br>[H⁺] = ১০'+(p?'⁻'+sup(p):'⁰')+' mol/L<br>[OH⁻] = ১০'+(14-p?'⁻'+sup(14-p):'⁰')+' mol/L<br>pH + pOH = ১৪ (২৫°C-এ)<br><small>pH ৭-এর তুলনায় এখানে H⁺ '+(p<7?'১০'+sup(7-p)+' গুণ বেশি':p>7?'১০'+sup(p-7)+' গুণ কম':'সমান')+'।</small>';}
+$('p2r').oninput=p2info;p2info();
+DRAWS.push(function(){var x=ctxOf('p2c'),p=+$('p2r').value,i;x.clearRect(0,0,380,220);x.fillStyle='#fff';x.fillRect(20,20,340,170);x.globalAlpha=.22;x.fillStyle=unic(p);x.fillRect(20,20,340,170);x.globalAlpha=1;x.strokeStyle='#5b6b7a';x.lineWidth=2;x.strokeRect(20,20,340,170);
+  var nh=Math.round(2+(14-p)*2.2),no=Math.round(2+p*2.2);
+  for(i=0;i<nh;i++){var hx2=40+rp(i,0,300)+Math.sin(FR*.02+i)*6,hy=40+rp(i*i+31,0,130)+Math.cos(FR*.025+i*2)*6;circ(x,0,hx2,hy,8,'#e63946','#fff',1);txt(x,'H⁺',hx2,hy,'bold 8px Hind Siliguri','#fff');}
+  for(i=0;i<no;i++){var ox=40+rp(i+77,0,300)+Math.cos(FR*.02+i)*6,oy=40+rp(i*i+113,0,130)+Math.sin(FR*.022+i*3)*6;circ(x,0,ox,oy,9,'#2b6cb0','#fff',1);txt(x,'OH⁻',ox,oy,'bold 7px Hind Siliguri','#fff');}
+  txt(x,'🔴 H⁺: '+bn(nh)+'   🔵 OH⁻: '+bn(no)+' (প্রতীকী সংখ্যা)',190,205,'bold 11px Hind Siliguri',NAVY);
+});
+mkGame('p3q','p3o','p3f','p3sc',function(){var s=pick(SUBS),k=1+Math.floor(Math.random()*3),c=indc(k,s[1])[1];
+  var all=k===1?['লাল','নীল','বেগুনি (মাঝামাঝি)','হলুদ']:k===2?['লাল','হলুদ','কমলা (মাঝামাঝি)','নীল']:['বর্ণহীন','গোলাপি','হালকা গোলাপি','নীল'];
+  var why=s[0]+'-এর pH প্রায় '+f(s[1],1)+', তাই '+INM[k]+' দেখায় '+c+'।';
+  return {q:'<b>'+s[0]+'</b> (pH প্রায় '+f(s[1],1)+')-এ <b>'+INM[k]+'</b> দিলে কোন রং হবে?',o:opts(c,all.filter(function(v){return v!==c;})),good:why,bad:why};});
+var QUIZ=[
+ {q:'২৫°C-এ নিরপেক্ষ দ্রবণের pH কত?',o:['৭','০','১','১৪'],a:0,e:'বিশুদ্ধ পানিতে [H⁺] = [OH⁻] = ১০⁻⁷ mol/L, তাই pH ৭।'},
+ {q:'pH ৩-এর দ্রবণ pH ৫-এর দ্রবণের চেয়ে কত গুণ বেশি অম্লীয়?',o:['১০০ গুণ','২ গুণ','১০ গুণ','১০০০ গুণ'],a:0,e:'প্রতি ১ pH কমলে [H⁺] ১০ গুণ বাড়ে। ২ ধাপে ১০ × ১০ = ১০০ গুণ।'},
+ {q:'কোন দ্রবণের [H⁺] = ১০⁻⁴ mol/L হলে pH কত?',o:['৪','১০','−৪','১৪'],a:0,e:'pH = −log(১০⁻⁴) = ৪।'},
+ {q:'মিথাইল অরেঞ্জ ক্ষারীয় দ্রবণে কোন রং দেখায়?',o:['হলুদ','লাল','গোলাপি','নীল'],a:0,e:'মিথাইল অরেঞ্জ pH ৩.১-এর নিচে লাল, ৪.৪-এর ওপরে হলুদ।'},
+ {q:'নীল লিটমাস কাগজ কোন দ্রবণে লাল হয়?',o:['অম্লীয়','ক্ষারীয়','নিরপেক্ষ','লবণের'],a:0,e:'অম্ল নীল লিটমাসকে লাল করে, ক্ষার লাল লিটমাসকে নীল করে।'},
+ {q:'pH সবচেয়ে সূক্ষ্মভাবে মাপা যায় কোনটি দিয়ে?',o:['pH মিটার','লিটমাস কাগজ','ফেনলফথ্যালিন','মিথাইল অরেঞ্জ'],a:0,e:'pH মিটার দশমিকসহ সংখ্যায় পাঠ দেয়।'},
+ {q:'pH ৯ হলে ২৫°C-এ pOH কত?',o:['৫','৯','৭','১৪'],a:0,e:'pH + pOH = ১৪, তাই pOH = ১৪ − ৯ = ৫।'},
+ {q:'ফেনলফথ্যালিন দিলে বর্ণহীন থাকে কোনটিতে?',o:['লেবুর রস','সাবান-পানি','লঘু NaOH','অ্যামোনিয়া দ্রবণ'],a:0,e:'লেবুর রস অম্লীয়। ফেনলফথ্যালিন pH ৮.২-এর নিচে বর্ণহীন।'}
+];
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+function frame(){FR++;for(var i=0;i<DRAWS.length;i++)DRAWS[i]();requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>

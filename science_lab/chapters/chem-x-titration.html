@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>⚗️ টাইট্রেশন ল্যাব - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+</style>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#chemistry">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">🧪 রসায়ন &rsaquo; বোনাস এক্সট্রা ল্যাব</div>
+  <h1 class="title">⚗️ টাইট্রেশন ল্যাব</h1>
+  <nav class="tabs"><a href="#note">📝 ধারণা</a><a href="#lab1">🔬 ল্যাব</a><a href="#lab2">🎮 হিসাবের খেলা</a><a href="#quiz">❓ কুইজ</a></nav>
+  <section class="panel" id="note">
+    <h2>📝 ধারণা</h2>
+    <div class="key">🎯 <b>টাইট্রেশন</b> হলো জানা ঘনমাত্রার একটি দ্রবণ দিয়ে অজানা ঘনমাত্রার দ্রবণের ঘনমাত্রা বের করার পদ্ধতি। স্কুল, কলেজ, বিশ্ববিদ্যালয়, ওষুধ ও খাদ্য কারখানার ল্যাবে এটি প্রতিদিন ব্যবহার হয়।</div>
+    <ul>
+      <li><b>বুরেট:</b> লম্বা দাগ-কাটা নল। এতে জানা ঘনমাত্রার দ্রবণ (এখানে ০.১ M NaOH) থাকে।</li>
+      <li><b>কনিক্যাল ফ্লাস্ক:</b> এতে পিপেট দিয়ে মাপা ২৫ mL অজানা এসিড ও ২–৩ ফোঁটা নির্দেশক থাকে।</li>
+      <li><b>নির্দেশক (ফেনলফথ্যালিন):</b> এসিডে বর্ণহীন, ক্ষারে গোলাপি। pH প্রায় ৮.২ থেকে ১০-এর মধ্যে রং বদলায়।</li>
+      <li><b>শেষ বিন্দু:</b> যে মুহূর্তে এক ফোঁটা NaOH পড়ায় দ্রবণ স্থায়ী হালকা গোলাপি হয়।</li>
+    </ul>
+    <p class="eq">HCl + NaOH → NaCl + H₂O<br>M(এসিড) × V(এসিড) = M(ক্ষার) × V(ক্ষার)</p>
+    <div class="warn">ℹ️ এই সূত্র ১ : ১ বিক্রিয়ার জন্য (যেমন HCl ও NaOH, CH₃COOH ও NaOH)। H₂SO₄-এর মতো এসিডে মোল অনুপাত আলাদা করে ধরতে হয়।</div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🔬 ল্যাব: অজানা এসিডের ঘনমাত্রা বের করো</h2>
+    <div class="say">👉 প্রথমে "+৫ mL" দিয়ে দ্রুত এগোও। pH বাড়তে শুরু করলে "+১ ফোঁটা" দিয়ে ধীরে যাও। ফ্লাস্ক হালকা গোলাপি হলেই থামো, তারপর "ফল বের করো" চাপো।</div>
+    <div class="ctl"><label>এসিড:</label><select id="t1s"><option value="0">HCl (সবল এসিড)</option><option value="1">CH₃COOH (দুর্বল এসিড)</option></select>
+      <button class="btn alt" id="t1new">🎲 নতুন নমুনা</button></div>
+    <div class="ctl"><button class="btn" id="t1a5">+৫ mL</button><button class="btn" id="t1a1">+১ mL</button><button class="btn" id="t1a01">+১ ফোঁটা (০.১ mL)</button><button class="btn alt" id="t1res">ফল বের করো</button></div>
+    <div class="row">
+      <div><canvas id="t1c" class="w" width="380" height="300"></canvas></div>
+      <div class="grow"><canvas id="t1g" class="w" width="380" height="230"></canvas><div class="tlinfo" id="t1t"></div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🎮 হিসাবের খেলা: M₁V₁ = M₂V₂</h2>
+    <div class="tlinfo" id="t2q"></div><div class="cls" id="t2o"></div><div class="fb" id="t2f"></div><small id="t2sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; ⚗️ টাইট্রেশন ল্যাব</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+var T={v10:0,ca:0.1,weak:0,drop:0};
+var CAS=[0.05,0.08,0.1,0.12,0.16];
+function tve(){return Math.round(T.ca*2500);}
+function tph(v10){var vb=v10/10,na=T.ca*25,nb=0.1*vb,V=25+vb,d10=tve()-v10,d=na-nb;
+  if(!T.weak){if(d10>0)return -Math.log10(d/V);if(d10<0)return 14+Math.log10(-d/V);return 7;}
+  var pKa=4.74,p0=0.5*(pKa-Math.log10(T.ca));
+  if(v10===0)return p0;
+  if(d10>0)return Math.max(p0,pKa+Math.log10(nb/d));
+  if(d10<0)return 14+Math.log10(-d/V);
+  return 7+0.5*(pKa+Math.log10(na/V));}
+function tinfo(m){var p=tph(T.v10);$('t1t').innerHTML='<b>বুরেট পাঠ:</b> '+f(T.v10/10,1)+' mL NaOH<br><b>ফ্লাস্কের pH:</b> '+f(p,2)+'<br>'+(m||(p>=8.2?'🌸 দ্রবণ গোলাপি হয়েছে। এবার "ফল বের করো" চাপো।':'দ্রবণ এখনো বর্ণহীন।'));}
+function tadd(n){if(T.v10>=500){tinfo('বুরেট খালি! "নতুন নমুনা" চাপো।');return;}T.v10=Math.min(500,T.v10+n);T.drop=1;tinfo();}
+function tnew(){T.ca=pick(CAS);T.weak=+$('t1s').value;T.v10=0;tinfo('নতুন নমুনা নেওয়া হলো: ২৫ mL অজানা এসিড + ফেনলফথ্যালিন।');}
+$('t1a5').onclick=function(){tadd(50);};$('t1a1').onclick=function(){tadd(10);};$('t1a01').onclick=function(){tadd(1);};
+$('t1new').onclick=tnew;$('t1s').onchange=tnew;
+$('t1res').onclick=function(){var p=tph(T.v10),vb=T.v10/10;
+  if(p<8.2){tinfo('⏳ এখনো গোলাপি হয়নি, অর্থাৎ শেষ বিন্দু আসেনি। আরও NaOH দাও।');return;}
+  var m=0.1*vb/25,over=T.v10-tve(),er=Math.abs(m-T.ca)/T.ca*100;
+  var h='<b>হিসাব:</b> M(এসিড) = (০.১ × '+f(vb,1)+') ÷ ২৫ = <b>'+f(m,4)+' M</b><br>আসল ঘনমাত্রা: '+f(T.ca,2)+' M। তোমার ভুল: '+f(er,1)+'%।<br>';
+  h+=over<=2?'🎉 চমৎকার! একদম শেষ বিন্দুতে থেমেছ।':'⚠️ '+f(over/10,1)+' mL বেশি পড়ে গেছে, তাই রং গাঢ় গোলাপি। "নতুন নমুনা" নিয়ে শেষ দিকে ফোঁটা ফোঁটা করে দাও।';
+  tinfo(h);};
+tnew();
+DRAWS.push(function(){var x=ctxOf('t1c'),vb=T.v10/10,p=tph(T.v10),over=T.v10-tve();x.clearRect(0,0,380,300);
+  // stand
+  x.fillStyle='#8a97a4';x.fillRect(60,10,6,280);x.fillRect(30,288,120,6);x.fillRect(60,60,95,5);
+  // burette
+  x.fillStyle='rgba(120,185,235,.75)';x.fillRect(151,20+3*vb,18,150-3*vb);
+  x.strokeStyle='#5b6b7a';x.lineWidth=2;x.strokeRect(150,20,20,150);
+  x.beginPath();x.moveTo(155,170);x.lineTo(158,192);x.lineTo(162,192);x.lineTo(165,170);x.stroke();
+  x.fillStyle=RED;x.fillRect(148,176,24,5);
+  for(var i=0;i<=5;i++){x.fillStyle='#345';x.fillRect(170,20+i*30,6,1.5);txt(x,bn(i*10),186,20+i*30,'10px Hind Siliguri','#345');}
+  txt(x,'বুরেট',128,34,'bold 11px Hind Siliguri',NAVY);txt(x,'NaOH ০.১ M',262,60,'bold 11px Hind Siliguri',BLU);
+  if(T.drop>0){T.drop-=0.05;circ(x,0,160,194+(1-T.drop)*40,3.5,'#5aa9e6',null);}
+  // flask
+  var col=p<8.2?'#e9f3fa':mixc('#fbd3e4','#d6336c',clamp((T.weak?over:over-1)/12,0,1));
+  x.fillStyle=col;x.beginPath();x.moveTo(128,250);x.lineTo(192,250);x.lineTo(212,284);x.lineTo(108,284);x.closePath();x.fill();
+  x.strokeStyle='#5b6b7a';x.lineWidth=2.5;x.beginPath();x.moveTo(150,200);x.lineTo(150,218);x.lineTo(108,284);x.lineTo(212,284);x.lineTo(170,218);x.lineTo(170,200);x.stroke();
+  txt(x,'কনিক্যাল ফ্লাস্ক',290,238,'bold 11px Hind Siliguri',NAVY);txt(x,'২৫ mL এসিড',290,256,'11px Hind Siliguri','#345');txt(x,'+ ফেনলফথ্যালিন',290,272,'11px Hind Siliguri','#345');
+  txt(x,'পাঠ: '+f(vb,1)+' mL',262,84,'bold 14px Hind Siliguri',NAVY);txt(x,'pH '+f(p,2),262,110,'bold 16px Hind Siliguri',p<8.2?'#345':'#c2255c');
+  txt(x,p<8.2?'বর্ণহীন':(over<=2?'হালকা গোলাপি ✔':'গাঢ় গোলাপি'),262,134,'bold 12px Hind Siliguri',p<8.2?'#678':'#c2255c');
+});
+DRAWS.push(function(){var x=ctxOf('t1g'),i;x.clearRect(0,0,380,230);var X=function(v){return 40+v*6.6;},Y=function(p){return 200-p*13;};
+  x.fillStyle='#fde3ee';x.fillRect(40,Y(10),330,Y(8.2)-Y(10));txt(x,'ফেনলফথ্যালিন রং বদলায়',290,Y(9.1),'10px Hind Siliguri','#c2255c');
+  x.strokeStyle='#789';x.lineWidth=1.5;x.beginPath();x.moveTo(40,18);x.lineTo(40,200);x.lineTo(370,200);x.stroke();
+  for(i=0;i<=14;i+=2)txt(x,bn(i),28,Y(i),'10px Hind Siliguri','#456');for(i=0;i<=50;i+=10)txt(x,bn(i),X(i),212,'10px Hind Siliguri','#456');
+  txt(x,'pH',16,10,'bold 11px Hind Siliguri',NAVY);txt(x,'NaOH (mL)',330,224,'bold 10px Hind Siliguri',NAVY);
+  x.strokeStyle=BLU;x.lineWidth=2.5;x.beginPath();for(i=0;i<=T.v10;i++){var py=Y(clamp(tph(i),0,14));if(i===0)x.moveTo(X(0),py);else x.lineTo(X(i/10),py);}x.stroke();
+  circ(x,0,X(T.v10/10),Y(clamp(tph(T.v10),0,14)),4.5,RED,'#fff',1.5);
+});
+mkGame('t2q','t2o','t2f','t2sc',function(){var vb=pick([10,12.5,15,20,25,30]),mb=pick([0.1,0.2]),va=pick([20,25]),m=mb*vb/va;
+  var w=[m*2,m/2,mb*va/vb].filter(function(v){return Math.abs(v-m)>1e-6;});if(w.length<3)w.push(m+0.05);
+  var why='M = ('+f(mb,1)+' × '+f(vb,1)+') ÷ '+bn(va)+' = '+f(m,3)+' M';
+  return {q:bn(va)+' mL HCl প্রশমিত করতে '+f(mb,1)+' M NaOH লাগল '+f(vb,1)+' mL। HCl-এর ঘনমাত্রা কত?',o:opts(f(m,3)+' M',w.slice(0,3).map(function(v){return f(v,3)+' M';})),good:why,bad:why};});
+var QUIZ=[
+ {q:'টাইট্রেশনে জানা ঘনমাত্রার দ্রবণ সাধারণত কোন যন্ত্রে নেওয়া হয়?',o:['বুরেট','বিকার','টেস্টটিউব','ফানেল'],a:0,e:'বুরেটের দাগ দেখে ঠিক কত mL পড়ল তা মাপা যায়।'},
+ {q:'ফেনলফথ্যালিন ক্ষারীয় দ্রবণে কোন রং দেখায়?',o:['গোলাপি','বর্ণহীন','হলুদ','নীল'],a:0,e:'এসিডে বর্ণহীন, ক্ষারে গোলাপি।'},
+ {q:'২৫ mL HCl প্রশমিত করতে ০.১ M NaOH ২০ mL লাগল। HCl-এর ঘনমাত্রা কত?',o:['০.০৮ M','০.১২৫ M','০.১ M','০.২ M'],a:0,e:'M = (০.১ × ২০) ÷ ২৫ = ০.০৮ M।'},
+ {q:'টাইট্রেশনের শেষ বিন্দু বলতে কী বোঝায়?',o:['যখন নির্দেশকের রং স্থায়ীভাবে বদলায়','যখন বুরেট খালি হয়','যখন দ্রবণ ফুটতে শুরু করে','যখন প্রথম ফোঁটা পড়ে'],a:0,e:'নির্দেশকের রং বদলই জানায় যে বিক্রিয়া শেষ।'},
+ {q:'শেষ বিন্দুর কাছে এসে NaOH কীভাবে যোগ করা উচিত?',o:['ফোঁটা ফোঁটা করে','একসাথে অনেকটা','ফ্লাস্ক না নেড়ে','গরম করে'],a:0,e:'শেষ বিন্দুর কাছে pH খুব দ্রুত বদলায়, তাই এক ফোঁটাতেই রং বদলাতে পারে।'},
+ {q:'সবল এসিড ও সবল ক্ষারের টাইট্রেশনে সমতা বিন্দুতে pH কত?',o:['৭','১','১০','১৪'],a:0,e:'HCl ও NaOH থেকে NaCl হয়, যার দ্রবণ নিরপেক্ষ (২৫°C-এ pH ৭)।'},
+ {q:'দুর্বল এসিড (CH₃COOH) ও সবল ক্ষারের (NaOH) টাইট্রেশনে সমতা বিন্দুর pH কেমন?',o:['৭-এর বেশি','ঠিক ৭','৭-এর কম','০'],a:0,e:'উৎপন্ন লবণ CH₃COONa-এর দ্রবণ ক্ষারীয়, তাই pH ৭-এর বেশি।'},
+ {q:'কনিক্যাল ফ্লাস্কে নির্দিষ্ট ২৫ mL এসিড মেপে নিতে কোন যন্ত্র সবচেয়ে উপযুক্ত?',o:['পিপেট','বিকার','ফানেল','ওয়াচ গ্লাস'],a:0,e:'পিপেট দিয়ে নির্দিষ্ট আয়তন সূক্ষ্মভাবে নেওয়া যায়।'}
+];
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+function frame(){FR++;for(var i=0;i<DRAWS.length;i++)DRAWS[i]();requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>
