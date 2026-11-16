@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>গতি (পদার্থবিজ্ঞান অধ্যায় ২) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+</style>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#physics">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">⚛️ পদার্থবিজ্ঞান &rsaquo; দ্বিতীয় অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🚴 গতি (Motion)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🚆 ল্যাব ১</a><a href="#lab2">🎠 ল্যাব ২</a><a href="#lab3">↗️ ল্যাব ৩</a><a href="#lab4">🛣️ ল্যাব ৪</a><a href="#lab5">🪨 ল্যাব ৫</a><a href="#lab6">🚗 ল্যাব ৬</a><a href="#lab7">🧮 ল্যাব ৭</a><a href="#lab8">🍎 ল্যাব ৮</a><a href="#lab9">📈 ল্যাব ৯</a><a href="#lab10">⛰️ ল্যাব ১০</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> স্থিতি ও গতি ব্যাখ্যা করতে; বিভিন্ন প্রকার গতি আলাদা করতে; স্কেলার ও ভেক্টর রাশি চিনতে; দূরত্ব, সরণ, দ্রুতি, বেগ ও ত্বরণের সম্পর্ক বের করতে; পড়ন্ত বস্তুর গতি ও লেখচিত্র বিশ্লেষণ করতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের ক্রম মেনে সহজ ভাষায় লেখা। বইয়ে "দূরত্ব ও সরণ" অংশের নম্বর "২.8" ছাপা আছে, আসলে এটি ২.৪।</div>
+
+    <h3>২.১ স্থিতি এবং গতি ⭐⭐⭐</h3>
+    <ul>
+      <li>সময়ের সাথে কোনো কিছুর <b>অবস্থানের পরিবর্তন না হলে</b> সেটি স্থির, <b>পরিবর্তন হলে</b> গতিশীল।</li>
+      <li><b>অবস্থান</b> বলতে হলে একটি <b>প্রসঙ্গ বিন্দু বা মূল বিন্দু</b> (origin) থেকে <b>দূরত্ব ও দিক</b> দুটোই বলতে হয়। যেমন: "স্কুলটি বাসার গেইট থেকে পূর্ব দিকে এক কিলোমিটার দূরে"।</li>
+      <li>প্রসঙ্গ বিন্দু চূড়ান্ত কিছু নয়, সুবিধামতো যেকোনো বিন্দুকে ধরা যায়।</li>
+      <li>চলন্ত ট্রেনে বসা বন্ধু তোমার সাপেক্ষে স্থির, কিন্তু স্টেশনে দাঁড়ানো মানুষের সাপেক্ষে গতিশীল। দুজনের কথাই সত্যি।</li>
+      <li>কোনো মূল বিন্দুর সাপেক্ষে বস্তুর অবস্থানের পরিবর্তন হলে বস্তুটি ঐ বিন্দুর সাপেক্ষে গতিশীল। <b>সব গতিই আপেক্ষিক।</b></li>
+      <li>সত্যিকারের স্থির বিন্দু পাওয়া যায় না: পৃথিবী নিজের অক্ষে ও সূর্যের চারদিকে ঘুরছে, সূর্যও গ্যালাক্সির (ছায়াপথ, Milky Way) কেন্দ্রকে ঘিরে ঘুরছে।</li>
+    </ul>
+
+    <h3>২.২ বিভিন্ন প্রকার গতি ⭐⭐⭐</h3>
+    <table class="t"><tr><th>গতি</th><th>কী</th><th>উদাহরণ</th></tr>
+      <tr><td><b>সরলরৈখিক</b></td><td>সরল রেখার ওপর চলাচল</td><td>সমতলে ধাক্কা দেওয়া বস্তু, ওপর থেকে মুক্তভাবে পড়া বল</td></tr>
+      <tr><td><b>ঘূর্ণন</b></td><td>নির্দিষ্ট বিন্দু থেকে সমদূরত্বে থেকে বৃত্তাকার পথে ঘোরা</td><td>বৈদ্যুতিক পাখা, ঘড়ির কাঁটা, পৃথিবীকে ঘিরে চাঁদ</td></tr>
+      <tr><td><b>চলন</b></td><td>বস্তুর সকল কণা একই সময়ে একই দিকে একই দূরত্ব যায়</td><td>সোজা এগিয়ে যাওয়া গাড়ি (চাকার ঘূর্ণন বাদে)</td></tr>
+      <tr><td><b>পর্যায়বৃত্ত</b></td><td>নির্দিষ্ট সময় পরপর গতির পুনরাবৃত্তি</td><td>হৃৎপিণ্ডের স্পন্দন, ফ্যানের পাখা, হ্যালির ধূমকেতু, স্প্রিংয়ে ঝোলানো বস্তু</td></tr>
+      <tr><td><b>সরল স্পন্দন</b></td><td>বিশেষ ধরনের পর্যায়বৃত্ত গতি; সাম্যবিন্দুর দুই পাশে স্পন্দন</td><td>দোলনা, ঘড়ির পেন্ডুলাম, স্প্রিংয়ে দোলানো বস্তু, শব্দ বহনকারী বাতাসের অণু</td></tr></table>
+    <ul>
+      <li><b>পর্যায়কাল:</b> যে সময় পরপর গতির পুনরাবৃত্তি ঘটে।</li>
+      <li>সরল স্পন্দন গতিতে দুই <b>শেষ প্রান্তে দ্রুতি শূন্য</b>, আর <b>সাম্যবিন্দুতে দ্রুতি সর্বোচ্চ</b>।</li>
+      <li>চলন গতি সোজা হতেই হবে এমন নয়, তবে আঁকাবাঁকা পথে চলন গতি পাওয়া কঠিন (চিত্র ২.০১-এর প্লেন)।</li>
+    </ul>
+
+    <h3>২.৩ স্কেলার ও ভেক্টর রাশি ⭐⭐⭐</h3>
+    <ul>
+      <li><b>স্কেলার:</b> যে রাশি শুধু একটি মান দিয়ে প্রকাশ করা যায়। উদাহরণ: তাপমাত্রা, সময়, দৈর্ঘ্য, ভর, দূরত্ব, দ্রুতি।</li>
+      <li><b>ভেক্টর:</b> যে রাশি প্রকাশ করতে মানের সাথে দিকও বলতে হয়। উদাহরণ: অবস্থান, সরণ, বেগ, ত্বরণ, বল।</li>
+      <li>ভেক্টরকে মোটা (Bold) অক্ষরে লেখা হয় (<b>A</b>, <b>B</b>)। হাতে লিখলে ওপরে তির চিহ্ন দেওয়া হয়।</li>
+      <li>দুটি ভেক্টর সমান হয় যদি <b>মান ও দিক দুটোই</b> সমান হয়, ভিন্ন অবস্থানে থাকলেও (চিত্র ২.০৩-এর A ও B)।</li>
+    </ul>
+
+    <h3>২.৪ দূরত্ব ও সরণ ⭐⭐⭐</h3>
+    <ul>
+      <li><b>দূরত্ব:</b> পথ ধরে মোট অতিক্রান্ত দৈর্ঘ্য। স্কেলার রাশি।</li>
+      <li><b>সরণ:</b> শুরুর অবস্থানের সাপেক্ষে শেষ অবস্থান (শুরু থেকে শেষ পর্যন্ত সোজা তির)। ভেক্টর রাশি।</li>
+      <li>চিত্র ২.০৪: আঁকাবাঁকা পথে A থেকে B পর্যন্ত দূরত্ব 4 km, কিন্তু সরণের মান 3 km। মোট 6 km গিয়ে C-তে পৌঁছালে সরণ মাত্র 1.5 km। বেশি দূরত্ব মানেই বেশি সরণ নয়।</li>
+      <li>A থেকে B-এর সরণ আর B থেকে A-এর সরণ একটি আরেকটির ঋণাত্মক।</li>
+    </ul>
+    <p class="eq">AB = −BA<br>[সরণ] = L (ভেক্টর), [দূরত্ব] = L (স্কেলার)</p>
+
+    <h3>২.৫ দ্রুতি এবং বেগ ⭐⭐⭐</h3>
+    <ul>
+      <li><b>দ্রুতি:</b> সময়ের সাথে দূরত্বের পরিবর্তনের হার। স্কেলার। যেমন 20 s-এ 100 m গেলে দ্রুতি 100/20 = 5 m/s।</li>
+      <li><b>বেগ:</b> সময়ের সাথে সরণের পরিবর্তনের হার। ভেক্টর। যেমন 20 s-এ নির্দিষ্ট দিকে 50 m সরলে বেগের মান 2.5 m/s।</li>
+      <li>সরল রৈখিক গতিতে বেগের মানই দ্রুতি।</li>
+    </ul>
+    <p class="eq">গড় দ্রুতি = মোট অতিক্রান্ত দূরত্ব ÷ মোট সময়<br>গড় বেগ = সরণ ÷ সময়<br>[v] = LT⁻¹</p>
+    <div class="key">📘 <b>বইয়ের উদাহরণ:</b> সাইকেলে A থেকে B যেতে 20 মিনিট লাগল। গড় দ্রুতি = 4 km ÷ 20 min = (4 × 1000) ÷ (20 × 60) = <b>3.33 m/s</b>। গড় বেগের মান = 3 km ÷ 20 min = <b>2.5 m/s</b>। পথ সোজা হলে দুটো সমান হতো।</div>
+    <ul>
+      <li><b>সুষম দ্রুতি:</b> সব সময় একই দ্রুতিতে চলা। তখন তাৎক্ষণিক দ্রুতি ও গড় দ্রুতি সমান।</li>
+      <li>আঁকাবাঁকা পথে সুষম দ্রুতিতে গেলেও দিক বদলায়, তাই <b>সুষম বেগ (সমবেগ) হয় না</b>। শুধু সরল রৈখিক গতিতেই সমবেগ সম্ভব।</li>
+      <li><b>সুতায় বাঁধা পাথর ঘোরালে:</b> দ্রুতি এক থাকে, কিন্তু প্রতি মুহূর্তে দিক পাল্টায় বলে বেগ বদলায়। এটি সমদ্রুতির উদাহরণ, সমবেগের নয়। সমবেগ হলে সমদ্রুতি হবেই, কিন্তু সমদ্রুতি হলেই সমবেগ হয় না।</li>
+      <li>পাথরটি হঠাৎ ছেড়ে দিলে একটি নির্দিষ্ট দিকে ছুটে যায়। বাতাসের ঘর্ষণ ও মাধ্যাকর্ষণ না থাকলে সেটি সমবেগে ও সমদ্রুতিতে যেতেই থাকত।</li>
+    </ul>
+    <h3>২.৬ ত্বরণ ⭐⭐⭐</h3>
+    <ul>
+      <li><b>ত্বরণ:</b> সময়ের সাথে বেগের পরিবর্তনের হার। ভেক্টর রাশি। সমবেগে চললে ত্বরণ নেই।</li>
+      <li>বেগের মান বা দিক, যেকোনোটি বদলালেই ত্বরণ হয়। তাই সমদ্রুতিতে ঘুরতে থাকা পাথরেরও ত্বরণ আছে।</li>
+      <li>সরলরৈখিক গতিতে বেগের মান বাড়লে <b>ধনাত্মক ত্বরণ</b>, কমলে <b>ঋণাত্মক ত্বরণ বা মন্দন</b> (deceleration)।</li>
+      <li>চিত্র ২.০৬: A-তে ধনাত্মক ত্বরণ, B-তে ত্বরণ নেই, C-তে ধনাত্মক ত্বরণ, D-তে মন্দন।</li>
+    </ul>
+    <p class="eq">a = (v − u) ÷ t &nbsp; অর্থাৎ &nbsp; v = u + at<br>[a] = LT⁻², একক ms⁻²</p>
+    <ul>
+      <li>স্থির অবস্থা থেকে সমত্বরণে চললে v = at।</li>
+      <li>এই সূত্রগুলো শুধু <b>সমত্বরণের</b> জন্য। গাড়ি, ট্রেন বা সাইকেলের ত্বরণ প্রায় সব সময়ই অসম।</li>
+      <li>সমত্বরণের পরিচিত উদাহরণ <b>মাধ্যাকর্ষণজনিত ত্বরণ g</b>। পৃথিবীপৃষ্ঠের কাছে g = <b>9.8 m/s²</b>। স্থির অবস্থা থেকে মুক্তভাবে পড়লে v = gt।</li>
+    </ul>
+
+    <h3>২.৭ গতির সমীকরণ ⭐⭐⭐</h3>
+    <p>u = আদি বেগ, v = শেষ বেগ, a = ত্বরণ, t = সময়, s = অতিক্রান্ত দূরত্ব।</p>
+    <p class="eq">v = u + at<br>s = ut + ½at²<br>v² = u² + 2as</p>
+    <ul>
+      <li>ত্বরণ না থাকলে v = u এবং s = vt।</li>
+      <li>সমত্বরণে গড় বেগ V = (u + v)/2 = u + ½at, যা ঠিক মাঝামাঝি সময়ের বেগের সমান। তাই s = Vt = ut + ½at²।</li>
+      <li>v = u + at-কে বর্গ করে t বাদ দিলে v² = u² + 2as পাওয়া যায়।</li>
+    </ul>
+    <div class="key">📘 <b>উদাহরণ ১:</b> গাড়ি স্থির অবস্থা থেকে 1 মিনিটে 60 km/hour। v = (60 × 1000) ÷ (60 × 60) = 16.67 m/s। a = v/t = 16.67 ÷ 60 = <b>0.278 m/s²</b>।</div>
+    <div class="key">📘 <b>উদাহরণ ২:</b> 60 miles/hour বেগের গাড়ির ইঞ্জিন বন্ধ হয়ে 5 মিনিটে থামে। 1 mile = 1600 m, তাই u = 26.8 m/s। a = (0 − 26.8) ÷ 300 = −0.089 m/s²। <b>মন্দন 0.089 m/s²</b>।</div>
+    <div class="key">📘 <b>উদাহরণ ৩:</b> বুলেট 1.5 km/s বেগে দেয়ালে 10 cm ঢোকে। 0 = (1500)² − 2a(0.1), তাই <b>মন্দন a = 11,250,000 m/s²</b>।</div>
+
+    <h3>২.৮ পড়ন্ত বস্তুর সূত্র ⭐⭐⭐</h3>
+    <p>গ্যালিলিওর তিনটি সূত্র (স্থির অবস্থা থেকে বিনা বাধায় মুক্তভাবে পড়ন্ত বস্তুর জন্য):</p>
+    <ul>
+      <li><b>প্রথম সূত্র:</b> স্থির অবস্থান ও একই উচ্চতা থেকে বিনা বাধায় পড়ন্ত বস্তু সমান সময়ে সমান পথ অতিক্রম করে।</li>
+      <li><b>দ্বিতীয় সূত্র:</b> নির্দিষ্ট সময়ে (t) প্রাপ্ত বেগ (v) ঐ সময়ের সমানুপাতিক: <b>v ∝ t</b>।</li>
+      <li><b>তৃতীয় সূত্র:</b> নির্দিষ্ট সময়ে অতিক্রান্ত দূরত্ব (h) ঐ সময়ের বর্গের সমানুপাতিক: <b>h ∝ t²</b>।</li>
+    </ul>
+    <p class="eq">v = u + gt<br>h = ut + ½gt²<br>v² = u² + 2gh</p>
+    <ul>
+      <li>সমীকরণে কোথাও ভর নেই। ভারী ও হালকা সব বস্তুর ওপর g সমানভাবে কাজ করে।</li>
+      <li>কাগজ আর পাথর ছাড়লে পাথর আগে পড়ে <b>বাতাসের বাধার কারণে</b>। বাতাসহীন টিউবে দুটো একই সময়ে পড়ে।</li>
+      <li>ওপরে ছুড়লে g মন্দন হিসেবে কাজ করে: v² = u² − 2gh। সর্বোচ্চ উচ্চতায় v = 0, তাই h = u²/2g।</li>
+    </ul>
+    <div class="key">📘 <b>উদাহরণ:</b> পেস বোলার 150 km/hour = 41.67 m/s বেগে বল খাড়া ওপরে ছুড়লে h = (41.67)² ÷ (2 × 9.8) = <b>88.59 m</b> (প্রায় ৩০ তলা দালানের ছাদ)।</div>
+    <div class="warn">⚠️ 10 km/s বেগে গোলা ছুড়লে একই সূত্রে h = 5,102 km আসে, কিন্তু উত্তরটি সঠিক নয়। কারণ পৃথিবী থেকে অনেক ওপরে গেলে g-এর মান কমতে থাকে, আর সূত্রে g ধ্রুব ধরা হয়েছে।</div>
+
+    <h3>গতি ও লেখচিত্র ⭐⭐⭐</h3>
+    <ul>
+      <li><b>দূরত্ব-সময় লেখচিত্র</b> থেকে বেগ: পরপর দুটি বিন্দুর দূরত্বের পার্থক্য ÷ সময়ের পার্থক্য। এই গড় বেগ দুই সময়ের মাঝামাঝিতে বসানো হয়।</li>
+      <li>টেবিল ২.০১-এর প্রথম সেট (0, 1, 4, 9, 16, 25 m): গড় বেগ 1, 3, 5, 7, 9 m/s, যা 0.5, 1.5, 2.5, 3.5, 4.5 s-এ বসে। এগুলো একটি সরলরেখা দেয়। 3 s-এ বেগ 6 m/s।</li>
+      <li><b>বেগ-সময় লেখচিত্র</b> থেকে ত্বরণ: a = (6 − 4) ÷ (3 − 2) = 2 m/s²। সরলরেখা বলে সব জায়গায় একই ত্বরণ।</li>
+      <li>আদর্শ পরিবেশ ধরা হয়েছে: ঘর্ষণ নেই। আসল পরীক্ষায় ল্যাবে air track ব্যবহার করা হয়।</li>
+    </ul>
+    <h4>অনুসন্ধান (সংক্ষেপে)</h4>
+    <ul>
+      <li><b>২.০১ ঢালু তল:</b> তক্তার দৈর্ঘ্য L, উঁচু প্রান্তের উচ্চতা h, ঢাল sinθ = h/L। মারবেল গড়াতে সময় t মেপে গড় দ্রুতি = L/t। ঢাল বাড়িয়ে sinθ বনাম গড় দ্রুতির লেখচিত্র আঁকতে হয়।</li>
+      <li><b>২.০২:</b> খেলার মাধ্যমে রৈখিক, ঘূর্ণন, চলন, পর্যায়বৃত্ত ও স্পন্দন গতি দেখানো।</li>
+      <li><b>২.০৩:</b> রাস্তার পাশে দুটি স্থির বস্তুর দূরত্ব পদক্ষেপ গুনে মেপে, যানবাহনের সময় গুনে গড় দ্রুতি = L/t বের করা।</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🚆 ল্যাব ১: স্থিতি না গতি? (প্রসঙ্গ বিন্দু)</h2>
+    <div class="say">👉 কে দেখছে তা বদলাও। একই ঘটনা দুই প্রসঙ্গ বিন্দু থেকে কেমন দেখায়, মিলিয়ে দেখো।</div>
+    <div class="ctl"><label>প্রসঙ্গ বিন্দু:</label><select id="r1s"><option value="0">স্টেশনে দাঁড়ানো মানুষ</option><option value="1">ট্রেনে বসা তুমি</option></select></div>
+    <div class="row">
+      <div><canvas id="r1c" class="w" width="380" height="220"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="r1t"></div></div>
+    </div>
+    <h3>🎮 স্থির না গতিশীল?</h3>
+    <div class="tlinfo" id="r1q"></div><div class="cls" id="r1o"></div><div class="fb" id="r1f"></div><small id="r1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🎠 ল্যাব ২: বিভিন্ন প্রকার গতি</h2>
+    <div class="say">👉 একটি গতির নামে চাপো আর অ্যানিমেশন দেখো।</div>
+    <div class="pills" id="m2p"></div>
+    <div class="row">
+      <div><canvas id="m2c" class="w" width="380" height="260"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="m2t"></div></div>
+    </div>
+    <h3>🎮 কোন গতি?</h3>
+    <div class="tlinfo" id="m2q"></div><div class="cls" id="m2o"></div><div class="fb" id="m2f"></div><small id="m2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>↗️ ল্যাব ৩: স্কেলার ও ভেক্টর</h2>
+    <div class="say">👉 B ভেক্টরের মান ও দিক বদলে A-এর সমান বানাও। অবস্থান আলাদা হলেও কি দুটো ভেক্টর সমান হতে পারে?</div>
+    <div class="ctl"><label>B-এর মান: <span id="v3mv"></span></label><input type="range" id="v3m" min="20" max="120" step="10" value="50" style="min-width:110px"><label>B-এর দিক: <span id="v3av"></span>°</label><input type="range" id="v3a" min="0" max="345" step="15" value="150" style="min-width:110px"></div>
+    <div class="row">
+      <div><canvas id="v3c" class="w" width="380" height="250"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="v3t"></div></div>
+    </div>
+    <h3>🎮 স্কেলার না ভেক্টর?</h3>
+    <div class="tlinfo" id="v3q"></div><div class="cls" id="v3o"></div><div class="fb" id="v3f"></div><small id="v3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🛣️ ল্যাব ৪: দূরত্ব ও সরণ</h2>
+    <div class="say">👉 স্লাইডার নেড়ে আঁকাবাঁকা পথে সাইকেল চালাও (বইয়ের চিত্র ২.০৪-এর মতো)। পথের দূরত্ব আর লাল তিরের সরণ তুলনা করো।</div>
+    <div class="ctl"><label>অতিক্রান্ত পথ: <span id="d4v"></span> km</label><input type="range" id="d4r" min="0" max="70" step="1" value="40" style="flex:1;min-width:160px"></div>
+    <div class="row">
+      <div><canvas id="d4c" class="w" width="380" height="300"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="d4t"></div></div>
+    </div>
+    <h3>🎮 দূরত্ব ও সরণের খেলা</h3>
+    <div class="tlinfo" id="d4q"></div><div class="cls" id="d4o"></div><div class="fb" id="d4f"></div><small id="d4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🪨 ল্যাব ৫: সমদ্রুতি বনাম সমবেগ (সুতায় বাঁধা পাথর)</h2>
+    <div class="say">👉 পাথরটি ঘুরছে। সবুজ তির বেগের দিক দেখায়। "সুতা ছেড়ে দাও" চেপে দেখো কী হয়।</div>
+    <div class="ctl"><button class="btn" id="s5go">✂️ সুতা ছেড়ে দাও</button><button class="btn alt" id="s5rs">↻ আবার ঘোরাও</button></div>
+    <div class="row">
+      <div><canvas id="s5c" class="w" width="380" height="280"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="s5t"></div></div>
+    </div>
+    <h3>🎮 দ্রুতি ও বেগের খেলা</h3>
+    <div class="tlinfo" id="s5q"></div><div class="cls" id="s5o"></div><div class="fb" id="s5f"></div><small id="s5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🚗 ল্যাব ৬: ত্বরণ ও বেগ-সময় লেখচিত্র</h2>
+    <div class="say">👉 "চালু" চাপো। গাড়িটি বইয়ের চিত্র ২.০৬-এর মতো A, B, C, D ধাপে চলবে। কোথায় ত্বরণ আছে, কোথায় নেই, দেখো।</div>
+    <div class="ctl"><button class="btn" id="a6go">▶ চালু / থামাও</button><button class="btn alt" id="a6rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="a6c" class="w" width="380" height="300"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="a6t"></div></div>
+    </div>
+    <h3>🧮 ত্বরণ হিসাব করো: a = (v − u) ÷ t</h3>
+    <div class="ctl"><label>u: <span id="a6uv"></span> m/s</label><input type="range" id="a6u" min="0" max="30" value="0" style="min-width:90px"><label>v: <span id="a6vv"></span> m/s</label><input type="range" id="a6v" min="0" max="30" value="20" style="min-width:90px"><label>t: <span id="a6tv"></span> s</label><input type="range" id="a6tt" min="1" max="20" value="5" style="min-width:90px"></div>
+    <div class="tlinfo" id="a6k"></div>
+    <h3>🎮 ত্বরণের খেলা</h3>
+    <div class="tlinfo" id="a6q"></div><div class="cls" id="a6o"></div><div class="fb" id="a6f"></div><small id="a6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>🧮 ল্যাব ৭: গতির সমীকরণ</h2>
+    <div class="say">👉 আদি বেগ, ত্বরণ ও সময় বদলাও। তিনটি সমীকরণ নিজে থেকে হিসাব হবে। লেখচিত্রের রঙিন অংশের ক্ষেত্রফলই অতিক্রান্ত দূরত্ব।</div>
+    <div class="ctl"><label>u: <span id="e7uv"></span> m/s</label><input type="range" id="e7u" min="0" max="20" value="4" style="min-width:90px"><label>a: <span id="e7av"></span> m/s²</label><input type="range" id="e7a" min="-4" max="4" step="0.5" value="2" style="min-width:90px"><label>t: <span id="e7tv"></span> s</label><input type="range" id="e7t" min="0" max="10" step="0.5" value="5" style="min-width:90px"></div>
+    <div class="row">
+      <div><canvas id="e7c" class="w" width="380" height="300"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="e7x"></div></div>
+    </div>
+    <h3>🎮 সমীকরণের খেলা</h3>
+    <div class="tlinfo" id="e7q"></div><div class="cls" id="e7o"></div><div class="fb" id="e7f"></div><small id="e7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>🍎 ল্যাব ৮: পড়ন্ত বস্তু (গ্যালিলিওর সূত্র)</h2>
+    <div class="say">👉 পাথর আর কাগজ একসাথে ২০ মিটার ওপর থেকে ছাড়ো। প্রথমে বাতাসহীন টিউবে, তারপর বাতাসে।</div>
+    <div class="ctl"><label>পরিবেশ:</label><select id="f8s"><option value="0">বাতাসহীন টিউব</option><option value="1">বাতাসে</option></select><button class="btn" id="f8go">⬇ ছেড়ে দাও</button><button class="btn alt" id="f8rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="f8c" class="w" width="380" height="340"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="f8t"></div></div>
+    </div>
+    <h3>⬆️ খাড়া ওপরে ছুড়লে কত উঠবে? h = u² ÷ 2g</h3>
+    <div class="ctl"><label>আদি বেগ u: <span id="f8uv"></span> m/s</label><input type="range" id="f8u" min="5" max="50" step="1" value="42" style="flex:1;min-width:150px"></div>
+    <div class="tlinfo" id="f8k"></div>
+    <h3>🎮 পড়ন্ত বস্তুর খেলা (g = 9.8 m/s²)</h3>
+    <div class="tlinfo" id="f8q"></div><div class="cls" id="f8o"></div><div class="fb" id="f8f"></div><small id="f8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>📈 ল্যাব ৯: গতি ও লেখচিত্র (টেবিল ২.০১)</h2>
+    <div class="say">👉 একটি উপাত্ত সেট বেছে নাও। দূরত্ব-সময় থেকে বেগ-সময়, তা থেকে ত্বরণ-সময় লেখচিত্র কীভাবে আসে দেখো। স্লাইডার নেড়ে যেকোনো সময়ের মান পড়ো।</div>
+    <div class="ctl"><label>উপাত্ত:</label><select id="g9s"><option value="0">প্রথম সেট (বইয়ে করা আছে)</option><option value="1">দ্বিতীয় সেট (নিজে করো)</option></select><label>সময়: <span id="g9v"></span> s</label><input type="range" id="g9r" min="0" max="10" step="1" value="5" style="flex:1;min-width:130px"></div>
+    <div class="row">
+      <div><canvas id="g9c" class="w" width="380" height="446"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="g9t"></div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="lab10">
+    <h2>⛰️ ল্যাব ১০: ঢালু তলে মারবেল (অনুসন্ধান ২.০১)</h2>
+    <div class="say">👉 উঁচু প্রান্তের উচ্চতা বদলে "গড়িয়ে দাও" চাপো। কয়েকটি ভিন্ন ঢালে করলে নিচের লেখচিত্রে বিন্দু জমবে।</div>
+    <div class="warn">ℹ️ এটি একটি সরল মডেল: তক্তা 100 cm, মারবেল না পিছলে গড়ায়, বাতাস ও অন্য বাধা নেই। আসল পরীক্ষায় সময় একটু বেশি লাগবে।</div>
+    <div class="ctl"><label>উচ্চতা h: <span id="i10v"></span> cm</label><input type="range" id="i10h" min="2" max="40" step="2" value="10" style="flex:1;min-width:140px"><button class="btn" id="i10go">▶ গড়িয়ে দাও</button><button class="btn alt" id="i10rs">লেখচিত্র মোছো</button></div>
+    <div class="row">
+      <div><canvas id="i10c" class="w" width="380" height="330"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="i10t"></div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। সৃজনশীল প্রশ্ন ১, ২ ও প্রথম ৪টি সংক্ষিপ্ত প্রশ্ন বইয়ের নমুনা প্রশ্ন থেকে নেওয়া। বাকিগুলো বইয়ের বিষয় ধরে আমার বানানো অনুশীলন। বইয়ে উত্তরমালা নেই, সব উত্তর আমার লেখা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; গতি (পদার্থবিজ্ঞান অধ্যায় ২)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+function opts(correct,wrongs){var seen={},a=[{t:correct,ok:1}];seen[correct]=1;wrongs.forEach(function(w){if(!seen[w]){seen[w]=1;a.push({t:w,ok:0});}});return shuffle(a);}
+function arrow(x,x1,y1,x2,y2,col,lw){var a=Math.atan2(y2-y1,x2-x1);x.strokeStyle=col;x.fillStyle=col;x.lineWidth=lw||3;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-11*Math.cos(a-.4),y2-11*Math.sin(a-.4));x.lineTo(x2-11*Math.cos(a+.4),y2-11*Math.sin(a+.4));x.closePath();x.fill();}
+function person(x,px,py,col){circ(x,0,px,py-22,6,col,null);x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(px,py-16);x.lineTo(px,py-4);x.moveTo(px-6,py-11);x.lineTo(px+6,py-11);x.moveTo(px,py-4);x.lineTo(px-5,py+6);x.moveTo(px,py-4);x.lineTo(px+5,py+6);x.stroke();}
+/* ---------- ল্যাব ১ ---------- */
+function r1info(){var o=+$('r1s').value;$('r1t').innerHTML=o===0?'<b>প্রসঙ্গ বিন্দু: স্টেশনের মানুষ</b><br>তার চোখে গাছ ও প্ল্যাটফর্ম স্থির, কিন্তু ট্রেন, তুমি ও তোমার বন্ধু সবাই <b>গতিশীল</b>।':'<b>প্রসঙ্গ বিন্দু: ট্রেনে বসা তুমি</b><br>তোমার চোখে বন্ধু <b>স্থির</b> (অবস্থান বদলাচ্ছে না)। কিন্তু গাছ, প্ল্যাটফর্ম ও স্টেশনের মানুষ উল্টো দিকে <b>গতিশীল</b>!<br><small>দুজনের কথাই সত্যি, কারণ সব গতিই আপেক্ষিক।</small>';}
+$('r1s').onchange=r1info;r1info();
+DRAWS.push(function(){var x=ctxOf('r1c'),o=+$('r1s').value,sh=(FR*1.6)%460,i;x.clearRect(0,0,380,220);x.fillStyle='#dff0fb';x.fillRect(0,0,380,150);x.fillStyle='#b9c3a0';x.fillRect(0,150,380,70);
+  var gx=o?-sh:0,tx=o?110:-150+sh;
+  for(i=0;i<4;i++){var px=((i*125+40+gx)%500+500)%500-60;x.fillStyle='#7a5a3a';x.fillRect(px-4,100,8,50);circ(x,0,px,90,22,'#3f9a4d',null);}
+  var sx=((300+gx)%500+500)%500-60;person(x,sx,190,'#c0392b');txt(x,'স্টেশনের মানুষ',clamp(sx,50,330),208,'bold 10px Hind Siliguri','#7b241c');
+  x.fillStyle='#2b6cb0';x.fillRect(tx,96,170,52);x.fillStyle='#fff';x.fillRect(tx+14,104,56,26);x.fillRect(tx+96,104,56,26);circ(x,0,tx+30,152,9,'#333',null);circ(x,0,tx+140,152,9,'#333',null);
+  circ(x,0,tx+42,118,7,'#f0b35a','#333',1);circ(x,0,tx+124,118,7,'#8ad0a0','#333',1);txt(x,'তুমি',tx+42,88,'bold 10px Hind Siliguri',NAVY);txt(x,'বন্ধু',tx+124,88,'bold 10px Hind Siliguri',NAVY);
+  x.fillStyle='#555';x.fillRect(0,160,380,3);
+  txt(x,o?'ট্রেন স্থির দেখাচ্ছে, বাইরেটা পেছনে যাচ্ছে ←':'ট্রেন ডানে যাচ্ছে →',190,16,'bold 12px Hind Siliguri',NAVY);
+});
+qgame('r1q','r1o','r1f','r1sc',[['চলন্ত ট্রেনে তোমার পাশে বসা বন্ধু <b>তোমার সাপেক্ষে</b> কেমন?','স্থির',['গতিশীল'],'তোমার সাপেক্ষে বন্ধুর অবস্থানের পরিবর্তন হচ্ছে না।'],
+ ['চলন্ত ট্রেনে বসা তুমি <b>স্টেশনে দাঁড়ানো মানুষের সাপেক্ষে</b> কেমন?','গতিশীল',['স্থির'],'তার সাপেক্ষে তোমার অবস্থান সময়ের সাথে বদলাচ্ছে।'],
+ ['স্টেশনের গাছ <b>চলন্ত ট্রেনের যাত্রীর সাপেক্ষে</b> কেমন?','গতিশীল',['স্থির'],'যাত্রীকে মূল বিন্দু ধরলে গাছের অবস্থান বদলাচ্ছে, তাই গাছ গতিশীল।'],
+ ['কোনো কিছুর অবস্থান বলতে হলে প্রসঙ্গ বিন্দু থেকে কী কী জানাতে হয়?','দূরত্ব ও দিক দুটোই',['শুধু দূরত্ব','শুধু দিক','শুধু সময়'],'যেমন: বাসার গেইট থেকে পূর্ব দিকে এক কিলোমিটার।'],
+ ['"সব গতিই আপেক্ষিক" কেন বলা হয়?','কারণ গতি সবসময় কোনো প্রসঙ্গ বিন্দুর সাপেক্ষে মাপা হয়',['কারণ সব বস্তু সমান বেগে চলে','কারণ পৃথিবী স্থির','কারণ গতি মাপা যায় না'],'সত্যিকারের স্থির কোনো প্রসঙ্গ বিন্দু পাওয়া যায় না।'],
+ ['টেবিলের ওপর রাখা বই <b>টেবিলের সাপেক্ষে</b> কেমন?','স্থির',['গতিশীল'],'টেবিলের সাপেক্ষে বইয়ের অবস্থান বদলাচ্ছে না, যদিও পৃথিবীর সাথে দুটোই ঘুরছে।']]);
+/* ---------- ল্যাব ২ ---------- */
+var M2N=[['সরলরৈখিক গতি','কোনো কিছু সরল রেখার ওপর চলাচল করলে তার গতি সরলরৈখিক। সমতলে ধাক্কা দিয়ে ছেড়ে দেওয়া বস্তু বা ওপর থেকে মুক্তভাবে পড়া বল এর উদাহরণ।'],['ঘূর্ণন গতি','বস্তু একটি নির্দিষ্ট বিন্দু থেকে সমদূরত্বে থেকে বৃত্তাকার পথে ঘোরে। বৈদ্যুতিক পাখা, ঘড়ির কাঁটা, পৃথিবীকে ঘিরে চাঁদ।'],['চলন গতি','বস্তুর সকল কণা একই সময়ে একই দিকে একই দূরত্ব যায়। ওপরের প্লেনটি চলন গতিতে আছে (দিক একই থাকছে)। নিচের প্লেনটি ঘুরে যাচ্ছে, তাই সেটি চলন গতি নয়।'],['পর্যায়বৃত্ত গতি','নির্দিষ্ট সময় পরপর গতির পুনরাবৃত্তি হয়। সেই সময়টাই পর্যায়কাল। পথ বৃত্তাকার, উপবৃত্তাকার (হ্যালির ধূমকেতু) বা সরলরৈখিক হতে পারে।'],['সরল স্পন্দন গতি','বিশেষ ধরনের পর্যায়বৃত্ত গতি। সাম্যবিন্দুর দুই পাশে বস্তু স্পন্দিত হয়। দুই শেষ প্রান্তে দ্রুতি শূন্য, সাম্যবিন্দুতে দ্রুতি সর্বোচ্চ। নিচের দণ্ডে দ্রুতি দেখো।']];
+var M2={k:0};
+$('m2p').innerHTML=M2N.map(function(m,i){return '<button data-i="'+i+'">'+m[0]+'</button>';}).join('');
+function m2show(){$('m2t').innerHTML='<b>'+M2N[M2.k][0]+'</b><br>'+M2N[M2.k][1];}
+$('m2p').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;M2.k=+b.getAttribute('data-i');m2show();};m2show();
+function plane(x,px,py,rot){x.save();x.translate(px,py);x.rotate(rot);x.fillStyle='#222';x.fillRect(-16,-3,32,6);x.beginPath();x.moveTo(-4,0);x.lineTo(4,-16);x.lineTo(8,-16);x.lineTo(4,0);x.lineTo(8,16);x.lineTo(4,16);x.closePath();x.fill();x.fillRect(-16,-8,4,16);x.restore();}
+DRAWS.push(function(){var x=ctxOf('m2c'),k=M2.k,t=FR*.02,i;x.clearRect(0,0,380,260);
+  if(k===0){x.strokeStyle='#8a97a4';x.lineWidth=3;x.beginPath();x.moveTo(20,150);x.lineTo(360,150);x.stroke();var px=30+(FR*1.5)%320;x.fillStyle=ORG;x.fillRect(px-20,126,40,18);circ(x,0,px-11,146,5,'#333',null);circ(x,0,px+11,146,5,'#333',null);arrow(x,px+26,134,px+60,134,RED,3);txt(x,'সরল রেখা',190,180,'bold 11px Hind Siliguri','#456');}
+  if(k===1){for(i=0;i<3;i++){var a=t*3+i*2.094;x.fillStyle='#7fb2dc';x.beginPath();x.ellipse(100+Math.cos(a)*30,120+Math.sin(a)*30,32,10,a,0,7);x.fill();}circ(x,0,100,120,8,'#345',null);txt(x,'পাখা',100,196,'bold 11px Hind Siliguri',NAVY);
+    circ(x,0,270,120,22,'#2b6cb0',null);x.strokeStyle='#bbb';x.setLineDash([4,4]);x.beginPath();x.arc(270,120,70,0,7);x.stroke();x.setLineDash([]);circ(x,0,270+Math.cos(t)*70,120+Math.sin(t)*70,9,'#ccc','#888',1);txt(x,'পৃথিবী ও চাঁদ',270,214,'bold 11px Hind Siliguri',NAVY);}
+  if(k===2){var u=(FR*.006)%1,px2=30+u*320,py2=70-Math.sin(u*Math.PI*2)*30;plane(x,px2,py2,0);txt(x,'চলন গতি ✔',70,22,'bold 12px Hind Siliguri','#2a7a3b');
+    var sl=-Math.cos(u*Math.PI*2)*30*2*Math.PI/320;plane(x,px2,py2+120,Math.atan(sl));txt(x,'চলন গতি নয় ✘',76,142,'bold 12px Hind Siliguri',RED);}
+  if(k===3){x.strokeStyle='#bbb';x.setLineDash([4,4]);x.beginPath();x.ellipse(190,130,150,60,0,0,7);x.stroke();x.setLineDash([]);circ(x,0,70,130,16,'#f6c34a','#e9a23b',2);var th=t*1.2-Math.sin(t*1.2)*.6;circ(x,0,190+Math.cos(th+Math.PI)*150,130+Math.sin(th+Math.PI)*60,7,'#9cc7ea','#345',1);
+    txt(x,'সূর্যকে ঘিরে ধূমকেতু (উপবৃত্তাকার পথ)',190,216,'bold 11px Hind Siliguri',NAVY);txt(x,'পর্যায়কাল পরপর একই জায়গায় ফেরে',190,236,'11px Hind Siliguri','#456');}
+  if(k===4){var an=Math.sin(t*2)*.7,sp=Math.abs(Math.cos(t*2)),bx=190+Math.sin(an)*150,by=30+Math.cos(an)*150;x.strokeStyle='#345';x.lineWidth=2;x.beginPath();x.moveTo(190,30);x.lineTo(bx,by);x.stroke();circ(x,0,bx,by,14,ORG,'#b8600b',2);
+    x.strokeStyle='#bbb';x.setLineDash([4,4]);x.beginPath();x.moveTo(190,30);x.lineTo(190,200);x.stroke();x.setLineDash([]);txt(x,'সাম্যবিন্দু',190,212,'bold 10px Hind Siliguri','#456');
+    x.fillStyle='#e8eef3';x.fillRect(90,232,200,14);x.fillStyle=RED;x.fillRect(90,232,200*sp,14);txt(x,'দ্রুতি',62,239,'bold 11px Hind Siliguri',NAVY);txt(x,sp<.12?'শেষ প্রান্ত: দ্রুতি শূন্য':sp>.95?'সাম্যবিন্দু: সর্বোচ্চ দ্রুতি':'',190,18,'bold 11px Hind Siliguri',RED);}
+});
+qgame('m2q','m2o','m2f','m2sc',[['ঘড়ির কাঁটার গতি কী রকম গতি?','পর্যায়বৃত্ত গতি',['রৈখিক গতি','চলন গতি','স্পন্দন গতি'],'কাঁটা নির্দিষ্ট সময় পরপর একই জায়গায় ফেরে। এটি ঘূর্ণন গতিও বটে।'],
+ ['দোলনায় দুলতে থাকা শিশুর গতি কোনটি?','সরল স্পন্দন গতি',['চলন গতি','রৈখিক গতি','ঘূর্ণন গতি'],'সাম্যবিন্দুর দুই পাশে স্পন্দিত হয়।'],
+ ['ওপর থেকে ছেড়ে দেওয়া বল মুক্তভাবে নিচে পড়ছে। এটি কোন গতি?','সরলরৈখিক গতি',['ঘূর্ণন গতি','পর্যায়বৃত্ত গতি','স্পন্দন গতি'],'বলটি সরল রেখা ধরে পড়ে।'],
+ ['সোজা এগিয়ে যাওয়া গাড়ির (চাকা বাদে) গতি কোনটি?','চলন গতি',['ঘূর্ণন গতি','স্পন্দন গতি','পর্যায়বৃত্ত গতি'],'গাড়ির প্রতিটি বিন্দু একই সময়ে একই দিকে একই দূরত্ব যায়।'],
+ ['পৃথিবীকে ঘিরে চাঁদের গতি কোনটির উদাহরণ?','ঘূর্ণন গতি',['চলন গতি','রৈখিক গতি','সরল স্পন্দন গতি'],'চাঁদ বৃত্তাকার পথে পৃথিবীকে ঘিরে ঘুরছে।'],
+ ['সরল স্পন্দন গতিতে কোথায় দ্রুতি সর্বোচ্চ?','সাম্যবিন্দুতে',['দুই শেষ প্রান্তে','সব জায়গায় সমান','শুরুর বিন্দুতে'],'শেষ প্রান্তে দ্রুতি শূন্য, সাম্যবিন্দুতে সর্বোচ্চ।'],
+ ['হৃৎপিণ্ডের স্পন্দন কোন গতির উদাহরণ?','পর্যায়বৃত্ত গতি',['রৈখিক গতি','চলন গতি','ঘূর্ণন গতি'],'হৃৎপিণ্ড নির্দিষ্ট সময় পরপর একইভাবে স্পন্দিত হয়।']]);
+
+/* ---------- ল্যাব ৩: ভেক্টর ---------- */
+function v3calc(){var m=+$('v3m').value,a=+$('v3a').value;return {m:m,a:a,same:m===60&&a===45};}
+function v3info(){var c=v3calc();$('v3mv').textContent=bn(c.m);$('v3av').textContent=bn(c.a);
+  $('v3t').innerHTML='<b>A ভেক্টর:</b> মান ৬০, দিক ৪৫° (স্থির)<br><b>B ভেক্টর:</b> মান '+bn(c.m)+', দিক '+bn(c.a)+'°<br>'+(c.same?'✅ <b>A = B</b>। মান ও দিক দুটোই সমান, ভিন্ন অবস্থানে থাকলেও।':(c.a===45?'দিক সমান, কিন্তু মান আলাদা। তাই ভেক্টর সমান নয় (বইয়ে C ও D-এর মতো)।':c.m===60?'মান সমান, কিন্তু দিক আলাদা। তাই ভেক্টর সমান নয় (বইয়ে A ও C-এর মতো)।':'মান ও দিক দুটোই আলাদা।'))+'<br><small>স্কেলার শুধু মান দিয়ে প্রকাশ হয়। ভেক্টরে মানের সাথে দিকও লাগে।</small>';}
+$('v3m').oninput=v3info;$('v3a').oninput=v3info;v3info();
+DRAWS.push(function(){var x=ctxOf('v3c'),c=v3calc(),i;x.clearRect(0,0,380,250);x.strokeStyle='#eef2f6';x.lineWidth=1;for(i=0;i<=380;i+=30){x.beginPath();x.moveTo(i,0);x.lineTo(i,250);x.stroke();}for(i=0;i<=250;i+=30){x.beginPath();x.moveTo(0,i);x.lineTo(380,i);x.stroke();}
+  var r=Math.PI/180,al=60*1.3,ax=al*Math.cos(45*r),ay=-al*Math.sin(45*r);arrow(x,50,200,50+ax,200+ay,BLU,4);txt(x,'A',50+ax/2-12,200+ay/2-6,'bold 15px Hind Siliguri',BLU);
+  var bl=c.m*1.3,bx=bl*Math.cos(c.a*r),by=-bl*Math.sin(c.a*r),ox=c.a>=90&&c.a<=270?320:200,oy=c.a>=180?60:200;if(c.a>=180&&c.a<345)oy=60;
+  ox=clamp(ox,Math.max(20,-bx+20),Math.min(360,360-bx));oy=clamp(oy,Math.max(20,-by+20),Math.min(235,235-by));
+  arrow(x,ox,oy,ox+bx,oy+by,c.same?'#2a7a3b':RED,4);txt(x,'B',ox+bx/2-12,oy+by/2-8,'bold 15px Hind Siliguri',c.same?'#2a7a3b':RED);
+  txt(x,c.same?'A = B ✔':'A ≠ B',320,18,'bold 14px Hind Siliguri',c.same?'#2a7a3b':RED);
+});
+mkGame('v3q','v3o','v3f','v3sc',function(){var Q=[['তাপমাত্রা',1],['সময়',1],['দৈর্ঘ্য',1],['ভর',1],['দূরত্ব',1],['দ্রুতি',1],['অবস্থান',0],['সরণ',0],['বেগ',0],['ত্বরণ',0],['বল',0]],g=pick(Q),A='স্কেলার',B='ভেক্টর',ans=g[1]?A:B;
+  var why=g[0]+(g[1]?' শুধু মান দিয়ে প্রকাশ করা যায়, তাই স্কেলার।':' প্রকাশ করতে মানের সাথে দিকও লাগে, তাই ভেক্টর।');return {q:'<b>'+g[0]+'</b> কোন ধরনের রাশি?',o:opts(ans,[g[1]?B:A]),good:why,bad:why};});
+/* ---------- ল্যাব ৪: দূরত্ব ও সরণ ---------- */
+var ROAD=[[80,250],[155.6,225.4],[176.4,214.1],[211.2,185.3],[244.5,122],[192.6,77.6],[140.4,115.4],[96.6,139.4],[86.3,144.2],[83.5,121.2],[75.9,76.5]];
+var RP=(function(){var P=ROAD,Q=[P[0]].concat(P,[P[P.length-1]]),pts=[],L=[0],i,k;for(i=1;i<Q.length-2;i++){var p0=Q[i-1],p1=Q[i],p2=Q[i+1],p3=Q[i+2];for(k=0;k<24;k++){var t=k/24,t2=t*t,t3=t2*t;pts.push([0.5*(2*p1[0]+(-p0[0]+p2[0])*t+(2*p0[0]-5*p1[0]+4*p2[0]-p3[0])*t2+(-p0[0]+3*p1[0]-3*p2[0]+p3[0])*t3),0.5*(2*p1[1]+(-p0[1]+p2[1])*t+(2*p0[1]-5*p1[1]+4*p2[1]-p3[1])*t2+(-p0[1]+3*p1[1]-3*p2[1]+p3[1])*t3)]);}}pts.push(P[P.length-1].slice());
+  for(i=1;i<pts.length;i++)L.push(L[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));return {pts:pts,L:L,tot:L[L.length-1]};})();
+function rpat(d){var s=d/7*RP.tot,i;for(i=1;i<RP.L.length;i++)if(RP.L[i]>=s){var u=(s-RP.L[i-1])/(RP.L[i]-RP.L[i-1]);return [RP.pts[i-1][0]+(RP.pts[i][0]-RP.pts[i-1][0])*u,RP.pts[i-1][1]+(RP.pts[i][1]-RP.pts[i-1][1])*u];}return RP.pts[RP.pts.length-1];}
+function d4disp(d){var a=rpat(0),b=rpat(d),km=RP.tot/7;return Math.hypot(b[0]-a[0],b[1]-a[1])/km;}
+function d4info(){var d=+$('d4r').value/10,s=d4disp(d);$('d4v').textContent=f(d,1);
+  $('d4t').innerHTML='<b>দূরত্ব</b> (পথ ধরে) = <b>'+f(d,1)+' km</b> (স্কেলার)<br><b>সরণের মান</b> (A থেকে সোজা) = <b>'+f(s,2)+' km</b> (ভেক্টর, দিক: লাল তিরের দিকে)<br>'+(Math.abs(d-4)<.05?'এটি বইয়ের B বিন্দু: দূরত্ব 4 km, সরণ 3 km।<br>':Math.abs(d-6)<.05?'এটি বইয়ের C বিন্দু: দূরত্ব 6 km, সরণ 1.5 km।<br>':'')+'<small>বেশি দূরত্ব গেলেই বেশি সরণ হয় না। শুরু ও শেষ অবস্থানের পার্থক্যই সরণ।<br>A থেকে B-এর সরণ আর B থেকে A-এর সরণ একটি আরেকটির ঋণাত্মক: AB = −BA।</small>';}
+$('d4r').oninput=d4info;d4info();
+DRAWS.push(function(){var x=ctxOf('d4c'),d=+$('d4r').value/10,i;x.clearRect(0,0,380,300);x.fillStyle='#e9f0cf';x.fillRect(0,0,380,300);
+  x.strokeStyle='#888';x.lineWidth=11;x.lineCap='round';x.beginPath();RP.pts.forEach(function(p,j){if(j)x.lineTo(p[0],p[1]);else x.moveTo(p[0],p[1]);});x.stroke();x.strokeStyle='#fff';x.lineWidth=2;x.setLineDash([6,6]);x.beginPath();RP.pts.forEach(function(p,j){if(j)x.lineTo(p[0],p[1]);else x.moveTo(p[0],p[1]);});x.stroke();x.setLineDash([]);x.lineCap='butt';
+  x.strokeStyle='#e9a23b';x.lineWidth=4;x.beginPath();var s=d/7*RP.tot;for(i=0;i<RP.pts.length&&RP.L[i]<=s;i++){if(i)x.lineTo(RP.pts[i][0],RP.pts[i][1]);else x.moveTo(RP.pts[i][0],RP.pts[i][1]);}var e=rpat(d);x.lineTo(e[0],e[1]);x.stroke();
+  for(i=0;i<=7;i++){var p=rpat(i);circ(x,0,p[0],p[1],7,'#fff','#555',1);txt(x,bn(i),p[0],p[1],'bold 10px Hind Siliguri','#333');}
+  var a=rpat(0);if(d>0.05)arrow(x,a[0]+14,a[1]-4,e[0],e[1],RED,3);circ(x,0,a[0],a[1],4,BLU,null);txt(x,'A',a[0]-14,a[1]+10,'bold 14px Hind Siliguri',BLU);circ(x,0,e[0],e[1],6,RED,'#fff',1.5);txt(x,'সাইকেল',e[0]+30,e[1],'bold 10px Hind Siliguri',RED);
+});
+mkGame('d4q','d4o','d4f','d4sc',function(){var r=Math.random();if(r<.34){var d=pick([4,6,8,10,12]),w='দূরত্ব = পথ ধরে মোট অতিক্রান্ত দৈর্ঘ্য = '+bn(d)+' km।';return {q:'আঁকাবাঁকা পথে A থেকে B যেতে সাইকেল '+bn(d)+' km পথ চলল। দূরত্ব কত?',o:opts(bn(d)+' km',[bn(d-1)+' km',bn(d+2)+' km','৩ km']),good:w,bad:w};}
+  if(r<.67){var w2='বইয়ের চিত্র ২.০৪: দূরত্ব 4 km হলেও A ও B-এর সোজা পার্থক্য (সরণ) মাত্র 3 km। সরণ দূরত্বের চেয়ে বেশি কখনো হয় না।';return {q:'বইয়ের উদাহরণে A থেকে B পর্যন্ত দূরত্ব 4 km হলে সরণের মান কত?',o:opts('3 km',['4 km','7 km','1.5 km']),good:w2,bad:w2};}
+  var w3='সরণ ভেক্টর রাশি, তাই মানের সাথে দিকও লাগে। দূরত্ব স্কেলার।';return {q:'কোনটি ভেক্টর রাশি?',o:opts('সরণ',['দূরত্ব','দ্রুতি','সময়']),good:w3,bad:w3};});
+/* ---------- ল্যাব ৫: পাথর ---------- */
+var S5={a:0,cut:false,px:0,py:0,vx:0,vy:0};
+function s5info(){$('s5t').innerHTML=S5.cut?'<b>সুতা ছাড়া হয়েছে।</b><br>পাথরটি যে মুহূর্তে ছাড়া হয়েছে সেই দিকে সোজা ছুটছে। সুতার টান না থাকায় আর দিক বদলাচ্ছে না।<br><small>বাতাসের ঘর্ষণ ও মাধ্যাকর্ষণ না থাকলে এটি সমবেগে ও সমদ্রুতিতে যেতেই থাকত।</small>':'<b>পাথর ঘুরছে।</b><br>দ্রুতি: <b>একই থাকছে</b> (সমদ্রুতি)<br>বেগ: প্রতি মুহূর্তে দিক বদলাচ্ছে, তাই <b>বেগ বদলাচ্ছে</b>।<br>বেগ বদলালে ত্বরণ আছে, তাই এই পাথরের ত্বরণ আছে।<br><small>সমদ্রুতি হলেই সমবেগ হয় না। সমবেগ হলে সমদ্রুতি হবেই।</small>';}
+$('s5go').onclick=function(){if(S5.cut)return;S5.cut=true;var r=70,a=S5.a;S5.px=190+r*Math.cos(a);S5.py=140+r*Math.sin(a);S5.vx=-Math.sin(a)*4.2;S5.vy=Math.cos(a)*4.2;s5info();};
+$('s5rs').onclick=function(){S5.cut=false;s5info();};s5info();
+DRAWS.push(function(){var x=ctxOf('s5c'),r=70;x.clearRect(0,0,380,280);
+  if(!S5.cut)S5.a+=.06;else{S5.px+=S5.vx;S5.py+=S5.vy;if(S5.px<-30||S5.px>410||S5.py<-30||S5.py>310){S5.cut=false;s5info();}}
+  var px=S5.cut?S5.px:190+r*Math.cos(S5.a),py=S5.cut?S5.py:140+r*Math.sin(S5.a),vx=S5.cut?S5.vx:-Math.sin(S5.a)*4.2,vy=S5.cut?S5.vy:Math.cos(S5.a)*4.2;
+  x.strokeStyle='#d0d7de';x.setLineDash([4,4]);x.lineWidth=1.5;x.beginPath();x.arc(190,140,r,0,7);x.stroke();x.setLineDash([]);
+  circ(x,0,190,140,8,'#c9976b','#8a5a2b',2);txt(x,'হাত',190,164,'bold 10px Hind Siliguri','#6b3a05');
+  if(!S5.cut){x.strokeStyle='#8a5a2b';x.lineWidth=2;x.beginPath();x.moveTo(190,140);x.lineTo(px,py);x.stroke();}
+  circ(x,0,px,py,11,'#7b8794','#333',2);arrow(x,px,py,px+vx*9,py+vy*9,'#2a9d4f',3);txt(x,'বেগ',px+vx*9+(vx>=0?18:-18),py+vy*9+(vy>=0?12:-12),'bold 10px Hind Siliguri','#1d7a3b');
+  var sp=Math.hypot(vx,vy);txt(x,'দ্রুতি = '+f(sp,1)+' (একই)',190,258,'bold 12px Hind Siliguri',NAVY);txt(x,'বেগের দিক: '+(S5.cut?'স্থির':'বদলাচ্ছে'),190,274,'bold 12px Hind Siliguri',S5.cut?'#2a7a3b':RED);
+});
+qgame('s5q','s5o','s5f','s5sc',[['সুতায় বাঁধা পাথর সমান দ্রুতিতে ঘুরছে। এটি কিসের উদাহরণ?','সমদ্রুতি, কিন্তু সমবেগ নয়',['সমদ্রুতি ও সমবেগ দুটোই','সমবেগ, কিন্তু সমদ্রুতি নয়','কোনোটাই নয়'],'দ্রুতি এক থাকলেও দিক বদলায় বলে বেগ বদলায়।'],
+ ['সমবেগে চলা বস্তু কি অবশ্যই সমদ্রুতিতে চলে?','হ্যাঁ',['না'],'বেগের মান ও দিক দুটোই এক থাকলে মান (দ্রুতি) অবশ্যই এক থাকবে।'],
+ ['সমদ্রুতিতে চলা বস্তু কি অবশ্যই সমবেগে চলে?','না',['হ্যাঁ'],'দিক বদলালে দ্রুতি এক থাকলেও বেগ বদলায়, যেমন বৃত্তাকার পথে।'],
+ ['ঘুরন্ত পাথরের সুতা ছিঁড়ে গেলে পাথরটি কোন পথে যাবে?','যে মুহূর্তে ছাড়া হলো সেই দিকে সোজা',['বৃত্তের কেন্দ্রের দিকে','বৃত্তেই ঘুরতে থাকবে','ওপরে উঠে যাবে'],'ছাড়ার মুহূর্তের বেগের দিকে একটি নির্দিষ্ট দিকে ছুটে যায়।'],
+ ['সমদ্রুতিতে বৃত্তাকার পথে ঘুরন্ত পাথরের ত্বরণ আছে কি?','আছে, কারণ বেগের দিক বদলাচ্ছে',['নেই, কারণ দ্রুতি একই','আছে, কারণ দ্রুতি বাড়ছে','নেই, কারণ সে ঘুরছে'],'বেগের মান বা দিক বদলালে ত্বরণ হয়।']]);
+
+/* ---------- ল্যাব ৬: ত্বরণ ---------- */
+var A6S=[[0,3,0,6,'A',0,0],[3,6,6,6,'B',0,0],[6,8,6,10,'C',0,0],[8,11,10,6,'D',0,0]];
+var A6={t:0,run:false};
+function a6v(t){if(t<3)return t*2;if(t<6)return 6;if(t<8)return 6+(t-6)*2;return Math.max(0,10-(t-8)*(4/3));}
+function a6dist(t){var s=0,dt=.05,i;for(i=0;i<t;i+=dt)s+=a6v(i)*dt;return s;}
+function a6seg(t){return t<3?0:t<6?1:t<8?2:3;}
+function a6info(){var k=a6seg(A6.t),M=['<b>A:</b> বেগ বাড়ছে, তাই <b>ধনাত্মক ত্বরণ</b> (a = 2 m/s²)।','<b>B:</b> বেগ একই (6 m/s), তাই <b>ত্বরণ নেই</b> (a = 0)।','<b>C:</b> বেগ আবার বাড়ছে, তাই <b>ধনাত্মক ত্বরণ</b> (a = 2 m/s²)।','<b>D:</b> বেগ কমছে, তাই <b>মন্দন বা ঋণাত্মক ত্বরণ</b> (a ≈ −1.33 m/s²)।'];$('a6t').innerHTML='সময় t = '+f(A6.t,1)+' s, বেগ = '+f(a6v(A6.t),1)+' m/s<br>'+M[k]+'<br><small>লেখচিত্রের ঢাল (ওঠা বা নামা) ত্বরণ নির্দেশ করে। আমি বইয়ের চিত্র ২.০৬-এর আকৃতি অনুযায়ী সংখ্যা ধরেছি।</small>';}
+$('a6go').onclick=function(){if(A6.t>=11)A6.t=0;A6.run=!A6.run;};$('a6rs').onclick=function(){A6.t=0;A6.run=false;a6info();};a6info();
+DRAWS.push(function(){var x=ctxOf('a6c'),i;x.clearRect(0,0,380,300);if(A6.run){A6.t=Math.min(11,A6.t+.025);if(A6.t>=11)A6.run=false;a6info();}
+  var X=function(t){return 40+t*30;},Y=function(v){return 150-v*11;};x.strokeStyle='#8a97a4';x.lineWidth=2;x.beginPath();x.moveTo(40,20);x.lineTo(40,150);x.lineTo(365,150);x.stroke();txt(x,'বেগ',18,24,'bold 10px Hind Siliguri',NAVY);txt(x,'সময়',350,164,'bold 10px Hind Siliguri',NAVY);
+  var cols=['#9fd6b0','#cfd6dd','#9fd6b0','#f4b6b0'],lab=['A','B','C','D'],bd=[0,3,6,8,11];
+  for(i=0;i<4;i++){x.fillStyle=cols[i];x.globalAlpha=.55;x.fillRect(X(bd[i]),22,X(bd[i+1])-X(bd[i]),128);x.globalAlpha=1;txt(x,lab[i],(X(bd[i])+X(bd[i+1]))/2,34,'bold 14px Hind Siliguri',NAVY);}
+  x.strokeStyle=BLU;x.lineWidth=3;x.beginPath();for(i=0;i<=A6.t*20;i++){var t=i/20;if(i)x.lineTo(X(t),Y(a6v(t)));else x.moveTo(X(t),Y(a6v(t)));}x.stroke();circ(x,0,X(A6.t),Y(a6v(A6.t)),5,RED,'#fff',1.5);
+  x.fillStyle='#d6dde4';x.fillRect(10,230,360,24);var cx=20+a6dist(A6.t)/a6dist(11)*300;x.fillStyle=ORG;x.fillRect(cx,214,36,16);circ(x,0,cx+8,232,5,'#333',null);circ(x,0,cx+28,232,5,'#333',null);txt(x,'গাড়ি',cx+18,206,'bold 10px Hind Siliguri',NAVY);
+  var v=a6v(A6.t);arrow(x,cx+38,222,cx+38+v*4,222,'#2a9d4f',3);txt(x,'ত্বরণ আছে? '+(A6.t<3||(A6.t>=6&&A6.t<8)?'হ্যাঁ ↑':A6.t>=8&&A6.t<11?'মন্দন ↓':'না'),190,278,'bold 12px Hind Siliguri',NAVY);
+});
+function a6ka(){var u=+$('a6u').value,v=+$('a6v').value,t=+$('a6tt').value,a=(v-u)/t;$('a6uv').textContent=bn(u);$('a6vv').textContent=bn(v);$('a6tv').textContent=bn(t);$('a6k').innerHTML='a = (v − u) ÷ t = ('+bn(v)+' − '+bn(u)+') ÷ '+bn(t)+' = <b>'+f(a,2)+' m/s²</b><br>'+(a>0?'ধনাত্মক ত্বরণ (বেগ বাড়ছে)':a<0?'ঋণাত্মক ত্বরণ বা মন্দন (বেগ কমছে)':'ত্বরণ নেই (বেগ একই)');}
+['a6u','a6v','a6tt'].forEach(function(i){$(i).oninput=a6ka;});a6ka();
+mkGame('a6q','a6o','a6f','a6sc',function(){var r=Math.random();if(r<.6){var u=pick([0,5,10,20]),a=pick([1,2,3,4,5]),t=pick([2,4,5,10]),v=u+a*t,w='a = (v − u) ÷ t = ('+bn(v)+' − '+bn(u)+') ÷ '+bn(t)+' = '+bn(a)+' m/s²';
+    return {q:'বেগ '+bn(u)+' m/s থেকে '+bn(t)+' s-এ '+bn(v)+' m/s হলো। ত্বরণ কত?',o:opts(bn(a)+' m/s²',[f(a*t,0)+' m/s²',f(a/2,1)+' m/s²',f(v/t,1)+' m/s²'].filter(function(s,i,A){return s!==bn(a)+' m/s²'&&A.indexOf(s)===i;})),good:w,bad:w};}
+  var g=pick([['ধনাত্মক ত্বরণ','বেগ বাড়ছে'],['মন্দন (ঋণাত্মক ত্বরণ)','বেগ কমছে'],['ত্বরণ নেই','বেগ একই থাকছে']]),w2=g[1]+' মানে '+g[0]+'।';
+  return {q:'সরলরেখায় চলা বস্তুর <b>'+g[1]+'</b>। কী বলা যায়?',o:opts(g[0],['ধনাত্মক ত্বরণ','মন্দন (ঋণাত্মক ত্বরণ)','ত্বরণ নেই'].filter(function(s){return s!==g[0];})),good:w2,bad:w2};});
+/* ---------- ল্যাব ৭: সমীকরণ ---------- */
+function e7c(){var u=+$('e7u').value,a=+$('e7a').value,t=+$('e7t').value,v=u+a*t,s=u*t+.5*a*t*t;return {u:u,a:a,t:t,v:v,s:s,v2:u*u+2*a*s};}
+function e7info(){var c=e7c();$('e7uv').textContent=bn(c.u);$('e7av').textContent=f(c.a,1);$('e7tv').textContent=f(c.t,1);
+  $('e7x').innerHTML='<b>১) v = u + at</b><br>= '+bn(c.u)+' + ('+f(c.a,1)+' × '+f(c.t,1)+') = <b>'+f(c.v,2)+' m/s</b><br><b>২) s = ut + ½at²</b><br>= ('+bn(c.u)+' × '+f(c.t,1)+') + ½ × '+f(c.a,1)+' × '+f(c.t*c.t,2)+' = <b>'+f(c.s,2)+' m</b><br><b>৩) v² = u² + 2as</b><br>= '+bn(c.u*c.u)+' + 2 × '+f(c.a,1)+' × '+f(c.s,2)+' = <b>'+f(c.v2,2)+'</b>, তাই v = '+f(Math.sqrt(Math.max(0,c.v2)),2)+' m/s'+(c.v<0?'<br><small>⚠️ v ঋণাত্মক হয়েছে, অর্থাৎ বস্তু থেমে উল্টো দিকে চলতে শুরু করেছে। v² থেকে শুধু মান পাওয়া যায়।</small>':'')+'<br><small>গড় বেগ V = (u+v)/2 = '+f((c.u+c.v)/2,2)+' m/s। s = V × t = '+f((c.u+c.v)/2*c.t,2)+' m (একই)।</small>';}
+['e7u','e7a','e7t'].forEach(function(i){$(i).oninput=e7info;});e7info();
+DRAWS.push(function(){var x=ctxOf('e7c'),c=e7c(),i,mx=Math.max(c.u,c.v,1)*1.15,X=function(t){return 45+t*30;},Y=function(v){return 230-Math.max(v,0)*(190/Math.max(mx,5));};x.clearRect(0,0,380,300);
+  x.strokeStyle='#8a97a4';x.lineWidth=2;x.beginPath();x.moveTo(45,16);x.lineTo(45,240);x.lineTo(360,240);x.stroke();txt(x,'বেগ (m/s)',60,10,'bold 10px Hind Siliguri',NAVY);txt(x,'সময় (s)',335,256,'bold 10px Hind Siliguri',NAVY);
+  x.fillStyle='rgba(43,108,176,.25)';x.beginPath();x.moveTo(X(0),240);x.lineTo(X(0),Y(c.u));x.lineTo(X(c.t),Y(c.v));x.lineTo(X(c.t),240);x.closePath();x.fill();
+  x.strokeStyle=BLU;x.lineWidth=3;x.beginPath();x.moveTo(X(0),Y(c.u));x.lineTo(X(c.t),Y(c.v));x.stroke();
+  x.setLineDash([4,4]);x.strokeStyle=ORG;x.lineWidth=2;var V=(c.u+c.v)/2;x.beginPath();x.moveTo(X(0),Y(V));x.lineTo(X(c.t),Y(V));x.stroke();x.setLineDash([]);
+  circ(x,0,X(0),Y(c.u),5,RED,'#fff',1.5);circ(x,0,X(c.t),Y(c.v),5,RED,'#fff',1.5);txt(x,'u',X(0)-10,Y(c.u),'bold 12px Hind Siliguri',RED);txt(x,'v',X(c.t)+10,Y(c.v),'bold 12px Hind Siliguri',RED);
+  txt(x,'গড় বেগ V',X(c.t/2),Y(V)-10,'bold 10px Hind Siliguri','#b8600b');txt(x,'রঙিন ক্ষেত্রফল = s = '+f(c.s,1)+' m',200,282,'bold 12px Hind Siliguri',NAVY);
+  for(i=0;i<=10;i+=2)txt(x,bn(i),X(i),250,'9px Hind Siliguri','#567');
+});
+mkGame('e7q','e7o','e7f','e7sc',function(){var r=Math.random();
+  if(r<.34){var a=pick([2,3,4,5]),t=pick([2,3,4,5]),v=a*t,w='স্থির অবস্থা থেকে v = at = '+bn(a)+' × '+bn(t)+' = '+bn(v)+' m/s';return {q:'স্থির অবস্থা থেকে '+bn(a)+' m/s² সমত্বরণে '+bn(t)+' s পরে বেগ কত?',o:opts(bn(v)+' m/s',[bn(v+a)+' m/s',bn(v*2)+' m/s',bn(a+t)+' m/s']),good:w,bad:w};}
+  if(r<.67){var u=pick([0,2,4,6]),a2=pick([2,4]),t2=pick([2,3,4]),s=u*t2+a2*t2*t2/2,w2='s = ut + ½at² = ('+bn(u)+'×'+bn(t2)+') + ½×'+bn(a2)+'×'+bn(t2*t2)+' = '+bn(s)+' m';return {q:'আদি বেগ '+bn(u)+' m/s, ত্বরণ '+bn(a2)+' m/s², সময় '+bn(t2)+' s। অতিক্রান্ত দূরত্ব কত?',o:opts(bn(s)+' m',[bn(s+a2)+' m',bn(u*t2+a2*t2)+' m',bn(s*2)+' m'].filter(function(q,i,A){return q!==bn(s)+' m'&&A.indexOf(q)===i;})),good:w2,bad:w2};}
+  var pairs=[[0,4,2],[0,8,4],[0,6,3],[3,5,4],[4,6,5]],p=pick(pairs),u3=p[0],s3=p[1],a3=p[2],v3=Math.sqrt(u3*u3+2*a3*s3),w3='v² = u² + 2as = '+bn(u3*u3)+' + 2×'+bn(a3)+'×'+bn(s3)+' = '+bn(v3*v3)+', তাই v = '+f(v3,2)+' m/s';
+  return {q:'আদি বেগ '+bn(u3)+' m/s, ত্বরণ '+bn(a3)+' m/s², দূরত্ব '+bn(s3)+' m। শেষ বেগ কত?',o:opts(f(v3,2)+' m/s',[f(v3*v3,2)+' m/s',f(v3+2,2)+' m/s',f(v3/2,2)+' m/s'].filter(function(q,i,A){return q!==f(v3,2)+' m/s'&&A.indexOf(q)===i;})),good:w3,bad:w3};});
+
+/* ---------- ল্যাব ৮: মুক্তভাবে পড়ন্ত বস্তু ---------- */
+var F8={t:0,run:false,air:0};
+function f8air(){return +$('f8s').value;}
+function f8info(){var t=F8.t,air=F8.air,h=.5*9.8*t*t,v=9.8*t,pv=air?Math.min(v,10)*0+(function(){var tt=t,vt=2;return vt*Math.tanh(tt*9.8/vt);})():v;
+  $('f8t').innerHTML='সময় t = <b>'+f(t,2)+' s</b><br>পাথর: v = gt = <b>'+f(v,2)+' m/s</b>, নেমেছে h = ½gt² = <b>'+f(Math.min(h,20),2)+' m</b><br>'+(air?'কাগজ: বাতাসের বাধায় ধীরে নামছে (সরু বেগে পৌঁছে যায়)।<br><small>বাতাসের বাধা থাকলে পাথর ও কাগজ একসাথে পড়ে না। এটি g-এর পার্থক্য নয়, বাতাসের বাধার ফল।</small>':'কাগজ: পাথরের সাথেই নামছে।<br><small>বাতাসহীন জায়গায় সব বস্তু একই ত্বরণে (g = 9.8 m/s²) পড়ে, ভর যত হোক না কেন।</small>')+'<br><small>গ্যালিলিওর সূত্র: ১) ভর নির্বিশেষে একই সময়ে একই দূরত্ব, ২) v ∝ t, ৩) s ∝ t²।</small>';}
+$('f8s').onchange=function(){F8.t=0;F8.run=false;F8.air=f8air();f8info();};
+$('f8go').onclick=function(){F8.air=f8air();if(F8.t>0&&!F8.run)F8.t=0;F8.run=true;};$('f8rs').onclick=function(){F8.t=0;F8.run=false;f8info();};f8info();
+DRAWS.push(function(){var x=ctxOf('f8c'),air=F8.air,T=Math.sqrt(2*20/9.8);x.clearRect(0,0,380,340);
+  if(F8.run){F8.t+=.016;if(F8.t>=T){F8.t=T;F8.run=false;}f8info();}
+  var Y0=30,Y1=300,sc=(Y1-Y0)/20,t=F8.t,i;
+  x.fillStyle=air?'#eef6fb':'#dfe7f5';x.fillRect(40,20,300,290);x.strokeStyle='#789';x.lineWidth=2;x.strokeRect(40,20,300,290);
+  for(i=0;i<=20;i+=5){x.strokeStyle='#cbd5de';x.lineWidth=1;x.beginPath();x.moveTo(40,Y0+i*sc);x.lineTo(60,Y0+i*sc);x.stroke();txt(x,bn(i)+'m',28,Y0+i*sc,'9px Hind Siliguri','#567','right');}
+  var hs=Math.min(.5*9.8*t*t,20),hp;
+  if(air){var vt=2,k=9.8/vt;hp=Math.min((vt*vt/9.8)*Math.log(Math.cosh(k*t)),20);}else hp=hs;
+  for(i=1;i<=4;i++){var tt=t*i/4;var ys=Math.min(.5*9.8*tt*tt,20);if(t>0)circ(x,0,130,Y0+ys*sc,3,'rgba(123,135,148,.35)',null);}
+  circ(x,0,130,Y0+hs*sc,12,'#7b8794','#333',2);txt(x,'পাথর',130,Y0-14,'bold 10px Hind Siliguri',NAVY);
+  x.save();x.translate(250,Y0+hp*sc);x.rotate(air?Math.sin(t*9)*.4:0);x.fillStyle='#fff';x.strokeStyle='#888';x.lineWidth=1.5;x.fillRect(-14,-9,28,18);x.strokeRect(-14,-9,28,18);x.restore();txt(x,'কাগজ',250,Y0-14,'bold 10px Hind Siliguri',NAVY);
+  if(air&&t>0){x.strokeStyle='rgba(120,150,180,.5)';x.lineWidth=1;for(i=0;i<5;i++){var yy=(FR*3+i*55)%270+20;x.beginPath();x.moveTo(200+i*12,yy);x.lineTo(200+i*12,yy+14);x.stroke();}}
+  x.setLineDash([5,5]);x.strokeStyle='#e9a23b';x.beginPath();x.moveTo(60,Y0+hs*sc);x.lineTo(320,Y0+hs*sc);x.stroke();x.setLineDash([]);
+  txt(x,'ভূমি  |  '+(air?'বাতাসসহ':'বাতাসহীন টিউব'),190,328,'bold 11px Hind Siliguri','#456');
+});
+function f8k(){var u=+$('f8u').value,h=u*u/(2*9.8),t=u/9.8;$('f8uv').textContent=bn(u);$('f8k').innerHTML='সর্বোচ্চ উচ্চতা h = u² ÷ 2g = '+bn(u*u)+' ÷ 19.6 = <b>'+f(h,2)+' m</b><br>সর্বোচ্চ উচ্চতায় পৌঁছাতে সময় = u ÷ g = <b>'+f(t,2)+' s</b>, একই সময় নামতেও লাগে।<br><small>সর্বোচ্চ বিন্দুতে বেগ শূন্য, কিন্তু ত্বরণ তখনও g = 9.8 m/s² নিচের দিকে।</small>'+(u===42?'':'');}
+$('f8u').oninput=f8k;f8k();
+mkGame('f8q','f8o','f8f','f8sc',function(){var r=Math.random(),g=9.8;
+  if(r<.34){var t=pick([1,2,3,4]),v=g*t,w='v = gt = 9.8 × '+bn(t)+' = '+f(v,1)+' m/s';return {q:'স্থির অবস্থা থেকে মুক্তভাবে পড়া বস্তুর '+bn(t)+' s পরে বেগ কত? (g = 9.8)',o:opts(f(v,1)+' m/s',[f(v/2,1)+' m/s',f(v*2,1)+' m/s',f(v+g,1)+' m/s']),good:w,bad:w};}
+  if(r<.67){var t2=pick([1,2,3]),h=.5*g*t2*t2,w2='h = ½gt² = ½ × 9.8 × '+bn(t2*t2)+' = '+f(h,1)+' m';return {q:'মুক্তভাবে পড়ে '+bn(t2)+' s-এ বস্তু কত নিচে নামবে?',o:opts(f(h,1)+' m',[f(g*t2,1)+' m',f(h*2,1)+' m',f(h/2,1)+' m']),good:w2,bad:w2};}
+  var u=pick([14,19.6,29.4]),hh=u*u/(2*g),w3='h = u²/2g = '+f(u*u,2)+' ÷ 19.6 = '+f(hh,2)+' m';return {q:'খাড়া ওপরে '+f(u,1)+' m/s বেগে ছুড়লে সর্বোচ্চ কত উচ্চতায় উঠবে?',o:opts(f(hh,2)+' m',[f(u*u,2)+' m',f(hh*2,2)+' m',f(u/g,2)+' m']),good:w3,bad:w3};});
+/* ---------- ল্যাব ৯: গ্রাফ ---------- */
+var G9=[{t:[0,.5,1.5,2.5,3.5,4.5],name:'set1'}];
+function g9data(){var set=+$('g9s').value,T,D;if(set===0){T=[0,1,2,3,4,5];D=[0,1,4,9,16,25];}else{T=[0,2,4,6,8,10];D=[0,6,24,54,96,150];}
+  var V=[],Tm=[],A=[],i;for(i=1;i<T.length;i++){V.push((D[i]-D[i-1])/(T[i]-T[i-1]));Tm.push((T[i]+T[i-1])/2);}for(i=1;i<V.length;i++)A.push((V[i]-V[i-1])/(Tm[i]-Tm[i-1]));return {T:T,D:D,V:V,Tm:Tm,A:A,set:set};}
+function g9info(){var g=g9data(),set=g.set,mx=set?10:5;$('g9r').max=mx;$('g9r').step=set?2:1;if(+$('g9r').value>mx)$('g9r').value=mx;if(set&&+$('g9r').value%2)$('g9r').value=+$('g9r').value+1;var t=+$('g9r').value;$('g9v').textContent=bn(t);
+  var i=Math.round(t/(set?2:1)),d=g.D[i];var s='<table class="t"><tr><th>সময় (s)</th>'+g.T.map(function(a){return '<th>'+bn(a)+'</th>';}).join('')+'</tr><tr><td>দূরত্ব (m)</td>'+g.D.map(function(a){return '<td>'+bn(a)+'</td>';}).join('')+'</tr></table>';
+  s+='<br><b>t = '+bn(t)+' s:</b> দূরত্ব = <b>'+bn(d)+' m</b>';if(i>0)s+='<br>আগের ধাপের গড় বেগ = <b>'+f(g.V[i-1],1)+' m/s</b>';
+  s+='<br><b>ত্বরণ</b> = বেগ-সময় রেখার ঢাল = <b>'+f(g.A[0],1)+' m/s²</b> (সব ধাপে একই, তাই সমত্বরণ)<br><small>d-t লেখচিত্র বাঁকা (বক্ররেখা), v-t লেখচিত্র সোজা ও ওপরে ওঠা, a-t লেখচিত্র অনুভূমিক সরলরেখা।'+(set?' এই সেটের d = 1.5t², তাই a = 3 m/s² (আমার হিসাব)।':' বইয়ে এই সেটের হিসাব করা আছে, a = 2 m/s²।')+'</small>';$('g9t').innerHTML=s;}
+$('g9s').onchange=g9info;$('g9r').oninput=g9info;g9info();
+DRAWS.push(function(){var x=ctxOf('g9c'),g=g9data(),t=+$('g9r').value,set=g.set,i,Tm=set?10:5;x.clearRect(0,0,380,430);
+  function panel(oy,title,ymax,xs,ys,col,line){var X=function(v){return 50+v/Tm*300;},Y=function(v){return oy+105-v/ymax*95;};x.strokeStyle='#8a97a4';x.lineWidth=2;x.beginPath();x.moveTo(50,oy);x.lineTo(50,oy+105);x.lineTo(355,oy+105);x.stroke();txt(x,title,200,oy-3,'bold 11px Hind Siliguri',NAVY);
+    x.strokeStyle='#e3e9ee';x.lineWidth=1;for(var k=1;k<=4;k++){x.beginPath();x.moveTo(50,Y(ymax*k/4));x.lineTo(355,Y(ymax*k/4));x.stroke();txt(x,f(ymax*k/4,0),44,Y(ymax*k/4),'8px Hind Siliguri','#567','right');}
+    x.strokeStyle=col;x.lineWidth=3;x.beginPath();if(line==='curve'){for(var u=0;u<=Tm*10;u++){var tt=u/10,dd=g.D[g.D.length-1]/(Tm*Tm)*tt*tt;if(u)x.lineTo(X(tt),Y(dd));else x.moveTo(X(tt),Y(dd));}}else{xs.forEach(function(a,j){if(j)x.lineTo(X(a),Y(ys[j]));else x.moveTo(X(a),Y(ys[j]));});}x.stroke();
+    xs.forEach(function(a,j){circ(x,0,X(a),Y(ys[j]),4,col,'#fff',1);});return {X:X,Y:Y};}
+  var p=panel(22,'দূরত্ব–সময় (বক্ররেখা)',g.D[g.D.length-1],g.T,g.D,BLU,'curve');circ(x,0,p.X(t),p.Y(g.D[Math.round(t/(set?2:1))]),7,RED,'#fff',2);
+  var vm=g.V[g.V.length-1]*1.1;p=panel(165,'বেগ–সময় (সরলরেখা, ঢাল = ত্বরণ)',vm,g.Tm,g.V,'#2a9d4f','line');
+  var a0=g.A[0];p=panel(305,'ত্বরণ–সময় (অনুভূমিক রেখা)',a0*1.5,g.Tm.slice(1),g.A,ORG,'line');
+  for(i=0;i<=Tm;i+=(set?2:1))txt(x,bn(i),50+i/Tm*300,419,'9px Hind Siliguri','#567');txt(x,'সময় (s)',200,434,'9px Hind Siliguri','#567');txt(x,'t = '+bn(t)+' s',335,8,'bold 11px Hind Siliguri',RED);
+});
+/* ---------- ল্যাব ১০: ঢালু তল ---------- */
+var I10={t:-1,pts:[],run:false,H:0};
+function i10info(){var h=+$('i10h').value;$('i10v').textContent=bn(h);var s=h/100,g=9.8,a=g*s*5/7,L=1,T=Math.sqrt(2*L/a),v=Math.sqrt(2*a*L);
+  $('i10t').innerHTML='তক্তা 100 cm, উচ্চতা '+bn(h)+' cm<br>sinθ = h ÷ L = '+f(s,2)+'<br>মারবেল নামতে সময় লাগবে ≈ <b>'+f(T,2)+' s</b><br>গড় বেগ = দূরত্ব ÷ সময় = 100 ÷ '+f(T,2)+' ≈ <b>'+f(100/T,0)+' cm/s</b><br><small>ঢাল বাড়ালে সময় কমে, তাই গড় বেগ বাড়ে। বিন্দুগুলো ডানের লেখচিত্রে জমছে।</small>'+(I10.pts.length?'<br><small>নেওয়া পাঠ: '+I10.pts.map(function(p){return bn(p[0])+' cm → '+f(p[1],2)+' s';}).join(' | ')+'</small>':'');}
+$('i10h').oninput=i10info;$('i10go').onclick=function(){if(I10.run)return;I10.run=true;I10.t=0;I10.H=+$('i10h').value;};$('i10rs').onclick=function(){I10.pts=[];I10.run=false;I10.t=-1;i10info();};i10info();
+DRAWS.push(function(){var x=ctxOf('i10c'),H=I10.run||I10.t>=0?I10.H:+$('i10h').value,i;x.clearRect(0,0,380,330);
+  var s=H/100,a=9.8*s*5/7,T=Math.sqrt(2/a);
+  if(I10.run){I10.t+=.016;if(I10.t>=T){I10.t=T;I10.run=false;I10.pts.push([H,T]);i10info();}}
+  var bx=30,by=180,L=300,ang=Math.asin(s),ex=bx+L*Math.cos(ang),ey=by-L*Math.sin(ang);
+  x.fillStyle='#e8dcc5';x.beginPath();x.moveTo(bx,by);x.lineTo(ex,by);x.lineTo(ex,ey);x.closePath();x.fill();x.strokeStyle='#8a5a2b';x.lineWidth=5;x.beginPath();x.moveTo(ex,ey);x.lineTo(bx,by);x.stroke();
+  x.strokeStyle='#d33';x.lineWidth=1.5;x.setLineDash([4,4]);x.beginPath();x.moveTo(ex,ey);x.lineTo(ex,by);x.stroke();x.setLineDash([]);txt(x,'h = '+bn(H)+' cm',ex-10,(ey+by)/2,'bold 10px Hind Siliguri','#a22','right');txt(x,'তক্তা 100 cm',bx+L/2*Math.cos(ang)-14,by-L/2*Math.sin(ang)-16,'bold 10px Hind Siliguri','#6b3a05');
+  txt(x,'θ',bx+34,by-6,'bold 12px Hind Siliguri',NAVY);
+  var tt=Math.max(I10.t,0),d=.5*a*tt*tt,fr=I10.t<0?0:Math.min(d/1,1),mx=ex-(ex-bx)*fr,my=ey+(by-ey)*fr;circ(x,0,mx-Math.sin(ang)*6,my-Math.cos(ang)*6,7,'#2b6cb0','#123',1.5);
+  txt(x,'সময়: '+f(I10.t<0?0:I10.t,2)+' s',100,40,'bold 13px Hind Siliguri',NAVY);
+  var ox=60,oy=312,pw=290,ph=60;x.strokeStyle='#8a97a4';x.lineWidth=2;x.beginPath();x.moveTo(ox,oy-ph);x.lineTo(ox,oy);x.lineTo(ox+pw,oy);x.stroke();txt(x,'h (cm) →',ox+pw-20,oy+14,'9px Hind Siliguri','#567');txt(x,'সময় (s) ↑',ox+30,oy-ph-8,'9px Hind Siliguri','#567');
+  for(i=0;i<=40;i+=10){txt(x,bn(i),ox+i/40*pw,oy+8,'8px Hind Siliguri','#567');}
+  I10.pts.forEach(function(p){circ(x,0,ox+p[0]/40*pw,oy-p[1]/4*ph,4,RED,'#fff',1);});
+});
+
+var QUIZ=[];
+function M(q,c,w,e,fix){var o=[c].concat(w);QUIZ.push({q:q,o:o,a:0,e:e,fix:!!fix});}
+/* বইয়ের ৫টি MCQ (বইয়ে উত্তরমালা নেই, উত্তর আমার হিসাব) */
+QUIZ.push({q:'ত্বরণের একক কোনটি?',o:['ms⁻¹','ms⁻²','Ns','kgs⁻²'],a:1,fix:true,e:'ত্বরণ = বেগের পরিবর্তন ÷ সময় = (m/s) ÷ s = m/s² = ms⁻²।'});
+QUIZ.push({q:'ঘড়ির কাঁটার গতি কোনটি?',o:['রৈখিক গতি','উপবৃত্তাকার গতি','পর্যায়বৃত্ত গতি','সরল স্পন্দন গতি'],a:2,fix:true,e:'কাঁটা নির্দিষ্ট সময় পরপর একই অবস্থানে ফেরে, তাই এটি পর্যায়বৃত্ত গতি।'});
+QUIZ.push({q:'মুক্তভাবে পড়ন্ত বস্তু নির্দিষ্ট সময়ে যে দূরত্ব অতিক্রম করে তা কিসের সমানুপাতিক?',o:['সময়ের','সময়ের বর্গের','সময়ের ব্যস্তানুপাতিক','সময়ের বর্গমূলের'],a:1,fix:true,e:'h = ½gt², অর্থাৎ h ∝ t²।'});
+QUIZ.push({q:'স্থির অবস্থান থেকে a ত্বরণে চলা বস্তুর জন্য কোনগুলো সঠিক?<br>i. s = (u+v)t/2<br>ii. s = ut + ½at<br>iii. s = ut + 2at²',o:['i','ii','ii ও iii','i ও ii'],a:0,fix:true,e:'শুধু (i) সঠিক সূত্র। (ii) ও (iii) ভুল, সঠিক সূত্র s = ut + ½at²। বইয়ে সম্ভবত ছাপার ভুল আছে, আমি (i)-কে উত্তর ধরেছি।'});
+QUIZ.push({q:'মুক্তভাবে পড়ন্ত বস্তুর জন্য কোন বেগ–সময় লেখচিত্র প্রযোজ্য? (বইয়ের চিত্র ২.১২)',o:['নিচের দিকে নামা সরলরেখা','অনুভূমিক রেখা','মূলবিন্দুগামী ঊর্ধ্বমুখী সরলরেখা','অবতল বক্ররেখা'],a:2,fix:true,e:'v = gt, তাই বেগ সময়ের সাথে সমানুপাতে বাড়ে, অর্থাৎ মূলবিন্দুগামী সরলরেখা।'});
+/* অতিরিক্ত অনুশীলন (আমার বানানো) */
+M('গতি বোঝাতে কীসের দরকার হয়?','একটি প্রসঙ্গ বিন্দু',['শুধু সময়','শুধু বস্তুর ভর','কোনো কিছুই লাগে না'],'অবস্থানের পরিবর্তন সবসময় কোনো প্রসঙ্গ বিন্দুর সাপেক্ষে মাপা হয়।');
+M('চলন্ত বাসে বসা যাত্রী পাশের যাত্রীর সাপেক্ষে —','স্থির',['গতিশীল','ত্বরিত','ঘূর্ণায়মান'],'দুজনের মধ্যে অবস্থানের পরিবর্তন হচ্ছে না।');
+M('বৈদ্যুতিক পাখার পাখার গতি —','ঘূর্ণন গতি',['রৈখিক গতি','চলন গতি','সরল স্পন্দন গতি'],'পাখা একটি অক্ষের চারদিকে বৃত্তাকারে ঘোরে।');
+M('সরল স্পন্দন গতিতে সাম্যবিন্দুতে দ্রুতি —','সর্বোচ্চ',['শূন্য','সর্বনিম্ন','ঋণাত্মক'],'শেষ প্রান্তে শূন্য, সাম্যবিন্দুতে সর্বোচ্চ।');
+M('সরল স্পন্দন গতিতে শেষ প্রান্তে দ্রুতি —','শূন্য',['সর্বোচ্চ','অসীম','ধ্রুব'],'প্রান্তে বস্তু মুহূর্তের জন্য থেমে উল্টো দিকে ফেরে।');
+M('নির্দিষ্ট সময় পরপর যে গতির পুনরাবৃত্তি হয় তাকে বলে —','পর্যায়বৃত্ত গতি',['রৈখিক গতি','চলন গতি','ঘূর্ণন গতি'],'এই নির্দিষ্ট সময়কে পর্যায়কাল বলে।');
+M('নিচের কোনটি ভেক্টর রাশি?','সরণ',['দূরত্ব','দ্রুতি','সময়'],'সরণের মান ও দিক দুটোই আছে।');
+M('নিচের কোনটি স্কেলার রাশি?','দ্রুতি',['বেগ','ত্বরণ','সরণ'],'দ্রুতিতে শুধু মান আছে, দিক নেই।');
+M('দূরত্ব ও সরণের মধ্যে সম্পর্ক —','সরণ কখনো দূরত্বের চেয়ে বেশি হয় না',['সরণ সবসময় দূরত্বের চেয়ে বেশি','সরণ সবসময় দূরত্বের সমান','সরণ ও দূরত্ব সম্পর্কহীন'],'সরল রেখায় একমুখী গতিতে সমান, নইলে সরণ কম।');
+M('একজন মানুষ বাড়ি থেকে বের হয়ে ঘুরে আবার বাড়ি ফিরল। তার সরণ —','শূন্য',['পথের দৈর্ঘ্যের সমান','পথের অর্ধেক','ঋণাত্মক'],'শুরু ও শেষ অবস্থান একই, তাই সরণ শূন্য।');
+M('একটি সরল পথে 3 km পূর্বে গিয়ে 3 km পশ্চিমে ফিরলে দূরত্ব ও সরণ কত?','দূরত্ব 6 km, সরণ 0',['দূরত্ব 0, সরণ 6 km','দূরত্ব 3 km, সরণ 3 km','দূরত্ব 6 km, সরণ 6 km'],'পথের মোট দৈর্ঘ্য 6 km, কিন্তু শুরু ও শেষ বিন্দু একই।');
+M('গড় দ্রুতি কীভাবে বের করা হয়?','মোট দূরত্ব ÷ মোট সময়',['মোট সরণ ÷ মোট দূরত্ব','মোট সময় ÷ মোট দূরত্ব','মোট দূরত্ব × মোট সময়'],'দ্রুতি = দূরত্ব ÷ সময়।');
+M('বেগ কীভাবে বের করা হয়?','সরণ ÷ সময়',['দূরত্ব × সময়','সময় ÷ সরণ','সরণ × সময়'],'বেগ = সরণ ÷ সময়, ভেক্টর রাশি।');
+M('একটি গাড়ি 40 m দূরত্ব 8 s-এ গেল। গড় দ্রুতি কত?','5 m/s',['320 m/s','0.2 m/s','48 m/s'],'40 ÷ 8 = 5 m/s।');
+M('একটি গাড়ি 120 km পথ 3 ঘণ্টায় গেল। গড় দ্রুতি কত?','40 km/h',['360 km/h','4 km/h','123 km/h'],'120 ÷ 3 = 40 km/h।');
+M('1 km/h = কত m/s?','5/18 m/s',['18/5 m/s','1/60 m/s','1000 m/s'],'1000 m ÷ 3600 s = 5/18 m/s।');
+M('36 km/h = কত m/s?','10 m/s',['36 m/s','6 m/s','100 m/s'],'36 × 5/18 = 10 m/s।');
+M('72 km/h = কত m/s?','20 m/s',['7.2 m/s','72 m/s','200 m/s'],'72 × 5/18 = 20 m/s।');
+M('বইয়ের উদাহরণে বাসের গতি 10 km/h-এ কত দূরত্ব 3 s-এ যায়? (দ্রুতি ≈ 2.78 m/s)','≈ 8.3 m',['10 m','3 m','30 m'],'2.78 × 3 ≈ 8.3 m।');
+M('সুতায় বাঁধা পাথর বৃত্তাকারে একই দ্রুতিতে ঘুরলে —','দ্রুতি ধ্রুব কিন্তু বেগ পরিবর্তনশীল',['বেগ ধ্রুব','দ্রুতি ও বেগ দুটোই ধ্রুব','ত্বরণ শূন্য'],'দিক বদলায় বলে বেগ বদলায়।');
+M('সমবেগে চলা বস্তুর ত্বরণ —','শূন্য',['ধনাত্মক','ঋণাত্মক','অসীম'],'বেগের মান ও দিক কোনোটাই বদলায় না।');
+M('ত্বরণ কী?','সময়ের সাথে বেগের পরিবর্তনের হার',['সময়ের সাথে দূরত্বের পরিবর্তনের হার','সরণের পরিবর্তন','দ্রুতির বর্গ'],'a = (v − u) ÷ t।');
+M('বেগ কমতে থাকলে ত্বরণকে বলে —','মন্দন',['সমবেগ','দ্রুতি','সরণ'],'এটি ঋণাত্মক ত্বরণ।');
+M('ত্বরণ একটি —','ভেক্টর রাশি',['স্কেলার রাশি','মৌলিক রাশি','ধ্রুব রাশি'],'বেগ ভেক্টর, তাই বেগের পরিবর্তনের হারও ভেক্টর (দিক আছে)।');
+M('স্থির অবস্থা থেকে 2 m/s² ত্বরণে 5 s পরে বেগ কত?','10 m/s',['7 m/s','2.5 m/s','25 m/s'],'v = u + at = 0 + 2 × 5 = 10 m/s।');
+M('বেগ 10 m/s থেকে 20 m/s হলো 5 s-এ। ত্বরণ কত?','2 m/s²',['0.5 m/s²','6 m/s²','50 m/s²'],'a = (20 − 10) ÷ 5 = 2 m/s²।');
+M('বেগ 20 m/s থেকে 0 হলো 5 s-এ। ত্বরণ কত?','−4 m/s²',['4 m/s²','−100 m/s²','0'],'a = (0 − 20) ÷ 5 = −4 m/s² (মন্দন)।');
+M('স্থির অবস্থা থেকে 2 m/s² ত্বরণে 4 s-এ দূরত্ব কত?','16 m',['8 m','4 m','32 m'],'s = ½at² = ½ × 2 × 16 = 16 m।');
+M('v² = u² + 2as সূত্রে u = 0, a = 2, s = 9 হলে v = ?','6 m/s',['18 m/s','36 m/s','3 m/s'],'v² = 2 × 2 × 9 = 36, v = 6 m/s।');
+M('গড় বেগ কখন (u+v)/2 হয়?','ত্বরণ ধ্রুব হলে',['বেগ শূন্য হলে','সবসময়','ত্বরণ পরিবর্তনশীল হলে'],'সমত্বরণে বেগ সমহারে বাড়ে, তাই গড় বেগ প্রথম ও শেষ বেগের গড়ের সমান।');
+M('v–t লেখচিত্রের ঢাল কী নির্দেশ করে?','ত্বরণ',['সরণ','দ্রুতি','ভর'],'ঢাল = Δv ÷ Δt = a।');
+M('v–t লেখচিত্র ও সময় অক্ষের মধ্যবর্তী ক্ষেত্রফল কী নির্দেশ করে?','অতিক্রান্ত দূরত্ব (সরণ)',['ত্বরণ','বল','ভর'],'v × t = s।');
+M('সমবেগের v–t লেখচিত্র কেমন?','সময় অক্ষের সমান্তরাল সরলরেখা',['মূলবিন্দুগামী ঢালু রেখা','বক্ররেখা','খাড়া রেখা'],'বেগ একই থাকে, ঢাল শূন্য।');
+M('সমত্বরণের d–t লেখচিত্র কেমন?','বক্ররেখা (প্যারাবোলা)',['সরলরেখা','অনুভূমিক রেখা','খাড়া রেখা'],'d = ½at², যা t²-এর সমানুপাতিক।');
+M('সমত্বরণের a–t লেখচিত্র কেমন?','সময় অক্ষের সমান্তরাল সরলরেখা',['ঢালু সরলরেখা','বক্ররেখা','খাড়া রেখা'],'ত্বরণ ধ্রুব।');
+M('বায়ুশূন্য স্থানে লোহার বল ও পালক একই উচ্চতা থেকে ছাড়লে —','একই সময়ে মাটিতে পড়বে',['বল আগে পড়বে','পালক আগে পড়বে','কোনোটিই পড়বে না'],'বাতাস না থাকলে সব বস্তু একই g ত্বরণে পড়ে।');
+M('পৃথিবীতে মুক্তভাবে পড়ন্ত বস্তুর ত্বরণ প্রায় —','9.8 m/s²',['98 m/s²','0.98 m/s²','6.67 m/s²'],'এটি অভিকর্ষজ ত্বরণ g।');
+M('গ্যালিলিওর মতে মুক্তভাবে পড়ন্ত বস্তুর বেগ কিসের সমানুপাতিক?','সময়ের',['সময়ের বর্গের','ভরের','উচ্চতার'],'v = gt।');
+M('একটি বল স্থির অবস্থা থেকে 3 s পড়ল। বেগ কত? (g = 9.8)','29.4 m/s',['9.8 m/s','3.27 m/s','88.2 m/s'],'v = gt = 9.8 × 3 = 29.4 m/s।');
+M('একটি বল স্থির অবস্থা থেকে 2 s পড়ল। কত নিচে নামল? (g = 9.8)','19.6 m',['9.8 m','39.2 m','4.9 m'],'h = ½gt² = ½ × 9.8 × 4 = 19.6 m।');
+M('খাড়া ওপরে ছোড়া বস্তু সর্বোচ্চ বিন্দুতে —','বেগ শূন্য, ত্বরণ g',['বেগ ও ত্বরণ দুটোই শূন্য','বেগ g, ত্বরণ শূন্য','বেগ সর্বোচ্চ'],'ত্বরণ নিচের দিকে g সবসময় কাজ করে।');
+M('খাড়া ওপরে u বেগে ছুড়লে সর্বোচ্চ উচ্চতা —','u² ÷ 2g',['u ÷ g','2u² ÷ g','u² × g'],'0 = u² − 2gh থেকে h = u²/2g।');
+M('9.8 m/s বেগে খাড়া ওপরে ছুড়লে উঠবে প্রায় —','4.9 m',['9.8 m','19.6 m','1 m'],'h = 9.8² ÷ 19.6 = 4.9 m।');
+M('ঢালু তলে মারবেল গড়ালে ঢাল বাড়ালে —','ত্বরণ বাড়ে',['ত্বরণ কমে','ত্বরণ একই থাকে','মারবেল থেমে যায়'],'ত্বরণ sinθ-এর সাথে বাড়ে।');
+M('ঢালু তলের sinθ = ?','h ÷ L',['L ÷ h','h × L','h + L'],'উচ্চতা ÷ তক্তার দৈর্ঘ্য।');
+M('সরলরেখায় চলা বস্তুর বেগ ও ত্বরণ একই দিকে হলে বস্তুর দ্রুতি —','বাড়ে',['কমে','অপরিবর্তিত থাকে','শূন্য হয়'],'বেগের দিকে ত্বরণ থাকলে দ্রুতি বাড়ে।');
+M('বেগ ও ত্বরণ বিপরীত দিকে হলে বস্তুর দ্রুতি —','কমে',['বাড়ে','অপরিবর্তিত থাকে','অসীম হয়'],'এটি মন্দন।');
+M('একটি গাড়ির গড় বেগ 4 m/s বলতে বোঝায় —','প্রতি সেকেন্ডে গড়ে 4 m সরণ হয়',['প্রতি মিটারে 4 s লাগে','গাড়ি সবসময় 4 m/s চলে','গাড়ি 4 m গিয়ে থেমে যায়'],'গড় বেগ মানে মোট সরণ ÷ মোট সময়।');
+M('প্রাথমিক ও শেষ অবস্থানের সরল রেখার দূরত্ব ও দিক হলো —','সরণ',['দূরত্ব','দ্রুতি','সময়'],'এটিই সরণ।');
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+var QA=[
+ {h:'📝 সৃজনশীল প্রশ্ন ১ (রাজীবের মাইক্রোবাস)',items:[
+  ['<b>উদ্দীপক:</b> রাজীব মাইক্রোবাসে জাফলং যাচ্ছে। প্রতি ৫ মিনিট পর স্পিডোমিটারে গতি দেখে লিখল: 18, 36, 54, 54, 54, 36, 18 km/h।<br><b>(ক)</b> তাৎক্ষণিক দ্রুতি কী? (১)',
+   'কোনো নির্দিষ্ট মুহূর্তে বস্তুর দ্রুতিকে তাৎক্ষণিক দ্রুতি বলে। স্পিডোমিটার এই মান দেখায়।'],
+  ['<b>(খ)</b> বৃত্তাকার পথে চলা বস্তুর ত্বরণ থাকে কি? ব্যাখ্যা করো। (২)',
+   'হ্যাঁ, থাকে। ত্বরণ হলো বেগের পরিবর্তনের হার, আর বেগের মান বা দিক বদলালেই বেগ বদলায়। বৃত্তাকার পথে সমান দ্রুতিতে চললেও প্রতি মুহূর্তে দিক বদলায়। তাই বেগ বদলায় এবং ত্বরণ থাকে।'],
+  ['<b>(গ)</b> প্রথম ৫ মিনিটে মাইক্রোবাসটি কত দূরত্ব গিয়েছিল? (৩)',
+   '<b>ধরে নিচ্ছি:</b> শুরুতে স্থির ছিল এবং প্রথম ৫ মিনিটে সমত্বরণে 18 km/h-এ পৌঁছায় (এটি আমার অনুমান, প্রশ্নে স্পষ্ট নেই)।<br>গড় বেগ = (0 + 18) ÷ 2 = 9 km/h<br>সময় = 5 মিনিট = 5/60 h = 1/12 h<br>দূরত্ব = 9 × 1/12 = <b>0.75 km = 750 m</b>'],
+  ['<b>(ঘ)</b> বেগ–সময় লেখচিত্র এঁকে ব্যাখ্যা করো। (৪)',
+   'x-অক্ষে সময় (মিনিট) ও y-অক্ষে বেগ (km/h) নিয়ে বিন্দু বসাই: (0,0), (5,18), (10,36), (15,54), (20,54), (25,54), (30,36), (35,18)।<br>• 0 থেকে 15 মিনিট: প্রতি ৫ মিনিটে 18 km/h বাড়ছে, তাই লেখচিত্র ওপরে ওঠা সরলরেখা (সমত্বরণ)।<br>• 15 থেকে 25 মিনিট: বেগ 54 km/h একই, তাই অনুভূমিক রেখা (সমবেগ, ত্বরণ শূন্য)।<br>• 25 থেকে 35 মিনিট: প্রতি ৫ মিনিটে 18 km/h কমছে, তাই নিচে নামা সরলরেখা (মন্দন)।<br>লেখচিত্রের ঢাল ত্বরণ নির্দেশ করে এবং নিচের ক্ষেত্রফল মোট অতিক্রান্ত দূরত্ব।']
+ ]},
+ {h:'📝 সৃজনশীল প্রশ্ন ২ (বাস ও গরু)',items:[
+  ['<b>উদ্দীপক:</b> একটি বাস স্থির অবস্থা থেকে 0.05 m/s² সমত্বরণে চলতে শুরু করল। বাস স্ট্যান্ডের 300 m আগে চালক একটি গরু দেখে ব্রেক কষলেন। বাসটি থামতে 28 s সময় নিল। বাসটির মোট অতিক্রান্ত দূরত্ব 4.3 km।<br><b>(ক)</b> চলন গতি কী? (১)',
+   'যে গতিতে বস্তুর সকল কণা একই সময়ে একই দিকে একই দূরত্ব অতিক্রম করে, তাকে চলন গতি বলে।'],
+  ['<b>(খ)</b> চার তলা থেকে পানির বোতল ও কাগজ একসাথে ছাড়লে কোনটি আগে পড়বে? ব্যাখ্যা করো। (২)',
+   'বোতল আগে পড়বে। বাতাসের বাধা কাগজের ওপর বেশি কাজ করে বলে সেটি ধীরে নামে। বাতাসশূন্য স্থানে দুটোই একসাথে পড়ত, কারণ সব বস্তুর অভিকর্ষজ ত্বরণ g একই।'],
+  ['<b>(গ)</b> চালক যাত্রা শুরুর কত সময় পর ব্রেক কষলেন? (৩)',
+   'ব্রেক কষার আগে বাস গেছে = 4300 − 300 = 4000 m (গরুটি স্ট্যান্ডের 300 m আগে ধরে)।<br>u = 0, a = 0.05 m/s²: s = ½at²<br>4000 = ½ × 0.05 × t² → t² = 160000 → <b>t = 400 s</b> (≈ 6 মিনিট 40 সেকেন্ড)'],
+  ['<b>(ঘ)</b> গরুটিকে বাঁচানো সম্ভব হতো কি? গাণিতিক যুক্তিসহ লেখো। (৪)',
+   'ব্রেক কষার মুহূর্তের বেগ: v = at = 0.05 × 400 = <b>20 m/s</b>।<br>এরপর 28 s-এ থামে, শেষ বেগ 0। মন্দন a = (0 − 20) ÷ 28 ≈ −0.714 m/s²।<br>থামার দূরত্ব s = (u+v)/2 × t = (20+0)/2 × 28 = <b>280 m</b>।<br>গরু ছিল 300 m সামনে, আর বাস থেমেছে 280 m-এ। 300 − 280 = 20 m বাকি ছিল। তাই <b>গরুটিকে বাঁচানো সম্ভব হতো।</b><br><small>এখানে ধরেছি 300 m-এর ভেতরেই গরু ছিল এবং ব্রেক কষার সময় চালকের প্রতিক্রিয়ার সময় ধরিনি। সব সংখ্যা আমার নিজের হিসাব।</small>']
+ ]},
+ {h:'✍️ সংক্ষিপ্ত প্রশ্ন ও উত্তর',items:[
+  ['সরল স্পন্দন গতি উদাহরণসহ ব্যাখ্যা করো। (বইয়ের প্রশ্ন ১)','কোনো বস্তু একটি নির্দিষ্ট বিন্দুর (সাম্যবিন্দু) দুই পাশে সরলরেখায় বারবার সমান সময় পরপর আসা-যাওয়া করলে তাকে সরল স্পন্দন গতি বলে। যেমন সুতায় ঝোলানো দোলকের দোলন বা দোলনায় দোলা। শেষ প্রান্তে দ্রুতি শূন্য, সাম্যবিন্দুতে সর্বোচ্চ।'],
+  ['"মহাবিশ্বের সব গতিই আপেক্ষিক" ব্যাখ্যা করো। (বইয়ের প্রশ্ন ২)','কোনো বস্তুর গতি মাপতে একটি প্রসঙ্গ বিন্দু লাগে। মহাবিশ্বে চিরস্থির কোনো বিন্দু নেই, পৃথিবী, সূর্য সবাই চলছে। তাই কোনো কিছুকেই চূড়ান্তভাবে স্থির বলা যায় না। চলন্ত ট্রেনের যাত্রী বন্ধুর সাপেক্ষে স্থির, কিন্তু স্টেশনের মানুষের সাপেক্ষে গতিশীল।'],
+  ['ত্বরণ ভেক্টর রাশি কেন? (বইয়ের প্রশ্ন ৩)','ত্বরণ = বেগের পরিবর্তন ÷ সময়। বেগ ভেক্টর (মান ও দিক আছে), তাই তার পরিবর্তনের হারেরও মান ও দিক আছে। ত্বরণের দিক বেগের পরিবর্তনের দিকে। তাই ত্বরণ ভেক্টর রাশি।'],
+  ['গাড়ির গড় বেগ 4 m/s বলতে কী বোঝায়? (বইয়ের প্রশ্ন ৪)','এর মানে গাড়িটির প্রতি সেকেন্ডে গড়ে 4 মিটার সরণ হয় একটি নির্দিষ্ট দিকে। পুরো সময়ে মোট সরণকে মোট সময় দিয়ে ভাগ করলে 4 m/s পাওয়া যায়।'],
+  ['দূরত্ব ও সরণের পার্থক্য লেখো। (আমার বানানো)','দূরত্ব: পথের মোট দৈর্ঘ্য, স্কেলার, কখনো ঋণাত্মক হয় না। সরণ: শুরু থেকে শেষ বিন্দুর সরলরেখার দূরত্ব ও দিক, ভেক্টর। সরণ কখনো দূরত্বের চেয়ে বেশি হয় না। যেমন ঘুরে বাড়ি ফিরলে দূরত্ব আছে কিন্তু সরণ শূন্য।'],
+  ['দ্রুতি ও বেগের পার্থক্য লেখো। (আমার বানানো)','দ্রুতি = দূরত্ব ÷ সময়, স্কেলার। বেগ = সরণ ÷ সময়, ভেক্টর। সমান দ্রুতিতে বৃত্তাকার পথে ঘুরলেও বেগ বদলায় কারণ দিক বদলায়।'],
+  ['গড় বেগ ও গড় ত্বরণের সূত্র লেখো। (আমার বানানো)','গড় বেগ = মোট সরণ ÷ মোট সময়। গড় ত্বরণ = বেগের পরিবর্তন ÷ সময় = (v − u) ÷ t।'],
+  ['গতির তিনটি সমীকরণ লেখো। (আমার বানানো)','১) v = u + at  ২) s = ut + ½at²  ৩) v² = u² + 2as। এখানে u আদি বেগ, v শেষ বেগ, a ত্বরণ, t সময়, s সরণ। এগুলো শুধু ধ্রুব ত্বরণের জন্য প্রযোজ্য।'],
+  ['গ্যালিলিওর পড়ন্ত বস্তুর সূত্রগুলো লেখো। (আমার বানানো)','১) বাতাসের বাধা না থাকলে ভর নির্বিশেষে সব বস্তু একই সময়ে একই দূরত্ব পড়ে। ২) বেগ সময়ের সমানুপাতিক (v = gt)। ৩) অতিক্রান্ত দূরত্ব সময়ের বর্গের সমানুপাতিক (h = ½gt²)।'],
+  ['ত্বরণ শূন্য হলেও কি বস্তু গতিশীল থাকতে পারে? (আমার বানানো)','হ্যাঁ। সমবেগে চলা বস্তুর বেগ বদলায় না, তাই ত্বরণ শূন্য, তবু সে গতিশীল।'],
+  ['72 km/h বেগকে m/s-এ প্রকাশ করো। (আমার বানানো)','72 km/h = 72 × 1000 ÷ 3600 = 72 × 5/18 = <b>20 m/s</b>।'],
+  ['একটি বল 19.6 m/s বেগে খাড়া ওপরে ছোড়া হলো। কত উচ্চতায় উঠবে? (আমার বানানো)','h = u² ÷ 2g = (19.6)² ÷ (2 × 9.8) = 384.16 ÷ 19.6 = <b>19.6 m</b>। লাগে সময় u/g = 2 s।'],
+  ['v–t লেখচিত্র থেকে কী কী জানা যায়? (আমার বানানো)','ঢাল থেকে ত্বরণ, রেখার নিচের ক্ষেত্রফল থেকে অতিক্রান্ত দূরত্ব, এবং যেকোনো সময়ের বেগ।']
+ ]}
+];
+
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+function frame(){FR++;for(var i=0;i<DRAWS.length;i++)DRAWS[i]();requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>
