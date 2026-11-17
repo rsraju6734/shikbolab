@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>কাজ, ক্ষমতা ও শক্তি (পদার্থবিজ্ঞান অধ্যায় ৪) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+small{color:#567}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/lab-boost.js?v=1"></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#physics">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">⚛️ পদার্থবিজ্ঞান &rsaquo; চতুর্থ অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">⚡ কাজ, ক্ষমতা ও শক্তি (Work, Power and Energy)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🧱 ল্যাব ১</a><a href="#lab2">🏢 ল্যাব ২</a><a href="#lab3">🏎️ ল্যাব ৩</a><a href="#lab4">⛲ ল্যাব ৪</a><a href="#lab5">🏹 ল্যাব ৫</a><a href="#lab6">🎡 ল্যাব ৬</a><a href="#lab7">🔄 ল্যাব ৭</a><a href="#lab8">⛽ ল্যাব ৮</a><a href="#lab9">☢️ ল্যাব ৯</a><a href="#lab10">⚙️ ল্যাব ১০</a><a href="#lab11">🏃 ল্যাব ১১</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> কাজ ও শক্তির সম্পর্ক ব্যাখ্যা করতে; কাজ = বল × সরণ সূত্র প্রয়োগ করতে; গতিশক্তি ও বিভব শক্তি হিসাব করতে; শক্তির রূপান্তর ও নিত্যতা বোঝাতে; শক্তির উৎসগুলোর সুবিধা-অসুবিধা ও পরিবেশের ওপর প্রভাব বিশ্লেষণ করতে; ভর-শক্তির সম্পর্ক জানতে; এবং ক্ষমতা ও কর্মদক্ষতা মাপতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের ক্রম মেনে সহজ ভাষায় লেখা। বইয়ের "নমুনা প্রশ্ন"-এর উত্তরমালা নেই, তাই MCQ-এর উত্তর আমি হিসাব করে ব্যাখ্যাসহ দিয়েছি।</div>
+
+    <h3>৪.১ কাজ (Work) ⭐⭐⭐</h3>
+    <ul>
+      <li>পদার্থবিজ্ঞানে "কাজ"-এর একটি নির্দিষ্ট অর্থ আছে। সারা দিন টুলে বসে পাহারা দিলেও দারোয়ান পদার্থবিজ্ঞানের ভাষায় <b>কাজ করেননি</b>।</li>
+      <li>বস্তুর ওপর <b>F বল</b> প্রয়োগ করলে এবং বস্তুটি <b>বলের দিকে s দূরত্ব</b> সরলে কাজ হয়: <p class="eq"><b>W = F s</b></p></li>
+      <li>একক: <b>জুল (J)</b>। মাত্রা: <b>[W] = ML²T⁻²</b>।</li>
+      <li>বল ও সরণ দুটোই ভেক্টর, কিন্তু তাদের গুণফল <b>স্কেলার</b>, তাই কাজ স্কেলার রাশি।</li>
+      <li>কাজ করে সবসময় <b>বল</b>, মানুষ বা যন্ত্র নয়। বলটি হয়তো মানুষ বা যন্ত্র প্রয়োগ করেছে।</li>
+      <li>বস্তুটিকে F বলে s দূরত্ব ঠেলে ছেড়ে দিলে সে আরও d দূরত্ব গিয়ে থামে। কাজ হয়েছে শুধু <b>W = Fs</b>, কারণ d দূরত্বে F বল প্রয়োগ করা হয়নি।</li>
+      <li><b>উদাহরণ:</b> 50 kg ভরের তুমি 10 তলা ভবনে উঠলে (প্রতি তলা 3 m)। ওজন = 50 × 9.8 = 490 N। উচ্চতা = 10 × 3 = 30 m। কাজ = 490 × 30 = <b>14700 J = 14.7 kJ</b>।</li>
+      <li><b>ঋণাত্মক কাজ:</b> বল ও সরণ বিপরীত দিকে হলে W = F(−s) = −Fs। উদাহরণ: তুমি 100 N বলে বস্তুটিকে 10 m নিলে তোমার কাজ = 1000 J = 1 kJ। ঘর্ষণ বল 10 N বিপরীত দিকে হলে ঘর্ষণের কাজ = −10 × 10 = <b>−100 J</b>। (ল্যাব ১)</li>
+    </ul>
+
+    <h3>৪.২ শক্তি (Energy) ⭐⭐⭐</h3>
+    <ul>
+      <li><b>শক্তি হলো কাজ করার সামর্থ্য।</b> কোনো বলের দ্বারা ধনাত্মক কাজ হলে বস্তুর মাঝে ততটুকু শক্তি সৃষ্টি হয়।</li>
+      <li><b>ধনাত্মক কাজ করা</b> ⇒ বস্তুকে শক্তি দেওয়া। <b>ঋণাত্মক কাজ করা</b> ⇒ বস্তু থেকে শক্তি সরিয়ে নেওয়া।</li>
+      <li>শক্তি স্কেলার (দিক নেই)। একক <b>জুল (J)</b>, মাত্রা <b>[E] = ML²T⁻²</b>, কাজের একক ও মাত্রার সমান।</li>
+      <li>ঘর্ষণ বলের ঋণাত্মক কাজ বস্তুর শক্তি কমায়। ক্ষয় হওয়া শক্তি সাধারণত <b>তাপ</b> হয়ে যায়। (ল্যাব ২)</li>
+    </ul>
+
+    <h3>৪.৩ শক্তির বিভিন্ন রূপ ⭐⭐</h3>
+    <ul>
+      <li>তাপ, আলো, শব্দ, বৈদ্যুতিক, রাসায়নিক, নিউক্লীয়, চৌম্বক, যান্ত্রিক ও সৌরশক্তি ইত্যাদি।</li>
+      <li><b>যান্ত্রিক শক্তি:</b> বস্তুর অবস্থা, আকার ও গতির কারণে যে শক্তি পাওয়া যায়। এর দুটি রূপ: <b>গতিশক্তি</b> ও <b>স্থিতিশক্তি (বিভব শক্তি)</b>।</li>
+    </ul>
+
+    <h3>৪.৩.১ গতিশক্তি (Kinetic Energy) ⭐⭐⭐</h3>
+    <ul>
+      <li>গতির কারণে বস্তুর যে শক্তি, তাকে <b>গতিশক্তি</b> বলে। দুর্ঘটনায় গাড়ি ভাঙা ও মানুষ মারা যাওয়ার প্রধান কারণ এই গতিশক্তি।</li>
+      <li>F বলে m ভরের স্থির বস্তু s দূরত্ব সরলে কাজ W = Fs = (ma)(½at²) = ½m(at)² = ½mv²। তাই: <p class="eq"><b>T = ½ m v²</b></p></li>
+      <li>v-এর বর্গ আছে বলে <b>বেগ দ্বিগুণ করতে চার গুণ শক্তি</b> দিতে হয়।</li>
+      <li>v² = u² + 2as-কে ½m দিয়ে গুণ করলে: <b>½mv² = ½mu² + W</b>। অর্থাৎ বস্তুর ওপর W কাজ করলে গতিশক্তি W পরিমাণ বাড়ে (কাজ–শক্তি উপপাদ্য)।</li>
+      <li><b>বইয়ের উদাহরণ:</b> 10 kg স্থির বস্তুতে 10 N বল। a = 10/10 = 1 m/s²। 10 s পর v = 10 m/s, গতিশক্তি = ½ × 10 × 10² = <b>500 J</b>। বল সরালে 20 s পরেও <b>500 J</b> (বেগ একই)। পুরো 20 s বল চালালে v = 20 m/s, গতিশক্তি = ½ × 10 × 20² = <b>2000 J</b>।</li>
+      <li><b>উদাহরণ:</b> 10 kg বস্তুর গতিশক্তি 80 J হলে v² = 2 × 80 ÷ 10 = 16, <b>v = 4 m/s</b>। (ল্যাব ৩)</li>
+    </ul>
+
+    <h3>৪.৩.২ বিভব শক্তি (Potential Energy) ⭐⭐⭐</h3>
+    <ul>
+      <li>বস্তুর <b>অবস্থা বা অবস্থানের</b> কারণে সঞ্চিত শক্তি হলো বিভব শক্তি। স্প্রিংকে সংকুচিত করলে বা পাথরকে ওপরে তুললে এটি জমা হয়।</li>
+      <li><b>স্প্রিং:</b> ধ্রুবক k, সংকোচন x হলে সঞ্চিত শক্তি <p class="eq"><b>V = ½ k x²</b></p> (বল F = −kx)।</li>
+      <li><b>উচ্চতা:</b> m ভরের বস্তু h উচ্চতায় তুললে (বল F = mg): <p class="eq"><b>W = V = m g h</b></p> ওপরে তুলতে যে কাজ করতে হয়, সেটাই বিভব শক্তি হয়ে জমা থাকে।</li>
+      <li>ছেড়ে দিলে h দূরত্ব নামার পর বিভব শক্তি পুরোটাই গতিশক্তি হয়: ½mv² = mgh ⇒ <b>v² = 2gh</b>। এই সূত্র আগে গতির সমীকরণ থেকেও পেয়েছিলে।</li>
+      <li><b>উদাহরণ ১:</b> 10 kg বস্তুকে 100 m/s বেগে ওপরে ছুড়লে। গতিশক্তি = ½ × 10 × 100² = 50000 J। mgh = 50000 ⇒ h = 50000 ÷ (10 × 9.8) = <b>510 m</b>। উত্তর ভরের ওপর নির্ভর করে না। (সরাসরি v² = 2gh থেকেও পাওয়া যায়।)</li>
+      <li><b>উদাহরণ ২:</b> 5 kg ভর, 50 m/s। প্রাথমিক গতিশক্তি = ½ × 5 × 50² = 6250 J। গতিশক্তি = বিভব শক্তি হলে প্রত্যেকে 6250 ÷ 2 = 3125 J। mgh = 3125 ⇒ h = 3125 ÷ (5 × 9.8) = <b>63.78 m</b>।</li>
+      <li><b>উদাহরণ ৩ (স্প্রিং):</b> 10 kg বস্তু 10 m/s বেগে স্প্রিংয়ে থেমে গেল, k = 100000। গতিশক্তি = 500 J = ½kx² ⇒ x² = 1000/100000 = 1/100 ⇒ <b>x = 0.1 m</b>। (ল্যাব ৪, ৫)</li>
+    </ul>
+
+    <h3>৪.৫ শক্তির নিত্যতা ও রূপান্তর ⭐⭐⭐</h3>
+    <ul>
+      <li><b>শক্তির নিত্যতা:</b> শক্তি সৃষ্টিও হয় না, ধ্বংসও হয় না। এক রূপ থেকে অন্য রূপে পরিবর্তিত হয় মাত্র। মহাবিশ্বের মোট শক্তি নির্দিষ্ট।</li>
+      <li>পাথর ওপরে তুললে বিভব শক্তি জমে। ছাড়লে বিভব কমে, গতিশক্তি বাড়ে। মাটিতে লাগার ঠিক আগে পুরো শক্তিই গতিশক্তি। আঘাতের পর সেটা <b>শব্দ ও তাপ</b> হয়ে যায়।</li>
+      <li><b>দোলক (চিত্র ৪.০৪):</b> সর্বোচ্চ উচ্চতায় বেগ 0, তখন সব শক্তি বিভব। নিচের বিন্দুতে বিভব সবচেয়ে কম, গতিশক্তি সবচেয়ে বেশি। মোট শক্তি (T + V) অপরিবর্তিত। ঘর্ষণ না থাকলে দোলক চিরকাল দুলত। (ল্যাব ৬)</li>
+    </ul>
+
+    <h3>৪.৫.২ শক্তির রূপান্তর ⭐⭐⭐</h3>
+    <table class="t"><tr><th>শক্তি</th><th>রূপান্তরের উদাহরণ</th></tr>
+      <tr><td>বিদ্যুৎ</td><td>পাখা/মোটরে → যান্ত্রিক; ইস্ত্রি/হিটারে → তাপ; বাল্ব/টিউবলাইট/LED → আলো; স্পিকারে → শব্দ; মোবাইল চার্জে → রাসায়নিক</td></tr>
+      <tr><td>রাসায়নিক</td><td>রান্নার গ্যাস → তাপ; মোমবাতি → তাপ ও আলো; জ্বালানি → ইঞ্জিনে যান্ত্রিক; ব্যাটারি → বিদ্যুৎ; খাদ্য → আমাদের শরীরের যান্ত্রিক/বৈদ্যুতিক শক্তি</td></tr>
+      <tr><td>তাপ</td><td>ইঞ্জিনে তাপ → যান্ত্রিক; থার্মোকাপলে → বিদ্যুৎ</td></tr>
+      <tr><td>যান্ত্রিক</td><td>জেনারেটরে যান্ত্রিক → বিদ্যুৎ; ঘর্ষণে যান্ত্রিক → তাপ</td></tr>
+      <tr><td>আলো</td><td>সোলার সেলে আলো → বিদ্যুৎ; ফটোগ্রাফিক ফিল্মে আলো → রাসায়নিক বিক্রিয়া</td></tr>
+      <tr><td>ভর</td><td>E = mc² অনুযায়ী ভর → শক্তি (নিউক্লিয়ার বোমা ও বিদ্যুৎকেন্দ্র)</td></tr>
+    </table>
+    <ul>
+      <li><b>নিউক্লিয়ার বিদ্যুৎকেন্দ্র (চিত্র ৪.০৫):</b> নিউক্লিয়ার বিক্রিয়ায় তাপ → পানি বাষ্প → টারবাইন ঘোরে (যান্ত্রিক) → জেনারেটর → বিদ্যুৎ। (ল্যাব ৭)</li>
+      <li><b>সব শক্তি ব্যবহার করা যায় না।</b> প্রতিবার রূপান্তরে কিছুটা শক্তি তাপ হয়ে অপচয় হয়। এটা প্রযুক্তির সীমাবদ্ধতা নয়, পদার্থবিজ্ঞানের বেঁধে দেওয়া নিয়ম।</li>
+      <li><b>অনন্তকাল চলা যন্ত্র</b> (জেনারেটর দিয়ে মোটর, মোটর দিয়ে জেনারেটর) কখনো কাজ করে না, কারণ প্রতি ধাপে শক্তির অপচয় হয়।</li>
+    </ul>
+
+    <h3>৪.৪ শক্তির বিভিন্ন উৎস ⭐⭐⭐</h3>
+    <table class="t"><tr><th>অনবায়নযোগ্য (ফুরিয়ে যায়)</th><th>নবায়নযোগ্য (ফুরায় না)</th></tr>
+      <tr><td><b>তেল, গ্যাস, কয়লা</b> (ফসিল জ্বালানি, লক্ষ-কোটি বছর আগে গাছপালা মাটিচাপা পড়ে তৈরি)<br><b>নিউক্লিয়ার</b> (ইউরেনিয়াম)</td><td><b>জলবিদ্যুৎ, বায়োমাস, সৌরশক্তি, বায়ুশক্তি, বায়োফুয়েল, ভূতাপীয় (জিওথার্মাল)</b></td></tr>
+    </table>
+    <ul>
+      <li><b>জ্বালানি (তেল, গ্যাস, কয়লা):</b> বর্তমানে সবচেয়ে বড় উৎস। বাংলাদেশের গ্যাস তুলনামূলক পরিষ্কার। বর্তমান হারে ব্যবহার চললে টেনেটুনে আর বড়জোর দুই শত বছর।</li>
+      <li><b>নিউক্লিয়ার:</b> জ্বালানি ইউরেনিয়াম। ভবিষ্যতে নিউক্লিয়ার ফিউশান (সূর্যের মতো, হাইড্রোজেন থেকে) আশা করা হয়।</li>
+      <li><b>জলবিদ্যুৎ:</b> নবায়নযোগ্য শক্তির সবচেয়ে বড় অংশ। নদীতে বাঁধ দিয়ে বিদ্যুৎ তৈরি। বাঁধে বিস্তীর্ণ অঞ্চল প্লাবিত হয় ও পরের এলাকায় খরা হতে পারে।</li>
+      <li><b>বায়োমাস:</b> লাকড়ি, খড়কুটো। পৃথিবীর বড় একটি অংশের মানুষ ব্যবহার করে। গাছ আবার জন্মায়, তাই নবায়নযোগ্য।</li>
+      <li><b>সৌরশক্তি:</b> এক বর্গকিলোমিটারে সূর্য থেকে প্রায় হাজার মেগাওয়াট শক্তি পাওয়া যায়, প্রায় একটি নিউক্লিয়ার কেন্দ্রের সমান। সোলার প্যানেল জনপ্রিয়। রাতে বা মেঘলা দিনে পাওয়া যায় না।</li>
+      <li><b>বায়ুশক্তি:</b> বায়ু টারবাইন একটি মাত্র থাম জায়গা নেয়। একটি টারবাইন থেকে কয়েক মেগাওয়াট। ব্যবহার প্রতি বছর প্রায় ত্রিশ শতাংশ হারে বাড়ছে।</li>
+      <li><b>বায়োফুয়েল:</b> ভুট্টা, আখ থেকে অ্যালকোহল জ্বালানি। রান্নার তেল থেকে ডিজেলের বিকল্প।</li>
+      <li><b>ভূতাপীয়:</b> পৃথিবীর ভেতরের উত্তপ্ত অগ্ন্যুৎপাত শক্তি। প্রক্রিয়া সহজ নয়, ব্যাপক ব্যবহার হয়নি।</li>
+      <li>পৃথিবীর মোট ব্যবহৃত শক্তির <b>পাঁচ ভাগের এক ভাগ</b> নবায়নযোগ্য, আর এর বড় অংশ জলবিদ্যুৎ। (ল্যাব ৮)</li>
+    </ul>
+
+    <h3>৪.৪.৩ শক্তির রূপান্তর ও পরিবেশের ওপর প্রভাব ⭐⭐</h3>
+    <ul>
+      <li><b>ফসিল জ্বালানি</b> পোড়ালে <b>কার্বন ডাই-অক্সাইড (গ্রিনহাউস গ্যাস)</b> তৈরি হয়। এটি তাপ ধরে রাখে, পৃথিবীর তাপমাত্রা বাড়ে (বৈশ্বিক উষ্ণতা)। মেরু অঞ্চলের বরফ গলে সমুদ্রপৃষ্ঠের উচ্চতা বাড়ে। নিম্নাঞ্চল প্লাবিত ও কৃষিজমি লবণাক্ত হয়, বাংলাদেশের জন্য বড় ঝুঁকি।</li>
+      <li><b>নিউক্লিয়ার কেন্দ্রে</b> কার্বন ডাই-অক্সাইড নিঃসরণ নেই, কিন্তু <b>তেজস্ক্রিয় বর্জ্য</b> লক্ষ লক্ষ বছর সংরক্ষণ করতে হয়। বড় দুর্ঘটনার উদাহরণ চেরনোবিল ও ফুকুশিমা।</li>
+      <li><b>নবায়নযোগ্য শক্তির</b> ক্ষতি তুলনামূলক কম, তবে জলবিদ্যুতের বাঁধে এলাকা প্লাবিত হয় আর নিচের এলাকায় তীব্র খরা হতে পারে।</li>
+    </ul>
+
+    <h3>৪.৬ ভর ও শক্তির সম্পর্ক ⭐⭐⭐</h3>
+    <ul>
+      <li>আইনস্টাইন দেখিয়েছেন ভর ও শক্তি একই জিনিস। m ভরকে শক্তিতে রূপান্তর করলে: <p class="eq"><b>E = m c²</b></p> c = আলোর বেগ = 3 × 10⁸ m/s। c² খুব বড়, তাই সামান্য ভর থেকেই বিপুল শক্তি।</li>
+      <li>নিউক্লিয়ার কেন্দ্রের জ্বালানি <b>ইউরেনিয়াম-235</b>: 92টি প্রোটন ও 143টি নিউট্রন। প্রাকৃতিক ইউরেনিয়ামের মাত্র 0.7%। অর্ধায়ু প্রায় 704 মিলিয়ন বছর।</li>
+      <li><b>বিক্রিয়া:</b> ¹₀n + ²³⁵₉₂U → ⁹²₃₆Kr + ¹⁴¹₅₆Ba + 3 ¹₀n + শক্তি। ডান পাশের ভর বাঁ পাশের চেয়ে কম। কম ভরটুকুই E = mc² অনুসারে শক্তি হয়ে বের হয়।</li>
+      <li><b>চেইন রি-অ্যাকশন:</b> বের হওয়া 3টি নিউট্রন খুব দ্রুত, তাই সহজে অন্য U-235 ধরতে পারে না। গতি কমলে অন্য নিউক্লিয়াসে আটকে সেটিকে ভাঙে, আবার তিনটি নিউট্রন বের হয়। এভাবে চলতে থাকে।</li>
+      <li>তাপে পানি বাষ্প, বাষ্পে টারবাইন, জেনারেটরে বিদ্যুৎ। একটি কেন্দ্র থেকে হাজার মেগাওয়াট পাওয়া সম্ভব।</li>
+      <li><b>কন্ট্রোল রড:</b> নিউট্রন শোষণ করে বিক্রিয়া নিয়ন্ত্রণ করে। শোষণ করালে চেইন রি-অ্যাকশন বন্ধ হয়ে যায়। (ল্যাব ৯)</li>
+    </ul>
+
+    <h3>৪.৭ ক্ষমতা (Power) ⭐⭐⭐</h3>
+    <ul>
+      <li><b>ক্ষমতা = কাজ করার হার।</b> t সময়ে W কাজ হলে: <p class="eq"><b>P = W ÷ t</b></p></li>
+      <li>একক <b>ওয়াট (W)</b>, 1 W = 1 J/s। মাত্রা <b>[P] = ML²T⁻³</b>। ক্ষমতা স্কেলার, কারণ কাজ ও সময় স্কেলার।</li>
+      <li>100 W বাতি মানে প্রতি সেকেন্ডে 100 J শক্তি ব্যয় হচ্ছে। 1000 MW বিদ্যুৎকেন্দ্র মানে প্রতি সেকেন্ডে 1000 × 10⁶ J বিদ্যুৎশক্তি।</li>
+      <li>ক্ষমতাকে শক্তির রূপান্তরের হারও বলা যায়।</li>
+    </ul>
+
+    <h3>৪.৮ কর্মদক্ষতা (Efficiency) ⭐⭐⭐</h3>
+    <ul>
+      <li>যন্ত্রে ঘর্ষণ ইত্যাদির জন্য শক্তি অপচয় হয়, তাই যতটুকু কাজ চাই তার সমান শক্তি দিলে হয় না, একটু বেশি দিতে হয়।</li>
+      <li><p class="eq"><b>কর্মদক্ষতা = (কাজের পরিমাণ ÷ প্রদত্ত শক্তি) × 100%</b><br>= (প্রদত্ত শক্তি − শক্তির অপচয়) ÷ প্রদত্ত শক্তি × 100%</p></li>
+      <li><b>বইয়ের উদাহরণ:</b> 1000 W মোটর, 15 s-এ 100 kg বস্তু 10 m ওপরে তুলল। কাজ = 100 × 9.8 × 10 = 9800 J। প্রদত্ত = 1000 × 15 = 15000 J। অপচয় = 15000 − 9800 = <b>5200 J</b>। কর্মদক্ষতা = 9800/15000 × 100% = <b>65.3%</b>।</li>
+      <li>বিদ্যুৎকেন্দ্রে প্রতি ধাপেই অপচয়, মোট কর্মদক্ষতা 30%-এ নেমে আসতে পারে।</li>
+      <li><b>উদাহরণ:</b> প্রতি ধাপে 10% অপচয় হলে চার ধাপে = 0.9 × 0.9 × 0.9 × 0.9 = 0.6561 = <b>65.6%</b>। (ল্যাব ১০)</li>
+    </ul>
+
+    <h3>🔍 অনুসন্ধান ৪.০১: শারীরিক ক্ষমতা</h3>
+    <ul>
+      <li>দালানের সিঁড়ির সংখ্যা ও প্রতি সিঁড়ির উচ্চতা মেপে উচ্চতা h বের করো। নিজের ভর m মাপো এবং সিঁড়ি বেয়ে উঠতে সময় t মাপো।</li>
+      <li>ক্ষমতা <b>P = mgh ÷ t</b>। শ্রেণির সবার ক্ষমতার গড় বের করে নিজেরটার সাথে তুলনা করো। (ল্যাব ১১)</li>
+    </ul>
+  </section>
+  <section class="panel" id="lab1">
+    <h2>🧱 ল্যাব ১: কাজ W = F s</h2>
+    <div class="say">👉 বল আর সরণ বদলে কাজ হিসাব করো। চারটি অবস্থা দেখো। প্রয়োগ বলের দিকে সরলে কাজ ধনাত্মক, উল্টো দিকে সরলে ঋণাত্মক।</div>
+<div class="pills" id="w1p"><button data-k="0" class="on">➡️ বলের দিকে সরণ</button><button data-k="1">⬅️ বলের উল্টো দিকে সরণ</button><button data-k="2">🛑 ছেড়ে দেওয়ার পর (d)</button><button data-k="3">🧱 ঘর্ষণসহ</button></div>
+    <div class="ctl"><label>বল F: <span id="w1fv"></span> N</label><input type="range" id="w1f" min="5" max="100" step="5" value="50"><label>সরণ s: <span id="w1sv"></span> m</label><input type="range" id="w1s" min="1" max="20" step="1" value="10"><span id="w1fr"><label>ঘর্ষণ f: <span id="w1ffv"></span> N</label><input type="range" id="w1ff" min="0" max="50" step="5" value="10"></span></div>
+    <div class="btnrow"><button class="btn" id="w1go">▶ চালাও</button><button class="btn alt" id="w1rs">↻</button></div>
+    <div class="row"><div><canvas id="w1c" class="w" width="380" height="200"></canvas></div><div class="grow"><div class="tlinfo" id="w1t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="w1q"></div><div class="cls" id="w1o"></div><div class="fb" id="w1fb"></div><small id="w1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🏢 ল্যাব ২: ভবনে ওঠার কাজ (W = mgh)</h2>
+    <div class="say">👉 তোমার ভর আর তলার সংখ্যা বদলাও। দেখো ওপরে ওঠার কাজ আর জমা বিভব শক্তি সমান।</div>
+<div class="ctl"><label>ভর m: <span id="b2mv"></span> kg</label><input type="range" id="b2m" min="30" max="100" step="5" value="50"><label>তলা: <span id="b2nv"></span> টি</label><input type="range" id="b2n" min="1" max="10" step="1" value="10"><button class="btn" id="b2go">▶ ওঠো</button><button class="btn alt" id="b2rs">↻</button></div>
+    <div class="row"><div><canvas id="b2c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="b2t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="b2q"></div><div class="cls" id="b2o"></div><div class="fb" id="b2fb"></div><small id="b2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🏎️ ল্যাব ৩: গতিশক্তি T = ½mv²</h2>
+    <div class="say">👉 ভর ও বেগ বদলে গতিশক্তি দেখো। তারপর বল প্রয়োগ করে কাজ আর গতিশক্তি মিলিয়ে নাও।</div>
+<div class="ctl"><label>ভর m: <span id="k3mv"></span> kg</label><input type="range" id="k3m" min="1" max="50" step="1" value="10"><label>বেগ v: <span id="k3vv"></span> m/s</label><input type="range" id="k3v" min="0" max="30" step="1" value="10"><button class="btn alt" id="k3d">v দ্বিগুণ করো</button></div>
+    <div id="k3b"></div>
+    <h3>🛒 বল দিয়ে চালু করো (স্থির অবস্থা থেকে)</h3>
+    <div class="ctl"><label>বল F: <span id="k3fv"></span> N</label><input type="range" id="k3f" min="1" max="50" step="1" value="10"><label>ভর m: <span id="k3m2v"></span> kg</label><input type="range" id="k3m2" min="1" max="50" step="1" value="10"><label>বল চলবে: <span id="k3tv"></span> s</label><input type="range" id="k3t" min="1" max="20" step="1" value="10"><button class="btn" id="k3go">▶ শুরু</button><button class="btn alt" id="k3rs">↻</button></div>
+    <div class="row"><div><canvas id="k3c" class="w" width="380" height="170"></canvas></div><div class="grow"><div class="tlinfo" id="k3t2"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="k3q"></div><div class="cls" id="k3o"></div><div class="fb" id="k3fb"></div><small id="k3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>⛲ ল্যাব ৪: বিভব শক্তি (mgh ও ½kx²)</h2>
+    <div class="say">👉 একটি পাথর ওপরে তোলো বা স্প্রিং চেপে ধরো। শক্তি কত জমল দেখো।</div>
+<div class="pills" id="v4p"><button data-k="0" class="on">🪨 উচ্চতায় (mgh)</button><button data-k="1">🌀 স্প্রিং (½kx²)</button></div>
+    <div class="ctl" id="v4a"><label>ভর m: <span id="v4mv"></span> kg</label><input type="range" id="v4m" min="1" max="20" step="1" value="5"><label>উচ্চতা h: <span id="v4hv"></span> m</label><input type="range" id="v4h" min="0" max="50" step="1" value="20"><button class="btn" id="v4go">▶ ছেড়ে দাও</button><button class="btn alt" id="v4rs">↻</button></div>
+    <div class="ctl" id="v4b" style="display:none"><label>ধ্রুবক k: <span id="v4kv"></span> N/m</label><input type="range" id="v4k" min="100" max="2000" step="100" value="1000"><label>সংকোচন x: <span id="v4xv"></span> cm</label><input type="range" id="v4x" min="0" max="50" step="1" value="20"><button class="btn alt" id="v4bk">📘 বইয়ের উদাহরণ (k = ১০০০০০, ৫০০ J)</button></div>
+    <div class="row"><div><canvas id="v4c" class="w" width="380" height="260"></canvas></div><div class="grow"><div class="tlinfo" id="v4t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="v4q"></div><div class="cls" id="v4o"></div><div class="fb" id="v4fb"></div><small id="v4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🏹 ল্যাব ৫: ওপরে ছোড়া বস্তু (গতি ↔ বিভব)</h2>
+    <div class="say">👉 বস্তুকে ওপরে ছোড়ো। স্লাইডার টেনে দেখো গতিশক্তি আর বিভব শক্তি কীভাবে বদলায়, আর মোট শক্তি কেন একই থাকে।</div>
+<div class="ctl"><label>ভর m: <span id="h5mv"></span> kg</label><input type="range" id="h5m" min="1" max="20" step="1" value="10"><label>ছোড়ার বেগ u: <span id="h5vv"></span> m/s</label><input type="range" id="h5v" min="10" max="100" step="5" value="100"><button class="btn" id="h5go">▶ ছোড়ো</button><button class="btn alt" id="h5bk">📘 ৫ kg, ৫০ m/s</button></div>
+    <div class="ctl"><label>উড্ডয়নের সময়: <span id="h5tv"></span> %</label><input type="range" id="h5t" min="0" max="100" step="1" value="0" style="flex:1;min-width:150px"></div>
+    <div class="row"><div><canvas id="h5c" class="w" width="380" height="280"></canvas></div><div class="grow"><div class="tlinfo" id="h5i"></div><div id="h5b"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="h5q"></div><div class="cls" id="h5o"></div><div class="fb" id="h5fb"></div><small id="h5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🎡 ল্যাব ৬: দোলকে শক্তির রূপান্তর (চিত্র ৪.০৪)</h2>
+    <div class="say">👉 দোলককে সরিয়ে ছেড়ে দাও। গতিশক্তি (T) আর বিভব শক্তি (V) বদলায়, কিন্তু যোগফল ঠিক থাকে। ঘর্ষণ থাকলে কী হয় সেটাও দেখো।</div>
+<div class="ctl"><label>শুরুর কোণ: <span id="p6av"></span>°</label><input type="range" id="p6a" min="10" max="70" step="5" value="45"><label>ঘর্ষণ:</label><select id="p6f"><option value="0">নেই</option><option value="1">আছে (বাতাস ও সুতার)</option></select><button class="btn" id="p6go">▶ ছাড়ো</button></div>
+    <div class="row"><div><canvas id="p6c" class="w" width="380" height="260"></canvas></div><div class="grow"><div id="p6b"></div><div class="tlinfo" id="p6t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="p6q"></div><div class="cls" id="p6o"></div><div class="fb" id="p6fb"></div><small id="p6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>🔄 ল্যাব ৭: শক্তির রূপান্তর</h2>
+    <div class="say">👉 একটি যন্ত্র বা ঘটনা বেছে নাও। শক্তি কোন রূপ থেকে কোন রূপে যায়, আর কতটা তাপ হয়ে অপচয় হয় দেখো।</div>
+<div class="pills" id="f7p"></div>
+    <div class="row"><div><canvas id="f7c" class="w" width="380" height="200"></canvas></div><div class="grow"><div class="tlinfo" id="f7t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="f7q"></div><div class="cls" id="f7o"></div><div class="fb" id="f7fb"></div><small id="f7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>⛽ ল্যাব ৮: শক্তির উৎস</h2>
+    <div class="say">👉 একটি উৎস চাপো। সেটি নবায়নযোগ্য কিনা, সুবিধা আর পরিবেশের ওপর প্রভাব জানো।</div>
+<div class="pills" id="s8p"></div>
+    <div class="tlinfo" id="s8t"></div>
+    <h4>🌍 পৃথিবীতে ব্যবহৃত শক্তির উৎস (বইয়ের তথ্য)</h4>
+    <div id="s8b"></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="s8q"></div><div class="cls" id="s8o"></div><div class="fb" id="s8fb"></div><small id="s8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>☢️ ল্যাব ৯: E = mc² ও চেইন রি-অ্যাকশন</h2>
+    <div class="say">👉 প্রথমে ভরকে শক্তিতে বদলাও। তারপর নিউক্লিয়ার বিক্রিয়ায় কন্ট্রোল রড নামিয়ে-তুলে দেখো বিক্রিয়া কীভাবে নিয়ন্ত্রণ হয়।</div>
+<div class="ctl"><label>ভর m: <span id="n9mv"></span> গ্রাম</label><input type="range" id="n9m" min="1" max="100" step="1" value="1"></div>
+    <div class="tlinfo" id="n9e"></div>
+    <h3>💥 চেইন রি-অ্যাকশন</h3>
+    <div class="ctl"><label>কন্ট্রোল রড: <span id="n9rv"></span>% নিউট্রন শোষণ</label><input type="range" id="n9r" min="0" max="100" step="5" value="0" style="flex:1;min-width:150px"><button class="btn" id="n9go">💥 একটি নিউট্রন ছোড়ো</button><button class="btn alt" id="n9rs">↻</button></div>
+    <div class="row"><div><canvas id="n9c" class="w" width="380" height="260"></canvas></div><div class="grow"><div class="tlinfo" id="n9t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="n9q"></div><div class="cls" id="n9o"></div><div class="fb" id="n9fb"></div><small id="n9sc"></small>
+  </section>
+
+  <section class="panel" id="lab10">
+    <h2>⚙️ ল্যাব ১০: ক্ষমতা ও কর্মদক্ষতা</h2>
+    <div class="say">👉 মোটরের ক্ষমতা, সময় আর ভার বদলাও। কতটা শক্তি কাজে লাগল আর কতটা অপচয় হলো দেখো।</div>
+<div class="ctl"><label>মোটরের ক্ষমতা P: <span id="q10pv"></span> W</label><input type="range" id="q10p" min="200" max="3000" step="100" value="1000"><label>সময় t: <span id="q10tv"></span> s</label><input type="range" id="q10t" min="5" max="30" step="1" value="15"></div>
+    <div class="ctl"><label>ভার m: <span id="q10mv"></span> kg</label><input type="range" id="q10m" min="20" max="300" step="10" value="100"><label>উচ্চতা h: <span id="q10hv"></span> m</label><input type="range" id="q10h" min="1" max="20" step="1" value="10"><button class="btn" id="q10go">▶ তোলো</button></div>
+    <div class="row"><div><canvas id="q10c" class="w" width="380" height="230"></canvas></div><div class="grow"><div class="tlinfo" id="q10i"></div></div></div>
+    <h3>🔗 ধাপে ধাপে অপচয় (বিদ্যুৎকেন্দ্র)</h3>
+    <div class="ctl"><label>প্রতি ধাপের দক্ষতা: <span id="q10ev"></span> %</label><input type="range" id="q10e" min="50" max="100" step="1" value="90"><label>ধাপ: <span id="q10nv"></span> টি</label><input type="range" id="q10n" min="1" max="6" step="1" value="4"></div>
+    <div id="q10b"></div><div class="tlinfo" id="q10t2"></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="q10q"></div><div class="cls" id="q10o"></div><div class="fb" id="q10fb"></div><small id="q10sc"></small>
+  </section>
+
+  <section class="panel" id="lab11">
+    <h2>🏃 ল্যাব ১১: নিজের শারীরিক ক্ষমতা (অনুসন্ধান ৪.০১)</h2>
+    <div class="say">👉 নিজের ভর, সিঁড়ির সংখ্যা ও উঠতে সময় দিয়ে ক্ষমতা বের করো। তারপর বন্ধুদের সাথে তুলনা করো।</div>
+<div class="ctl"><label>ভর m: <span id="b11mv"></span> kg</label><input type="range" id="b11m" min="30" max="90" step="1" value="50"><label>সিঁড়ি: <span id="b11nv"></span> টি</label><input type="range" id="b11n" min="10" max="60" step="1" value="30"></div>
+    <div class="ctl"><label>প্রতি সিঁড়ি: <span id="b11sv"></span> cm</label><input type="range" id="b11s" min="15" max="25" step="1" value="18"><label>সময় t: <span id="b11tv"></span> s</label><input type="range" id="b11t" min="3" max="40" step="1" value="12"><button class="btn" id="b11go">▶ উঠো</button></div>
+    <div class="row"><div><canvas id="b11c" class="w" width="380" height="260"></canvas></div><div class="grow"><div class="tlinfo" id="b11i"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="b11q"></div><div class="cls" id="b11o"></div><div class="fb" id="b11fb"></div><small id="b11sc"></small>
+  </section>
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। বইয়ের নমুনা প্রশ্নের উত্তরমালা নেই, তাই উত্তরগুলো আমার হিসাব। যেখানে অনুমান করেছি, সেখানে লিখে দিয়েছি।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; কাজ, ক্ষমতা ও শক্তি (পদার্থবিজ্ঞান অধ্যায় ৪)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+function opts(correct,wrongs){var seen={},a=[{t:correct,ok:1}];seen[correct]=1;wrongs.forEach(function(w){if(!seen[w]){seen[w]=1;a.push({t:w,ok:0});}});return shuffle(a);}
+function arrow(x,x1,y1,x2,y2,col,lw){var a=Math.atan2(y2-y1,x2-x1);x.strokeStyle=col;x.fillStyle=col;x.lineWidth=lw||3;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-11*Math.cos(a-.4),y2-11*Math.sin(a-.4));x.lineTo(x2-11*Math.cos(a+.4),y2-11*Math.sin(a+.4));x.closePath();x.fill();}
+function person(x,px,py,col){circ(x,0,px,py-22,6,col,null);x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(px,py-16);x.lineTo(px,py-4);x.moveTo(px-6,py-11);x.lineTo(px+6,py-11);x.moveTo(px,py-4);x.lineTo(px-5,py+6);x.moveTo(px,py-4);x.lineTo(px+5,py+6);x.stroke();}
+/* ---------- সাধারণ সহায়ক ---------- */
+function pills(id,fn){$(id).onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var all=$(id).querySelectorAll('button'),i;for(i=0;i<all.length;i++)all[i].classList.toggle('on',all[i]===b);fn(+b.getAttribute('data-k'));};}
+function sci(x){if(!(x>0))return bn(0);var e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);if(+m.toFixed(2)>=10){m/=10;e++;}return bn(parseFloat(m.toFixed(2)))+' × ১০'+(e<0?'⁻':'')+sup(Math.abs(e));}
+function brow(label,val,max,col,txtv){return '<div class="bar"><div class="bl">'+label+'</div><div class="bt"><div class="bf" style="width:'+clamp(val/max*100,1,100)+'%;background:'+col+'"></div></div><b style="min-width:80px;font-size:14px;color:#1f3a5f">'+(txtv||'')+'</b></div>';}
+function on(ids,fn){ids.forEach(function(i){$(i).oninput=fn;$(i).onchange=fn;});}
+var G=9.8;
+function box(x,px,py,w,h,fill,stroke){x.fillStyle=fill;x.fillRect(px,py,w,h);if(stroke){x.strokeStyle=stroke;x.lineWidth=2;x.strokeRect(px,py,w,h);}}
+function wheel(x,px,py,r){circ(x,0,px,py,r,'#333',null);circ(x,0,px,py,r*.4,'#bbb',null);}
+
+/* ---------- ল্যাব ১: কাজ ---------- */
+var W1={k:0,p:0,run:0};
+function w1info(){var F=+$('w1f').value,s=+$('w1s').value,fr=+$('w1ff').value,k=W1.k,h;$('w1fv').textContent=bn(F);$('w1sv').textContent=bn(s);$('w1ffv').textContent=bn(fr);
+  if(k===0)h='বল F = '+bn(F)+' N, সরণ s = '+bn(s)+' m (একই দিকে)।<br><b>W = F × s = '+bn(F*s)+' J</b> <span style="color:#1d7a6f">(ধনাত্মক, বস্তুতে শক্তি যোগ হলো)</span>';
+  else if(k===1)h='বল ডানে দিকে নয়, বাঁয়ে ('+bn(F)+' N), কিন্তু বস্তু ডানে '+bn(s)+' m সরল।<br><b>W = F × (−s) = −'+bn(F*s)+' J</b> <span style="color:#c0392b">(ঋণাত্মক, বস্তু থেকে শক্তি সরে গেল)</span>';
+  else if(k===2)h='তুমি F = '+bn(F)+' N বলে '+bn(s)+' m ঠেলে ছেড়ে দিলে। বস্তু আরও কিছুটা (d) গিয়ে থামল।<br><b>কাজ = F s = '+bn(F*s)+' J</b> (শুধু ঠেলার সময়)।<br>d দূরত্বে কোনো F প্রয়োগ হয়নি, তাই সেখানে F-এর কাজ <b>শূন্য</b>।';
+  else h='তোমার কাজ = '+bn(F)+' × '+bn(s)+' = <b>'+bn(F*s)+' J</b><br>ঘর্ষণের কাজ = −'+bn(fr)+' × '+bn(s)+' = <b style="color:#c0392b">−'+bn(fr*s)+' J</b><br>বস্তুর পাওয়া নিট শক্তি = '+bn(F*s-fr*s)+' J। ঘর্ষণ কিছু শক্তি কমিয়ে নিয়েছে, হয়তো তাপ হয়েছে।'+(F<fr?'<br><small>F < f হলে বস্তু নড়বে না।</small>':'');
+  $('w1t').innerHTML=h;}
+pills('w1p',function(k){W1.k=k;W1.p=0;W1.run=0;$('w1fr').style.display=k===3?'inline':'none';w1info();});
+$('w1fr').style.display='none';
+on(['w1f','w1s','w1ff'],function(){W1.p=0;W1.run=0;w1info();});
+$('w1go').onclick=function(){W1.p=0;W1.run=1;};$('w1rs').onclick=function(){W1.p=0;W1.run=0;};
+DRAWS.push(function(){var x=ctxOf('w1c'),F=+$('w1f').value,s=+$('w1s').value,fr=+$('w1ff').value,k=W1.k;x.clearRect(0,0,380,200);x.fillStyle='#eef6fb';x.fillRect(0,0,380,200);x.fillStyle='#b98b5e';x.fillRect(0,150,380,12);
+  if(W1.run){W1.p+=.012;if(W1.p>=1){W1.p=1;W1.run=0;}}
+  var p=W1.p,dist=s*9,bx,force=1;
+  if(k===2){if(p<.6){bx=30+(p/.6)*dist;}else{var q=(p-.6)/.4;bx=30+dist+60*(1-(1-q)*(1-q));force=0;}}else bx=30+p*dist;
+  x.strokeStyle='#cfd9e1';x.setLineDash([3,3]);x.beginPath();x.moveTo(30,170);x.lineTo(30+dist+(k===2?60:0)+50,170);x.stroke();x.setLineDash([]);
+  box(x,bx,110,50,40,'#3f6fd1','#1f3a8a');txt(x,'বস্তু',bx+25,130,'bold 12px Hind Siliguri','#fff');
+  var L=10+F*.8;
+  if(force){if(k===1)arrow(x,bx+50,125,bx+50-Math.min(L,90),125,RED,4);else arrow(x,bx-4-Math.min(L,90),125,bx-4,125,RED,4);}
+  if(k===3&&fr>0)arrow(x,bx+50+4+fr*.8,142,bx+54,142,'#2a9d8f',4);
+  txt(x,'সরণ = '+f(p*s*(k===2?Math.min(p/.6,1)/p||0:1),1)+' m',190,20,'bold 13px Hind Siliguri',NAVY);
+  if(k===2&&p>=.6)txt(x,'F নেই, d দূরত্বে কাজ ০',190,42,'bold 12px Hind Siliguri','#c0392b');});
+w1info();
+qgame('w1q','w1o','w1fb','w1sc',[
+ ['100 N বলে 10 m সরালে কাজ কত?','1000 J',['10 J','110 J','100 J'],'W = F s = 100 × 10 = 1000 J।'],
+ ['বল ও সরণ বিপরীত দিকে হলে কাজ কেমন?','ঋণাত্মক',['ধনাত্মক','শূন্য','অসীম'],'W = F(−s) = −Fs।'],
+ ['কাজের একক কী?','জুল (J)',['নিউটন (N)','ওয়াট (W)','কেলভিন (K)'],'1 J = 1 N × 1 m।'],
+ ['টুলে বসে সারা দিন পাহারা দিলে পদার্থবিজ্ঞানে কাজ কত?','শূন্য (সরণ নেই)',['অনেক','বলের সমান','ওজনের সমান'],'বলের দিকে সরণ না হলে কাজ হয় না।'],
+ ['ঘর্ষণ বল 10 N, বস্তু 10 m সরলে ঘর্ষণের কাজ?','−100 J',['+100 J','0','10 J'],'ঘর্ষণ গতির বিপরীতে, তাই ঋণাত্মক।'],
+ ['কাজ কোন ধরনের রাশি?','স্কেলার',['ভেক্টর','দুটোই','কোনোটিই নয়'],'বল ও সরণ ভেক্টর, কিন্তু গুণফল স্কেলার।']]);
+
+/* ---------- ল্যাব ২: ভবনে ওঠা ---------- */
+var B2={p:0,run:0};
+function b2info(){var m=+$('b2m').value,n=+$('b2n').value,h=n*3,Wt=m*G;$('b2mv').textContent=bn(m);$('b2nv').textContent=bn(n);
+  $('b2t').innerHTML='ওজন = mg = '+bn(m)+' × 9.8 = <b>'+f(Wt,0)+' N</b><br>উচ্চতা h = '+bn(n)+' × 3 = <b>'+bn(h)+' m</b><br>কাজ W = mgh = '+f(Wt,0)+' × '+bn(h)+' = <b>'+f(Wt*h,0)+' J = '+f(Wt*h/1000,2)+' kJ</b><br>এটি তোমার ভেতর <b>বিভব শক্তি</b> হয়ে জমা হলো। '+(m===50&&n===10?'<br>✅ এটি বইয়ের উদাহরণ (14.7 kJ)।':'');}
+on(['b2m','b2n'],function(){B2.p=0;B2.run=0;b2info();});
+$('b2go').onclick=function(){B2.p=0;B2.run=1;};$('b2rs').onclick=function(){B2.p=0;B2.run=0;};
+DRAWS.push(function(){var x=ctxOf('b2c'),n=+$('b2n').value,i;x.clearRect(0,0,380,300);x.fillStyle='#eef6fb';x.fillRect(0,0,380,300);
+  if(B2.run){B2.p+=.006;if(B2.p>=1){B2.p=1;B2.run=0;}}
+  var fh=Math.min(26,250/n),top=280-fh*n;
+  for(i=0;i<n;i++){box(x,110,280-fh*(i+1),130,fh,i%2?'#e8d9c4':'#f1e6d3','#a08c70');x.fillStyle='#bcd7ea';x.fillRect(125,280-fh*(i+1)+fh*.25,30,fh*.5);x.fillRect(195,280-fh*(i+1)+fh*.25,30,fh*.5);}
+  x.fillStyle='#8a99a6';x.fillRect(60,280,260,10);
+  var py=280-fh*n*B2.p;person(x,95,py-2,'#2b6cb0');
+  arrow(x,300,280,300,top+6,'#2a9d8f',3);txt(x,'h = '+bn(n*3)+' m',325,(280+top)/2,'bold 12px Hind Siliguri','#1d7a6f');
+  var m=+$('b2m').value;arrow(x,75,py-10,75,py+20,RED,3);txt(x,'mg',58,py+8,'bold 11px Hind Siliguri',RED);
+  txt(x,'এ পর্যন্ত কাজ = '+f(m*G*3*n*B2.p,0)+' J',190,16,'bold 13px Hind Siliguri',NAVY);});
+b2info();
+qgame('b2q','b2o','b2fb','b2sc',[
+ ['50 kg তুমি 30 m উচ্চতায় উঠলে কাজ কত? (g = 9.8)','14700 J',['1500 J','490 J','1470 J'],'W = mgh = 50 × 9.8 × 30 = 14700 J।'],
+ ['ওপরে উঠলে তোমার ভেতর কোন শক্তি জমে?','বিভব শক্তি',['গতিশক্তি','তাপশক্তি','শব্দশক্তি'],'কাজটাই বিভব শক্তি হয়ে জমা থাকে।'],
+ ['ওপরে ওঠার সময় তোমার প্রয়োগ করা বল কত?','ওজনের সমান (mg)',['ওজনের অর্ধেক','শূন্য','ওজনের দ্বিগুণ'],'ওজনের সমান বল ওপরে প্রয়োগ করতে হয়।'],
+ ['ওপরে ওঠার কাজের মান কিসের ওপর নির্ভর করে?','ভর ও উচ্চতা',['শুধু সময়','শুধু গতি','পথের আকার'],'W = mgh।'],
+ ['একই ভর দ্বিগুণ উচ্চতায় উঠলে কাজ?','দ্বিগুণ',['অর্ধেক','একই','চার গুণ'],'W ∝ h।']]);
+
+/* ---------- ল্যাব ৩: গতিশক্তি ---------- */
+function k3show(){var m=+$('k3m').value,v=+$('k3v').value;$('k3mv').textContent=bn(m);$('k3vv').textContent=bn(v);
+  var a=.5*m*v*v,b=.5*m*4*v*v;$('k3b').innerHTML=brow('v = '+bn(v)+' m/s',a,Math.max(b,1),'#2a9d8f',f(a,1)+' J')+brow('v = '+bn(2*v)+' m/s',b,Math.max(b,1),'#e63946',f(b,1)+' J')+'<div class="tlinfo">T = ½mv² = ½ × '+bn(m)+' × '+bn(v)+'² = <b>'+f(a,1)+' J</b><br>বেগ দ্বিগুণ করলে গতিশক্তি <b>'+(v>0?'চার গুণ':'শূন্য')+'</b> হয়ে '+f(b,1)+' J।</div>';}
+on(['k3m','k3v'],k3show);$('k3d').onclick=function(){var e=$('k3v');e.value=Math.min(30,Math.max(1,+e.value*2));k3show();};k3show();
+var K3={run:0,t:0};
+function k3calc(t){var F=+$('k3f').value,m=+$('k3m2').value,tf=+$('k3t').value,a=F/m,tt=Math.min(t,tf),v=a*tt,s=.5*a*tt*tt+v*(t-tt);return {F:F,m:m,tf:tf,a:a,v:v,s:s,W:F*.5*a*tt*tt,KE:.5*m*v*v};}
+function k3info(){var c=k3calc(K3.t);$('k3fv').textContent=bn(c.F);$('k3m2v').textContent=bn(c.m);$('k3tv').textContent=bn(c.tf);
+  $('k3t2').innerHTML='a = F/m = '+bn(c.F)+'/'+bn(c.m)+' = '+f(c.a,2)+' m/s²<br>t = '+f(K3.t,1)+' s: v = '+f(c.v,1)+' m/s<br>বলের কাজ W = <b>'+f(c.W,1)+' J</b><br>গতিশক্তি ½mv² = <b>'+f(c.KE,1)+' J</b><br>'+(K3.t>c.tf?'<b>বল সরে গেছে, তাই বেগ ও গতিশক্তি অপরিবর্তিত।</b>':'কাজ = গতিশক্তি (কাজ–শক্তি উপপাদ্য)')+((c.F===10&&c.m===10&&c.tf===10)?'<br>📘 বইয়ের উদাহরণ: 10 s পর 500 J।':'');}
+function k3reset(){K3.run=0;K3.t=0;k3info();}
+on(['k3f','k3m2','k3t'],k3reset);$('k3go').onclick=function(){K3.t=0;K3.run=1;};$('k3rs').onclick=k3reset;
+DRAWS.push(function(){var x=ctxOf('k3c');x.clearRect(0,0,380,170);x.fillStyle='#eef6fb';x.fillRect(0,0,380,170);x.fillStyle='#889';x.fillRect(0,130,380,8);
+  if(K3.run){K3.t+=1/30;var c0=k3calc(K3.t);if(K3.t>=c0.tf+4||c0.s*2>330)K3.run=0;k3info();}
+  var c=k3calc(K3.t),px=20+Math.min(c.s*2,300),w=30+c.m*.6;box(x,px,128-w*.6,w,w*.6,'#e9a23b','#8a5a00');txt(x,bn(c.m)+' kg',px+w/2,128-w*.3,'bold 11px Hind Siliguri','#3d2600');
+  if(K3.t<=c.tf)arrow(x,px-4-c.F*.9,128-w*.3,px-4,128-w*.3,RED,4);
+  x.fillStyle='#e8eef3';x.fillRect(20,12,340,14);x.fillStyle='#e63946';x.fillRect(20,12,340*clamp(c.KE/Math.max(.5*c.m*Math.pow(c.F/c.m*c.tf,2),1),0,1),14);txt(x,'গতিশক্তি '+f(c.KE,0)+' J',190,19,'bold 11px Hind Siliguri','#000');});
+k3info();
+qgame('k3q','k3o','k3fb','k3sc',[
+ ['বেগ দ্বিগুণ হলে গতিশক্তি কত গুণ?','চার গুণ',['দ্বিগুণ','অর্ধেক','একই'],'T = ½mv² ∝ v²।'],
+ ['10 kg বস্তুর বেগ 10 m/s হলে গতিশক্তি কত?','500 J',['100 J','1000 J','50 J'],'½ × 10 × 100 = 500।'],
+ ['10 kg বস্তুর গতিশক্তি 80 J হলে বেগ কত?','4 m/s',['8 m/s','16 m/s','2 m/s'],'v² = 2 × 80 ÷ 10 = 16।'],
+ ['বল সরে নিলে (ধ্রুব বেগে) গতিশক্তি কী হয়?','অপরিবর্তিত থাকে',['বাড়তে থাকে','কমতে থাকে','শূন্য হয়'],'বেগ একই থাকে।'],
+ ['স্থির থেকে W কাজ করলে গতিশক্তি কত হয়?','W',['2W','W/2','W²'],'½mv² = ½mu² + W, u = 0।'],
+ ['দুর্ঘটনায় বেশি ক্ষতির প্রধান কারণ কী?','প্রচণ্ড গতিশক্তি',['গাড়ির রং','টায়ারের চাপ','রাস্তার দৈর্ঘ্য'],'বেগ বেশি হলে গতিশক্তি অনেক বেশি।']]);
+
+/* ---------- ল্যাব ৪: বিভব শক্তি ---------- */
+var V4={k:0,fall:0,y:0,v:0,book:0};
+function v4info(){var h;
+  if(V4.k===0){var m=+$('v4m').value,hh=+$('v4h').value,E=m*G*hh;$('v4mv').textContent=bn(m);$('v4hv').textContent=bn(hh);
+    h='ওজন mg = '+f(m*G,1)+' N<br>ওপরে তুলতে কাজ W = mgh = '+f(m*G,1)+' × '+bn(hh)+' = <b>'+f(E,0)+' J</b> (এটাই বিভব শক্তি)<br>ছেড়ে দিলে মাটিতে লাগার আগে বেগ v = √(2gh) = <b>'+f(Math.sqrt(2*G*hh),1)+' m/s</b>, গতিশক্তি = <b>'+f(E,0)+' J</b>।<br>'+(V4.fall?'এখন: গতিশক্তি = '+f(.5*m*V4.v*V4.v,0)+' J, বিভব = '+f(m*G*(hh-V4.y),0)+' J':'<small>"ছেড়ে দাও" চাপো।</small>');
+  }else{var k=V4.book?100000:+$('v4k').value,x=(V4.book?10:+$('v4x').value)/100;$('v4kv').textContent=V4.book?'১০০০০০':bn(k);$('v4xv').textContent=bn(Math.round(x*100));
+    h='F = kx = '+f(k*x,0)+' N<br>সঞ্চিত শক্তি <b>V = ½kx² = ½ × '+bn(k)+' × '+f(x,2)+'² = '+f(.5*k*x*x,1)+' J</b>'+(V4.book?'<br>📘 বইয়ের উদাহরণ: 500 J শক্তিতে x = 0.1 m।':'')+'<br><small>x দ্বিগুণ করলে শক্তি চার গুণ।</small>';}
+  $('v4t').innerHTML=h;}
+pills('v4p',function(k){V4.k=k;V4.fall=0;$('v4a').style.display=k===0?'flex':'none';$('v4b').style.display=k===1?'flex':'none';v4info();});
+on(['v4m','v4h'],function(){V4.fall=0;v4info();});on(['v4k','v4x'],function(){V4.book=0;v4info();});
+$('v4bk').onclick=function(){V4.book=1;v4info();};
+$('v4go').onclick=function(){V4.fall=1;V4.y=0;V4.v=0;};$('v4rs').onclick=function(){V4.fall=0;V4.y=0;V4.v=0;v4info();};
+DRAWS.push(function(){var x=ctxOf('v4c');x.clearRect(0,0,380,260);x.fillStyle='#eef6fb';x.fillRect(0,0,380,260);
+  if(V4.k===0){var hh=+$('v4h').value,m=+$('v4m').value,H=190*hh/50+10;x.fillStyle='#8a99a6';x.fillRect(0,230,380,20);
+    x.fillStyle='#d8c9a8';x.fillRect(60,230-H,40,H);
+    if(V4.fall){V4.v+=G/60*3;V4.y+=V4.v/60*3;if(V4.y>=hh){V4.y=hh;V4.fall=0;}v4info();}
+    var py=230-H+(V4.y/Math.max(hh,1))*H;circ(x,0,80+(V4.fall?0:0),py-10,10,'#7b8794','#333',2);
+    arrow(x,80,230-H-24,80,230-H-2,RED,0);x.strokeStyle='#2a9d8f';x.lineWidth=2;x.setLineDash([4,3]);x.beginPath();x.moveTo(110,230);x.lineTo(110,230-H);x.stroke();x.setLineDash([]);txt(x,'h = '+bn(hh)+' m',150,230-H/2,'bold 12px Hind Siliguri','#1d7a6f');
+    var E=m*G*hh,PE=m*G*(hh-V4.y),KE=E-PE;x.fillStyle='#e8eef3';x.fillRect(220,40,140,16);x.fillRect(220,90,140,16);x.fillStyle='#2a9d8f';x.fillRect(220,40,140*PE/Math.max(E,1),16);x.fillStyle='#e63946';x.fillRect(220,90,140*KE/Math.max(E,1),16);
+    txt(x,'বিভব শক্তি '+f(PE,0)+' J',290,32,'bold 11px Hind Siliguri',NAVY);txt(x,'গতিশক্তি '+f(KE,0)+' J',290,82,'bold 11px Hind Siliguri',NAVY);
+  }else{var xx=(V4.book?10:+$('v4x').value)/100,mx=.5,coils=12,len=200*(1-xx/mx*.55);x.fillStyle='#8a99a6';x.fillRect(30,100,10,60);
+    x.strokeStyle='#e9a23b';x.lineWidth=4;x.beginPath();x.moveTo(40,130);for(var i=0;i<=coils*8;i++){var t=i/(coils*8);x.lineTo(40+t*len,130+Math.sin(t*coils*6.283)*14);}x.stroke();
+    box(x,40+len,110,40,40,'#3f6fd1','#1f3a8a');arrow(x,40+len+80,130,40+len+44,130,RED,4);txt(x,'F',40+len+88,118,'bold 13px Hind Siliguri',RED);
+    txt(x,'সংকোচন x = '+f(xx*100,0)+' cm',190,40,'bold 13px Hind Siliguri',NAVY);x.fillStyle='#d4dde5';x.fillRect(0,160,380,8);}});
+v4info();
+qgame('v4q','v4o','v4fb','v4sc',[
+ ['m ভরের বস্তুকে h উচ্চতায় তুললে বিভব শক্তি কত?','mgh',['mg/h','½mgh','mh/g'],'W = F h = mg h।'],
+ ['স্প্রিংয়ে সঞ্চিত শক্তির সূত্র কোনটি?','½ k x²',['kx','½ k x','k x²/2g'],'V = ½kx²।'],
+ ['স্প্রিং সংকোচন দ্বিগুণ করলে শক্তি কত গুণ?','চার গুণ',['দ্বিগুণ','অর্ধেক','একই'],'V ∝ x²।'],
+ ['10 kg ভরকে 10 m তুললে (g = 9.8) বিভব শক্তি কত?','980 J',['98 J','100 J','9800 J'],'10 × 9.8 × 10 = 980।'],
+ ['পাথর ছেড়ে দিলে মাটিতে লাগার ঠিক আগে কী ঘটে?','বিভব শক্তি প্রায় পুরোটাই গতিশক্তি',['সব শক্তি শূন্য','শুধু তাপ','বিভব শক্তি বাড়ে'],'শক্তির নিত্যতার কারণে।'],
+ ['টান-টান স্প্রিং ছাড়লে বস্তুকে ঠেলে দিতে পারে, কারণ —','বিভব শক্তি জমা থাকে',['গতিশক্তি আছে','তাপ আছে','ভর বেড়েছে'],'সংকুচিত স্প্রিং কাজ করার সামর্থ্য রাখে।']]);
+
+/* ---------- ল্যাব ৫: ওপরে ছোড়া ---------- */
+var H5={run:0};
+function h5calc(){var m=+$('h5m').value,u=+$('h5v').value,T=2*u/G,fr=+$('h5t').value/100,t=fr*T,y=u*t-.5*G*t*t,v=u-G*t;return {m:m,u:u,T:T,fr:fr,t:t,y:y,v:v,hm:u*u/(2*G),KE:.5*m*v*v,PE:m*G*y,E:.5*m*u*u};}
+function h5info(){var c=h5calc();$('h5mv').textContent=bn(c.m);$('h5vv').textContent=bn(c.u);$('h5tv').textContent=bn(Math.round(c.fr*100));
+  $('h5i').innerHTML='শুরুতে ½mu² = <b>'+f(c.E,0)+' J</b><br>সর্বোচ্চ উচ্চতা h = u² ÷ 2g = <b>'+f(c.hm,1)+' m</b> (ভরের ওপর নির্ভর করে না)<br>এখন: উচ্চতা = '+f(c.y,1)+' m, বেগ = '+f(c.v,1)+' m/s<br>KE = '+f(c.KE,0)+' J, PE = '+f(c.PE,0)+' J, <b>যোগফল = '+f(c.KE+c.PE,0)+' J</b>'+(c.m===5&&c.u===50?'<br>📘 KE = PE হয় h = '+f(c.hm/2,2)+' m-এ (বইয়ে 63.78 m)।':'');
+  $('h5b').innerHTML=brow('গতিশক্তি',c.KE,c.E,'#e63946',f(c.KE,0)+' J')+brow('বিভব শক্তি',c.PE,c.E,'#2a9d8f',f(c.PE,0)+' J')+brow('মোট',c.KE+c.PE,c.E,'#3f6fd1',f(c.KE+c.PE,0)+' J');}
+on(['h5m','h5v','h5t'],function(ev){H5.run=0;h5info();});
+$('h5go').onclick=function(){$('h5t').value=0;H5.run=1;};$('h5bk').onclick=function(){$('h5m').value=5;$('h5v').value=50;$('h5t').value=0;H5.run=0;h5info();};
+DRAWS.push(function(){var x=ctxOf('h5c');if(H5.run){var e=$('h5t');e.value=Math.min(100,+e.value+.5);if(+e.value>=100)H5.run=0;h5info();}
+  var c=h5calc();x.clearRect(0,0,380,280);x.fillStyle='#eef6fb';x.fillRect(0,0,380,280);x.fillStyle='#8a99a6';x.fillRect(0,260,380,20);
+  var top=30,H=225,py=260-(c.y/c.hm)*H;x.strokeStyle='#cfd9e1';x.beginPath();x.moveTo(190,top);x.lineTo(190,260);x.stroke();
+  x.setLineDash([5,4]);x.strokeStyle='#e9a23b';x.beginPath();x.moveTo(110,260-H/2);x.lineTo(270,260-H/2);x.stroke();x.setLineDash([]);txt(x,'KE = PE',320,260-H/2,'bold 11px Hind Siliguri','#b8600b');
+  txt(x,'সর্বোচ্চ '+f(c.hm,0)+' m',320,top,'bold 11px Hind Siliguri','#1d7a6f');
+  circ(x,0,190,py-10,10+c.m*.4,'#7b8794','#333',2);arrow(x,190,py-10,190,py-10-(c.v>0?1:-1)*Math.min(Math.abs(c.v)*.4,50),'#2a9d8f',3);});
+h5info();
+qgame('h5q','h5o','h5fb','h5sc',[
+ ['ওপরে ছোড়া বস্তু সর্বোচ্চ বিন্দুতে পৌঁছালে কোন শক্তি সবচেয়ে বেশি?','বিভব শক্তি',['গতিশক্তি','দুটোই শূন্য','তাপ'],'সেখানে বেগ শূন্য, তাই গতিশক্তি শূন্য।'],
+ ['10 kg, 100 m/s ছুড়লে সর্বোচ্চ উচ্চতা প্রায় কত?','510 m',['100 m','50 m','1000 m'],'v²/2g = 10000/19.6 ≈ 510।'],
+ ['ওপরের প্রশ্নে ভর 20 kg হলে উচ্চতা?','একই (510 m)',['দ্বিগুণ','অর্ধেক','চার গুণ'],'h = v²/2g, ভর নেই।'],
+ ['ছোড়ার পর যেকোনো সময়ে KE + PE কী থাকে?','একই (নিত্যতা)',['বাড়ে','কমে','শূন্য'],'শক্তির নিত্যতা।'],
+ ['কোন উচ্চতায় KE = PE হয়?','সর্বোচ্চ উচ্চতার অর্ধেকে',['সর্বোচ্চ বিন্দুতে','মাটিতে','এক-চতুর্থাংশে'],'মোট শক্তির অর্ধেক করে হলে mgh = E/2।'],
+ ['নামার সময় বেগ বাড়ে, কারণ —','বিভব শক্তি গতিশক্তি হচ্ছে',['ভর বাড়ছে','তাপ জমছে','g কমছে'],'½mv² = mgh।']]);
+/* ---------- ল্যাব ৬: দোলক ---------- */
+var P6={th:.78,w:0,run:0,E0:1};
+function p6reset(){var a=+$('p6a').value;$('p6av').textContent=bn(a);P6.th=a*Math.PI/180;P6.w=0;P6.run=0;P6.E0=G*1.5*(1-Math.cos(P6.th));}
+function p6en(){var L=1.5,V=G*L*(1-Math.cos(P6.th)),T=.5*L*L*P6.w*P6.w;return {V:V,T:T,H:Math.max(P6.E0-V-T,0)};}
+function p6show(){var e=p6en(),E=P6.E0;$('p6b').innerHTML=brow('গতিশক্তি T',e.T,E,'#e63946',f(e.T/E*100,0)+'%')+brow('বিভব শক্তি V',e.V,E,'#2a9d8f',f(e.V/E*100,0)+'%')+brow('T + V',e.T+e.V,E,'#3f6fd1',f((e.T+e.V)/E*100,0)+'%')+brow('তাপ (অপচয়)',e.H,E,'#e9a23b',f(e.H/E*100,0)+'%');
+  $('p6t').innerHTML=(+$('p6f').value?'ঘর্ষণ আছে: প্রতি দোলে একটু শক্তি তাপ হয়ে যায়, তাই দোল কমতে কমতে থেমে যায়। T + V কমে, কিন্তু <b>তাপসহ মোট শক্তি ঠিক থাকে</b> (শক্তির নিত্যতা)।':'ঘর্ষণ নেই: সর্বোচ্চ বিন্দুতে সব শক্তি বিভব (বেগ ০), নিচের বিন্দুতে সব শক্তি গতিশক্তি। T + V সবসময় একই, তাই দোলক চিরকাল দুলত।');}
+on(['p6a','p6f'],function(){p6reset();p6show();});$('p6go').onclick=function(){p6reset();P6.run=1;};
+DRAWS.push(function(){var x=ctxOf('p6c');if(P6.run){var c=+$('p6f').value?.22:0;for(var i=0;i<2;i++){var al=-(G/1.5)*Math.sin(P6.th)-c*P6.w;P6.w+=al/120;P6.th+=P6.w/120;}p6show();}
+  x.clearRect(0,0,380,260);x.fillStyle='#eef6fb';x.fillRect(0,0,380,260);x.fillStyle='#8a99a6';x.fillRect(130,20,120,10);
+  var bx=190+170*Math.sin(P6.th),by=30+170*Math.cos(P6.th);x.strokeStyle='#444';x.lineWidth=2.5;x.beginPath();x.moveTo(190,30);x.lineTo(bx,by);x.stroke();circ(x,0,bx,by,15,'#6a7f94','#222',2);
+  x.setLineDash([4,4]);x.strokeStyle='#bbb';x.beginPath();x.moveTo(190,30);x.lineTo(190,210);x.stroke();x.setLineDash([]);
+  var e=p6en();txt(x,e.T>e.V?'গতিশক্তি বেশি':e.V>e.T?'বিভব শক্তি বেশি':'',190,246,'bold 12px Hind Siliguri',NAVY);});
+p6reset();p6show();
+qgame('p6q','p6o','p6fb','p6sc',[
+ ['দোলকের সর্বোচ্চ উচ্চতায় (প্রান্তে) কোন শক্তি সবচেয়ে বেশি?','বিভব শক্তি',['গতিশক্তি','তাপ','শব্দ'],'সেখানে বেগ ০, তাই সব শক্তি বিভব।'],
+ ['দোলকের সর্বনিম্ন বিন্দুতে (মাঝখানে) কী ঘটে?','গতিশক্তি সর্বোচ্চ',['বিভব সর্বোচ্চ','মোট শক্তি শূন্য','গতিশক্তি শূন্য'],'নিচে বিভব সবচেয়ে কম, বেগ সবচেয়ে বেশি।'],
+ ['ঘর্ষণ না থাকলে দোলকের T + V —','সবসময় একই',['বাড়ে','কমে','শূন্য হয়'],'শক্তির নিত্যতা।'],
+ ['ঘর্ষণ থাকলে দোলক ধীরে থেমে যায়, কারণ —','শক্তি তাপ হয়ে যায়',['শক্তি ধ্বংস হয়','ভর কমে','g কমে'],'শক্তি নষ্ট হয় না, তাপে রূপান্তরিত হয়।'],
+ ['পাথর মেঝেতে আঘাত করলে গতিশক্তি কোথায় যায়?','শব্দ ও তাপে',['ধ্বংস হয়','ভরে','বিভবে'],'শক্তির নিত্যতা।']]);
+
+/* ---------- ল্যাব ৭: শক্তির রূপান্তর ---------- */
+var F7=[
+ ['🌀 ইলেকট্রিক পাখা',['বিদ্যুৎ','যান্ত্রিক (ঘূর্ণন)'],'বিদ্যুৎশক্তি মোটরে যান্ত্রিক শক্তি হয়ে পাখা ঘোরায়। কিছুটা তাপ হয়ে যায়।'],
+ ['💡 বাল্ব/টিউবলাইট',['বিদ্যুৎ','তাপ','আলো'],'ফিলামেন্টে বিদ্যুৎ তাপ হয়, উত্তপ্ত ফিলামেন্ট আলো দেয়। তাই ফিলামেন্ট বাল্বে বেশি শক্তি অপচয় হয়, এখন সাশ্রয়ী বাল্ব ব্যবহার হয়।'],
+ ['🔋 ব্যাটারি ও মোবাইল',['রাসায়নিক','বিদ্যুৎ','আলো ও শব্দ'],'ব্যাটারিতে রাসায়নিক শক্তি বিদ্যুৎ হয়, ফোন সেই বিদ্যুতে আলো ও শব্দ তৈরি করে। চার্জ দেওয়ার সময় উল্টোটা ঘটে (বিদ্যুৎ → রাসায়নিক)।'],
+ ['⚙️ জেনারেটর',['যান্ত্রিক','বিদ্যুৎ'],'তারের কুণ্ডলীকে চৌম্বক ক্ষেত্রে ঘুরিয়ে যান্ত্রিক শক্তি বিদ্যুৎ হয়। ঘর্ষণে কিছুটা তাপ হয়।'],
+ ['☀️ সোলার সেল',['আলো','বিদ্যুৎ'],'সোলার সেলে আলো সরাসরি বিদ্যুৎশক্তিতে রূপান্তরিত হয়।'],
+ ['🔊 স্পিকার',['বিদ্যুৎ','যান্ত্রিক (কম্পন)','শব্দ'],'বিদ্যুৎ স্পিকারের পর্দাকে কাঁপায় (যান্ত্রিক), কম্পন থেকে শব্দ তৈরি হয়।'],
+ ['🏃 তুমি দৌড়ালে',['রাসায়নিক (খাদ্য)','যান্ত্রিক'],'খাবারের রাসায়নিক শক্তি পেশীতে যান্ত্রিক শক্তি (গতিশক্তি) হয়। শরীর গরম হয় (তাপ)।'],
+ ['🕯️ মোমবাতি',['রাসায়নিক','তাপ','আলো'],'মোম পুড়ে রাসায়নিক শক্তি তাপ হয়, উত্তপ্ত গ্যাসের কণা আলো দেয়।'],
+ ['☢️ নিউক্লিয়ার কেন্দ্র',['ভর','তাপ','যান্ত্রিক (টারবাইন)','বিদ্যুৎ'],'নিউক্লিয়ার বিক্রিয়ায় ভর থেকে তাপ, তাপে বাষ্প, বাষ্পে টারবাইন ঘোরে, জেনারেটরে বিদ্যুৎ তৈরি হয়। (চিত্র ৪.০৫)']];
+var f7k=0;
+$('f7p').innerHTML=F7.map(function(e,i){return '<button data-k="'+i+'"'+(i===0?' class="on"':'')+'>'+e[0]+'</button>';}).join('');
+function f7info(){var e=F7[f7k];$('f7t').innerHTML='<b>'+e[0]+'</b><br>'+e[1].join(' → ')+'<br><br>'+e[2]+'<br><small>প্রতিটি রূপান্তরেই কিছুটা শক্তি তাপ হয়ে অপচয় হয়।</small>';}
+pills('f7p',function(k){f7k=k;f7info();});
+DRAWS.push(function(){var x=ctxOf('f7c'),st=F7[f7k][1],n=st.length,bw=Math.min(100,(340-(n-1)*20)/n),gap=n>1?(340-n*bw)/(n-1):0,i,cols=['#3f6fd1','#e9a23b','#2a9d8f','#e63946','#8e6bbf'];x.clearRect(0,0,380,200);x.fillStyle='#f6f9fb';x.fillRect(0,0,380,200);
+  for(i=0;i<n;i++){var bx=20+i*(bw+gap);x.fillStyle=cols[i%5];x.globalAlpha=.9;x.fillRect(bx,50,bw,60);x.globalAlpha=1;txt(x,st[i].split(' ')[0],bx+bw/2,74,'bold 13px Hind Siliguri','#fff');if(st[i].indexOf(' ')>0)txt(x,st[i].split(' ').slice(1).join(' '),bx+bw/2,94,'10px Hind Siliguri','#fff');
+    if(i<n-1){var sx=bx+bw,ex=bx+bw+gap;for(var d=0;d<4;d++){var u=((FR*.02+d/4)%1);circ(x,0,sx+u*gap,80,4,'#e9a23b','#8a5a00',1);}arrow(x,sx+1,80,ex-1,80,'#8a99a6',1);
+      var wy=118+((FR*1.5)%30);x.globalAlpha=.7;txt(x,'🔥',sx+gap/2,wy,'16px Hind Siliguri','#000');x.globalAlpha=1;}}
+  txt(x,'অপচয় তাপ ↓',190,185,'bold 12px Hind Siliguri','#c0392b');txt(x,'শক্তির প্রবাহ →',190,22,'bold 12px Hind Siliguri',NAVY);});
+f7info();
+qgame('f7q','f7o','f7fb','f7sc',[
+ ['বাল্ব জ্বালালে মূলত শক্তি কীভাবে বদলায়?','বিদ্যুৎ → তাপ → আলো',['আলো → বিদ্যুৎ','রাসায়নিক → শব্দ','তাপ → বিদ্যুৎ'],'ফিলামেন্ট উত্তপ্ত হয়ে আলো দেয়।'],
+ ['জেনারেটরে কী রূপান্তর ঘটে?','যান্ত্রিক → বিদ্যুৎ',['বিদ্যুৎ → যান্ত্রিক','আলো → বিদ্যুৎ','তাপ → আলো'],'কুণ্ডলী ঘুরিয়ে বিদ্যুৎ তৈরি।'],
+ ['সোলার সেলে আলো কী হয়?','বিদ্যুৎ',['তাপ','শব্দ','রাসায়নিক'],'আলো সরাসরি বিদ্যুতে রূপান্তরিত।'],
+ ['তুমি দৌড়ালে কোন রূপান্তর হয়?','রাসায়নিক → যান্ত্রিক (ও তাপ)',['যান্ত্রিক → রাসায়নিক','আলো → তাপ','কিছুই নয়'],'খাদ্যের রাসায়নিক শক্তি পেশীতে কাজে লাগে।'],
+ ['নিউক্লিয়ার কেন্দ্রে সবার আগে কী শক্তিতে রূপান্তরিত হয়?','ভর',['বিদ্যুৎ','আলো','শব্দ'],'E = mc² অনুসারে ভর থেকে তাপশক্তি।'],
+ ['প্রতিবার রূপান্তরে কিছুটা শক্তি কী হয়ে যায়?','তাপ হয়ে অপচয় হয়',['সৃষ্টি হয়','ভর হয়ে যায়','আলো হয়'],'ঘর্ষণ ইত্যাদি কারণে।']]);
+
+/* ---------- ল্যাব ৮: শক্তির উৎস ---------- */
+var S8=[
+ ['🛢️ তেল',0,'ফসিল জ্বালানি: লক্ষ-কোটি বছর আগে গাছপালা মাটিচাপা পড়ে তৈরি। অশোধিত তেল রিফাইনারিতে পেট্রোল, ডিজেল, কেরোসিন হয়।','পোড়ালে CO₂ (গ্রিনহাউস গ্যাস) বেরোয়, বৈশ্বিক উষ্ণতা বাড়ে।'],
+ ['🔥 গ্যাস',0,'ফসিল জ্বালানি। মূলত মিথেন (CH₄)। বাংলাদেশের গ্যাস তুলনামূলক পরিষ্কার ও সরাসরি ব্যবহারযোগ্য।','পোড়ালে CO₂ বেরোয়, তবে কয়লার চেয়ে কম দূষণ।'],
+ ['⚫ কয়লা',0,'ফসিল জ্বালানি। মাটির নিচ থেকে তুলতে হয়।','পোড়ালে প্রচুর CO₂ বেরোয়।'],
+ ['☢️ নিউক্লিয়ার',0,'জ্বালানি ইউরেনিয়াম। অল্প জ্বালানি থেকে বিপুল শক্তি। ইউরেনিয়াম সীমিত।','CO₂ নিঃসরণ নেই, কিন্তু তেজস্ক্রিয় বর্জ্য লক্ষ লক্ষ বছর সংরক্ষণ করতে হয়। চেরনোবিল ও ফুকুশিমার মতো দুর্ঘটনার ঝুঁকি।'],
+ ['💧 জলবিদ্যুৎ',1,'নদীতে বাঁধ দিয়ে বিদ্যুৎ তৈরি। নবায়নযোগ্য শক্তির সবচেয়ে বড় অংশ।','বাঁধে বিস্তীর্ণ অঞ্চল প্লাবিত হয়, বাঁধের নিচের এলাকায় খরা হতে পারে।'],
+ ['🌿 বায়োমাস',1,'লাকড়ি, খড়কুটো। পৃথিবীর বড় অংশের মানুষ রান্না ও জ্বালানিতে ব্যবহার করে। গাছ আবার জন্মায়।','ধোঁয়া ও CO₂ হয়, তবে গাছ আবার জন্মে CO₂ শুষে নেয়।'],
+ ['☀️ সৌরশক্তি',1,'সূর্য থেকে আলো ও তাপ। এক বর্গকিলোমিটারে প্রায় হাজার মেগাওয়াট পাওয়া যায়। সোলার প্যানেলে সরাসরি বিদ্যুৎ।','রাতে ও মেঘলা দিনে পাওয়া যায় না। পরিবেশের ক্ষতি খুব কম।'],
+ ['🌬️ বায়ুশক্তি',1,'বায়ু টারবাইন ঘুরিয়ে বিদ্যুৎ। একটি টারবাইন থেকে কয়েক মেগাওয়াট। ব্যবহার প্রতি বছর প্রায় ত্রিশ শতাংশ হারে বাড়ছে।','জায়গা প্রায় নষ্ট হয় না, কারণ শুধু একটা থাম মাটিতে থাকে।'],
+ ['🌽 বায়োফুয়েল',1,'ভুট্টা, আখ থেকে অ্যালকোহল জ্বালানি, গাছের তেল থেকে ডিজেলের বিকল্প। ব্রাজিল বড় আকারে ব্যবহার করে।','ফসল ও জমি ব্যবহার হয়, তবে CO₂-এর ভারসাম্য বেশি ভালো।'],
+ ['🌋 ভূতাপীয়',1,'পৃথিবীর ভেতরের উত্তপ্ত ম্যাগমার তাপ। কয়েক কিলোমিটার গর্ত করে পেলে তাপের বিশাল উৎস।','প্রক্রিয়া সহজ নয়, ব্যাপকভাবে ব্যবহার শুরু হয়নি।']];
+var s8k=0;
+$('s8p').innerHTML=S8.map(function(e,i){return '<button data-k="'+i+'"'+(i===0?' class="on"':'')+'>'+e[0]+'</button>';}).join('');
+function s8info(){var e=S8[s8k];$('s8t').innerHTML='<b>'+e[0]+'</b> <span class="chip" style="background:'+(e[1]?'#d9f2ee':'#fde0da')+'">'+(e[1]?'নবায়নযোগ্য ♻️':'অনবায়নযোগ্য ⛔')+'</span><br>'+e[2]+'<br><b>পরিবেশের ওপর প্রভাব:</b> '+e[3];}
+pills('s8p',function(k){s8k=k;s8info();});s8info();
+$('s8b').innerHTML=brow('অনবায়নযোগ্য',80,100,'#e63946','প্রায় ৪/৫ ভাগ')+brow('নবায়নযোগ্য',20,100,'#2a9d8f','প্রায় ১/৫ ভাগ')+'<div class="tlinfo">নবায়নযোগ্য অংশের বড় ভাগ জলবিদ্যুৎ। তেল-গ্যাস-কয়লা বর্তমান হারে ব্যবহার করলে টেনেটুনে বড়জোর দুই শত বছর চলবে।</div>';
+qgame('s8q','s8o','s8fb','s8sc',[
+ ['কোনটি নবায়নযোগ্য শক্তি?','সৌরশক্তি',['কয়লা','তেল','ইউরেনিয়াম'],'সূর্যের আলো ফুরায় না।'],
+ ['কোনটি অনবায়নযোগ্য?','কয়লা',['বায়ুশক্তি','বায়োমাস','জলবিদ্যুৎ'],'ফসিল জ্বালানি একবার ফুরালে ফিরে আসে না।'],
+ ['কোন উৎসের জন্য বাঁধ দিতে হয়?','জলবিদ্যুৎ',['সৌরশক্তি','বায়ুশক্তি','ভূতাপীয়'],'নদীতে বাঁধ দিয়ে।'],
+ ['বৈশ্বিক উষ্ণতার প্রধান কারণ কোন গ্যাস?','কার্বন ডাই-অক্সাইড',['অক্সিজেন','নাইট্রোজেন','হিলিয়াম'],'ফসিল জ্বালানি পুড়ে CO₂ হয়, যা তাপ ধরে রাখে।'],
+ ['নবায়নযোগ্য শক্তি পৃথিবীর মোট শক্তির প্রায় কত অংশ?','পাঁচ ভাগের এক ভাগ',['অর্ধেক','দশ ভাগের এক ভাগ','পুরোটা'],'বইয়ের তথ্য।'],
+ ['নিউক্লিয়ার কেন্দ্রের বড় ঝুঁকি কোনটি?','তেজস্ক্রিয় বর্জ্য ও দুর্ঘটনা',['CO₂ নিঃসরণ','বাতাসের অভাব','ফসল নষ্ট'],'চেরনোবিল ও ফুকুশিমা উদাহরণ।'],
+ ['বায়োফুয়েল কিসের থেকে তৈরি?','ভুট্টা, আখ ইত্যাদি উদ্ভিজ্জ',['কয়লা','ইউরেনিয়াম','পাথর'],'অ্যালকোহল জ্বালানি।']]);
+
+/* ---------- ল্যাব ৯: E = mc² ও চেইন রি-অ্যাকশন ---------- */
+function n9show(){var m=+$('n9m').value,kg=m/1000,E=kg*9e16,yrs=E/100/3.156e7;$('n9mv').textContent=bn(m);
+  $('n9e').innerHTML='E = mc² = '+f(kg,3)+' kg × (3 × 10⁸)² = <b>'+sci(E)+' J</b><br>এই শক্তিতে 100 W একটি বাতি প্রায় <b>'+bn(Math.round(yrs).toLocaleString('en-US').replace(/,/g,''))+' বছর</b> জ্বলতে পারে!<br><small>c² খুব বড় বলে সামান্য ভর থেকেই বিপুল শক্তি। বাস্তবে নিউক্লিয়ার কেন্দ্রে ভরের খুব ছোট অংশই শক্তি হয়।</small>';}
+on(['n9m'],n9show);n9show();
+var N9={at:[],ne:[],fis:0,run:0,fl:[]};
+function n9init(){N9.at=[];N9.ne=[];N9.fis=0;N9.run=0;N9.fl=[];for(var i=0;i<9;i++)for(var j=0;j<5;j++)N9.at.push({x:55+i*35,y:60+j*35,s:0});}
+function n9info(){var r=+$('n9r').value,alive=N9.ne.length;$('n9rv').textContent=bn(r);
+  $('n9t').innerHTML='বিভাজিত U-235 নিউক্লিয়াস: <b>'+bn(N9.fis)+'</b>/৪৫<br>চলমান নিউট্রন: <b>'+bn(alive)+'</b><br>'+(r===0?'কন্ট্রোল রড নেই: প্রতি বিক্রিয়ায় ৩টি নিউট্রন, তাই <b>বিক্রিয়া দ্রুত বাড়ে</b> (চেইন রি-অ্যাকশন)।':r>=70?'কন্ট্রোল রড অনেক নিউট্রন শোষণ করছে: <b>বিক্রিয়া থেমে যাবে।</b>':'রড কিছু নিউট্রন শোষণ করছে: বিক্রিয়া ধীর বা নিয়ন্ত্রিত।')+'<br><small>বিক্রিয়া: n + ²³⁵U → ⁹²Kr + ¹⁴¹Ba + 3n + শক্তি</small>';}
+$('n9go').onclick=function(){n9init();N9.ne.push({x:8,y:60+2*35,vx:2.6,vy:0});N9.run=1;n9info();};$('n9rs').onclick=function(){n9init();n9info();};$('n9r').oninput=n9info;n9init();n9info();
+DRAWS.push(function(){var x=ctxOf('n9c'),r=+$('n9r').value/100,i,j;x.clearRect(0,0,380,260);x.fillStyle='#10192b';x.fillRect(0,0,380,260);
+  for(i=0;i<N9.ne.length;i++){var n=N9.ne[i];n.x+=n.vx;n.y+=n.vy;
+    for(j=0;j<N9.at.length;j++){var a=N9.at[j];if(!a.s&&Math.hypot(a.x-n.x,a.y-n.y)<9){a.s=1;N9.fis++;n.dead=1;N9.fl.push({x:a.x,y:a.y,t:12});for(var k=0;k<3;k++){if(Math.random()>=r){var an=Math.random()*6.283;N9.ne.push({x:a.x,y:a.y,vx:2.6*Math.cos(an),vy:2.6*Math.sin(an)});}}break;}}
+    if(n.x<-5||n.x>385||n.y<-5||n.y>265)n.dead=1;}
+  N9.ne=N9.ne.filter(function(n){return !n.dead;});if(N9.ne.length>140)N9.ne.length=140;
+  for(i=0;i<9;i++){x.fillStyle='rgba(180,190,210,'+(.12+r*.7)+')';if(i<8)x.fillRect(72+i*35,40,6,185);}
+  N9.at.forEach(function(a){if(a.s){circ(x,0,a.x-5,a.y,5,'#2a9d8f','#9ff',1);circ(x,0,a.x+5,a.y,5,'#e9a23b','#ffd',1);}else circ(x,0,a.x,a.y,8,'#e63946','#ffb3b3',1);});
+  N9.fl=N9.fl.filter(function(q){q.t--;circ(x,0,q.x,q.y,26-q.t,'rgba(255,220,100,'+q.t/20+')',null);return q.t>0;});
+  N9.ne.forEach(function(n){circ(x,0,n.x,n.y,3,'#fff',null);});
+  txt(x,'🔴 U-235   ⚪ নিউট্রন   ▮ কন্ট্রোল রড',190,14,'bold 11px Hind Siliguri','#cfe3ff');
+  if(N9.run)n9info();});
+qgame('n9q','n9o','n9fb','n9sc',[
+ ['E = mc²-এ c কী?','আলোর বেগ',['শব্দের বেগ','তাপ ধারকত্ব','আলোর ভর'],'c = 3 × 10⁸ m/s।'],
+ ['নিউক্লিয়ার বিক্রিয়ায় শক্তি কোথা থেকে আসে?','কিছু ভর শক্তিতে বদলে',['নতুন ভর তৈরি হয়ে','কিছুই না','শুধু ঘর্ষণ থেকে'],'ডান পাশের ভর বাঁ পাশের চেয়ে কম।'],
+ ['কন্ট্রোল রডের কাজ কী?','নিউট্রন শোষণ করে বিক্রিয়া নিয়ন্ত্রণ',['তাপ তৈরি','বাষ্প তৈরি','বিদ্যুৎ তৈরি'],'শোষণ করালে চেইন রি-অ্যাকশন থেমে যায়।'],
+ ['U-235 এ কতটি নিউট্রন আছে?','143',['92','235','141'],'প্রোটন 92, নিউট্রন 235 − 92 = 143।'],
+ ['একটি U-235 বিভাজনে কয়টি নতুন নিউট্রন বের হয়?','৩টি',['১টি','২টি','৫টি'],'বইয়ের সমীকরণ অনুসারে।'],
+ ['চেইন রি-অ্যাকশনে বিক্রিয়া চলতে থাকে কারণ —','নতুন নিউট্রন আবার অন্য নিউক্লিয়াস ভাঙে',['তাপ বাইরে থেকে দিতে হয়','বাষ্প আটকে থাকে','ভর বাড়ে'],'ধীর নিউট্রন অন্য U-235 কে ভাঙে।']]);
+
+/* ---------- ল্যাব ১০: ক্ষমতা ও কর্মদক্ষতা ---------- */
+var Q10={p:0,run:0};
+function q10calc(){var P=+$('q10p').value,t=+$('q10t').value,m=+$('q10m').value,h=+$('q10h').value,inp=P*t,use=m*G*h;return {P:P,t:t,m:m,h:h,inp:inp,use:use,waste:inp-use,eff:use/inp*100,pw:use/t};}
+function q10info(){var c=q10calc();$('q10pv').textContent=bn(c.P);$('q10tv').textContent=bn(c.t);$('q10mv').textContent=bn(c.m);$('q10hv').textContent=bn(c.h);
+  $('q10i').innerHTML='প্রদত্ত শক্তি = P × t = '+bn(c.P)+' × '+bn(c.t)+' = <b>'+bn(c.inp)+' J</b><br>কাজ = mgh = '+bn(c.m)+' × ৯.৮ × '+bn(c.h)+' = <b>'+f(c.use,0)+' J</b><br>'+(c.use>c.inp?'<b style="color:#c0392b">কাজ প্রদত্ত শক্তির চেয়ে বেশি হতে পারে না!</b> ক্ষমতা বাড়াও বা সময় বাড়াও বা ভার কমাও।':'অপচয় = <b>'+f(c.waste,0)+' J</b><br>কর্মদক্ষতা = কাজ ÷ প্রদত্ত × 100% = <b>'+f(c.eff,1)+'%</b><br>কাজের ক্ষমতা (কাজ ÷ t) = '+f(c.pw,0)+' W')+(c.P===1000&&c.t===15&&c.m===100&&c.h===10?'<br>📘 বইয়ের উদাহরণ: 65.3%।':'');}
+on(['q10p','q10t','q10m','q10h'],function(){Q10.p=0;Q10.run=0;q10info();});$('q10go').onclick=function(){Q10.p=0;Q10.run=1;};
+DRAWS.push(function(){var x=ctxOf('q10c'),c=q10calc();x.clearRect(0,0,380,230);x.fillStyle='#eef6fb';x.fillRect(0,0,380,230);if(Q10.run){Q10.p+=.008;if(Q10.p>=1){Q10.p=1;Q10.run=0;}}
+  x.fillStyle='#8a99a6';x.fillRect(20,205,90,12);box(x,40,170,50,35,'#2a9d8f','#146a60');txt(x,'মোটর',65,188,'bold 11px Hind Siliguri','#fff');x.fillStyle='#8a99a6';x.fillRect(95,24,16,181);
+  var ly=190-Q10.p*150;x.strokeStyle='#444';x.lineWidth=2;x.beginPath();x.moveTo(103,30);x.lineTo(103,ly);x.stroke();box(x,86,ly,34,22+c.m/20,'#e9a23b','#8a5a00');txt(x,bn(c.m)+'kg',103,ly+14,'bold 9px Hind Siliguri','#3d2600');
+  var tot=Math.max(c.inp,c.use,1),bw=200,ux=bw*Math.min(c.use,c.inp)/tot,x0=150;x.fillStyle='#e8eef3';x.fillRect(x0,90,bw,26);x.fillStyle='#2a9d8f';x.fillRect(x0,90,ux,26);x.fillStyle='#e63946';x.fillRect(x0+ux,90,Math.max(bw*c.waste/tot,0),26);
+  txt(x,'প্রদত্ত শক্তি '+bn(c.inp)+' J',250,76,'bold 12px Hind Siliguri',NAVY);txt(x,'কাজ',x0+ux/2,103,'bold 11px Hind Siliguri','#fff');if(c.waste>0)txt(x,'অপচয়',x0+ux+bw*c.waste/tot/2,103,'bold 11px Hind Siliguri','#fff');
+  txt(x,'η = '+(c.use<=c.inp?f(c.eff,1)+'%':'অসম্ভব'),250,150,'bold 18px Hind Siliguri',c.use<=c.inp?'#1d7a6f':RED);});
+function q10b(){var e=+$('q10e').value/100,n=+$('q10n').value,i,h='',v=1;$('q10ev').textContent=bn(+$('q10e').value);$('q10nv').textContent=bn(n);
+  for(i=1;i<=n;i++){v*=e;h+=brow('ধাপ '+bn(i)+' পর',v*100,100,i===n?'#e63946':'#3f6fd1',f(v*100,1)+'%');}
+  $('q10b').innerHTML=h;$('q10t2').innerHTML='প্রতি ধাপে '+bn(+$('q10e').value)+'% দক্ষতা, '+bn(n)+' ধাপে মোট = '+bn(+$('q10e').value)+'%<sup>'+bn(n)+'</sup> = <b>'+f(v*100,1)+'%</b>'+(+$('q10e').value===90&&n===4?'<br>📘 বইয়ের উদাহরণ: 0.9⁴ = 0.6561 = 65.6%।':'')+'<br><small>ধাপ বাড়লে মোট কর্মদক্ষতা কমে। বিদ্যুৎকেন্দ্রে প্রায় 30%-এ নামতে পারে।</small>';}
+on(['q10e','q10n'],q10b);q10info();q10b();
+qgame('q10q','q10o','q10fb','q10sc',[
+ ['ক্ষমতার সূত্র কোনটি?','P = W ÷ t',['P = W × t','P = F × s','P = m × a'],'ক্ষমতা = কাজ করার হার।'],
+ ['1 W = ?','1 J/s',['1 N','1 J × s','1 kg'],'প্রতি সেকেন্ডে 1 জুল।'],
+ ['100 W বাতি প্রতি সেকেন্ডে কত শক্তি ব্যয় করে?','100 J',['10 J','1 J','1000 J'],'100 W = 100 J/s।'],
+ ['কাজ 9800 J, প্রদত্ত শক্তি 15000 J হলে কর্মদক্ষতা প্রায় কত?','65.3%',['34.7%','98%','153%'],'9800/15000 × 100 = 65.3%।'],
+ ['প্রতি ধাপে 10% অপচয় হলে চার ধাপে কর্মদক্ষতা?','65.6%',['60%','90%','40%'],'0.9⁴ = 0.6561।'],
+ ['কর্মদক্ষতা কখনো —','100%-এর বেশি হতে পারে না',['0 হয়','বাড়তে থাকে','ঋণাত্মক হয় সবসময়'],'কাজ কখনো প্রদত্ত শক্তির চেয়ে বেশি হয় না।'],
+ ['ক্ষমতা কোন ধরনের রাশি?','স্কেলার',['ভেক্টর','দুটোই','কোনোটিই নয়'],'কাজ ও সময় স্কেলার।']]);
+
+/* ---------- ল্যাব ১১: শারীরিক ক্ষমতা ---------- */
+var B11={p:0,run:0};
+function b11info(){var m=+$('b11m').value,n=+$('b11n').value,s=+$('b11s').value,t=+$('b11t').value,h=n*s/100,Wk=m*G*h,P=Wk/t;$('b11mv').textContent=bn(m);$('b11nv').textContent=bn(n);$('b11sv').textContent=bn(s);$('b11tv').textContent=bn(t);
+  $('b11i').innerHTML='উচ্চতা h = '+bn(n)+' × '+bn(s)+' cm = <b>'+f(h,2)+' m</b><br>কাজ = mgh = '+bn(m)+' × ৯.৮ × '+f(h,2)+' = <b>'+f(Wk,0)+' J</b><br>ক্ষমতা P = mgh ÷ t = '+f(Wk,0)+' ÷ '+bn(t)+' = <b>'+f(P,0)+' W</b><br>তুমি একটি '+f(P/100,1)+'টি 100 W বাতির সমান শক্তি-হারে কাজ করেছ।<br><small>বেশি দ্রুত উঠলে (t কম) একই কাজে ক্ষমতা বেশি।</small>';}
+on(['b11m','b11n','b11s','b11t'],function(){B11.p=0;B11.run=0;b11info();});$('b11go').onclick=function(){B11.p=0;B11.run=1;};
+DRAWS.push(function(){var x=ctxOf('b11c'),n=+$('b11n').value,s=+$('b11s').value,i;x.clearRect(0,0,380,260);x.fillStyle='#eef6fb';x.fillRect(0,0,380,260);
+  if(B11.run){B11.p+=1/(60*Math.max(+$('b11t').value/6,1));if(B11.p>=1){B11.p=1;B11.run=0;}}
+  var steps=Math.min(n,30),sx=300/steps,sy=190/steps;x.fillStyle='#bfa98a';for(i=0;i<steps;i++){x.fillRect(30+i*sx,230-(i+1)*sy,sx+1,(i+1)*sy);}
+  var px=30+B11.p*300,py=230-B11.p*190;person(x,px,py-2,'#2b6cb0');
+  arrow(x,345,230,345,40,'#2a9d8f',2);txt(x,'h = '+f(n*s/100,1)+' m',340,130,'bold 12px Hind Siliguri','#1d7a6f');txt(x,'সময় = '+f(B11.p*+$('b11t').value,1)+' s',100,20,'bold 13px Hind Siliguri',NAVY);});
+b11info();
+qgame('b11q','b11o','b11fb','b11sc',[
+ ['সিঁড়ি বেয়ে ওঠার ক্ষমতার সূত্র কোনটি?','P = mgh ÷ t',['P = mg × t','P = mh ÷ g','P = m ÷ t'],'ক্ষমতা = কাজ ÷ সময়, কাজ = mgh।'],
+ ['50 kg, 3 m উচ্চতা, 10 s হলে ক্ষমতা কত? (g = 9.8)','147 W',['1470 W','14.7 W','490 W'],'50 × 9.8 × 3 ÷ 10 = 147 W।'],
+ ['একই কাজ কম সময়ে করলে ক্ষমতা —','বেশি',['কম','একই','শূন্য'],'P = W/t।'],
+ ['সিঁড়ির উচ্চতা কীভাবে বের করব?','সিঁড়ির সংখ্যা × প্রতি সিঁড়ির উচ্চতা',['শুধু সংখ্যা','সময় × ভর','ভর ÷ সংখ্যা'],'অনুসন্ধান ৪.০১ অনুযায়ী।'],
+ ['ভর বেশি হলে (সময় একই) ক্ষমতা —','বেশি',['কম','একই','শূন্য'],'P ∝ m।']]);
+/* ---------- কুইজ ---------- */
+var QUIZ=[];
+function M(q,c,w,e,fix){QUIZ.push({q:q,o:[c].concat(w),a:0,e:e,fix:!!fix});}
+QUIZ.push({q:'কাজের একক কোনটি? (বইয়ের নমুনা প্রশ্ন ১)',o:['জুল','নিউটন','কেলভিন','ওয়াট'],a:0,fix:true,e:'কাজের একক জুল (J)। ওয়াট ক্ষমতার একক।'});
+QUIZ.push({q:'5 kg ভরের একটি বস্তুকে 20 cm, 30 cm, 40 cm ও 50 cm উপরে রাখা হলো। কোন অবস্থানে তার বিভব শক্তি সবচেয়ে বেশি? (বইয়ের নমুনা প্রশ্ন ২)',o:['20 cm','30 cm','40 cm','50 cm'],a:3,fix:true,e:'V = mgh, ভর একই, তাই যত বেশি উচ্চতা তত বেশি বিভব শক্তি। 50 cm-এ সবচেয়ে বেশি।'});
+QUIZ.push({q:'একটি স্প্রিংকে টান টান করলে এর মধ্যে কোন শক্তি জমা থাকে? (বইয়ের নমুনা প্রশ্ন ৩)',o:['গতিশক্তি','বিভব শক্তি','তাপশক্তি','রাসায়নিক শক্তি'],a:1,fix:true,e:'টানা বা সংকুচিত স্প্রিংয়ে বিভব শক্তি V = ½kx² জমা থাকে।'});
+QUIZ.push({q:'চিত্র ৪.০৭ (গাড়ির ভর 1000 kg; বেগ 0 থেকে সমহারে বেড়ে A বিন্দুতে 10 m/s, AB সমবেগ, BC ও DE-তে বেগ কমছে) লেখচিত্রের কোন অংশে গতিশক্তি সময়ের বর্গের সমানুপাতে বাড়ে? (বইয়ের নমুনা প্রশ্ন ৪)',o:['OA অংশে','AB অংশে','CD অংশে','DE অংশে'],a:0,fix:true,e:'OA-তে v ∝ t, তাই T = ½mv² ∝ t²। (লেখচিত্র বইয়ে দেখো। উত্তর আমার নির্ণয়।)'});
+QUIZ.push({q:'ওপরের লেখচিত্রে (m = 1000 kg, সর্বোচ্চ বেগ 10 m/s) সর্বোচ্চ গতিশক্তি কত? (বইয়ের নমুনা প্রশ্ন ৫)',o:['1.25 × 10⁵ J','5.0 × 10⁴ J','1.25 × 10⁴ J','6.2 × 10³ J'],a:1,fix:true,e:'T = ½mv² = ½ × 1000 × 10² = 50000 J = 5.0 × 10⁴ J।'});
+QUIZ.push({q:'শক্তির সংরক্ষণশীলতা নীতি থেকে পাওয়া যায় — i. শক্তির সৃষ্টি ও বিনাশ নেই, মহাবিশ্বের মোট শক্তি নির্দিষ্ট ii. অনবায়নযোগ্য শক্তি দ্রুত নিঃশেষ হয়ে যাবে, তাই নবায়নযোগ্য শক্তি ব্যবহার করতে হবে iii. শক্তিকে রক্ষা করতে এর কার্যকর ব্যবহার ও সিস্টেম লস কমানো জরুরি। কোনটি সঠিক? (বইয়ের নমুনা প্রশ্ন ৬)',o:['i','ii','ii ও iii','i, ii ও iii'],a:3,fix:true,e:'তিনটি বাক্যই অধ্যায়ের আলোচনার সাথে মেলে। (এটি আমার নির্ণয়, বইয়ে উত্তরমালা নেই।)'});
+M('কাজ কোন ধরনের রাশি?','স্কেলার',['ভেক্টর','দুটোই','কোনোটিই নয়'],'বল ও সরণ ভেক্টর, কিন্তু তাদের গুণফল স্কেলার।');
+M('বল ও সরণ বিপরীত দিকে হলে কাজ —','ঋণাত্মক',['ধনাত্মক','শূন্য','অসীম'],'W = F(−s) = −Fs।');
+M('কাজের মাত্রা কোনটি?','ML²T⁻²',['MLT⁻²','ML²T⁻³','MLT⁻¹'],'W = F s = (MLT⁻²)(L)।');
+M('গতিশক্তির সূত্র —','½mv²',['mgh','½kx²','mv'],'T = ½mv²।');
+M('বেগ দ্বিগুণ হলে গতিশক্তি —','চার গুণ',['দ্বিগুণ','অর্ধেক','একই'],'T ∝ v²।');
+M('10 kg ভরের বস্তুর গতিশক্তি 80 J হলে বেগ —','4 m/s',['8 m/s','16 m/s','2 m/s'],'v² = 2 × 80/10 = 16।');
+M('10 kg বস্তুতে 10 N বল 10 s চালালে (স্থির থেকে) গতিশক্তি —','500 J',['100 J','1000 J','2000 J'],'v = at = 10 m/s, ½ × 10 × 100 = 500 J।');
+M('m ভরকে h উচ্চতায় তুললে বিভব শক্তি —','mgh',['mg/h','½mgh','mh'],'W = mg × h।');
+M('স্প্রিংয়ের সঞ্চিত শক্তি —','½kx²',['kx','½kx','kx²'],'V = ½kx²।');
+M('10 kg বস্তুকে 100 m/s বেগে ওপরে ছুড়লে প্রায় কত উচ্চতায় উঠবে?','510 m',['100 m','250 m','1000 m'],'h = v²/2g = 10000/19.6 ≈ 510।');
+M('ওপরে ছোড়া বস্তুর সর্বোচ্চ উচ্চতা বস্তুর ভরের —','ওপর নির্ভর করে না',['সমানুপাতিক','ব্যস্তানুপাতিক','বর্গের সমানুপাতিক'],'h = v²/2g।');
+M('শক্তির নিত্যতা সূত্র অনুসারে শক্তি —','সৃষ্টিও হয় না, ধ্বংসও হয় না',['সৃষ্টি হয়','ধ্বংস হয়','সবসময় বাড়ে'],'শুধু রূপ বদলায়।');
+M('দোলকের সর্বনিম্ন বিন্দুতে —','গতিশক্তি সর্বোচ্চ',['বিভব সর্বোচ্চ','গতিশক্তি শূন্য','মোট শক্তি শূন্য'],'নিচে বেগ সবচেয়ে বেশি।');
+M('জেনারেটরে শক্তি রূপান্তর —','যান্ত্রিক → বিদ্যুৎ',['বিদ্যুৎ → যান্ত্রিক','আলো → বিদ্যুৎ','তাপ → আলো'],'কুণ্ডলী ঘুরিয়ে।');
+M('কোনটি নবায়নযোগ্য শক্তি?','বায়ুশক্তি',['কয়লা','গ্যাস','ইউরেনিয়াম'],'বাতাস ফুরায় না।');
+M('E = mc² অনুসারে 1 kg ভর থেকে শক্তি —','9 × 10¹⁶ J',['3 × 10⁸ J','9 × 10⁸ J','3 × 10¹⁶ J'],'(3 × 10⁸)² = 9 × 10¹⁶।');
+M('ক্ষমতার একক —','ওয়াট',['জুল','নিউটন','ক্যালরি'],'1 W = 1 J/s।');
+M('ক্ষমতার মাত্রা —','ML²T⁻³',['ML²T⁻²','MLT⁻²','ML²T⁻¹'],'P = W/t।');
+M('কর্মদক্ষতা = ?','কাজ ÷ প্রদত্ত শক্তি × 100%',['প্রদত্ত শক্তি ÷ কাজ','কাজ × সময়','কাজ − শক্তি'],'অপচয় বাদে ব্যবহৃত অংশ।');
+M('প্রতি ধাপে 10% অপচয় হলে চার ধাপে কর্মদক্ষতা প্রায় —','65.6%',['60%','90%','40%'],'0.9⁴ = 0.6561।');
+M('বৈশ্বিক উষ্ণতা বাড়ার প্রধান কারণ কোন গ্যাস?','কার্বন ডাই-অক্সাইড',['অক্সিজেন','নাইট্রোজেন','হিলিয়াম'],'ফসিল জ্বালানি পুড়ে CO₂ তৈরি হয়।');
+M('নিউক্লিয়ার চেইন রি-অ্যাকশন নিয়ন্ত্রণ করে —','কন্ট্রোল রড',['টারবাইন','জেনারেটর','বাষ্প'],'নিউট্রন শোষণ করে।');
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+/* ---------- সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন ---------- */
+var QA=[
+ {h:'📝 সৃজনশীল প্রশ্ন ১ (বালক ও যুবকের দৌড়)',items:[
+  ['<b>উদ্দীপক:</b> 40 kg ভরের একটি বালক এবং 60 kg ভরের একজন যুবক একটি ভবনের নিচতলা থেকে একসাথে দৌড় শুরু করে দৌড়ে একই সময়ে ছাদের একই জায়গায় পৌঁছাল। দৌড়ের সময় উভয়ের বেগ ছিল 30 m/min।<br><b>(ক)</b> কর্মদক্ষতা কী? (১)',
+   'কোনো যন্ত্রে প্রদত্ত শক্তির কতটুকু অংশ কাজে লাগে তার শতকরা হারকে কর্মদক্ষতা বলে। কর্মদক্ষতা = (কাজের পরিমাণ ÷ প্রদত্ত শক্তি) × 100%।'],
+  ['<b>(খ)</b> 50 J কাজ বলতে কী বোঝায়? (২)',
+   '50 J কাজ বলতে বোঝায় কোনো বস্তুর ওপর 50 N বল প্রয়োগ করলে বলের দিকে বস্তুটির 1 m সরণ হয়। (অথবা 1 N বলে বলের দিকে 50 m সরণ।) কারণ W = F s এবং 1 J = 1 N × 1 m।'],
+  ['<b>(গ)</b> যুবকটির গতিশক্তি নির্ণয় করো। (৩)',
+   'v = 30 m/min = 30 ÷ 60 = 0.5 m/s, m = 60 kg।<br>T = ½mv² = ½ × 60 × (0.5)² = ½ × 60 × 0.25 = <b>7.5 J</b>'],
+  ['<b>(ঘ)</b> ছাদে ওঠার ক্ষেত্রে দুজনের ক্ষমতা সমান ছিল কিনা গাণিতিক যুক্তিসহ যাচাই করো। (৪)',
+   'দুজনেই একই জায়গায় (একই উচ্চতা h) একই সময় t-তে পৌঁছেছে।<br>বালকের ক্ষমতা P₁ = m₁gh ÷ t = 40gh/t<br>যুবকের ক্ষমতা P₂ = m₂gh ÷ t = 60gh/t<br>P₁ : P₂ = 40 : 60 = <b>2 : 3</b><br>অর্থাৎ ক্ষমতা সমান ছিল না। যুবকের ক্ষমতা বালকের <b>1.5 গুণ</b>, কারণ একই সময়ে বেশি ভর একই উচ্চতায় তুলতে বেশি কাজ করতে হয়েছে।']
+ ]},
+ {h:'📝 সৃজনশীল প্রশ্ন ২ (দুটি মোটর)',items:[
+  ['<b>উদ্দীপক:</b> 1 kW ক্ষমতার একটি মোটর 10 মিনিটে 2000 লিটার পানি দ্বিতীয় তলার ছাদের ট্যাংকে তুলতে পারে। অপরদিকে 2 kW ক্ষমতার একটি মোটর 15 মিনিটে 3000 লিটার পানি চতুর্থ তলার ছাদের ট্যাংকে তুলতে পারে। প্রতি তলার উচ্চতা 10 m।<br><b>(ক)</b> নবায়নযোগ্য শক্তি কাকে বলে? (১)',
+   'যে শক্তির উৎস ব্যবহার করলেও ফুরিয়ে যায় না, অর্থাৎ যাকে বারবার নবায়ন করা যায় (যেমন সৌরশক্তি, বায়ুশক্তি, জলবিদ্যুৎ), তাকে নবায়নযোগ্য শক্তি বলে।'],
+  ['<b>(খ)</b> তুমি যখন দৌড় দাও তখন শক্তির কোন ধরনের রূপান্তর ঘটে? ব্যাখ্যা করো। (২)',
+   'খাবারের <b>রাসায়নিক শক্তি</b> আমাদের শরীরে পেশীতে <b>যান্ত্রিক শক্তিতে</b> (গতিশক্তি) রূপান্তরিত হয়, যার ফলে আমরা দৌড়াই। এর সাথে কিছু শক্তি <b>তাপ</b> হয়ে অপচয় হয়, তাই দৌড়ালে শরীর গরম হয়।'],
+  ['<b>(গ)</b> 10 মিনিটে দ্বিতীয় তলার ছাদের ট্যাংকে উত্তোলিত পানির বিভবশক্তি নির্ণয় করো। (৩)',
+   '<b>অনুমান:</b> দ্বিতীয় তলার ছাদ = 2 তলা উঁচু = 2 × 10 = 20 m এবং 1 লিটার পানির ভর = 1 kg, g = 9.8 m/s² (উদ্দীপকে স্পষ্ট নেই, এটা আমার অনুমান)।<br>m = 2000 kg, h = 20 m<br>V = mgh = 2000 × 9.8 × 20 = 392000 J = <b>3.92 × 10⁵ J</b>'],
+  ['<b>(ঘ)</b> ব্যবহারের দিক দিয়ে কোন মোটরটি অধিক সাশ্রয়ী? গাণিতিক যুক্তিসহ মতামত দাও। (৪)',
+   '<b>মোটর ১:</b> প্রদত্ত শক্তি = 1000 × (10 × 60) = 6 × 10⁵ J। কাজ = 3.92 × 10⁵ J।<br>কর্মদক্ষতা = 3.92 × 10⁵ ÷ 6 × 10⁵ × 100% = <b>65.3%</b><br><b>মোটর ২:</b> প্রদত্ত শক্তি = 2000 × (15 × 60) = 1.8 × 10⁶ J। কাজ = 3000 × 9.8 × 40 = 1.176 × 10⁶ J (চতুর্থ তলার ছাদ = 40 m ধরে)।<br>কর্মদক্ষতা = 1.176 × 10⁶ ÷ 1.8 × 10⁶ × 100% = <b>65.3%</b><br><b>মতামত:</b> দুটি মোটরের কর্মদক্ষতা সমান, তাই ব্যবহারের দিক দিয়ে কোনোটি আরেকটির চেয়ে বেশি সাশ্রয়ী নয়। মোটর ২ বেশি কাজ করে, কিন্তু বেশি শক্তিও ব্যয় করে।<br><small>এখানে "চতুর্থ তলার ছাদ" ও "দ্বিতীয় তলার ছাদ" 40 m ও 20 m ধরা হয়েছে।</small>']
+ ]},
+ {h:'✍️ সংক্ষিপ্ত প্রশ্ন ও উত্তর',items:[
+  ['মাটি থেকে কোনো বস্তু তুলতে কোন ধরনের কাজ হবে? ব্যাখ্যা করো। (বইয়ের প্রশ্ন ১)','ধনাত্মক কাজ হবে। বস্তুকে তুলতে ওপরের দিকে ওজনের সমান (mg) বল প্রয়োগ করতে হয় এবং সরণও ওপরের দিকে, অর্থাৎ বল ও সরণ একই দিকে। তাই W = mgh ধনাত্মক। এই কাজটাই বস্তুতে বিভব শক্তি হয়ে জমা থাকে। (ওজনের নিজের কাজ নিচের দিকে বলে ঋণাত্মক।)'],
+  ['একটি বৈদ্যুতিক বাতির কর্মদক্ষতা 70% বলতে কী বোঝায়? (বইয়ের প্রশ্ন ২)','বাতিকে যে বিদ্যুৎশক্তি দেওয়া হয়, তার 70% কাজে লাগে (আলো হয়), বাকি 30% তাপ ইত্যাদি হয়ে অপচয় হয়। যেমন 100 J বিদ্যুৎ দিলে 70 J আলো হয়, 30 J অপচয়।'],
+  ['বেগের পরিবর্তনের সাথে গতিশক্তির পরিবর্তন ব্যাখ্যা করো। (বইয়ের প্রশ্ন ৩)','গতিশক্তি T = ½mv², তাই এটি বেগের বর্গের সমানুপাতিক। বেগ দ্বিগুণ হলে গতিশক্তি 4 গুণ, তিন গুণ হলে 9 গুণ হয়। আবার কাজ–শক্তি সূত্রে ½mv² = ½mu² + W, অর্থাৎ বেগ বাড়াতে কাজ করা হলে গতিশক্তি সেই কাজের সমান বাড়ে।'],
+  ['নিউক্লীয় চেইন বিক্রিয়া উদাহরণসহ ব্যাখ্যা করো। (বইয়ের প্রশ্ন ৪)','ধীর গতির একটি নিউট্রন U-235 নিউক্লিয়াসকে ভেঙে Kr-92 ও Ba-141 করে এবং 3টি নতুন নিউট্রন ও শক্তি বের করে: ¹₀n + ²³⁵₉₂U → ⁹²₃₆Kr + ¹⁴¹₅₆Ba + 3¹₀n। এই নিউট্রনগুলো গতি কমে অন্য U-235 নিউক্লিয়াসকে ভাঙে, আবার নিউট্রন বেরোয়। এভাবে বিক্রিয়া নিজে নিজেই চলতে থাকে। নিউক্লিয়ার কেন্দ্রে কন্ট্রোল রড নিউট্রন শোষণ করে এটি নিয়ন্ত্রণ করে।'],
+  ['কাজ ও শক্তির সম্পর্ক লেখো। (আমার বানানো)','শক্তি হলো কাজ করার সামর্থ্য। ধনাত্মক কাজ করলে বস্তুতে শক্তি যোগ হয়, ঋণাত্মক কাজ করলে শক্তি সরে যায়। কাজ ও শক্তির একক (জুল) ও মাত্রা (ML²T⁻²) একই।'],
+  ['শক্তির নিত্যতার সূত্র লেখো। (আমার বানানো)','শক্তি সৃষ্টিও হয় না, ধ্বংসও হয় না। এক রূপ থেকে অন্য রূপে পরিবর্তিত হয় মাত্র। মহাবিশ্বের মোট শক্তি নির্দিষ্ট।'],
+  ['গতিশক্তি ও বিভব শক্তির পার্থক্য লেখো। (আমার বানানো)','গতিশক্তি: গতির কারণে শক্তি, T = ½mv²। বিভব শক্তি: অবস্থা বা অবস্থানের কারণে সঞ্চিত শক্তি, V = mgh বা ½kx²। দুটিই যান্ত্রিক শক্তির রূপ।'],
+  ['নবায়নযোগ্য ও অনবায়নযোগ্য শক্তির পার্থক্য লেখো। (আমার বানানো)','নবায়নযোগ্য শক্তি ফুরিয়ে যায় না (সৌর, বায়ু, জলবিদ্যুৎ, বায়োমাস)। অনবায়নযোগ্য শক্তি একবার ফুরালে ফিরে আসে না (তেল, গ্যাস, কয়লা, ইউরেনিয়াম)।'],
+  ['ফসিল জ্বালানি পরিবেশের কী ক্ষতি করে? (আমার বানানো)','পোড়ালে কার্বন ডাই-অক্সাইড (গ্রিনহাউস গ্যাস) তৈরি হয়। এটি তাপ ধরে রেখে পৃথিবীর তাপমাত্রা বাড়ায় (বৈশ্বিক উষ্ণতা)। এতে মেরুর বরফ গলে সমুদ্রপৃষ্ঠ বাড়ে, নিম্নাঞ্চল প্লাবিত ও কৃষিজমি লবণাক্ত হয়, যা বাংলাদেশের জন্য ঝুঁকি।'],
+  ['E = mc² সমীকরণটি কী বোঝায়? (আমার বানানো)','ভর ও শক্তি সমতুল্য। m ভর শক্তিতে রূপান্তরিত হলে E = mc² শক্তি পাওয়া যায়, c = 3 × 10⁸ m/s। c² খুব বড় বলে সামান্য ভর থেকে বিপুল শক্তি আসে। 1 kg ভর থেকে 9 × 10¹⁶ J।'],
+  ['ক্ষমতা ও কর্মদক্ষতার পার্থক্য লেখো। (আমার বানানো)','ক্ষমতা = কাজ করার হার, P = W/t, একক ওয়াট। কর্মদক্ষতা = প্রদত্ত শক্তির কত অংশ কাজে লাগল, শতকরা হারে, একক নেই।'],
+  ['100 kg বস্তুকে 10 m ওপরে তুলতে 1000 W মোটরে 15 s লাগল। কর্মদক্ষতা কত? (বইয়ের উদাহরণ)','কাজ = 100 × 9.8 × 10 = 9800 J। প্রদত্ত শক্তি = 1000 × 15 = 15000 J। অপচয় = 5200 J। কর্মদক্ষতা = 9800/15000 × 100% = <b>65.3%</b>।'],
+  ['5 kg ভর 50 m/s বেগে ছুড়লে কত উচ্চতায় বিভব ও গতিশক্তি সমান হবে? (বইয়ের উদাহরণ)','প্রাথমিক গতিশক্তি = ½ × 5 × 2500 = 6250 J। সমান হলে প্রত্যেকে 3125 J। mgh = 3125 ⇒ h = 3125 ÷ (5 × 9.8) = <b>63.78 m</b>।']
+ ]}
+];
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+function frame(){FR++;for(var i=0;i<DRAWS.length;i++)DRAWS[i]();requestAnimationFrame(frame);}
+frame();
+
+</script>
+</body>
+</html>

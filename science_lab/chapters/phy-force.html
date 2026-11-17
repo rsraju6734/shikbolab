@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>বল (পদার্থবিজ্ঞান অধ্যায় ৩) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+small{color:#567}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/lab-boost.js?v=1"></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#physics">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">⚛️ পদার্থবিজ্ঞান &rsaquo; তৃতীয় অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🏋️ বল (Force)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🥤 ল্যাব ১</a><a href="#lab2">📈 ল্যাব ২</a><a href="#lab3">🌌 ল্যাব ৩</a><a href="#lab4">⚖️ ল্যাব ৪</a><a href="#lab5">💥 ল্যাব ৫</a><a href="#lab6">🚦 ল্যাব ৬</a><a href="#lab7">🛒 ল্যাব ৭</a><a href="#lab8">🌍 ল্যাব ৮</a><a href="#lab9">🪢 ল্যাব ৯</a><a href="#lab10">🤝 ল্যাব ১০</a><a href="#lab11">🧱 ল্যাব ১১</a><a href="#lab12">⛰️ ল্যাব ১২</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> জড়তা ও নিউটনের প্রথম সূত্র ব্যাখ্যা করতে; চার মৌলিক বলের প্রকৃতি বলতে; সাম্য ও অসাম্য বলের প্রভাব বোঝাতে; ভরবেগ ও তার সংরক্ষণ সূত্র প্রয়োগ করতে; F = ma দিয়ে বল পরিমাপ করতে; ক্রিয়া ও প্রতিক্রিয়া চিনতে; মহাকর্ষ ও ঘর্ষণ বল ব্যাখ্যা করতে এবং নিরাপদ ভ্রমণে বেগের প্রভাব বিশ্লেষণ করতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের ক্রম মেনে সহজ ভাষায় লেখা। বইয়ে "নমুনা প্রশ্ন"-এর উত্তরমালা দেওয়া নেই। তাই MCQ-এর উত্তর আমি নিজে হিসাব করেছি এবং ব্যাখ্যায় লিখে দিয়েছি।</div>
+
+    <h3>৩.১ জড়তা ও নিউটনের প্রথম সূত্র ⭐⭐⭐</h3>
+    <ul>
+      <li><b>নিউটনের প্রথম সূত্র:</b> বল প্রয়োগ না করলে <b>স্থির বস্তু স্থির থাকবে</b> এবং <b>সমবেগে চলতে থাকা বস্তু সমবেগে চলতে থাকবে</b>।</li>
+      <li>বেগ ভেক্টর, তাই "সমবেগ" মানে দিকও বদলাবে না। সরলরেখায় সমদ্রুতিতে যেতে হবে।</li>
+      <li>দৈনন্দিন জীবনে চলন্ত বস্তু শেষে থেমে যায়, কারণ <b>ঘর্ষণ ও বাতাসের বাধা</b> বেগের বিপরীতে বল দেয়। এই বল না থাকলে বস্তু অনন্তকাল সমবেগে চলত।</li>
+      <li>গতিশীল বস্তু থেমে গেলে বুঝতে হবে তার ওপর কোনো না কোনো বল কাজ করেছে।</li>
+      <li><b>জড়তা:</b> যে বৈশিষ্ট্যের কারণে স্থির বস্তু স্থির থাকতে চায় এবং গতিশীল বস্তু গতিশীল থাকতে চায়, তাকে জড়তা বলে।
+        <ul><li><b>স্থিতি জড়তা:</b> গাড়ি হঠাৎ চললে আমরা পেছনে হেলে পড়ি।</li>
+        <li><b>গতি জড়তা:</b> চলন্ত বাস থেকে নামলে আমরা সামনে হুমড়ি খেয়ে পড়ি।</li></ul></li>
+      <li><b>ভর বাড়লে জড়তা বাড়ে।</b> সমান বল দিলে যার ভর বেশি সে কম বিচ্যুত হয়।</li>
+      <li><b>নিজে করো:</b> গ্লাসের ওপর কার্ড ও কার্ডের ওপর মুদ্রা রেখে কার্ডে সজোরে টোকা দিলে মুদ্রা গ্লাসে পড়ে। (ল্যাব ১ এ চেষ্টা করো।)</li>
+    </ul>
+
+    <h3>৩.১.২ বল (Force)</h3>
+    <ul>
+      <li>নিউটনের প্রথম সূত্রই বলের সংজ্ঞা: <b>যার প্রয়োগে স্থির বস্তু চলতে শুরু করে এবং গতিশীল বস্তুর বেগের পরিবর্তন হয়, সেটাই বল।</b></li>
+      <li>প্রথম সূত্র থেকে বল কী তা বুঝি, কিন্তু পরিমাপ করা যায় দ্বিতীয় সূত্র থেকে।</li>
+      <li>বল দুই ধরনের: <b>স্পর্শ বল</b> (ধাক্কা, টান, ঘর্ষণ) এবং <b>অস্পর্শ বল</b> (মহাকর্ষ, চুম্বকের আকর্ষণ)।</li>
+      <li>লেখচিত্র থেকে বল আছে কিনা বোঝা যায় (চিত্র ৩.০১)। <b>অবস্থান–সময়</b> লেখচিত্রের সরলরেখা মানে সমবেগ, তাই বল নেই। বল কাজ করে শুধু কোণ বদলের মুহূর্তে। <b>বেগ–সময়</b> লেখচিত্রের ঢালু অংশে বেগ বদলায়, তাই সেখানে বল আছে। (ল্যাব ২)</li>
+    </ul>
+
+    <h3>৩.২ মৌলিক বলের প্রকৃতি ⭐⭐⭐</h3>
+    <p>প্রকৃতিতে মাত্র <b>চার রকম মৌলিক বল</b> আছে। বাকি সব বল (ধাক্কা, টান, ঘর্ষণ) এই চারটির কোনো না কোনোটি থেকেই আসে।</p>
+    <table class="t"><tr><th>বল</th><th>সংক্ষেপে</th><th>পাল্লা</th></tr>
+      <tr><td><b>মহাকর্ষ বল</b></td><td>ভর আছে এমন সব বস্তু একে অপরকে আকর্ষণ করে। গ্যালাক্সি, সূর্যকে ঘিরে পৃথিবীর ঘোরা, চাঁদের ঘোরা এর কাজ। পৃথিবীর মহাকর্ষকে বলে মাধ্যাকর্ষণ।</td><td>অসীম</td></tr>
+      <tr><td><b>তড়িৎ চৌম্বক বল</b></td><td>চুম্বক ও তড়িৎ আসলে একই বল। মহাকর্ষের চেয়ে প্রায় <b>10³⁶ গুণ</b> শক্তিশালী।</td><td>অসীম</td></tr>
+      <tr><td><b>দুর্বল নিউক্লীয় বল</b></td><td>তেজস্ক্রিয় নিউক্লিয়াস থেকে বিটা (β) রশ্মি বা ইলেকট্রন বের হওয়ার কারণ। তড়িৎ চৌম্বক বলের প্রায় ট্রিলিয়ন ভাগের এক ভাগ, তবু মহাকর্ষের মতো এত দুর্বল নয়।</td><td>10⁻¹⁸ m</td></tr>
+      <tr><td><b>সবল নিউক্লীয় বল</b></td><td>সবচেয়ে শক্তিশালী। মহাকর্ষের <b>10⁴¹ গুণ</b> এবং তড়িৎ চৌম্বকের প্রায় একশ গুণ। নিউক্লিয়াসের প্রোটন ও নিউট্রনকে আটকে রাখে। ভেঙে বা জুড়ে এর থেকে বিপুল শক্তি পাওয়া যায়।</td><td>10⁻¹⁵ m</td></tr>
+    </table>
+    <ul>
+      <li>বিজ্ঞানীরা মনে করেন চার বলের উৎস আসলে একটাই। তড়িৎ চৌম্বক ও দুর্বল নিউক্লীয় বলকে এক সূত্রে ব্যাখ্যা করা গেছে (নাম <b>ইলেকট্রো-উইক</b>)। তাই বলা যায় বল তিন ধরনের: মহাকর্ষ, ইলেকট্রো-উইক ও নিউক্লীয়।</li>
+    </ul>
+
+    <h3>৩.৩ বলের সাম্যাবস্থা ও অসাম্যাবস্থা ⭐⭐</h3>
+    <ul>
+      <li>বল ভেক্টর। তাই একটি বলকে উল্টোদিকের আরেকটি বল কাটাকাটি করে দিতে পারে।</li>
+      <li><b>সাম্যাবস্থা:</b> একাধিক বলের <b>লব্ধি শূন্য</b> হলে বলগুলো সাম্যাবস্থায় আছে, বস্তুর ত্বরণ থাকে না। <b>অসাম্য বল:</b> লব্ধি শূন্য নয়, ত্বরণ হয়।</li>
+      <li>সুতায় ঝোলানো বস্তুর ওজন W নিচে, সুতার টান T ওপরে। দুটো সমান ও বিপরীত, তাই সাম্যাবস্থা (চিত্র ৩.০২)। সুতা কেটে দিলে শুধু ওজন থাকে, সেটাই অসাম্য বল, তাই বস্তু নিচে পড়ে। বস্তুকে পাশে টেনে ছেড়ে দিলেও টান আর ওজনের লব্ধি শূন্য হয় না, তাই সে দুলতে থাকে।</li>
+      <li><b>নিজে করো:</b> একটি ভারী বই দড়ি দিয়ে বেঁধে দুই প্রান্ত টেনে একেবারে সোজা করা যায় না। কারণ দড়ি পুরো সোজা হলে ওজন W-কে নিষ্ক্রিয় করার মতো লব্ধি পাওয়া যায় না। (ল্যাব ৪)</li>
+    </ul>
+
+    <h3>৩.৪ ভরবেগ ⭐⭐⭐</h3>
+    <ul>
+      <li>ভর ও বেগের গুণফলকে <b>ভরবেগ</b> বলে: <b>p = mv</b>। ভর স্কেলার, বেগ ভেক্টর, তাই ভরবেগ <b>ভেক্টর</b>।</li>
+      <li>একক: <b>kg m/s</b> (kg m s⁻¹)। মাত্রা: <b>[p] = MLT⁻¹</b>।</li>
+      <li>একই বেগে সাইকেল ও ট্রাক আঘাত করলে ট্রাকের ভরবেগ অনেক বেশি, তাই বেশি ক্ষতি হয়।</li>
+      <li>আলোর কণা ফোটনের ভর নেই, তবু ভরবেগ আছে। অর্থাৎ ভরবেগ ভর ও বেগ থেকেও মৌলিক রাশি।</li>
+      <li><b>ভরবেগের নিত্যতার সূত্র:</b> বাইরে থেকে কোনো বল না থাকলে সংঘর্ষের আগে ও পরে সম্মিলিত ভরবেগ <b>সমান</b>।</li>
+      <li>উদাহরণ: 100 g টেনিস বল 10 m/s-এ দেয়ালে লেগে একই দ্রুতিতে ফিরলে ভরবেগের পরিবর্তন = mv − (−mv) = 2mv = 2 × 0.1 × 10 = <b>2 kg m/s</b>।</li>
+    </ul>
+
+    <h3>৩.৫ সংঘর্ষ ⭐⭐⭐</h3>
+    <ul>
+      <li>m₁ ও m₂ ভরের দুটি বস্তু u₁ ও u₂ বেগে ধাক্কা খেয়ে v₁ ও v₂ বেগ পেলে:
+        <p class="eq"><b>ভরবেগের সংরক্ষণ:</b> m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂</p>
+        <p class="eq"><b>গতিশক্তির সংরক্ষণ</b> (ধরে নিই অন্য শক্তি বদলায়নি): ½m₁u₁² + ½m₂u₂² = ½m₁v₁² + ½m₂v₂²</p></li>
+      <li>দুটো সমীকরণ মেলালে পাওয়া যায়:
+        <p class="eq">v₁ = [(m₁ − m₂)u₁ + 2m₂u₂] ÷ (m₁ + m₂)</p>
+        <p class="eq">v₂ = [(m₂ − m₁)u₂ + 2m₁u₁] ÷ (m₁ + m₂)</p></li>
+      <li>দুটো ভর <b>সমান</b> হলে (m₁ = m₂) তারা পরস্পরের বেগ <b>পাল্টে নেয়</b>: v₁ = u₂ এবং v₂ = u₁।</li>
+      <li><b>নিরাপদ ভ্রমণ:</b> গতিশক্তি = ½mv², তাই <b>বেগ দ্বিগুণ হলে গতিশক্তি চার গুণ</b>। দুর্ঘটনায় এই শক্তিই গাড়ি ভাঙে ও মানুষকে আঘাত করে। ক্ষতি কমাতে সবচেয়ে সহজ উপায় <b>গতি কম রাখা</b>।</li>
+      <li><b>ভারী ট্রাক ও হালকা গাড়ি</b> মুখোমুখি ধাক্কা খেলে (ট্রাকের বেগ u, গাড়ির বেগ −u, m₂ ≈ 0): <b>v₁ = u</b> (ট্রাকের বেগ অপরিবর্তিত) আর <b>v₂ = 3u</b>। গাড়ির বেগ −u থেকে 3u হয়, অর্থাৎ বেগের পরিবর্তন <b>4u</b> এবং গাড়ি উল্টোদিকে ছিটকে যায়। তাই ছোট গাড়ি দুমড়েমুচড়ে যায়।</li>
+    </ul>
+
+    <h3>৩.৬ নিউটনের দ্বিতীয় সূত্র ⭐⭐⭐</h3>
+    <ul>
+      <li><b>সূত্র:</b> বস্তুর ভরবেগের পরিবর্তনের হার তার ওপর প্রযুক্ত বলের সমানুপাতিক এবং যেদিকে বল প্রয়োগ করা হয় ভরবেগের পরিবর্তনও সেদিকে ঘটে।</li>
+      <li>ভরবেগের পরিবর্তনের হার = (mv − mu) ÷ t = m(v − u) ÷ t = <b>ma</b>। ধ্রুবক 1 ধরলে পাই:
+        <p class="eq"><b>F = ma</b></p></li>
+      <li>বলের একক <b>নিউটন (N)</b>। 1 N হলো 1 kg ভরের বস্তুতে 1 m/s² ত্বরণ সৃষ্টিকারী বল।</li>
+      <li>বলের মাত্রা: <b>[F] = MLT⁻²</b>।</li>
+      <li>এই সূত্র শুধু সরলরেখার গতির জন্য নয়, যেকোনো গতির জন্য সত্য। এর সাহায্যে সূর্যকে ঘিরে গ্রহের গতিও ব্যাখ্যা করা যায়।</li>
+      <li><b>বইয়ের উদাহরণ:</b> 5 kg ভরের স্থির বস্তুর ওপর 100 N বল 10 s ধরে। (ক) a = F/m = 100/5 = <b>20 m/s²</b>। (খ) 10 s পরে v = u + at = 0 + 20×10 = <b>200 m/s</b>। (গ) এরপর আর বল নেই, তাই 20 s পরেও বেগ <b>200 m/s</b>। (ঘ) প্রথম 10 s-এ s₁ = ½at² = ½×20×100 = 1000 m; পরের 10 s-এ s₂ = vt = 200×10 = 2000 m; মোট <b>3000 m = 3 km</b>।</li>
+      <li><b>বইয়ের উদাহরণ ২:</b> স্থির অবস্থা থেকে 10 s-এ 100 m যেতে 20 N লাগলে: a = 2s/t² = 2×100/100 = 2 m/s²; m = F/a = 20/2 = <b>10 kg</b>।</li>
+    </ul>
+
+    <h3>৩.৭ মহাকর্ষ বল ⭐⭐⭐</h3>
+    <ul>
+      <li>m₁ ও m₂ ভরের দুটি বস্তু r দূরত্বে থাকলে তাদের মাঝের আকর্ষণ বল:
+        <p class="eq"><b>F = G m₁m₂ ÷ r²</b></p></li>
+      <li><b>G = 6.67 × 10⁻¹¹ N m² kg⁻²</b> (মহাকর্ষীয় ধ্রুবক)। দুজনেই একে অপরকে সমান বলে টানে (ক্রিয়া–প্রতিক্রিয়া)।</li>
+      <li><b>ভর দ্বিগুণ হলে বল দ্বিগুণ, দূরত্ব দ্বিগুণ হলে বল চার ভাগের এক ভাগ।</b></li>
+      <li>পৃথিবী ও m ভরের বস্তুর মাঝে F = GmM/R² = mg। এখান থেকে <b>g = GM/R²</b>। M = 5.98 × 10²⁴ kg এবং R = 6.37 × 10⁶ m ধরলে <b>g = 9.8 m/s²</b>। (R হলো পৃথিবীর কেন্দ্র থেকে দূরত্ব।)</li>
+      <li>উচ্চতা বাড়লে g কমে: <b>g′ = g ÷ (1 + r/R)²</b>। স্পেস স্টেশনে (r = 100 km) g′ ≈ 9.5 m/s² (বইয়ে 9.49)। মান প্রায় একই, তবু মহাকাশচারীরা ভাসেন কেন? এর উত্তর ল্যাব ৮-এ আছে।</li>
+      <li>ওজন বল = <b>mg</b>। ভর একটি অপরিবর্তনীয় পরিমাণ, কিন্তু ওজন স্থানভেদে বদলায়।</li>
+    </ul>
+
+    <h3>৩.৭.১ কপিকল ও দড়ির টান ⭐⭐</h3>
+    <ul>
+      <li>প্রতিটি ভরের জন্য <b>আলাদাভাবে</b> নিউটনের দ্বিতীয় সূত্র লিখতে হয়। এক সুতায় টান সবখানে সমান।</li>
+      <li><b>চিত্র ৩.০৯:</b> টেবিলে m ভর, সুতার অন্য প্রান্তে M ঝুলছে। m-এর জন্য <b>T = ma</b>। M-এর জন্য <b>Mg − T = Ma</b>। সমাধান: <b>a = Mg ÷ (M + m)</b>।</li>
+      <li><b>চিত্র ৩.১০:</b> m₁ = 5 kg, m₂ = 10 kg, মাঝে m। m₁-এর জন্য T₁ − m₁g = m₁a; m-এর জন্য T₂ − T₁ = ma; m₂-এর জন্য T₂ − m₂g = −m₂a। ফল: <b>a = 5g ÷ (m + 15)</b>। সাধারণ সূত্র a = (m₂ − m₁)g ÷ (m₁ + m₂ + m)।</li>
+    </ul>
+
+    <h3>৩.৮ নিউটনের তৃতীয় সূত্র ⭐⭐⭐</h3>
+    <ul>
+      <li><b>সূত্র:</b> যখন একটি বস্তু অন্য বস্তুর ওপর বল প্রয়োগ করে, তখন সেই বস্তুটিও প্রথম বস্তুর ওপর বিপরীত দিকে সমান বল প্রয়োগ করে।</li>
+      <li>বই "প্রত্যেক ক্রিয়ার সমান ও বিপরীত প্রতিক্রিয়া আছে" ভাষা এড়িয়ে চলে, কারণ ক্রিয়া-প্রতিক্রিয়া শব্দ বিভ্রান্তি তৈরি করে।</li>
+      <li><b>কেন কাটাকাটি হয় না?</b> কারণ বল দুটি <b>ভিন্ন ভিন্ন বস্তুর ওপর</b> কাজ করে, এক বস্তুর ওপর নয়। কাটাকাটি হতো যদি দুটি বলই একই বস্তুতে লাগত।</li>
+      <li><b>আপেল ও পৃথিবী:</b> আপেল পৃথিবীকে একই বলে টানে। কিন্তু পৃথিবীর ত্বরণ a = (m/M)g, 1 kg ভরের জন্য মাত্র <b>1.6 × 10⁻²⁴ m/s²</b>। তাই কেউ খেয়াল করে না।</li>
+      <li><b>হাঁটা:</b> আমরা পা দিয়ে মাটিকে পেছনে ধাক্কা দিই, মাটি আমাদের সমান বলে সামনে ঠেলে। তাই সাবান-পানিতে বা বালুতে হাঁটা কঠিন হয়, কারণ মাটিকে জোরে ঠেলা যায় না।</li>
+      <li><b>বইয়ের উদাহরণ:</b> ঘর্ষণহীন মেঝেতে 50 kg-এর তুমি 100 kg-এর পাথরকে 50 N-এ ঠেললে: পাথরের a = 50/100 = <b>0.5 m/s²</b> (ডানে), তোমার a = 50/50 = <b>1 m/s²</b> (বামে)। 10 s পরে পাথরের বেগ 5 m/s। বইয়ে সমান বলের কারণে দুজনেই উল্টোদিকে সরে যায়।</li>
+    </ul>
+
+    <h3>৩.৯ ঘর্ষণ বল ⭐⭐⭐</h3>
+    <ul>
+      <li>দুটি তল স্পর্শ করে একটি অন্যটির ওপর দিয়ে সরতে চাইলে বাধা দেওয়ার জন্য যে বল তৈরি হয় তা <b>ঘর্ষণ বল</b>। এটি <b>সবসময় প্রয়োগ করা বলের বিপরীতে</b> কাজ করে।</li>
+      <li><b>কেন হয়?</b> অণুবীক্ষণ যন্ত্রে দেখলে সব তলই এবড়োখেবড়ো। খাঁজ ও উঁচু অংশ একটি আরেকটিতে আটকে যায়। চাপ বাড়ালে আরও গভীরভাবে আটকে ঘর্ষণ বাড়ে।</li>
+      <li>ঘর্ষণে <b>তাপ</b> তৈরি হয়। ইঞ্জিন গরম হয়, শক্তি অপচয় হয়।</li>
+      <li><b>স্থিতি ঘর্ষণ:</b> স্থির বস্তুর ওপর কাজ করে। তার সর্বোচ্চ মান <b>fₛ = μₛN</b>। μₛ হলো স্থিতি ঘর্ষণ সহগ।</li>
+      <li><b>গতি ঘর্ষণ:</b> বস্তু চলার সময় কাজ করে। <b>fₖ = μₖN</b>। গতি ঘর্ষণ সাধারণত স্থিতি ঘর্ষণের (সর্বোচ্চ মানের) চেয়ে কম, তাই সরতে শুরু করার পর টানা সহজ হয়।</li>
+      <li><b>আবর্ত ঘর্ষণ:</b> যখন একটি বস্তু গড়িয়ে বা ঘুরে চলে। সব ঘর্ষণের মধ্যে ছোট, তাই চাকা লাগিয়ে ভারী জিনিস টানা সহজ।</li>
+      <li><b>সহগ বের করার পরীক্ষা (চিত্র ৩.১৮):</b> বইয়ের ওপর ম্যাচ বাক্স রেখে বই ঢালু করতে থাকো। যে কোণ θ-তে বাক্স পিছলাতে শুরু করে, সেখানে <b>μₛ = tan θ</b>। (ল্যাব ১২)</li>
+      <li><b>বইয়ের উদাহরণ:</b> কাঠের টুকরোর μₛ = 0.01 হলে 10 kg-এর জন্য বল লাগবে μₛmg = 0.01×10×9.8 ≈ <b>0.98 N</b>; 100 kg-এর পাথরের জন্য ≈ <b>9.8 N</b>। ঘর্ষণহীন মেঝে হলে সামান্য ধাক্কাতেই বস্তু অনন্তকাল চলত।</li>
+    </ul>
+
+    <h3>৩.৯.২ ঘর্ষণের প্রভাব, কমানো-বাড়ানো ⭐⭐</h3>
+    <table class="t"><tr><th>ঘর্ষণ বাড়ানো দরকার</th><th>ঘর্ষণ কমানো দরকার</th></tr>
+      <tr><td>টায়ারে খাঁজ কাটা<br>রাস্তার পৃষ্ঠ অমসৃণ রাখা<br>ব্রেকে প্যাড বা জুতা চেপে ধরা<br>কাদায় আটকা গাড়ির চাকার নিচে কিছু দেওয়া<br>জুতার সোল খসখসে করা</td><td>তল মসৃণ করা<br>তেল, মবিল, গ্রিজ (লুব্রিক্যান্ট) দেওয়া<br>চাকা বা বল বিয়ারিং ব্যবহার<br>স্ট্রিম লাইন আকার (গাড়ি ও বিমান)<br>তল দুটির স্পর্শ-ক্ষেত্র কমানো</td></tr>
+    </table>
+    <ul>
+      <li>ঘর্ষণ একটি <b>প্রয়োজনীয় উপদ্রব</b>। এটি তাপ তৈরি করে শক্তি নষ্ট করে, কিন্তু ঘর্ষণ না থাকলে আমরা হাঁটতে, কলম দিয়ে লিখতে, গাড়ি চালাতে বা ব্রেক করতে পারতাম না।</li>
+      <li><b>ব্রেকিং বল:</b> ব্রেক প্যাডে চাপ দিলে প্যাড চাকার সাথে ঘষা খায়। সেই ঘর্ষণ বল চাকার বেগ কমায়।</li>
+    </ul>
+  </section>
+  <section class="panel" id="lab1">
+    <h2>🥤 ল্যাব ১: জড়তা (কার্ড, মুদ্রা ও বাস)</h2>
+    <div class="say">👉 নিউটনের প্রথম সূত্র নিজে পরীক্ষা করো। একটা পরীক্ষা বেছে নাও আর ঘটতে দেখো।</div>
+    <div class="pills" id="i1p"><button data-k="0" class="on">🥤 কার্ড ও মুদ্রা</button><button data-k="1">🚌 চলন্ত বাস</button></div>
+    <div class="ctl" id="i1cA"><label>কার্ডে:</label><select id="i1s"><option value="1">সজোরে টোকা</option><option value="0">ধীরে টানা</option></select><button class="btn" id="i1go">▶ শুরু</button></div>
+    <div class="ctl" id="i1cB" style="display:none"><label>বাস:</label><select id="i1b"><option value="0">হঠাৎ চলা শুরু করল</option><option value="1">হঠাৎ ব্রেক করল</option></select><button class="btn" id="i1go2">▶ শুরু</button></div>
+    <div class="row">
+      <div><canvas id="i1c" class="w" width="380" height="220"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="i1t"></div></div>
+    </div>
+    <h3>🎮 কোন জড়তা?</h3>
+    <div class="tlinfo" id="i1q"></div><div class="cls" id="i1o"></div><div class="fb" id="i1f"></div><small id="i1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>📈 ল্যাব ২: বল কখন কাজ করছে? (চিত্র ৩.০১)</h2>
+    <div class="say">👉 স্লাইডার সরিয়ে দেখো গাড়িটি কখন নড়ছে, আর কখন বল কাজ করছে।</div>
+    <div class="ctl"><label>লেখচিত্র:</label><select id="g2m"><option value="0">অবস্থান–সময়</option><option value="1">বেগ–সময়</option></select><label>সময় t: <span id="g2tv"></span> s</label><input type="range" id="g2t" min="0" max="10" step="0.1" value="0" style="flex:1;min-width:140px"><button class="btn" id="g2go">▶ চালাও</button></div>
+    <div class="row">
+      <div><canvas id="g2c" class="w" width="380" height="290"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="g2i"></div></div>
+    </div>
+    <h3>🎮 লেখচিত্র দেখে বলো</h3>
+    <div class="tlinfo" id="g2q"></div><div class="cls" id="g2o"></div><div class="fb" id="g2f"></div><small id="g2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🌌 ল্যাব ৩: চার রকম মৌলিক বল</h2>
+    <div class="say">👉 একটি বলের নামে চাপো, অ্যানিমেশন দেখো। নিচের বারে শক্তি তুলনা করো।</div>
+    <div class="pills" id="f3p"><button data-k="0" class="on">🌍 মহাকর্ষ</button><button data-k="1">🧲 তড়িৎ চৌম্বক</button><button data-k="2">☢️ দুর্বল নিউক্লীয়</button><button data-k="3">⚛️ সবল নিউক্লীয়</button></div>
+    <div class="row">
+      <div><canvas id="f3c" class="w" width="380" height="240"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="f3t"></div></div>
+    </div>
+    <h4>📊 শক্তির তুলনা (মহাকর্ষকে 1 ধরে, বারের দৈর্ঘ্য ঘাতের সমানুপাতিক)</h4>
+    <div id="f3b"></div>
+    <h3>🎮 কোন বল?</h3>
+    <div class="tlinfo" id="f3q"></div><div class="cls" id="f3o"></div><div class="fb" id="f3f"></div><small id="f3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>⚖️ ল্যাব ৪: সাম্য ও অসাম্য বল (চিত্র ৩.০২, ৩.০৩)</h2>
+    <div class="say">👉 দুলক বা ঝোলানো বইয়ের ওপর কোন কোন বল কাজ করছে, লব্ধি কত, সেটা দেখো।</div>
+    <div class="ctl"><label>পরীক্ষা:</label><select id="p4m"><option value="0">সুতায় ঝোলানো বস্তু (দোলক)</option><option value="1">দড়ি সোজা করা যায় কি? (বই ঝোলানো)</option></select><label><span id="p4l">কোণ θ</span>: <span id="p4av"></span>°</label><input type="range" id="p4a" min="0" max="50" step="1" value="0" style="flex:1;min-width:140px"></div>
+    <div class="ctl" id="p4b"><button class="btn" id="p4go">▶ ছেড়ে দাও</button><button class="btn" id="p4cut">✂️ সুতা কাটো</button><button class="btn alt" id="p4rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="p4c" class="w" width="380" height="260"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="p4t"></div></div>
+    </div>
+    <h3>🎮 সাম্য না অসাম্য?</h3>
+    <div class="tlinfo" id="p4q"></div><div class="cls" id="p4o"></div><div class="fb" id="p4f"></div><small id="p4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>💥 ল্যাব ৫: ভরবেগ ও সংঘর্ষ</h2>
+    <div class="say">👉 আগে দেখো ভর ও বেগ থেকে ভরবেগ কীভাবে হয়। তারপর দুটি বলের সংঘর্ষ ঘটাও। ধাক্কার আগে ও পরে ভরবেগ ও গতিশক্তি মেলাও।</div>
+    <h3>🚲🚚 p = mv: সাইকেল বনাম ট্রাক</h3>
+    <div class="ctl"><label>দুজনেরই বেগ: <span id="m5v"></span> m/s</label><input type="range" id="m5s" min="1" max="20" step="1" value="10" style="flex:1;min-width:150px"></div>
+    <canvas id="m5c" class="w" width="380" height="110"></canvas>
+    <div id="m5b"></div>
+    <h3>🎱 দুটি বলের সংঘর্ষ (সরলরেখায়)</h3>
+    <div class="ctl"><label>m₁: <span id="c5m1v"></span> kg</label><input type="range" id="c5m1" min="1" max="10" step="1" value="4"><label>u₁: <span id="c5u1v"></span> m/s</label><input type="range" id="c5u1" min="-5" max="8" step="1" value="5"></div>
+    <div class="ctl"><label>m₂: <span id="c5m2v"></span> kg</label><input type="range" id="c5m2" min="1" max="10" step="1" value="4"><label>u₂: <span id="c5u2v"></span> m/s</label><input type="range" id="c5u2" min="-5" max="5" step="1" value="-2"></div>
+    <div class="btnrow"><button class="btn" id="c5go">💥 সংঘর্ষ ঘটাও</button><button class="btn alt" id="c5rs">↻ আবার</button><button class="btn alt" id="c5eq">সমান ভর</button><button class="btn alt" id="c5hv">ভারী × হালকা</button></div>
+    <canvas id="c5c" class="w" width="380" height="170"></canvas>
+    <div class="tlinfo" id="c5t"></div>
+    <h3>🎮 সংঘর্ষের খেলা</h3>
+    <div class="tlinfo" id="c5q"></div><div class="cls" id="c5o"></div><div class="fb" id="c5f"></div><small id="c5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🚦 ল্যাব ৬: নিরাপদ ভ্রমণ (ট্রাক ও ছোট গাড়ি)</h2>
+    <div class="say">👉 ভারী ট্রাকের সাথে ছোট গাড়ির মুখোমুখি ধাক্কা ঘটাও। তারপর দেখো গতি বাড়লে শক্তি কত বাড়ে।</div>
+    <div class="ctl"><label>দুজনেরই বেগ u: <span id="s6uv"></span> m/s</label><input type="range" id="s6u" min="5" max="30" step="1" value="15" style="flex:1;min-width:150px"><button class="btn" id="s6go">💥 ধাক্কা</button><button class="btn alt" id="s6rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="s6c" class="w" width="380" height="180"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="s6t"></div></div>
+    </div>
+    <h3>⚡ গতিশক্তি ½mv² বেগের বর্গের সাথে বাড়ে</h3>
+    <div class="ctl"><label>গাড়ির বেগ: <span id="k6v"></span> km/h</label><input type="range" id="k6s" min="20" max="120" step="10" value="60" style="flex:1;min-width:150px"></div>
+    <div id="k6b"></div>
+    <div class="tlinfo" id="k6t"></div>
+    <h3>🎮 নিরাপদ ভ্রমণের খেলা</h3>
+    <div class="tlinfo" id="s6q"></div><div class="cls" id="s6o"></div><div class="fb" id="s6f"></div><small id="s6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>🛒 ল্যাব ৭: F = ma (নিউটনের দ্বিতীয় সূত্র)</h2>
+    <div class="say">👉 বল ও ভর বদলাও আর গাড়ির ত্বরণ দেখো। নিচের লেখচিত্রে বেগ কীভাবে বাড়ে লক্ষ করো। (ঘর্ষণ নেই ধরা হয়েছে)</div>
+    <div class="ctl"><label>বল F: <span id="a7fv"></span> N</label><input type="range" id="a7f" min="0" max="100" step="5" value="30"><label>ভর m: <span id="a7mv"></span> kg</label><input type="range" id="a7m" min="1" max="20" step="1" value="5"></div>
+    <div class="btnrow"><button class="btn" id="a7go">▶ বল প্রয়োগ করো</button><button class="btn alt" id="a7rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="a7c" class="w" width="380" height="280"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="a7t"></div></div>
+    </div>
+    <h3>📘 বইয়ের উদাহরণ: 5 kg ভরে 100 N, 10 s পর্যন্ত</h3>
+    <div class="ctl"><label>সময় t: <span id="b7tv"></span> s</label><input type="range" id="b7t" min="0" max="20" step="0.5" value="10" style="flex:1;min-width:150px"></div>
+    <div class="row">
+      <div><canvas id="b7v" class="w" width="380" height="190"></canvas></div>
+      <div><canvas id="b7s" class="w" width="380" height="190"></canvas></div>
+    </div>
+    <div class="tlinfo" id="b7t2"></div>
+    <h3>🎮 F = ma এর খেলা</h3>
+    <div class="tlinfo" id="a7q"></div><div class="cls" id="a7o"></div><div class="fb" id="a7f2"></div><small id="a7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>🌍 ল্যাব ৮: মহাকর্ষ বল</h2>
+    <div class="say">👉 ভর ও দূরত্ব বদলে F = G m₁m₂ ÷ r² কীভাবে বদলায় দেখো। তারপর স্পেস স্টেশনে g কত পাওয়া যায় যাচাই করো।</div>
+    <div class="ctl"><label>m₁: <span id="g8av"></span> টন</label><input type="range" id="g8a" min="1" max="100" step="1" value="10"><label>m₂: <span id="g8bv"></span> টন</label><input type="range" id="g8b" min="1" max="100" step="1" value="10"></div>
+    <div class="ctl"><label>দূরত্ব r: <span id="g8rv"></span> m</label><input type="range" id="g8r" min="1" max="20" step="1" value="5"><button class="btn alt" id="g8x1">m₁ দ্বিগুণ</button><button class="btn alt" id="g8x2">r দ্বিগুণ</button><button class="btn alt" id="g8x0">↻</button></div>
+    <div class="row">
+      <div><canvas id="g8c" class="w" width="380" height="170"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="g8t"></div></div>
+    </div>
+    <h3>🛰️ পৃথিবী থেকে উচ্চতায় g কত?</h3>
+    <div class="ctl"><label>উচ্চতা r: <span id="h8v"></span> km</label><input type="range" id="h8" min="0" max="5000" step="50" value="100" style="flex:1;min-width:150px"></div>
+    <div class="row">
+      <div><canvas id="h8c" class="w" width="380" height="200"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="h8t"></div></div>
+    </div>
+    <h3>🎮 মহাকর্ষের খেলা</h3>
+    <div class="tlinfo" id="g8q"></div><div class="cls" id="g8o"></div><div class="fb" id="g8f"></div><small id="g8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>🪢 ল্যাব ৯: কপিকল, সুতার টান ও ত্বরণ (চিত্র ৩.০৯, ৩.১০)</h2>
+    <div class="say">👉 প্রতিটি ভর আলাদা করে দেখো। দ্বিতীয় সূত্র লিখে a আর T বের করে সিমুলেশনের সাথে মিলাও।</div>
+    <div class="ctl"><label>চিত্র:</label><select id="k9m"><option value="0">৩.০৯: টেবিলে m, ঝুলন্ত M</option><option value="1">৩.১০: দুই পাশে ঝুলন্ত m₁, m₂</option></select><button class="btn" id="k9go">▶ ছেড়ে দাও</button><button class="btn alt" id="k9rs">↻</button></div>
+    <div class="ctl"><label>m: <span id="k9mv"></span> kg</label><input type="range" id="k9a" min="1" max="20" step="1" value="5"><label id="k9bl">M: <span id="k9bv"></span> kg</label><input type="range" id="k9b" min="1" max="20" step="1" value="5"></div>
+    <div class="ctl" id="k9row"><label>m₁ (ডানে): <span id="k9cv"></span> kg</label><input type="range" id="k9c" min="1" max="20" step="1" value="5"></div>
+    <div class="row">
+      <div><canvas id="k9c2" class="w" width="380" height="270"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="k9t"></div></div>
+    </div>
+    <h3>🎮 কপিকলের খেলা (g = 9.8)</h3>
+    <div class="tlinfo" id="k9q"></div><div class="cls" id="k9o"></div><div class="fb" id="k9f"></div><small id="k9sc"></small>
+  </section>
+
+  <section class="panel" id="lab10">
+    <h2>🤝 ল্যাব ১০: নিউটনের তৃতীয় সূত্র (চিত্র ৩.১২, ৩.১৪)</h2>
+    <div class="say">👉 একজন ধাক্কা দিলে আরেকজনও সমান বলে ধাক্কা দেয়। কে কত সরে, সেটা ভর ঠিক করে।</div>
+    <div class="pills" id="t10p"><button data-k="0" class="on">🪨 পাথর ঠেলা</button><button data-k="1">🚶 হাঁটা</button></div>
+    <div class="ctl" id="t10a"><label>বল F: <span id="t10fv"></span> N</label><input type="range" id="t10f" min="10" max="100" step="10" value="50"><label>তোমার ভর: <span id="t10pv"></span> kg</label><input type="range" id="t10pm" min="30" max="80" step="10" value="50"><label>পাথরের ভর: <span id="t10rv"></span> kg</label><input type="range" id="t10rm" min="50" max="200" step="10" value="100"></div>
+    <div class="ctl" id="t10b" style="display:none"><label>মেঝে:</label><select id="t10s"><option value="1">শক্ত মাটি</option><option value="0">সাবান-পানির পিচ্ছিল মেঝে</option></select></div>
+    <div class="btnrow"><button class="btn" id="t10go">▶ শুরু</button><button class="btn alt" id="t10rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="t10c" class="w" width="380" height="230"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="t10t"></div></div>
+    </div>
+    <h3>🎮 ক্রিয়া ও প্রতিক্রিয়া</h3>
+    <div class="tlinfo" id="t10q"></div><div class="cls" id="t10o"></div><div class="fb" id="t10f2"></div><small id="t10sc"></small>
+  </section>
+
+  <section class="panel" id="lab11">
+    <h2>🧱 ল্যাব ১১: ঘর্ষণ বল (স্থিতি ও গতি)</h2>
+    <div class="say">👉 ব্লকে ধীরে ধীরে বল বাড়াও। কখন নড়তে শুরু করে দেখো। নিচের লেখচিত্রে ঘর্ষণ বলের পরিবর্তন লক্ষ করো।</div>
+    <div class="ctl"><label>তল:</label><select id="r11s"><option value="0">বইয়ের উদাহরণ (μₛ = 0.01)</option><option value="1">বরফ (μₛ ≈ 0.05)</option><option value="2">কাঠ (μₛ ≈ 0.5)</option><option value="3">রাবার-রাস্তা (μₛ ≈ 0.9)</option></select><label>ভর m: <span id="r11mv"></span> kg</label><input type="range" id="r11m" min="1" max="100" step="1" value="10"></div>
+    <div class="ctl"><label>প্রয়োগ বল F: <span id="r11fv"></span> N</label><input type="range" id="r11f" min="0" max="10" step="0.1" value="0" style="flex:1;min-width:160px"><button class="btn" id="r11go">▶ ছেড়ে দাও</button><button class="btn alt" id="r11rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="r11c" class="w" width="380" height="170"></canvas><canvas id="r11g" class="w" width="380" height="150"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="r11t"></div></div>
+    </div>
+    <h3>🎮 ঘর্ষণ কমাবে না বাড়াবে?</h3>
+    <div class="tlinfo" id="r11q"></div><div class="cls" id="r11o"></div><div class="fb" id="r11f2"></div><small id="r11sc"></small>
+  </section>
+
+  <section class="panel" id="lab12">
+    <h2>⛰️ ল্যাব ১২: ঢালু তলে স্থিতি ঘর্ষণ সহগ (চিত্র ৩.১৮)</h2>
+    <div class="say">👉 বইয়ের ওপর ম্যাচ বাক্স রাখা আছে। ঢাল ধীরে ধীরে বাড়াও আর দেখো কোন কোণে বাক্স পিছলাতে শুরু করে। তখন μₛ = tan θ।</div>
+    <div class="ctl"><label>তল:</label><select id="i12s"><option value="0">ম্যাচ বাক্স-বই (μₛ ≈ 0.4)</option><option value="1">বরফ (μₛ ≈ 0.05)</option><option value="2">রাবার (μₛ ≈ 0.9)</option></select><label>ঢালের কোণ θ: <span id="i12v"></span>°</label><input type="range" id="i12a" min="0" max="60" step="0.5" value="0" style="flex:1;min-width:140px"></div>
+    <div class="btnrow"><button class="btn" id="i12go">🔼 ধীরে ধীরে বাড়াও</button><button class="btn alt" id="i12rs">↻</button></div>
+    <div class="row">
+      <div><canvas id="i12c" class="w" width="380" height="230"></canvas></div>
+      <div class="grow"><div class="tlinfo" id="i12t"></div></div>
+    </div>
+    <h3>🎮 ঘর্ষণ বাড়ে না কমে?</h3>
+    <div class="tlinfo" id="i12q"></div><div class="cls" id="i12o"></div><div class="fb" id="i12f"></div><small id="i12sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। বইয়ের নমুনা প্রশ্নের উত্তরমালা নেই, তাই উত্তরগুলো আমার হিসাব। যেখানে অনুমান করেছি, সেখানে লিখে দিয়েছি।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; বল (পদার্থবিজ্ঞান অধ্যায় ৩)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+function opts(correct,wrongs){var seen={},a=[{t:correct,ok:1}];seen[correct]=1;wrongs.forEach(function(w){if(!seen[w]){seen[w]=1;a.push({t:w,ok:0});}});return shuffle(a);}
+function arrow(x,x1,y1,x2,y2,col,lw){var a=Math.atan2(y2-y1,x2-x1);x.strokeStyle=col;x.fillStyle=col;x.lineWidth=lw||3;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-11*Math.cos(a-.4),y2-11*Math.sin(a-.4));x.lineTo(x2-11*Math.cos(a+.4),y2-11*Math.sin(a+.4));x.closePath();x.fill();}
+function person(x,px,py,col){circ(x,0,px,py-22,6,col,null);x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(px,py-16);x.lineTo(px,py-4);x.moveTo(px-6,py-11);x.lineTo(px+6,py-11);x.moveTo(px,py-4);x.lineTo(px-5,py+6);x.moveTo(px,py-4);x.lineTo(px+5,py+6);x.stroke();}
+/* ---------- সাধারণ সহায়ক ---------- */
+function pills(id,fn){$(id).onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var all=$(id).querySelectorAll('button'),i;for(i=0;i<all.length;i++)all[i].classList.toggle('on',all[i]===b);fn(+b.getAttribute('data-k'));};}
+function sci(x){if(!(x>0))return bn(0);var e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);if(+m.toFixed(2)>=10){m/=10;e++;}return bn(parseFloat(m.toFixed(2)))+' × ১০'+(e<0?'⁻':'')+sup(Math.abs(e));}
+function brow(label,val,max,col,txtv){return '<div class="bar"><div class="bl">'+label+'</div><div class="bt"><div class="bf" style="width:'+clamp(val/max*100,1,100)+'%;background:'+col+'"></div></div><b style="min-width:80px;font-size:14px;color:#1f3a5f">'+(txtv||'')+'</b></div>';}
+function on(ids,fn){ids.forEach(function(i){$(i).oninput=fn;$(i).onchange=fn;});}
+var G=9.8;
+function box(x,px,py,w,h,fill,stroke){x.fillStyle=fill;x.fillRect(px,py,w,h);if(stroke){x.strokeStyle=stroke;x.lineWidth=2;x.strokeRect(px,py,w,h);}}
+function wheel(x,px,py,r){circ(x,0,px,py,r,'#333',null);circ(x,0,px,py,r*.4,'#bbb',null);}
+
+/* ---------- ল্যাব ১: জড়তা ---------- */
+var I1={mode:0,t:0,run:0,fast:1,bus:0};
+function i1info(){var h;
+  if(I1.mode===0){
+    if(!I1.run&&I1.t===0)h='<b>পরীক্ষা:</b> গ্লাসের ওপর কার্ড, কার্ডের ওপর মুদ্রা।<br>"শুরু" চেপে দেখো। সজোরে টোকা আর ধীরে টানার ফল মেলাও।';
+    else if(I1.fast)h=I1.t<.3?'কার্ডটি খুব দ্রুত সরে যাচ্ছে...':'<b>মুদ্রা গ্লাসে পড়ল!</b><br>কার্ডের ওপর খুব অল্প সময় বল কাজ করেছে, তাই মুদ্রা স্থির থাকতে চেয়েছে (<b>স্থিতি জড়তা</b>)। কার্ড সরতেই অভিকর্ষ মুদ্রাকে গ্লাসে নামিয়ে দিয়েছে।';
+    else h=I1.t<.7?'কার্ডটি ধীরে টানা হচ্ছে...':'<b>মুদ্রা কার্ডের সাথেই সরে গেল।</b><br>ধীরে টানলে কার্ড ও মুদ্রার ঘর্ষণ বল মুদ্রাকে সাথে টেনে নেয়, তাই জড়তার ফল দেখা যায় না। সেজন্য "সজোরে" টোকা দিতে হয়।';
+  }else{
+    if(!I1.run&&I1.t===0)h='<b>পরীক্ষা:</b> বাসে দাঁড়ানো একজন যাত্রী। বাস চালু বা ব্রেক করে দেখো।';
+    else if(I1.bus===0)h='<b>যাত্রী পেছনে হেলে পড়ছে!</b><br>পা বাসের সাথে সামনে এগোল, কিন্তু শরীরের ওপরের অংশ স্থির থাকতে চেয়েছে। এটি <b>স্থিতি জড়তা</b>।';
+    else h='<b>যাত্রী সামনে ঝুঁকে পড়ছে!</b><br>পা বাসের সাথে থেমে গেল, কিন্তু ওপরের অংশ আগের গতিতেই চলতে চেয়েছে। এটি <b>গতি জড়তা</b>।';
+  }
+  $('i1t').innerHTML=h;}
+pills('i1p',function(k){I1.mode=k;I1.t=0;I1.run=0;$('i1cA').style.display=k===0?'flex':'none';$('i1cB').style.display=k===1?'flex':'none';i1info();});
+$('i1go').onclick=function(){I1.fast=+$('i1s').value;I1.t=.0001;I1.run=1;};
+$('i1go2').onclick=function(){I1.bus=+$('i1b').value;I1.t=.0001;I1.run=1;};
+DRAWS.push(function(){var x=ctxOf('i1c'),t=I1.t,i;x.clearRect(0,0,380,220);x.fillStyle='#eef6fb';x.fillRect(0,0,380,220);
+  if(I1.run){I1.t+=I1.mode===0&&!I1.fast?.007:.012;if(I1.t>=1){I1.t=1;I1.run=0;}i1info();}
+  t=I1.t;
+  if(I1.mode===0){
+    box(x,20,180,340,12,'#b98b5e','#7a5a3a');
+    var dx,cx,cy,tt=t,gl=165;
+    if(I1.fast){dx=230*ease(clamp(tt/.3,0,1));cx=190;var f=clamp((tt-.3)/.4,0,1);cy=(tt<.3?116:116+f*f*44);}
+    else{dx=190*tt;cx=190+dx;var f2=clamp((tt-.78)/.22,0,1);cy=tt<.78?116:116+f2*f2*60;}
+    x.fillStyle='rgba(120,180,230,.25)';x.fillRect(gl,130,50,50);
+    x.fillStyle='#fff';x.strokeStyle='#e9a23b';x.lineWidth=2;x.fillRect(190+dx-50,124,100,6);x.strokeRect(190+dx-50,124,100,6);
+    circ(x,0,cx,cy,8,'#e9a23b','#8a5a00',2);
+    x.strokeStyle='#567';x.lineWidth=3;x.strokeRect(gl,130,50,50);
+    txt(x,'গ্লাস',190,204,'bold 11px Hind Siliguri','#456');
+    if(I1.run&&I1.fast&&tt<.3)arrow(x,60,127,120,127,RED,4);
+    if(I1.run&&!I1.fast)arrow(x,60,127,110,127,'#888',3);
+  }else{
+    x.fillStyle='#889';x.fillRect(0,185,380,10);for(i=0;i<8;i++)x.fillRect((i*60-(t*150)%60+380)%380,189,26,2);
+    var bx=I1.bus===0?20+150*t*t:20+150*(2*t-t*t),lean=(I1.bus===0?-1:1)*.62*Math.min(1,t*3);
+    if(!I1.run&&t===0)lean=0;
+    box(x,bx,100,170,70,'#2a9d8f','#146a60');box(x,bx+10,108,150,26,'#e6f5f9','#146a60');
+    wheel(x,bx+35,172,13);wheel(x,bx+135,172,13);
+    var px=bx+85,fy=168,tx=px+Math.sin(lean)*42,ty=fy-Math.cos(lean)*42;
+    x.strokeStyle='#e63946';x.lineWidth=5;x.beginPath();x.moveTo(px-5,fy);x.lineTo(px,fy-4);x.lineTo(px+5,fy);x.moveTo(px,fy-4);x.lineTo(tx,ty);x.stroke();
+    circ(x,0,tx+Math.sin(lean)*9,ty-Math.cos(lean)*9,8,'#ffd5b0','#a0703c',2);
+    if(I1.run)arrow(x,bx+180,140,bx+215,140,'#1f3a5f',4);
+    txt(x,I1.bus===0?'বাস চলছে':'ব্রেক!',190,30,'bold 14px Hind Siliguri',NAVY);
+  }});
+i1info();
+qgame('i1q','i1o','i1f','i1sc',[
+ ['চলন্ত বাস হঠাৎ ব্রেক করলে যাত্রী সামনে ঝুঁকে পড়ে। এটি কোন জড়তা?','গতি জড়তা',['স্থিতি জড়তা','ঘর্ষণ','মহাকর্ষ'],'যাত্রী চলতে থাকতে চায়, তাই গতি জড়তা।'],
+ ['স্থির গাড়ি হঠাৎ চলতে শুরু করলে আমরা পেছনে হেলে পড়ি। কেন?','স্থিতি জড়তার জন্য',['গতি জড়তার জন্য','ঘর্ষণ কমে যায় বলে','মহাকর্ষ বাড়ে বলে'],'শরীরের ওপরের অংশ স্থির থাকতে চায়, তাই স্থিতি জড়তা।'],
+ ['গাছে ঝাঁকি দিলে পাকা ফল পড়ে যায়। এর কারণ কী?','স্থিতি জড়তা',['গতি জড়তা','চুম্বকত্ব','ঘর্ষণ'],'ডাল সরে যায়, ফল স্থির থাকতে চায়।'],
+ ['দৌড়ানোর সময় হোঁচট খেলে সামনে পড়ে যাই। এটি কোন জড়তা?','গতি জড়তা',['স্থিতি জড়তা','ঘূর্ণন জড়তা','ঘর্ষণ'],'পা আটকে গেলেও শরীর চলতে চায়।'],
+ ['কোন বস্তুর জড়তা বেশি?','ভর বেশি যার',['আকার বড় যার','বেগ বেশি যার','রং গাঢ় যার'],'জড়তা ভরের ওপর নির্ভর করে। ভর বাড়লে জড়তা বাড়ে।'],
+ ['কম্বল ঝাড়লে ধুলা পড়ে যায়। এর কারণ কী?','ধুলা জড়তার কারণে স্থির থাকতে চায়',['ধুলা হালকা বলে','কম্বল গরম হয় বলে','বাতাস ঢোকে বলে'],'কম্বল গতিশীল হয়, ধুলা স্থির থাকতে চায় (স্থিতি জড়তা)।']]);
+
+/* ---------- ল্যাব ২: বল ও লেখচিত্র ---------- */
+var G2={T:0,run:0};
+function g2x(t){return t<3?2:t<7?2+(t-3)*1.5:8;}
+function g2v(t){return t<3?1:t<7?1+(t-3):5;}
+function g2s(t){if(t<3)return t;if(t<7){var u=t-3;return 3+u+.5*u*u;}return 15+5*(t-7);}
+function g2f(){var T=G2.T,m=+$('g2m').value;if(m===0)return Math.abs(T-3)<.2||Math.abs(T-7)<.2;return T>3&&T<7;}
+function g2info(){var T=G2.T,m=+$('g2m').value,h;$('g2tv').textContent=f(T,1);
+  if(m===0){
+    if(Math.abs(T-3)<.2)h='<b>t₁ মুহূর্ত:</b> স্থির বস্তুটি নড়তে শুরু করল। এই মুহূর্তে <b style="color:#c0392b">বল প্রযুক্ত হয়েছে</b>।';
+    else if(Math.abs(T-7)<.2)h='<b>t₂ মুহূর্ত:</b> গতিশীল বস্তুটি থেমে গেল। এই মুহূর্তে <b style="color:#c0392b">বল প্রযুক্ত হয়েছে</b>।';
+    else if(T<3)h='অবস্থান বদলাচ্ছে না। বেগ শূন্য, <b>বল নেই</b>।';
+    else if(T<7)h='অবস্থান সমহারে বদলাচ্ছে (সরলরেখা)। <b>সমবেগ</b>, বেগের পরিবর্তন নেই, তাই <b>বল নেই</b>।';
+    else h='আবার অবস্থান বদলাচ্ছে না। বস্তু স্থির, <b>বল নেই</b>।';
+  }else{
+    if(T<3)h='বেগ ধ্রুব (1 m/s)। ত্বরণ শূন্য, তাই <b>বল নেই</b>।';
+    else if(T<7)h='বেগ সমহারে বাড়ছে। ত্বরণ আছে, তাই এখানে <b style="color:#c0392b">বল প্রযুক্ত হচ্ছে</b> (F = ma)।';
+    else h='বেগ আবার ধ্রুব (5 m/s)। ত্বরণ শূন্য, <b>বল নেই</b>।';
+  }
+  $('g2i').innerHTML=h;}
+$('g2t').oninput=function(){G2.T=+this.value;G2.run=0;g2info();};
+$('g2m').onchange=function(){g2info();};
+$('g2go').onclick=function(){if(G2.T>=10)G2.T=0;G2.run=1;};
+DRAWS.push(function(){var x=ctxOf('g2c'),m=+$('g2m').value,T=G2.T,i;x.clearRect(0,0,380,290);
+  if(G2.run){G2.T+=.025;if(G2.T>=10){G2.T=10;G2.run=0;}$('g2t').value=G2.T;g2info();T=G2.T;}
+  var GX=45,GY=14,GW=310,GH=130,ymax=m===0?9:6;
+  x.fillStyle='#fafcfe';x.fillRect(GX,GY,GW,GH);
+  if(m===1){x.fillStyle='rgba(230,57,70,.12)';x.fillRect(GX+GW*.3,GY,GW*.4,GH);}
+  else{x.fillStyle='rgba(230,57,70,.35)';x.fillRect(GX+GW*.3-2,GY,4,GH);x.fillRect(GX+GW*.7-2,GY,4,GH);}
+  x.strokeStyle='#789';x.lineWidth=2;x.strokeRect(GX,GY,GW,GH);
+  x.strokeStyle='#cbd5de';x.lineWidth=1;for(i=1;i<10;i++){x.beginPath();x.moveTo(GX+GW*i/10,GY);x.lineTo(GX+GW*i/10,GY+GH);x.stroke();}
+  x.strokeStyle='#1f3a5f';x.lineWidth=3;x.beginPath();for(i=0;i<=200;i++){var tt=i/20,val=m===0?g2x(tt):g2v(tt),px=GX+GW*tt/10,py=GY+GH-GH*val/ymax;if(i===0)x.moveTo(px,py);else x.lineTo(px,py);}x.stroke();
+  var cv=m===0?g2x(T):g2v(T),cpx=GX+GW*T/10,cpy=GY+GH-GH*cv/ymax;
+  x.setLineDash([4,4]);x.strokeStyle='#e9a23b';x.beginPath();x.moveTo(cpx,GY);x.lineTo(cpx,GY+GH);x.stroke();x.setLineDash([]);circ(x,0,cpx,cpy,6,'#e9a23b','#8a5a00',2);
+  txt(x,'t₁',GX+GW*.3,GY+GH+12,'bold 12px Hind Siliguri','#c0392b');txt(x,'t₂',GX+GW*.7,GY+GH+12,'bold 12px Hind Siliguri','#c0392b');
+  txt(x,'সময় t (s) →',GX+GW/2,GY+GH+26,'11px Hind Siliguri','#456');txt(x,m===0?'অবস্থান':'বেগ',22,GY+GH/2,'bold 11px Hind Siliguri','#456');
+  /* ট্র্যাক */
+  var pos=m===0?g2x(T)/8:g2s(T)/30,ty=240;x.fillStyle='#d8e2ea';x.fillRect(20,ty+14,340,8);
+  var cx=30+pos*290;box(x,cx,ty-12,40,22,'#2a9d8f','#146a60');wheel(x,cx+9,ty+12,6);wheel(x,cx+31,ty+12,6);
+  if(g2f()){var dir=(m===0&&Math.abs(T-7)<.2)?-1:1;arrow(x,cx+(dir>0?44:-4),ty-1,cx+(dir>0?84:-44),ty-1,RED,4);txt(x,'বল!',cx+20,ty-28,'bold 13px Hind Siliguri',RED);}
+  txt(x,'গাড়ির অবস্থান',190,278,'11px Hind Siliguri','#456');});
+g2info();
+qgame('g2q','g2o','g2f','g2sc',[
+ ['অবস্থান–সময় লেখচিত্রের ঢালু সরলরেখা অংশে বস্তুর ওপর বল আছে কি?','না, সমবেগ বলে',['হ্যাঁ, বেগ বাড়ছে','হ্যাঁ, বেগ কমছে','বলা যায় না'],'সরলরেখা মানে অবস্থান সমহারে বদলাচ্ছে, অর্থাৎ সমবেগ। ত্বরণ শূন্য, তাই বল নেই।'],
+ ['বেগ–সময় লেখচিত্রের ওপরে ওঠা ঢালু অংশে কী ঘটছে?','ত্বরণ আছে, বল প্রযুক্ত হচ্ছে',['সমবেগে চলছে','বস্তু স্থির','বল নেই'],'বেগ সমহারে বাড়ছে মানে ত্বরণ আছে, তাই বল কাজ করছে।'],
+ ['বেগ–সময় লেখচিত্রের অনুভূমিক অংশে বল কত?','শূন্য',['সবচেয়ে বেশি','ধ্রুব ও অশূন্য','ঋণাত্মক'],'বেগ ধ্রুব মানে ত্বরণ শূন্য, তাই লব্ধি বল শূন্য।'],
+ ['অবস্থান–সময় লেখচিত্রে অনুভূমিক রেখা কী বোঝায়?','বস্তু স্থির',['সমবেগে চলছে','ত্বরণ আছে','বল আছে'],'অবস্থান বদলাচ্ছে না, তাই বস্তু স্থির।'],
+ ['স্থির বস্তু চলতে শুরু করার মুহূর্তে কী প্রযুক্ত হয়েছিল?','বল',['কিছুই না','শুধু ভর','জড়তা বাড়ানো হয়েছিল'],'স্থির অবস্থা থেকে গতিশীল হতে বল লাগে (নিউটনের প্রথম সূত্র)।']]);
+
+/* ---------- ল্যাব ৩: মৌলিক বল ---------- */
+var F3={k:0};
+var F3N=[
+ ['🌍 মহাকর্ষ বল (Gravitational)','ভর আছে এমন সব বস্তু একে অপরকে টানে। গ্যালাক্সিতে নক্ষত্র, সূর্যকে ঘিরে পৃথিবী, পৃথিবীকে ঘিরে চাঁদ ঘোরে এর জন্য।<br><b>শক্তি:</b> সবচেয়ে দুর্বল। <b>পাল্লা:</b> অসীম।'],
+ ['🧲 তড়িৎ চৌম্বক বল','চুম্বক ও বিদ্যুৎ আসলে একই বল। চুম্বকের আকর্ষণ-বিকর্ষণ, চিরুনিতে কাগজ টানা এর উদাহরণ।<br><b>শক্তি:</b> মহাকর্ষের <b>10³⁶ গুণ</b>। <b>পাল্লা:</b> অসীম।'],
+ ['☢️ দুর্বল নিউক্লীয় বল','তেজস্ক্রিয় নিউক্লিয়াস থেকে বিটা (β) রশ্মি বা ইলেকট্রন বের হয় এর কারণে (নিউট্রন → প্রোটন + ইলেকট্রন)।<br><b>শক্তি:</b> তড়িৎ চৌম্বকের প্রায় ট্রিলিয়ন ভাগের এক ভাগ, তবু মহাকর্ষের মতো এত দুর্বল নয়। <b>পাল্লা:</b> মাত্র 10⁻¹⁸ m।'],
+ ['⚛️ সবল নিউক্লীয় বল','নিউক্লিয়াসের ভেতরে প্রোটন ও নিউট্রনকে একসাথে আটকে রাখে। এ থেকেই নিউক্লীয় শক্তি পাওয়া যায়।<br><b>শক্তি:</b> সবচেয়ে বেশি, মহাকর্ষের <b>10⁴¹ গুণ</b>। <b>পাল্লা:</b> মাত্র 10⁻¹⁵ m।']];
+var F3E=[['মহাকর্ষ',0,'#3f6fd1'],['দুর্বল নিউক্লীয় (≈)',24,'#2a9d8f'],['তড়িৎ চৌম্বক',36,'#e9a23b'],['সবল নিউক্লীয়',41,'#e63946']];
+var F3ord=[0,2,1,3];
+function f3show(){$('f3t').innerHTML='<b>'+F3N[F3.k][0]+'</b><br>'+F3N[F3.k][1];
+  $('f3b').innerHTML=F3E.map(function(e,i){var sel=(i===0&&F3.k===0)||(i===1&&F3.k===2)||(i===2&&F3.k===1)||(i===3&&F3.k===3);return brow((sel?'👉 ':'')+e[0],Math.max(e[1],.5),41,e[2],'১০'+sup(e[1])+(e[1]===0?' = ১':' গুণ'));}).join('');}
+pills('f3p',function(k){F3.k=k;f3show();});
+DRAWS.push(function(){var x=ctxOf('f3c'),k=F3.k,i,a=FR*.02;
+  x.clearRect(0,0,380,240);x.fillStyle=['#0f1b33','#f1f6fb','#f4effa','#faf1ec'][k];x.fillRect(0,0,380,240);
+  if(k===0){
+    for(i=0;i<30;i++)circ(x,0,(i*97)%380,(i*53)%240,1.2,'#fff',null);
+    x.strokeStyle='rgba(255,255,255,.25)';x.setLineDash([3,5]);x.beginPath();x.arc(190,120,90,0,7);x.stroke();x.setLineDash([]);
+    circ(x,0,190,120,24,'#ffb703','#fb8500',3);txt(x,'সূর্য',190,120,'bold 11px Hind Siliguri','#5a2d00');
+    var px=190+90*Math.cos(a),py=120+90*Math.sin(a);circ(x,0,px,py,11,'#3f8fd1','#1b5b99',2);
+    var mx=px+24*Math.cos(a*5),my=py+24*Math.sin(a*5);circ(x,0,mx,my,4,'#ddd',null);
+    arrow(x,px,py,px+(190-px)*.35,py+(120-py)*.35,'#ffb703',3);txt(x,'পৃথিবী',px,py-19,'bold 10px Hind Siliguri','#fff');
+    txt(x,'মহাকর্ষ বল গ্রহকে কক্ষপথে ধরে রাখে',190,222,'bold 12px Hind Siliguri','#cfe3ff');
+  }else if(k===1){
+    box(x,20,100,60,40,'#e63946','#333');box(x,80,100,60,40,'#2b6cb0','#333');txt(x,'N',50,120,'bold 18px Hind Siliguri','#fff');txt(x,'S',110,120,'bold 18px Hind Siliguri','#fff');
+    for(i=0;i<6;i++){var ph=(Math.sin(a*1.6+i*1.1)+1)/2,fx=lerp(300,160,ph),fy=40+i*30;x.strokeStyle='rgba(90,110,130,.25)';x.beginPath();x.moveTo(140,120);x.lineTo(fx,fy);x.stroke();circ(x,0,fx,fy,6,'#6b7c8a','#333',1.5);if(ph>.5)arrow(x,fx,fy,fx-22,fy+(120-fy)*.1,'#e9a23b',2);}
+    txt(x,'চুম্বক লোহার টুকরো টানছে',230,222,'bold 12px Hind Siliguri',NAVY);
+  }else if(k===2){
+    var cyc=(FR%240)/240,nx=100,ny=120,pts=[[0,0],[16,-8],[-12,12],[14,14],[-14,-10],[2,18]];
+    pts.forEach(function(p,j){var col=(j===0&&cyc<.25)?'#8a8f98':'#e63946';circ(x,0,nx+p[0]+Math.sin(FR*.1+j)*1.5,ny+p[1],12,j===0&&cyc<.25?'#9aa0aa':(j%2?'#e63946':'#9aa0aa'),'#333',1.5);});
+    if(cyc>=.25){var e=(cyc-.25)/.75;circ(x,0,nx+e*220,ny-e*30,6,'#2b6cb0','#123',1.5);txt(x,'e⁻ (β)',nx+e*220,ny-e*30-14,'bold 11px Hind Siliguri','#2b6cb0');
+      x.setLineDash([4,4]);x.strokeStyle='#999';x.beginPath();x.moveTo(nx,ny);x.lineTo(nx+e*200,ny+e*60);x.stroke();x.setLineDash([]);}
+    txt(x,cyc<.25?'নিউট্রন (ধূসর)':'নিউট্রন → প্রোটন + ইলেকট্রন',190,222,'bold 12px Hind Siliguri',NAVY);
+  }else{
+    var P=[[0,-26],[24,-10],[24,14],[0,28],[-24,14],[-24,-10],[0,0],[12,-8]];
+    for(i=0;i<P.length;i++)for(var j=i+1;j<P.length;j++){var d=Math.hypot(P[i][0]-P[j][0],P[i][1]-P[j][1]);if(d<36){x.strokeStyle='rgba(230,57,70,.55)';x.lineWidth=3;x.beginPath();x.moveTo(190+P[i][0],120+P[i][1]);x.lineTo(190+P[j][0],120+P[j][1]);x.stroke();}}
+    P.forEach(function(p,j){var jx=Math.sin(FR*.25+j*2)*2,jy=Math.cos(FR*.22+j*3)*2;circ(x,0,190+p[0]+jx,120+p[1]+jy,11,j%2?'#e63946':'#9aa0aa','#333',1.5);txt(x,j%2?'+':'0',190+p[0]+jx,120+p[1]+jy,'bold 11px Hind Siliguri','#fff');});
+    txt(x,'প্রোটন (লাল +) ও নিউট্রন (ধূসর)',190,215,'bold 12px Hind Siliguri',NAVY);txt(x,'একে অপরকে আটকে রাখছে',190,232,'bold 12px Hind Siliguri','#c0392b');}
+});
+f3show();
+qgame('f3q','f3o','f3f','f3sc',[
+ ['নিউক্লিয়াসের ভেতর প্রোটন ও নিউট্রনকে আটকে রাখে কোন বল?','সবল নিউক্লীয় বল',['মহাকর্ষ বল','দুর্বল নিউক্লীয় বল','ঘর্ষণ বল'],'সবল নিউক্লীয় বল সবচেয়ে শক্তিশালী, কিন্তু খুব অল্প দূরত্বে (10⁻¹⁵ m) কাজ করে।'],
+ ['তেজস্ক্রিয় পদার্থ থেকে বিটা রশ্মি বের হওয়ার কারণ কোন বল?','দুর্বল নিউক্লীয় বল',['সবল নিউক্লীয় বল','মহাকর্ষ বল','ঘর্ষণ বল'],'বিটা ক্ষয়ে নিউট্রন প্রোটনে বদলে ইলেকট্রন ছাড়ে। এটি দুর্বল নিউক্লীয় বলের কাজ।'],
+ ['কোন বল মহাকর্ষের চেয়ে প্রায় 10³⁶ গুণ শক্তিশালী?','তড়িৎ চৌম্বক বল',['সবল নিউক্লীয় বল','ঘর্ষণ বল','কোনোটিই না'],'বইয়ের তথ্য: তড়িৎ চৌম্বক বল মহাকর্ষের 10³⁶ গুণ।'],
+ ['সূর্যকে ঘিরে পৃথিবীর ঘোরার জন্য দায়ী বল কোনটি?','মহাকর্ষ বল',['তড়িৎ চৌম্বক বল','সবল নিউক্লীয় বল','ঘর্ষণ বল'],'ভর আছে এমন বস্তুর মাঝের আকর্ষণই মহাকর্ষ বল।'],
+ ['মৌলিক বল মোট কয়টি?','৪টি',['২টি','৩টি','৫টি'],'মহাকর্ষ, তড়িৎ চৌম্বক, দুর্বল ও সবল নিউক্লীয়। (তিনটি বলে গণনাও করা যায়, কারণ প্রথম দুটি ইলেকট্রো-উইক হিসেবে এক।)'],
+ ['কোন বল দুটির পাল্লা অসীম?','মহাকর্ষ ও তড়িৎ চৌম্বক',['সবল ও দুর্বল নিউক্লীয়','শুধু সবল নিউক্লীয়','মহাকর্ষ ও দুর্বল নিউক্লীয়'],'মহাকর্ষ ও তড়িৎ চৌম্বক বল যেকোনো দূরত্ব থেকে কাজ করে।']]);
+
+/* ---------- ল্যাব ৪: সাম্য ও অসাম্য ---------- */
+var P4={ang:0,vel:0,rel:0,cut:0,cy:0,vy:0};
+function p4mode(){return +$('p4m').value;}
+function p4set(){var m=p4mode(),s=$('p4a');
+  if(m===0){s.min=0;s.max=50;if(+s.value>50)s.value=20;$('p4l').textContent='কোণ θ';$('p4b').style.display='flex';}
+  else{s.min=3;s.max=45;if(+s.value<3||+s.value>45)s.value=20;$('p4l').textContent='দড়ির কোণ α (অনুভূমিকের সাথে)';$('p4b').style.display='none';}
+  $('p4av').textContent=bn(s.value);}
+function p4reset(){P4.rel=0;P4.cut=0;P4.vel=0;P4.cy=0;P4.vy=0;P4.ang=p4mode()===0?+$('p4a').value*Math.PI/180:0;p4info();}
+function p4info(){var m=p4mode(),W=20,h,a=+$('p4a').value;$('p4av').textContent=bn(a);
+  if(m===0){
+    var th=a*Math.PI/180;
+    if(P4.cut)h='<b>সুতা কাটা হয়েছে।</b> এখন টান নেই, শুধু ওজন W = '+bn(W)+' N নিচে কাজ করছে। এটি <b>অসাম্য বল</b>, তাই বস্তু নিচে পড়ছে।';
+    else if(P4.rel)h='<b>ছেড়ে দেওয়া হয়েছে।</b> টান ও ওজনের লব্ধি শূন্য নয়, ওজনের স্পর্শক-উপাংশ W sinθ বস্তুকে সাম্যাবস্থানের দিকে ফেরায়। তাই বস্তু দুলছে। <b>এটি অসাম্য বল</b>।';
+    else if(a===0)h='<b>সাম্যাবস্থা:</b> ওজন W = '+bn(W)+' N নিচে, সুতার টান T = '+bn(W)+' N ওপরে। দুটো সমান ও বিপরীত। লব্ধি শূন্য, তাই ত্বরণ নেই।';
+    else h='বস্তুকে '+bn(a)+'° সরানো হয়েছে।<br>T = W cosθ = <b>'+f(W*Math.cos(th),1)+' N</b><br>লব্ধি বল = W sinθ = <b>'+f(W*Math.sin(th),1)+' N</b> (সাম্যাবস্থানের দিকে)।<br>লব্ধি শূন্য নয়, তাই <b>অসাম্য বল</b>। "ছেড়ে দাও" চাপলে দুলবে।';
+  }else{
+    var al=a*Math.PI/180,T=W/(2*Math.sin(al));
+    h='বই ঝুলছে, ওজন W = '+bn(W)+' N। দুই দিকের টান T-এর খাড়া উপাংশ ওজনকে সামলায়:<br>2T sinα = W ⇒ <b>T = W ÷ (2 sinα) = '+f(T,1)+' N</b><br>α = '+bn(a)+'° এ T হলো ওজনের <b>'+f(T/W,1)+' গুণ</b>।'+(a<=6?'<br><b style="color:#c0392b">দড়ি প্রায় সোজা, টান বিপুল! ছিঁড়ে যেতে পারে।</b>':'')+'<br><small>α = 0° হলে sinα = 0 হয়, T অসীম লাগত। তাই দড়ি কখনো পুরোপুরি সোজা হয় না।</small>';
+  }
+  $('p4t').innerHTML=h;}
+$('p4m').onchange=function(){p4set();p4reset();};
+$('p4a').oninput=function(){if(!P4.rel&&!P4.cut)P4.ang=p4mode()===0?+this.value*Math.PI/180:0;p4info();};
+$('p4go').onclick=function(){if(P4.cut)return;P4.rel=1;P4.vel=0;p4info();};
+$('p4cut').onclick=function(){P4.cut=1;P4.rel=0;P4.vy=0;P4.cy=0;p4info();};
+$('p4rs').onclick=function(){p4reset();};
+DRAWS.push(function(){var x=ctxOf('p4c'),m=p4mode(),W=20;x.clearRect(0,0,380,260);x.fillStyle='#f6f9fb';x.fillRect(0,0,380,260);
+  if(m===0){
+    if(P4.rel&&!P4.cut){P4.vel+=(-9*Math.sin(P4.ang)-.18*P4.vel)*.016;P4.ang+=P4.vel*.016;if(Math.abs(P4.ang)<.002&&Math.abs(P4.vel)<.01){P4.ang=0;P4.vel=0;P4.rel=0;p4info();}}
+    var th=P4.ang,L=150,bx=190+L*Math.sin(th),by=30+L*Math.cos(th);
+    if(P4.cut){P4.vy+=.45;P4.cy+=P4.vy;if(by+P4.cy>232){P4.cy=232-by;P4.vy=0;}}
+    var cy=by+P4.cy;
+    x.fillStyle='#8a99a6';x.fillRect(120,18,140,12);x.fillStyle='#bfcbd5';x.fillRect(0,246,380,14);
+    if(!P4.cut){x.strokeStyle='#444';x.lineWidth=2.5;x.beginPath();x.moveTo(190,30);x.lineTo(bx,by);x.stroke();}
+    circ(x,0,bx,cy,15,'#6a7f94','#222',2);
+    arrow(x,bx,cy,bx,cy+W*2.2,'#2b6cb0',4);txt(x,'W',bx+14,cy+W*2.2,'bold 13px Hind Siliguri','#2b6cb0');
+    if(!P4.cut&&!P4.rel){var tl=W*2.2*Math.cos(th),ux=(190-bx)/L,uy=(30-by)/L;arrow(x,bx,by,bx+ux*tl,by+uy*tl,RED,4);txt(x,'T',bx+ux*tl-12,by+uy*tl,'bold 13px Hind Siliguri',RED);
+      if(Math.abs(th)>.01){var nl=W*2.2*Math.sin(th),tx=-Math.cos(th),ty=Math.sin(th)*(th>0?1:-1)*0;var dirx=-Math.sign(th)*Math.cos(th),diry=-Math.sign(th)*(-Math.sin(th))*-1;
+        var rx=Math.cos(th)*-Math.sign(th),ry=Math.sin(th)*Math.sign(th)*-1;arrow(x,bx,by,bx+rx*nl,by-Math.abs(ry)*nl*0-0,'#2a9d8f',4);txt(x,'লব্ধি',bx+rx*nl*.5,by-14,'bold 11px Hind Siliguri','#1d7a6f');}}
+    if(P4.rel&&!P4.cut&&Math.abs(th)>.02){arrow(x,bx,by,bx-Math.sign(th)*Math.cos(th)*40,by+Math.sign(th)*Math.sin(th)*40*Math.sign(th)*0,'#2a9d8f',4);}
+  }else{
+    var al=(+$('p4a').value)*Math.PI/180,hw=140,d=hw*Math.tan(al),ky=70+d,kx=190;
+    x.fillStyle='#8a99a6';x.fillRect(10,40,22,150);x.fillRect(348,40,22,150);
+    x.strokeStyle='#8b5a2b';x.lineWidth=3;x.beginPath();x.moveTo(32,70);x.lineTo(kx,ky);x.lineTo(348,70);x.stroke();
+    box(x,kx-24,ky+8,48,26,'#3f6fd1','#1f3a8a');txt(x,'বই',kx,ky+21,'bold 12px Hind Siliguri','#fff');
+    var tl=clamp(W/(2*Math.sin(al))*1.3,26,95);
+    arrow(x,kx,ky,kx-Math.cos(al)*tl,ky-Math.sin(al)*tl,RED,4);arrow(x,kx,ky,kx+Math.cos(al)*tl,ky-Math.sin(al)*tl,RED,4);txt(x,'T',kx-Math.cos(al)*tl-10,ky-Math.sin(al)*tl-8,'bold 13px Hind Siliguri',RED);txt(x,'T',kx+Math.cos(al)*tl+10,ky-Math.sin(al)*tl-8,'bold 13px Hind Siliguri',RED);
+    arrow(x,kx,ky+34,kx,ky+78,'#2b6cb0',4);txt(x,'W',kx+14,ky+70,'bold 13px Hind Siliguri','#2b6cb0');
+    x.setLineDash([4,4]);x.strokeStyle='#999';x.beginPath();x.moveTo(32,70);x.lineTo(348,70);x.stroke();x.setLineDash([]);txt(x,'α',kx-60,86,'bold 12px Hind Siliguri','#456');
+  }});
+p4set();p4info();
+qgame('p4q','p4o','p4f','p4sc',[
+ ['সুতায় ঝুলিয়ে রাখা স্থির বস্তুর ওপর কাজ করা বলগুলো কেমন?','সাম্যাবস্থায় (লব্ধি শূন্য)',['অসাম্য, লব্ধি নিচে','অসাম্য, লব্ধি ওপরে','বল নেই'],'ওজন নিচে ও টান ওপরে, সমান। লব্ধি শূন্য।'],
+ ['সুতা কেটে দিলে বস্তু নিচে পড়ে কেন?','অসাম্য বল (শুধু ওজন) কাজ করে বলে',['টান বেড়ে যায় বলে','ওজন শূন্য হয় বলে','সাম্যাবস্থা তৈরি হয় বলে'],'টান নেই, তাই শুধু ওজন থাকে। এটি অসাম্য বল।'],
+ ['দুই বা তার বেশি বলের লব্ধি শূন্য হলে বস্তুর ত্বরণ কত?','শূন্য',['g','সর্বোচ্চ','অসীম'],'F = ma। লব্ধি বল শূন্য হলে ত্বরণও শূন্য।'],
+ ['দড়ি টেনে ভারী বইকে পুরোপুরি সোজা রাখা যায় না কেন?','টান ওজনকে নিষ্ক্রিয় করার মতো খাড়া উপাংশ দিতে পারে না',['দড়ি হালকা বলে','বই ভারী বলে','টান শূন্য হয় বলে'],'α = 0 হলে খাড়া উপাংশ 2T sinα = 0, তাই কখনো ওজন সামলানো যায় না।'],
+ ['পেন্ডুলামকে এক পাশে সরিয়ে ছেড়ে দিলে সেটি দোলে কেন?','লব্ধি বল শূন্য নয় বলে',['টান শূন্য বলে','ওজন বাড়ে বলে','জড়তা নেই বলে'],'W sinθ লব্ধি বল বস্তুকে সাম্যাবস্থানের দিকে টানে।']]);
+/* ---------- ল্যাব ৫: ভরবেগ ও সংঘর্ষ ---------- */
+function m5show(){var v=+$('m5s').value;$('m5v').textContent=bn(v);
+  var pb=15*v,pt=5000*v;
+  $('m5b').innerHTML=brow('🚲 সাইকেল (১৫ kg)',pb,100000,'#2a9d8f',bn(pb)+' kg m/s')+brow('🚚 ট্রাক (৫০০০ kg)',pt,100000,'#e63946',bn(pt)+' kg m/s')+'<div class="tlinfo">একই বেগ '+bn(v)+' m/s হলেও <b>p = mv</b> অনুযায়ী ট্রাকের ভরবেগ সাইকেলের <b>'+bn(Math.round(5000/15))+' গুণ</b>। তাই ট্রাককে থামানো বা ট্রাকের ধাক্কা সামলানো কঠিন।</div>';}
+on(['m5s'],m5show);m5show();
+DRAWS.push(function(){var x=ctxOf('m5c'),v=+$('m5s').value,t=FR*v*.12,i;x.clearRect(0,0,380,110);x.fillStyle='#eef6fb';x.fillRect(0,0,380,110);x.fillStyle='#889';x.fillRect(0,92,380,8);
+  var bx=(t*1.3)%420-40;x.strokeStyle='#2a9d8f';x.lineWidth=3;circ(x,0,bx,84,8,null,'#2a9d8f',3);circ(x,0,bx+28,84,8,null,'#2a9d8f',3);x.beginPath();x.moveTo(bx,84);x.lineTo(bx+12,66);x.lineTo(bx+28,84);x.moveTo(bx+12,66);x.lineTo(bx+6,60);x.stroke();
+  var tx=(t*1.3+200)%520-120;box(x,tx,52,70,34,'#e63946','#8a1c25');box(x,tx+70,64,24,22,'#c0392b','#8a1c25');wheel(x,tx+16,88,9);wheel(x,tx+60,88,9);wheel(x,tx+84,88,9);
+  txt(x,'→ '+bn(v)+' m/s',190,14,'bold 13px Hind Siliguri',NAVY);});
+var C5={run:0,hit:0,t:0,x1:60,x2:320,v1:0,v2:0,th:0};
+function c5in(){return {m1:+$('c5m1').value,u1:+$('c5u1').value,m2:+$('c5m2').value,u2:+$('c5u2').value};}
+function c5calc(p){var s=p.m1+p.m2;return {v1:((p.m1-p.m2)*p.u1+2*p.m2*p.u2)/s,v2:((p.m2-p.m1)*p.u2+2*p.m1*p.u1)/s};}
+function c5info(){var p=c5in();['m1','u1','m2','u2'].forEach(function(k){$('c5'+k+'v').textContent=bn(p[k]);});
+  var r=c5calc(p),pb=p.m1*p.u1+p.m2*p.u2,pa=p.m1*r.v1+p.m2*r.v2,kb=.5*p.m1*p.u1*p.u1+.5*p.m2*p.u2*p.u2,ka=.5*p.m1*r.v1*r.v1+.5*p.m2*r.v2*r.v2,h;
+  if(p.u1-p.u2<=0)h='<b>এই মানে সংঘর্ষ হবে না।</b> বাঁ বলের বেগ u₁ ডান বলের বেগ u₂-এর চেয়ে বেশি হতে হবে। u₁ বাড়াও বা u₂ কমাও।';
+  else h='<b>সংঘর্ষের আগে:</b> p = '+f(pb,1)+' kg m/s, গতিশক্তি = '+f(kb,1)+' J<br><b>সংঘর্ষের পরে:</b> v₁ = <b>'+f(r.v1,2)+'</b> m/s, v₂ = <b>'+f(r.v2,2)+'</b> m/s<br>p = '+f(pa,1)+' kg m/s, গতিশক্তি = '+f(ka,1)+' J<br>✅ ভরবেগ ও গতিশক্তি দুটোই অপরিবর্তিত (স্থিতিস্থাপক সংঘর্ষ)।'+(p.m1===p.m2?'<br>⭐ <b>ভর সমান</b>, তাই তারা বেগ পাল্টে নিয়েছে।':'');
+  $('c5t').innerHTML=h;}
+function c5reset(){C5.run=0;C5.hit=0;C5.t=0;C5.x1=60;C5.x2=320;C5.v1=0;C5.v2=0;c5info();}
+on(['c5m1','c5u1','c5m2','c5u2'],function(){c5reset();});
+$('c5go').onclick=function(){c5reset();var p=c5in();if(p.u1-p.u2<=0)return;C5.run=1;};
+$('c5rs').onclick=c5reset;
+$('c5eq').onclick=function(){$('c5m1').value=5;$('c5m2').value=5;$('c5u1').value=5;$('c5u2').value=0;c5reset();};
+$('c5hv').onclick=function(){$('c5m1').value=10;$('c5m2').value=1;$('c5u1').value=4;$('c5u2').value=0;c5reset();};
+DRAWS.push(function(){var x=ctxOf('c5c'),p=c5in(),r1=10+p.m1*2.2,r2=10+p.m2*2.2,K=30/60;x.clearRect(0,0,380,170);x.fillStyle='#eef6fb';x.fillRect(0,0,380,170);x.fillStyle='#889';x.fillRect(0,128,380,6);
+  if(C5.run){C5.t+=1/60;var v1=C5.hit?C5.v1:p.u1,v2=C5.hit?C5.v2:p.u2;C5.x1+=v1*K*1.0;C5.x2+=v2*K*1.0;
+    if(!C5.hit&&C5.x2-C5.x1<=r1+r2){var r=c5calc(p);C5.v1=r.v1;C5.v2=r.v2;C5.hit=1;C5.th=C5.t;var m=(C5.x1+C5.x2)/2;C5.x1=m-r1-.5;C5.x2=m+r2+.5;}
+    if(C5.hit&&C5.t-C5.th>3)C5.run=0;}
+  var y=128;circ(x,0,C5.x1,y-r1,r1,'#3f6fd1','#1f3a8a',2);circ(x,0,C5.x2,y-r2,r2,'#e9a23b','#8a5a00',2);
+  txt(x,bn(p.m1)+' kg',C5.x1,y-r1,'bold 12px Hind Siliguri','#fff');txt(x,bn(p.m2)+' kg',C5.x2,y-r2,'bold 12px Hind Siliguri','#3d2600');
+  var a1=C5.hit?C5.v1:p.u1,a2=C5.hit?C5.v2:p.u2;
+  if(a1)arrow(x,C5.x1,y-2*r1-8,C5.x1+a1*8,y-2*r1-8,'#1f3a8a',3);if(a2)arrow(x,C5.x2,y-2*r2-8,C5.x2+a2*8,y-2*r2-8,'#8a5a00',3);
+  txt(x,C5.hit?'সংঘর্ষের পর':'সংঘর্ষের আগে',190,12,'bold 12px Hind Siliguri',NAVY);});
+c5info();
+qgame('c5q','c5o','c5f','c5sc',[
+ ['সমান ভরের দুটি বল সরাসরি স্থিতিস্থাপক সংঘর্ষ করলে কী ঘটে?','তারা বেগ পাল্টে নেয়',['দুটোই থেমে যায়','দুটোই একসাথে চলে','বেগ অপরিবর্তিত থাকে'],'m₁ = m₂ হলে v₁ = u₂ এবং v₂ = u₁।'],
+ ['সংঘর্ষের আগে ও পরে কোন রাশি সমান থাকে (বাইরের বল না থাকলে)?','মোট ভরবেগ',['প্রত্যেক বলের বেগ','প্রত্যেক বলের ভরবেগ','কোনোটিই না'],'ভরবেগের নিত্যতার সূত্র।'],
+ ['ভরবেগ কী ধরনের রাশি?','ভেক্টর',['স্কেলার','দুটোই নয়','কোনোটিই নয়'],'p = mv, বেগ ভেক্টর বলে ভরবেগও ভেক্টর।'],
+ ['100 g বল 10 m/s এ দেয়ালে লেগে একই দ্রুতিতে ফিরলে ভরবেগের পরিবর্তন কত?','2 kg m/s',['0','1 kg m/s','10 kg m/s'],'Δp = mv − (−mv) = 2mv = 2 × 0.1 × 10 = 2।'],
+ ['ভরবেগের একক কোনটি?','kg m/s',['kg m/s²','N','J'],'p = mv, একক kg × m/s।'],
+ ['ফোটনের ভর নেই, তবু কী আছে?','ভরবেগ',['স্থিতি জড়তা','ওজন','ঘর্ষণ'],'বই বলে ভরবেগ ভর ও বেগ থেকেও মৌলিক রাশি।']]);
+
+/* ---------- ল্যাব ৬: নিরাপদ ভ্রমণ ---------- */
+var S6={run:0,t:0,hit:0,x1:70,x2:310,v1:0,v2:0,th:0};
+var TM=10000,CM=1000;
+function s6calc(u){var s=TM+CM;return {v1:((TM-CM)*u+2*CM*(-u))/s,v2:((CM-TM)*(-u)+2*TM*u)/s};}
+function s6info(){var u=+$('s6u').value;$('s6uv').textContent=bn(u);var r=s6calc(u);
+  $('s6t').innerHTML='ট্রাক 10000 kg, গাড়ি 1000 kg। দুজনেই u = '+bn(u)+' m/s-এ মুখোমুখি।<br><b>ধাক্কার পর:</b><br>ট্রাক v₁ = '+f(r.v1,1)+' m/s (বেগের পরিবর্তন মাত্র '+f(u-r.v1,1)+')<br>গাড়ি v₂ = <b>'+f(r.v2,1)+' m/s</b> (বেগের পরিবর্তন <b style="color:#c0392b">'+f(r.v2+u,1)+' m/s</b>)<br><small>বইয়ের আদর্শ হিসাব (গাড়ির ভর ≈ 0): v₁ = u, v₂ = 3u, গাড়ির বেগ-পরিবর্তন = 4u। এখানে ভর অনুপাত 10:1, তাই মান কাছাকাছি।</small>';}
+function s6reset(){S6.run=0;S6.t=0;S6.hit=0;S6.x1=70;S6.x2=310;s6info();}
+on(['s6u'],s6reset);$('s6go').onclick=function(){s6reset();S6.run=1;};$('s6rs').onclick=s6reset;
+DRAWS.push(function(){var x=ctxOf('s6c'),u=+$('s6u').value;x.clearRect(0,0,380,180);x.fillStyle='#eef6fb';x.fillRect(0,0,380,180);x.fillStyle='#889';x.fillRect(0,140,380,8);
+  if(S6.run){S6.t+=1/60;var K=u*.12,v1=S6.hit?S6.v1:1,v2=S6.hit?S6.v2:-1;
+    if(S6.hit){var r=s6calc(u);v1=r.v1/u;v2=r.v2/u;}
+    S6.x1+=v1*K;S6.x2+=v2*K;
+    if(!S6.hit&&S6.x2-S6.x1<=100){S6.hit=1;S6.th=S6.t;}
+    if(S6.hit&&S6.t-S6.th>2.2)S6.run=0;}
+  var cr=S6.hit&&S6.t-S6.th<.6;
+  box(x,S6.x1-50,92,80,46,'#e63946','#8a1c25');box(x,S6.x1+30,106,26,32,'#c0392b','#8a1c25');wheel(x,S6.x1-30,142,10);wheel(x,S6.x1+8,142,10);wheel(x,S6.x1+44,142,10);txt(x,'ট্রাক',S6.x1-10,114,'bold 12px Hind Siliguri','#fff');
+  box(x,S6.x2-20,112,48,26,'#2a9d8f','#146a60');wheel(x,S6.x2-6,142,8);wheel(x,S6.x2+18,142,8);txt(x,'গাড়ি',S6.x2+4,125,'bold 11px Hind Siliguri','#fff');
+  if(!S6.hit){arrow(x,S6.x1+60,70,S6.x1+100,70,'#8a1c25',4);arrow(x,S6.x2-30,70,S6.x2-70,70,'#146a60',4);}
+  if(cr){txt(x,'💥',(S6.x1+S6.x2)/2,100,'bold 34px Hind Siliguri','#000');}
+  txt(x,S6.hit?'ধাক্কার পর: গাড়ি ছিটকে গেল':'ধাক্কার আগে',190,16,'bold 12px Hind Siliguri',NAVY);});
+function k6show(){var v=+$('k6s').value;$('k6v').textContent=bn(v);var ke=function(a){return .5*1000*Math.pow(a/3.6,2)/1000;};
+  $('k6b').innerHTML=brow('বেগ '+bn(v/2)+' km/h',ke(v/2),ke(120),'#2a9d8f',f(ke(v/2),1)+' kJ')+brow('বেগ '+bn(v)+' km/h',ke(v),ke(120),'#e63946',f(ke(v),1)+' kJ');
+  $('k6t').innerHTML='বেগ দ্বিগুণ করলে (গাড়ি 1000 kg) গতিশক্তি <b>'+bn(Math.round(ke(v)/ke(v/2)))+' গুণ</b> হয়। তাই দুর্ঘটনায় গতি বাড়লে ক্ষতি অনেক বেশি বাড়ে।';}
+on(['k6s'],k6show);s6info();k6show();
+qgame('s6q','s6o','s6f','s6sc',[
+ ['বেগ দ্বিগুণ হলে গতিশক্তি কত গুণ হয়?','চার গুণ',['দ্বিগুণ','অর্ধেক','একই'],'KE = ½mv², তাই v² এর সাথে বাড়ে।'],
+ ['ভারী ট্রাক ও হালকা গাড়ির মুখোমুখি ধাক্কায় কার বেগ বেশি বদলায়?','হালকা গাড়ির',['ট্রাকের','দুজনের সমান','কারো বদলায় না'],'ভর কম বলে গাড়ির বেগ-পরিবর্তন বেশি (বইয়ের আদর্শ হিসাবে 4u)।'],
+ ['দুর্ঘটনার ক্ষতি কমানোর সবচেয়ে সহজ উপায় কী?','গতি কম রাখা',['গাড়ির রং বদলানো','হর্ন বাজানো','আরও জোরে চালানো'],'গতিশক্তি বেগের বর্গের সমানুপাতিক, তাই গতি কমালে শক্তি অনেক কমে।'],
+ ['ট্রাক বেগ u ও ছোট গাড়ি বেগ −u (m₂ ≈ 0) হলে ধাক্কার পর গাড়ির বেগ কত?','3u',['u','−u','0'],'বইয়ের সূত্র থেকে v₂ = 3u।'],
+ ['ট্রাকের বেগ ধাক্কার পর (আদর্শ হিসাবে) কত থাকে?','u (প্রায় অপরিবর্তিত)',['0','−u','3u'],'ভারী ট্রাক জড়তার কারণে প্রায় একই বেগে চলে।']]);
+
+/* ---------- ল্যাব ৭: F = ma ---------- */
+var A7={run:0,t:0,x:0,v:0};
+function a7vals(){return {F:+$('a7f').value,m:+$('a7m').value};}
+function a7info(){var p=a7vals(),a=p.F/p.m;$('a7fv').textContent=bn(p.F);$('a7mv').textContent=bn(p.m);
+  $('a7t').innerHTML='<b>a = F ÷ m = '+bn(p.F)+' ÷ '+bn(p.m)+' = '+f(a,2)+' m/s²</b><br>t = '+f(A7.t,1)+' s হলে বেগ v = at = '+f(A7.v,1)+' m/s<br>সরণ s = ½at² = '+f(A7.x,1)+' m<br>'+(p.F===0?'বল নেই, তাই গাড়ি স্থির।':'<small>বল দ্বিগুণ করলে ত্বরণ দ্বিগুণ। ভর দ্বিগুণ করলে ত্বরণ অর্ধেক।</small>');}
+function a7reset(){A7.run=0;A7.t=0;A7.x=0;A7.v=0;a7info();}
+on(['a7f','a7m'],a7reset);$('a7go').onclick=function(){a7reset();A7.run=1;};$('a7rs').onclick=a7reset;
+DRAWS.push(function(){var x=ctxOf('a7c'),p=a7vals(),a=p.F/p.m,i;x.clearRect(0,0,380,280);x.fillStyle='#eef6fb';x.fillRect(0,0,380,130);x.fillStyle='#889';x.fillRect(0,112,380,6);
+  if(A7.run){A7.t+=1/60;A7.v=a*A7.t;A7.x=.5*a*A7.t*A7.t;a7info();if(A7.x*7>260||A7.t>=10){A7.run=0;}}
+  var cx=20+Math.min(A7.x*7,260),w=34+p.m*1.6;box(x,cx,112-w*.55-8,w,w*.55,'#2a9d8f','#146a60');txt(x,bn(p.m)+' kg',cx+w/2,112-w*.3-8,'bold 12px Hind Siliguri','#fff');wheel(x,cx+8,110,7);wheel(x,cx+w-8,110,7);
+  if(p.F>0)arrow(x,cx-4-p.F*.5,112-w*.3-8,cx-4,112-w*.3-8,RED,4+p.F/30);
+  txt(x,'F = '+bn(p.F)+' N',60,16,'bold 13px Hind Siliguri',RED);
+  var GX=44,GY=150,GW=310,GH=110,vm=Math.max(a*10,1);x.strokeStyle='#789';x.lineWidth=2;x.beginPath();x.moveTo(GX,GY);x.lineTo(GX,GY+GH);x.lineTo(GX+GW,GY+GH);x.stroke();
+  txt(x,'বেগ v',24,GY+6,'bold 11px Hind Siliguri','#456');txt(x,'সময় t (s) →',GX+GW-34,GY+GH+14,'11px Hind Siliguri','#456');
+  x.setLineDash([4,4]);x.strokeStyle='#c8d3dc';x.beginPath();x.moveTo(GX,GY+GH);x.lineTo(GX+GW,GY+GH-GH*a*10/vm);x.stroke();x.setLineDash([]);
+  x.strokeStyle='#1f3a5f';x.lineWidth=3;x.beginPath();x.moveTo(GX,GY+GH);x.lineTo(GX+GW*A7.t/10,GY+GH-GH*A7.v/vm);x.stroke();circ(x,0,GX+GW*A7.t/10,GY+GH-GH*A7.v/vm,5,'#e9a23b','#8a5a00',2);
+  txt(x,'ঢাল = ত্বরণ = '+f(a,2),GX+GW/2,GY-6,'bold 12px Hind Siliguri',NAVY);});
+a7info();
+function b7calc(t){var a=20,v,s;if(t<=10){v=a*t;s=.5*a*t*t;}else{v=200;s=1000+200*(t-10);}return {v:v,s:s};}
+function b7axes(x,w,h,xm,ym,lx,ly){x.strokeStyle='#789';x.lineWidth=2;x.beginPath();x.moveTo(44,10);x.lineTo(44,h-26);x.lineTo(w-14,h-26);x.stroke();txt(x,lx,w-50,h-10,'11px Hind Siliguri','#456');txt(x,ly,26,18,'bold 10px Hind Siliguri','#456');}
+function b7draw(id,key,ym,ly){var x=ctxOf(id),t=+$('b7t').value,i,W=380,H=190;x.clearRect(0,0,W,H);b7axes(x,W,H,20,ym,'সময় t (s)',ly);
+  var X=function(tt){return 44+(W-60)*tt/20;},Y=function(v){return H-26-(H-40)*v/ym;};
+  x.strokeStyle='#cfd9e1';x.lineWidth=1;x.beginPath();x.moveTo(X(10),10);x.lineTo(X(10),H-26);x.stroke();
+  x.strokeStyle='#1f3a5f';x.lineWidth=3;x.beginPath();for(i=0;i<=40;i++){var tt=i/2,y=Y(b7calc(tt)[key]);if(i===0)x.moveTo(X(tt),y);else x.lineTo(X(tt),y);}x.stroke();
+  var c=b7calc(t);circ(x,0,X(t),Y(c[key]),6,'#e9a23b','#8a5a00',2);txt(x,'10 s',X(10),H-14,'10px Hind Siliguri','#c0392b');}
+DRAWS.push(function(){var t=+$('b7t').value;$('b7tv').textContent=bn(t);b7draw('b7v','v',210,'বেগ (m/s)');b7draw('b7s','s',3200,'সরণ (m)');var c=b7calc(t);
+  $('b7t2').innerHTML='t = '+bn(t)+' s: '+(t<=10?'বল কাজ করছে (100 N), a = 20 m/s²।':'<b>বল নেই</b> (a = 0), সমবেগ 200 m/s।')+'<br>বেগ = <b>'+f(c.v,0)+' m/s</b>, সরণ = <b>'+f(c.s,0)+' m</b>'+(t>=20?' (20 s-এ মোট 3000 m = 3 km)':'');});
+qgame('a7q','a7o','a7f2','a7sc',[
+ ['5 kg ভরের বস্তুতে 50 N বল প্রযুক্ত হলে ত্বরণ কত?','10 m/s²',['5 m/s²','250 m/s²','0.1 m/s²'],'a = F/m = 50/5 = 10।'],
+ ['বল দ্বিগুণ করলে (ভর একই) ত্বরণ কী হয়?','দ্বিগুণ',['অর্ধেক','একই','চার গুণ'],'a ∝ F।'],
+ ['ভর দ্বিগুণ করলে (বল একই) ত্বরণ কী হয়?','অর্ধেক',['দ্বিগুণ','একই','চার গুণ'],'a ∝ 1/m।'],
+ ['20 N বলে 4 kg ভর কত ত্বরণ পায়?','5 m/s²',['80 m/s²','0.2 m/s²','16 m/s²'],'a = 20/4 = 5।'],
+ ['1 N কী?','1 kg ভরে 1 m/s² ত্বরণ সৃষ্টিকারী বল',['1 kg ভরের ওজন','1 m দূরত্বে বল','1 s এ 1 kg বল'],'F = ma থেকে 1 N = 1 kg m/s²।'],
+ ['বলের মাত্রা কোনটি?','MLT⁻²',['MLT⁻¹','ML²T⁻²','ML⁻¹T²'],'F = ma = kg × m/s²।']]);
+
+/* ---------- ল্যাব ৮: মহাকর্ষ ---------- */
+var GK=6.67e-11,RE=6370;
+function g8show(){var a=+$('g8a').value,b=+$('g8b').value,r=+$('g8r').value;$('g8av').textContent=bn(a);$('g8bv').textContent=bn(b);$('g8rv').textContent=bn(r);
+  var F=GK*a*1000*b*1000/(r*r);
+  $('g8t').innerHTML='F = G m₁m₂ ÷ r²<br>= 6.67×10⁻¹¹ × '+bn(a*1000)+' × '+bn(b*1000)+' ÷ '+bn(r*r)+'<br><b>F = '+sci(F)+' N</b><br><small>বল খুব ছোট, কারণ G খুব ছোট। দুজনেই একে অপরকে সমান বলে টানে।</small>';}
+on(['g8a','g8b','g8r'],g8show);
+$('g8x1').onclick=function(){var e=$('g8a');e.value=Math.min(100,+e.value*2);g8show();};
+$('g8x2').onclick=function(){var e=$('g8r');e.value=Math.min(20,+e.value*2);g8show();};
+$('g8x0').onclick=function(){$('g8a').value=10;$('g8b').value=10;$('g8r').value=5;g8show();};
+DRAWS.push(function(){var x=ctxOf('g8c'),a=+$('g8a').value,b=+$('g8b').value,r=+$('g8r').value;x.clearRect(0,0,380,170);x.fillStyle='#0f1b33';x.fillRect(0,0,380,170);
+  var gap=40+r*10,r1=10+a*.2,r2=10+b*.2,cx=190,x1=cx-gap/2-r1*.5,x2=cx+gap/2+r2*.5,F=GK*a*1000*b*1000/(r*r),L=clamp(Math.log10(F*1e6+1)*14,6,70);
+  circ(x,0,x1,85,r1,'#3f8fd1','#cfe3ff',2);circ(x,0,x2,85,r2,'#e9a23b','#fff3d0',2);
+  arrow(x,x1+r1,85,x1+r1+L,85,'#ff6b6b',4);arrow(x,x2-r2,85,x2-r2-L,85,'#ff6b6b',4);
+  x.strokeStyle='#8fb2e8';x.setLineDash([3,4]);x.beginPath();x.moveTo(x1,138);x.lineTo(x2,138);x.stroke();x.setLineDash([]);txt(x,'r = '+bn(r)+' m',(x1+x2)/2,152,'bold 12px Hind Siliguri','#cfe3ff');
+  txt(x,'m₁',x1,85,'bold 12px Hind Siliguri','#fff');txt(x,'m₂',x2,85,'bold 12px Hind Siliguri','#3d2600');txt(x,'দুটি বলই সমান (তীর একই লম্বা)',190,16,'bold 12px Hind Siliguri','#cfe3ff');});
+g8show();
+function h8show(){var h=+$('h8').value;$('h8v').textContent=bn(h);var g=9.8/Math.pow(1+h/RE,2);
+  $('h8t').innerHTML='g′ = g ÷ (1 + r/R)²<br>r = '+bn(h)+' km, R = '+bn(RE)+' km<br><b>g′ = '+f(g,2)+' m/s²</b> (ভূপৃষ্ঠে 9.8)<br>'+(h>0?'g প্রায় একই, তবু স্পেস স্টেশনের যাত্রীরা <b>ভাসেন</b> কারণ তারা <b>মুক্তভাবে পড়ছেন</b> (free fall)। ওজন আছে, কিন্তু ওজন অনুভব হয় না।':'ভূপৃষ্ঠে: ওজন অনুভব হয়।');}
+on(['h8'],h8show);
+DRAWS.push(function(){var x=ctxOf('h8c'),h=+$('h8').value;x.clearRect(0,0,380,200);x.fillStyle='#0f1b33';x.fillRect(0,0,380,200);for(var i=0;i<25;i++)circ(x,0,(i*83)%380,(i*47)%200,1,'#fff',null);
+  circ(x,0,190,330,200,'#2b6cb0','#7fb9ff',3);circ(x,0,190,330,196,'#2f8f5b',null);
+  var y=130-h/5000*70,sx=190+Math.sin(FR*.03)*0;box(x,sx-14,y-8,28,14,'#ddd','#888');box(x,sx-30,y-5,14,8,'#3f8fd1','#fff');box(x,sx+16,y-5,14,8,'#3f8fd1','#fff');
+  arrow(x,sx,y+8,sx,y+8+34,'#ff6b6b',3);txt(x,'g′',sx+14,y+30,'bold 12px Hind Siliguri','#ffb3b3');txt(x,'স্পেস স্টেশন',sx+50,y-12,'bold 11px Hind Siliguri','#cfe3ff');txt(x,'পৃথিবী',190,192,'bold 11px Hind Siliguri','#fff');});
+h8show();
+qgame('g8q','g8o','g8f','g8sc',[
+ ['দুটি বস্তুর দূরত্ব দ্বিগুণ করলে মহাকর্ষ বল কত হয়?','চার ভাগের এক ভাগ',['অর্ধেক','দ্বিগুণ','চার গুণ'],'F ∝ 1/r²।'],
+ ['একটি বস্তুর ভর দ্বিগুণ করলে মহাকর্ষ বল?','দ্বিগুণ',['অর্ধেক','একই','চার গুণ'],'F ∝ m₁।'],
+ ['G-এর মান কত?','6.67 × 10⁻¹¹ N m² kg⁻²',['9.8 m/s²','6.67 × 10¹¹','3 × 10⁸ m/s'],'মহাকর্ষীয় ধ্রুবক।'],
+ ['স্পেস স্টেশনে মহাকাশচারীরা ভাসেন কেন?','তারা মুক্তভাবে পড়ছেন',['সেখানে g = 0','সেখানে বাতাস নেই','পৃথিবী টানে না'],'সেখানে g প্রায় 9.5 m/s², কিন্তু স্টেশন ও যাত্রী একসাথে পড়ছে, তাই ওজন অনুভব হয় না।'],
+ ['g = GM/R² সূত্রে R কী?','পৃথিবীর কেন্দ্র থেকে দূরত্ব',['পৃথিবীর ভর','বস্তুর ভর','পৃথিবীর ঘনত্ব'],'R হলো পৃথিবীর কেন্দ্র থেকে বস্তুর দূরত্ব।'],
+ ['উচ্চতা বাড়লে g-এর মান?','কমে',['বাড়ে','একই থাকে','শূন্য হয়'],'g′ = g ÷ (1 + r/R)²।']]);
+
+/* ---------- ল্যাব ৯: কপিকল ---------- */
+var K9={run:0,t:0};
+function k9mode(){return +$('k9m').value;}
+function k9labels(){var m=k9mode();$('k9mv').parentNode.firstChild.nodeValue=m===0?'m (টেবিলে): ':'m (মাঝে): ';$('k9bv').parentNode.firstChild.nodeValue=m===0?'M (ঝুলন্ত): ':'m₁ (বামে): ';$('k9cv').parentNode.firstChild.nodeValue='m₂ (ডানে): ';$('k9row').style.display=m===1?'flex':'none';}
+function k9calc(){var m=k9mode(),a=+$('k9a').value,b=+$('k9b').value,c=+$('k9c').value;
+  if(m===0)return {a:b*G/(a+b),T:a*b*G/(a+b)};
+  var acc=(c-b)*G/(b+c+a);return {a:acc,T1:b*(G+acc),T2:c*(G-acc)};}
+function k9info(){var m=k9mode(),a=+$('k9a').value,b=+$('k9b').value,c=+$('k9c').value,r=k9calc(),h;$('k9mv').textContent=bn(a);$('k9bv').textContent=bn(b);$('k9cv').textContent=bn(c);
+  if(m===0)h='<b>m-এর জন্য:</b> T = ma<br><b>M-এর জন্য:</b> Mg − T = Ma<br>দুটো মিলিয়ে <b>a = Mg ÷ (M + m) = '+f(r.a,2)+' m/s²</b><br>টান <b>T = '+f(r.T,1)+' N</b><br><small>M-এর ওজন Mg = '+f(b*G,1)+' N, কিন্তু T তার চেয়ে ছোট।</small>';
+  else h='<b>m₁:</b> T₁ − m₁g = m₁a<br><b>m:</b> T₂ − T₁ = ma<br><b>m₂:</b> m₂g − T₂ = m₂a<br><b>a = (m₂ − m₁)g ÷ (m₁ + m₂ + m) = '+f(r.a,2)+' m/s²</b><br>T₁ = <b>'+f(r.T1,1)+' N</b>, T₂ = <b>'+f(r.T2,1)+' N</b>'+(b===5&&c===10?'<br><small>বইয়ের m₁ = 5, m₂ = 10: a = 5g ÷ (m + 15)</small>':'')+(r.a<0?'<br><small>a ঋণাত্মক মানে বাম দিক ভারী, ডানে ওঠে।</small>':'');
+  $('k9t').innerHTML=h;}
+function k9reset(){K9.run=0;K9.t=0;k9info();}
+$('k9m').onchange=function(){if(k9mode()===0){$('k9a').value=5;$('k9b').value=5;}else{$('k9a').value=5;$('k9b').value=5;$('k9c').value=10;}k9labels();k9reset();};
+on(['k9a','k9b','k9c'],k9reset);$('k9go').onclick=function(){k9reset();K9.run=1;};$('k9rs').onclick=k9reset;
+DRAWS.push(function(){var x=ctxOf('k9c2'),m=k9mode(),r=k9calc(),a=r.a,d;x.clearRect(0,0,380,270);x.fillStyle='#f6f9fb';x.fillRect(0,0,380,270);
+  if(K9.run){K9.t+=1/60;}
+  d=.5*Math.abs(a)*K9.t*K9.t*14;var lim=90;if(d>lim){d=lim;K9.run=0;}var dd=d*Math.sign(a);
+  if(m===0){
+    box(x,20,70,210,12,'#b98b5e','#7a5a3a');box(x,60,70,12,150,'#999',null);
+    var bx=70+dd;box(x,bx-28+0,40,50,30,'#3f6fd1','#1f3a8a');txt(x,'m',bx-3,55,'bold 13px Hind Siliguri','#fff');
+    x.strokeStyle='#444';x.lineWidth=2;x.beginPath();x.moveTo(bx+22,55);x.lineTo(250,55);x.stroke();circ(x,0,250,64,9,'#ccc','#444',2);
+    var my=95+dd;x.beginPath();x.moveTo(259,64);x.lineTo(259,my);x.stroke();box(x,236,my,46,40,'#e9a23b','#8a5a00');txt(x,'M',259,my+20,'bold 14px Hind Siliguri','#3d2600');
+    arrow(x,bx,55,bx+34,55,RED,3);txt(x,'T',bx+20,44,'bold 12px Hind Siliguri',RED);arrow(x,259,my+40,259,my+78,'#2b6cb0',3);txt(x,'Mg',280,my+68,'bold 11px Hind Siliguri','#2b6cb0');
+  }else{
+    var y1=140-dd,y2=140+dd;
+    x.fillStyle='#8a99a6';x.fillRect(150,16,80,10);circ(x,0,190,34,12,'#ccc','#444',2);
+    var cx=190,half=24;x.strokeStyle='#444';x.lineWidth=2;
+    box(x,cx-100-26,y1,52,34,'#3f6fd1','#1f3a8a');txt(x,'m₁',cx-100,y1+17,'bold 13px Hind Siliguri','#fff');
+    box(x,cx+100-26,y2,52,46,'#e9a23b','#8a5a00');txt(x,'m₂',cx+100,y2+23,'bold 13px Hind Siliguri','#3d2600');
+    x.beginPath();x.moveTo(cx-100,y1);x.lineTo(cx-100,34);x.arc(cx,34,12,Math.PI,0);x.lineTo(cx+100,y2);x.stroke();
+    var midy=216-dd*.2;box(x,cx-24,midy,48,30,'#2a9d8f','#146a60');txt(x,'m',cx,midy+15,'bold 12px Hind Siliguri','#fff');
+    arrow(x,cx-100,y1,cx-100,y1-28,RED,3);txt(x,'T₁',cx-80,y1-18,'bold 12px Hind Siliguri',RED);arrow(x,cx+100,y2,cx+100,y2-28,RED,3);txt(x,'T₂',cx+120,y2-18,'bold 12px Hind Siliguri',RED);
+    txt(x,'(m মাঝে সুতায় যুক্ত ধরা হয়েছে)',190,262,'11px Hind Siliguri','#567');
+  }
+  txt(x,'t = '+f(K9.t,1)+' s',330,16,'bold 12px Hind Siliguri',NAVY);});
+k9labels();k9info();
+qgame('k9q','k9o','k9f','k9sc',[
+ ['টেবিলে m = 5 kg, ঝুলন্ত M = 5 kg হলে a কত? (g = 9.8)','4.9 m/s²',['9.8 m/s²','2.45 m/s²','0 m/s²'],'a = Mg/(M+m) = 5×9.8/10 = 4.9।'],
+ ['ওপরের প্রশ্নে সুতার টান T কত?','24.5 N',['49 N','5 N','9.8 N'],'T = ma = 5 × 4.9 = 24.5 N।'],
+ ['ঝুলন্ত M-এর জন্য নিউটনের দ্বিতীয় সূত্র কোনটি?','Mg − T = Ma',['T = Ma','Mg + T = Ma','T − Mg = 0'],'নিচে ওজন Mg, ওপরে টান T, ত্বরণ নিচের দিকে।'],
+ ['m₁ = 5 kg, m₂ = 10 kg, মাঝে m = 0 হলে a কত?','3.27 m/s²',['4.9 m/s²','9.8 m/s²','1.63 m/s²'],'a = (10−5)×9.8 ÷ 15 = 3.27।'],
+ ['একই সুতার সব জায়গায় টান কেমন?','সমান (হালকা সুতা ও মসৃণ কপিকলে)',['সবসময় ভিন্ন','শূন্য','ওজনের দ্বিগুণ'],'আদর্শ সুতায় টান সবখানে সমান। m মাঝে থাকলে T₁ ≠ T₂ হয়।']]);
+
+/* ---------- ল্যাব ১০: ক্রিয়া–প্রতিক্রিয়া ---------- */
+var T10={mode:0,run:0,t:0};
+function t10info(){var F=+$('t10f').value,pm=+$('t10pm').value,rm=+$('t10rm').value,h;$('t10fv').textContent=bn(F);$('t10pv').textContent=bn(pm);$('t10rv').textContent=bn(rm);
+  if(T10.mode===0){var ap=F/pm,ar=F/rm;h='তুমি পাথরকে <b>'+bn(F)+' N</b> বলে ঠেললে, পাথরও তোমাকে <b>'+bn(F)+' N</b> বলে বিপরীতে ঠেলল (ভিন্ন বস্তুর ওপর)।<br>পাথরের a = '+bn(F)+' ÷ '+bn(rm)+' = <b>'+f(ar,2)+' m/s²</b><br>তোমার a = '+bn(F)+' ÷ '+bn(pm)+' = <b>'+f(ap,2)+' m/s²</b> (উল্টো দিকে)<br>t = '+f(T10.t,1)+' s: তোমার বেগ '+f(ap*T10.t,2)+', পাথরের বেগ '+f(ar*T10.t,2)+' m/s<br><small>ভর কম যার, ত্বরণ বেশি তার।</small>';}
+  else h=+$('t10s').value?'<b>শক্ত মাটি:</b> তুমি পা দিয়ে মাটিকে পেছনে ঠেলছ, মাটিও তোমাকে সমান বলে সামনে ঠেলছে। তাই হাঁটা যায়।':'<b>পিচ্ছিল মেঝে:</b> পা মাটিকে জোরে ঠেলতে পারে না, পা পিছলে যায়। প্রতিক্রিয়া বল তৈরি হয় না, তাই সামনে এগোনো যায় না।';
+  $('t10t').innerHTML=h;}
+pills('t10p',function(k){T10.mode=k;T10.run=0;T10.t=0;$('t10a').style.display=k===0?'flex':'none';$('t10b').style.display=k===1?'flex':'none';t10info();});
+on(['t10f','t10pm','t10rm','t10s'],function(){T10.run=0;T10.t=0;t10info();});
+$('t10go').onclick=function(){T10.t=0;T10.run=1;};$('t10rs').onclick=function(){T10.run=0;T10.t=0;t10info();};
+DRAWS.push(function(){var x=ctxOf('t10c');x.clearRect(0,0,380,230);x.fillStyle='#eef6fb';x.fillRect(0,0,380,230);x.fillStyle='#bfcbd5';x.fillRect(0,180,380,14);
+  var F=+$('t10f').value,pm=+$('t10pm').value,rm=+$('t10rm').value;
+  if(T10.run){T10.t+=1/60;t10info();if(T10.t>=4)T10.run=0;}
+  if(T10.mode===0){var ap=F/pm,ar=F/rm,t=T10.t,dp=.5*ap*t*t*9,dr=.5*ar*t*t*9;
+    var px=170-dp,rx=210+dr,rw=34+rm*.3;person(x,px,172,'#2b6cb0');box(x,rx,180-rw,rw,rw,'#7b8794','#333');txt(x,bn(rm)+' kg',rx+rw/2,180-rw/2,'bold 11px Hind Siliguri','#fff');txt(x,bn(pm)+' kg',px,128,'bold 11px Hind Siliguri','#2b6cb0');
+    var L=10+F*.5;arrow(x,px+8,150,px+8+L,150,'#2a9d8f',4);txt(x,'তোমার বল',px+8+L/2,138,'bold 10px Hind Siliguri','#1d7a6f');arrow(x,rx,120,rx-L,120,RED,4);txt(x,'পাথরের প্রতিক্রিয়া',rx-L/2,108,'bold 10px Hind Siliguri',RED);}
+  else{var ok=+$('t10s').value,t=T10.t,wx=ok?80+t*50:140,phase=Math.sin(t*7);
+    person(x,wx,172,'#2b6cb0');var fx=wx+(ok?phase*8:-t*18%40+0);
+    x.fillStyle='#2b6cb0';x.fillRect(fx-8,174,16,6);
+    if(ok){arrow(x,wx-4,190,wx-44,190,'#2a9d8f',4);txt(x,'পা মাটিকে পেছনে',wx-28,206,'bold 10px Hind Siliguri','#1d7a6f');arrow(x,wx+4,150,wx+44,150,RED,4);txt(x,'মাটি সামনে ঠেলে',wx+40,138,'bold 10px Hind Siliguri',RED);}
+    else{x.fillStyle='rgba(120,180,230,.5)';x.fillRect(20,180,340,14);txt(x,'সাবান-পানি 🫧',190,215,'bold 11px Hind Siliguri','#2b6cb0');if(T10.run)txt(x,'😵 পিছলে যাচ্ছি!',wx,120,'bold 13px Hind Siliguri',RED);}}
+  });
+t10info();
+qgame('t10q','t10o','t10f2','t10sc',[
+ ['নিউটনের তৃতীয় সূত্রে ক্রিয়া ও প্রতিক্রিয়া বল কাটাকাটি হয় না কেন?','দুটি ভিন্ন বস্তুর ওপর কাজ করে',['একই বস্তুর ওপর কাজ করে','মান ভিন্ন','একই দিকে কাজ করে'],'কাটাকাটি হতো যদি দুটোই একই বস্তুর ওপর লাগত।'],
+ ['আপেল পৃথিবীতে পড়ে, পৃথিবী আপেলের দিকে ওঠে না কেন?','পৃথিবীর ভর বিপুল, ত্বরণ নগণ্য',['পৃথিবী টানে না','বল ভিন্ন','আপেলের বল বেশি'],'পৃথিবীর ত্বরণ (m/M)g, যা মাত্র ~1.6 × 10⁻²⁴ m/s² (1 kg-এর জন্য)।'],
+ ['50 kg-এর তুমি 100 kg পাথরকে 50 N-এ ঠেললে তোমার ত্বরণ কত?','1 m/s²',['0.5 m/s²','2 m/s²','0'],'a = 50/50 = 1।'],
+ ['ওপরের প্রশ্নে পাথরের ত্বরণ কত?','0.5 m/s²',['1 m/s²','2 m/s²','0'],'a = 50/100 = 0.5।'],
+ ['সাবান-পানির মেঝেতে হাঁটা কঠিন কেন?','মাটিকে জোরে ঠেলা যায় না',['মাধ্যাকর্ষণ বাড়ে','ভর কমে','জড়তা নেই'],'ঠেলতে না পারলে সামনে ঠেলার প্রতিক্রিয়া বলও তৈরি হয় না।']]);
+
+/* ---------- ল্যাব ১১: ঘর্ষণ ---------- */
+var MUS=[.01,.05,.5,.9],R11={run:0,x:0,v:0};
+function r11p(){var mu=MUS[+$('r11s').value],m=+$('r11m').value,N=m*G;return {mu:mu,m:m,N:N,fs:mu*N,fk:.8*mu*N};}
+function r11rng(){var p=r11p(),mx=Math.max(.5,Math.ceil(p.fs*1.6*2)/2),e=$('r11f');e.max=mx;e.step=mx/200;if(+e.value>mx)e.value=mx;}
+function r11info(){var p=r11p(),F=+$('r11f').value,h;$('r11mv').textContent=bn(p.m);$('r11fv').textContent=f(F,1);
+  h='N = mg = '+f(p.N,1)+' N<br>সর্বোচ্চ স্থিতি ঘর্ষণ fₛ = μₛN = <b>'+f(p.fs,2)+' N</b><br>গতি ঘর্ষণ fₖ = μₖN ≈ <b>'+f(p.fk,2)+' N</b><br>';
+  if(F<=p.fs)h+='F = '+f(F,1)+' N ≤ fₛ ⇒ ব্লক <b>স্থির</b>। ঘর্ষণ বল = '+f(F,1)+' N (প্রয়োগ বলের সমান ও বিপরীত)।';
+  else h+='F = '+f(F,1)+' N > fₛ ⇒ ব্লক <b>নড়ছে</b>। a = (F − fₖ) ÷ m = '+f((F-p.fk)/p.m,2)+' m/s²।';
+  $('r11t').innerHTML=h;}
+function r11reset(){R11.run=0;R11.x=0;R11.v=0;}
+on(['r11s','r11m'],function(){r11rng();r11reset();r11info();});
+$('r11f').oninput=function(){r11reset();r11info();};
+$('r11go').onclick=function(){r11reset();R11.run=1;};$('r11rs').onclick=function(){r11reset();};
+DRAWS.push(function(){var x=ctxOf('r11c'),g=ctxOf('r11g'),p=r11p(),F=+$('r11f').value;x.clearRect(0,0,380,170);x.fillStyle='#eef6fb';x.fillRect(0,0,380,170);x.fillStyle='#b98b5e';x.fillRect(0,120,380,12);
+  var moves=F>p.fs;if(R11.run&&moves){R11.v+=(F-p.fk)/p.m/60;R11.x+=R11.v*.6;if(R11.x>240)R11.run=0;}
+  var bx=50+R11.x,w=40+Math.min(p.m,100)*.35;box(x,bx,120-w*.7,w,w*.7,'#3f6fd1','#1f3a8a');txt(x,bn(p.m)+' kg',bx+w/2,120-w*.35,'bold 11px Hind Siliguri','#fff');
+  var fr=moves?p.fk:F;if(F>0)arrow(x,bx-4-F*3,120-w*.35,bx-4,120-w*.35,RED,4);if(fr>0.02)arrow(x,bx+w+4+fr*3,148,bx+w+4,148,'#2a9d8f',4);
+  txt(x,'F প্রয়োগ',60,30,'bold 12px Hind Siliguri',RED);txt(x,'ঘর্ষণ বল',320,30,'bold 12px Hind Siliguri','#1d7a6f');
+  g.clearRect(0,0,380,150);var mx=+$('r11f').max,ym=Math.max(p.fs*1.15,mx*.6),X=function(v){return 40+300*v/mx;},Y=function(v){return 125-100*v/ym;};
+  g.strokeStyle='#789';g.lineWidth=2;g.beginPath();g.moveTo(40,10);g.lineTo(40,125);g.lineTo(345,125);g.stroke();
+  g.strokeStyle='#1f3a5f';g.lineWidth=3;g.beginPath();g.moveTo(X(0),Y(0));g.lineTo(X(p.fs),Y(p.fs));g.lineTo(X(p.fs),Y(p.fk));g.lineTo(X(mx),Y(p.fk));g.stroke();
+  circ(g,0,X(F),Y(F<=p.fs?F:p.fk),6,'#e9a23b','#8a5a00',2);txt(g,'ঘর্ষণ বল f',70,10,'bold 11px Hind Siliguri','#456');txt(g,'প্রয়োগ বল F →',300,140,'bold 11px Hind Siliguri','#456');txt(g,'fₛ',X(p.fs),Y(p.fs)-10,'bold 11px Hind Siliguri','#c0392b');txt(g,'fₖ',X(p.fs)+16,Y(p.fk)-8,'bold 11px Hind Siliguri','#1d7a6f');});
+r11rng();r11info();
+qgame('r11q','r11o','r11f2','r11sc',[
+ ['ব্লক নড়তে শুরু করার পর টানা সহজ হয় কেন?','গতি ঘর্ষণ স্থিতি ঘর্ষণের চেয়ে কম',['ঘর্ষণ বাড়ে','ভর কমে','ওজন শূন্য হয়'],'fₖ = μₖN < fₛ(max) = μₛN।'],
+ ['স্থিতি ঘর্ষণের সর্বোচ্চ মান?','μₛN',['μₖN','mg ও μ-এর যোগফল','শূন্য'],'এই মান অতিক্রম করলে বস্তু নড়ে।'],
+ ['10 kg কাঠের টুকরোর μₛ = 0.01 হলে নড়াতে কত বল লাগে? (g = 9.8)','0.98 N',['9.8 N','98 N','0.1 N'],'0.01 × 10 × 9.8 = 0.98 N।'],
+ ['100 kg পাথরের জন্য (μₛ = 0.01) কত?','9.8 N',['0.98 N','98 N','0.098 N'],'0.01 × 100 × 9.8 = 9.8 N।'],
+ ['ঘর্ষণ বল প্রয়োগ বলের —','বিপরীত দিকে কাজ করে',['একই দিকে কাজ করে','লম্ব দিকে কাজ করে','কাজ করে না'],'ঘর্ষণ সবসময় সরণের চেষ্টার বিরোধিতা করে।'],
+ ['কোন ঘর্ষণ সবচেয়ে ছোট?','আবর্ত ঘর্ষণ',['স্থিতি ঘর্ষণ','গতি ঘর্ষণ','সবগুলো সমান'],'চাকা বা বল গড়ালে ঘর্ষণ কম, তাই চাকায় ভারী মাল টানা সহজ।']]);
+
+/* ---------- ল্যাব ১২: ঢালু তল ---------- */
+var MU12=[.4,.05,.9],I12={auto:0,slip:0,s:0,v:0};
+function i12mu(){return MU12[+$('i12s').value];}
+function i12info(){var th=+$('i12a').value,mu=i12mu(),h;$('i12v').textContent=bn(th);
+  h='ঢালের কোণ θ = '+f(th,1)+'°, tanθ = <b>'+f(Math.tan(th*Math.PI/180),3)+'</b><br>';
+  if(I12.slip)h+='<b style="color:#c0392b">বাক্স পিছলাতে শুরু করেছে!</b><br>এই কোণে tanθ = μₛ ⇒ <b>μₛ = '+f(Math.tan(I12.slipAng*Math.PI/180),2)+'</b> (θ = '+f(I12.slipAng,1)+'°)।';
+  else h+='বাক্স স্থির আছে। ঢাল ধীরে ধীরে বাড়াও।<br><small>নিয়ম: tanθ < μₛ হলে স্থির, tanθ > μₛ হলে পিছলে যায়।</small>';
+  $('i12t').innerHTML=h;}
+function i12reset(){I12.ang=0;I12.auto=0;I12.slip=0;I12.s=0;I12.v=0;$('i12a').value=0;i12info();}
+$('i12s').onchange=i12reset;$('i12rs').onclick=i12reset;
+$('i12a').oninput=function(){I12.auto=0;if(I12.slip&&+$('i12a').value<I12.slipAng-1){I12.slip=0;I12.s=0;I12.v=0;}i12info();};
+$('i12go').onclick=function(){I12.slip=0;I12.s=0;I12.v=0;I12.auto=1;if(+$('i12a').value>50)$('i12a').value=0;I12.ang=+$('i12a').value;};
+DRAWS.push(function(){var x=ctxOf('i12c'),mu=i12mu(),th=+$('i12a').value;
+  if(I12.auto&&!I12.slip){I12.ang=Math.min(60,(I12.ang||0)+.12);th=I12.ang;$('i12a').value=th;if(Math.tan(th*Math.PI/180)>mu){I12.slip=1;I12.slipAng=th;I12.auto=0;}}
+  if(!I12.slip&&Math.tan(th*Math.PI/180)>mu&&!I12.auto){I12.slip=1;I12.slipAng=th;}
+  if(I12.slip){var a=G*(Math.sin(th*Math.PI/180)-.8*mu*Math.cos(th*Math.PI/180));I12.v+=Math.max(a,0)/60;I12.s+=I12.v*4;}
+  i12info();x.clearRect(0,0,380,230);x.fillStyle='#eef6fb';x.fillRect(0,0,380,230);x.fillStyle='#8a99a6';x.fillRect(0,206,380,16);
+  var r=th*Math.PI/180,ox=40,oy=200,L=300;x.save();x.translate(ox,oy);x.rotate(-r);x.fillStyle='#3f6fd1';x.fillRect(0,-6,L,8);x.fillStyle='#fff';x.font='11px Hind Siliguri';
+  var sp=clamp(I12.s,0,L-70);box(x,L-80-sp,-6-24,44,24,'#e9a23b','#8a5a00');x.restore();
+  x.strokeStyle='#999';x.setLineDash([4,4]);x.beginPath();x.moveTo(ox,oy);x.lineTo(ox+L,oy);x.stroke();x.setLineDash([]);
+  x.strokeStyle='#e63946';x.lineWidth=2;x.beginPath();x.arc(ox,oy,56,-r,0);x.stroke();txt(x,'θ = '+f(th,1)+'°',ox+84,oy-12-r*14,'bold 12px Hind Siliguri','#c0392b');
+  txt(x,'বই',ox+20,oy+14,'bold 11px Hind Siliguri','#fff');txt(x,'ম্যাচ বাক্স',ox+L*.6,40,'bold 11px Hind Siliguri','#8a5a00');
+  txt(x,'পৃষ্ঠের μₛ ≈ '+bn(mu),300,20,'bold 12px Hind Siliguri',NAVY);});
+i12info();
+qgame('i12q','i12o','i12f','i12sc',[
+ ['ঢালু তলে বস্তু পিছলাতে শুরু করলে μₛ = ?','tan θ',['sin θ','cos θ','θ'],'mg sinθ = μₛ mg cosθ ⇒ μₛ = tanθ।'],
+ ['ঢাল বাড়ালে বস্তুর ওপর ঘর্ষণ বল কীভাবে বদলায় (পিছলানোর আগে)?','বাড়ে (mg sinθ এর সমান)',['কমে','একই থাকে','শূন্য'],'পিছলানোর আগে ঘর্ষণ = mg sinθ।'],
+ ['যে তলে বাক্স আগে পিছলায় তার μₛ?','কম',['বেশি','সমান','শূন্য'],'tanθ = μₛ, কম μₛ হলে কম কোণেই পিছলায়।'],
+ ['ঘর্ষণ কমাতে কী করা যায়?','তেল বা গ্রিজ দেওয়া',['তল অমসৃণ করা','চেপে ধরা','তল ঘষে খসখসে করা'],'লুব্রিক্যান্ট তল মসৃণ করে।'],
+ ['কাদায় আটকা গাড়ির চাকার নিচে খড়-পাথর দিই কেন?','ঘর্ষণ বাড়ানোর জন্য',['ঘর্ষণ কমানোর জন্য','ভর বাড়ানোর জন্য','গাড়ি ঠান্ডা করতে'],'চাকা কিছু ধরতে পারে না বলে ঘর্ষণ বাড়াতে হয়।']]);
+/* ---------- কুইজ ---------- */
+var QUIZ=[];
+function M(q,c,w,e,fix){QUIZ.push({q:q,o:[c].concat(w),a:0,e:e,fix:!!fix});}
+QUIZ.push({q:'নিউটনের প্রথম সূত্র থেকে কোন ধারণা পাওয়া যায়? (বইয়ের নমুনা প্রশ্ন ১)',o:['ত্বরণ','ভরবেগ','জড়তা','ঘর্ষণ'],a:2,fix:true,e:'প্রথম সূত্র জড়তার ধারণা দেয়। (বইয়ে উত্তরমালা নেই, এটি আমার নির্ণয়)'});
+QUIZ.push({q:'বলের মাত্রা কোনটি? (বইয়ের নমুনা প্রশ্ন ২)',o:['MLT⁻²','MLT⁻¹','ML²T⁻²','ML⁻¹T²'],a:0,fix:true,e:'F = ma = kg × m/s², তাই [F] = MLT⁻²।'});
+QUIZ.push({q:'ভরবেগের একক কোনটি? (বইয়ের নমুনা প্রশ্ন ৩)',o:['kg m s⁻²','kg m s⁻¹','N m','kg m² s⁻¹'],a:1,fix:true,e:'p = mv, একক kg × m/s = kg m s⁻¹।'});
+QUIZ.push({q:'5 kg ভরের বস্তুর ওপর 50 N বল কাজ করলে ত্বরণ কত? (বইয়ের নমুনা প্রশ্ন ৪)',o:['2 ms⁻²','5 ms⁻²','50 ms⁻²','10 ms⁻²'],a:3,fix:true,e:'a = F/m = 50/5 = 10 ms⁻²।'});
+QUIZ.push({q:'10 kg ভরের বস্তু 10 m/s বেগে চললে তার ভরবেগ কত? (বইয়ের নমুনা প্রশ্ন ৫)',o:['10 kg ms⁻¹','50 kg ms⁻¹','100 kg ms⁻¹','1000 kg ms⁻¹'],a:2,fix:true,e:'p = mv = 10 × 10 = 100 kg ms⁻¹।'});
+QUIZ.push({q:'একটি গাড়ির ওপর ডানে 800 N, বামে 50 N এবং নিচে ওজন 1960 N (তার সমান ওপরে প্রতিক্রিয়া) কাজ করলে লব্ধি বল কত? (বইয়ের নমুনা প্রশ্ন ৬)',o:['750 N','800 N','850 N','1960 N'],a:0,fix:true,e:'অনুভূমিক লব্ধি = 800 − 50 = 750 N (খাড়া বল কাটাকাটি হয়ে যায়)।'});
+M('1 N কী?','1 kg ভরে 1 m/s² ত্বরণ সৃষ্টিকারী বল',['1 kg ভরের ওজন','1 g ভরে 1 m/s² ত্বরণ','1 kg ভরের 1 m দূরত্ব'],'F = ma থেকে 1 N = 1 kg m/s²।');
+M('চার মৌলিক বলের মধ্যে সবচেয়ে শক্তিশালী কোনটি?','সবল নিউক্লীয় বল',['তড়িৎ চৌম্বক বল','মহাকর্ষ বল','দুর্বল নিউক্লীয় বল'],'এটি মহাকর্ষের 10⁴¹ গুণ।');
+M('কোন বল দুটির পাল্লা অসীম?','মহাকর্ষ ও তড়িৎ চৌম্বক',['সবল ও দুর্বল নিউক্লীয়','মহাকর্ষ ও দুর্বল নিউক্লীয়','তড়িৎ চৌম্বক ও সবল নিউক্লীয়'],'নিউক্লীয় বলগুলোর পাল্লা মাত্র 10⁻¹⁵ ও 10⁻¹⁸ m।');
+M('গাড়ি হঠাৎ চললে আমরা পেছনে হেলে পড়ি, কারণ —','স্থিতি জড়তা',['গতি জড়তা','ঘর্ষণ','মহাকর্ষ'],'শরীর স্থির থাকতে চায়।');
+M('নিউটনের তৃতীয় সূত্রের ক্রিয়া ও প্রতিক্রিয়া বল —','ভিন্ন বস্তুর ওপর কাজ করে',['একই বস্তুর ওপর কাজ করে','মানে ভিন্ন','একই দিকে কাজ করে'],'তাই এরা কাটাকাটি হয় না।');
+M('দুটি বস্তুর দূরত্ব দ্বিগুণ করলে মহাকর্ষ বল —','চার ভাগের এক ভাগ হয়',['অর্ধেক হয়','দ্বিগুণ হয়','একই থাকে'],'F ∝ 1/r²।');
+M('বেগ দ্বিগুণ হলে গতিশক্তি —','চার গুণ হয়',['দ্বিগুণ হয়','অর্ধেক হয','একই থাকে'],'KE = ½mv² ∝ v²।'.replace('অর্ধেক হয','অর্ধেক হয়'));
+M('সমান ভরের দুটি বস্তুর স্থিতিস্থাপক সংঘর্ষে —','তারা বেগ বিনিময় করে',['দুটোই থেমে যায়','বেগ একই থাকে','একটি থামে অন্যটির বেগ দ্বিগুণ হয়'],'m₁ = m₂ হলে v₁ = u₂, v₂ = u₁।');
+M('ভরবেগ কোন ধরনের রাশি?','ভেক্টর',['স্কেলার','দুটোই','কোনোটিই নয়'],'p = mv, বেগ ভেক্টর।');
+M('টেবিলে m ভর, সুতায় ঝুলন্ত M ভর (ঘর্ষণহীন) হলে ত্বরণ —','Mg ÷ (M + m)',['mg ÷ (M + m)','Mg ÷ m','g'],'M-এর জন্য Mg − T = Ma, m-এর জন্য T = ma।');
+M('স্থিতি ঘর্ষণের সর্বোচ্চ মান —','μₛN',['μₖN','mg','শূন্য'],'এই মান পার হলেই বস্তু নড়ে।');
+M('ঘর্ষণ বল প্রয়োগ বলের —','বিপরীত দিকে',['একই দিকে','লম্ব দিকে','কাজ করে না'],'ঘর্ষণ সরণের বিরোধিতা করে।');
+M('কোন ঘর্ষণ সবচেয়ে কম?','আবর্ত ঘর্ষণ',['স্থিতি ঘর্ষণ','গতি ঘর্ষণ','সব সমান'],'গড়িয়ে চললে ঘর্ষণ ছোট।');
+M('ঘর্ষণ কমানোর উপায় কোনটি?','লুব্রিক্যান্ট ব্যবহার',['তল অমসৃণ করা','তলে চাপ বাড়ানো','তল শুকনো রাখা'],'তেল, গ্রিজ ইত্যাদি তল মসৃণ করে।');
+M('মহাকাশচারীরা স্পেস স্টেশনে ভাসেন কারণ —','তারা মুক্তভাবে পড়ছেন',['সেখানে g = 0','সেখানে বাতাস নেই','পৃথিবীর আকর্ষণ নেই'],'সেখানে g প্রায় 9.5 m/s²।');
+M('ম্যাচ বাক্স ঢালু বইয়ে পিছলানো শুরু করলে μₛ = ?','tan θ',['sin θ','cos θ','θ'],'mg sinθ = μₛ mg cosθ।');
+M('20 N বলে 4 kg ভর কত ত্বরণ পায়?','5 m/s²',['80 m/s²','0.2 m/s²','16 m/s²'],'a = 20/4 = 5।');
+M('ফোটনের ভর নেই, তবু তার —','ভরবেগ আছে',['জড়তা বেশি','ওজন আছে','ঘর্ষণ আছে'],'ভরবেগ ভর ও বেগ থেকেও মৌলিক রাশি।');
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+/* ---------- সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন ---------- */
+var QA=[
+ {h:'📝 সৃজনশীল প্রশ্ন ১ (ফারুকের বাক্স)',items:[
+  ['<b>উদ্দীপক (সারসংক্ষেপ):</b> ফারুক 10 kg ভরের একটি বাক্সকে মেঝেতে টেনে নিচ্ছে। বাক্স ও মেঝের মাঝে ঘর্ষণ বল 1.5 N এবং বাক্সের ত্বরণ 0.8 m/s²। <small>(হুবহু উদ্দীপক বইয়ে দেখে নিও)</small><br><b>(ক)</b> সাম্য বল কী? (১)',
+   'কোনো বস্তুর ওপর একাধিক বল কাজ করা সত্ত্বেও যদি লব্ধি বল শূন্য হয় এবং বস্তুর ত্বরণ না হয়, তাহলে সেই বলগুলোকে সাম্য বল (balanced force) বলে।'],
+  ['<b>(খ)</b> ঘর্ষণ বল কেন সৃষ্টি হয়? ব্যাখ্যা করো। (২)',
+   'কোনো তলই সম্পূর্ণ মসৃণ নয়, অণুবীক্ষণ যন্ত্রে দেখলে সব তলেই উঁচু-নিচু খাঁজ থাকে। দুটি তল স্পর্শ করে একটি অন্যটির ওপর দিয়ে সরতে চাইলে এই খাঁজ ও উঁচু অংশগুলো একে অপরের সাথে আটকে যায়। এই বাধাই ঘর্ষণ বল। চাপ বাড়ালে আরও গভীরে আটকে ঘর্ষণ বাড়ে।'],
+  ['<b>(গ)</b> ফারুক বাক্সটিকে কত বলে টেনেছিল? (৩)',
+   'টানা বল F ডানে, ঘর্ষণ f = 1.5 N বামে।<br>লব্ধি বল = F − f = ma<br>F = ma + f = 10 × 0.8 + 1.5 = 8 + 1.5 = <b>9.5 N</b>'],
+  ['<b>(ঘ)</b> মেঝে ঘর্ষণহীন হলে ওই বলে বাক্সের ত্বরণ কী হতো? গাণিতিকভাবে বিশ্লেষণ করো। (৪)',
+   'ঘর্ষণহীন হলে লব্ধি বল = পুরো টান F = 9.5 N।<br>a′ = F ÷ m = 9.5 ÷ 10 = <b>0.95 m/s²</b>।<br>আগের ত্বরণ ছিল 0.8 m/s²। অর্থাৎ ত্বরণ 0.15 m/s² বেড়ে যেত, কারণ ঘর্ষণের বিপরীত বল (1.5 N) আর থাকত না।']
+ ]},
+ {h:'📝 সৃজনশীল প্রশ্ন ২ (গাড়ি ও ট্রাকের সংঘর্ষ)',items:[
+  ['<b>উদ্দীপক (সারসংক্ষেপ):</b> 1000 kg ভরের একটি গাড়ি স্থির অবস্থা থেকে 1000 N বলে 3 s চলে। ঘর্ষণ বল 200 N। 5 s পরে গাড়িটি 6 m/s বেগে বিপরীত দিক থেকে আসা 6000 kg ভরের ট্রাকের সাথে সংঘর্ষ করে। <small>(হুবহু উদ্দীপক বইয়ে দেখে নিও)</small><br><b>(ক)</b> ভরবেগের নিত্যতার সূত্রটি লেখো। (১)',
+   'বাইরে থেকে কোনো বল না থাকলে একটি বিচ্ছিন্ন সংঘর্ষে সংঘর্ষের আগে ও পরে বস্তুগুলোর মোট ভরবেগ সমান থাকে।'],
+  ['<b>(খ)</b> ভারী ট্রাকের জড়তা বেশি কেন? (২)',
+   'জড়তা ভরের ওপর নির্ভর করে, ভর যত বেশি জড়তা তত বেশি। ট্রাকের ভর অনেক বেশি, তাই তার গতির অবস্থা বদলানো কঠিন। ট্রাকের গতি বদলাতে বা থামাতে বেশি বল ও বেশি সময় লাগে।'],
+  ['<b>(গ)</b> সংঘর্ষের ঠিক আগে গাড়ির বেগ কত ছিল? (৩)',
+   '<b>অনুমান:</b> 3 s পরে বল সরানো হয়, তারপর শুধু ঘর্ষণ (200 N) বাকি 2 s গাড়ি ধীর করে। (প্রশ্নে স্পষ্ট নেই, এটি আমার অনুমান।)<br>প্রথম 3 s: লব্ধি = 1000 − 200 = 800 N, a = 800/1000 = 0.8 m/s², v = 0.8 × 3 = <b>2.4 m/s</b>।<br>পরের 2 s: মন্দন = 200/1000 = 0.2 m/s², v = 2.4 − 0.2 × 2 = <b>2.0 m/s</b>।<br>অতএব সংঘর্ষের আগে গাড়ির বেগ ≈ <b>2 m/s</b>।'],
+  ['<b>(ঘ)</b> সংঘর্ষে কোন যানটির বেশি ক্ষতি হবে? গাণিতিক যুক্তি দাও। (৪)',
+   'ধরি সংঘর্ষ স্থিতিস্থাপক। গাড়ির দিক ধনাত্মক: m₁ = 1000 kg, u₁ = 2 m/s; ট্রাক m₂ = 6000 kg, u₂ = −6 m/s।<br>v₁ = [(m₁ − m₂)u₁ + 2m₂u₂] ÷ (m₁ + m₂) = [(−5000)(2) + 2(6000)(−6)] ÷ 7000 = −82000/7000 ≈ <b>−11.71 m/s</b><br>v₂ = [(m₂ − m₁)u₂ + 2m₁u₁] ÷ (m₁ + m₂) = [(5000)(−6) + 2(1000)(2)] ÷ 7000 = −26000/7000 ≈ <b>−3.71 m/s</b><br>গাড়ির বেগ-পরিবর্তন = −11.71 − 2 ≈ <b>13.71 m/s</b><br>ট্রাকের বেগ-পরিবর্তন = −3.71 − (−6) ≈ <b>2.29 m/s</b><br>গাড়ির বেগ-পরিবর্তন অনেক বেশি, তাই <b>গাড়িটির বেশি ক্ষতি</b> হবে। কারণ ট্রাকের ভর (ও জড়তা) বেশি।<br><small>বাস্তবে সংঘর্ষ পুরো স্থিতিস্থাপক হয় না, এটি বইয়ের সূত্র অনুসারে হিসাব।</small>']
+ ]},
+ {h:'✍️ সংক্ষিপ্ত প্রশ্ন ও উত্তর',items:[
+  ['ভরবেগের সংরক্ষণশীলতা সূত্রটি ব্যাখ্যা করো। (বইয়ের প্রশ্ন ১)','বাইরে থেকে বল না থাকলে সংঘর্ষের আগের মোট ভরবেগ = পরের মোট ভরবেগ, যেমন m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂। এক বস্তুর ভরবেগ যতটুকু কমে, অন্যটির ততটুকু বাড়ে। উদাহরণ: বন্দুকের গুলি ছুটলে গুলি সামনে এবং বন্দুক পেছনে ধাক্কা দেয়।'],
+  ['সবল নিউক্লীয় বল ও দুর্বল নিউক্লীয় বলের পার্থক্য লেখো। (বইয়ের প্রশ্ন ২)','সবল নিউক্লীয় বল: সবচেয়ে শক্তিশালী (মহাকর্ষের 10⁴¹ গুণ), পাল্লা 10⁻¹⁵ m, প্রোটন-নিউট্রনকে নিউক্লিয়াসে আটকে রাখে।<br>দুর্বল নিউক্লীয় বল: তড়িৎ চৌম্বকের প্রায় ট্রিলিয়ন ভাগের এক ভাগ, পাল্লা 10⁻¹⁸ m, বিটা ক্ষয়ে ইলেকট্রন বের হওয়ার কারণ।'],
+  ['যানবাহনের টায়ারে খাঁজ কাটা থাকে কেন? (বইয়ের প্রশ্ন ৩)','খাঁজ থাকলে টায়ার ও রাস্তার মধ্যে ঘর্ষণ বাড়ে। ফলে চাকা রাস্তা ভালোভাবে আঁকড়ে ধরে, পিছলে যায় না, বিশেষ করে ভেজা রাস্তায়। এতে ব্রেক করা ও মোড় নেওয়া নিরাপদ হয়।'],
+  ['ব্রেক করলে গাড়ি থেমে যায় কেন? (বইয়ের প্রশ্ন ৪)','ব্রেক প্যাড চাকার সাথে ঘষা খায় এবং ঘর্ষণ বল চাকার গতির বিপরীতে কাজ করে। এই বিপরীতমুখী বল গাড়ির বেগ কমিয়ে (মন্দন) শেষে থামিয়ে দেয়। গতিশক্তি তাপে রূপান্তরিত হয়।'],
+  ['নিউটনের তিনটি গতিসূত্র লেখো। (আমার বানানো)','১) বল না থাকলে স্থির বস্তু স্থির এবং সমবেগে চলা বস্তু সমবেগে চলতে থাকবে।<br>২) ভরবেগের পরিবর্তনের হার প্রযুক্ত বলের সমানুপাতিক। F = ma।<br>৩) একটি বস্তু অন্য বস্তুর ওপর বল প্রয়োগ করলে সেও প্রথমটির ওপর সমান ও বিপরীত বল প্রয়োগ করে।'],
+  ['জড়তা কাকে বলে? কত প্রকার? (আমার বানানো)','যে ধর্মের কারণে স্থির বস্তু স্থির থাকতে চায় এবং গতিশীল বস্তু একই বেগে চলতে চায় তাকে জড়তা বলে। প্রকার: স্থিতি জড়তা ও গতি জড়তা। ভর বাড়লে জড়তা বাড়ে।'],
+  ['ভর ও ওজনের পার্থক্য কী? (আমার বানানো)','ভর: বস্তুতে পদার্থের পরিমাণ, স্কেলার, সর্বত্র একই, একক kg। ওজন: পৃথিবীর টান, W = mg, ভেক্টর, স্থানভেদে বদলায়, একক N।'],
+  ['মহাকর্ষ বলের সূত্রটি লেখো। (আমার বানানো)','দুটি বস্তুর মাঝের আকর্ষণ বল তাদের ভরের গুণফলের সমানুপাতিক এবং দূরত্বের বর্গের ব্যস্তানুপাতিক। F = G m₁m₂/r², G = 6.67 × 10⁻¹¹ N m² kg⁻²।'],
+  ['স্থিতি ঘর্ষণ ও গতি ঘর্ষণের পার্থক্য লেখো। (আমার বানানো)','স্থিতি ঘর্ষণ: বস্তু স্থির থাকলে কাজ করে, সর্বোচ্চ মান μₛN। গতি ঘর্ষণ: বস্তু চলতে থাকলে কাজ করে, fₖ = μₖN, সাধারণত স্থিতি ঘর্ষণের সর্বোচ্চ মানের চেয়ে কম।'],
+  ['ঘর্ষণ একটি প্রয়োজনীয় উপদ্রব, কেন? (আমার বানানো)','ঘর্ষণে তাপ তৈরি হয়ে শক্তি নষ্ট ও যন্ত্র ক্ষয় হয় (উপদ্রব)। কিন্তু ঘর্ষণ না থাকলে আমরা হাঁটতে, লিখতে, ব্রেক করতে বা গাড়ি চালাতে পারতাম না (প্রয়োজনীয়)।'],
+  ['ঘর্ষণ কমানো ও বাড়ানোর দুটি করে উপায় লেখো। (আমার বানানো)','কমানো: তেল/গ্রিজ ব্যবহার, চাকা বা বল বিয়ারিং ব্যবহার। বাড়ানো: টায়ারে খাঁজ কাটা, জুতার তলা খসখসে করা।'],
+  ['5 kg ভরের বস্তুতে 100 N বলে 10 s কাজ করলে শেষ বেগ ও সরণ কত? (বইয়ের উদাহরণ)','a = 100/5 = 20 m/s²। v = 20 × 10 = <b>200 m/s</b>। s = ½ × 20 × 10² = <b>1000 m</b>।'],
+  ['100 g টেনিস বল 10 m/s এ দেয়ালে লেগে ফিরলে ভরবেগের পরিবর্তন কত? (বইয়ের উদাহরণ)','Δp = mv − (−mv) = 2mv = 2 × 0.1 × 10 = <b>2 kg m/s</b>।']
+ ]}
+];
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+function frame(){FR++;for(var i=0;i<DRAWS.length;i++)DRAWS[i]();requestAnimationFrame(frame);}
+frame();
+
+</script>
+</body>
+</html>
