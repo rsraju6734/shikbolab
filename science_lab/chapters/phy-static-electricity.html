@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>স্থির বিদ্যুৎ (পদার্থবিজ্ঞান অধ্যায় ১০) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+small{color:#567}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/lab-boost.js?v=1"></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#physics">&larr; সব অধ্যায়</a>
+</header><div class="wrap">
+  <div class="crumb">⚛️ পদার্থবিজ্ঞান &rsaquo; দশম অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">⚡ স্থির বিদ্যুৎ (Static Electricity)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">⚛️ ল্যাব ১</a><a href="#lab2">🔌 ল্যাব ২</a><a href="#lab3">🧤 ল্যাব ৩</a><a href="#lab4">🧲 ল্যাব ৪</a><a href="#lab5">🪞 ল্যাব ৫</a><a href="#lab6">🧪 ল্যাব ৬</a><a href="#lab7">🧮 ল্যাব ৭</a><a href="#lab8">⚖️ ল্যাব ৮</a><a href="#lab9">🧿 ল্যাব ৯</a><a href="#lab10">🔋 ল্যাব ১০</a><a href="#lab11">🔌 ল্যাব ১১</a><a href="#lab12">🎡 ল্যাব ১২</a><a href="#lab13">⛈️ ল্যাব ১৩</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> আধান পাওয়ার কারণ ব্যাখ্যা করতে; ঘর্ষণ ও আবেশে চার্জ বোঝাতে; তড়িৎবীক্ষণ যন্ত্র ব্যবহার করতে; কুলম্বের সূত্রে বল হিসাব করতে; তড়িৎ ক্ষেত্র, বলরেখা ও বিভব বোঝাতে; ধারকের শক্তি বলতে; স্থির বিদ্যুতের ব্যবহার ও বজ্রপাত থেকে রক্ষার উপায় জানতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের ক্রম মেনে সহজ ভাষায় লেখা। বইয়ের "নমুনা প্রশ্ন"-এর উত্তরমালা নেই, তাই MCQ ও প্রশ্নের উত্তর আমি হিসাব করে ব্যাখ্যাসহ দিয়েছি। যেখানে আমার নিজের যোগ করা তথ্য আছে, সেখানে লিখে দিয়েছি।</div>
+
+    <h3>১০.১ আধান বা চার্জ ⭐⭐⭐</h3>
+    <ul>
+      <li>চিরুনি দিয়ে চুল আঁচড়ে কাগজ আকর্ষণ করা, শিশুর চুল খাড়া হওয়া আর বজ্রপাত, এই তিনটির মূলেই <b>চার্জ বা আধান</b>।</li>
+      <li>সবকিছু অণু-পরমাণু দিয়ে তৈরি। এখন পর্যন্ত 118টি মৌলের পরমাণু পাওয়া গেছে, এর মাঝে মাত্র 80টি স্থায়ী।</li>
+      <li>পরমাণুর কেন্দ্রে <b>নিউক্লিয়াস</b> (প্রোটন + নিউট্রন), বাইরে বিভিন্ন কক্ষপথে <b>ইলেকট্রন</b> বিচরণ করে।</li>
+      <li>প্রোটন <b>ধনাত্মক</b> (+1.6 × 10⁻¹⁹ C), ইলেকট্রন <b>ঋণাত্মক</b> (−1.6 × 10⁻¹⁹ C), নিউট্রনের কোনো চার্জ নেই। প্রোটন ও ইলেকট্রনের চার্জের মান সমান কিন্তু বিপরীত।</li>
+      <li>নিউক্লিয়াসে যতগুলো প্রোটন, বাইরে ঠিক ততগুলো ইলেকট্রন থাকে, তাই পরমাণু <b>চার্জ নিরপেক্ষ</b>।</li>
+      <li>সবচেয়ে সহজ পরমাণু হাইড্রোজেন (একটি প্রোটন, একটি ইলেকট্রন)। হিলিয়ামে দুটি প্রোটন, দুটি নিউট্রন, দুটি ইলেকট্রন।</li>
+      <li>বাইরের কক্ষপথের একটি ইলেকট্রন সরিয়ে নিলে পরমাণু <b>ধনাত্মক আহিত (আয়নিত)</b> হয়। ইলেকট্রন যুক্ত হলে <b>ঋণাত্মক আহিত</b> হয়।</li>
+      <li><b>বিদ্যুৎ সুপরিবাহী:</b> শেষ কক্ষপথে প্রায় মুক্ত ইলেকট্রন আছে, তাই সহজে চলাচল করে (ধাতু: সোনা, রুপা, তামা)। <b>অপরিবাহী:</b> মুক্ত ইলেকট্রন নেই (কাঠ, প্লাস্টিক, কাচ, রাবার)।</li>
+    </ul>
+
+    <h3>১০.২ ঘর্ষণে স্থির বিদ্যুৎ ⭐⭐⭐</h3>
+    <ul>
+      <li>কাচকে সিল্ক দিয়ে ঘষলে কাচ থেকে ইলেকট্রন সিল্কে যায়। <b>কাচ হয় পজিটিভ, সিল্ক নেগেটিভ</b>। কারণ ইলেকট্রনের জন্য কাচের চেয়ে সিল্কের আসক্তি বেশি।</li>
+      <li>প্লাস্টিককে ফ্লানেল দিয়ে ঘষলে ফ্লানেল থেকে ইলেকট্রন প্লাস্টিকে আসে। <b>প্লাস্টিক নেগেটিভ, ফ্লানেল পজিটিভ</b>।</li>
+      <li>ঝুলন্ত আহিত দণ্ডের কাছে আরেকটি আহিত দণ্ড আনলে: <b>একই ধরনের চার্জ বিকর্ষণ করে, ভিন্ন ধরনের চার্জ আকর্ষণ করে</b> (চিত্র ১০.০৩)।</li>
+      <li>মহাকর্ষ বলে শুধু আকর্ষণ, কারণ ভর এক রকম (ঋণাত্মক ভর নেই)। কিন্তু চার্জ দুই রকম, তাই তড়িৎ বল দুই রকম: আকর্ষণ ও বিকর্ষণ।</li>
+    </ul>
+
+    <h3>১০.৩ বৈদ্যুতিক আবেশ ⭐⭐⭐</h3>
+    <ul>
+      <li>চার্জহীন বস্তুর কাছে চার্জিত বস্তু আনলে চার্জহীন বস্তুতে চার্জ আলাদা হয়ে যায়, একে <b>আবেশ</b> বলে।</li>
+      <li>ধাতব গোলকের কাছে ধনাত্মক দণ্ড আনলে গোলকের কাছের দিকে ঋণাত্মক চার্জ আসে, দূরের দিকে ধনাত্মক। কাছের বিপরীত চার্জের আকর্ষণ বেশি, তাই দণ্ড ও গোলক পরস্পরকে আকর্ষণ করে (চিত্র ১০.০৪)।</li>
+      <li>চিরুনি কাগজকে আকর্ষণ করে আবেশের কারণে। কাগজ লেগে চিরুনির চার্জ পেয়ে গেলে একই চার্জ হয়ে বিকর্ষিত হয়ে ছিটকে পড়ে (চিত্র ১০.০৫)।</li>
+      <li>বাতাসে জলীয় বাষ্প থাকলে জমা চার্জ দ্রুত হারিয়ে যায়, তাই স্থির বিদ্যুতের পরীক্ষা শীতকালে বেশি ভালো হয়। (বইয়ের প্রশ্ন: বর্ষায় পরীক্ষা কাজ করে না কেন?)</li>
+      <li>উদাহরণ: একটি পজিটিভ আহিত কাচদণ্ড দিয়ে দুটি ধাতব গোলকে দুই রকম চার্জ তৈরি করা যায় (চিত্র ১০.০৬): গোলক দুটি পাশে রেখে দণ্ড কাছে এনে আলাদা করলে একটি নেগেটিভ, অন্যটি পজিটিভ হয়।</li>
+    </ul>
+    <h4>১০.৩.১ তড়িৎবীক্ষণ যন্ত্র ⭐⭐⭐</h4>
+    <ul>
+      <li>ধাতব চাকতি, ধাতব দণ্ড ও তার নিচে দুটি হালকা সোনার (বা অ্যালুমিনিয়ামের) পাত। কাচের বোতলের ভেতরে অপরিবাহী ছিপিতে রাখা।</li>
+      <li><b>চার্জ আহিতকরণ:</b> আহিত দণ্ড চাকতিতে ছোঁয়ালে চার্জ দণ্ড বেয়ে পাতে যায়, দুটি পাতে একই চার্জ, তাই <b>বিকর্ষণ করে ফাঁক হয়</b>।</li>
+      <li><b>চার্জের প্রকৃতি বের করা:</b> আগে চার্জ জানা যন্ত্র নিই (ধরো কাচ-সিল্কে পজিটিভ)। অজানা বস্তু কাছে আনলে ফাঁক <b>কমলে</b> বিপরীত (নেগেটিভ), <b>আরও বাড়লে</b> একই (পজিটিভ)।</li>
+      <li><b>চার্জের আবেশ:</b> না ছুঁয়ে কাছে আনলেই চাকতিতে বিপরীত চার্জ, পাতে একই চার্জ, ফলে পাত ফাঁক হয়।</li>
+    </ul>
+    <b>বজ্রপাতের ব্যাখ্যা (বইয়ের মতো):</b> মেঘে মেঘের ঘর্ষণে চার্জ আলাদা হয়। মেঘে বিপুল চার্জ জমলে নিচে বিপরীত চার্জের আবেশ হয়। এক সময় চার্জ বাতাস ভেদ করে মাটির দিকে ছুটে আসে, এটাই বজ্রপাত।
+
+    <h3>১০.৪ বৈদ্যুতিক বল (কুলম্বের সূত্র) ⭐⭐⭐</h3>
+    <ul>
+      <li>নিউটনের মহাকর্ষ সূত্র F = G m₁m₂/r²-এর অনুকরণে, কুলম্বের সূত্র: দুটি বিন্দু চার্জ q₁, q₂ যদি r দূরত্বে থাকে, তাদের মধ্যে বল: <b>F = k q₁q₂ / r²</b>।</li>
+      <li>k = <b>9 × 10⁹ Nm²/C²</b>। চার্জের একক <b>কুলম্ব (C)</b>, দূরত্বের একক মিটার, বলের একক নিউটন।</li>
+      <li>এক সেকেন্ডে এক অ্যাম্পিয়ার কারেন্ট প্রবাহিত হলে চার্জের পরিমাণ 1 C।</li>
+      <li>q₁, q₂ একই চিহ্নের হলে F ধনাত্মক (বিকর্ষণ)। একটি ধনাত্মক, অন্যটি ঋণাত্মক হলে F ঋণাত্মক, বলের দিক বদলায়, অর্থাৎ আকর্ষণ।</li>
+    </ul>
+    <b>উদাহরণ ১:</b> +1 C ও −1 C, 10 cm দূরে: F = 9 × 10⁹ × 1 × (−1) / (0.10)² = <b>−9 × 10¹¹ N</b> (আকর্ষণ)।<br>
+    <b>উদাহরণ ২ (হাইড্রোজেন পরমাণু):</b> প্রোটন +1.6 × 10⁻¹⁹ C, ইলেকট্রন −1.6 × 10⁻¹⁹ C, r = 0.5 × 10⁻⁸ m ➜ F = <b>−9.22 × 10⁻¹² N</b> (আকর্ষণ)।<br>
+    <b>উদাহরণ ৩:</b> +9 C ও +16 C চার্জ 1 m দূরে। তৃতীয় +q চার্জ কোথায় রাখলে কোনো বল অনুভব করবে না? +9C থেকে x দূরে: k·9q/x² = k·16q/(1−x)² ➜ 9(1−x)² = 16x² ➜ 7x² + 18x − 9 = 0 ➜ (7x−3)(x+3) = 0 ➜ x = 0.43 বা −3। x অবশ্যই 0 থেকে 1 এর ভেতরে, তাই <b>x = 0.43 m</b>।<br>
+    <b>উদাহরণ ৪ (পৃথিবী-চাঁদ):</b> মহাকর্ষ বল F_G = 1.98 × 10²⁰ N। একে কুলম্ব বল দিয়ে কমাতে হলে F_G = F_E। q = 5.69 × 10¹³ C, ইলেকট্রনের সংখ্যা n = 3.56 × 10³², ভর = 324 kg। অর্থাৎ পৃথিবী ও চাঁদে মাত্র 324 kg ইলেকট্রন রেখে দিলে চাঁদ কক্ষপথ থেকে ছুটে বেরিয়ে যাবে।
+
+    <h3>১০.৫ তড়িৎ ক্ষেত্র ⭐⭐⭐</h3>
+    <ul>
+      <li>একটি চার্জ q তার চারপাশে তড়িৎ ক্ষেত্র তৈরি করে। কোনো বিন্দুতে ক্ষেত্র প্রাবল্য: <b>E = k q / r²</b>।</li>
+      <li>এই ক্ষেত্রে অন্য চার্জ q আনলে সেটি বল অনুভব করে: <b>F = E q</b>, অর্থাৎ E = F/q। একক <b>N/C</b>।</li>
+      <li>F ভেক্টর, q স্কেলার, তাই <b>E ভেক্টর</b>।</li>
+      <li><b>বলরেখা</b> কাল্পনিক রেখা, মাইকেল ফ্যারাডে প্রথম আঁকেন। নিয়ম: (a) ধনাত্মক চার্জ থেকে বেরোয়, ঋণাত্মকে ঢোকে। স্পর্শকের দিক ক্ষেত্রের দিক। (b) চার্জ বেশি হলে রেখা বেশি। (c) রেখা কাছাকাছি থাকলে ক্ষেত্র বেশি। (d) একটি চার্জের বলরেখা অন্য বলরেখার ওপর দিয়ে যায় না।</li>
+      <li>বিপরীত চার্জে এক চার্জের বলরেখা অন্য চার্জে গিয়ে শেষ হয়, চার্জ দুটি একে অপরকে টানে। দুটি ধনাত্মক চার্জে রেখা একে অপরকে ঠেলে, মাঝখানে একটি বিন্দুতে ক্ষেত্রের মান শূন্য।</li>
+    </ul>
+    <b>উদাহরণ ৫:</b> 5 C চার্জের জন্য 10 m দূরে E = 9 × 10⁹ × 5 / 10² = <b>4.5 × 10⁸ N/C</b>।<br>
+    <b>উদাহরণ ৬:</b> 3 C চার্জ 10 N বল অনুভব করলে E = F/q = 10/3 = <b>3.33 N/C</b>।
+
+    <h3>১০.৬ তড়িৎ বিভব ⭐⭐⭐</h3>
+    <ul>
+      <li>অসীম দূরত্ব থেকে একটি অতি ক্ষুদ্র ধনাত্মক টেস্ট চার্জ q₀ কে সমবেগে q থেকে r দূরত্বে আনতে W কাজ করতে হয়। প্রতি একক চার্জে কাজই বিভব: <b>V = W/q₀</b>।</li>
+      <li>বিন্দু চার্জের জন্য: <b>V(r) = k q / r</b>। বিভব <b>স্কেলার</b> রাশি।</li>
+      <li>একক <b>ভোল্ট (V)</b>। অসীম থেকে 1 C ধনাত্মক আধান আনতে 1 J কাজ হলে ঐ বিন্দুর বিভব 1 V: <b>1 V = 1 J/C</b>।</li>
+    </ul>
+    <h4>১০.৬.১ বিভব পার্থক্য ⭐⭐</h4>
+    <ul>
+      <li>চার্জ প্রবাহিত হয় <b>বিভব পার্থক্যের</b> জন্য, বিভবের মানের জন্য নয়। বেশি বিভব থেকে কম বিভবের দিকে চার্জ যায়।</li>
+      <li>হাইভোল্টেজ তারে বসা কাকের বিভব তারের সমান, কোনো পার্থক্য নেই, তাই শক খায় না। হেলিকপ্টারে বসে খালি হাতে হাইভোল্টেজ তারে কাজ করা কর্মীদের ক্ষেত্রেও একই কথা।</li>
+      <li>পৃথিবীকে শূন্য বিভব ধরা হয়। ভারী বৈদ্যুতিক যন্ত্র ভূমির সাথে লাগানো (আর্থিং) থাকে, যাতে দুর্ঘটনায় প্রচুর চার্জ নিরাপদে মাটিতে চলে যায়।</li>
+    </ul>
+
+    <h3>১০.৭ ধারক ⭐⭐⭐</h3>
+    <ul>
+      <li>পরিবাহীর চার্জ দিলে তার বিভব কতটুকু বাড়বে, সেটি ধারকত্ব C-এর ওপর নির্ভর করে। বেশি ধারকত্ব হলে অনেক চার্জেও বিভব কম বাড়ে।</li>
+      <li>গোলাকার ধারকে চার্জ Q হলে <b>V = Q/C</b>। r ব্যাসার্ধের ধাতব গোলকের C = r/k।</li>
+      <li>ধারকত্বের একক <b>ফ্যারাড (F)</b>।</li>
+      <li>সবচেয়ে সহজ ধারক: দুটি সমান্তরাল ধাতব পাত পাশাপাশি। একটিতে ধনাত্মক, অন্যটিতে ঋণাত্মক চার্জ, মাঝে তড়িৎ ক্ষেত্র তৈরি হয় ও শক্তি সঞ্চিত থাকে।</li>
+      <li>সঞ্চিত শক্তি: <b>U = ½ C V²</b>।</li>
+    </ul>
+    <b>উদাহরণ ৭:</b> 20 µF ধারকে 10 V বিভব পার্থক্য দিলে শক্তি = ½ × 20 × 10⁻⁶ × 10² = 10⁻³ J = <b>1 mJ</b>।
+
+    <h3>১০.৮ স্থির বিদ্যুতের ব্যবহার ⭐⭐</h3>
+    <ul>
+      <li><b>ফটোকপি:</b> লেখার প্রতিচ্ছবি রোলারে ফেলে স্থির চার্জ তৈরি হয়। কালো কালি পাউডার চার্জের জায়গায় লেগে যায়, তারপর সাদা কাগজে বসিয়ে তাপ দিয়ে যুক্ত করা হয়।</li>
+      <li><b>ভ্যান ডি গ্রাফ মেশিন:</b> ঘুরন্ত অপরিবাহী বেল্টে চার্জ কণা স্প্রে করা হয়, বেল্ট চার্জ ধাতব গোলকের ভেতরে নেয়। চার্জ বেশি বিভব থেকে কম বিভবে যায়, গোলকের ভেতরে সব সময় সমান বিভব, তাই বাইরের পৃষ্ঠে চলে যায়। এভাবে অনেক উঁচু বিভব তৈরি করা যায়।</li>
+      <li><b>জ্বালানি ট্রাক:</b> চাকার সাথে রাস্তার ঘর্ষণে স্থির বিদ্যুৎ জমলে স্ফুলিঙ্গে বিস্ফোরণের ভয়। তাই ট্রাকের পেছনে ট্যাংক থেকে শিকল ঝুলিয়ে মাটিতে ঘষে চার্জ ছেড়ে দেওয়া হয়।</li>
+      <li><b>ইলেকট্রনিকস:</b> শীতপ্রধান দেশে বাতাস শুকনো, তাই স্থির বিদ্যুতে আইসি নষ্ট হতে পারে। তাই টেবিলের ওপরের অংশ ও কর্মীর হাতের স্ট্র্যাপ বিদ্যুৎ পরিবাহী পদার্থে ভূমির সাথে যুক্ত রাখা হয়।</li>
+      <li><b>বজ্রপাত ও বজ্রনিরোধক:</b> মেঘে ঘর্ষণে ইলেকট্রন আলাদা হয়, নিচের মেঘে ঋণাত্মক, উপরের মেঘে ধনাত্মক চার্জ জমে। বিপুল চার্জে বাতাস আয়নিত হয়ে চার্জ মাটিতে নেমে আসে। তখন বাতাসের তাপমাত্রা 20–30 হাজার °C হয়, নীলাভ সাদা আলোর ঝলকানি আর শকওয়েভের শব্দ হয়। আলো প্রায় সাথে সাথে আসে, শব্দ প্রতি 3 সেকেন্ডে প্রায় 1 কিলোমিটার যায়, তাই বজ্রের দূরত্ব আন্দাজ করা যায়। উঁচু বিল্ডিংয়ে মুখযুক্ত ধাতব শলাকা ও মোটা তার মাটির গভীরে পাঠানো হয়। শলাকার তীব্র ক্ষেত্রে বাতাস আয়নিত হয়ে মেঘের চার্জ নিষ্ক্রিয় হয়। বজ্র পড়লে সেই তার দিয়ে নিরাপদে মাটিতে চলে যায়।</li>
+      <li><b>স্থির বৈদ্যুতিক রং স্প্রে:</b> রঙের কণা চার্জযুক্ত হয়ে একে অপরকে বিকর্ষণ করে ছড়িয়ে পড়ে। যে জিনিস রং করা হবে তাকে বিপরীত বিভবে বা ভূমির সাথে যুক্ত করা হয়, তাই কণা আকর্ষিত হয়ে মসৃণ আস্তরণ তৈরি করে।</li>
+    </ul>
+    <div class="key">🧪 <b>অনুসন্ধান ১০.০১ (ঘর্ষণ ও আবেশ):</b> চিরুনি ও অ্যালুমিনিয়াম ফয়েলের ছোট বলে চিরুনি (শীতে চুল আঁচড়ে) কাছে আনো। অ্যালুমিনিয়াম ফয়েল পরিবাহী, তাই সামনের ভাগে ধনাত্মক চার্জ আবেশিত হয়, ফয়েল লাফিয়ে চিরুনিতে লেগে যায়। চার্জ ফয়েলে চলে যাওয়ায় আবার বিকর্ষিত হয়ে ছিটকে সরে যায়।</div>
+    <div class="key">🧠 <b>মনে রাখার ছক:</b><br>
+      • e = 1.6 × 10⁻¹⁹ C; k = 9 × 10⁹ Nm²/C²<br>
+      • একই চার্জ বিকর্ষণ, বিপরীত চার্জ আকর্ষণ<br>
+      • F = k q₁q₂/r² (N); E = kq/r² = F/q (N/C); V = kq/r (V)<br>
+      • বলরেখা: + থেকে − এ; ঘন মানে ক্ষেত্র বেশি<br>
+      • V = Q/C; U = ½CV² (J); C-এর একক F</div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>⚛️ ল্যাব 1: পরমাণু: প্রোটন, নিউট্রন ও ইলেকট্রন</h2>
+    <div class="say">👉 মাঝে নিউক্লিয়াস (লাল প্রোটন, ধূসর নিউট্রন), বাইরে ইলেকট্রন ঘুরছে। ইলেকট্রন কমালে পরমাণু ধনাত্মক আহিত, বাড়ালে ঋণাত্মক আহিত হয়।</div>
+<div class="pills" id="a1p"><button data-k="0" class="on">H হাইড্রোজেন</button><button data-k="1">He হিলিয়াম</button><button data-k="2">Li লিথিয়াম</button><button data-k="3">C কার্বন</button></div>
+    <div class="ctl"><label>ইলেকট্রন বাড়ানো (+) বা সরানো (−): <span id="a1kv"></span> টি</label><input type="range" id="a1k" min="-2" max="2" step="1" value="0"></div>
+    <div class="row"><div><canvas id="a1c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="a1t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="a1q"></div><div class="cls" id="a1o"></div><div class="fb" id="a1fb"></div><small id="a1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🔌 ল্যাব 2: পরিবাহী ও অপরিবাহী পদার্থ</h2>
+    <div class="say">👉 মাধ্যম বেছে নাও। ধাতুতে মুক্ত ইলেকট্রন অনেক, তাই সহজে ছোটাছুটি করে। কাঠ, প্লাস্টিক, কাচ, রাবারে মুক্ত ইলেকট্রন নেই, সব আবদ্ধ। এবার ঠেলা (বিভব) বাড়াও।</div>
+<div class="pills" id="c2p"><button data-k="0" class="on">🥇 সোনা</button><button data-k="1">🟠 তামা</button><button data-k="2">🪵 কাঠ</button><button data-k="3">🧴 প্লাস্টিক</button><button data-k="4">🪟 কাচ</button><button data-k="5">🔴 রাবার</button></div>
+    <div class="ctl"><label>ঠেলা (বিভব পার্থক্য): <span id="c2kv"></span> V</label><input type="range" id="c2k" min="0" max="10" step="1" value="0"></div>
+    <div class="row"><div><canvas id="c2c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="c2t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="c2q"></div><div class="cls" id="c2o"></div><div class="fb" id="c2fb"></div><small id="c2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🧤 ল্যাব 3: ঘর্ষণে স্থির বিদ্যুৎ তৈরি</h2>
+    <div class="say">👉 দুটি বস্তু ঘষলে ইলেকট্রন এক বস্তু থেকে অন্যটিতে চলে যায়। যে বস্তু ইলেকট্রন হারায় সে ধনাত্মক হয়, যে পায় সে ঋণাত্মক হয়। ঘষার পরিমাণ বাড়াও।</div>
+<div class="pills" id="r3p"><button data-k="0" class="on">🪟 কাচ + সিল্ক</button><button data-k="1">🧴 প্লাস্টিক + ফ্লানেল</button></div>
+    <div class="ctl"><label>ঘষার পরিমাণ: <span id="r3kv"></span> %</label><input type="range" id="r3k" min="0" max="100" step="1" value="0"></div>
+    <div class="row"><div><canvas id="r3c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="r3t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="r3q"></div><div class="cls" id="r3o"></div><div class="fb" id="r3fb"></div><small id="r3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🧲 ল্যাব 4: সমান চার্জ ঠেলে, বিপরীত চার্জ টানে</h2>
+    <div class="say">👉 দুটি আহিত দণ্ড কাছাকাছি আনো। একই ধরনের চার্জ একে অপরকে বিকর্ষণ করে, ভিন্ন ধরনের চার্জ আকর্ষণ করে। দূরত্ব কমালে বল বাড়ে।</div>
+<div class="pills" id="t4p"><button data-k="0" class="on">+ ও +</button><button data-k="1">− ও −</button><button data-k="2">+ ও −</button></div>
+    <div class="ctl"><label>দূরত্ব: <span id="t4kv"></span> cm</label><input type="range" id="t4k" min="2" max="20" step="1" value="8"></div>
+    <div class="row"><div><canvas id="t4c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="t4t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="t4q"></div><div class="cls" id="t4o"></div><div class="fb" id="t4fb"></div><small id="t4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🪞 ল্যাব 5: আবেশ: ছোঁয়া ছাড়াই চার্জ আলাদা হয়</h2>
+    <div class="say">👉 চার্জহীন ধাতব গোলকের কাছে আহিত দণ্ড আনো। গোলকে বিপরীত চার্জ কাছে জমে, একই চার্জ দূরে সরে যায়। কাগজের টুকরোও এভাবে চিরুনির দিকে লাফায়।</div>
+<div class="pills" id="i5p"><button data-k="0" class="on">🔴 ধনাত্মক দণ্ড</button><button data-k="1">🔵 ঋণাত্মক দণ্ড</button></div>
+    <div class="ctl"><label>দণ্ড কত কাছে: <span id="i5kv"></span> %</label><input type="range" id="i5k" min="0" max="100" step="1" value="10"></div>
+    <div class="row"><div><canvas id="i5c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="i5t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="i5q"></div><div class="cls" id="i5o"></div><div class="fb" id="i5fb"></div><small id="i5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🧪 ল্যাব 6: তড়িৎবীক্ষণ (ইলেকট্রোস্কোপ)</h2>
+    <div class="say">👉 দণ্ড চাকতিতে ছোঁয়ালে পাত দুটি ফাঁক হয়, কাছে আনলেও (আবেশ) হয়। তৃতীয় মোডে যন্ত্রটি আগে থেকেই ঋণাত্মক আহিত। অজানা দণ্ড কাছে আনলে ফাঁক বাড়লে একই চার্জ, কমলে বিপরীত।</div>
+<div class="pills" id="e6p"><button data-k="0" class="on">✋ ছোঁয়ানো</button><button data-k="1">👋 কাছে আনা (আবেশ)</button><button data-k="2">🔎 চার্জের প্রকৃতি জানা</button></div>
+<div class="pills" id="e6s"><button data-k="0" class="on">🔴 দণ্ড ধনাত্মক</button><button data-k="1">🔵 দণ্ড ঋণাত্মক</button></div>
+    <div class="ctl"><label>চার্জ / নৈকট্য: <span id="e6kv"></span> %</label><input type="range" id="e6k" min="0" max="100" step="1" value="40"></div>
+    <div class="row"><div><canvas id="e6c" class="w" width="380" height="320"></canvas></div><div class="grow"><div class="tlinfo" id="e6t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="e6q"></div><div class="cls" id="e6o"></div><div class="fb" id="e6fb"></div><small id="e6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>🧮 ল্যাব 7: কুলম্বের সূত্র F = k q₁q₂ / r²</h2>
+    <div class="say">👉 দুই বিন্দু চার্জের মান ও দূরত্ব বদলাও। মান গুণ করলে বল গুণ হয়, দূরত্ব দ্বিগুণ করলে বল চার ভাগের এক ভাগ হয়। চিহ্ন ভিন্ন হলে আকর্ষণ।</div>
+    <div class="ctl"><label>q₁: <span id="k7av"></span> µC</label><input type="range" id="k7a" min="-10" max="10" step="1" value="5"><label>q₂: <span id="k7bv"></span> µC</label><input type="range" id="k7b" min="-10" max="10" step="1" value="-5"><label>দূরত্ব r: <span id="k7rv"></span> cm</label><input type="range" id="k7r" min="10" max="100" step="1" value="40"></div>
+    <div class="row"><div><canvas id="k7c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="k7t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="k7q"></div><div class="cls" id="k7o"></div><div class="fb" id="k7fb"></div><small id="k7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>⚖️ ল্যাব 8: তৃতীয় চার্জ কোথায় বল অনুভব করে না?</h2>
+    <div class="say">👉 বইয়ের উদাহরণ: +9 C ও +16 C চার্জ 1 m দূরে। মাঝে +q চার্জ কোথায় রাখলে দুই দিকের ঠেলা সমান হয়ে বল শূন্য হবে? স্লাইডার সরিয়ে খোঁজো।</div>
+    <div class="ctl"><label>+9C থেকে x: <span id="b8kv"></span> cm</label><input type="range" id="b8k" min="5" max="95" step="1" value="20"></div>
+    <div class="row"><div><canvas id="b8c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="b8t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="b8q"></div><div class="cls" id="b8o"></div><div class="fb" id="b8fb"></div><small id="b8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>🧿 ল্যাব 9: তড়িৎ বলরেখা</h2>
+    <div class="say">👉 বলরেখা ধনাত্মক চার্জ থেকে বেরোয়, ঋণাত্মক চার্জে ঢোকে। রেখা যেখানে ঘন, সেখানে ক্ষেত্র তীব্র। দুই চার্জ বেছে নিয়ে দেখো রেখা কেমন হয়।</div>
+<div class="pills" id="f9p"><button data-k="0" class="on">➕ একটি ধনাত্মক</button><button data-k="1">➖ একটি ঋণাত্মক</button><button data-k="2">➕➖ বিপরীত</button><button data-k="3">➕➕ সমান</button><button data-k="4">🔶 ঋণাত্মক দ্বিগুণ</button></div>
+<p class="note" style="margin:6px 0 0;font-size:13px">(শেষ অপশনে ধনাত্মক q আর ঋণাত্মক −2q, বইয়ের ১০.১৩ চিত্রের মতো)</p>
+    <div class="row"><div><canvas id="f9c" class="w" width="380" height="320"></canvas></div><div class="grow"><div class="tlinfo" id="f9t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="f9q"></div><div class="cls" id="f9o"></div><div class="fb" id="f9fb"></div><small id="f9sc"></small>
+  </section>
+
+  <section class="panel" id="lab10">
+    <h2>🔋 ল্যাব 10: তড়িৎ বিভব V = kq / r</h2>
+    <div class="say">👉 চার্জ আর দূরত্ব বদলাও। কাছে গেলে বিভব বাড়ে। বিভব পার্থক্যই চার্জকে চালায়। 1 V মানে 1 C চার্জ আনতে 1 J কাজ লাগে।</div>
+    <div class="ctl"><label>চার্জ q: <span id="v10av"></span> µC</label><input type="range" id="v10a" min="-10" max="10" step="1" value="5"><label>দূরত্ব r: <span id="v10rv"></span> cm</label><input type="range" id="v10r" min="5" max="100" step="1" value="30"></div>
+    <div class="row"><div><canvas id="v10c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="v10t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="v10q"></div><div class="cls" id="v10o"></div><div class="fb" id="v10fb"></div><small id="v10sc"></small>
+  </section>
+
+  <section class="panel" id="lab11">
+    <h2>🔌 ল্যাব 11: ধারকে শক্তি সঞ্চয় U = ½CV²</h2>
+    <div class="say">👉 ধারক দুটি ধাতব পাতের তৈরি। ক্যাপাসিট্যান্স ও ভোল্টেজ বদলাও, দেখো কতটুকু চার্জ ও শক্তি জমা হয়। বইয়ের উদাহরণ: 20 µF, 10 V ➜ 1 mJ।</div>
+    <div class="ctl"><label>ধারকত্ব C: <span id="d11av"></span> µF</label><input type="range" id="d11a" min="1" max="100" step="1" value="20"><label>ভোল্টেজ V: <span id="d11vv"></span> V</label><input type="range" id="d11v" min="1" max="20" step="1" value="10"></div>
+    <div class="row"><div><canvas id="d11c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="d11t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="d11q"></div><div class="cls" id="d11o"></div><div class="fb" id="d11fb"></div><small id="d11sc"></small>
+  </section>
+
+  <section class="panel" id="lab12">
+    <h2>🎡 ল্যাব 12: ভ্যান ডি গ্রাফ মেশিন</h2>
+    <div class="say">👉 ঘুরন্ত রাবারের বেল্ট নিচ থেকে চার্জ তুলে ধাতব গোলকের ভেতরে পৌঁছে দেয়। চার্জ গোলকের বাইরের পৃষ্ঠে জমে, তাই বিভব ক্রমশ বাড়ে। বেল্টের গতি বাড়াও।</div>
+    <div class="ctl"><label>বেল্টের গতি: <span id="g12kv"></span> </label><input type="range" id="g12k" min="0" max="10" step="1" value="5"></div>
+    <div class="btnrow"><button class="btn" id="g12r">🔄 চার্জ খালি করো</button></div>
+    <div class="row"><div><canvas id="g12c" class="w" width="380" height="320"></canvas></div><div class="grow"><div class="tlinfo" id="g12t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="g12q"></div><div class="cls" id="g12o"></div><div class="fb" id="g12fb"></div><small id="g12sc"></small>
+  </section>
+
+  <section class="panel" id="lab13">
+    <h2>⛈️ ল্যাব 13: বজ্রপাত ও বজ্রনিরোধক</h2>
+    <div class="say">👉 মেঘে চার্জ জমতে জমতে এক সময় বাতাস ভেদ করে মাটিতে নেমে আসে, এটাই বজ্রপাত। বজ্রনিরোধক শলাকা থাকলে বিদ্যুৎ নিরাপদে মাটিতে চলে যায়। আলোর ঝলকের পর শব্দ শুনতে সময় লাগে।</div>
+<div class="pills" id="z13p"><button data-k="0" class="on">🏢 বজ্রনিরোধক ছাড়া</button><button data-k="1">🏢⚡ বজ্রনিরোধক সহ</button></div>
+    <div class="ctl"><label>মেঘে চার্জ জমার হার: <span id="z13kv"></span> </label><input type="range" id="z13k" min="1" max="10" step="1" value="5"><label>বজ্রপাত কত দূরে: <span id="z13dv"></span> km</label><input type="range" id="z13d" min="1" max="10" step="1" value="3"></div>
+    <div class="row"><div><canvas id="z13c" class="w" width="380" height="320"></canvas></div><div class="grow"><div class="tlinfo" id="z13t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="z13q"></div><div class="cls" id="z13o"></div><div class="fb" id="z13fb"></div><small id="z13sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। বইয়ের নমুনা প্রশ্নের উত্তরমালা নেই, তাই উত্তরগুলো আমার হিসাব করা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; স্থির বিদ্যুৎ (পদার্থবিজ্ঞান অধ্যায় ১০)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+function opts(correct,wrongs){var seen={},a=[{t:correct,ok:1}];seen[correct]=1;wrongs.forEach(function(w){if(!seen[w]){seen[w]=1;a.push({t:w,ok:0});}});return shuffle(a);}
+function arrow(x,x1,y1,x2,y2,col,lw){var a=Math.atan2(y2-y1,x2-x1);x.strokeStyle=col;x.fillStyle=col;x.lineWidth=lw||3;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-11*Math.cos(a-.4),y2-11*Math.sin(a-.4));x.lineTo(x2-11*Math.cos(a+.4),y2-11*Math.sin(a+.4));x.closePath();x.fill();}
+function person(x,px,py,col){circ(x,0,px,py-22,6,col,null);x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(px,py-16);x.lineTo(px,py-4);x.moveTo(px-6,py-11);x.lineTo(px+6,py-11);x.moveTo(px,py-4);x.lineTo(px-5,py+6);x.moveTo(px,py-4);x.lineTo(px+5,py+6);x.stroke();}
+/* ---------- সাধারণ সহায়ক ---------- */
+function pills(id,fn){$(id).onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var all=$(id).querySelectorAll('button'),i;for(i=0;i<all.length;i++)all[i].classList.toggle('on',all[i]===b);fn(+b.getAttribute('data-k'));};}
+function sci(x){if(!(x>0))return bn(0);var e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);if(+m.toFixed(2)>=10){m/=10;e++;}return bn(parseFloat(m.toFixed(2)))+' × ১০'+(e<0?'⁻':'')+sup(Math.abs(e));}
+function brow(label,val,max,col,txtv){return '<div class="bar"><div class="bl">'+label+'</div><div class="bt"><div class="bf" style="width:'+clamp(val/max*100,1,100)+'%;background:'+col+'"></div></div><b style="min-width:80px;font-size:14px;color:#1f3a5f">'+(txtv||'')+'</b></div>';}
+function on(ids,fn){ids.forEach(function(i){$(i).oninput=fn;$(i).onchange=fn;});}
+var G=9.8;
+function box(x,px,py,w,h,fill,stroke){x.fillStyle=fill;x.fillRect(px,py,w,h);if(stroke){x.strokeStyle=stroke;x.lineWidth=2;x.strokeRect(px,py,w,h);}}
+function wheel(x,px,py,r){circ(x,0,px,py,r,'#333',null);circ(x,0,px,py,r*.4,'#bbb',null);}
+
+
+/* ---------- সুন্দর আঁকার সহায়ক (নতুন) ---------- */
+function shade(c,a){var h=hx(c),o='#';for(var i=0;i<3;i++){var v=clamp(Math.round(h[i]+a),0,255).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function grad(x,px,py,w,h,c1,c2){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1);g.addColorStop(1,c2);x.fillStyle=g;x.fillRect(px,py,w,h);}
+function ball(x,px,py,r,col){var g=x.createRadialGradient(px-r*.35,py-r*.35,r*.08,px,py,r);g.addColorStop(0,'#ffffff');g.addColorStop(.3,col);g.addColorStop(1,shade(col,-55));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();}
+function rr(x,px,py,w,h,r){r=Math.min(r,w/2,h/2);x.beginPath();x.moveTo(px+r,py);x.lineTo(px+w-r,py);x.quadraticCurveTo(px+w,py,px+w,py+r);x.lineTo(px+w,py+h-r);x.quadraticCurveTo(px+w,py+h,px+w-r,py+h);x.lineTo(px+r,py+h);x.quadraticCurveTo(px,py+h,px,py+h-r);x.lineTo(px,py+r);x.quadraticCurveTo(px,py,px+r,py);x.closePath();}
+function tag(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.lineJoin='round';x.lineWidth=4;x.strokeStyle='rgba(255,255,255,.92)';x.strokeText(s,px,py);x.fillStyle=col||NAVY;x.fillText(s,px,py);}
+function wave(x,px,py,w,h,t,c1,c2,amp){amp=amp===undefined?2.5:amp;var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1||'rgba(86,176,240,.88)');g.addColorStop(1,c2||'rgba(22,84,172,.96)');x.fillStyle=g;x.beginPath();x.moveTo(px,py+h);x.lineTo(px,py);var i;for(i=0;i<=w;i+=4)x.lineTo(px+i,py+Math.sin(i/13+t*.05)*amp);x.lineTo(px+w,py+h);x.closePath();x.fill();x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=1.6;x.beginPath();for(i=0;i<=w;i+=4){var yy=py+Math.sin(i/13+t*.05)*amp;if(i===0)x.moveTo(px,yy);else x.lineTo(px+i,yy);}x.stroke();}
+function bubs(x,px,py,w,h,n,t){for(var i=0;i<n;i++){var u=((t*.004*(0.6+rp(i,0,.8))+rp(i+50,0,1))%1),bx=px+rp(i,6,w-6)+Math.sin(t*.04+i)*3,by=py+h-u*h,r=1.5+rp(i+9,0,2.2);if(by<py+4)continue;x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=1.2;x.beginPath();x.arc(bx,by,r,0,7);x.stroke();}}
+function glassBox(x,px,py,w,h){x.strokeStyle='#5b7389';x.lineWidth=3;x.beginPath();x.moveTo(px,py);x.lineTo(px,py+h);x.lineTo(px+w,py+h);x.lineTo(px+w,py);x.stroke();x.fillStyle='rgba(255,255,255,.18)';x.fillRect(px+4,py+4,5,h-8);}
+function sun(x,px,py,r,t){x.save();x.translate(px,py);x.rotate(t*.004);x.strokeStyle='rgba(255,196,60,.7)';x.lineWidth=3;for(var i=0;i<12;i++){x.rotate(Math.PI/6);x.beginPath();x.moveTo(r+4,0);x.lineTo(r+11,0);x.stroke();}x.restore();ball(x,px,py,r,'#ffc83d');}
+function cloud(x,px,py,s,col){x.fillStyle=col||'rgba(255,255,255,.95)';[[0,0,14],[16,-6,17],[34,0,14],[17,6,15]].forEach(function(c){x.beginPath();x.arc(px+c[0]*s,py+c[1]*s,c[2]*s,0,7);x.fill();});}
+function dial(x,cx,cy,r,frac,txtv,col){x.strokeStyle='#dfe7ee';x.lineWidth=9;x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*2.2);x.stroke();x.strokeStyle=col||'#2a9d8f';x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*(.8+1.4*clamp(frac,0,1)));x.stroke();var a=Math.PI*(.8+1.4*clamp(frac,0,1));x.strokeStyle=NAVY;x.lineWidth=3;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a)*(r-6),cy+Math.sin(a)*(r-6));x.stroke();circ(x,0,cx,cy,4,NAVY,null);if(txtv)tag(x,txtv,cx,cy+r*.62,NAVY,12);}
+function sand(x,px,py,w,h){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,'#eccb8a');g.addColorStop(1,'#c99a55');x.fillStyle=g;x.fillRect(px,py,w,h);}
+function atom(x,px,py,r,col,t){ball(x,px,py,r,col);}
+function fmtN(v){if(Math.abs(v)>=1000)return bn(Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g,','));return bn(parseFloat(v.toFixed(2)));}
+
+function tagd(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=4;x.fillStyle=col||'#fff';x.fillText(s,px,py);x.restore();}
+
+
+var DT=.02,TKL=performance.now();
+DRAWS.push(function(){var n=performance.now();DT=Math.min(.05,(n-TKL)/1000);TKL=n;});
+function hm(a,b,t){var A=hx(a),B=hx(b),o='#';t=clamp(t,0,1);for(var i=0;i<3;i++){var v=Math.round(lerp(A[i],B[i],t)).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function ln(x,x1,y1,x2,y2,col,lw,dash){x.strokeStyle=col;x.lineWidth=lw||2;if(dash)x.setLineDash(dash);x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();if(dash)x.setLineDash([]);}
+function DEG(a){return a*Math.PI/180;}
+function sgn(v){return v>0?'+':(v<0?'−':'');}
+function pm(x,s,px,py,r,col){x.strokeStyle=col||'#fff';x.lineWidth=Math.max(1.5,r/4);x.beginPath();x.moveTo(px-r*.6,py);x.lineTo(px+r*.6,py);if(s>0){x.moveTo(px,py-r*.6);x.lineTo(px,py+r*.6);}x.stroke();}
+function chBall(x,px,py,r,s,lbl){var c=s>0?'#e5484d':(s<0?'#3b82f6':'#b0bcc8');ball(x,px,py,r,c);if(s)pm(x,s,px,py,r*.8,'#fff');if(lbl)tag(x,lbl,px,py+r+12,'#1f3a5f',11);}
+function eBall(x,px,py,r){ball(x,px,py,r,'#3b82f6');pm(x,-1,px,py,r*.8,'#fff');}
+function pBall(x,px,py,r){ball(x,px,py,r,'#e5484d');pm(x,1,px,py,r*.8,'#fff');}
+var CH=1.6;
+
+/* ===== ল্যাব ১: পরমাণু ===== */
+var A1={m:0,t:0,D:[['H','হাইড্রোজেন',1,0],['He','হিলিয়াম',2,2],['Li','লিথিয়াম',3,4],['C','কার্বন',6,6]]};
+pills('a1p',function(k){A1.m=k;a1info();});on(['a1k'],a1info);
+function a1e(){var a=A1.D[A1.m],d=+$('a1k').value;return {Z:a[2],N:a[3],e:Math.max(0,a[2]+d),d:d,a:a};}
+function a1info(){var c=a1e(),net=c.Z-c.e,dd=+$('a1k').value;$('a1kv').textContent=sgn(dd)+bn(Math.abs(dd));
+  $('a1t').innerHTML='<b>'+c.a[0]+' ('+c.a[1]+')</b>: প্রোটন '+bn(c.Z)+', নিউট্রন '+bn(c.N)+', ইলেকট্রন '+bn(c.e)+'<br>মোট চার্জ = ('+bn(c.Z)+' − '+bn(c.e)+') × 1.6 × 10⁻¹⁹ C = <b>'+(net>0?'+':(net<0?'−':''))+f(Math.abs(net)*CH,1)+' × 10⁻¹⁹ C</b><br>'+(net===0?'<b style="color:#1d7a6f">পরমাণু চার্জ নিরপেক্ষ (প্রোটন = ইলেকট্রন)</b>':(net>0?'<b style="color:#e5484d">ইলেকট্রন কমে গেছে ➜ ধনাত্মক আহিত (আয়ন)</b>':'<b style="color:#3b82f6">ইলেকট্রন বেড়েছে ➜ ঋণাত্মক আহিত (আয়ন)</b>'))+'<br><small>প্রোটনের চার্জ +1.6 × 10⁻¹⁹ C, ইলেকট্রনের −1.6 × 10⁻¹⁹ C, নিউট্রনের কোনো চার্জ নেই। বইয়ের মডেল: হাইড্রোজেনে একটি প্রোটন ও একটি ইলেকট্রন, হিলিয়ামে দুটি প্রোটন, দুটি নিউট্রন, দুটি ইলেকট্রন। লিথিয়াম ও কার্বনের নিউট্রনের সংখ্যা আমি যোগ করেছি। ছবির কক্ষপথ সরল।</small>';}
+DRAWS.push(function(){var x=ctxOf('a1c'),c=a1e(),cx=190,cy=150,i,t;A1.t+=DT;grad(x,0,0,380,300,'#101a33','#1c2b52');
+  [[60,2],[100,8]].forEach(function(s){x.strokeStyle='rgba(180,200,255,.35)';x.lineWidth=1.5;x.beginPath();x.arc(cx,cy,s[0],0,7);x.stroke();});
+  var n=c.Z+c.N,k;for(i=0;i<n;i++){var a=i*2.4,r=7*Math.sqrt(i+.5)*(n>1?1:0);var px=cx+Math.cos(a)*r,py=cy+Math.sin(a)*r;if(i<c.Z)pBall(x,px,py,8);else ball(x,px,py,8,'#9aa5b1');}
+  tagd(x,'নিউক্লিয়াস',cx,cy+34,'#fff',12);
+  var e1=Math.min(2,c.e),e2=Math.max(0,c.e-2),sh=[[60,e1,1],[100,e2,-.7]];
+  sh.forEach(function(s){for(k=0;k<s[1];k++){var an=A1.t*s[2]*1.3+k*2*Math.PI/s[1];eBall(x,cx+Math.cos(an)*s[0],cy+Math.sin(an)*s[0],8);}});
+  var net=c.Z-c.e;tagd(x,net===0?'নিরপেক্ষ':(net>0?'ধনাত্মক আয়ন '+sgn(net)+bn(Math.abs(net)):'ঋণাত্মক আয়ন −'+bn(Math.abs(net))),cx,24,net>0?'#ff8f8f':(net<0?'#8fb8ff':'#9fe3d1'),15);
+  pBall(x,28,278,7);tagd(x,'প্রোটন (+)',42,278,'#fff',11,'left');eBall(x,150,278,7);tagd(x,'ইলেকট্রন (−)',164,278,'#fff',11,'left');ball(x,270,278,7,'#9aa5b1');tagd(x,'নিউট্রন',284,278,'#fff',11,'left');
+  });
+a1info();
+qgame('a1q','a1o','a1fb','a1sc',[
+ ['প্রোটনের চার্জ কেমন?','ধনাত্মক (+1.6 × 10⁻¹⁹ C)',['ঋণাত্মক','শূন্য','+1.6 × 10⁻⁹ C'],'ইলেকট্রনের চার্জ ঠিক একই মানের কিন্তু ঋণাত্মক।'],
+ ['পরমাণু সাধারণত নিরপেক্ষ কেন?','প্রোটন ও ইলেকট্রনের সংখ্যা সমান বলে',['নিউট্রন থাকে বলে','ইলেকট্রন নেই বলে','প্রোটন নেই বলে'],'সমান ও বিপরীত চার্জ কাটাকাটি হয়ে যায়।'],
+ ['পরমাণু একটি ইলেকট্রন হারালে কী হয়?','ধনাত্মক আহিত হয়',['ঋণাত্মক আহিত হয়','নিরপেক্ষ থাকে','নিউট্রন হয়ে যায়'],'প্রোটন সংখ্যা তখন ইলেকট্রনের চেয়ে বেশি।'],
+ ['কোন কণার চার্জ নেই?','নিউট্রন',['প্রোটন','ইলেকট্রন','কোনোটিই না'],'নিউট্রন চার্জবিহীন।'],
+ ['সবচেয়ে সহজ পরমাণু কোনটি?','হাইড্রোজেন',['হিলিয়াম','লিথিয়াম','কার্বন'],'নিউক্লিয়াসে শুধু একটি প্রোটন, বাইরে একটি ইলেকট্রন।']]);
+
+/* ===== ল্যাব ২: পরিবাহী ও অপরিবাহী ===== */
+var C2={m:0,E:[],t:0,M:[['সোনা',1],['তামা',1],['কাঠ',0],['প্লাস্টিক',0],['কাচ',0],['রাবার',0]]};
+function c2init(){C2.E=[];var n=C2.M[C2.m][1]?16:0;for(var i=0;i<n;i++)C2.E.push({x:50+Math.random()*280,y:70+Math.random()*130,vx:(Math.random()-.5)*40,vy:(Math.random()-.5)*40});}
+pills('c2p',function(k){C2.m=k;c2init();c2info();});on(['c2k'],c2info);c2init();
+function c2info(){var v=+$('c2k').value,m=C2.M[C2.m];$('c2kv').textContent=bn(v);
+  $('c2t').innerHTML='<b>'+m[0]+'</b> ➜ '+(m[1]?'<b style="color:#1d7a6f">বিদ্যুৎ সুপরিবাহী</b>: প্রচুর মুক্ত ইলেকট্রন আছে। '+(v>0?'ঠেলা দিলে ইলেকট্রনগুলো সবাই ডান দিকে সরে যাচ্ছে, তাই বিদ্যুৎ প্রবাহিত হচ্ছে।':'ঠেলা নেই, তাই ইলেকট্রন এলোমেলো ছোটাছুটি করছে।'):'<b style="color:#c0392b">বিদ্যুৎ অপরিবাহী</b>: মুক্ত ইলেকট্রন নেই, সব শক্তভাবে আবদ্ধ। ঠেলা দিলেও প্রবাহ হয় না।')+'<br><small>বইয়ে: ধাতব পদার্থ (সোনা, রুপা, তামা) পরিবাহী। কাঠ, প্লাস্টিক, কাচ, রাবার অপরিবাহী। কখনো কখনো শেষ কক্ষপথে একটি-দুটি ইলেকট্রন প্রায় মুক্ত থাকে, সেগুলোই পরিবাহী পদার্থে ছোটাছুটি করে। ছবিতে ইলেকট্রনের সংখ্যা ও গতি সরলীকরণ।</small>';}
+DRAWS.push(function(){var x=ctxOf('c2c'),v=+$('c2k').value,m=C2.M[C2.m],i,j;C2.t+=DT;grad(x,0,0,380,300,'#f3f6fa','#dfe7f0');
+  x.fillStyle=m[1]?'#fff3cf':'#e8e0d6';rr(x,30,52,320,160,12);x.fill();x.strokeStyle='#8a7a5a';x.lineWidth=2;x.stroke();
+  for(i=0;i<6;i++)for(j=0;j<3;j++){var ax=70+i*50,ay=90+j*50;ball(x,ax,ay,13,m[1]?'#d9a21b':'#9aa5b1');pm(x,1,ax,ay,10,'#fff');
+    if(!m[1]){var w=Math.sin(C2.t*8+i*2+j)*2;eBall(x,ax+13+w,ay-8,4);}}
+  C2.E.forEach(function(e){e.vx+=(Math.random()-.5)*60*DT;e.vy+=(Math.random()-.5)*60*DT;var sp=Math.sqrt(e.vx*e.vx+e.vy*e.vy);if(sp>45){e.vx*=45/sp;e.vy*=45/sp;}
+    e.x+=(e.vx+v*7)*DT;e.y+=e.vy*DT;if(e.x>340)e.x=40;if(e.x<40)e.x=340;if(e.y<62)e.vy=Math.abs(e.vy);if(e.y>202)e.vy=-Math.abs(e.vy);eBall(x,e.x,e.y,5);});
+  var on_=m[1]&&v>0,gl=on_?clamp(v/10,.2,1):0;x.fillStyle='rgba(255,230,80,'+(.15+gl*.6)+')';x.beginPath();x.arc(190,252,26+gl*8,0,7);x.fill();x.fillStyle=on_?'#ffd23f':'#d5d9de';x.beginPath();x.arc(190,252,16,0,7);x.fill();x.strokeStyle='#6b7d8e';x.lineWidth=2;x.stroke();
+  tag(x,on_?'💡 বিদ্যুৎ চলছে':'বিদ্যুৎ চলছে না',270,262,on_?'#1d7a6f':'#c0392b',13);tag(x,m[0],190,36,'#1f3a5f',15);tag(x,'ঠেলা ➜ '+bn(v)+' V',70,262,'#6b7d8e',12);
+  });
+c2info();
+qgame('c2q','c2o','c2fb','c2sc',[
+ ['কোনটি বিদ্যুৎ পরিবাহী?','তামা',['কাঠ','রাবার','কাচ'],'ধাতব পদার্থ পরিবাহী।'],
+ ['বিদ্যুৎ অপরিবাহী কোনটি?','প্লাস্টিক',['সোনা','রুপা','তামা'],'কাঠ, প্লাস্টিক, কাচ, রাবার অপরিবাহী।'],
+ ['পরিবাহীতে প্রবাহ হওয়ার কারণ কী?','মুক্ত ইলেকট্রন আছে',['প্রোটন ছোটে','নিউট্রন ছোটে','তাপ আছে'],'মুক্ত ইলেকট্রন সহজে ছোটাছুটি করতে পারে।'],
+ ['অপরিবাহীতে ইলেকট্রন কেমন?','শক্তভাবে আবদ্ধ',['সম্পূর্ণ মুক্ত','নেই','প্রোটনের চেয়ে বেশি'],'ছোটাছুটি করার মতো মুক্ত ইলেকট্রন নেই।'],
+ ['ধাতব পরিবাহীতে কোন কণা চলাচল করে?','ইলেকট্রন',['প্রোটন','পুরো পরমাণু','নিউট্রন'],'প্রোটন নিউক্লিয়াসে আটকে থাকে।']]);
+
+/* ===== ল্যাব ৩: ঘর্ষণ ===== */
+var R3={m:0,t:0};
+pills('r3p',function(k){R3.m=k;r3info();});on(['r3k'],r3info);
+function r3n(){return Math.round(+$('r3k').value/100*8);}
+function r3info(){var n=r3n(),v=+$('r3k').value;$('r3kv').textContent=bn(v);var P=[['কাচ','সিল্ক'],['ফ্লানেল','প্লাস্টিক']][R3.m];
+  $('r3t').innerHTML=P[0]+' থেকে '+bn(n)+'টি ইলেকট্রন '+P[1]+'-এ গেছে ➜ <b style="color:#e5484d">'+P[0]+' ধনাত্মক</b>, <b style="color:#3b82f6">'+P[1]+' ঋণাত্মক</b> আহিত।<br><small>বইয়ে: কাচকে সিল্ক দিয়ে ঘষলে কাচ থেকে ইলেকট্রন সিল্কে যায়, কাচ পজিটিভ, সিল্ক নেগেটিভ। প্লাস্টিককে ফ্লানেল দিয়ে ঘষলে ফ্লানেল থেকে ইলেকট্রন প্লাস্টিকে যায়, প্লাস্টিক নেগেটিভ। কারণ ইলেকট্রনের জন্য সিল্ক (বা প্লাস্টিক) এর আসক্তি বেশি।</small>';}
+DRAWS.push(function(){var x=ctxOf('r3c'),n=r3n(),am=+$('r3k').value/100,i;R3.t+=DT;grad(x,0,0,380,300,'#f4f7fb','#e2e9f2');
+  var gl=R3.m===0,names=gl?['কাচ','সিল্ক']:['প্লাস্টিক','ফ্লানেল'],cols=gl?['#bfe3f7','#f2c94c']:['#f4a6c0','#b98ad9'],rub=Math.sin(R3.t*7)*am*26;
+  var donorA=gl;/* A=রড; donor ধনাত্মক */
+  rr(x,30,120,150,40,8);x.fillStyle=cols[0];x.fill();x.strokeStyle='#5b7389';x.lineWidth=2;x.stroke();
+  var bx=200+rub;rr(x,bx,110,140,60,18);x.fillStyle=cols[1];x.fill();x.strokeStyle='#5b7389';x.stroke();
+  tag(x,names[0],105,100,'#1f3a5f',13);tag(x,names[1],bx+70,190,'#1f3a5f',13);
+  var da=donorA?[105,140]:[bx+70,140],ac=donorA?[bx+70,140]:[105,140];
+  for(i=0;i<8;i++){var on=i<n;var px=50+i*17,py=148;
+    if(donorA){if(on)pm(x,1,px,py+(i%2)*8-4,6,'#e5484d');}
+    else{if(on)pm(x,-1,px,py+(i%2)*8-4,6,'#3b82f6');}}
+  for(i=0;i<n;i++){var ph=((R3.t*.6+i/Math.max(1,n))%1),sx=donorA?105+(i%4)*15-20:bx+40+(i%4)*15,tx=donorA?bx+30+(i%4)*15:105+(i%4)*15-20;var qx=lerp(sx,tx,ph),qy=lerp(140,140,ph)-Math.sin(ph*Math.PI)*45;eBall(x,qx,qy,5);}
+  tagd(x,'',0,0,'#000',1);
+  var nA=donorA?n:-n,nB=-nA;
+  if(n>0){tag(x,donorA?'ধনাত্মক ('+bn(n)+'টি ইলেকট্রন গেছে)':'ঋণাত্মক (+'+bn(n)+'টি ইলেকট্রন)',105,70,donorA?'#e5484d':'#3b82f6',12);tag(x,donorA?'ঋণাত্মক (+'+bn(n)+'টি ইলেকট্রন)':'ধনাত্মক ('+bn(n)+'টি ইলেকট্রন গেছে)',bx+70,230,donorA?'#3b82f6':'#e5484d',12);}
+  else tag(x,'ঘষো (স্লাইডার বাড়াও)',190,50,'#6b7d8e',13);
+  tag(x,'ইলেকট্রন ডোনার ➜ গ্রহীতা',190,280,'#6b7d8e',11);
+  });
+r3info();
+qgame('r3q','r3o','r3fb','r3sc',[
+ ['কাচের দণ্ডকে সিল্ক দিয়ে ঘষলে কাচ কী চার্জ পায়?','ধনাত্মক',['ঋণাত্মক','কোনো চার্জ না','প্রথমে ধনাত্মক পরে ঋণাত্মক'],'কাচ থেকে ইলেকট্রন সিল্কে চলে যায়।'],
+ ['প্লাস্টিককে ফ্লানেল দিয়ে ঘষলে প্লাস্টিক কী চার্জ পায়?','ঋণাত্মক',['ধনাত্মক','কোনো না','প্রোটন পায়'],'ফ্লানেল থেকে ইলেকট্রন প্লাস্টিকে আসে।'],
+ ['ঘর্ষণে আসলে কোন কণা এক বস্তু থেকে অন্য বস্তুতে যায়?','ইলেকট্রন',['প্রোটন','নিউট্রন','পরমাণু'],'প্রোটন নিউক্লিয়াসে আটকে থাকে।'],
+ ['যে বস্তু ইলেকট্রন হারায় সে কেমন হয়?','ধনাত্মক আহিত',['ঋণাত্মক আহিত','নিরপেক্ষ','চুম্বক'],'প্রোটন বেশি থাকে।'],
+ ['শীতকালে চিরুনি দিয়ে চুল আঁচড়ালে চিরুনিতে কী চার্জ জমে?','নেগেটিভ',['পজিটিভ','শূন্য','কখনো না'],'বইয়ে আছে: চিরুনিতে নেগেটিভ স্থির বিদ্যুৎ জমে।']]);
+
+/* ===== ল্যাব ৪: আকর্ষণ ও বিকর্ষণ ===== */
+var T4={m:0,t:0,S:[[1,1],[-1,-1],[1,-1]]};
+pills('t4p',function(k){T4.m=k;t4info();});on(['t4k'],t4info);
+function t4info(){var d=+$('t4k').value,s=T4.S[T4.m],same=s[0]*s[1]>0;$('t4kv').textContent=bn(d);
+  $('t4t').innerHTML=(same?'<b style="color:#e9822b">একই ধরনের চার্জ ➜ বিকর্ষণ (ঠেলে দূরে সরায়)</b>':'<b style="color:#1d7a6f">ভিন্ন ধরনের চার্জ ➜ আকর্ষণ (কাছে টানে)</b>')+'<br>দূরত্ব '+bn(d)+' cm ➜ দূরত্ব অর্ধেক করলে বল ৪ গুণ, দ্বিগুণ করলে বল ১/৪ গুণ হয়।<br><small>বইয়ের ১০.০৩ চিত্র: ঝুলন্ত দণ্ডের কাছে আরেকটি আহিত দণ্ড আনলে একই চার্জ বিকর্ষণ করে, ভিন্ন চার্জ আকর্ষণ করে। মহাকর্ষ শুধু আকর্ষণ করে, কারণ ভর এক রকম; কিন্তু চার্জ দুই রকম, তাই বল দুই রকম।</small>';}
+DRAWS.push(function(){var x=ctxOf('t4c'),d=+$('t4k').value,s=T4.S[T4.m],same=s[0]*s[1]>0,i;T4.t+=DT;grad(x,0,0,380,300,'#f4f7fb','#e2e9f2');
+  var gap=d*9,cx=190,y=150,ph=Math.sin(T4.t*3)*3,mv=(same?1:-1)*(10+ph);
+  var x1=cx-gap/2-mv*.6,x2=cx+gap/2+mv*.6;
+  ln(x,x1,40,x1,y-30,'#8a7a5a',1.5);ln(x,x2,40,x2,y-30,'#8a7a5a',1.5);
+  rr(x,x1-16,y-30,32,60,8);x.fillStyle=s[0]>0?'#ffd2d2':'#d2e2ff';x.fill();x.strokeStyle='#6b7d8e';x.lineWidth=2;x.stroke();
+  rr(x,x2-16,y-30,32,60,8);x.fillStyle=s[1]>0?'#ffd2d2':'#d2e2ff';x.fill();x.stroke();
+  for(i=0;i<3;i++){pm(x,s[0],x1,y-18+i*18,7,s[0]>0?'#e5484d':'#3b82f6');pm(x,s[1],x2,y-18+i*18,7,s[1]>0?'#e5484d':'#3b82f6');}
+  var L=12+Math.min(60,700/d),yy=y+55;
+  if(same){arrow(x,x1-18,yy,x1-18-L,yy,'#e9822b',4);arrow(x,x2+18,yy,x2+18+L,yy,'#e9822b',4);}
+  else{arrow(x,x1+18,yy,x1+18+L,yy,'#1d7a6f',4);arrow(x,x2-18,yy,x2-18-L,yy,'#1d7a6f',4);}
+  ln(x,x1,y+85,x2,y+85,'#6b7d8e',1.5);tag(x,bn(d)+' cm',cx,y+98,'#1f3a5f',12);
+  tag(x,same?'বিকর্ষণ':'আকর্ষণ',cx,y-80,same?'#e9822b':'#1d7a6f',18);
+  });
+t4info();
+qgame('t4q','t4o','t4fb','t4sc',[
+ ['দুটি ধনাত্মক চার্জ কাছাকাছি আনলে কী হয়?','বিকর্ষণ',['আকর্ষণ','কিছুই না','নিরপেক্ষ হয়'],'একই ধরনের চার্জ বিকর্ষণ করে।'],
+ ['ধনাত্মক ও ঋণাত্মক চার্জের মধ্যে কী বল কাজ করে?','আকর্ষণ',['বিকর্ষণ','শূন্য','মহাকর্ষ'],'বিপরীত চার্জ আকর্ষণ করে।'],
+ ['মহাকর্ষ বল শুধু আকর্ষণ করে কেন?','ভর এক রকমের (ঋণাত্মক ভর নেই)',['ভর দুই রকম','ভর নেই','দূরত্ব বেশি'],'বইয়ের ভাষ্য: ঋণাত্মক ভর বলে কিছু নাই।'],
+ ['দূরত্ব দ্বিগুণ করলে বৈদ্যুতিক বল কত হয়?','১/৪ গুণ',['অর্ধেক','দ্বিগুণ','চার গুণ'],'F ∝ 1/r²।'],
+ ['তড়িৎ বল কয় রকম?','২ রকম: আকর্ষণ ও বিকর্ষণ',['১ রকম','৩ রকম','কোনোটিই নয়'],'কারণ চার্জ দুই রকম।']]);
+
+/* ===== ল্যাব ৫: আবেশ ===== */
+var I5={m:0,t:0};
+pills('i5p',function(k){I5.m=k;i5info();});on(['i5k'],i5info);
+function i5info(){var k=+$('i5k').value,pos=I5.m===0;$('i5kv').textContent=bn(k);
+  $('i5t').innerHTML='দণ্ড '+(pos?'ধনাত্মক':'ঋণাত্মক')+' ➜ গোলকের কাছের দিকে '+(pos?'<b style="color:#3b82f6">ঋণাত্মক</b>':'<b style="color:#e5484d">ধনাত্মক</b>')+' চার্জ জমছে, দূরের দিকে '+(pos?'<b style="color:#e5484d">ধনাত্মক</b>':'<b style="color:#3b82f6">ঋণাত্মক</b>')+'।<br>'+(k>=85?'কাগজের টুকরো লাফিয়ে দণ্ডে লেগে গেছে!':(k>=55?'কাগজের টুকরোগুলো উঠছে...':'কাগজ এখনো নড়ছে না।'))+'<br><small>বইয়ের ব্যাখ্যা: চার্জহীন কিছুর কাছে চার্জিত বস্তু আনলে সেটিতে বিপরীত ধরনের চার্জ জন্ম নেয়, একে বৈদ্যুতিক আবেশ বলে। কাছের বিপরীত চার্জের আকর্ষণ, দূরের একই চার্জের বিকর্ষণের চেয়ে বেশি, তাই মোট বল আকর্ষণ। কাগজ চিরুনিতে লেগে চার্জ পেয়ে গেলে আবার বিকর্ষিত হয়ে ছিটকে পড়ে।</small>';}
+DRAWS.push(function(){var x=ctxOf('i5c'),k=+$('i5k').value,s=k/100,pos=I5.m===0,i;I5.t+=DT;grad(x,0,0,380,300,'#f4f7fb','#e2e9f2');
+  var sx=250,sy=140,R=55,tip=20+s*(sx-R-24),col=pos?'#ffd2d2':'#d2e2ff';
+  rr(x,tip-140,sy-12,140,24,10);x.fillStyle=col;x.fill();x.strokeStyle='#6b7d8e';x.lineWidth=2;x.stroke();for(i=0;i<5;i++)pm(x,pos?1:-1,tip-18-i*24,sy,6,pos?'#e5484d':'#3b82f6');
+  rr(x,sx-12,sy+R,24,50,4);x.fillStyle='#b98a4a';x.fill();rr(x,sx-35,sy+R+46,70,10,3);x.fill();
+  var g=x.createRadialGradient(sx-18,sy-18,5,sx,sy,R);g.addColorStop(0,'#f4f6f8');g.addColorStop(1,'#a8b3bf');x.fillStyle=g;x.beginPath();x.arc(sx,sy,R,0,7);x.fill();x.strokeStyle='#6b7d8e';x.lineWidth=2;x.stroke();
+  for(i=0;i<7;i++){var a=-1.2+i*.4,pa=a+Math.PI*s*0,u=Math.PI+(a)*(1-s*.7),v=(a)*(1-s*.7);
+    var nega=pos?u:v,posa=pos?v:u;pm(x,-1,sx+Math.cos(nega)*(R-12),sy+Math.sin(nega)*(R-12),7,'#3b82f6');pm(x,1,sx+Math.cos(posa)*(R-12),sy+Math.sin(posa)*(R-12),7,'#e5484d');}
+  for(i=0;i<5;i++){var px=30+i*20,hop=clamp((k-55)/30,0,1),py=262-hop*(95+i*2)+Math.sin(I5.t*10+i)*hop*3,tx=tip-6-i*4;var fx=lerp(px,tx,hop>=1?1:hop*.6);ctxOf('i5c').fillStyle='#fff';x.save();x.translate(fx,py);x.rotate(.4*Math.sin(i+I5.t*(hop>0?6:0)));x.fillStyle='#fff';x.strokeStyle='#8a99a8';x.lineWidth=1;x.fillRect(-7,-4,14,8);x.strokeRect(-7,-4,14,8);x.restore();}
+  ln(x,10,270,370,270,'#8a7a5a',2);tag(x,'কাগজের টুকরো',70,286,'#6b7d8e',11);tag(x,'ধাতব গোলক',sx,sy+R+68,'#1f3a5f',11);
+  });
+i5info();
+qgame('i5q','i5o','i5fb','i5sc',[
+ ['চার্জহীন বস্তুর কাছে চার্জিত বস্তু আনলে যে ঘটনা ঘটে, তাকে কী বলে?','বৈদ্যুতিক আবেশ',['ঘর্ষণ','প্রতিসরণ','তড়িৎ বিশ্লেষণ'],'চার্জহীন বস্তুতে বিপরীত ধরনের চার্জ জন্ম নেয়।'],
+ ['ধনাত্মক দণ্ড ধাতব গোলকের কাছে আনলে গোলকের কাছের দিকে কী জমে?','ঋণাত্মক চার্জ',['ধনাত্মক চার্জ','কিছুই না','নিউট্রন'],'বিপরীত চার্জ কাছে আসে।'],
+ ['চিরুনি কাগজের টুকরোকে আকর্ষণ করে কেন?','আবেশের কারণে',['চুম্বকত্বের কারণে','ভরের কারণে','বাতাসের কারণে'],'কাগজে আবেশিত বিপরীত চার্জ কাছে আসে।'],
+ ['কাগজ চিরুনিতে লেগে আবার ছিটকে পড়ে কেন?','চিরুনির চার্জ পেয়ে বিকর্ষিত হয়',['বাতাসে উড়ে যায়','ভারী হয়ে যায়','চুম্বক ছেড়ে দেয়'],'তখন কাগজ ও চিরুনি একই চার্জের।'],
+ ['কাছের বিপরীত চার্জ ও দূরের একই চার্জের মধ্যে বল কোনটি বেশি?','কাছেরটির আকর্ষণ',['দূরেরটির বিকর্ষণ','সমান','শূন্য'],'কাছে বল বেশি, তাই মোট বল আকর্ষণ।']]);
+
+
+function sup(s){var m={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻'},o='';String(s).split('').forEach(function(c){o+=m[c]||c;});return o;}
+function sci(v,d){if(v===0)return bn(0);var e=Math.floor(Math.log(Math.abs(v))/Math.LN10),m=v/Math.pow(10,e);if(e>=-2&&e<=3)return f(Math.abs(v),e<0?3:2);return f(Math.abs(m),d||2)+' × 10'+sup(e);}
+
+/* ===== ল্যাব ৬: ইলেকট্রোস্কোপ ===== */
+var E6={m:0,s:0,t:0,th:0};
+pills('e6p',function(k){E6.m=k;e6info();});pills('e6s',function(k){E6.s=k;e6info();});on(['e6k'],e6info);
+function e6c(){var k=+$('e6k').value,s=E6.s===0?1:-1,th,ls,top;
+  if(E6.m===0){ls=s;th=k/100*50;top=s;}
+  else if(E6.m===1){ls=s;th=k/100*40;top=-s;}
+  else{var t0=25;ls=-1;top=-1;th=s<0?t0+k*.3:Math.max(0,t0-k*.3);if(s>0){top=1;}}
+  return {k:k,s:s,th:th,ls:ls,top:top};}
+function e6info(){var c=e6c();$('e6kv').textContent=bn(c.k);var m=E6.m,t;
+  if(m===0)t='দণ্ড চাকতিতে ছোঁয়ানো হয়েছে ➜ চার্জ ধাতব দণ্ড বেয়ে সোনার পাতে নেমেছে ➜ দুটি পাতে '+(c.s>0?'ধনাত্মক':'ঋণাত্মক')+' চার্জ ➜ <b>বিকর্ষণ করে ফাঁক হচ্ছে ('+f(c.th,0)+'°)</b>।';
+  else if(m===1)t='দণ্ড ছোঁয়ানো হয়নি, শুধু কাছে আনা ➜ চাকতিতে বিপরীত চার্জ, পাতে '+(c.s>0?'ধনাত্মক':'ঋণাত্মক')+' চার্জ ➜ <b>পাত ফাঁক হচ্ছে ('+f(c.th,0)+'°)</b>, দণ্ড সরিয়ে নিলে বন্ধ।';
+  else t='যন্ত্র আগে থেকেই নেগেটিভ আহিত (ফাঁক ≈ 25°)। দণ্ড '+(c.s>0?'ধনাত্মক ➜ <b style="color:#1d7a6f">ফাঁক কমছে ('+f(c.th,0)+'°)</b>, তাই দণ্ড বিপরীত চার্জের (পজিটিভ)':'ঋণাত্মক ➜ <b style="color:#e9822b">ফাঁক বাড়ছে ('+f(c.th,0)+'°)</b>, তাই দণ্ড একই চার্জের (নেগেটিভ)')+'।';
+  $('e6t').innerHTML=t+'<br><small>বইয়ের কথা: তড়িৎবীক্ষণ যন্ত্রে ধাতব চাকতি, ধাতব দণ্ড ও দুটি সূক্ষ্ম সোনার (বা অ্যালুমিনিয়ামের) পাত থাকে, কাচের বোতলের ভেতরে। চার্জ সব জায়গায় ছড়িয়ে পড়ে, সোনার পাতে একই চার্জ আসায় পাত দুটি বিকর্ষণ করে ফাঁক হয়। তৃতীয় মোডের সংখ্যাগুলো আমার সরল মডেল।</small>';}
+function e6sym(x,s,px,py){pm(x,s,px,py,6,s>0?'#e5484d':'#3b82f6');}
+DRAWS.push(function(){var x=ctxOf('e6c'),c=e6c(),i;E6.t+=DT;E6.th+=(c.th-E6.th)*Math.min(1,DT*8);var th=DEG(E6.th);grad(x,0,0,380,320,'#f4f7fb','#e2e9f2');
+  x.fillStyle='rgba(190,225,245,.4)';rr(x,115,150,150,140,18);x.fill();x.strokeStyle='#7b8fa3';x.lineWidth=2.5;x.stroke();
+  ln(x,190,105,190,205,'#8a8f96',5);ln(x,190,205,190,205,'#8a8f96',1);
+  rr(x,150,92,80,12,6);x.fillStyle='#c9a24b';x.fill();x.strokeStyle='#8a6b1e';x.lineWidth=1.5;x.stroke();
+  x.fillStyle='#b98a4a';rr(x,168,118,44,14,3);x.fill();
+  var lx=Math.sin(th)*70,ly=Math.cos(th)*70;ln(x,190,205,190-lx,205+ly,'#e6c04a',5);ln(x,190,205,190+lx,205+ly,'#e6c04a',5);
+  if(c.k>0||E6.m===2){e6sym(x,c.top,170,98);e6sym(x,c.top,190,98);e6sym(x,c.top,210,98);e6sym(x,c.ls,190-lx*.55,205+ly*.55);e6sym(x,c.ls,190+lx*.55,205+ly*.55);e6sym(x,c.ls,190,160);}
+  var s=E6.s===0?1:-1,col=s>0?'#ffd2d2':'#d2e2ff';
+  if(E6.m===0){var yy=60-(1-c.k/100)*6;rr(x,150,yy-12,80,24,10);x.fillStyle=col;x.fill();x.strokeStyle='#6b7d8e';x.lineWidth=2;x.stroke();for(i=0;i<3;i++)e6sym(x,s,168+i*22,yy);tag(x,'ছোঁয়ানো',190,24,'#6b7d8e',12);}
+  else{var yy2=34+(1-c.k/100)*30;if(E6.m===2)yy2=34+(1-c.k/100)*28;rr(x,150,yy2-12,80,24,10);x.fillStyle=col;x.fill();x.strokeStyle='#6b7d8e';x.lineWidth=2;x.stroke();for(i=0;i<3;i++)e6sym(x,s,168+i*22,yy2);tag(x,E6.m===1?'কাছে আনা':'অজানা দণ্ড',190,12,'#6b7d8e',12);}
+  tag(x,'ধাতব চাকতি',70,98,'#1f3a5f',11);tag(x,'সোনার পাত',300,240,'#1f3a5f',11);tag(x,'কাচের বোতল',190,300,'#6b7d8e',11);
+  });
+e6info();
+qgame('e6q','e6o','e6fb','e6sc',[
+ ['কোনো বস্তুতে আধানের অস্তিত্ব নির্ণয়ের যন্ত্র কোনটি? (বইয়ের নমুনা প্রশ্ন ১)','তড়িৎবীক্ষণ যন্ত্র',['অ্যামিটার','ভোল্টমিটার','অণুবীক্ষণ যন্ত্র'],'ইলেকট্রোস্কোপ।'],
+ ['আহিত দণ্ড চাকতিতে ছোঁয়ালে সোনার পাত দুটি ফাঁক হয় কেন?','পাতে একই চার্জ আসে বলে বিকর্ষণ হয়',['পাত ভারী হয়','চুম্বক হয়','বাতাস ঠেলে'],'একই ধরনের চার্জ বিকর্ষণ করে।'],
+ ['আহিত দণ্ড কাছে আনলে (না ছুঁয়ে) পাত কেন ফাঁক হয়?','আবেশের কারণে',['ঘর্ষণের কারণে','তাপের কারণে','ছোঁয়ার কারণে'],'চাকতিতে বিপরীত, পাতে একই ধরনের চার্জ আসে।'],
+ ['যন্ত্রটি ধনাত্মক আহিত। পাতের ফাঁক আরও বাড়লে কাছে আনা দণ্ডটি কী চার্জের?','ধনাত্মক',['ঋণাত্মক','নিরপেক্ষ','বলা যায় না'],'বইয়ে আছে: ফাঁক আরও বাড়লে চার্জটি নিশ্চয়ই পজিটিভ।'],
+ ['ইলেকট্রোস্কোপের পাতগুলো কী দিয়ে তৈরি?','খুব হালকা সোনা বা অ্যালুমিনিয়াম',['লোহা','কাঠ','রাবার'],'হালকা বলেই সামান্য বলেই নড়ে ওঠে।']]);
+
+/* ===== ল্যাব ৭: কুলম্বের সূত্র ===== */
+on(['k7a','k7b','k7r'],k7info);
+function k7c(){var q1=+$('k7a').value,q2=+$('k7b').value,r=+$('k7r').value,F=9e9*q1*1e-6*q2*1e-6/Math.pow(r/100,2);return {q1:q1,q2:q2,r:r,F:F};}
+function k7info(){var c=k7c();$('k7av').textContent=sgn(c.q1)+bn(Math.abs(c.q1));$('k7bv').textContent=sgn(c.q2)+bn(Math.abs(c.q2));$('k7rv').textContent=bn(c.r);
+  $('k7t').innerHTML='F = 9 × 10⁹ × ('+bn(c.q1)+' × 10⁻⁶) × ('+bn(c.q2)+' × 10⁻⁶) ÷ ('+f(c.r/100,2)+')²<br>'+(c.F===0?'<b>একটি চার্জ শূন্য, তাই বল নেই।</b>':'F = <b>'+(c.F<0?'−':'')+sci(Math.abs(c.F))+' N</b> ➜ '+(c.F>0?'<b style="color:#e9822b">বিকর্ষণ</b>':'<b style="color:#1d7a6f">আকর্ষণ</b>'))+'<br><small>বইয়ে: F = k q₁q₂/r², k = 9 × 10⁹ Nm²/C²। F ঋণাত্মক মানে বলের দিক বদলে আকর্ষণ। বইয়ের উদাহরণ: +1 C ও −1 C, 10 cm দূরে ➜ F = −9 × 10¹¹ N। হাইড্রোজেন পরমাণুতে (0.5 × 10⁻⁸ m) প্রোটন-ইলেকট্রন বল ≈ −9.22 × 10⁻¹² N। (এখানে চার্জ µC-তে, কারণ 1 C খুব বিশাল।)</small>';}
+DRAWS.push(function(){var x=ctxOf('k7c'),c=k7c(),cy=150;grad(x,0,0,380,300,'#f4f7fb','#e2e9f2');
+  var gap=c.r*2.6,x1=190-gap/2,x2=190+gap/2;ln(x,x1,cy+50,x2,cy+50,'#6b7d8e',1.5);ln(x,x1,cy+44,x1,cy+56,'#6b7d8e',1.5);ln(x,x2,cy+44,x2,cy+56,'#6b7d8e',1.5);tag(x,'r = '+bn(c.r)+' cm',190,cy+66,'#1f3a5f',12);
+  var r1=10+Math.sqrt(Math.abs(c.q1))*4,r2=10+Math.sqrt(Math.abs(c.q2))*4;chBall(x,x1,cy,r1,c.q1,'q₁');chBall(x,x2,cy,r2,c.q2,'q₂');
+  if(c.F!==0){var L=10+12*Math.log(1+Math.abs(c.F)*1000)/Math.LN10;if(c.F>0){arrow(x,x1-r1-4,cy-r1-14,x1-r1-4-L,cy-r1-14,'#e9822b',4);arrow(x,x2+r2+4,cy-r2-14,x2+r2+4+L,cy-r2-14,'#e9822b',4);}else{arrow(x,x1+r1+4,cy-r1-14,x1+r1+4+L,cy-r1-14,'#1d7a6f',4);arrow(x,x2-r2-4,cy-r2-14,x2-r2-4-L,cy-r2-14,'#1d7a6f',4);}}
+  tag(x,c.F===0?'বল নেই':(c.F>0?'বিকর্ষণ':'আকর্ষণ'),190,40,c.F>0?'#e9822b':'#1d7a6f',18);tag(x,'|F| = '+(c.F===0?'০':sci(Math.abs(c.F)))+' N',190,70,'#1f3a5f',14);
+  });
+k7info();
+qgame('k7q','k7o','k7fb','k7sc',[
+ ['কুলম্বের সূত্র কোনটি?','F = k q₁q₂ / r²',['F = k q₁q₂ r²','F = k r / q','F = q₁ + q₂'],'বল চার্জের গুণফলের সমানুপাতিক ও দূরত্বের বর্গের ব্যস্তানুপাতিক।'],
+ ['k-এর মান কত?','9 × 10⁹ Nm²/C²',['6.67 × 10⁻¹¹','9.8','3 × 10⁸'],'বইয়ে k-এর একক Nm²/C²।'],
+ ['দূরত্ব দ্বিগুণ করলে বল কত হবে?','এক-চতুর্থাংশ',['অর্ধেক','দ্বিগুণ','চার গুণ'],'F ∝ 1/r²।'],
+ ['কুলম্ব কিসের একক?','চার্জের',['বলের','বিভবের','ধারকত্বের'],'এক অ্যাম্পিয়ার কারেন্টে এক সেকেন্ডে যে চার্জ যায় তা 1 C।'],
+ ['F ঋণাত্মক পেলে কী বোঝায়?','আকর্ষণ বল',['বিকর্ষণ বল','বল নেই','চার্জ নেই'],'ঋণাত্মক চিহ্নে বলের দিক পরিবর্তন বোঝায়।']]);
+
+/* ===== ল্যাব ৮: তৃতীয় চার্জ ===== */
+on(['b8k'],b8info);
+function b8c(){var cm=+$('b8k').value,x=cm/100,F1=9/(x*x),F2=16/((1-x)*(1-x));return {cm:cm,x:x,F1:F1,F2:F2,net:F1-F2};}
+function b8info(){var c=b8c();$('b8kv').textContent=bn(c.cm);
+  $('b8t').innerHTML='+q চার্জ +9C থেকে x = '+f(c.x,2)+' m দূরে<br>+9C এর ঠেলা (ডানে) ∝ 9/x² = '+f(c.F1,1)+', +16C এর ঠেলা (বামে) ∝ 16/(1−x)² = '+f(c.F2,1)+'<br>'+(Math.abs(c.cm-42.86)<=.9?'<b style="color:#1d7a6f">দুই ঠেলা প্রায় সমান ➜ বল শূন্য! (x ≈ 0.43 m)</b>':(c.net>0?'+9C এর ঠেলা বেশি, তাই +q ডানে (+16C এর দিকে) সরবে। বামে সরিয়ে দেখো।':'+16C এর ঠেলা বেশি, তাই +q বামে (+9C এর দিকে) সরবে। ডানে সরিয়ে দেখো।'))+'<br><small>বইয়ের সমাধান: k(9)q/x² = k(16)q/(1−x)² ➜ 9(1−x)² = 16x² ➜ 7x² + 18x − 9 = 0 ➜ (7x − 3)(x + 3) = 0 ➜ x = 0.43 বা −3। x অবশ্যই 0 ও 1 এর মাঝে, তাই x = 0.43 m। (x = −3 হলে কী হবে, সেটা বইয়ে নিজেদের চিন্তা করতে বলা হয়েছে।)</small>';}
+function lg(v){return 8+14*Math.log(1+v)/Math.LN10;}
+DRAWS.push(function(){var x=ctxOf('b8c'),c=b8c(),cy=150,X0=40,S=3;grad(x,0,0,380,300,'#f4f7fb','#e2e9f2');
+  ln(x,X0,cy+42,X0+300,cy+42,'#6b7d8e',1.5);tag(x,'0',X0,cy+56,'#6b7d8e',11);tag(x,'1 m',X0+300,cy+56,'#6b7d8e',11);
+  var bx=X0+42.86*S;ln(x,bx,cy-60,bx,cy+42,'rgba(29,122,111,.7)',1.5,[4,4]);tag(x,'x = 0.43 m',bx,cy-70,'#1d7a6f',11);
+  chBall(x,X0,cy,18,1,'+9 C');chBall(x,X0+300,cy,22,1,'+16 C');var qx=X0+c.cm*S;chBall(x,qx,cy,9,1,'+q');
+  arrow(x,qx+12,cy-18,qx+12+lg(c.F1),cy-18,'#e9822b',4);arrow(x,qx-12,cy+22,qx-12-lg(c.F2),cy+22,'#3b82f6',4);
+  tag(x,'+9C এর ঠেলা',qx+14+lg(c.F1)/2,cy-34,'#e9822b',11);tag(x,'+16C এর ঠেলা',qx-14-lg(c.F2)/2,cy+38,'#3b82f6',11);
+  var bal=Math.abs(c.cm-42.86)<=.9;tag(x,bal?'✔ বল শূন্য':'নেট বল ≠ 0',190,40,bal?'#1d7a6f':'#c0392b',18);
+  var m=Math.max(c.F1,c.F2),hh=40;x.fillStyle='#e9822b';x.fillRect(40,236,lg(c.F1)*3,10);x.fillStyle='#3b82f6';x.fillRect(40,252,lg(c.F2)*3,10);tag(x,'ডানমুখী',36,241,'#6b7d8e',10,'right');tag(x,'বামমুখী',36,257,'#6b7d8e',10,'right');
+  });
+b8info();
+qgame('b8q','b8o','b8fb','b8sc',[
+ ['+9 C ও +16 C চার্জের মাঝে +q কত দূরে রাখলে বল শূন্য? (+9C থেকে, মোট দূরত্ব 1 m)','প্রায় 0.43 m',['0.5 m','0.25 m','0.75 m'],'7x² + 18x − 9 = 0 সমাধান করে x = 0.43।'],
+ ['দুটি একই ধরনের চার্জের মাঝে তৃতীয় +q-এ দুই চার্জের বল কেমন হয়?','বিপরীত দিকে',['একই দিকে','কোনো বল নেই','লম্ব দিকে'],'দুই বড় চার্জই +q কে ঠেলে দূরে সরায়।'],
+ ['কম চার্জের (+9C) কাছে সাম্যবিন্দু হয় কেন?','দুটি বলই সমান করার জন্য কাছে যেতে হয়',['কম চার্জ বেশি টানে','দূরত্ব বেশি লাগে','কিছুই না'],'বল ∝ q/r², কম q-এর জন্য r কম লাগে।'],
+ ['সমীকরণ 9(1−x)² = 16x² কোথা থেকে এসেছে?','k·9q/x² = k·16q/(1−x)² থেকে',['F = ma থেকে','V = IR থেকে','E = mc² থেকে'],'দুই কুলম্ব বল সমান ধরে।'],
+ ['x = −3 কেন গ্রহণযোগ্য নয়?','x অবশ্যই 0 ও 1 m-এর মাঝে হতে হবে',['x ঋণাত্মক হতে পারে না কারণ ভর নেই','x অসীম','কিছুই নয়'],'চার্জ দুটির মধ্যবর্তী বিন্দু খোঁজা হচ্ছে।']]);
+
+/* ===== ল্যাব ৯: বলরেখা ===== */
+var F9={m:0,P:null,t:0,CFG:[[[1,190,165]],[[-1,190,165]],[[1,120,165],[-1,260,165]],[[1,120,165],[1,260,165]],[[1,120,165],[-2,260,165]]]};
+function f9E(px,py,Q){var ex=0,ey=0;Q.forEach(function(c){var dx=px-c[1],dy=py-c[2],r2=dx*dx+dy*dy,r=Math.sqrt(r2);ex+=c[0]*dx/(r2*r);ey+=c[0]*dy/(r2*r);});return [ex,ey];}
+function f9build(){var Q=F9.CFG[F9.m],P=[],pos=Q.filter(function(c){return c[0]>0;}),src=pos.length?pos:Q,sg=pos.length?1:-1;
+  src.forEach(function(c){var n=Math.round(12*Math.abs(c[0]));for(var i=0;i<n;i++){var a=i*2*Math.PI/n+.13,px=c[1]+Math.cos(a)*10,py=c[2]+Math.sin(a)*10,pts=[[px,py]];
+    for(var s=0;s<420;s++){var e=f9E(px,py,Q),l=Math.sqrt(e[0]*e[0]+e[1]*e[1]);if(l===0)break;px+=sg*e[0]/l*3;py+=sg*e[1]/l*3;pts.push([px,py]);if(px<-5||px>385||py<-5||py>325)break;var hit=false;Q.forEach(function(o){if(o!==c&&Math.hypot(px-o[1],py-o[2])<9)hit=true;});if(hit)break;}
+    if(sg<0)pts.reverse();P.push(pts);}});F9.P=P;}
+pills('f9p',function(k){F9.m=k;f9build();f9info();});f9build();
+function f9info(){var d=['একটি ধনাত্মক চার্জ: বলরেখা চারদিকে ছড়িয়ে পড়ে।','একটি ঋণাত্মক চার্জ: বলরেখা চারদিক থেকে কেন্দ্রে এসে মেশে।','বিপরীত চার্জ: এক চার্জ থেকে অন্য চার্জে গিয়ে রেখা শেষ হয়। রেখা যেখানে বেশি, ক্ষেত্র সেখানে বেশি, চার্জ দুটি একে অপরকে টানছে।','দুটি সমান ধনাত্মক চার্জ: রেখা একে অপরকে ঠেলছে, মাঝখানে একটি বিন্দুতে ক্ষেত্রের মান শূন্য।','ধনাত্মক q ও ঋণাত্মক −2q: ঋণাত্মকে বেশি রেখা এসে শেষ হয়, কিছু রেখা অসীমে চলে যায় (বইয়ের ১০.১৩)।'];
+  $('f9t').innerHTML='<b>'+d[F9.m]+'</b><br><small>বইয়ের নিয়ম: (a) ধনাত্মক থেকে বেরোয়, ঋণাত্মকে ঢোকে। বলরেখার স্পর্শক তড়িৎ ক্ষেত্রের দিক। (b) চার্জ বেশি হলে রেখা বেশি। (c) রেখা কাছাকাছি থাকলে ক্ষেত্র বেশি। (d) একটি চার্জের বলরেখা অন্য বলরেখার ওপর দিয়ে যায় না। বলরেখা কাল্পনিক, মাইকেল ফ্যারাডে প্রথম আঁকেন। রেখার সংখ্যা ও আকার আমার গণনা, চিত্রটি সমতলে দেখানো।</small>';}
+DRAWS.push(function(){var x=ctxOf('f9c'),Q=F9.CFG[F9.m];F9.t+=DT;grad(x,0,0,380,320,'#101a33','#1c2b52');
+  F9.P.forEach(function(pts,i){x.strokeStyle='rgba(255,215,120,.85)';x.lineWidth=1.6;x.beginPath();pts.forEach(function(p,j){if(j)x.lineTo(p[0],p[1]);else x.moveTo(p[0],p[1]);});x.stroke();
+    var n=pts.length;if(n>6){[Math.floor(n*.3),Math.floor(n*.7)].forEach(function(m){if(m<2)return;var a=pts[m-1],b=pts[m+1]||pts[m],ang=Math.atan2(b[1]-a[1],b[0]-a[0]),p=pts[m];x.fillStyle='#ffd778';x.beginPath();x.moveTo(p[0]+Math.cos(ang)*6,p[1]+Math.sin(ang)*6);x.lineTo(p[0]+Math.cos(ang+2.5)*5,p[1]+Math.sin(ang+2.5)*5);x.lineTo(p[0]+Math.cos(ang-2.5)*5,p[1]+Math.sin(ang-2.5)*5);x.fill();});}
+    var u=Math.floor(((F9.t*.25+i*.137)%1)*(n-1));ball(x,pts[u][0],pts[u][1],3,'#ffffff');});
+  Q.forEach(function(c){var r=9+Math.abs(c[0])*3;chBall(x,c[1],c[2],r,c[0]);if(Math.abs(c[0])>1)tagd(x,'−2q',c[1],c[2]+r+12,'#fff',11);});
+  tagd(x,'বলরেখা ➜ ধনাত্মক থেকে ঋণাত্মকে',190,20,'#fff',12);
+  });
+f9info();
+qgame('f9q','f9o','f9fb','f9sc',[
+ ['বলরেখা কোথা থেকে বেরোয়?','ধনাত্মক চার্জ থেকে',['ঋণাত্মক চার্জ থেকে','নিরপেক্ষ বিন্দু থেকে','চুম্বকের মেরু থেকে'],'ঋণাত্মক চার্জে বলরেখা ঢুকে মিলে যায়।'],
+ ['বলরেখা ঘন হলে তড়িৎ ক্ষেত্র কেমন?','বেশি',['কম','শূন্য','একই'],'কাছাকাছি থাকলে ক্ষেত্রের মান বেশি।'],
+ ['দুটি বলরেখা কি একে অপরকে ছেদ করতে পারে?','না',['হ্যাঁ','শুধু ঋণাত্মকে','শুধু মাঝখানে'],'একটি চার্জের বলরেখা অন্য বলরেখার ওপর দিয়ে যাবে না।'],
+ ['সমান দুটি ধনাত্মক চার্জের মাঝখানে একটি বিন্দুতে ক্ষেত্র কেমন?','শূন্য',['সবচেয়ে বেশি','অসীম','ঋণাত্মক'],'বইয়ে আছে: মাঝখানে একটি বিন্দুতে তড়িৎ ক্ষেত্রের মান শূন্য।'],
+ ['তড়িৎ ক্ষেত্র E-এর একক কী?','N/C',['C/N','Nm','V·C'],'F = Eq থেকে E = F/q।']]);
+
+
+/* ===== ল্যাব ১০: তড়িৎ বিভব ===== */
+on(['v10a','v10r'],v10info);
+function v10c(){var q=+$('v10a').value,r=+$('v10r').value,V=9e5*q/r;return {q:q,r:r,V:V};}
+function v10info(){var c=v10c();$('v10av').textContent=sgn(c.q)+bn(Math.abs(c.q));$('v10rv').textContent=bn(c.r);
+  $('v10t').innerHTML='V = kq/r = 9 × 10⁹ × ('+bn(c.q)+' × 10⁻⁶) ÷ '+f(c.r/100,2)+'<br>'+(c.q===0?'চার্জ নেই, তাই বিভব শূন্য।':'বিভব V = <b>'+(c.V<0?'−':'')+sci(Math.abs(c.V))+' ভোল্ট</b>')+'<br>'+(c.q>0?'ধনাত্মক চার্জের চারপাশে বিভব ধনাত্মক। 1 C ধনাত্মক চার্জ এখানে আনতে '+sci(Math.abs(c.V))+' J কাজ লাগবে।':(c.q<0?'ঋণাত্মক চার্জের কাছে বিভব ঋণাত্মক।':''))+'<br><small>বইয়ে: অসীম দূরত্ব থেকে 1 C ধনাত্মক আধানকে তড়িৎ ক্ষেত্রের কোনো বিন্দুতে আনতে যদি 1 J কাজ সম্পন্ন হয় তবে ঐ বিন্দুর বিভব 1 V (1 V = 1 J/C)। বিভব স্কেলার রাশি। চার্জ প্রবাহিত হয় বিভব পার্থক্যের জন্য, বিভবের মানের জন্য নয়। তাই হাইভোল্টেজ তারে বসা কাকের বিভব তারের সমান, কোনো পার্থক্য নেই, তাই শক খায় না। মানগুলো µC ও cm ব্যবহার করে আমার হিসাব।</small>';}
+DRAWS.push(function(){var x=ctxOf('v10c'),c=v10c(),cx=100,cy=150,S=2.6,i;grad(x,0,0,380,300,'#101a33','#1c2b52');
+  var col=c.q>=0?'#ff6b6f':'#5a9dff';
+  for(i=34;i>=1;i--){var r=i*9,Vv=Math.abs(9e5*c.q/(r/S)),t=clamp(Math.log(1+Vv/1500)/Math.log(1+1.8e6/1500),0,1);x.fillStyle=hm('#1c2b52',col,t*.9);x.beginPath();x.arc(cx,cy,r,0,7);x.fill();}
+  [20,40,70].forEach(function(rc){var rp=rc*S;x.strokeStyle='rgba(255,255,255,.35)';x.lineWidth=1;x.setLineDash([4,4]);x.beginPath();x.arc(cx,cy,rp,0,7);x.stroke();x.setLineDash([]);if(c.q!==0)tagd(x,sci(Math.abs(9e5*c.q/rc))+' V',cx+rp*.71,cy-rp*.71,'#fff',10);});
+  chBall(x,cx,cy,14,c.q||1);var px=cx+c.r*S;ln(x,cx,cy+36,px,cy+36,'#ffffff',1.5);tagd(x,'r = '+bn(c.r)+' cm',(cx+px)/2,cy+50,'#fff',12);
+  ball(x,px,cy,8,'#ffd23f');pm(x,1,px,cy,7,'#8a5a00');tagd(x,'পরীক্ষামূলক +চার্জ',px,cy-22,'#fff',11);
+  if(c.q!==0){var L=14+10*Math.log(1+Math.abs(c.V)/1e3)/Math.LN10*.6,d=c.q>0?1:-1;arrow(x,px+(d>0?10:-10-0),cy+(d>0?0:0),px+d*L+(d>0?10:-10),cy,'#ffd23f',3);}
+  tagd(x,c.q===0?'V = ০':'V = '+(c.V<0?'−':'')+sci(Math.abs(c.V))+' V',190,282,'#fff',16);
+  });
+v10info();
+qgame('v10q','v10o','v10fb','v10sc',[
+ ['বিন্দু চার্জ q থেকে r দূরত্বে বিভবের সূত্র কোনটি?','V = kq/r',['V = kq/r²','V = kqr','V = q/r²'],'বলের সূত্র (1/r²) থেকে আলাদা, বিভবে r¹।'],
+ ['বিভবের একক কী?','ভোল্ট (V)',['নিউটন','ওয়াট','কুলম্ব'],'1 V = 1 J/C।'],
+ ['বিভব কী ধরনের রাশি?','স্কেলার',['ভেক্টর','দিক আছে','বল'],'বইয়ে বলা: তড়িৎ বিভব একটি স্কেলার রাশি।'],
+ ['হাইভোল্টেজ তারে বসা কাক শক খায় না কেন?','কাকের ও তারের বিভব সমান, পার্থক্য নেই',['কাক রাবার বলে','তারে বিদ্যুৎ নেই','কাক হালকা বলে'],'চার্জ প্রবাহিত হয় বিভব পার্থক্যের জন্য।'],
+ ['চার্জ ও দূরত্ব থেকে দূরত্ব দ্বিগুণ করলে বিভব কত হয়?','অর্ধেক',['এক-চতুর্থাংশ','দ্বিগুণ','চার গুণ'],'V ∝ 1/r।']]);
+/* ভুল id এড়াতে কুইজ ডিভ আইডি মিলিয়ে নেওয়া হবে gen-এ */
+
+/* ===== ল্যাব ১১: ধারক ===== */
+var D11={t:0};
+on(['d11a','d11v'],d11info);
+function d11c(){var C=+$('d11a').value,V=+$('d11v').value,Q=C*V,U=.5*C*V*V*1e-6;return {C:C,V:V,Q:Q,U:U};}
+function d11info(){var c=d11c();$('d11av').textContent=bn(c.C);$('d11vv').textContent=bn(c.V);
+  $('d11t').innerHTML='চার্জ Q = CV = '+bn(c.C)+' µF × '+bn(c.V)+' V = <b>'+bn(c.Q)+' µC</b><br>শক্তি U = ½CV² = ½ × '+bn(c.C)+' × 10⁻⁶ × '+bn(c.V)+'² = <b>'+sci(c.U)+' J</b> ('+f(c.U*1000,2)+' mJ)<br><small>বইয়ে: ধারকত্বের একক ফ্যারাড (F), V = Q/C। সবচেয়ে সহজ ধারক হলো দুটি ধাতব পাত পাশাপাশি রাখা, একটিতে ধনাত্মক, অন্যটিতে ঋণাত্মক চার্জ। বইয়ের উদাহরণ: 20 µF ধারকে 10 V ➜ শক্তি = 10⁻³ J = 1 mJ। বইয়ের MCQ: 10 µF ও 12 V ➜ 7.2 × 10⁻⁴ J।</small>';}
+DRAWS.push(function(){var x=ctxOf('d11c'),c=d11c(),i;D11.t+=DT;grad(x,0,0,380,300,'#f4f7fb','#e2e9f2');
+  var n=Math.max(3,Math.round(c.Q/2000*22)),y1=100,y2=190;
+  x.fillStyle='rgba(120,160,210,.5)';x.beginPath();x.moveTo(60,y1);x.lineTo(280,y1);x.lineTo(310,y1-28);x.lineTo(90,y1-28);x.closePath();x.fill();x.strokeStyle='#5b7389';x.lineWidth=2;x.stroke();
+  x.fillStyle='rgba(120,160,210,.5)';x.beginPath();x.moveTo(60,y2);x.lineTo(280,y2);x.lineTo(310,y2-28);x.lineTo(90,y2-28);x.closePath();x.fill();x.stroke();
+  for(i=0;i<n;i++){var px=80+i*(220/n)+((i%2)*6),py1=y1-8-(i%3)*6,py2=y2-8-(i%3)*6;pm(x,-1,px,py1,5,'#3b82f6');pm(x,1,px+6,py2,5,'#e5484d');}
+  var m=Math.max(3,Math.min(14,Math.round(n*.7)));for(i=0;i<m;i++){var ax=82+i*(210/m)+8,ph=((D11.t*.8+i*.13)%1);var ay=lerp(y2-24,y1+4,ph);x.strokeStyle='rgba(255,170,60,.9)';x.lineWidth=2;ln(x,ax,ay+7,ax,ay-7,'rgba(255,150,40,.9)',2);}
+  tag(x,'+ (ধনাত্মক পাত)',330,y2+6,'#e5484d',11,'right');tag(x,'− (ঋণাত্মক পাত)',330,y1-34,'#3b82f6',11,'right');tag(x,'তড়িৎ ক্ষেত্র',195,(y1+y2)/2,'#a25a14',12);
+  rr(x,330,130,28,70,6);x.fillStyle='#d94f4f';x.fill();x.strokeStyle='#6b3030';x.stroke();tag(x,bn(c.V)+' V',344,215,'#1f3a5f',12);ln(x,310,y1-14,344,y1-14,'#5b7389',2);ln(x,344,y1-14,344,130,'#5b7389',2);ln(x,310,y2-14,344,y2-14,'#5b7389',2);ln(x,344,y2-14,344,200,'#5b7389',2);
+  tag(x,'Q = '+bn(c.Q)+' µC',90,250,'#1f3a5f',14,'left');tag(x,'U = '+f(c.U*1000,2)+' mJ',90,274,'#1d7a6f',15,'left');
+  });
+d11info();
+qgame('d11q','d11o','d11fb','d11sc',[
+ ['ধারকত্বের একক কী?','ফ্যারাড (F)',['ভোল্ট','কুলম্ব','ওহম'],'1 µF = 10⁻⁶ F।'],
+ ['ধারকে সঞ্চিত শক্তির সূত্র কোনটি?','U = ½CV²',['U = CV','U = C/V','U = ½C/V²'],'বইয়ের সূত্র।'],
+ ['20 µF ধারকে 10 V বিভব দিলে কত শক্তি সঞ্চিত হয়?','1 mJ',['0.1 mJ','10 mJ','100 mJ'],'½ × 20 × 10⁻⁶ × 100 = 10⁻³ J।'],
+ ['10 µF ধারককে 12 V দিলে শক্তি কত? (বইয়ের নমুনা প্রশ্ন ৫)','7.2 × 10⁻⁴ J',['6 × 10⁻¹⁰ J','6 × 10⁻⁵ J','1.44 × 10⁻³ J'],'½ × 10 × 10⁻⁶ × 144 = 7.2 × 10⁻⁴ J।'],
+ ['ধারকত্ব বেশি হলে একই চার্জে বিভব...','কম বাড়ে',['বেশি বাড়ে','বাড়ে না','শূন্য হয়'],'V = Q/C।']]);
+
+/* ===== ল্যাব ১২: ভ্যান ডি গ্রাফ ===== */
+var G12={Q:0,t:0,spark:0};
+$('g12r').onclick=function(){G12.Q=0;g12info();};on(['g12k'],g12info);
+function g12info(){var s=+$('g12k').value;$('g12kv').textContent=bn(s);$('g12t').innerHTML='গোলকের চার্জ/বিভব (আপেক্ষিক): <b>'+f(G12.Q,0)+'%</b><br>'+(s===0?'বেল্ট থেমে আছে ➜ নতুন চার্জ আসছে না।':'বেল্ট ঘুরছে ➜ প্রতি মুহূর্তে চার্জ উঠছে, কিছু চার্জ বাতাসে ক্ষয়ও হচ্ছে।')+'<br><small>বইয়ের ১০.১৬ চিত্র: ঘুরন্ত রাবারের (অপরিবাহী) বেল্টে স্প্রে থেকে চার্জ ছিটানো হয়, বেল্ট চার্জ ধাতব গোলকের ভেতরে নিয়ে যায়, একটি স্পর্শক (কম্ব) সেই চার্জ গোলকে দেয়। চার্জ সব সময় বেশি থেকে কম বিভবে প্রবাহিত হয়, আর গোলকের ভেতরে সব সময় সমান বিভব, তাই ভেতরের বাড়তি চার্জ গোলকের পৃষ্ঠে চলে যায়। এভাবে অনেক উঁচু পটেনশিয়াল তৈরি হয়। স্ফুলিঙ্গ ও জমার হারের সংখ্যা আমার সরল মডেল।</small>';}
+DRAWS.push(function(){var x=ctxOf('g12c'),s=+$('g12k').value,i;G12.t+=DT;G12.Q=clamp(G12.Q+(s*9-G12.Q*.35*(s>0?1:2.5))*DT*3,0,100);if(s===0)G12.Q=Math.max(0,G12.Q-DT*8);
+  grad(x,0,0,380,320,'#f4f7fb','#e2e9f2');
+  if(G12.Q>82&&Math.random()<.04){G12.spark=.25;G12.Q*=.45;}
+  rr(x,150,250,80,44,6);x.fillStyle='#8a99a8';x.fill();rr(x,164,100,52,150,4);x.fillStyle='#cfd6dd';x.fill();x.strokeStyle='#8a99a8';x.stroke();
+  var cx=190,cy=85,R=68;var g=x.createRadialGradient(cx-20,cy-20,5,cx,cy,R);g.addColorStop(0,'#fafbfc');g.addColorStop(1,'#a9b4bf');x.fillStyle=g;x.beginPath();x.arc(cx,cy,R,0,7);x.fill();x.strokeStyle='#6b7d8e';x.lineWidth=2.5;x.stroke();
+  var nn=Math.round(G12.Q/100*26);for(i=0;i<nn;i++){var a=i*2*Math.PI/26;pm(x,1,cx+Math.cos(a)*(R+10),cy+Math.sin(a)*(R+10),5,'#e5484d');}
+  rr(x,176,150,28,6,2);ln(x,181,100,181,250,'#3a3f47',6);ln(x,199,100,199,250,'#3a3f47',6);ball(x,190,106,9,'#6b7d8e');ball(x,190,246,9,'#6b7d8e');
+  for(i=0;i<8;i++){var yy=108+((i*17+G12.t*s*14)%140);var up=yy;if(s>0||true){var on_=s>0;pm(x,1,199,yy,4,on_?'#e5484d':'#999');}}
+  ln(x,135,250,176,246,'#7a5a20',2);ln(x,128,238,135,250,'#7a5a20',2);tag(x,'স্প্রে (চার্জ ছিটায়)',70,256,'#1f3a5f',11);
+  ln(x,208,112,225,100,'#c9a24b',2);tag(x,'স্পর্শক (চার্জ নেয়)',282,112,'#1f3a5f',11);tag(x,'ধাতব গোলক',cx,cy-R-14,'#1f3a5f',12);tag(x,'রাবারের বেল্ট',250,190,'#6b7d8e',11);
+  ball(x,330,100,18,'#9aa5b1');ln(x,330,118,330,160,'#6b7d8e',3);tag(x,'মাটির সাথে যুক্ত',330,172,'#6b7d8e',10);
+  if(G12.spark>0){G12.spark-=DT;var px=cx+R,py=cy-4,qx=312,qy=96;x.strokeStyle='#ffe066';x.lineWidth=3;x.beginPath();x.moveTo(px,py);for(i=1;i<6;i++)x.lineTo(lerp(px,qx,i/6),lerp(py,qy,i/6)+(Math.random()-.5)*16);x.lineTo(qx,qy);x.stroke();tag(x,'⚡ স্ফুলিঙ্গ!',270,60,'#c0392b',14);}
+  tag(x,'চার্জ: '+f(G12.Q,0)+'%',72,296,'#1d7a6f',13);x.fillStyle='#d9e2ec';x.fillRect(110,288,150,12);x.fillStyle=hm('#3b82f6','#e5484d',G12.Q/100);x.fillRect(110,288,150*G12.Q/100,12);
+  if(FR%10===0)g12info();});
+g12info();
+qgame('g12q','g12o','g12fb','g12sc',[
+ ['ভ্যান ডি গ্রাফ মেশিনে বেল্ট কেমন পদার্থের হয়?','বিদ্যুৎ অপরিবাহী (রাবার)',['ধাতব','চুম্বকীয়','তরল'],'অপরিবাহী বেল্টে চার্জ ছিটানো যায়।'],
+ ['চার্জ ধাতব গোলকের কোথায় জমে?','বাইরের পৃষ্ঠে',['ভেতরে মাঝখানে','কেন্দ্রে','বেল্টে'],'গোলকের ভেতরে সব সময় সমান বিভব, তাই চার্জ পৃষ্ঠে চলে যায়।'],
+ ['চার্জ সব সময় কীভাবে প্রবাহিত হয়?','বেশি বিভব থেকে কম বিভবে',['কম থেকে বেশিতে','সমান বিভবে','শুধু ঋণাত্মকে'],'বইয়ের কথা।'],
+ ['ভ্যান ডি গ্রাফে কী উৎপন্ন হয়?','খুব উচ্চ বিভব',['কম বিভব','শব্দ','চুম্বক'],'বিশাল পরিমাণ চার্জ জমিয়ে।'],
+ ['বেল্ট থামিয়ে দিলে কী হবে?','নতুন চার্জ আসা বন্ধ, চার্জ ক্ষয় হতে থাকে',['চার্জ বাড়ে','কিছুই না','গোলক গলে যায়'],'বাতাসে চার্জ ক্ষয়ও হয়।']]);
+
+/* ===== ল্যাব ১৩: বজ্রপাত ===== */
+var Z13={m:0,c:0,t:0,st:0,bolt:null,th:0,flash:0};
+pills('z13p',function(k){Z13.m=k;Z13.c=0;Z13.st=0;Z13.bolt=null;Z13.flash=0;z13info();});on(['z13k','z13d'],z13info);
+function z13info(){var k=+$('z13k').value,d=+$('z13d').value;$('z13kv').textContent=bn(k);$('z13dv').textContent=bn(d);
+  $('z13t').innerHTML='মেঘে চার্জ জমছে: <b>'+f(Z13.c,0)+'%</b><br>বজ্রপাত '+bn(d)+' km দূরে হলে আলোর ঝলকের <b>'+bn(d*3)+' সেকেন্ড পরে</b> শব্দ শোনা যাবে (শব্দের গতি ≈ 330 m/s ≈ প্রতি 3 s-এ 1 km)।<br>'+(Z13.m===1?'<b style="color:#1d7a6f">বজ্রনিরোধক শলাকা ঝলকটি নিরাপদে মাটিতে পাঠায়।</b>':'<b style="color:#c0392b">বজ্রনিরোধক ছাড়া বিদ্যুৎ সরাসরি ছাদে পড়ে, ভয়ংকর ক্ষতি হতে পারে।</b>')+'<br><small>বইয়ের কথা: মেঘের ঘর্ষণে চার্জ আলাদা হয়, নিচে বিপরীত চার্জের আবেশ তৈরি হয়, এক সময় বাতাস ভেদ করে চার্জ মাটিতে নেমে আসে। তখন বাতাসের তাপমাত্রা 20–30 হাজার °C পর্যন্ত হয়ে যায় (সূর্য পৃষ্ঠের চেয়ে বেশি), বাতাস দ্রুত প্রসারিত হয়ে শকওয়েভ (বজ্রধ্বনি) তৈরি হয়। বজ্রনিরোধক: উঁচু বিল্ডিংয়ে মুখযুক্ত ধাতব শলাকা ও মোটা তার মাটির গভীরে। শলাকার তীব্র ক্ষেত্রে বাতাস আয়নিত হয়ে মেঘের চার্জ নিষ্ক্রিয় করে।</small>';}
+function z13bolt(tx,ty){var p=[[230,92]],n=11;for(var i=1;i<=n;i++){p.push([lerp(230,tx,i/n)+(i<n?(Math.random()-.5)*34:0),lerp(92,ty,i/n)]);}return p;}
+DRAWS.push(function(){var x=ctxOf('z13c'),k=+$('z13k').value,d=+$('z13d').value,i;Z13.t+=DT;
+  var rod=Z13.m===1,tx=rod?262:260,ty=rod?138:160;
+  if(Z13.st===0){Z13.c+=k*6*DT;if(Z13.c>=100){Z13.c=100;Z13.st=1;Z13.th=0;Z13.flash=1;Z13.bolt=z13bolt(tx,ty);}}
+  else{Z13.th+=DT;Z13.flash=Math.max(0,Z13.flash-DT*2.2);if(Z13.th>d*3+1.6){Z13.st=0;Z13.c=0;Z13.bolt=null;Z13.th=0;}}
+  grad(x,0,0,380,320,'#1d2742','#3a4468');if(Z13.flash>0){x.fillStyle='rgba(255,255,255,'+(Z13.flash*.5)+')';x.fillRect(0,0,380,320);}
+  x.fillStyle='#4b5a39';x.fillRect(0,290,380,30);
+  [[120,56,70],[200,48,80],[270,58,64],[160,70,56]].forEach(function(c){x.fillStyle='#59627c';x.beginPath();x.arc(c[0],c[1],c[2]*.5,0,7);x.fill();});x.fillStyle='#59627c';rr(x,70,40,230,50,24);x.fill();
+  var nn=Math.round(Z13.c/100*8)+1;for(i=0;i<nn;i++){pm(x,-1,100+i*24,84,5,'#8fb8ff');pm(x,1,110+i*24,48,5,'#ff8f8f');}
+  rr(x,230,tx===262?ty:ty,60,290-ty,2);x.fillStyle=Z13.st===1&&!rod&&Z13.flash>0?'#d94f4f':'#8a7a6a';x.fill();
+  for(i=0;i<4;i++)for(var j=0;j<3;j++){x.fillStyle='#f3d98a';x.fillRect(238+j*17,ty+16+i*30,10,14);}
+  if(rod){ln(x,262,ty,262,ty-18,'#d9dde2',3);ln(x,262,ty-18,262,ty-22,'#fff',3);ln(x,288,ty+4,308,ty+4,'#d9dde2',2.5,[5,3]);ln(x,308,ty+4,308,300,'#d9dde2',2.5,[5,3]);tag(x,'বজ্রনিরোধক',326,ty-14,'#fff',11);}
+  var pc=Math.round(Z13.c/100*6);for(i=0;i<pc;i++)pm(x,1,236+i*9,(rod?ty-8:ty-8),5,'#ff8f8f');
+  if(Z13.st===1&&Z13.bolt){var vis=Z13.th<.6;if(vis){x.strokeStyle='#ffffff';x.lineWidth=5;x.shadowColor='#bcd4ff';x.shadowBlur=14;x.beginPath();Z13.bolt.forEach(function(p,j){if(j)x.lineTo(p[0],p[1]);else x.moveTo(p[0],p[1]);});x.stroke();x.shadowBlur=0;}
+    if(rod&&Z13.th<1.2){ln(x,262,ty,262,ty-18,'#ffe066',4);ln(x,288,ty+4,308,ty+4,'#ffe066',3);ln(x,308,ty+4,308,300,'#ffe066',3);}}
+  if(Z13.st===1){var wait=d*3;if(Z13.th<wait)tag(x,'⏱ শব্দ আসতে আরও '+f(wait-Z13.th,1)+' s',150,170,'#ffe066',14);else tag(x,'🔊 ধুম! (বজ্রধ্বনি)',150,170,'#ffffff',16);
+    if(!rod&&Z13.th>.2)tag(x,'⚠ ছাদে ক্ষতি!',150,230,'#ff8f8f',15);if(rod&&Z13.th>.2)tag(x,'✔ নিরাপদে মাটিতে',140,230,'#9fe3d1',15);}
+  else tag(x,'মেঘে চার্জ জমছে...',190,20,'#fff',13);
+  x.fillStyle='#d9e2ec';x.fillRect(20,300,120,8);x.fillStyle='#ffd23f';x.fillRect(20,300,120*Z13.c/100,8);
+  if(FR%15===0)z13info();});
+z13info();
+qgame('z13q','z13o','z13fb','z13sc',[
+ ['বজ্রপাত কীসের কারণে হয়?','মেঘে জমা বিপুল চার্জ মাটিতে নেমে আসায়',['মেঘের ধাক্কায় শব্দে','সূর্যের আলোয়','বাতাসের গতিতে'],'বইয়ের ভাষায় মেঘ থেকে বিপুল পরিমাণ চার্জ মাটিতে নেমে আসাই বজ্রপাত।'],
+ ['বজ্রপাতের সময় বাতাসের তাপমাত্রা প্রায় কত হয়ে যায়?','20 থেকে 30 হাজার °C',['100 °C','1000 °C','500 °C'],'যা সূর্যের পৃষ্ঠের চেয়েও বেশি।'],
+ ['বজ্রধ্বনি কোন ধরনের তরঙ্গ?','শকওয়েভ',['আলোক তরঙ্গ','রেডিও তরঙ্গ','কম্পাঙ্কহীন'],'বাতাস দ্রুত প্রসারিত হয়ে শকওয়েভ তৈরি করে।'],
+ ['আলোর ঝলকের ৬ সেকেন্ড পরে বজ্রধ্বনি শোনা গেলে বজ্র প্রায় কত দূরে?','2 km',['6 km','1 km','18 km'],'প্রতি 3 সেকেন্ডে প্রায় 1 কিলোমিটার।'],
+ ['বজ্রনিরোধক শলাকা কী কাজ করে?','চার্জ নিরাপদে মাটির গভীরে পৌঁছে দেয়',['চার্জ বাড়ায়','মেঘ সরায়','বজ্র তৈরি করে'],'এছাড়া আশপাশের বাতাস আয়নিত করে মেঘের চার্জ নিষ্ক্রিয়ও করে।']]);
+
+
+var QUIZ=[];
+function M(q,c,w,e,fix){QUIZ.push({q:q,o:[c].concat(w),a:0,e:e,fix:!!fix});}
+QUIZ.push({q:'কোনো বস্তুতে আধানের অস্তিত্ব নির্ণয়ের যন্ত্র হলো— (বইয়ের নমুনা প্রশ্ন ১)',o:['অ্যামিটার','ভোল্টমিটার','অণুবীক্ষণ যন্ত্র','তড়িৎবীক্ষণ যন্ত্র'],a:3,fix:true,e:'তড়িৎবীক্ষণ যন্ত্রে (ইলেকট্রোস্কোপ) সোনার পাত দুটি ফাঁক হয়ে চার্জের উপস্থিতি জানায়।'});
+QUIZ.push({q:'দুটি আধানের মধ্যকার তড়িৎ বল নিচের কোনটির ওপর নির্ভর করে না? i. আধান দুটির মধ্যবর্তী দূরত্বের ওপর ii. আধান দুটি যে মাধ্যমে অবস্থিত তার প্রকৃতির ওপর iii. আধান দুটির ভরের ওপর (বইয়ের নমুনা প্রশ্ন ২)',o:['i ও ii','iii','ii ও iii','i, ii ও iii'],a:1,fix:true,e:'বইয়ের কুলম্বের সূত্র F = k q₁q₂/r² এ দূরত্ব ও চার্জ আছে, ভর নেই। তাই ভরের ওপর নির্ভর করে না। (উত্তর আমার হিসাব)'});
+QUIZ.push({q:'তড়িৎ তীব্রতার একক হচ্ছে— (বইয়ের নমুনা প্রশ্ন ৩)',o:['N','Nm','Nm⁻¹','NC⁻¹'],a:3,fix:true,e:'E = F/q, একক N/C (NC⁻¹)।'});
+QUIZ.push({q:'১০.১৭ চিত্রে A (5 V, 6 C) ও B (3 V, 9 C) দুটি গোলক তার দিয়ে যুক্ত। i. A গোলক থেকে কিছু আধান B গোলকে যাবে ii. A থেকে নির্গত বলরেখা B গোলকে যাবে iii. আধান পার্থক্য সর্বদা সমান থাকে। নিচের কোনটি সঠিক? (বইয়ের নমুনা প্রশ্ন ৪)',o:['i','ii','i ও iii','i, ii ও iii'],a:0,fix:true,e:'চার্জ বেশি বিভব (5 V) থেকে কম বিভবে (3 V) যায়, তাই i সঠিক। দুটোই ধনাত্মক, তাই A-র বলরেখা B-তে শেষ হয় না (ii ভুল)। চার্জ প্রবাহের পর পার্থক্য বদলে যায় (iii ভুল)। (চিত্র পড়ে আমার হিসাব, শিক্ষকের সাথে মিলিয়ে নিও)'});
+QUIZ.push({q:'একটি 10 µF ধারককে 12 V বিভব পার্থক্যে যুক্ত করলে ধারকে কী পরিমাণ শক্তি সঞ্চিত হবে? (বইয়ের নমুনা প্রশ্ন ৫)',o:['6×10⁻¹⁰ J','6×10⁻⁵ J','1.44×10⁻³ J','7.2×10⁻⁴ J'],a:3,fix:true,e:'U = ½CV² = ½ × 10 × 10⁻⁶ × 144 = 7.2 × 10⁻⁴ J।'});
+M('প্রোটন ও ইলেকট্রনের চার্জের মান কত?','1.6 × 10⁻¹⁹ C (সমান, বিপরীত)',['1.6 × 10⁻⁹ C','9 × 10⁹ C','শূন্য'],'প্রোটন ধনাত্মক, ইলেকট্রন ঋণাত্মক, মান সমান।');
+M('নিউট্রনের চার্জ কত?','শূন্য',['+1.6 × 10⁻¹⁹ C','−1.6 × 10⁻¹⁹ C','1 C'],'নিউট্রন চার্জবিহীন।');
+M('পরমাণুর কেন্দ্রে কী থাকে?','নিউক্লিয়াস (প্রোটন ও নিউট্রন)',['ইলেকট্রন','শুধু নিউট্রন','শুধু প্রোটন'],'বাইরে ইলেকট্রন বিচরণ করে।');
+M('একটি পরমাণু কোনো ইলেকট্রন হারালে সেটি—','ধনাত্মক আহিত হয়',['ঋণাত্মক আহিত হয়','নিরপেক্ষ থাকে','নিউট্রন পায়'],'প্রোটন সংখ্যা তখন বেশি।');
+M('একটি পরমাণুতে ইলেকট্রন যুক্ত হলে সেটি—','ঋণাত্মক আহিত হয়',['ধনাত্মক আহিত হয','নিরপেক্ষ থাকে','প্রোটন হারায়'],'ইলেকট্রন সংখ্যা বেশি হয়ে যায়।');
+M('সবচেয়ে সহজ পরমাণু কোনটি?','হাইড্রোজেন',['হিলিয়াম','কার্বন','অক্সিজেন'],'নিউক্লিয়াসে মাত্র একটি প্রোটন।');
+M('কোনটি বিদ্যুৎ সুপরিবাহী?','সোনা',['কাঠ','রাবার','কাচ'],'ধাতব পদার্থ সুপরিবাহী।');
+M('বিদ্যুৎ অপরিবাহী কোনটি?','রাবার',['তামা','রুপা','সোনা'],'কাঠ, প্লাস্টিক, কাচ, রাবার অপরিবাহী।');
+M('কাচকে সিল্ক দিয়ে ঘষলে কাচ কী চার্জ পায়?','ধনাত্মক',['ঋণাত্মক','শূন্য','কোনোটিই নয়'],'কাচ থেকে ইলেকট্রন সিল্কে যায়।');
+M('প্লাস্টিককে ফ্লানেল দিয়ে ঘষলে প্লাস্টিক কী চার্জ পায়?','ঋণাত্মক',['ধনাত্মক','শূন্য','চৌম্বক'],'ফ্লানেল থেকে ইলেকট্রন প্লাস্টিকে যায়।');
+M('একই ধরনের চার্জ একে অপরকে—','বিকর্ষণ করে',['আকর্ষণ করে','কোনো বল নেই','শোষণ করে'],'বিপরীত ধরনের চার্জ আকর্ষণ করে।');
+M('চিরুনিতে আহিত হলে চুলের কাছে ছোট কাগজ আসে কেন?','আবেশের কারণে',['চুম্বকের কারণে','তাপের কারণে','ভরের কারণে'],'আবেশে কাগজে বিপরীত চার্জ জন্ম নেয়।');
+M('চার্জহীন বস্তুর কাছে আহিত বস্তু আনলে যে ঘটনা ঘটে—','বৈদ্যুতিক আবেশ',['ঘর্ষণ','বিকিরণ','ক্ষয়'],'চার্জ আলাদা হয়ে যায়।');
+M('তড়িৎবীক্ষণ যন্ত্রের সোনার পাত দুটি ফাঁক হয় কেন?','একই চার্জ বিকর্ষণ করে',['ভারী হয়','বাতাস ঠেলে','তাপে'],'পাত দুটিতে একই চার্জ আসে।');
+M('তড়িৎবীক্ষণে ধনাত্মক আহিত যন্ত্রের ফাঁক আরও বাড়লে কাছে আনা বস্তুর চার্জ—','ধনাত্মক',['ঋণাত্মক','নিরপেক্ষ','বলা যায় না'],'বই অনুযায়ী ফাঁক বাড়া মানে একই ধরনের।');
+M('কুলম্বের সূত্র কোনটি?','F = k q₁q₂ / r²',['F = q₁q₂ r²','F = k r/(q₁q₂)','F = G m₁m₂/r²'],'শেষেরটি নিউটনের মহাকর্ষ সূত্র।');
+M('k-এর মান কত?','9 × 10⁹ Nm²/C²',['6.67 × 10⁻¹¹','1.6 × 10⁻¹⁹','3 × 10⁸'],'বইয়ে দেওয়া।');
+M('চার্জের একক কী?','কুলম্ব (C)',['ভোল্ট','ফ্যারাড','অ্যাম্পিয়ার'],'1 A কারেন্টে 1 s-এ যে চার্জ যায় তা 1 C।');
+M('+1 C ও −1 C চার্জ 10 cm দূরে। বল কত? (বইয়ের উদাহরণ)','−9 × 10¹¹ N (আকর্ষণ)',['9 × 10⁹ N','9 × 10¹¹ N বিকর্ষণ','শূন্য'],'ঋণাত্মক চিহ্ন বোঝায় আকর্ষণ।');
+M('হাইড্রোজেন পরমাণুর প্রোটন-ইলেকট্রনের মধ্যে আকর্ষণ বল প্রায় কত? (r = 0.5 × 10⁻⁸ m)','9.22 × 10⁻¹² N',['9 × 10⁹ N','1.6 × 10⁻¹⁹ N','শূন্য'],'বইয়ের উদাহরণ।');
+M('তড়িৎ ক্ষেত্র E বের করার সূত্র কোনটি?','E = kq/r²',['E = kq/r','E = qr','E = F q'],'বিন্দু চার্জের জন্য।');
+M('F = Eq থেকে E = ?','F/q',['Fq','q/F','F + q'],'একক N/C।');
+M('5 C চার্জের জন্য 10 m দূরে তড়িৎ ক্ষেত্র কত? (বইয়ের উদাহরণ)','4.5 × 10⁸ N/C',['4.5 × 10⁹ N/C','9 × 10⁸','5 N/C'],'9×10⁹×5/100।');
+M('3 C চার্জ 10 N বল অনুভব করলে E কত? (বইয়ের উদাহরণ)','3.33 N/C',['30 N/C','0.3 N/C','13 N/C'],'E = F/q = 10/3।');
+M('তড়িৎ ক্ষেত্র কোন ধরনের রাশি?','ভেক্টর',['স্কেলার','দিক নেই','চার্জ'],'বইয়ে: E ভেক্টর, এর একক N/C।');
+M('ধনাত্মক চার্জের বলরেখা কোথা দিয়ে যায়?','চার্জ থেকে বেরিয়ে চারদিকে ছড়িয়ে',['চার্জে ঢোকে','বৃত্তাকার','স্থির থাকে'],'ঋণাত্মকে বলরেখা কেন্দ্রীভূত হয়।');
+M('বলরেখা যেখানে ঘন সেখানে তড়িৎ ক্ষেত্র—','বেশি',['কম','শূন্য','একই'],'বইয়ের নিয়ম (c)।');
+M('তড়িৎ বিভবের একক কী?','ভোল্ট (V)',['নিউটন','কুলম্ব','ফ্যারাড'],'1 V = 1 J/C।');
+M('বিন্দু চার্জের বিভব V = ?','kq/r',['kq/r²','kqr','q/r'],'বইয়ের সূত্র।');
+M('তড়িৎ বিভব কী ধরনের রাশি?','স্কেলার',['ভেক্টর','দিকযুক্ত','বল'],'বইয়ে বলা।');
+M('হাইভোল্টেজ তারে কাক বসলে শক খায় না কেন?','কাক ও তারের বিভব সমান',['কাক হালকা','তারে বিদ্যুৎ নেই','কাকের পালক'],'চার্জ প্রবাহের জন্য বিভব পার্থক্য লাগে।');
+M('ভারী বৈদ্যুতিক যন্ত্রপাতি ভূমির সাথে (আর্থিং) লাগানো হয় কেন?','প্রচুর চার্জ হলে মাটিতে নিরাপদে চলে যায়',['শক্তি বাড়ানোর জন্য','ওজনের জন্য','আলোর জন্য'],'পৃথিবীকে শূন্য বিভব ধরা হয়।');
+M('ধারকত্বের একক কী?','ফ্যারাড (F)',['ভোল্ট','কুলম্ব','ওহম'],'1 µF = 10⁻⁶ F।');
+M('ধারকের সঞ্চিত শক্তি U = ?','½CV²',['CV','C/V','½C/V'],'বইয়ের সূত্র।');
+M('গোলাকার ধারকে V = ?','Q/C',['QC','C/Q','Q + C'],'বইয়ে V = Q/C।');
+M('20 µF ধারকে 10 V বিভবে শক্তি কত?','1 mJ',['10 mJ','0.1 mJ','100 mJ'],'½ × 20 × 10⁻⁶ × 100 = 10⁻³ J।');
+M('ভ্যান ডি গ্রাফ মেশিনে বেল্ট কেমন?','বিদ্যুৎ অপরিবাহী (রাবার)',['ধাতব','চুম্বক','কাচ'],'চার্জ ছিটিয়ে বেল্ট গোলকের ভেতরে নেয়।');
+M('ফটোকপি মেশিনে কী ব্যবহার হয়?','স্থির বিদ্যুৎ',['চুম্বক','তাপ শুধু','আলো শুধু'],'রোলারে স্থির চার্জ ও কালি পাউডার।');
+M('জ্বালানি ট্রাকের পেছনে শিকল ঝুলিয়ে রাখা হয় কেন?','স্থির বিদ্যুৎ মাটিতে চলে যেতে',['শব্দের জন্য','সাজানোর জন্য','ওজনের জন্য'],'স্ফুলিঙ্গ থেকে বিস্ফোরণ এড়াতে।');
+M('শীতকালে স্থির বিদ্যুতের পরীক্ষা ভালো কাজ করে কেন?','বাতাস শুকনো, জলীয় বাষ্প কম',['বাতাস ভেজা','তাপমাত্রা বেশি','সূর্যের আলো বেশি'],'জলীয় বাষ্পে জমা চার্জ দ্রুত হারিয়ে যায়।');
+M('বজ্রপাতের সময় বাতাসের তাপমাত্রা প্রায় কত?','20–30 হাজার °C',['100 °C','1000 °C','500 °C'],'সূর্য পৃষ্ঠের চেয়েও বেশি।');
+M('বজ্রনিরোধক শলাকায় কী ধরনের তার ব্যবহার হয়?','মোটা বিদ্যুৎ সুপরিবাহী তার',['সরু রাবারের তার','কাচের তার','কোনো তার না'],'মাটির গভীরে চার্জ নিয়ে যেতে।');
+M('শব্দের গতি প্রায় কত?','330 m/s',['3 × 10⁸ m/s','3 m/s','33 m/s'],'প্রতি কিলোমিটারে প্রায় 3 s।');
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+
+var QA=[
+ {h:'📝 সৃজনশীল প্রশ্ন ১ (রিমা ও সীমার চিরুনি)',items:[
+  ['<b>উদ্দীপক:</b> রিমা চুল আঁচড়ানোর পর দেখতে পেল তার চিরুনি ছোট ছোট কাগজের টুকরাকে আকর্ষণ করছে। সীমা বলল চিরুনিটি ধনাত্মকভাবে আহিত হয়েছে, যার জন্য এটা ঘটছে। রিমার বক্তব্য চিরুনিটি ঋণাত্মক আধানে আহিত হয়েছে। বিষয়টির সুরাহার জন্য দুজন তাদের পদার্থবিজ্ঞান শিক্ষককে খুঁজতে গিয়ে তাকে পদার্থবিজ্ঞান গবেষণাগারে পেল। তিনি সব শুনে তাদেরকে তড়িৎবীক্ষণ যন্ত্রের সাহায্যে পরীক্ষা করে চিরুনির আধানের প্রকৃতি নির্ণয় করতে বললেন।<br><b>(ক)</b> আধান বলতে কী বোঝায়? (১)','আধান বা চার্জ হলো পদার্থের এমন একটি ধর্ম, যার কারণে তা আকর্ষণ বা বিকর্ষণ বল অনুভব করে ও প্রয়োগ করে। আধান দুই রকম: ধনাত্মক (প্রোটনের) ও ঋণাত্মক (ইলেকট্রনের)।'],
+  ['<b>(খ)</b> কোনো বিন্দুতে তড়িৎ বিভব শূন্য হলেই তড়িৎ ক্ষেত্র শূন্য হবে কী? ব্যাখ্যা করো। (২)','<b>না।</b> বিভব স্কেলার ও ক্ষেত্র ভেক্টর। উদাহরণ: দুটি সমান ও বিপরীত চার্জের ঠিক মাঝের বিন্দুতে বিভব শূন্য (+kq/r ও −kq/r কাটাকাটি হয়) কিন্তু ক্ষেত্র শূন্য নয়, কারণ দুই চার্জের ক্ষেত্র একই দিকে যোগ হয়। (এই ব্যাখ্যা আমার, বইয়ে সরাসরি নেই)'],
+  ['<b>(গ)</b> চিরুনিটি আহিত হওয়ার কারণ বর্ণনা করো। (৩)','শীতকালে শুকনো চুল চিরুনি দিয়ে আঁচড়ালে ঘর্ষণ হয়। ঘর্ষণে চুল থেকে ইলেকট্রন চিরুনিতে চলে আসে। ইলেকট্রন বেশি হওয়ায় চিরুনি ঋণাত্মক আহিত হয় আর চুল ধনাত্মক আহিত হয়। বইয়ে আছে, শীতকালে চিরুনিতে নেগেটিভ স্থির বিদ্যুৎ জমা হয়। এই আহিত চিরুনি কাছে আনলে কাগজে আবেশে বিপরীত চার্জ আসে ও আকর্ষণ করে।'],
+  ['<b>(ঘ)</b> যন্ত্রটির সাহায্যে কীভাবে চিরুনিটির আধানের প্রকৃতি নির্ণয় করা যাবে ব্যাখ্যা করো। (৪)','<b>তড়িৎবীক্ষণ যন্ত্র</b> (ইলেকট্রোস্কোপ): ধাতব চাকতি, দণ্ড ও দুটি সোনার পাত থাকে।<br>১) আগে যন্ত্রে জানা চার্জ দিই: কাচদণ্ডকে সিল্ক দিয়ে ঘষে পজিটিভ করে চাকতিতে ছোঁয়াই। পাত দুটিতে পজিটিভ চার্জ আসে, তারা বিকর্ষণ করে ফাঁক হয়।<br>২) এবার চিরুনিটি চাকতির কাছে (না ছুঁয়ে) আনি।<br>৩) পাতের ফাঁক <b>কমলে</b> বুঝব চিরুনির চার্জ বিপরীত, অর্থাৎ <b>ঋণাত্মক</b> (কারণ ঋণাত্মক চার্জ চাকতিতে এসে পাত থেকে ইলেকট্রন... চাকতির দিকে সরিয়ে পাতের চার্জ কমায়)। ফাঁক <b>বাড়লে</b> চার্জ একই, অর্থাৎ ধনাত্মক।<br>৪) যেহেতু শুকনো চুল ঘষে চিরুনিতে ইলেকট্রন আসে, ফাঁক কমবে। তাই <b>রিমার বক্তব্য সঠিক</b>, চিরুনিতে ঋণাত্মক আধান জমেছে।']
+ ]},
+ {h:'📝 সৃজনশীল প্রশ্ন ২ (তিনটি আধান, চিত্র ১০.১৮)',items:[
+  ['<b>উদ্দীপক:</b> q₁ (2 C), q₂ (−1 C) এবং q₃ (1 C) এই তিনটি আধান একটি সরল রেখায় পর্যায়ক্রমে পরস্পর থেকে 1 m সমদূরত্বে রাখা আছে।<br><b>(ক)</b> তড়িৎ বল কী? (১)','দুটি আধানের মধ্যে যে আকর্ষণ বা বিকর্ষণ বল কাজ করে, তাকে তড়িৎ বল (বৈদ্যুতিক বল) বলে। F = k q₁q₂/r²।'],
+  ['<b>(খ)</b> তড়িৎ ক্ষেত্র ও তড়িৎ বিভব একই নয় কেন? (২)','তড়িৎ ক্ষেত্র E হলো প্রতি একক চার্জ যে বল অনুভব করে (E = F/q, একক N/C), এটি <b>ভেক্টর</b>, দিক আছে। তড়িৎ বিভব V হলো প্রতি একক চার্জকে অসীম থেকে আনতে কাজ (V = W/q, একক J/C = V), এটি <b>স্কেলার</b>। তাই দুটি এক নয়।'],
+  ['<b>(গ)</b> তিনটি চার্জের জন্য যে বলরেখা তৈরি হবে তার চিত্র আঁকো। (৩)','<b>আঁকার নিয়ম:</b> সরলরেখায় বাঁ থেকে ডানে q₁ (+2C), q₂ (−1C), q₃ (+1C) বসাও।<br>• q₁ (+2C) থেকে 2 ভাগ বলরেখা (ধরো 16টি) চারদিকে বেরোবে। q₃ (+1C) থেকে তার অর্ধেক (8টি)।<br>• q₂ (−1C)-তে বলরেখা ঢুকে শেষ হবে। q₁ ও q₃ এর কিছু রেখা q₂-তে এসে মিলবে।<br>• q₁ ও q₃ উভয়ই ধনাত্মক, তাই এদের মধ্যবর্তী রেখাগুলো একে অপরকে ঠেলে, কোথাও ছেদ করবে না।<br>• তীরের দিক ধনাত্মক থেকে বাইরের দিকে, ঋণাত্মকে ভেতরের দিকে।<br>(এই ছবির বর্ণনা বইয়ের নিয়মগুলো (a)–(d) অনুযায়ী আমার তৈরি। ল্যাব ৯ এ দুটি চার্জের বলরেখা দেখতে পারো।)'],
+  ['<b>(ঘ)</b> q₁ আধানটির মান কত হলে q₃ আধানটি কোনো বল অনুভব করবে না বিশ্লেষণ করো। (৪)','q₁, q₂, q₃ যথাক্রমে 0, 1 m, 2 m অবস্থানে। q₃ (+1 C) এর ওপর বল:<br>• q₂ (−1 C) থেকে: আকর্ষণ, 1 m দূরে। F₂ = k × 1 × 1 / 1² = k (বাম দিকে, q₂-এর দিকে)।<br>• q₁ (ধরি +q₁) থেকে: বিকর্ষণ, 2 m দূরে। F₁ = k × q₁ × 1 / 2² = k q₁/4 (ডান দিকে)।<br>কোনো বল অনুভব না করতে হলে দুটি বল সমান ও বিপরীত হতে হবে: k q₁/4 = k ➜ q₁ = <b>4 C</b>।<br>অর্থাৎ q₁ = +4 C হলে q₃ কোনো বল অনুভব করবে না। (উদ্দীপকে দেওয়া আছে 2 C, তাই এই 4 C-এর সাথে মেলে না, এই প্রশ্নে মান বদলে নতুন হিসাবই চাওয়া হয়েছে।)']
+ ]},
+ {h:'✏️ সংক্ষিপ্ত উত্তর প্রশ্ন (বই থেকে)',items:[
+  ['১. স্বাভাবিক পরমাণু চার্জ নিরপেক্ষ কেন? ব্যাখ্যা কর।','একটি পরমাণুর নিউক্লিয়াসে যতগুলো প্রোটন (ধনাত্মক) থাকে, নিউক্লিয়াসের বাইরে ঠিক ততগুলো ইলেকট্রন (ঋণাত্মক) থাকে। প্রোটন ও ইলেকট্রনের চার্জের মান সমান (1.6 × 10⁻¹⁹ C) কিন্তু বিপরীত। তাই পরমাণুর মোট চার্জ শূন্য, অর্থাৎ নিরপেক্ষ।'],
+  ['২. ঘর্ষণে একটি অনাহিত বস্তু কীভাবে আহিত হয়? ব্যাখ্যা কর।','দুটি অনাহিত বস্তু ঘষলে ইলেকট্রন এক বস্তু থেকে অন্য বস্তুতে চলে যায়। যে বস্তু ইলেকট্রন হারায় সেটি ধনাত্মক আহিত হয়, আর যে ইলেকট্রন পায় সেটি ঋণাত্মক আহিত হয়। যেমন কাচকে সিল্ক দিয়ে ঘষলে কাচ থেকে ইলেকট্রন সিল্কে যায়, কাচ পজিটিভ ও সিল্ক নেগেটিভ আহিত হয়।'],
+  ['৩. শিশু হামাগুড়ি দেয়ার সময় শরীরের চুল খাড়া হয়ে যায় কেন? ব্যাখ্যা কর।','কার্পেটে ঘষে ঘষে যাওয়ার ফলে শিশুর শরীরে চার্জ জমা হয়। সারা শরীরের সাথে চুলেও সেই একই চার্জ ছড়িয়ে পড়ে। একই ধরনের চার্জ একে অপরকে বিকর্ষণ করে, তাই এক চুল অন্য চুলকে ঠেলে খাড়া হয়ে ছড়িয়ে পড়ে। শীতকালে বাতাস শুকনো থাকায় এটি বেশি হয়।'],
+  ['৪. তড়িৎ ক্ষেত্রের দুই বিন্দুর পার্থক্য 2 V বলতে কী বোঝায়?','তড়িৎ ক্ষেত্রের একটি বিন্দু থেকে অন্য বিন্দুতে 1 C ধনাত্মক চার্জকে নিতে 2 J কাজ করতে হলে তাদের বিভব পার্থক্য 2 V। কারণ 1 V = 1 J/C। (সংজ্ঞাটি বইয়ের 1 V-এর সংজ্ঞা থেকে আমার বানানো)']
+ ]},
+ {h:'💡 বাড়তি অনুশীলন (আমার বানানো, বইয়ের সূত্র দিয়ে)',items:[
+  ['৫. 2 C ও 3 C দুটি ধনাত্মক চার্জ 3 m দূরে। তাদের মধ্যে বল কত? (k = 9 × 10⁹)','F = 9 × 10⁹ × 2 × 3 / 3² = 9 × 10⁹ × 6/9 = <b>6 × 10⁹ N</b> (বিকর্ষণ)।'],
+  ['৬. 10 C চার্জ থেকে 5 m দূরে তড়িৎ ক্ষেত্রের মান কত?','E = kq/r² = 9 × 10⁹ × 10 / 25 = <b>3.6 × 10⁹ N/C</b>।'],
+  ['৭. 5 µF ধারককে 20 V দিলে শক্তি কত?','U = ½CV² = ½ × 5 × 10⁻⁶ × 400 = <b>10⁻³ J = 1 mJ</b>।'],
+  ['৮. বজ্রের আলোর 9 সেকেন্ড পরে শব্দ শোনা গেলে বজ্র কত দূরে? (শব্দের গতি 330 m/s)','দূরত্ব = 330 × 9 = <b>2970 m ≈ 3 km</b> (আলো প্রায় তাৎক্ষণিক আসে ধরে)।']
+ ]}
+];
+
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+function frame(){FR++;for(var i=0;i<DRAWS.length;i++)DRAWS[i]();requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>

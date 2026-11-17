@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>বিদ্যুতের চৌম্বক ক্রিয়া (পদার্থবিজ্ঞান অধ্যায় ১২) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+small{color:#567}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/lab-boost.js?v=1"></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#physics">&larr; সব অধ্যায়</a>
+</header><div class="wrap">
+  <div class="crumb">⚛️ পদার্থবিজ্ঞান &rsaquo; দ্বাদশ অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🧲 বিদ্যুতের চৌম্বক ক্রিয়া (Magnetic Effects of Current)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🧲 ল্যাব ১</a><a href="#lab2">🧭 ল্যাব ২</a><a href="#lab3">🧭 ল্যাব ৩</a><a href="#lab4">✋ ল্যাব ৪</a><a href="#lab5">🌀 ল্যাব ৫</a><a href="#lab6">🔩 ল্যাব ৬</a><a href="#lab7">🔊 ল্যাব ৭</a><a href="#lab8">⬆️ ল্যাব ৮</a><a href="#lab9">⚙️ ল্যাব ৯</a><a href="#lab10">🪄 ল্যাব ১০</a><a href="#lab11">🔄 ল্যাব ১১</a><a href="#lab12">🔌 ল্যাব ১২</a><a href="#lab13">🔁 ল্যাব ১৩</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+<section class="panel" id="note">
+<h3>📘 ১২.১ চুম্বক ও চৌম্বক ক্ষেত্র</h3>
+<ul>
+<li>চুম্বক <b>লোহাজাতীয়</b> পদার্থকে আকর্ষণ করে। চুম্বকের দুটি মেরু: <b>উত্তর (N)</b> ও <b>দক্ষিণ (S)</b>।</li>
+<li>একই ধরনের মেরু <b>বিকর্ষণ</b> করে, ভিন্ন ধরনের মেরু <b>আকর্ষণ</b> করে। মাঝখানে কিছু না থাকলেও এই অদৃশ্য বল কাজ করে।</li>
+<li>মুক্তভাবে ঝুলালে চুম্বক <b>উত্তর-দক্ষিণ</b> বরাবর থামে, কারণ পৃথিবীর নিজের একটি চৌম্বক ক্ষেত্র আছে। কম্পাসের কাঁটা আসলে একটি ছোট চুম্বক।</li>
+</ul>
+<div class="key">🔑 চুম্বকের চারপাশে যে জায়গায় তার প্রভাব টের পাওয়া যায়, সেটাই চৌম্বক ক্ষেত্র।</div>
+<h3>⚡ ১২.২ বিদ্যুৎ ও চৌম্বক ক্ষেত্র</h3>
+<h4>বিদ্যুৎবাহী তারের চারপাশে ক্ষেত্র</h4>
+<ul>
+<li>তারে বিদ্যুৎ না থাকলে কম্পাসের সব কাঁটা উত্তর-দক্ষিণ বরাবর থাকে। বিদ্যুৎ দিলে কাঁটাগুলো তারকে ঘিরে <b>বৃত্তাকারে</b> সাজে।</li>
+<li>বিদ্যুৎ বাড়ালে ক্ষেত্র শক্তিশালী হয়; বিদ্যুতের দিক উল্টালে ক্ষেত্রের দিকও উল্টে যায়।</li>
+</ul>
+<div class="key">✋ <b>ডান হাতের নিয়ম:</b> বুড়ো আঙুল = বিদ্যুতের দিক, বাকি আঙুলগুলো = চৌম্বক ক্ষেত্রের দিক।</div>
+<h4>সলিনয়েড ও তড়িৎচুম্বক</h4>
+<ul>
+<li>অপরিবাহী আস্তরণের তার অনেকবার প্যাঁচালে <b>সলিনয়েড</b> হয়; এটি দণ্ড চুম্বকের মতো কাজ করে।</li>
+<li>প্যাঁচ ও বিদ্যুৎ বেশি হলে ক্ষেত্র বেশি শক্তিশালী।</li>
+<li>ভেতরে লোহার টুকরো ঢোকালে ছোট ছোট চুম্বকগুলো সারিবদ্ধ হয়ে ক্ষেত্র আরও বাড়ায় ➜ <b>তড়িৎচুম্বক</b>। বিদ্যুৎ বন্ধ করলে ক্ষেত্র অদৃশ্য হয়।</li>
+<li>ব্যবহার: <b>স্পিকার</b> (ডায়াফ্রাম কাঁপে)।</li>
+</ul>
+<h3>🔧 ১২.৩ চৌম্বক ক্ষেত্রে বিদ্যুৎ ও বল</h3>
+<ul>
+<li>চৌম্বক ক্ষেত্রে বিদ্যুৎবাহী তার <b>বল</b> অনুভব করে। বিদ্যুতের দিক উল্টালে বলের দিকও উল্টে যায়।</li>
+<li><b>ডিসি মোটর:</b> কুণ্ডলীর দুই পাশে উল্টো বল ➜ ঘূর্ণন। <b>কমুটেটর</b> প্রতি অর্ধ-পাকে বিদ্যুতের দিক উল্টে দেয় বলে ঘূর্ণন চলতে থাকে। বিদ্যুৎশক্তি ➜ যান্ত্রিক শক্তি।</li>
+</ul>
+<h3>🌀 ১২.৩.১ তড়িৎ চুম্বকীয় আবেশ</h3>
+<ul>
+<li>কুণ্ডলীর ভেতর চৌম্বক ক্ষেত্র <b>পরিবর্তিত</b> হলে ভোল্টেজ ও বিদ্যুৎ তৈরি হয় (আবিষ্ট ভোল্টেজ/বিদ্যুৎ)। স্থির চুম্বকে কিছু হয় না।</li>
+<li>চুম্বক ঢোকালে ও বের করলে কাঁটা উল্টো দিকে নড়ে; মেরু বদলালেও দিক বদলায়।</li>
+<li><b>জেনারেটর:</b> কুণ্ডলী ঘোরালে এসি তৈরি; যান্ত্রিক ➜ বিদ্যুৎশক্তি।</li>
+<li><b>ট্রান্সফর্মার:</b> শুধু এসি-তে কাজ করে। <b>Vs/Vp = ns/np</b>। ns > np হলে স্টেপ-আপ, ns < np হলে স্টেপ-ডাউন।</li>
+</ul>
+<div class="warn">⚠️ বইয়ে আবেশের আবিষ্কারক হিসেবে যে নাম আছে, প্রচলিতভাবে এটি <b>ফ্যারাডে</b>-র আবিষ্কার হিসেবে পরিচিত। শিক্ষকের কাছে একবার যাচাই করে নিয়ো।</div>
+</section>
+
+  <section class="panel" id="lab1">
+    <h2>🧲 ল্যাব 1: চুম্বকের মেরু: আকর্ষণ ও বিকর্ষণ</h2>
+    <div class="say">👉 দুটি চুম্বক মুখোমুখি রাখো। বিপরীত মেরু (N–S) আকর্ষণ করে, একই মেরু (N–N বা S–S) বিকর্ষণ করে। দূরত্ব কমলে বল বাড়ে।</div>
+<div class="pills" id="g1p"><button data-k="0" class="on">N ও S (বিপরীত)</button><button data-k="1">N ও N (একই)</button><button data-k="2">S ও S (একই)</button></div>
+    <div class="ctl"><label>দুই চুম্বকের দূরত্ব: <span id="g1kv"></span> cm</label><input type="range" id="g1k" min="2" max="15" step="1" value="8"></div>
+    <div class="row"><div><canvas id="g1c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="g1t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="g1q"></div><div class="cls" id="g1o"></div><div class="fb" id="g1fb"></div><small id="g1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🧭 ল্যাব 2: ঝুলন্ত চুম্বক সবসময় উত্তর-দক্ষিণ বরাবর থাকে</h2>
+    <div class="say">👉 একটা চুম্বককে মুক্তভাবে ঝুলিয়ে দিলে সেটা দুলতে দুলতে উত্তর-দক্ষিণ বরাবর থামে। কারণ পৃথিবীর একটা চৌম্বক ক্ষেত্র আছে। ধাক্কা দিয়ে দেখো।</div>
+    <div class="ctl"><label>পৃথিবীর ক্ষেত্রের তীব্রতা: <span id="e2kv"></span> </label><input type="range" id="e2k" min="1" max="5" step="1" value="3"></div>
+    <div class="btnrow"><button class="btn" id="e2b">👆 ধাক্কা দাও</button></div>
+    <div class="row"><div><canvas id="e2c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="e2t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="e2q"></div><div class="cls" id="e2o"></div><div class="fb" id="e2fb"></div><small id="e2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🧭 ল্যাব 3: বিদ্যুৎবাহী তারের চারপাশে কম্পাসের কাঁটা</h2>
+    <div class="say">👉 তারে বিদ্যুৎ না থাকলে সব কম্পাস উত্তর-দক্ষিণ বরাবর। বিদ্যুৎ দিলে কাঁটাগুলো তারকে ঘিরে বৃত্তাকারে সাজিয়ে যায়। বিদ্যুতের দিক উল্টালে কাঁটাও উল্টে যায় (বইয়ের চিত্র ১২.০২)।</div>
+    <div class="ctl"><label>বিদ্যুৎপ্রবাহ (+ বেরিয়ে আসছে, − ঢুকছে): <span id="w3kv"></span> A</label><input type="range" id="w3k" min="-5" max="5" step="1" value="3"></div>
+    <div class="row"><div><canvas id="w3c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="w3t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="w3q"></div><div class="cls" id="w3o"></div><div class="fb" id="w3fb"></div><small id="w3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>✋ ল্যাব 4: ডান হাতের নিয়মে চৌম্বক ক্ষেত্রের দিক</h2>
+    <div class="say">👉 ডান হাতের বুড়ো আঙুল বিদ্যুতের দিকে রাখলে বাকি আঙুলগুলো যেদিকে ঘোরে সেটাই চৌম্বক ক্ষেত্রের দিক। দিক বদলে দেখো।</div>
+<div class="pills" id="r4p"><button data-k="0" class="on">⬆ বিদ্যুৎ ওপরে (পর্দা থেকে বেরিয়ে)</button><button data-k="1">⬇ বিদ্যুৎ নিচে (পর্দায় ঢুকে)</button></div>
+    <div class="row"><div><canvas id="r4c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="r4t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="r4q"></div><div class="cls" id="r4o"></div><div class="fb" id="r4fb"></div><small id="r4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🌀 ল্যাব 5: সলিনয়েডে চৌম্বক ক্ষেত্র</h2>
+    <div class="say">👉 অনেক প্যাঁচের তারের কুণ্ডলী (সলিনয়েড) দণ্ড চুম্বকের মতো কাজ করে। প্যাঁচ ও বিদ্যুৎ বাড়ালে ক্ষেত্র শক্তিশালী হয়। বিদ্যুতের দিক উল্টালে মেরু উল্টে যায়।</div>
+<div class="pills" id="l5p"><button data-k="0" class="on">⬇ সামনের পাকে বিদ্যুৎ নিচের দিকে</button><button data-k="1">⬆ সামনের পাকে বিদ্যুৎ ওপরের দিকে</button></div>
+    <div class="ctl"><label>প্যাঁচ সংখ্যা: <span id="l5nv"></span> টি</label><input type="range" id="l5n" min="1" max="10" step="1" value="5"><label>বিদ্যুৎ: <span id="l5av"></span> A</label><input type="range" id="l5a" min="0" max="5" step="1" value="3"></div>
+    <div class="row"><div><canvas id="l5c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="l5t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="l5q"></div><div class="cls" id="l5o"></div><div class="fb" id="l5fb"></div><small id="l5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🔩 ল্যাব 6: তড়িৎচুম্বক (ইলেকট্রোম্যাগনেট)</h2>
+    <div class="say">👉 কুণ্ডলীর ভেতরে লোহা ঢোকালে লোহার ছোট ছোট চুম্বকগুলো সারিবদ্ধ হয়ে ক্ষেত্র অনেক শক্তিশালী করে। বিদ্যুৎ বন্ধ করলে আবার এলোমেলো, ক্ষেত্র অদৃশ্য।</div>
+<div class="pills" id="k6p"><button data-k="0" class="on">⭕ ফাঁকা কুণ্ডলী</button><button data-k="1">🔩 লোহার কোর সহ</button></div>
+    <div class="ctl"><label>প্যাঁচ সংখ্যা: <span id="k6nv"></span> টি</label><input type="range" id="k6n" min="1" max="10" step="1" value="5"><label>বিদ্যুৎ: <span id="k6av"></span> A</label><input type="range" id="k6a" min="0" max="5" step="1" value="3"></div>
+    <div class="row"><div><canvas id="k6c" class="w" width="380" height="320"></canvas></div><div class="grow"><div class="tlinfo" id="k6t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="k6q"></div><div class="cls" id="k6o"></div><div class="fb" id="k6fb"></div><small id="k6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>🔊 ল্যাব 7: স্পিকারে তড়িৎচুম্বকের ব্যবহার</h2>
+    <div class="say">👉 বদলাতে থাকা বিদ্যুৎ তড়িৎচুম্বকে আসে। স্থায়ী চুম্বকের টানে-ঠেলায় ডায়াফ্রাম কাঁপে। কাঁপার কম্পাঙ্ক শব্দের সুর, বিস্তার শব্দের তীব্রতা (বইয়ের চিত্র ১২.০৮)।</div>
+    <div class="ctl"><label>সংকেতের কম্পাঙ্ক: <span id="s7fv"></span> </label><input type="range" id="s7f" min="1" max="10" step="1" value="4"><label>সংকেতের তীব্রতা: <span id="s7av"></span> </label><input type="range" id="s7a" min="0" max="5" step="1" value="3"></div>
+    <div class="row"><div><canvas id="s7c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="s7t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="s7q"></div><div class="cls" id="s7o"></div><div class="fb" id="s7fb"></div><small id="s7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>⬆️ ল্যাব 8: চৌম্বক ক্ষেত্রে বিদ্যুৎবাহী তার বল অনুভব করে</h2>
+    <div class="say">👉 N ও S মেরুর মাঝে তারে বিদ্যুৎ দিলে তার নিজের ক্ষেত্র আর চুম্বকের ক্ষেত্র মিলে একদিকে ঘন, অন্যদিকে পাতলা হয়। তাই তার ঘনত্ব কম দিকে সরে যায় (বইয়ের চিত্র ১২.০৯)।</div>
+<div class="pills" id="q8p"><button data-k="0" class="on">⊙ বিদ্যুৎ পর্দা থেকে বেরিয়ে</button><button data-k="1">⊗ বিদ্যুৎ পর্দায় ঢুকে</button></div>
+    <div class="ctl"><label>বিদ্যুৎ: <span id="q8kv"></span> A</label><input type="range" id="q8k" min="0" max="5" step="1" value="3"></div>
+    <div class="row"><div><canvas id="q8c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="q8t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="q8q"></div><div class="cls" id="q8o"></div><div class="fb" id="q8fb"></div><small id="q8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>⚙️ ল্যাব 9: ডিসি মোটর ও কমুটেটর</h2>
+    <div class="say">👉 কুণ্ডলী চুম্বকের মাঝে বিদ্যুৎ নিয়ে ঘোরে। কমুটেটর সঠিক সময়ে বিদ্যুতের দিক উল্টে দেয়, তাই ঘূর্ণন চলতে থাকে। কমুটেটর না থাকলে কুণ্ডলী দুলে থেমে যায় (চিত্র ১২.১০, ১২.১১)।</div>
+<div class="pills" id="m9p"><button data-k="0" class="on">🔁 কমুটেটর সহ</button><button data-k="1">⛔ কমুটেটর ছাড়া</button></div>
+    <div class="ctl"><label>ব্যাটারি ভোল্টেজ: <span id="m9kv"></span> V</label><input type="range" id="m9k" min="1" max="12" step="1" value="6"></div>
+    <div class="btnrow"><button class="btn alt" id="m9r">🔄 শুরু থেকে</button></div>
+    <div class="row"><div><canvas id="m9c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="m9t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="m9q"></div><div class="cls" id="m9o"></div><div class="fb" id="m9fb"></div><small id="m9sc"></small>
+  </section>
+
+  <section class="panel" id="lab10">
+    <h2>🪄 ল্যাব 10: চুম্বক নাড়ালে কুণ্ডলীতে বিদ্যুৎ</h2>
+    <div class="say">👉 কুণ্ডলীর ভেতর চুম্বক ঢোকালে বা বের করলে অ্যামিটারের কাঁটা নড়ে, উল্টো দিকে। চুম্বক স্থির থাকলে প্রবাহ নেই। চুম্বকের মেরু বদলালে কাঁটার দিকও বদলায় (চিত্র ১২.১২)।</div>
+<div class="pills" id="n10p"><button data-k="0" class="on">N মেরু আগে</button><button data-k="1">S মেরু আগে</button></div>
+    <div class="ctl"><label>চুম্বকের অবস্থান (টেনে নাড়াও): <span id="n10kv"></span> %</label><input type="range" id="n10k" min="0" max="100" step="1" value="10"></div>
+    <div class="btnrow"><button class="btn" id="n10b">▶ নিজে নিজে নড়ুক</button></div>
+    <div class="row"><div><canvas id="n10c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="n10t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="n10q"></div><div class="cls" id="n10o"></div><div class="fb" id="n10fb"></div><small id="n10sc"></small>
+  </section>
+
+  <section class="panel" id="lab11">
+    <h2>🔄 ল্যাব 11: জেনারেটর: ঘুরিয়ে বিদ্যুৎ তৈরি</h2>
+    <div class="say">👉 চৌম্বক ক্ষেত্রে কুণ্ডলী ঘোরালে তাতে এসি ইএমএফ তৈরি হয়। দ্রুত ঘোরালে বা বেশি প্যাঁচ হলে বেশি ইএমএফ। মোটরের উল্টো কাজ (বইয়ের ১২.৩.১)।</div>
+    <div class="ctl"><label>ঘোরার গতি: <span id="j11kv"></span> </label><input type="range" id="j11k" min="1" max="10" step="1" value="4"><label>প্যাঁচ সংখ্যা: <span id="j11nv"></span> টি</label><input type="range" id="j11n" min="1" max="10" step="1" value="4"></div>
+    <div class="row"><div><canvas id="j11c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="j11t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="j11q"></div><div class="cls" id="j11o"></div><div class="fb" id="j11fb"></div><small id="j11sc"></small>
+  </section>
+
+  <section class="panel" id="lab12">
+    <h2>🔌 ল্যাব 12: ট্রান্সফর্মার: Vₛ/Vₚ = nₛ/nₚ</h2>
+    <div class="say">👉 প্রাইমারিতে এসি দিলে সেকেন্ডারিতে ভোল্টেজ তৈরি হয়। প্যাঁচ বেশি হলে ভোল্টেজ বেশি (স্টেপ আপ), কম হলে কম (স্টেপ ডাউন)। ডিসি দিলে কিছুই হয় না। বইয়ের উদাহরণ: nₚ = 100, nₛ = 1000, 12 V ➜ 120 V।</div>
+<div class="pills" id="t12p"><button data-k="0" class="on">〰️ এসি (AC)</button><button data-k="1">➖ ডিসি (DC)</button></div>
+    <div class="ctl"><label>প্রাইমারির প্যাঁচ nₚ: <span id="t12av"></span> টি</label><input type="range" id="t12a" min="10" max="200" step="10" value="100"><label>সেকেন্ডারির প্যাঁচ nₛ: <span id="t12bv"></span> টি</label><input type="range" id="t12b" min="10" max="2000" step="10" value="1000"><label>প্রাইমারির ভোল্টেজ Vₚ: <span id="t12vv"></span> V</label><input type="range" id="t12v" min="1" max="240" step="1" value="12"><label>প্রাইমারির প্রবাহ Iₚ: <span id="t12iv"></span> × 0.1 A</label><input type="range" id="t12i" min="1" max="50" step="1" value="10"></div>
+    <div class="row"><div><canvas id="t12c" class="w" width="380" height="320"></canvas></div><div class="grow"><div class="tlinfo" id="t12t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="t12q"></div><div class="cls" id="t12o"></div><div class="fb" id="t12fb"></div><small id="t12sc"></small>
+  </section>
+
+  <section class="panel" id="lab13">
+    <h2>🔁 ল্যাব 13: মোটর ও জেনারেটর: একই যন্ত্র, উল্টো কাজ</h2>
+    <div class="say">👉 একই কাঠামো। বিদ্যুৎ দিলে ঘোরে (মোটর), ঘুরিয়ে দিলে বিদ্যুৎ পাওয়া যায় (জেনারেটর)। ডিসি মোটরের আর্মেচার ঘোরালে ডিসি বিদ্যুৎ, এসি মোটর ঘোরালে এসি বিদ্যুৎ দেয়।</div>
+<div class="pills" id="v13p"><button data-k="0" class="on">⚡ মোটর (বিদ্যুৎ ➜ ঘূর্ণন)</button><button data-k="1">🌀 জেনারেটর (ঘূর্ণন ➜ বিদ্যুৎ)</button></div>
+    <div class="ctl"><label>ইনপুট (বিদ্যুৎ বা ঘোরানো): <span id="v13kv"></span> </label><input type="range" id="v13k" min="0" max="10" step="1" value="5"></div>
+    <div class="row"><div><canvas id="v13c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="v13t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="v13q"></div><div class="cls" id="v13o"></div><div class="fb" id="v13fb"></div><small id="v13sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। বইয়ের নমুনা প্রশ্নের উত্তরমালা নেই, তাই উত্তরগুলো আমার হিসাব করা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; বিদ্যুতের চৌম্বক ক্রিয়া (পদার্থবিজ্ঞান অধ্যায় ১২)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+function opts(correct,wrongs){var seen={},a=[{t:correct,ok:1}];seen[correct]=1;wrongs.forEach(function(w){if(!seen[w]){seen[w]=1;a.push({t:w,ok:0});}});return shuffle(a);}
+function arrow(x,x1,y1,x2,y2,col,lw){var a=Math.atan2(y2-y1,x2-x1);x.strokeStyle=col;x.fillStyle=col;x.lineWidth=lw||3;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-11*Math.cos(a-.4),y2-11*Math.sin(a-.4));x.lineTo(x2-11*Math.cos(a+.4),y2-11*Math.sin(a+.4));x.closePath();x.fill();}
+function person(x,px,py,col){circ(x,0,px,py-22,6,col,null);x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(px,py-16);x.lineTo(px,py-4);x.moveTo(px-6,py-11);x.lineTo(px+6,py-11);x.moveTo(px,py-4);x.lineTo(px-5,py+6);x.moveTo(px,py-4);x.lineTo(px+5,py+6);x.stroke();}
+/* ---------- সাধারণ সহায়ক ---------- */
+function pills(id,fn){$(id).onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var all=$(id).querySelectorAll('button'),i;for(i=0;i<all.length;i++)all[i].classList.toggle('on',all[i]===b);fn(+b.getAttribute('data-k'));};}
+function sci(x){if(!(x>0))return bn(0);var e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);if(+m.toFixed(2)>=10){m/=10;e++;}return bn(parseFloat(m.toFixed(2)))+' × ১০'+(e<0?'⁻':'')+sup(Math.abs(e));}
+function brow(label,val,max,col,txtv){return '<div class="bar"><div class="bl">'+label+'</div><div class="bt"><div class="bf" style="width:'+clamp(val/max*100,1,100)+'%;background:'+col+'"></div></div><b style="min-width:80px;font-size:14px;color:#1f3a5f">'+(txtv||'')+'</b></div>';}
+function on(ids,fn){ids.forEach(function(i){$(i).oninput=fn;$(i).onchange=fn;});}
+var G=9.8;
+function box(x,px,py,w,h,fill,stroke){x.fillStyle=fill;x.fillRect(px,py,w,h);if(stroke){x.strokeStyle=stroke;x.lineWidth=2;x.strokeRect(px,py,w,h);}}
+function wheel(x,px,py,r){circ(x,0,px,py,r,'#333',null);circ(x,0,px,py,r*.4,'#bbb',null);}
+
+
+/* ---------- সুন্দর আঁকার সহায়ক (নতুন) ---------- */
+function shade(c,a){var h=hx(c),o='#';for(var i=0;i<3;i++){var v=clamp(Math.round(h[i]+a),0,255).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function grad(x,px,py,w,h,c1,c2){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1);g.addColorStop(1,c2);x.fillStyle=g;x.fillRect(px,py,w,h);}
+function ball(x,px,py,r,col){var g=x.createRadialGradient(px-r*.35,py-r*.35,r*.08,px,py,r);g.addColorStop(0,'#ffffff');g.addColorStop(.3,col);g.addColorStop(1,shade(col,-55));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();}
+function rr(x,px,py,w,h,r){r=Math.min(r,w/2,h/2);x.beginPath();x.moveTo(px+r,py);x.lineTo(px+w-r,py);x.quadraticCurveTo(px+w,py,px+w,py+r);x.lineTo(px+w,py+h-r);x.quadraticCurveTo(px+w,py+h,px+w-r,py+h);x.lineTo(px+r,py+h);x.quadraticCurveTo(px,py+h,px,py+h-r);x.lineTo(px,py+r);x.quadraticCurveTo(px,py,px+r,py);x.closePath();}
+function tag(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.lineJoin='round';x.lineWidth=4;x.strokeStyle='rgba(255,255,255,.92)';x.strokeText(s,px,py);x.fillStyle=col||NAVY;x.fillText(s,px,py);}
+function wave(x,px,py,w,h,t,c1,c2,amp){amp=amp===undefined?2.5:amp;var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1||'rgba(86,176,240,.88)');g.addColorStop(1,c2||'rgba(22,84,172,.96)');x.fillStyle=g;x.beginPath();x.moveTo(px,py+h);x.lineTo(px,py);var i;for(i=0;i<=w;i+=4)x.lineTo(px+i,py+Math.sin(i/13+t*.05)*amp);x.lineTo(px+w,py+h);x.closePath();x.fill();x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=1.6;x.beginPath();for(i=0;i<=w;i+=4){var yy=py+Math.sin(i/13+t*.05)*amp;if(i===0)x.moveTo(px,yy);else x.lineTo(px+i,yy);}x.stroke();}
+function bubs(x,px,py,w,h,n,t){for(var i=0;i<n;i++){var u=((t*.004*(0.6+rp(i,0,.8))+rp(i+50,0,1))%1),bx=px+rp(i,6,w-6)+Math.sin(t*.04+i)*3,by=py+h-u*h,r=1.5+rp(i+9,0,2.2);if(by<py+4)continue;x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=1.2;x.beginPath();x.arc(bx,by,r,0,7);x.stroke();}}
+function glassBox(x,px,py,w,h){x.strokeStyle='#5b7389';x.lineWidth=3;x.beginPath();x.moveTo(px,py);x.lineTo(px,py+h);x.lineTo(px+w,py+h);x.lineTo(px+w,py);x.stroke();x.fillStyle='rgba(255,255,255,.18)';x.fillRect(px+4,py+4,5,h-8);}
+function sun(x,px,py,r,t){x.save();x.translate(px,py);x.rotate(t*.004);x.strokeStyle='rgba(255,196,60,.7)';x.lineWidth=3;for(var i=0;i<12;i++){x.rotate(Math.PI/6);x.beginPath();x.moveTo(r+4,0);x.lineTo(r+11,0);x.stroke();}x.restore();ball(x,px,py,r,'#ffc83d');}
+function cloud(x,px,py,s,col){x.fillStyle=col||'rgba(255,255,255,.95)';[[0,0,14],[16,-6,17],[34,0,14],[17,6,15]].forEach(function(c){x.beginPath();x.arc(px+c[0]*s,py+c[1]*s,c[2]*s,0,7);x.fill();});}
+function dial(x,cx,cy,r,frac,txtv,col){x.strokeStyle='#dfe7ee';x.lineWidth=9;x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*2.2);x.stroke();x.strokeStyle=col||'#2a9d8f';x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*(.8+1.4*clamp(frac,0,1)));x.stroke();var a=Math.PI*(.8+1.4*clamp(frac,0,1));x.strokeStyle=NAVY;x.lineWidth=3;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a)*(r-6),cy+Math.sin(a)*(r-6));x.stroke();circ(x,0,cx,cy,4,NAVY,null);if(txtv)tag(x,txtv,cx,cy+r*.62,NAVY,12);}
+function sand(x,px,py,w,h){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,'#eccb8a');g.addColorStop(1,'#c99a55');x.fillStyle=g;x.fillRect(px,py,w,h);}
+function atom(x,px,py,r,col,t){ball(x,px,py,r,col);}
+function fmtN(v){if(Math.abs(v)>=1000)return bn(Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g,','));return bn(parseFloat(v.toFixed(2)));}
+
+function tagd(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=4;x.fillStyle=col||'#fff';x.fillText(s,px,py);x.restore();}
+
+
+var DT=.02,TKL=performance.now();
+DRAWS.push(function(){var n=performance.now();DT=Math.min(.05,(n-TKL)/1000);TKL=n;});
+function hm(a,b,t){var A=hx(a),B=hx(b),o='#';t=clamp(t,0,1);for(var i=0;i<3;i++){var v=Math.round(lerp(A[i],B[i],t)).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function ln(x,x1,y1,x2,y2,col,lw,dash){x.strokeStyle=col;x.lineWidth=lw||2;if(dash)x.setLineDash(dash);x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();if(dash)x.setLineDash([]);}
+function sup(s){var m={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻'},o='';String(s).split('').forEach(function(c){o+=m[c]||c;});return o;}
+function sci(v,d){if(v===0)return bn(0);var e=Math.floor(Math.log(Math.abs(v))/Math.LN10),m=v/Math.pow(10,e);if(e>=-2&&e<=4)return f(Math.abs(v),e<0?3:2);return f(Math.abs(m),d||2)+' × 10'+sup(e);}
+function sv(v,d){return (v>0.0001?'+':(v<-0.0001?'−':''))+f(Math.abs(v),d===undefined?1:d);}
+/* বদ্ধ পথ বরাবর অবস্থান (s: 0 থেকে 1) */
+function loopPos(P,s){var n=P.length,L=[],tot=0,i,a,b;for(i=0;i<n;i++){a=P[i];b=P[(i+1)%n];var d=Math.hypot(b[0]-a[0],b[1]-a[1]);L.push(d);tot+=d;}
+  var t=(((s%1)+1)%1)*tot,j=0;while(j<n-1&&t>L[j]){t-=L[j];j++;}a=P[j];b=P[(j+1)%n];var u=L[j]?t/L[j]:0;return [lerp(a[0],b[0],u),lerp(a[1],b[1],u)];}
+function wirePath(x,P,col,lw,closed){x.strokeStyle=col||'#37474f';x.lineWidth=lw||3;x.lineJoin='round';x.beginPath();x.moveTo(P[0][0],P[0][1]);for(var i=1;i<P.length;i++)x.lineTo(P[i][0],P[i][1]);if(closed)x.closePath();x.stroke();}
+function flow(x,P,ph,n,col,r){for(var k=0;k<n;k++){var p=loopPos(P,ph+k/n);circ(x,0,p[0],p[1],r||3.2,col,null);}}
+/* জিগজ্যাগ রোধ */
+function resis(x,x1,y1,x2,y2,col,lw){var L=Math.hypot(x2-x1,y2-y1),ux=(x2-x1)/L,uy=(y2-y1)/L,nx=-uy,ny=ux,ld=L*.2,i,n=6,A=7;x.strokeStyle=col||'#5d4037';x.lineWidth=lw||3;x.lineJoin='round';x.beginPath();x.moveTo(x1,y1);x.lineTo(x1+ux*ld,y1+uy*ld);
+  for(i=0;i<n;i++){var t=ld+(L-2*ld)*(i+.5)/n,s=(i%2?1:-1)*A;x.lineTo(x1+ux*t+nx*s,y1+uy*t+ny*s);}x.lineTo(x2-ux*ld,y2-uy*ld);x.lineTo(x2,y2);x.stroke();}
+/* ব্যাটারির প্রতীক (অনুভূমিক রেখা; উপরে +) */
+function battSym(x,px,py,n){var i;for(i=0;i<(n||1);i++){var yy=py+i*14;ln(x,px-14,yy,px+14,yy,'#c62828',3);ln(x,px-8,yy+7,px+8,yy+7,'#1f3a5f',5);}tag(x,'+',px+22,py,'#c62828',13);tag(x,'−',px+22,py+(n||1)*14,'#1f3a5f',13);}
+function gnd(x,px,py){ln(x,px,py,px,py+8,'#37474f',2);ln(x,px-10,py+8,px+10,py+8,'#37474f',2);ln(x,px-6,py+12,px+6,py+12,'#37474f',2);ln(x,px-2,py+16,px+2,py+16,'#37474f',2);}
+function bulbD(x,px,py,r,b){b=clamp(b,0,1);if(b>.02){var g=x.createRadialGradient(px,py,2,px,py,r*(1.4+b*2.2));g.addColorStop(0,'rgba(255,230,80,'+(.25+b*.6)+')');g.addColorStop(1,'rgba(255,230,80,0)');x.fillStyle=g;x.beginPath();x.arc(px,py,r*(1.4+b*2.2),0,7);x.fill();}
+  circ(x,0,px,py,r,hm('#d9dde2','#fff3a0',b),'#6b7683',2);ln(x,px-r*.6,py-r*.6,px+r*.6,py+r*.6,'#6b7683',1.5);ln(x,px+r*.6,py-r*.6,px-r*.6,py+r*.6,'#6b7683',1.5);}
+function ammD(x,px,py,s){circ(x,0,px,py,14,'#fff','#37474f',2);tag(x,s||'A',px,py,'#1f3a5f',13);}
+function pm(x,s,px,py,r,col){x.strokeStyle=col||'#fff';x.lineWidth=Math.max(1.5,r/4);x.beginPath();x.moveTo(px-r*.6,py);x.lineTo(px+r*.6,py);if(s>0){x.moveTo(px,py-r*.6);x.lineTo(px,py+r*.6);}x.stroke();}
+function eBall(x,px,py,r){ball(x,px,py,r,'#3b82f6');pm(x,-1,px,py,r*.8,'#fff');}
+var BLUE='#2563eb',REDC='#e5484d';
+
+
+function magnet(x,px,py,w,h,leftN){var a=leftN?'N':'S',b=leftN?'S':'N',ca=leftN?'#e5484d':'#3b82f6',cb=leftN?'#3b82f6':'#e5484d';x.fillStyle=ca;x.fillRect(px-w/2,py-h/2,w/2,h);x.fillStyle=cb;x.fillRect(px,py-h/2,w/2,h);x.strokeStyle='#37474f';x.lineWidth=2;x.strokeRect(px-w/2,py-h/2,w,h);tag(x,a,px-w/4,py,'#1f3a5f',16);tag(x,b,px+w/4,py,'#1f3a5f',16);}
+function compass(x,px,py,ang,r){circ(x,0,px,py,r,'#fff','#37474f',1.5);var dx=Math.cos(ang),dy=Math.sin(ang);x.lineWidth=3;x.strokeStyle='#e5484d';x.beginPath();x.moveTo(px,py);x.lineTo(px+dx*r*.85,py+dy*r*.85);x.stroke();x.strokeStyle='#3b82f6';x.beginPath();x.moveTo(px,py);x.lineTo(px-dx*r*.85,py-dy*r*.85);x.stroke();}
+function coilD(x,px,py,w,h,n,col){for(var i=0;i<n;i++){var cx=px+(n>1?i*(w/(n-1)):w/2);x.strokeStyle=col||'#b8672d';x.lineWidth=3;x.beginPath();x.ellipse(cx,py,6,h/2,0,0,7);x.stroke();}}
+
+/* ===== ল্যাব ১: চুম্বকের আকর্ষণ/বিকর্ষণ ===== */
+var G1={m:0};
+pills('g1p',function(k){G1.m=k;g1info();});on(['g1k'],g1info);
+function g1info(){var d=+$('g1k').value,F=100/(d*d),att=G1.m===0;$('g1kv').textContent=bn(d);
+  $('g1t').innerHTML=(att?'<b style="color:#0a7">বিপরীত মেরু ➜ আকর্ষণ</b>':'<b style="color:#c62828">একই মেরু ➜ বিকর্ষণ</b>')+'<br>দূরত্ব '+bn(d)+' cm ➜ বলের আপেক্ষিক মান ≈ '+f(F,2)+'<br><small>বই: মেরু দুটি একই ধরনের হলে বিকর্ষণ, ভিন্ন ধরনের হলে আকর্ষণ। (দূরত্বের সাথে বল কীভাবে বদলায়, সেই সূত্রটা বইয়ে নেই। আমি ছবির সুবিধার জন্য 1/d² ধরে আপেক্ষিক সংখ্যা দেখিয়েছি।)</small>';}
+DRAWS.push(function(){var x=ctxOf('g1c'),d=+$('g1k').value,gap=d*8,i;grad(x,0,0,380,300,'#eef4fa','#fbfdff');
+  var tw=200+gap,sx=(380-tw)/2,L=sx+50,R=sx+100+gap+50;
+  var lN=G1.m!==2?1:0,rN=G1.m===0?0:(G1.m===1?1:0);
+  magnet(x,L,130,100,46,lN?0:1);magnet(x,R,130,100,46,rN?0:1);
+  var att=G1.m===0,F=clamp(100/(d*d),.1,8),len=14+F*7;
+  if(att){arrow(x,sx+100-2,200,sx+100+len,200,'#0a8',4);arrow(x,sx+100+gap+2,200,sx+100+gap-len,200,'#0a8',4);}
+  else{arrow(x,sx+100,200,sx+100-len,200,'#c62828',4);arrow(x,sx+100+gap,200,sx+100+gap+len,200,'#c62828',4);}
+  tag(x,att?'আকর্ষণ':'বিকর্ষণ',190,240,att?'#0a7':'#c62828',20);
+  tag(x,'দূরত্ব '+bn(d)+' cm',190,60,'#1f3a5f',14);g1info();});
+g1info();
+qgame('g1q','g1o','g1fb','g1sc',[
+ ['চুম্বকের দুই মেরুকে কী কী বলে?','উত্তর মেরু ও দক্ষিণ মেরু',['ধনাত্মক ও ঋণাত্মক','লাল ও নীল','পূর্ব ও পশ্চিম'],'বই: উত্তর (N) আর দক্ষিণ (S) মেরু।'],
+ ['দুটি চুম্বকের একই মেরু কাছাকাছি আনলে কী হয়?','বিকর্ষণ',['আকর্ষণ','কিছুই না','জোড়া লেগে যায়'],'একই ধরনের মেরু বিকর্ষণ করে।'],
+ ['ভিন্ন ধরনের মেরু কাছে আনলে কী হয়?','আকর্ষণ',['বিকর্ষণ','কিছুই না','গরম হয়'],'N আর S পরস্পরকে টানে।'],
+ ['চুম্বক কোন ধরনের পদার্থকে আকর্ষণ করে?','লোহাজাতীয় পদার্থকে',['কাঠকে','কাচকে','রাবারকে'],'বইয়ের প্রথম কথা।'],
+ ['দুটি চুম্বকের মাঝে কী নেই, তবুও বল কাজ করে?','কিছু নেই (অদৃশ্য বল)',['তার','সুতো','আঠা'],'বইয়ে: মাঝখানে কিছু নেই কিন্তু অদৃশ্য বল টানে।']]);
+
+/* ===== ল্যাব ২: পৃথিবীর চৌম্বক ক্ষেত্র ===== */
+var E2={a:1.2,w:0};
+$('e2b').onclick=function(){E2.w+=(Math.random()<.5?-1:1)*(3+Math.random()*3);};
+on(['e2k'],function(){$('e2kv').textContent=bn(+$('e2k').value);});$('e2kv').textContent=bn(+$('e2k').value);
+DRAWS.push(function(){var x=ctxOf('e2c'),k=+$('e2k').value;grad(x,0,0,380,300,'#eef4fa','#fbfdff');
+  E2.w+=(-k*3*Math.sin(E2.a)-.9*E2.w)*DT;E2.a+=E2.w*DT;
+  var cx=190,cy=150;circ(x,0,cx,cy,100,'#fff','#9aa5b1',2);tag(x,'উত্তর (N)',cx,60,'#c62828',14);tag(x,'দক্ষিণ (S)',cx,240,'#1f5fbf',14);tag(x,'পূর্ব',cx+118,cy,'#6b7683',12);tag(x,'পশ্চিম',cx-118,cy,'#6b7683',12);
+  x.save();x.translate(cx,cy);x.rotate(E2.a);
+  x.fillStyle='#e5484d';x.fillRect(-14,-70,28,70);x.fillStyle='#3b82f6';x.fillRect(-14,0,28,70);x.strokeStyle='#37474f';x.lineWidth=2;x.strokeRect(-14,-70,28,140);
+  tag(x,'N',0,-35,'#fff',16);tag(x,'S',0,35,'#fff',16);x.restore();circ(x,0,cx,cy,4,'#37474f',null);
+  arrow(x,cx+150,230,cx+150,170,'#6b7683',2);tag(x,'পৃথিবীর ক্ষেত্র',cx+150,245,'#6b7683',11);
+  var off=Math.abs(((E2.a+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI);$('e2t').innerHTML=(off<.06&&Math.abs(E2.w)<.15?'<b style="color:#0a7">উত্তর-দক্ষিণ বরাবর থেমে গেছে ✅</b>':'চুম্বক দুলছে…')+'<br>বই: মুক্তভাবে ঝুলালে চুম্বক উত্তর-দক্ষিণ বরাবর থাকে। যে অংশ উত্তরে থাকে সেটা উত্তর মেরু (N), যেটা দক্ষিণে সেটা দক্ষিণ মেরু (S)। কারণ পৃথিবীর একটা চৌম্বক ক্ষেত্র আছে। (দোলনের গতি আমার সরল মডেল)';});
+qgame('e2q','e2o','e2fb','e2sc',[
+ ['মুক্তভাবে ঝুলানো চুম্বক কোন দিকে থামে?','উত্তর-দক্ষিণ বরাবর',['পূর্ব-পশ্চিম বরাবর','যেকোনো দিকে','ওপর-নিচ'],'পৃথিবীর চৌম্বক ক্ষেত্রের কারণে।'],
+ ['চুম্বকের যে অংশ উত্তরে থাকে তার নাম?','উত্তর মেরু',['দক্ষিণ মেরু','পূর্ব মেরু','কোনো নাম নেই'],'বইয়ের সংজ্ঞা।'],
+ ['কম্পাসের কাঁটা কেন উত্তর-দক্ষিণ বরাবর থাকে?','পৃথিবীর চৌম্বক ক্ষেত্রের জন্য',['বাতাসের জন্য','মাধ্যাকর্ষণের জন্য','তাপের জন্য'],'চুম্বক নিজেকে ক্ষেত্র বরাবর সাজিয়ে নেয়।'],
+ ['কম্পাসের কাঁটা আসলে কী?','একটি ছোট চুম্বক',['একটি তার','একটি স্প্রিং','একটি আয়না'],'কাঁটা নিজেই চুম্বক।'],
+ ['ঝুলন্ত চুম্বকের দক্ষিণমুখী মেরুকে কী বলে?','দক্ষিণ মেরু',['উত্তর মেরু','কিছু না','নিরপেক্ষ মেরু'],'যেটা দক্ষিণ দিক বরাবর থাকে।']]);
+
+/* ===== ল্যাব ৩: তারের চারপাশে ক্ষেত্র ===== */
+var W3={a:[]};for(var w3i=0;w3i<10;w3i++)W3.a.push(-Math.PI/2);
+on(['w3k'],w3info);
+function w3info(){var I=+$('w3k').value;$('w3kv').textContent=(I>0?'+':'')+bn(I);
+  $('w3t').innerHTML=(I===0?'<b>বিদ্যুৎ নেই ➜ সব কম্পাস উত্তর-দক্ষিণ বরাবর।</b>':'বিদ্যুৎ '+bn(Math.abs(I))+' A ➜ কাঁটাগুলো তারকে ঘিরে <b>'+(I>0?'ঘড়ির কাঁটার উল্টো দিকে':'ঘড়ির কাঁটার দিকে')+'</b> সাজিয়েছে।')+'<br><small>বই: বিদ্যুৎ যত বেশি, চৌম্বক ক্ষেত্র তত শক্তিশালী। বিদ্যুৎ উল্টালে কম্পাসের দিকও উল্টে যায়। (ছবিটি ওপর থেকে দেখা; কাঁটার সঠিক কোণ আমার সরল গণনা)</small>';}
+DRAWS.push(function(){var x=ctxOf('w3c'),I=+$('w3k').value,cx=190,cy=150,i;grad(x,0,0,380,300,'#f1e7d0','#f8f1e0');
+  x.fillStyle='#d9c7a2';x.fillRect(40,20,300,260);x.strokeStyle='#a38c5a';x.lineWidth=2;x.strokeRect(40,20,300,260);
+  var R=95;for(i=0;i<10;i++){var al=i*Math.PI*2/10,px=cx+R*Math.cos(al),py=cy-R*Math.sin(al);
+    var tx=-Math.sin(al),ty=-Math.cos(al),vx=tx*I*.6,vy=-1+ty*I*.6;
+    var tg=Math.atan2(vy,vx);var cur=W3.a[i];var dd=Math.atan2(Math.sin(tg-cur),Math.cos(tg-cur));W3.a[i]=cur+dd*Math.min(1,DT*6);compass(x,px,py,W3.a[i],13);}
+  circ(x,0,cx,cy,12,'#37474f','#fff',2);tag(x,I>0?'⊙':(I<0?'⊗':'0'),cx,cy,'#fff',14);tag(x,I>0?'বিদ্যুৎ বেরিয়ে আসছে':(I<0?'বিদ্যুৎ ঢুকছে':'বিদ্যুৎ নেই'),cx,40,'#1f3a5f',13);
+  tag(x,'ওপর থেকে দেখা (কার্ডবোর্ড)',cx,268,'#6b7683',11);w3info();});
+w3info();
+qgame('w3q','w3o','w3fb','w3sc',[
+ ['তারে বিদ্যুৎ না থাকলে কম্পাসের কাঁটা কোন দিকে থাকে?','উত্তর-দক্ষিণ',['তারকে ঘিরে বৃত্তে','পূর্ব-পশ্চিম','এলোমেলো'],'বইয়ের চিত্র ১২.০২ (I = 0)।'],
+ ['বিদ্যুৎ দিলে কম্পাসের কাঁটাগুলো কীভাবে সাজায়?','তারকে ঘিরে বৃত্তাকারে',['সোজা লাইনে','তারের দিকে মুখ করে','এলোমেলো'],'বিদ্যুৎবাহী তারের চারপাশে বৃত্তাকার ক্ষেত্র।'],
+ ['বিদ্যুতের দিক উল্টে দিলে কাঁটার দিক—','উল্টে যায়',['একই থাকে','বন্ধ হয়ে যায়','দ্বিগুণ হয়'],'বইয়ের ব্যাখ্যা।'],
+ ['বিদ্যুৎ বাড়ালে চৌম্বক ক্ষেত্র—','শক্তিশালী হয়',['দুর্বল হয়','একই থাকে','মিলিয়ে যায়'],'বই: যত বেশি প্রবাহ, তত শক্তিশালী।'],
+ ['তারের ভেতর দিয়ে বিদ্যুৎ গেলে কী তৈরি হয়?','চৌম্বক ক্ষেত্র',['শুধু তাপ','স্থির বিদ্যুৎ','শব্দ'],'এটাই বিদ্যুতের চৌম্বক ক্রিয়া।']]);
+
+/* ===== ল্যাব ৪: ডান হাতের নিয়ম ===== */
+var R4={m:0};
+pills('r4p',function(k){R4.m=k;r4info();});
+function r4info(){var up=R4.m===0;$('r4t').innerHTML='<b>বুড়ো আঙুল</b> = বিদ্যুতের দিক ('+(up?'ওপরে, পর্দা থেকে বেরিয়ে':'নিচে, পর্দায় ঢুকে')+')<br><b>বাকি আঙুল</b> ঘোরে ➜ চৌম্বক ক্ষেত্র <b>'+(up?'ঘড়ির কাঁটার উল্টো দিকে':'ঘড়ির কাঁটার দিকে')+'</b><br>বইয়ের উদাহরণ ১২.০৪: বিদ্যুৎ বই থেকে ওপরের দিকে বেরোচ্ছে ➜ <b>বাম দিকের চিত্রটি</b> সঠিক (ঘড়ির কাঁটার উল্টো দিকে)।';}
+DRAWS.push(function(){var x=ctxOf('r4c'),up=R4.m===0,i;grad(x,0,0,380,300,'#eef4fa','#fbfdff');
+  ln(x,95,40,95,260,'#37474f',6);arrow(x,95,up?170:110,95,up?70:230,'#e5484d',5);tag(x,'বুড়ো আঙুল (I)',95,up?50:250,'#c62828',12);
+  [[55,'#2563eb'],[85,'#2563eb']].forEach(function(s){});
+  var dir=up?1:-1;x.strokeStyle='#2563eb';x.lineWidth=3;
+  for(i=0;i<2;i++){var yy=135+i*60;x.beginPath();x.ellipse(95,yy,50,12,0,0,7);x.stroke();var ax=95+(dir>0?-1:1)*50,ay=yy;
+    var px=95+50*Math.cos(.8*Math.PI*(dir>0?1:-1)*0+Math.PI/2),py=yy+12*Math.sin(Math.PI/2);
+    arrow(x,95-dir*8,yy+12,95+dir*18,yy+12,'#2563eb',3);}
+  tag(x,'ক্ষেত্র',95,240,'#2563eb',12);tag(x,'পাশ থেকে দেখা',95,278,'#6b7683',11);
+  var cx=280,cy=150;circ(x,0,cx,cy,12,'#37474f','#fff',2);tag(x,up?'⊙':'⊗',cx,cy,'#fff',14);
+  [30,60,90].forEach(function(r){x.strokeStyle='#2563eb';x.lineWidth=2.5;x.beginPath();x.arc(cx,cy,r,0,7);x.stroke();
+    var a=-Math.PI/2+0.01,ax=cx+r*Math.cos(a),ay=cy+r*Math.sin(a);var tx=up?-1:1;arrow(x,ax-tx*10,ay,ax+tx*4,ay,'#2563eb',3);
+    var b=Math.PI/2,bx=cx+r*Math.cos(b),by=cy+r*Math.sin(b);arrow(x,bx+tx*10,by,bx-tx*4,by,'#2563eb',3);});
+  tag(x,'ওপর থেকে দেখা',cx,278,'#6b7683',11);tag(x,up?'ঘড়ির কাঁটার উল্টো দিকে ↺':'ঘড়ির কাঁটার দিকে ↻',cx,24,'#2563eb',13);r4info();});
+r4info();
+qgame('r4q','r4o','r4fb','r4sc',[
+ ['ডান হাতের নিয়মে বুড়ো আঙুল কী নির্দেশ করে?','বিদ্যুৎপ্রবাহের দিক',['চৌম্বক ক্ষেত্রের দিক','বলের দিক','ইলেকট্রনের দিক'],'বইয়ের নিয়ম।'],
+ ['বাকি আঙুলগুলো কী নির্দেশ করে?','চৌম্বক ক্ষেত্রের দিক',['বিদ্যুতের দিক','ভোল্টেজ','রোধ'],'বুড়ো আঙুল বিদ্যুতের দিক দেখালে।'],
+ ['তারে বিদ্যুৎ পর্দা থেকে বেরিয়ে আসছে। ক্ষেত্র কোন দিকে ঘোরে?','ঘড়ির কাঁটার উল্টো দিকে',['ঘড়ির কাঁটার দিকে','ওপর-নিচ','ঘোরে না'],'আঙুল ঘোরে বাম দিক বরাবর ওপর থেকে।'],
+ ['বিদ্যুতের দিক উল্টে দিলে ক্ষেত্রের দিক?','উল্টে যায়',['একই থাকে','শূন্য হয়','দ্বিগুণ হয়'],'দিক বদলালে ক্ষেত্রও বদলায়।'],
+ ['বইয়ের উদাহরণ ১২.০৪ এ বিদ্যুৎ ওপরের দিকে গেলে কোন চিত্র সঠিক?','বাম দিকেরটি',['ডান দিকেরটি','দুটোই','কোনোটিই না'],'বইয়ের উত্তর।']]);
+
+/* ===== ল্যাব ৫: সলিনয়েড ===== */
+var L5={m:0,ph:0};
+pills('l5p',function(k){L5.m=k;l5info();});on(['l5n','l5a'],l5info);
+function l5info(){var n=+$('l5n').value,I=+$('l5a').value,Nr=L5.m===0;$('l5nv').textContent=bn(n);$('l5av').textContent=bn(I);
+  $('l5t').innerHTML='ক্ষেত্রের আপেক্ষিক শক্তি ∝ প্যাঁচ × বিদ্যুৎ = '+bn(n)+' × '+bn(I)+' = <b>'+bn(n*I)+'</b><br>'+(I===0?'বিদ্যুৎ নেই ➜ চুম্বক নেই।':'<b>'+(Nr?'ডান':'বাম')+' প্রান্ত উত্তর মেরু (N)</b>, '+(Nr?'বাম':'ডান')+' প্রান্ত দক্ষিণ মেরু (S)')+'<br><small>বই: সলিনয়েড দণ্ড চুম্বকের মতো কাজ করে। ডান হাতের আঙুল বিদ্যুতের দিকে ঘোরালে বুড়ো আঙুল উত্তর মেরু দেখায়। প্যাঁচ বেশি, বিদ্যুৎ বেশি ➜ শক্তিশালী ক্ষেত্র।</small>';}
+DRAWS.push(function(){var x=ctxOf('l5c'),n=+$('l5n').value,I=+$('l5a').value,Nr=L5.m===0,i,st=n*I/50;grad(x,0,0,380,300,'#eef4fa','#fbfdff');L5.ph+=DT;
+  var x0=80,x1=300,cy=150,H=70;
+  for(i=0;i<n;i++){var cxp=n>1?x0+12+i*(x1-x0-24)/(n-1):(x0+x1)/2;x.strokeStyle='#b8672d';x.lineWidth=4;x.beginPath();x.ellipse(cxp,cy,8,H/2,0,0,7);x.stroke();
+    var fy=cy+(Nr?1:-1)*H/2;if(I>0)arrow(x,cxp-4,cy+(Nr?-1:1)*H/2*0+(Nr?H/2-18:-H/2+18),cxp+0,cy+(Nr?H/2:-H/2)+(Nr?4:-4),'#c62828',2);}
+  if(I>0){var dirx=Nr?1:-1,a0=Nr?x0:x1;
+    for(i=-1;i<=1;i++){var yy=cy+i*16,sx=Nr?x0+30:x1-30,ex=Nr?x1-30:x0+30;arrow(x,sx,yy,ex,yy,'rgba(37,99,235,'+clamp(.35+st*.65,0,1)+')',2+st*2);}
+    [[-1,1],[1,-1]].forEach(function(s){for(var k=0;k<2;k++){var rr2=60+k*30;x.strokeStyle='rgba(37,99,235,'+clamp(.2+st*.5,0,1)+')';x.lineWidth=1.5+st;x.beginPath();x.moveTo(Nr?x1+8:x0-8,cy);x.bezierCurveTo(Nr?x1+rr2+20:x0-rr2-20,cy+s[0]*rr2*1.5,Nr?x0-rr2-20:x1+rr2+20,cy+s[0]*rr2*1.5,Nr?x0-8:x1+8,cy);x.stroke();}});}
+  tagd(x,'N',Nr?x1+34:x0-34,cy,'#c62828',22);tagd(x,'S',Nr?x0-34:x1+34,cy,'#1f5fbf',22);
+  ln(x,40,cy+H/2+2,x0+12,cy+H/2+2,'#37474f',3);ln(x,x1-12,cy-H/2-2,340,cy-H/2-2,'#37474f',3);
+  tag(x,'প্যাঁচ '+bn(n)+'টি, বিদ্যুৎ '+bn(I)+' A',190,265,'#1f3a5f',13);l5info();});
+l5info();
+qgame('l5q','l5o','l5fb','l5sc',[
+ ['সলিনয়েড কী?','অনেক প্যাঁচের তারের কুণ্ডলী',['সোজা তার','একটা ব্যাটারি','লোহার দণ্ড'],'বইয়ের সংজ্ঞা।'],
+ ['সলিনয়েড কীসের মতো কাজ করে?','দণ্ড চুম্বকের মতো',['বাল্বের মতো','রোধের মতো','ধারকের মতো'],'বইয়ে: দণ্ড চুম্বকের মতো, বুড়ো আঙুলের দিকটা উত্তর মেরু।'],
+ ['প্যাঁচ সংখ্যা বাড়ালে ক্ষেত্র—','শক্তিশালী হয়',['দুর্বল হয়','একই থাকে','উল্টে যায়'],'প্রতিটি প্যাঁচের ক্ষেত্র যোগ হয়।'],
+ ['বিদ্যুতের দিক উল্টালে সলিনয়েডের মেরু—','উল্টে যায়',['একই থাকে','মিলিয়ে যায়','তিনটি হয়'],'N আর S জায়গা বদলায়।'],
+ ['শক্তিশালী চৌম্বক ক্ষেত্র চাইলে বই কী করতে বলে?','অপরিবাহী আস্তরণের তার অনেকবার প্যাঁচাতে',['তারটি সোজা রাখতে','শুধু একটা বড় লুপ বানাতে','তার কেটে ফেলতে'],'এতে কুণ্ডলী বা সলিনয়েড হয়।']]);
+
+
+/* ===== ল্যাব ৬: তড়িৎচুম্বক ===== */
+var K6={m:0,D:[]};for(var k6i=0;k6i<20;k6i++)K6.D.push({x:(k6i%5),y:Math.floor(k6i/5),a:Math.random()*6.28,t:Math.random()*6.28});
+pills('k6p',function(k){K6.m=k;k6info();});on(['k6n','k6a'],k6info);
+function k6c(){var n=+$('k6n').value,I=+$('k6a').value,core=K6.m===1,st=n*I*(core?20:1),al=core?clamp(I/3,0,1):0,clips=clamp(Math.round(st/12),0,8);return {n:n,I:I,core:core,st:st,al:al,clips:clips};}
+function k6info(){var c=k6c();$('k6nv').textContent=bn(c.n);$('k6av').textContent=bn(c.I);
+  $('k6t').innerHTML=(c.core?'<b>লোহার কোর আছে:</b> ছোট ছোট চুম্বকগুলো সারিবদ্ধ হয়ে নিজস্ব ক্ষেত্র যোগ করেছে।':'<b>ফাঁকা কুণ্ডলী:</b> শুধু বিদ্যুতের ক্ষেত্র, দুর্বল।')+'<br>আপেক্ষিক শক্তি ≈ '+bn(c.st)+' ➜ আকর্ষিত পেরেক '+bn(c.clips)+'টি<br><small>বই: বিদ্যুৎ বন্ধ করলে সারিবদ্ধ ছোট চুম্বকগুলো তাপশক্তির কারণে আবার এলোমেলো হয়ে যায়, পুরো ক্ষেত্র অদৃশ্য হয়। (কোরের সাথে শক্তির গুণক 20 গুণ আমার সরল ধরা মান।)</small>';}
+DRAWS.push(function(){var x=ctxOf('k6c'),c=k6c(),i;grad(x,0,0,380,320,'#eef4fa','#fbfdff');
+  var x0=70,x1=310,cy=110,H=80;rr(x,x0-6,cy-H/2+6,x1-x0+12,H-12,6);x.fillStyle=c.core?'#cfd6df':'#f4f7fb';x.fill();x.strokeStyle='#9aa5b1';x.lineWidth=1.5;x.stroke();
+  if(c.core){for(i=0;i<20;i++){var d=K6.D[i],px=x0+14+d.x*((x1-x0-28)/4),py=cy-H/2+16+d.y*((H-32)/3),tg=0,cur=d.a;d.a=cur+(Math.atan2(Math.sin(tg-cur),Math.cos(tg-cur)))*Math.min(1,DT*(1+c.al*3))*(c.al>.01?1:0);if(c.al<.01){d.t+=DT*2;d.a=d.t;}
+      x.save();x.translate(px,py);x.rotate(d.a);x.fillStyle='#e5484d';x.fillRect(-9,-4,9,8);x.fillStyle='#3b82f6';x.fillRect(0,-4,9,8);x.restore();}}
+  for(i=0;i<c.n;i++){var cxp=c.n>1?x0+4+i*(x1-x0-8)/(c.n-1):(x0+x1)/2;x.strokeStyle='#b8672d';x.lineWidth=3.5;x.beginPath();x.ellipse(cxp,cy,5,H/2+4,0,0,7);x.stroke();}
+  tag(x,c.I>0?'বিদ্যুৎ চালু':'বিদ্যুৎ বন্ধ',190,30,c.I>0?'#c62828':'#6b7683',14);
+  var cl=c.clips;for(i=0;i<8;i++){var cx2=110+i*20,y2=i<cl?cy+H/2+16+(i%2)*10:250+(i%2)*6;x.save();x.translate(cx2,y2);x.rotate(i<cl?0:1.2);x.fillStyle='#8a93a0';x.fillRect(-3,-9,6,18);x.restore();}
+  tag(x,'আকর্ষিত পেরেক: '+bn(cl)+'টি',190,290,'#1f3a5f',14);k6info();});
+k6info();
+qgame('k6q','k6o','k6fb','k6sc',[
+ ['তড়িৎচুম্বক বানাতে কুণ্ডলীর ভেতরে কী ঢোকানো হয়?','লোহার টুকরো',['কাঠ','রাবার','প্লাস্টিক'],'বই: লোহা, কোবাল্ট, নিকেলের বিশেষ চৌম্বকীয় ধর্ম আছে।'],
+ ['লোহার কোর বসালে ক্ষেত্র—','অনেক শক্তিশালী হয়',['দুর্বল হয়','একই থাকে','বন্ধ হয়'],'ছোট চুম্বকগুলো সারিবদ্ধ হয়।'],
+ ['বিদ্যুৎ বন্ধ করলে তড়িৎচুম্বকের কী হয়?','চৌম্বক ক্ষেত্র অদৃশ্য হয়',['আরও শক্তিশালী হয়','চিরস্থায়ী হয়','গরম হয়ে ফেটে যায়'],'ছোট চুম্বকগুলো আবার এলোমেলো।'],
+ ['তড়িৎচুম্বকের ব্যবহার কোথায়?','স্পিকার ও মোটর',['শুধু ঘড়ির কাঁটায়','বাতাসে','পানিতে'],'বইয়ে স্পিকারের উদাহরণ আছে।'],
+ ['তড়িৎচুম্বকে বিদ্যুৎ বাড়ালে আকর্ষণ—','বাড়ে',['কমে','একই থাকে','উল্টো হয়'],'ক্ষেত্র বিদ্যুতের সমানুপাতিক।']]);
+
+/* ===== ল্যাব ৭: স্পিকার ===== */
+var S7={ph:0,w:[]};
+DRAWS.push(function(){var x=ctxOf('s7c'),f0=+$('s7f').value,A=+$('s7a').value,i;$('s7fv').textContent=bn(f0);$('s7av').textContent=bn(A);grad(x,0,0,380,300,'#eef4fa','#fbfdff');
+  S7.ph+=DT*f0*1.6;var sig=Math.sin(S7.ph*2*Math.PI/2),disp=A*4*sig;
+  rr(x,250,100,60,90,6);x.fillStyle='#d0d6dd';x.fill();x.strokeStyle='#37474f';x.lineWidth=2;x.stroke();tag(x,'স্থায়ী চুম্বক',280,145,'#1f3a5f',11);
+  var cx=215+disp;coilD(x,cx-22,145,24,60,4,'#b8672d');tag(x,'তড়িৎচুম্বক',cx-10,205,'#b8672d',11);
+  x.fillStyle='#b9d6f2';x.strokeStyle='#37474f';x.lineWidth=2;x.beginPath();x.moveTo(cx-22,115);x.lineTo(cx-110,50);x.lineTo(cx-110,240);x.lineTo(cx-22,175);x.closePath();x.fill();x.stroke();tag(x,'ডায়াফ্রাম',cx-82,145,'#1f3a5f',12);
+  if(Math.random()<.04*f0+.02&&A>0)S7.w.push({r:10,a:1});
+  for(i=S7.w.length-1;i>=0;i--){var w=S7.w[i];w.r+=DT*(70+f0*6);w.a-=DT*.6;if(w.a<=0){S7.w.splice(i,1);continue;}x.strokeStyle='rgba(37,99,235,'+(w.a*clamp(A/3,.15,1))+')';x.lineWidth=2;x.beginPath();x.arc(cx-110,145,w.r,Math.PI*.65,Math.PI*1.35);x.stroke();}
+  x.strokeStyle='#e5484d';x.lineWidth=2;x.beginPath();for(i=0;i<=300;i++){var px=40+i,t=S7.ph-(i)/20,py=262-A*5*Math.sin(t*Math.PI);if(i===0)x.moveTo(px,py);else x.lineTo(px,py);}x.stroke();tag(x,'বিদ্যুৎ সংকেত (এসি)',190,288,'#c62828',12);
+  $('s7t').innerHTML='<b>কম্পাঙ্ক '+bn(f0)+'</b> ➜ ডায়াফ্রাম প্রতি সেকেন্ডে বেশি বার কাঁপে ➜ সুর চড়া।<br><b>তীব্রতা '+bn(A)+'</b> ➜ কাঁপুনি বড় ➜ শব্দ জোরালো।<br><small>বই: শব্দের কম্পন ও তীব্রতার সমান বিদ্যুৎপ্রবাহ তড়িৎচুম্বকে পাঠানো হয়, সেটা ডায়াফ্রামকে কাঁপায়। (সংখ্যাগুলো আমার সরল স্কেল)</small>';});
+qgame('s7q','s7o','s7fb','s7sc',[
+ ['স্পিকারে কোন নীতি ব্যবহার হয়?','তড়িৎচুম্বক (বিদ্যুতের চৌম্বক ক্রিয়া)',['শুধু ঘর্ষণ','তাপ','প্রতিসরণ'],'বইয়ের চিত্র ১২.০৮।'],
+ ['স্পিকারে কোনটি কাঁপে?','ডায়াফ্রাম',['স্থায়ী চুম্বক','ব্যাটারি','কেবল'],'তড়িৎচুম্বকের সাথে যুক্ত।'],
+ ['সংকেতের তীব্রতা বাড়ালে শব্দ—','জোরালো হয়',['আস্তে হয়','একই থাকে','বন্ধ হয়'],'বিদ্যুৎ বেশি, কাঁপুনি বড়।'],
+ ['স্পিকারের স্থায়ী চুম্বকের কাজ কী?','তড়িৎচুম্বকের সাথে টানাটানি করে ডায়াফ্রামকে কাঁপানো',['বিদ্যুৎ তৈরি','শব্দ ঠান্ডা করা','তাপ দেওয়া'],'ঘন ঘন দিক বদলানো বিদ্যুৎ ঘন ঘন টান-ঠেলা তৈরি করে।'],
+ ['স্পিকারে কোন ধরনের বিদ্যুৎ পাঠানো হয়?','শব্দের কম্পন ও তীব্রতার সমান পরিবর্তনশীল বিদ্যুৎ',['ধ্রুব ডিসি','শুধু স্থির বিদ্যুৎ','কোনোটিই না'],'বইয়ের ব্যাখ্যা।']]);
+
+/* ===== ল্যাব ৮: তারের ওপর বল ===== */
+var Q8={m:0,y:0};
+pills('q8p',function(k){Q8.m=k;q8info();});on(['q8k'],q8info);
+function q8info(){var I=+$('q8k').value,out=Q8.m===0;$('q8kv').textContent=bn(I);
+  $('q8t').innerHTML=(I===0?'বিদ্যুৎ নেই ➜ কোনো বল নেই।':'বিদ্যুৎ '+(out?'পর্দা থেকে বেরিয়ে':'পর্দায় ঢুকে')+' ➜ তার নিজের ক্ষেত্র '+(out?'ঘড়ির কাঁটার উল্টো দিকে':'ঘড়ির কাঁটার দিকে')+'।<br>চুম্বকের ক্ষেত্র N ➜ S (ডান দিকে)। <b>'+(out?'নিচে':'ওপরে')+'</b> দুই ক্ষেত্র একই দিকে ➜ ঘন, <b>'+(out?'ওপরে':'নিচে')+'</b> উল্টো দিকে ➜ পাতলা। ফলে তার <b>'+(out?'ওপরের':'নিচের')+'</b> দিকে সরে যায়।')+'<br><small>বই: তারে প্রবাহ উল্টালে তার উল্টো দিকে ঠেলা খায়। (দিক ও সংখ্যাগুলো বইয়ের ব্যাখ্যা মেনে আমার আঁকা)</small>';}
+DRAWS.push(function(){var x=ctxOf('q8c'),I=+$('q8k').value,out=Q8.m===0,i;grad(x,0,0,380,300,'#eef4fa','#fbfdff');
+  var f=(I===0?0:(out?-1:1))*I*9;Q8.y+=(f-Q8.y)*Math.min(1,DT*3);
+  x.fillStyle='#ffd6d6';x.fillRect(20,70,50,160);x.fillStyle='#d6e4ff';x.fillRect(310,70,50,160);tag(x,'N',45,150,'#c62828',24);tag(x,'S',335,150,'#1f5fbf',24);
+  for(i=0;i<7;i++){var yy=95+i*17;arrow(x,80,yy,300,yy,'rgba(90,100,120,.5)',1.5);}
+  if(I>0){x.fillStyle='rgba(229,72,77,.12)';var dense=out?1:-1;x.fillRect(80,150+(dense>0?0:-70),220,70);x.fillStyle='#37474f';tag(x,'ঘন (বেশি ক্ষেত্র)',190,150+(dense>0?55:-55),'#c62828',11);tag(x,'পাতলা',120,150+(dense>0?-55:55),'#6b7683',11);}
+  var wy=150+Q8.y;circ(x,0,190,wy,12,'#37474f','#fff',2);tag(x,out?'⊙':'⊗',190,wy,'#fff',13);
+  if(I>0){x.strokeStyle='#2563eb';x.lineWidth=2;[26,40].forEach(function(r){x.beginPath();x.arc(190,wy,r,0,7);x.stroke();});arrow(x,190,wy+(out?-16:16),190,wy+(out?-58:58),'#0a8',4);}
+  tag(x,I>0?'বল: '+(out?'ওপরে ⬆':'নিচে ⬇'):'বল নেই',190,36,I>0?'#0a7':'#6b7683',16);q8info();});
+q8info();
+qgame('q8q','q8o','q8fb','q8sc',[
+ ['চৌম্বক ক্ষেত্রে বিদ্যুৎবাহী তারের ওপর কী ঘটে?','তার বল অনুভব করে',['কিছুই ঘটে না','তার গলে যায়','তারের রোধ শূন্য হয়'],'বইয়ের চিত্র ১২.০৯।'],
+ ['বিদ্যুতের দিক উল্টালে তারের ওপর বলের দিক—','উল্টে যায়',['একই থাকে','শূন্য হয়','দ্বিগুণ হয়'],'বই: বৃত্তাকার ক্ষেত্রের দিক পাল্টে যাবে, তারটি উল্টো দিকে ঠেলা খাবে।'],
+ ['তার কোন দিকে সরে যায়?','যেদিকে বলরেখার ঘনত্ব কম',['যেদিকে ঘন','কোনোদিকেই না','চুম্বকের দিকে সোজা'],'ঘন দিক থেকে ঠেলে পাতলা দিকে।'],
+ ['বিদ্যুৎ বাড়ালে বল—','বাড়ে',['কমে','একই থাকে','শূন্য হয়'],'বইয়ে: বিদ্যুৎ যত বেশি, ক্ষেত্র তত শক্তিশালী।'],
+ ['কোন যন্ত্র এই ঘটনায় কাজ করে?','বৈদ্যুতিক মোটর',['ট্রান্সফর্মার','ধারক','বাল্ব'],'মোটরে কুণ্ডলী এভাবেই ঘোরে।']]);
+
+/* ===== ল্যাব ৯: ডিসি মোটর ===== */
+var M9={m:0,ph:.35,w:0};
+pills('m9p',function(k){M9.m=k;M9.ph=.35;M9.w=0;m9info();});on(['m9k'],m9info);$('m9r').onclick=function(){M9.ph=.35;M9.w=0;};
+function m9info(){var V=+$('m9k').value;$('m9kv').textContent=bn(V);
+  $('m9t').innerHTML=(M9.m===0?'<b>কমুটেটর সহ:</b> কুণ্ডলী খাড়া অবস্থান পেরোনোর সময় বিদ্যুতের দিক উল্টে যায়, তাই টর্ক একই দিকে থেকে ঘূর্ণন চলতে থাকে।':'<b>কমুটেটর ছাড়া:</b> কুণ্ডলী খাড়া অবস্থানে পৌঁছে থেমে যায় (দুলতে দুলতে), কারণ বিদ্যুতের দিক বদলায় না।')+'<br>ঘূর্ণন গতি ≈ '+f(Math.abs(M9.w),1)+'<br><small>বই: বিদ্যুতের দিক পাল্টাতে কমুটেটর নামে উপকরণ লাগে। (গতি ও দোলন আমার সরল মডেল)</small>';}
+DRAWS.push(function(){var x=ctxOf('m9c'),V=+$('m9k').value,i;grad(x,0,0,380,300,'#eef4fa','#fbfdff');
+  var tq=V*.5*Math.cos(M9.ph),sgn2=1;if(M9.m===0)tq=V*.5*Math.abs(Math.cos(M9.ph));M9.w+=(tq*3-(M9.m===0?.8:1.4)*M9.w)*DT;M9.ph+=M9.w*DT;
+  x.fillStyle='#ffd6d6';x.fillRect(20,40,70,190);x.fillStyle='#d6e4ff';x.fillRect(290,40,70,190);tag(x,'N',55,135,'#c62828',24);tag(x,'S',325,135,'#1f5fbf',24);
+  for(i=0;i<5;i++)arrow(x,98,70+i*38,280,70+i*38,'rgba(90,100,120,.45)',1.5);
+  var cx=190,cy=135,L=78,ax=Math.cos(M9.ph)*L,ay=Math.sin(M9.ph)*L*.35;
+  ln(x,cx,40,cx,230,'#9aa5b1',3);
+  x.strokeStyle='#b8672d';x.lineWidth=7;x.beginPath();x.moveTo(cx-ax,cy-ay);x.lineTo(cx+ax,cy+ay);x.stroke();
+  var sg=M9.m===0?(Math.cos(M9.ph)>=0?1:-1):1;tag(x,sg>0?'⊙':'⊗',cx+ax,cy+ay,'#fff',12);circ(x,0,cx+ax,cy+ay,9,sg>0?'#e5484d':'#3b82f6','#fff',2);tag(x,sg>0?'⊙':'⊗',cx+ax,cy+ay,'#fff',12);circ(x,0,cx-ax,cy-ay,9,sg>0?'#3b82f6':'#e5484d','#fff',2);tag(x,sg>0?'⊗':'⊙',cx-ax,cy-ay,'#fff',12);
+  circ(x,0,cx,250,16,'#e3e8ee','#37474f',2);ln(x,cx-16,250,cx+16,250,'#37474f',2);tag(x,M9.m===0?'কমুটেটর':'(কমুটেটর নেই)',cx+70,258,'#1f3a5f',11);
+  battSym(x,cx-90,278,1);tag(x,bn(V)+' V',cx-50,278,'#c62828',12);tag(x,'ওপর থেকে দেখা: কুণ্ডলী ঘুরছে',190,22,'#6b7683',11);m9info();});
+m9info();
+qgame('m9q','m9o','m9fb','m9sc',[
+ ['কমুটেটরের কাজ কী?','কুণ্ডলীর বিদ্যুতের দিক উল্টে দেওয়া',['বিদ্যুৎ বাড়ানো','চুম্বক তৈরি','তাপ কমানো'],'যাতে টর্ক একই দিকে থাকে।'],
+ ['কমুটেটর না থাকলে কুণ্ডলী কী করবে?','দুলে থেমে যাবে',['আরও দ্রুত ঘুরবে','উড়ে যাবে','গলে যাবে'],'খাড়া অবস্থানে স্থির হয়।'],
+ ['মোটর কোন শক্তিকে কোন শক্তিতে রূপান্তর করে?','বিদ্যুৎশক্তি ➜ যান্ত্রিক শক্তি',['যান্ত্রিক ➜ বিদ্যুৎ','তাপ ➜ আলো','রাসায়নিক ➜ শব্দ'],'বিদ্যুৎ দিলে ঘোরে।'],
+ ['কুণ্ডলী ঘোরে কেন?','চৌম্বক ক্ষেত্রে বিদ্যুৎবাহী তার ঘূর্ণন সৃষ্টিকারী টর্ক অনুভব করে',['মাধ্যাকর্ষণে','বাতাসের ঠেলায়','তাপে'],'বইয়ের ব্যাখ্যা।'],
+ ['ব্যাটারি ভোল্টেজ বাড়ালে মোটরের গতি—','বাড়ে',['কমে','একই থাকে','উল্টে যায়'],'বিদ্যুৎ বেশি ➜ টর্ক বেশি।']]);
+
+/* ===== ল্যাব ১০: তড়িৎ চুম্বকীয় আবেশ ===== */
+var N10={m:0,auto:0,t:0,phi:0,pp:0,pos:10,defl:0};
+pills('n10p',function(k){N10.m=k;});on(['n10k'],function(){N10.auto=0;$('n10b').textContent='▶ নিজে নিজে নড়ুক';});
+$('n10b').onclick=function(){N10.auto=!N10.auto;this.textContent=N10.auto?'⏸ থামাও':'▶ নিজে নিজে নড়ুক';};
+function n10info(e){$('n10t').innerHTML=(Math.abs(e)<.05?'চুম্বক স্থির বা কুণ্ডলী থেকে দূরে ➜ <b>কোনো বিদ্যুৎ নেই</b>।':'<b>চুম্বক নড়ছে, চৌম্বক ক্ষেত্র বদলাচ্ছে ➜ আবিষ্ট বিদ্যুৎ ('+(e>0?'ডান':'বাম')+' দিকে কাঁটা)।</b>')+'<br><small>বই: কুণ্ডলীর ভেতর চৌম্বক ক্ষেত্র পরিবর্তন করলেই ইএমএফ ও বিদ্যুৎ তৈরি হয়। চুম্বক ঢোকালে এক দিকে, বের করলে উল্টো দিকে কাঁটা নড়ে। মেরু বদলালেও দিক বদলায়। (কাঁটার মাপ আমার সরল মডেল)</small>';}
+DRAWS.push(function(){var x=ctxOf('n10c'),i;grad(x,0,0,380,300,'#eef4fa','#fbfdff');
+  if(N10.auto){N10.t+=DT;N10.pos=50+45*Math.sin(N10.t*1.4);$('n10k').value=Math.round(N10.pos);}else N10.pos=+$('n10k').value;$('n10kv').textContent=bn(Math.round(N10.pos));
+  var mx=40+N10.pos*2.6,phi=Math.exp(-Math.pow((mx-200)/55,2)),sg=N10.m===0?1:-1,dphi=(phi-N10.phi)/Math.max(DT,.005);N10.phi=phi;
+  var e=clamp(-sg*dphi*.12,-1,1);N10.defl+=(e-N10.defl)*Math.min(1,DT*10);
+  coilD(x,150,130,100,70,7,'#b8672d');ln(x,160,168,100,215,'#37474f',2);ln(x,240,168,270,215,'#37474f',2);ln(x,100,215,170,250,'#37474f',2);
+  rr(x,135,223,110,60,8);x.fillStyle='#fff';x.fill();x.strokeStyle='#37474f';x.lineWidth=2;x.stroke();tag(x,'অ্যামিটার',190,273,'#6b7683',11);
+  x.strokeStyle='#e5484d';x.lineWidth=3;x.beginPath();x.moveTo(190,270);x.lineTo(190+Math.sin(N10.defl*1.1)*44,270-Math.cos(N10.defl*1.1)*38);x.stroke();
+  for(i=-4;i<=4;i++)ln(x,190+Math.sin(i*.28)*52,270-Math.cos(i*.28)*46,190+Math.sin(i*.28)*58,270-Math.cos(i*.28)*52,'#9aa5b1',1.5);
+  magnet(x,mx,80,70,28,N10.m===0?0:1);tag(x,'চুম্বক ⬌',mx,52,'#1f3a5f',12);
+  n10info(N10.defl);});
+n10info(0);
+qgame('n10q','n10o','n10fb','n10sc',[
+ ['কুণ্ডলীতে বিদ্যুৎ তৈরি হয় কখন?','চৌম্বক ক্ষেত্র পরিবর্তন হলে',['চুম্বক স্থির থাকলে','কুণ্ডলী ঠান্ডা হলে','কখনোই হয় না'],'বই: শুধু যখন চৌম্বক ক্ষেত্র পরিবর্তন হয় তখন।'],
+ ['কুণ্ডলীর মাঝে প্রচণ্ড শক্তিশালী স্থির চুম্বক রাখলে কী হবে?','কোনো বিদ্যুৎ প্রবাহিত হবে না',['প্রচুর বিদ্যুৎ চলবে','কুণ্ডলী গলে যাবে','চুম্বক উড়ে যাবে'],'বইয়ের কথা।'],
+ ['চুম্বক ঢোকালে আর বের করলে কাঁটা—','উল্টো দিকে নড়ে',['একই দিকে নড়ে','নড়ে না','দ্বিগুণ নড়ে'],'বইয়ের ব্যাখ্যা।'],
+ ['এই ঘটনাকে কী বলে?','তড়িৎ চুম্বকীয় আবেশ',['স্থির বিদ্যুৎ','প্রতিসরণ','ঘর্ষণ'],'ফলে যে ভোল্টেজ ও বিদ্যুৎ তৈরি হয় তাকে আবিষ্ট ভোল্টেজ ও আবিষ্ট বিদ্যুৎ বলে।'],
+ ['চুম্বকের মেরু বদলালে কাঁটা—','উল্টো দিকে নড়ে',['একই দিকে নড়ে','নড়ে না','ভেঙে যায়'],'বইয়ে: মেরু পরিবর্তন করলে অ্যামিটারেও প্রবাহ-দিক পরিবর্তন।']]);
+
+
+/* ===== ল্যাব ১১: জেনারেটর ===== */
+var J11={ph:0,g:[]};
+on(['j11k','j11n'],function(){});
+DRAWS.push(function(){var x=ctxOf('j11c'),sp=+$('j11k').value,n=+$('j11n').value,i;$('j11kv').textContent=bn(sp);$('j11nv').textContent=bn(n);grad(x,0,0,380,300,'#eef4fa','#fbfdff');
+  J11.ph+=DT*sp*.9;var ph=J11.ph,e=n*sp*Math.cos(ph)*.12;
+  x.fillStyle='#ffd6d6';x.fillRect(20,40,50,150);x.fillStyle='#d6e4ff';x.fillRect(310,40,50,150);tag(x,'N',45,115,'#c62828',22);tag(x,'S',335,115,'#1f5fbf',22);
+  var cx=190,cy=115,L=80,ax=Math.cos(ph)*L,ay=Math.sin(ph)*L*.3;ln(x,cx,35,cx,195,'#9aa5b1',3);
+  x.strokeStyle='#b8672d';x.lineWidth=3+Math.min(n,10)*.4;x.beginPath();x.moveTo(cx-ax,cy-ay);x.lineTo(cx+ax,cy+ay);x.stroke();
+  circ(x,0,cx+ax,cy+ay,7,'#e5484d','#fff',2);circ(x,0,cx-ax,cy-ay,7,'#3b82f6','#fff',2);
+  x.save();x.translate(60,20);x.strokeStyle='#37474f';x.lineWidth=2;x.beginPath();x.arc(0,0,0,0,1);x.stroke();x.restore();
+  tag(x,'আবর্তন ↻ (হাতে ঘোরাচ্ছি)',cx,22,'#6b7683',11);
+  J11.g.push(e);if(J11.g.length>300)J11.g.shift();x.fillStyle='#fff';x.fillRect(40,215,300,75);x.strokeStyle='#9aa5b1';x.lineWidth=1;x.strokeRect(40,215,300,75);ln(x,40,252,340,252,'#cfd6df',1);
+  x.strokeStyle='#e5484d';x.lineWidth=2;x.beginPath();for(i=0;i<J11.g.length;i++){var py=252-clamp(J11.g[i]*.25,-34,34);if(i===0)x.moveTo(40+i,py);else x.lineTo(40+i,py);}x.stroke();
+  tag(x,'আবিষ্ট ভোল্টেজ (ইএমএফ) — এসি',190,228,'#c62828',11);
+  $('j11t').innerHTML='<b>প্যাঁচ '+bn(n)+', গতি '+bn(sp)+'</b> ➜ ইএমএফ-এর বড় মান ≈ '+bn(n*sp)+' (আপেক্ষিক)<br>কুণ্ডলী ঘুরলে ক্ষেত্রের পরিবর্তন হয় ➜ <b>ভোল্টেজ কখনো ধনাত্মক, কখনো ঋণাত্মক</b> ➜ এসি।<br><small>বই: কুণ্ডলী চৌম্বক ক্ষেত্রে ঘুরলে আবিষ্ট বিদ্যুৎ তৈরি হয়; এটাই জেনারেটর, মোটরের উল্টো। (সংখ্যা ও গ্রাফ আমার সরল মডেল)</small>';});
+qgame('j11q','j11o','j11fb','j11sc',[
+ ['জেনারেটর কোন শক্তিকে কোন শক্তিতে রূপান্তর করে?','যান্ত্রিক ➜ বিদ্যুৎশক্তি',['বিদ্যুৎ ➜ যান্ত্রিক','তাপ ➜ শব্দ','আলো ➜ তাপ'],'কুণ্ডলী ঘোরালে বিদ্যুৎ তৈরি হয়।'],
+ ['জেনারেটরে বিদ্যুৎ তৈরির মূল নীতি কী?','তড়িৎ চুম্বকীয় আবেশ',['ঘর্ষণ','প্রতিসরণ','তাপ পরিবহন'],'কুণ্ডলীর ভেতর ক্ষেত্র বদলায়।'],
+ ['কুণ্ডলী দ্রুত ঘোরালে ভোল্টেজ—','বাড়ে',['কমে','একই থাকে','শূন্য হয়'],'দ্রুত পরিবর্তন ➜ বেশি আবেশ।'],
+ ['প্যাঁচ সংখ্যা বাড়ালে ভোল্টেজ—','বাড়ে',['কমে','একই থাকে','উল্টে যায়'],'প্রতিটি প্যাঁচে ভোল্টেজ যোগ হয়।'],
+ ['ঘূর্ণনরত কুণ্ডলী থেকে কোন ধরনের বিদ্যুৎ মেলে?','পরিবর্তী প্রবাহ (এসি)',['শুধু ডিসি','স্থির বিদ্যুৎ','কোনোটিই না'],'দিক পাল্টাতে থাকে।']]);
+
+/* ===== ল্যাব ১২: ট্রান্সফর্মার ===== */
+var T12={m:0,ph:0};
+pills('t12p',function(k){T12.m=k;});
+DRAWS.push(function(){var x=ctxOf('t12c'),np=+$('t12a').value,ns=+$('t12b').value,Vp=+$('t12v').value,Ip=+$('t12i').value/10,ac=T12.m===0;
+  $('t12av').textContent=bn(np);$('t12bv').textContent=bn(ns);$('t12vv').textContent=bn(Vp);$('t12iv').textContent=bn(Ip);grad(x,0,0,380,320,'#eef4fa','#fbfdff');T12.ph+=DT*3;
+  var Vs=ac?Vp*ns/np:0,Is=Vs>0?Vp*Ip/Vs:0,fl=ac?Math.sin(T12.ph):0;
+  rr(x,130,70,120,150,8);x.fillStyle='#cfd6df';x.fill();x.strokeStyle='#37474f';x.lineWidth=2;x.stroke();rr(x,160,100,60,90,4);x.fillStyle='#fbfdff';x.fill();x.stroke();
+  x.strokeStyle='#b8672d';x.lineWidth=4;var kp=Math.min(14,Math.round(np/15)),ks=Math.min(14,Math.round(ns/150)||1),i;
+  for(i=0;i<kp;i++){var y=84+i*(100/Math.max(kp,1));ln(x,126,y,164,y+5,'#b8672d',4);}
+  for(i=0;i<ks;i++){var y2=84+i*(100/Math.max(ks,1));ln(x,216,y2+5,254,y2,'#2563eb',4);}
+  if(ac){var a=.3+.7*Math.abs(fl);x.strokeStyle='rgba(37,99,235,'+a+')';x.lineWidth=2.5;x.strokeRect(150,92,80,106);}
+  tag(x,'প্রাইমারি '+bn(np)+' প্যাঁচ',68,60,'#b8672d',12);tag(x,'সেকেন্ডারি '+bn(ns)+' প্যাঁচ',312,60,'#2563eb',12);
+  tag(x,'Vp = '+bn(Vp)+' V ('+(ac?'এসি':'ডিসি')+')',68,250,'#c62828',13);tag(x,'Ip = '+bn(Ip)+' A',68,272,'#c62828',12);
+  tag(x,'Vs = '+f(Vs,1)+' V',312,250,'#2563eb',13);tag(x,'Is = '+f(Is,2)+' A',312,272,'#2563eb',12);
+  tag(x,Vs>Vp?'ভোল্টেজ বাড়ানো (স্টেপ-আপ)':(ac&&Vs<Vp?'ভোল্টেজ কমানো (স্টেপ-ডাউন)':(ac?'সমান':'ডিসিতে আবেশ নেই')),190,300,'#1f3a5f',13);
+  $('t12t').innerHTML=(ac?'<b>Vs = Vp × (ns ÷ np)</b> = '+bn(Vp)+' × ('+bn(ns)+' ÷ '+bn(np)+') = <b>'+f(Vs,1)+' V</b><br>শক্তি অক্ষয় ধরলে Vp·Ip = Vs·Is ➜ Is = '+f(Is,3)+' A':'<b>ডিসি দিলে সেকেন্ডারিতে কিছুই হয় না</b> — কারণ ক্ষেত্র বদলায় না, আবেশ হয় না।')+'<br><small>বই: ট্রান্সফর্মার শুধু এসি-তে কাজ করে। (শক্তি অক্ষয় ধরাটা আদর্শ ট্রান্সফর্মারের সরল ধারণা। বইয়ের চিত্র ১২.১৫-এর সংখ্যা মোটামুটি স্কিম্যাটিক, তাই হুবহু মিলবে না।)</small>';});
+qgame('t12q','t12o','t12fb','t12sc',[
+ ['ট্রান্সফর্মার কোন ধরনের বিদ্যুতে কাজ করে?','এসি (পরিবর্তী)',['শুধু ডিসি','দুটোতেই','কোনোটিতেই না'],'ক্ষেত্র বদলাতে হয়।'],
+ ['প্রাইমারি ১০০ প্যাঁচ, সেকেন্ডারি ৫০০ প্যাঁচ, Vp = ২০ V হলে Vs?','১০০ V',['৪ V','২০ V','১০ V'],'20 × 500/100 = 100।'],
+ ['ns > np হলে ট্রান্সফর্মারকে বলে—','স্টেপ-আপ',['স্টেপ-ডাউন','নিরপেক্ষ','ডিসি'],'ভোল্টেজ বাড়ে।'],
+ ['স্টেপ-আপে ভোল্টেজ বাড়লে বিদ্যুৎ (আদর্শ ধরে)—','কমে',['বাড়ে','একই থাকে','উল্টে যায়'],'Vp·Ip = Vs·Is।'],
+ ['প্রাইমারিতে ডিসি দিলে সেকেন্ডারিতে ভোল্টেজ—','হয় না',['দ্বিগুণ হয়','অর্ধেক হয়','অসীম হয়'],'চৌম্বক ক্ষেত্র বদলায় না।']]);
+
+/* ===== ল্যাব ১৩: শক্তির রূপান্তর ===== */
+var V13={m:0,ph:0};
+pills('v13p',function(k){V13.m=k;});
+DRAWS.push(function(){var x=ctxOf('v13c'),L=+$('v13k').value,mo=V13.m===0,i;$('v13kv').textContent=bn(L);grad(x,0,0,380,300,'#eef4fa','#fbfdff');V13.ph+=DT*(1+L*.5);
+  var A=mo?'বিদ্যুৎশক্তি':'যান্ত্রিক শক্তি',B=mo?'যান্ত্রিক শক্তি':'বিদ্যুৎশক্তি',dev=mo?'মোটর':'জেনারেটর';
+  rr(x,20,110,100,70,10);x.fillStyle='#fff3cd';x.fill();x.strokeStyle='#b8860b';x.lineWidth=2;x.stroke();tag(x,A,70,145,'#8a6d00',12);
+  rr(x,140,100,100,90,10);x.fillStyle='#d6e4ff';x.fill();x.strokeStyle='#2563eb';x.stroke();tag(x,dev,190,145,'#1f3a5f',16);
+  rr(x,260,110,100,70,10);x.fillStyle='#d9f2e0';x.fill();x.strokeStyle='#2e7d32';x.stroke();tag(x,B,310,145,'#1b5e20',12);
+  for(i=0;i<5;i++){var t=((V13.ph*.25+i/5)%1);if(L>0){circ(x,0,20+340*t,100,3+L*.25,mo?'#f5c518':'#5aa469',null);}}
+  arrow(x,122,145,138,145,'#37474f',3);arrow(x,242,145,258,145,'#37474f',3);
+  x.save();x.translate(190,215);x.rotate(V13.ph*(L>0?1:0));x.strokeStyle='#37474f';x.lineWidth=4;x.beginPath();x.moveTo(-24,0);x.lineTo(24,0);x.moveTo(0,-24);x.lineTo(0,24);x.stroke();x.restore();
+  tag(x,'ইনপুট ➜ '+dev+' ➜ আউটপুট',190,30,'#1f3a5f',14);tag(x,'মাত্রা: '+bn(L),190,270,'#6b7683',13);
+  $('v13t').innerHTML=mo?'<b>মোটর:</b> বিদ্যুৎ ঢোকে ➜ কুণ্ডলী ঘোরে (বলের কাজ)। বিদ্যুৎ যত বেশি, ঘূর্ণন তত দ্রুত।':'<b>জেনারেটর:</b> কুণ্ডলী ঘোরাই ➜ আবেশে বিদ্যুৎ তৈরি। যত দ্রুত ঘোরাই, তত বেশি বিদ্যুৎ।';
+  $('v13t').innerHTML+='<br><small>বই: মোটর ও জেনারেটর একই কাঠামো, শক্তির দিক উল্টো। (ছবির বাক্স ও গতি আমার আঁকা)</small>';});
+qgame('v13q','v13o','v13fb','v13sc',[
+ ['মোটরে ইনপুট কী?','বিদ্যুৎশক্তি',['যান্ত্রিক শক্তি','তাপশক্তি','শব্দ'],'বিদ্যুৎ ঢুকে ঘূর্ণন তৈরি করে।'],
+ ['জেনারেটরে আউটপুট কী?','বিদ্যুৎশক্তি',['যান্ত্রিক শক্তি','আলো','শব্দ'],'ঘূর্ণন থেকে বিদ্যুৎ।'],
+ ['মোটর কোন নীতিতে কাজ করে?','চৌম্বক ক্ষেত্রে বিদ্যুৎবাহী তারের ওপর বল',['তড়িৎ চুম্বকীয় আবেশ','প্রতিসরণ','ঘর্ষণ'],'বইয়ের ব্যাখ্যা।'],
+ ['জেনারেটর কোন নীতিতে কাজ করে?','তড়িৎ চুম্বকীয় আবেশ',['তারের ওপর বল','তাপ প্রবাহ','প্রতিফলন'],'ক্ষেত্র বদলালে বিদ্যুৎ।'],
+ ['মোটর ও জেনারেটরের শক্তির দিক—','একে অপরের উল্টো',['একই','দুটোই তাপে','কোনো সম্পর্ক নেই'],'বিদ্যুৎ↔যান্ত্রিক।']]);
+
+var QUIZ=[];function M(q,c,w,e,fix){var o=[c].concat(w);QUIZ.push({q:q,o:o,a:0,e:e,fix:!!fix});}
+M('চুম্বকের একই মেরু কাছাকাছি আনলে—','বিকর্ষণ হয়',['আকর্ষণ হয়','কিছুই হয় না','তাপ তৈরি হয়'],'একই মেরু বিকর্ষণ করে।',true);
+M('মুক্তভাবে ঝুলানো চুম্বক থামে—','উত্তর-দক্ষিণ বরাবর',['পূর্ব-পশ্চিম বরাবর','খাড়া','যেকোনো দিকে'],'পৃথিবীর চৌম্বক ক্ষেত্রের জন্য।',true);
+M('ডান হাতের নিয়মে বুড়ো আঙুল নির্দেশ করে—','বিদ্যুতের দিক',['ক্ষেত্রের দিক','বলের দিক','রোধ'],'নিয়ম।',true);
+M('সলিনয়েড কীসের মতো আচরণ করে?','দণ্ড চুম্বকের',['ব্যাটারির','বাল্বের','ধারকের'],'বই।',true);
+M('মোটরে কমুটেটরের কাজ—','বিদ্যুতের দিক উল্টানো',['ভোল্টেজ বাড়ানো','চুম্বক বানানো','তাপ কমানো'],'ঘূর্ণন চালু রাখে।',true);
+M('ট্রান্সফর্মার কাজ করে—','এসি-তে',['ডিসি-তে','দুটোতেই','কোনোটিতে না'],'ক্ষেত্র বদলাতে হয়।',true);
+M('তারে বিদ্যুৎ না থাকলে কম্পাস—','উত্তর-দক্ষিণ দেখায়',['বৃত্তে ঘোরে','ভেঙে যায়','পশ্চিম দেখায়'],'শুধু পৃথিবীর ক্ষেত্র।');
+M('বিদ্যুৎ বাড়ালে তারের চৌম্বক ক্ষেত্র—','শক্তিশালী হয়',['দুর্বল হয়','একই থাকে','মুছে যায়'],'সমানুপাতিক।');
+M('বিদ্যুৎ উল্টালে ক্ষেত্রের দিক—','উল্টে যায়',['একই থাকে','দ্বিগুণ হয়','শূন্য হয়'],'দিক বদলায়।');
+M('তড়িৎচুম্বকে কোর হিসেবে ভালো—','নরম লোহা',['কাঠ','প্লাস্টিক','কাচ'],'লোহাজাতীয় পদার্থ চৌম্বকীয় হয়।');
+M('তড়িৎচুম্বক শক্তিশালী করতে—','প্যাঁচ ও বিদ্যুৎ বাড়াই',['প্যাঁচ কমাই','বিদ্যুৎ বন্ধ করি','কোর সরাই'],'n×I বাড়ে।');
+M('বিদ্যুৎ বন্ধ করলে তড়িৎচুম্বক—','চুম্বকত্ব হারায়',['আরও শক্ত হয়','গরম হয়ে গলে','অপরিবর্তিত থাকে'],'ছোট চুম্বক এলোমেলো হয়।');
+M('স্পিকারে কাঁপে—','ডায়াফ্রাম',['ব্যাটারি','তার','কম্পাস'],'শব্দ তৈরি।');
+M('চৌম্বক ক্ষেত্রে তারের ওপর বল কখন কাজ করে?','তারে বিদ্যুৎ থাকলে',['সবসময়','বিদ্যুৎ না থাকলে','শুধু রাতে'],'বিদ্যুৎবাহী তার।');
+M('বিদ্যুৎ উল্টালে তারের বল—','উল্টো দিকে',['একই দিকে','শূন্য','দ্বিগুণ'],'বই।');
+M('মোটর রূপান্তর করে—','বিদ্যুৎ ➜ যান্ত্রিক শক্তি',['যান্ত্রিক ➜ বিদ্যুৎ','তাপ ➜ আলো','আলো ➜ বিদ্যুৎ'],'সংজ্ঞা।');
+M('কমুটেটর না থাকলে কুণ্ডলী—','খাড়া অবস্থানে থেমে যায়',['চিরকাল ঘোরে','দ্রুত ঘোরে','গলে যায়'],'টর্ক দিক বদলায় না।');
+M('কুণ্ডলীর ভেতর স্থির চুম্বক থাকলে বিদ্যুৎ—','হয় না',['বেশি হয়','দ্বিগুণ','সবসময় হয়'],'ক্ষেত্র বদলায় না।');
+M('আবিষ্ট বিদ্যুৎ পেতে দরকার—','চৌম্বক ক্ষেত্রের পরিবর্তন',['স্থির ক্ষেত্র','তাপ','আলো'],'আবেশ।');
+M('চুম্বক ঢোকানো ও বের করায় কাঁটা—','উল্টো দিকে নড়ে',['একই দিকে','নড়ে না','ভেঙে যায়'],'বই।');
+M('জেনারেটরের আউটপুট—','বিদ্যুৎশক্তি',['যান্ত্রিক শক্তি','শব্দ','আলো'],'ঘূর্ণন ➜ বিদ্যুৎ।');
+M('জেনারেটর দ্রুত ঘোরালে ভোল্টেজ—','বাড়ে',['কমে','একই','শূন্য'],'আবেশ বেশি।');
+M('ঘূর্ণনরত কুণ্ডলী সাধারণত দেয়—','এসি',['ডিসি','স্থির বিদ্যুৎ','কিছু না'],'দিক পাল্টায়।');
+M('np=১০০, ns=২০০, Vp=৫০ V হলে Vs—','১০০ V',['২৫ V','৫০ V','২০০ V'],'50×200/100।');
+M('ns < np হলে ট্রান্সফর্মার—','স্টেপ-ডাউন',['স্টেপ-আপ','নিরপেক্ষ','ডিসি'],'ভোল্টেজ কমে।');
+M('আদর্শ স্টেপ-আপে ভোল্টেজ ২ গুণ হলে বিদ্যুৎ—','অর্ধেক',['দ্বিগুণ','একই','শূন্য'],'Vp·Ip = Vs·Is।');
+M('ট্রান্সফর্মারে ডিসি দিলে সেকেন্ডারিতে—','কোনো ভোল্টেজ নেই',['বেশি ভোল্টেজ','এসি','বিস্ফোরণ'],'ক্ষেত্র স্থির।');
+M('কম্পাসের কাঁটা হলো—','ছোট চুম্বক',['তার','ধারক','রোধ'],'বই।');
+M('ডান হাতের নিয়মে বাকি আঙুল দেখায়—','ক্ষেত্রের দিক',['বিদ্যুতের দিক','রোধ','ভোল্টেজ'],'নিয়ম।');
+M('বিদ্যুৎ বেরিয়ে এলে ক্ষেত্র ঘোরে—','ঘড়ির কাঁটার উল্টো দিকে',['ঘড়ির কাঁটার দিকে','ঘোরে না','ওপর-নিচ'],'ডান হাতের নিয়ম।');
+M('মোটর ও জেনারেটরের শক্তির দিক—','উল্টো',['একই','কোনো সম্পর্ক নেই','দুটোই তাপ'],'বিপরীত রূপান্তর।');
+M('আবিষ্ট বিদ্যুতের দিক বদলায়, যখন—','চুম্বকের মেরু বদলাই',['তার রং বদলাই','আলো জ্বালি','কিছুই না'],'বই।');
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+var QA=[
+{h:'সৃজনশীল প্রশ্ন (আমার নিজের লেখা উত্তর, শিক্ষকের সাথে মিলিয়ে নিও)',items:[
+['১. রাফির টেবিলে দুটি দণ্ড চুম্বক। একটার N অন্যটার N-এর কাছে আনতেই সরে গেল। (ক) চৌম্বক ক্ষেত্র কী? (খ) কম্পাসের কাঁটা উত্তর-দক্ষিণ থাকে কেন? (গ) কেন সরে গেল ব্যাখ্যা করো। (ঘ) N-এর কাছে S আনলে কী হতো, যুক্তিসহ লেখো।','(ক) চুম্বকের চারপাশে যে স্থানে তার প্রভাব অনুভূত হয়। (খ) কাঁটা একটি ছোট চুম্বক; পৃথিবীর চৌম্বক ক্ষেত্রে সে উত্তর-দক্ষিণ বরাবর সাজে। (গ) একই মেরু (N-N) বিকর্ষণ করে, তাই সরে গেল। (ঘ) ভিন্ন মেরু আকর্ষণ করে, তাই দুটি কাছে টানত ও জুড়ে যেত।'],
+['২. একটি সোজা তারে বিদ্যুৎ পাঠানো হলো। (ক) ডান হাতের নিয়ম বলো। (খ) তারে বিদ্যুৎ বাড়ালে কী হয়? (গ) তারটিকে সলিনয়েড করলে কেন ক্ষেত্র বাড়ে? (ঘ) ভেতরে লোহা ঢোকালে কী বদল হয়?','(ক) বুড়ো আঙুল বিদ্যুতের দিকে রাখলে বাকি আঙুল ক্ষেত্রের দিক দেখায়। (খ) ক্ষেত্র শক্তিশালী হয়। (গ) প্রতিটি প্যাঁচের ক্ষেত্র যোগ হয়ে একদিকে জোরালো ক্ষেত্র হয়। (ঘ) ছোট চুম্বকগুলো সারিবদ্ধ হয়ে ক্ষেত্র অনেক বাড়ায়; এটি তড়িৎচুম্বক।']]},
+{h:'সংক্ষিপ্ত প্রশ্ন',items:[
+['১. তড়িৎ চুম্বকীয় আবেশ কী?','কুণ্ডলীর ভেতর চৌম্বক ক্ষেত্রের পরিবর্তনে যে ভোল্টেজ ও বিদ্যুৎ তৈরি হয় সেই ঘটনা।'],
+['২. মোটরে কমুটেটর কেন লাগে?','প্রতি অর্ধ-পাকে বিদ্যুতের দিক উল্টে দিয়ে ঘূর্ণন একই দিকে রাখতে।'],
+['৩. ট্রান্সফর্মার ডিসি-তে কাজ করে না কেন?','ডিসি-তে চৌম্বক ক্ষেত্র বদলায় না, তাই আবেশ হয় না।'],
+['৪. জেনারেটর ও মোটরের পার্থক্য কী?','মোটর বিদ্যুৎকে যান্ত্রিক শক্তিতে, জেনারেটর যান্ত্রিক শক্তিকে বিদ্যুতে রূপান্তর করে।']]},
+{h:'অতিরিক্ত অনুশীলন (আমার তৈরি)',items:[
+['১. np = ২০০, ns = ১০০০, Vp = ১২ V হলে Vs কত?','Vs = 12 × 1000/200 = 60 V।'],
+['২. আদর্শ ট্রান্সফর্মারে Vp = ২০ V, Ip = ৫ A, Vs = ১০০ V হলে Is?','Is = (20×5)/100 = 1 A।']]}];
+
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+function frame(){FR++;for(var i=0;i<DRAWS.length;i++)DRAWS[i]();requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>

@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>আলোর প্রতিফলন (পদার্থবিজ্ঞান অধ্যায় ৮) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+small{color:#567}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/lab-boost.js?v=1"></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#physics">&larr; সব অধ্যায়</a>
+</header><div class="wrap">
+  <div class="crumb">⚛️ পদার্থবিজ্ঞান &rsaquo; অষ্টম অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🪞 আলোর প্রতিফলন (Reflection of Light)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🌈 ল্যাব ১</a><a href="#lab2">🔦 ল্যাব ২</a><a href="#lab3">📐 ল্যাব ৩</a><a href="#lab4">🧱 ল্যাব ৪</a><a href="#lab5">🌹 ল্যাব ৫</a><a href="#lab6">🪞 ল্যাব ৬</a><a href="#lab7">🕯️ ল্যাব ৭</a><a href="#lab8">🧍 ল্যাব ৮</a><a href="#lab9">📏 ল্যাব ৯</a><a href="#lab10">📷 ল্যাব ১০</a><a href="#lab11">🚗 ল্যাব ১১</a><a href="#lab12">🥄 ল্যাব ১২</a><a href="#lab13">🔭 ল্যাব ১৩</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> আলোর প্রকৃতি ব্যাখ্যা করতে; প্রতিফলনের সূত্র বলতে ও আলোকরশ্মি এঁকে দেখাতে; সমতল দর্পণে প্রতিবিম্ব, পূর্ণদৈর্ঘ্য প্রতিবিম্ব ও একাধিক প্রতিবিম্ব বোঝাতে; উত্তল ও অবতল দর্পণে প্রতিবিম্বের অবস্থান ও ধরন বলতে; বিবর্ধন ও দর্পণের সূত্র ব্যবহার করতে; আর দর্পণের দৈনন্দিন ব্যবহার জানতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের ক্রম মেনে সহজ ভাষায় লেখা। বইয়ের "নমুনা প্রশ্ন"-এর উত্তরমালা নেই, তাই MCQ ও প্রশ্নের উত্তর আমি হিসাব করে ব্যাখ্যাসহ দিয়েছি।</div>
+
+    <h3>৮.১ আলোর প্রকৃতি ⭐⭐</h3>
+    <ul>
+      <li>আলো থেকে প্রতিফলিত হয়ে চোখে এলেই আমরা বস্তু দেখি। <b>আলো একটি তড়িৎচৌম্বক তরঙ্গ।</b> এর মাধ্যম লাগে না।</li>
+      <li>আলোরও তরঙ্গদৈর্ঘ্য আছে। <b>400 nm থেকে 700 nm</b> তরঙ্গদৈর্ঘ্যের আলোই আমরা দেখি (1 nm = 10⁻⁹ m)।</li>
+      <li>তরঙ্গদৈর্ঘ্য কম হলে: বেগুনি, তারপর অতিবেগুনি (আল্ট্রাভায়োলেট), এক্স-রে, গামা রে। বেশি হলে: লাল, তারপর অবলোহিত (ইনফ্রারেড), মাইক্রোওয়েভ, রেডিও তরঙ্গ।</li>
+      <li>রিমোট কন্ট্রোলের আলো ইনফ্রারেড, তাই খালি চোখে দেখা যায় না। মোবাইল ক্যামেরায় দেখা যায়।</li>
+    </ul>
+
+    <h3>৮.২ প্রতিফলন ⭐⭐⭐</h3>
+    <ul>
+      <li>আলো এক মাধ্যম থেকে অন্য মাধ্যমে গেলে <b>তিনটি ঘটনা</b> ঘটে: <b>প্রতিফলন</b> (প্রথম মাধ্যমে ফিরে আসা), <b>প্রতিসরণ</b> (দ্বিতীয় মাধ্যমে ঢুকে যাওয়া), <b>শোষণ</b> (তলে শোষিত হওয়া)।</li>
+      <li><b>শোষণ ও রং:</b> বস্তু যে রংয়ের আলো ফেরত দেয়, আমরা সেই রংই দেখি, বাকি রং শোষণ করে। লাল গোলাপ লাল ফেরত দেয়, সবুজ পাতা সবুজ। লাল আলোতে সবুজ পাতা কালো দেখায়।</li>
+      <li><b>কিছু পরিভাষা:</b> আপতিত রশ্মি (XO), প্রতিফলিত রশ্মি (OX'), অভিলম্ব (আপতন বিন্দুতে তলের ওপর লম্ব), আপতন কোণ θi, প্রতিফলন কোণ θr (দুটিই অভিলম্ব থেকে মাপা)।</li>
+      <li><b>প্রথম সূত্র:</b> আপতিত রশ্মি, প্রতিফলিত রশ্মি ও অভিলম্ব একই সমতলে থাকে।</li>
+      <li><b>দ্বিতীয় সূত্র:</b> প্রতিফলন কোণ = আপতন কোণ (θr = θi)।</li>
+      <li>আপতন কোণ যত বেশি, প্রতিফলনও তত বেশি। সাধারণ কাচে লম্ব আপতনে মাত্র 4%–5% প্রতিফলিত হয়, কিন্তু 80°–90° কোণে অনেক বেশি। (পুরো হিসাবের সূত্রের নাম ফ্রেনেলের সূত্র।)</li>
+      <li><b>মসৃণ তলে</b> সমান্তরাল রশ্মি প্রতিফলনের পরও সমান্তরাল থাকে (নিয়মিত প্রতিফলন)। <b>অমসৃণ তলে</b> রশ্মি আলাদা কোণে ছড়িয়ে পড়ে (ব্যাপ্ত প্রতিফলন)। দুই ক্ষেত্রেই প্রতিটি রশ্মি সূত্র মেনে চলে।</li>
+    </ul>
+
+    <h3>৮.৩ সমতল দর্পণ (আয়না) ⭐⭐⭐</h3>
+    <ul>
+      <li>কাচের পেছনে রুপা বা অ্যালুমিনিয়ামের প্রলেপ দিয়ে আয়না বানানো হয়। কাচের সামনের পৃষ্ঠ থেকে প্রায় 4% আলো ফেরে, প্রলেপ থেকে প্রায় সবটা ফেরে বলে একটি স্পষ্ট (100%) প্রতিবিম্ব হয়।</li>
+      <li>প্রতিফলিত রশ্মিগুলোকে পেছনে বাড়ালে যে বিন্দুতে মিলে, সেটিই প্রতিবিম্বের অবস্থান।</li>
+      <li><b>সমতল আয়নায় প্রতিবিম্ব:</b> (a) আয়না থেকে বস্তুর সমদূরত্বে, (b) অবাস্তব, (c) সোজা, (d) সমান দৈর্ঘ্যের। (প্রমাণ: OPX ও OPX' ত্রিভুজ সর্বসম।)</li>
+      <li><b>বাস্তব প্রতিবিম্ব:</b> যেখানে সত্যিই আলো কেন্দ্রীভূত হয়, তাই পর্দায় ধরা যায়। <b>অবাস্তব প্রতিবিম্ব:</b> আলো কেন্দ্রীভূত হয় না, শুধু মনে হয় ওখান থেকে আসছে, পর্দায় ধরা যায় না।</li>
+      <li><b>পূর্ণদৈর্ঘ্য প্রতিবিম্ব</b> দেখতে আয়নার দৈর্ঘ্য মানুষের উচ্চতার অর্ধেক হলেই যথেষ্ট। আয়না থেকে 1 m বা 10 m দূরে থাকলেও তাই। (1.5 m ➜ 0.75 m)</li>
+      <li><b>ডান-বাম উল্টে যায়</b>, ওপর-নিচ নয়। ডান-বাম অবিকৃত রাখতে দুটি আয়নাকে পরস্পর <b>90°</b> কোণে রাখতে হয়।</li>
+      <li>দুটি সমান্তরাল আয়নার মাঝে একটি মোমবাতি থাকলে <b>অসংখ্য প্রতিবিম্ব</b> হয়, কারণ এক আয়নার প্রতিবিম্বের প্রতিবিম্ব অন্যটিতে তৈরি হতে থাকে।</li>
+      <li>দুটি আয়না 60° কোণে। প্রথম আয়নায় 60° কোণে আলো ফেলা হলে রশ্মি দ্বিতীয় আয়নায় লম্বভাবে পড়ে ঠিক উল্টো দিকে ফিরে যায়।</li>
+      <li><b>ক্যালাইডোস্কোপ:</b> তিনটি কাচ ত্রিভুজাকারে সাজিয়ে ভেতরে রঙিন পাথর রাখলে বারবার প্রতিফলনে সুন্দর নকশা হয়।</li>
+      <li><b>পিনহোল ক্যামেরা:</b> বোর্ডের সূক্ষ্ম ফুটো দিয়ে আলো এসে পর্দায় বাস্তব, উল্টো ও সকল দূরত্বে স্পষ্ট প্রতিবিম্ব তৈরি করে।</li>
+    </ul>
+
+    <h3>৮.৪–৮.৬ গোলীয় দর্পণ ⭐⭐⭐</h3>
+    <ul>
+      <li>গোলকের কিছু অংশ কেটে পেছনে রুপা বা অ্যালুমিনিয়াম দিলে <b>গোলীয় আয়না</b> হয়। ভেতরের পিঠ চকচকে হলে <b>অবতল</b> (চামচের ভেতর)। বাইরের পিঠ চকচকে হলে <b>উত্তল</b> (চামচের উল্টো পিঠ)।</li>
+      <li>গোলকের কেন্দ্র = <b>বক্রতার কেন্দ্র C</b>, আয়নার কেন্দ্রবিন্দু = <b>মেরু বিন্দু P</b>, ব্যাসার্ধ r। <b>ফোকাস বিন্দু F</b> থেকে P-এর দূরত্ব <b>ফোকাস দূরত্ব f = r/2</b>।</li>
+      <li>সমতল আয়নার ফোকাস দূরত্ব অসীম।</li>
+      <li><b>তিনটি নিয়ম:</b> (i) কেন্দ্রমুখী রশ্মি লম্ব হয়ে একই পথে ফিরে আসে। (ii) প্রধান অক্ষের সমান্তরাল রশ্মি প্রতিফলনের পর ফোকাস বিন্দু F দিয়ে যায় (অবতলে) বা F থেকে ছড়ায় বলে মনে হয় (উত্তলে)। (iii) ফোকাস অভিমুখী রশ্মি প্রতিফলনের পর অক্ষের সমান্তরাল হয়।</li>
+      <li><b>উত্তল আয়নার প্রতিবিম্ব:</b> সব সময় অবাস্তব, সোজা, ছোট, F ও P-এর মাঝে। বস্তু যত দূরে যাবে, প্রতিবিম্ব তত ছোট।</li>
+      <li><b>অবতল আয়নার প্রতিবিম্ব (সারণি):</b>
+        <ul>
+          <li>অসীম দূরে ➜ F-এ, বাস্তব, উল্টো, বিন্দুর মতো।</li>
+          <li>অসীম ও C-র মাঝে ➜ F ও C-র মাঝে, বাস্তব, উল্টো, খর্বিত।</li>
+          <li>C-তে ➜ C-তে, বাস্তব, উল্টো, সমান আকারের।</li>
+          <li>C ও F-এর মাঝে ➜ C ও অসীমের মাঝে, বাস্তব, উল্টো, বিবর্ধিত।</li>
+          <li>F-এ ➜ অসীম দূরত্বে, প্রতিবিম্ব গঠিত হয় না।</li>
+          <li>F ও P-এর মাঝে ➜ বিপরীত দিকে, অবাস্তব, সোজা, বিবর্ধিত।</li>
+          <li>P-তে ➜ P-তে, অবাস্তব, সোজা, সমান।</li>
+        </ul></li>
+      <li><b>দর্পণের সূত্র:</b> <b>1/u + 1/v = 1/f</b>। u = বস্তুর দূরত্ব, v = প্রতিবিম্বের দূরত্ব, f = ফোকাস দূরত্ব।</li>
+    </ul>
+
+    <h3>৮.৭ বিবর্ধন ও ৮.৮ আয়নার ব্যবহার ⭐⭐</h3>
+    <ul>
+      <li><b>বিবর্ধন m = l'/l</b> (প্রতিবিম্বের দৈর্ঘ্য ÷ বস্তুর দৈর্ঘ্য)। টেলিস্কোপে দেখা বস্তু খালি চোখের চেয়ে যত বড় দেখায়, সেটিই বিবর্ধন।</li>
+      <li><b>সমতল আয়না:</b> দৈনন্দিন ব্যবহারে (ডান-বাম বদলে যায়)।</li>
+      <li><b>উত্তল আয়না:</b> গাড়ির রিয়ার ভিউ মিরর, পাহাড়ি রাস্তার বাঁকে (45° কোণে)। ছোট জায়গায় বড় দৃশ্য দেখা যায়।</li>
+      <li><b>অবতল আয়না:</b> টেলিস্কোপ, টর্চলাইট ও জাহাজের সার্চলাইট (উৎস ফোকাসে থাকে, সমান্তরাল আলো বেরোয়), ডাক্তার ও ডেন্টিস্টের আয়না (সোজা ও বড় প্রতিবিম্ব)।</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🌈 ল্যাব 1: আলো একটি তড়িৎচৌম্বক তরঙ্গ</h2>
+    <div class="say">👉 তরঙ্গদৈর্ঘ্য বদলাও। শুধু 400 nm থেকে 700 nm পর্যন্ত আলো আমরা দেখি। এর কম হলে অতিবেগুনি, বেশি হলে অবলোহিত, দুটোই আমরা দেখতে পাই না।</div>
+<div class="pills" id="n1p"><button data-k="0" class="on">🟣 বেগুনি</button><button data-k="1">🔵 নীল</button><button data-k="2">🟢 সবুজ</button><button data-k="3">🟡 হলুদ</button><button data-k="4">🟠 কমলা</button><button data-k="5">🔴 লাল</button></div>
+    <div class="ctl"><label>তরঙ্গদৈর্ঘ্য λ: <span id="n1kv"></span> nm</label><input type="range" id="n1k" min="300" max="900" step="5" value="550"></div>
+    <div class="row"><div><canvas id="n1c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="n1t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="n1q"></div><div class="cls" id="n1o"></div><div class="fb" id="n1fb"></div><small id="n1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🔦 ল্যাব 2: এক মাধ্যম থেকে অন্য মাধ্যমে আলো</h2>
+    <div class="say">👉 আলো কাচে বা পানিতে পড়লে একটু ফিরে আসে (প্রতিফলন), একটু ভেতরে ঢোকে (প্রতিসরণ), আর কালো কাগজে প্রায় সবটাই শোষিত হয়। আপতন কোণ বাড়ালে প্রতিফলন অনেক বেড়ে যায়।</div>
+<div class="pills" id="r2p"><button data-k="0" class="on">🪟 কাচ</button><button data-k="1">💧 পানি</button><button data-k="2">⬛ কালো কাগজ</button></div>
+    <div class="ctl"><label>আপতন কোণ: <span id="r2kv"></span> °</label><input type="range" id="r2k" min="0" max="89" step="1" value="30"></div>
+    <div class="row"><div><canvas id="r2c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="r2t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="r2q"></div><div class="cls" id="r2o"></div><div class="fb" id="r2fb"></div><small id="r2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>📐 ল্যাব 3: প্রতিফলনের সূত্র: আপতন কোণ = প্রতিফলন কোণ</h2>
+    <div class="say">👉 আলোর রশ্মির দিক আর আয়নার ঘোরানো বদলাও। অভিলম্ব (লম্ব) থেকে মাপা আপতন কোণ সব সময় প্রতিফলন কোণের সমান।</div>
+    <div class="ctl"><label>আলোর দিক: <span id="l3kv"></span> °</label><input type="range" id="l3k" min="-70" max="70" step="1" value="35"><label>আয়না ঘোরানো: <span id="l3mv"></span> °</label><input type="range" id="l3m" min="-30" max="30" step="1" value="0"></div>
+    <div class="row"><div><canvas id="l3c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="l3t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="l3q"></div><div class="cls" id="l3o"></div><div class="fb" id="l3fb"></div><small id="l3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🧱 ল্যাব 4: মসৃণ ও অমসৃণ তলে প্রতিফলন</h2>
+    <div class="say">👉 সমান্তরাল রশ্মি মসৃণ তলে প্রতিফলনের পরও সমান্তরাল থাকে। অমসৃণ তলে প্রতিটি রশ্মি আলাদা কোণে ফেরে এবং আলো চারদিকে ছড়িয়ে পড়ে। প্রতিটি রশ্মি কিন্তু সূত্র মেনেই ফেরে।</div>
+<div class="pills" id="d4p"><button data-k="0" class="on">🪞 মসৃণ (আয়না)</button><button data-k="1">📄 একটু অমসৃণ</button><button data-k="2">🪨 খুব অমসৃণ</button></div>
+    <div class="ctl"><label>তলের অমসৃণতা: <span id="d4kv"></span> %</label><input type="range" id="d4k" min="0" max="100" step="1" value="0"></div>
+    <div class="row"><div><canvas id="d4c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="d4t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="d4q"></div><div class="cls" id="d4o"></div><div class="fb" id="d4fb"></div><small id="d4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🌹 ল্যাব 5: বস্তুর রং: শোষণ আর প্রতিফলন</h2>
+    <div class="say">👉 আলোর রং বেছে নাও। লাল গোলাপ শুধু লাল আলো ফেরত দেয়, সবুজ পাতা শুধু সবুজ। বাকি রংগুলো শোষণ করে নেয়। যে আলো ফেরত আসে না, সেই জায়গা কালো দেখায়।</div>
+<div class="pills" id="c5p"><button data-k="0" class="on">⚪ সাদা আলো</button><button data-k="1">🔴 লাল আলো</button><button data-k="2">🟢 সবুজ আলো</button><button data-k="3">🔵 নীল আলো</button></div>
+    <div class="row"><div><canvas id="c5c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="c5t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="c5q"></div><div class="cls" id="c5o"></div><div class="fb" id="c5fb"></div><small id="c5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🪞 ল্যাব 6: সমতল দর্পণে প্রতিবিম্ব</h2>
+    <div class="say">👉 বস্তুর দূরত্ব বদলাও। প্রতিবিম্ব সব সময় আয়নার পেছনে সমান দূরত্বে সৃষ্টি হয়। দেখে মনে হয় আলো ওখান থেকেই আসছে, কিন্তু আসলে ওখানে আলো নেই। তাই এটি অবাস্তব।</div>
+<div class="pills" id="i6p"><button data-k="0" class="on">📍 বিন্দু বস্তু X</button><button data-k="1">🕯️ বস্তু XY (তীর)</button></div>
+    <div class="ctl"><label>আয়না থেকে বস্তুর দূরত্ব: <span id="i6kv"></span> cm</label><input type="range" id="i6k" min="20" max="120" step="5" value="60"></div>
+    <div class="row"><div><canvas id="i6c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="i6t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="i6q"></div><div class="cls" id="i6o"></div><div class="fb" id="i6fb"></div><small id="i6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>🕯️ ল্যাব 7: দুই সমান্তরাল আয়নায় অসংখ্য প্রতিবিম্ব</h2>
+    <div class="say">👉 দুই আয়নার মাঝখানে মোমবাতি রাখো। এক আয়নার প্রতিবিম্ব আরেক আয়নায় প্রতিবিম্ব তৈরি করে, এভাবে চলতেই থাকে। মোমবাতির অবস্থান বা আয়নার ফাঁক বদলাও।</div>
+    <div class="ctl"><label>মোমবাতির অবস্থান: <span id="m7kv"></span> %</label><input type="range" id="m7k" min="10" max="90" step="5" value="35"><label>আয়নার ফাঁক: <span id="m7dv"></span> </label><input type="range" id="m7d" min="90" max="200" step="10" value="140"></div>
+    <div class="row"><div><canvas id="m7c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="m7t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="m7q"></div><div class="cls" id="m7o"></div><div class="fb" id="m7fb"></div><small id="m7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>🧍 ল্যাব 8: নিজেকে পুরো দেখতে কত বড় আয়না লাগে?</h2>
+    <div class="say">👉 নিজের পুরো প্রতিবিম্ব দেখতে আয়নার দৈর্ঘ্য তোমার উচ্চতার অর্ধেক হলেই চলে। আয়না থেকে দূরে বা কাছে দাঁড়ালেও তা বদলায় না। আয়না ছোট করে দেখো কতটুকু দেখা যায়।</div>
+    <div class="ctl"><label>তোমার উচ্চতা: <span id="h8kv"></span> cm</label><input type="range" id="h8k" min="100" max="190" step="5" value="150"><label>আয়না থেকে দূরত্ব: <span id="h8dv"></span> cm</label><input type="range" id="h8d" min="50" max="300" step="10" value="150"><label>আয়নার দৈর্ঘ্য (h/2 এর %): <span id="h8mv"></span> %</label><input type="range" id="h8m" min="30" max="130" step="5" value="100"></div>
+    <div class="row"><div><canvas id="h8c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="h8t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="h8q"></div><div class="cls" id="h8o"></div><div class="fb" id="h8fb"></div><small id="h8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>📏 ল্যাব 9: পরস্পর কোণে রাখা দুটি আয়না</h2>
+    <div class="say">👉 দুই আয়নার মাঝের কোণ আর আলোর আপতন কোণ বদলাও। বইয়ের উদাহরণ: 60° কোণে রাখা আয়নায় আলো দ্বিতীয় আয়নায় লম্বভাবে পড়ে, তাই ঠিক উল্টো পথে ফিরে আসে। দুই আয়না 90° তে থাকলে ডান-বাম ঠিক থাকে।</div>
+<div class="pills" id="a9p"><button data-k="0" class="on">📖 বইয়ের উদাহরণ (60°)</button><button data-k="1">📐 ৯০° আয়না</button><button data-k="2">🔶 ৪৫° আয়না</button></div>
+    <div class="ctl"><label>আয়নাদুটির মাঝের কোণ: <span id="a9kv"></span> °</label><input type="range" id="a9k" min="30" max="120" step="5" value="60"><label>প্রথম আয়নায় আপতন কোণ: <span id="a9av"></span> °</label><input type="range" id="a9a" min="0" max="80" step="5" value="60"></div>
+    <div class="row"><div><canvas id="a9c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="a9t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="a9q"></div><div class="cls" id="a9o"></div><div class="fb" id="a9fb"></div><small id="a9sc"></small>
+  </section>
+
+  <section class="panel" id="lab10">
+    <h2>📷 ল্যাব 10: সূক্ষ্ম ফুটো দিয়ে প্রতিবিম্ব</h2>
+    <div class="say">👉 বোর্ডের সূক্ষ্ম ফুটো দিয়ে আলো গিয়ে পর্দায় উল্টো প্রতিবিম্ব তৈরি করে। এটি বাস্তব প্রতিবিম্ব। পর্দা যত দূরে সরাবে ছবি তত বড় হবে।</div>
+    <div class="ctl"><label>বস্তু থেকে ফুটোর দূরত্ব: <span id="p10kv"></span> cm</label><input type="range" id="p10k" min="60" max="200" step="10" value="100"><label>ফুটো থেকে পর্দার দূরত্ব: <span id="p10sv"></span> cm</label><input type="range" id="p10s" min="30" max="130" step="10" value="70"></div>
+    <div class="row"><div><canvas id="p10c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="p10t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="p10q"></div><div class="cls" id="p10o"></div><div class="fb" id="p10fb"></div><small id="p10sc"></small>
+  </section>
+
+  <section class="panel" id="lab11">
+    <h2>🚗 ল্যাব 11: উত্তল দর্পণে প্রতিবিম্ব</h2>
+    <div class="say">👉 বস্তুর দূরত্ব আর বক্রতার ব্যাসার্ধ বদলাও। উত্তল দর্পণে প্রতিবিম্ব সব সময় অবাস্তব, সোজা ও ছোট হয়, আর ফোকাস ও মেরু বিন্দুর মাঝে তৈরি হয়। এজন্য এটা রিয়ার ভিউ মিররে ব্যবহার হয়।</div>
+    <div class="ctl"><label>বস্তুর দূরত্ব u: <span id="v11kv"></span> cm</label><input type="range" id="v11k" min="10" max="100" step="5" value="50"><label>বক্রতার ব্যাসার্ধ r: <span id="v11rv"></span> cm</label><input type="range" id="v11r" min="30" max="80" step="5" value="60"></div>
+    <div class="row"><div><canvas id="v11c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="v11t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="v11q"></div><div class="cls" id="v11o"></div><div class="fb" id="v11fb"></div><small id="v11sc"></small>
+  </section>
+
+  <section class="panel" id="lab12">
+    <h2>🥄 ল্যাব 12: অবতল দর্পণে প্রতিবিম্ব</h2>
+    <div class="say">👉 বস্তুকে ফোকাসের ভেতরে, বাইরে, বক্রতার কেন্দ্রে নিয়ে যাও। প্রতিবিম্বের অবস্থান, আকার ও ধরন বদলে যায়। সূত্র: 1/u + 1/v = 1/f, আর f = r/2।</div>
+<div class="pills" id="k12p"><button data-k="0" class="on">F-এর ভেতরে</button><button data-k="1">F ও C-র মাঝে</button><button data-k="2">C-তে</button><button data-k="3">C-র বাইরে</button><button data-k="4">ঠিক F-এ</button></div>
+    <div class="ctl"><label>বস্তুর দূরত্ব u: <span id="k12kv"></span> cm</label><input type="range" id="k12k" min="5" max="120" step="5" value="50"><label>বক্রতার ব্যাসার্ধ r: <span id="k12rv"></span> cm</label><input type="range" id="k12r" min="30" max="80" step="5" value="60"></div>
+    <div class="row"><div><canvas id="k12c" class="w" width="380" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="k12t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="k12q"></div><div class="cls" id="k12o"></div><div class="fb" id="k12fb"></div><small id="k12sc"></small>
+  </section>
+
+  <section class="panel" id="lab13">
+    <h2>🔭 ল্যাব 13: দর্পণের নানা ব্যবহার</h2>
+    <div class="say">👉 টর্চলাইট, টেলিস্কোপ, গাড়ির রিয়ার ভিউ মিরর আর পাহাড়ি বাঁকের আয়না। মোড বেছে নাও আর স্লাইডার নাড়িয়ে দেখো।</div>
+<div class="pills" id="u13p"><button data-k="0" class="on">🔦 টর্চ/সার্চলাইট</button><button data-k="1">🔭 টেলিস্কোপ</button><button data-k="2">🚗 উত্তল রিয়ার ভিউ</button><button data-k="3">🚗 সমতল (তুলনা)</button><button data-k="4">🏔️ পাহাড়ি বাঁক</button></div>
+    <div class="ctl"><label>মান: <span id="u13kv"></span> %</label><input type="range" id="u13k" min="0" max="100" step="1" value="50"></div>
+    <div class="row"><div><canvas id="u13c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="u13t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="u13q"></div><div class="cls" id="u13o"></div><div class="fb" id="u13fb"></div><small id="u13sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। বইয়ের নমুনা প্রশ্নের উত্তরমালা নেই, তাই উত্তরগুলো আমার হিসাব করা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; আলোর প্রতিফলন (পদার্থবিজ্ঞান অধ্যায় ৮)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+function opts(correct,wrongs){var seen={},a=[{t:correct,ok:1}];seen[correct]=1;wrongs.forEach(function(w){if(!seen[w]){seen[w]=1;a.push({t:w,ok:0});}});return shuffle(a);}
+function arrow(x,x1,y1,x2,y2,col,lw){var a=Math.atan2(y2-y1,x2-x1);x.strokeStyle=col;x.fillStyle=col;x.lineWidth=lw||3;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-11*Math.cos(a-.4),y2-11*Math.sin(a-.4));x.lineTo(x2-11*Math.cos(a+.4),y2-11*Math.sin(a+.4));x.closePath();x.fill();}
+function person(x,px,py,col){circ(x,0,px,py-22,6,col,null);x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(px,py-16);x.lineTo(px,py-4);x.moveTo(px-6,py-11);x.lineTo(px+6,py-11);x.moveTo(px,py-4);x.lineTo(px-5,py+6);x.moveTo(px,py-4);x.lineTo(px+5,py+6);x.stroke();}
+/* ---------- সাধারণ সহায়ক ---------- */
+function pills(id,fn){$(id).onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var all=$(id).querySelectorAll('button'),i;for(i=0;i<all.length;i++)all[i].classList.toggle('on',all[i]===b);fn(+b.getAttribute('data-k'));};}
+function sci(x){if(!(x>0))return bn(0);var e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);if(+m.toFixed(2)>=10){m/=10;e++;}return bn(parseFloat(m.toFixed(2)))+' × ১০'+(e<0?'⁻':'')+sup(Math.abs(e));}
+function brow(label,val,max,col,txtv){return '<div class="bar"><div class="bl">'+label+'</div><div class="bt"><div class="bf" style="width:'+clamp(val/max*100,1,100)+'%;background:'+col+'"></div></div><b style="min-width:80px;font-size:14px;color:#1f3a5f">'+(txtv||'')+'</b></div>';}
+function on(ids,fn){ids.forEach(function(i){$(i).oninput=fn;$(i).onchange=fn;});}
+var G=9.8;
+function box(x,px,py,w,h,fill,stroke){x.fillStyle=fill;x.fillRect(px,py,w,h);if(stroke){x.strokeStyle=stroke;x.lineWidth=2;x.strokeRect(px,py,w,h);}}
+function wheel(x,px,py,r){circ(x,0,px,py,r,'#333',null);circ(x,0,px,py,r*.4,'#bbb',null);}
+
+
+/* ---------- সুন্দর আঁকার সহায়ক (নতুন) ---------- */
+function shade(c,a){var h=hx(c),o='#';for(var i=0;i<3;i++){var v=clamp(Math.round(h[i]+a),0,255).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function grad(x,px,py,w,h,c1,c2){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1);g.addColorStop(1,c2);x.fillStyle=g;x.fillRect(px,py,w,h);}
+function ball(x,px,py,r,col){var g=x.createRadialGradient(px-r*.35,py-r*.35,r*.08,px,py,r);g.addColorStop(0,'#ffffff');g.addColorStop(.3,col);g.addColorStop(1,shade(col,-55));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();}
+function rr(x,px,py,w,h,r){r=Math.min(r,w/2,h/2);x.beginPath();x.moveTo(px+r,py);x.lineTo(px+w-r,py);x.quadraticCurveTo(px+w,py,px+w,py+r);x.lineTo(px+w,py+h-r);x.quadraticCurveTo(px+w,py+h,px+w-r,py+h);x.lineTo(px+r,py+h);x.quadraticCurveTo(px,py+h,px,py+h-r);x.lineTo(px,py+r);x.quadraticCurveTo(px,py,px+r,py);x.closePath();}
+function tag(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.lineJoin='round';x.lineWidth=4;x.strokeStyle='rgba(255,255,255,.92)';x.strokeText(s,px,py);x.fillStyle=col||NAVY;x.fillText(s,px,py);}
+function wave(x,px,py,w,h,t,c1,c2,amp){amp=amp===undefined?2.5:amp;var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1||'rgba(86,176,240,.88)');g.addColorStop(1,c2||'rgba(22,84,172,.96)');x.fillStyle=g;x.beginPath();x.moveTo(px,py+h);x.lineTo(px,py);var i;for(i=0;i<=w;i+=4)x.lineTo(px+i,py+Math.sin(i/13+t*.05)*amp);x.lineTo(px+w,py+h);x.closePath();x.fill();x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=1.6;x.beginPath();for(i=0;i<=w;i+=4){var yy=py+Math.sin(i/13+t*.05)*amp;if(i===0)x.moveTo(px,yy);else x.lineTo(px+i,yy);}x.stroke();}
+function bubs(x,px,py,w,h,n,t){for(var i=0;i<n;i++){var u=((t*.004*(0.6+rp(i,0,.8))+rp(i+50,0,1))%1),bx=px+rp(i,6,w-6)+Math.sin(t*.04+i)*3,by=py+h-u*h,r=1.5+rp(i+9,0,2.2);if(by<py+4)continue;x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=1.2;x.beginPath();x.arc(bx,by,r,0,7);x.stroke();}}
+function glassBox(x,px,py,w,h){x.strokeStyle='#5b7389';x.lineWidth=3;x.beginPath();x.moveTo(px,py);x.lineTo(px,py+h);x.lineTo(px+w,py+h);x.lineTo(px+w,py);x.stroke();x.fillStyle='rgba(255,255,255,.18)';x.fillRect(px+4,py+4,5,h-8);}
+function sun(x,px,py,r,t){x.save();x.translate(px,py);x.rotate(t*.004);x.strokeStyle='rgba(255,196,60,.7)';x.lineWidth=3;for(var i=0;i<12;i++){x.rotate(Math.PI/6);x.beginPath();x.moveTo(r+4,0);x.lineTo(r+11,0);x.stroke();}x.restore();ball(x,px,py,r,'#ffc83d');}
+function cloud(x,px,py,s,col){x.fillStyle=col||'rgba(255,255,255,.95)';[[0,0,14],[16,-6,17],[34,0,14],[17,6,15]].forEach(function(c){x.beginPath();x.arc(px+c[0]*s,py+c[1]*s,c[2]*s,0,7);x.fill();});}
+function dial(x,cx,cy,r,frac,txtv,col){x.strokeStyle='#dfe7ee';x.lineWidth=9;x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*2.2);x.stroke();x.strokeStyle=col||'#2a9d8f';x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*(.8+1.4*clamp(frac,0,1)));x.stroke();var a=Math.PI*(.8+1.4*clamp(frac,0,1));x.strokeStyle=NAVY;x.lineWidth=3;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a)*(r-6),cy+Math.sin(a)*(r-6));x.stroke();circ(x,0,cx,cy,4,NAVY,null);if(txtv)tag(x,txtv,cx,cy+r*.62,NAVY,12);}
+function sand(x,px,py,w,h){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,'#eccb8a');g.addColorStop(1,'#c99a55');x.fillStyle=g;x.fillRect(px,py,w,h);}
+function atom(x,px,py,r,col,t){ball(x,px,py,r,col);}
+function fmtN(v){if(Math.abs(v)>=1000)return bn(Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g,','));return bn(parseFloat(v.toFixed(2)));}
+
+function tagd(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=4;x.fillStyle=col||'#fff';x.fillText(s,px,py);x.restore();}
+
+
+var DT=.02,TKL=performance.now();
+DRAWS.push(function(){var n=performance.now();DT=Math.min(.05,(n-TKL)/1000);TKL=n;});
+function hm(a,b,t){var A=hx(a),B=hx(b),o='#';t=clamp(t,0,1);for(var i=0;i<3;i++){var v=Math.round(lerp(A[i],B[i],t)).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function ln(x,x1,y1,x2,y2,col,lw,dash){x.strokeStyle=col;x.lineWidth=lw||2;if(dash)x.setLineDash(dash);x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();if(dash)x.setLineDash([]);}
+function DEG(a){return a*Math.PI/180;}
+function wl2rgb(w){var r=0,g=0,b=0;if(w>=380&&w<440){r=-(w-440)/60;b=1;}else if(w<490){g=(w-440)/50;b=1;}else if(w<510){g=1;b=-(w-510)/20;}else if(w<580){r=(w-510)/70;g=1;}else if(w<645){r=1;g=-(w-645)/65;}else if(w<=700){r=1;}
+  var h=function(v){return Math.round(clamp(v,0,1)*255);};return [h(r),h(g),h(b)];}
+function rgbHex(a){var o='#';for(var i=0;i<3;i++){var v=a[i].toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+
+/* ===== ল্যাব ১: আলোর প্রকৃতি ===== */
+var N1={t:0};
+function n1info(){var w=+$('n1k').value;$('n1kv').textContent=bn(w);var nm,vis=w>=400&&w<=700;
+  if(w<400)nm='অতিবেগুনি (আল্ট্রাভায়োলেট), দেখা যায় না';else if(w<=450)nm='বেগুনি';else if(w<=495)nm='নীল';else if(w<=570)nm='সবুজ';else if(w<=590)nm='হলুদ';else if(w<=620)nm='কমলা';else if(w<=700)nm='লাল';else nm='অবলোহিত (ইনফ্রারেড), দেখা যায় না';
+  var s=Math.exp(-Math.pow((w-555)/55,2));
+  $('n1t').innerHTML='তরঙ্গদৈর্ঘ্য λ = <b>'+bn(w)+' nm</b><br>ধরন: <b style="color:'+(vis?'#1d7a6f':'#c0392b')+'">'+nm+'</b><br>চোখের সংবেদনশীলতা প্রায় <b>'+bn(Math.round(s*100))+'%</b><br><small>আলো একটি তড়িৎচৌম্বক তরঙ্গ, এর মাধ্যম লাগে না। দৃশ্যমান আলোর তরঙ্গদৈর্ঘ্য 400 nm থেকে 700 nm। 1 nm = 10⁻⁹ m। (রঙের সীমা ও সংবেদনশীলতার সংখ্যা আনুমানিক, আমার যোগ করা।)</small>';}
+pills('n1p',function(k){$('n1k').value=[420,470,540,580,600,650][k];n1info();});on(['n1k'],n1info);
+DRAWS.push(function(){var x=ctxOf('n1c'),w=+$('n1k').value,i;N1.t+=DT;
+  grad(x,0,0,380,300,'#f5f9fc','#e0eaf3');
+  var bx=20,bw=340,by=40,bh=40;function X(v){return bx+(v-300)/600*bw;}
+  for(i=0;i<bw;i++){var ww=300+i/bw*600,rgb=wl2rgb(ww);if(ww<380||ww>700){x.fillStyle=ww<380?'#c9c1e0':'#e7c4c4';}else x.fillStyle=rgbHex(rgb);x.fillRect(bx+i,by,1.5,bh);}
+  x.strokeStyle='#5b7389';x.lineWidth=2;x.strokeRect(bx,by,bw,bh);
+  tag(x,'অতিবেগুনি',(bx+X(400))/2,by+bh/2,'#4a3d8a',10);tag(x,'অবলোহিত',(X(700)+bx+bw)/2,by+bh/2,'#8a3d3d',10);
+  [300,400,500,600,700,800,900].forEach(function(v){x.strokeStyle='#5b7389';x.lineWidth=1.5;x.beginPath();x.moveTo(X(v),by+bh);x.lineTo(X(v),by+bh+6);x.stroke();tag(x,bn(v),X(v),by+bh+16,'#5b7389',10);});
+  x.fillStyle='#1f3a5f';x.beginPath();x.moveTo(X(w),by-2);x.lineTo(X(w)-7,by-14);x.lineTo(X(w)+7,by-14);x.closePath();x.fill();tag(x,bn(w)+' nm',clamp(X(w),44,336),by-26,'#1f3a5f',13);
+  var gy=120,gh=70;x.fillStyle='#fff';rr(x,bx-6,gy-8,bw+12,gh+34,8);x.fill();x.strokeStyle='#cfd9e1';x.lineWidth=1.5;x.stroke();
+  tag(x,'চোখের সংবেদনশীলতা',bx+4,gy+2,'#5b7389',10,'left');
+  x.beginPath();x.moveTo(X(400),gy+gh);for(i=400;i<=700;i+=5){x.lineTo(X(i),gy+gh-gh*.85*Math.exp(-Math.pow((i-555)/55,2)));}x.lineTo(X(700),gy+gh);x.closePath();var g=x.createLinearGradient(X(400),0,X(700),0);for(i=0;i<=6;i++)g.addColorStop(i/6,rgbHex(wl2rgb(400+i*50)));x.fillStyle=g;x.globalAlpha=.8;x.fill();x.globalAlpha=1;x.strokeStyle='#5b7389';x.lineWidth=1.5;x.stroke();
+  x.strokeStyle='#c0392b';x.lineWidth=2;x.beginPath();x.moveTo(X(w),gy);x.lineTo(X(w),gy+gh);x.stroke();
+  tag(x,'400',X(400),gy+gh+12,'#5b7389',10);tag(x,'700 nm',X(700),gy+gh+12,'#5b7389',10);
+  var wy=250,wl=w/5,col=(w>=400&&w<=700)?rgbHex(wl2rgb(w)):'#9aa5b1';x.fillStyle='#fff';rr(x,bx-6,wy-34,bw+12,66,8);x.fill();x.stroke();
+  x.strokeStyle=col;x.lineWidth=4;x.beginPath();for(i=0;i<=bw;i+=2){var yy=wy-18*Math.sin(2*Math.PI*(i/wl)-N1.t*6);if(i===0)x.moveTo(bx+i,yy);else x.lineTo(bx+i,yy);}x.stroke();
+  x.strokeStyle='#1f3a5f';x.lineWidth=2;x.beginPath();x.moveTo(bx+8,wy+26);x.lineTo(bx+8+wl,wy+26);x.stroke();tag(x,'λ',bx+8+wl/2,wy+16,'#1f3a5f',13);
+  });
+n1info();
+qgame('n1q','n1o','n1fb','n1sc',[
+ ['আলো কোন ধরনের তরঙ্গ?','তড়িৎচৌম্বক তরঙ্গ',['যান্ত্রিক তরঙ্গ','শব্দ তরঙ্গ','অনুদৈর্ঘ্য তরঙ্গ'],'আলো তড়িৎ ও চৌম্বক ক্ষেত্রের তরঙ্গ, তাই মাধ্যম ছাড়াই চলে।'],
+ ['আমরা কত তরঙ্গদৈর্ঘ্যের আলো দেখতে পাই?','400 nm থেকে 700 nm',['4 nm থেকে 7 nm','1 m থেকে 2 m','100 nm থেকে 200 nm'],'এই ছোট্ট সীমার ভেতরের তরঙ্গই আমাদের চোখে আলো।'],
+ ['700 nm-এর বেশি তরঙ্গদৈর্ঘ্যের আলোকে কী বলে?','অবলোহিত (ইনফ্রারেড)',['অতিবেগুনি','এক্স-রে','গামা রে'],'লাল ছাড়িয়ে গেলে ইনফ্রারেড। রিমোট কন্ট্রোল এই আলো ব্যবহার করে।'],
+ ['দৃশ্যমান আলোর সবচেয়ে ছোট তরঙ্গদৈর্ঘ্য কোন রঙের?','বেগুনি',['লাল','সবুজ','হলুদ'],'বেগুনির তরঙ্গদৈর্ঘ্য ছোট, লালের সবচেয়ে বড়।'],
+ ['1 nm কত?','10⁻⁹ m',['10⁻³ m','10⁹ m','10⁻¹² m'],'ন্যানোমিটার মিটারের একশ কোটি ভাগের এক ভাগ।']]);
+
+/* ===== ল্যাব ২: প্রতিফলন-প্রতিসরণ-শোষণ ===== */
+var R2={m:0,N:['কাচ','পানি','কালো কাগজ'],n:[1.5,1.33,0]};
+function r2calc(){var ti=DEG(+$('r2k').value),n=R2.n[R2.m],R,T,A,tt=0;
+  if(R2.m===2){R=.05;T=0;A=.95;}else{tt=Math.asin(Math.sin(ti)/n);var c1=Math.cos(ti),c2=Math.cos(tt),rs=Math.pow((c1-n*c2)/(c1+n*c2),2),rp=Math.pow((n*c1-c2)/(n*c1+c2),2);R=(rs+rp)/2;T=1-R;A=0;}
+  return {ti:ti,tt:tt,R:R,T:T,A:A};}
+function r2info(){var c=r2calc(),a=+$('r2k').value;$('r2kv').textContent=bn(a);
+  $('r2t').innerHTML='আপতন কোণ = <b>'+bn(a)+'°</b> ('+R2.N[R2.m]+')<br>প্রতিফলিত: <b style="color:#2b6cb0">'+f(c.R*100,1)+'%</b><br>প্রতিসরিত (ভেতরে ঢোকে): <b style="color:#1d7a6f">'+f(c.T*100,1)+'%</b><br>শোষিত: <b style="color:#c0392b">'+f(c.A*100,1)+'%</b><br><small>কাচে 4% আর 5% প্রতিফলনের কথা বইয়ে আছে, বড় কোণে প্রতিফলন বেড়ে যায়। সংখ্যাগুলো আমি ফ্রেনেলের সূত্রে হিসাব করেছি (আমার যোগ করা, বইয়ে শুধু সূত্রের নাম আছে)। কাচ ও পানির শোষণ ধরিনি।</small>';}
+pills('r2p',function(k){R2.m=k;r2info();});on(['r2k'],r2info);
+DRAWS.push(function(){var x=ctxOf('r2c'),c=r2calc(),ox=190,oy=140,L=120;
+  grad(x,0,0,380,300,'#eef6fc','#dfe9f2');
+  var cols=['rgba(170,215,240,.75)','rgba(110,175,225,.75)','#2c2f36'];x.fillStyle=cols[R2.m];x.fillRect(0,oy,380,160);
+  ln(x,0,oy,380,oy,'#5b7389',2);ln(x,ox,oy-110,ox,oy+110,'#8899aa',1.5,[5,4]);
+  tag(x,'বাতাস (প্রথম মাধ্যম)',8,20,'#5b7389',11,'left');if(R2.m===2)tagd(x,'কালো কাগজ',8,280,'#fff',12,'left');else tag(x,R2.N[R2.m]+' (দ্বিতীয় মাধ্যম)',8,280,'#1f3a5f',11,'left');
+  tag(x,'অভিলম্ব',ox+30,oy-100,'#8899aa',10);
+  var sx=ox-Math.sin(c.ti)*L,sy=oy-Math.cos(c.ti)*L;arrow(x,sx,sy,ox-Math.sin(c.ti)*8,oy-Math.cos(c.ti)*8,'#e9a23b',4);tag(x,'আপতিত',sx-4,sy-12,'#a25a14',12);
+  var rx=ox+Math.sin(c.ti)*L,ry=oy-Math.cos(c.ti)*L;x.globalAlpha=.25+.75*Math.min(1,c.R*3);ln(x,ox,oy,rx,ry,'#2b6cb0',2+Math.min(c.R*14,5));x.globalAlpha=1;tag(x,'প্রতিফলিত',rx+2,ry-12,'#2b6cb0',12);
+  if(c.T>0.01){var tx=ox+Math.sin(c.tt)*L,ty=oy+Math.cos(c.tt)*L;x.globalAlpha=.4+.6*c.T;ln(x,ox,oy,tx,ty,'#1d7a6f',2+c.T*4);x.globalAlpha=1;tagd(x,'প্রতিসরিত',clamp(tx+10,50,330),Math.min(ty+14,252),'#fff',12);}
+  if(c.A>.5){for(var i=0;i<5;i++){var u=((FR*.02+i/5)%1);tagd(x,'♨',ox-34+i*16,oy+30+u*40,'#ffb347',14);}tagd(x,'শোষণ (তাপ)',ox,oy+84,'#ffb347',12);}
+  var bw=96;[['প্রতিফলন',c.R,'#2b6cb0'],['প্রতিসরণ',c.T,'#1d7a6f'],['শোষণ',c.A,'#c0392b']].forEach(function(b,j){var yy=34+j*18;x.fillStyle='rgba(255,255,255,.9)';x.fillRect(8,yy,96,14);x.fillStyle=b[2];x.fillRect(8,yy,bw*b[1],14);tag(x,b[0]+' '+bn(Math.round(b[1]*100))+'%',12,yy+7,'#1f3a5f',10,'left');});
+  });
+r2info();
+qgame('r2q','r2o','r2fb','r2sc',[
+ ['আলো এক মাধ্যম থেকে অন্য মাধ্যমে গেলে কয়টি ঘটনা ঘটে?','তিনটি: প্রতিফলন, প্রতিসরণ, শোষণ',['একটি','দুটি','চারটি'],'বইয়ে তিনটির কথা আছে। এই অধ্যায়ে প্রতিফলন নিয়ে আলোচনা।'],
+ ['সাধারণ কাচের সামনের পৃষ্ঠ থেকে প্রায় কত আলো প্রতিফলিত হয়?','প্রায় 4%',['প্রায় 96%','50%','100%'],'বাকি আলো ভেতরে চলে যায়।'],
+ ['আপতন কোণ খুব বড় (80°-90°) হলে প্রতিফলন কেমন হয়?','অনেক বেড়ে যায়',['কমে যায়','শূন্য হয়','একই থাকে'],'জানালার কাচের পাশে দাঁড়িয়ে পরীক্ষা করা যায়।'],
+ ['প্রথম মাধ্যম থেকে ফিরে আসাকে কী বলে?','প্রতিফলন',['প্রতিসরণ','শোষণ','বিচ্ছুরণ'],'ফিরে আসাই প্রতিফলন। ঢুকে যাওয়া হলো প্রতিসরণ।'],
+ ['আলো প্রবাহের জন্য মাধ্যম লাগে কি?','না, শূন্যেও চলে',['হ্যাঁ, বাতাস লাগে','হ্যাঁ, পানি লাগে','হ্যাঁ, কঠিন লাগে'],'আলো তড়িৎচৌম্বক তরঙ্গ। বাতাস এত হালকা মাধ্যম যে একে শূন্য ধরলে বড় ভুল হয় না।']]);
+
+/* ===== ল্যাব ৩: প্রতিফলনের সূত্র ===== */
+var L3={t:0,go:0};
+function l3calc(){var a=DEG(+$('l3k').value),al=DEG(+$('l3m').value),din=[Math.sin(a),Math.cos(a)],nn=[Math.sin(al),-Math.cos(al)],dn=din[0]*nn[0]+din[1]*nn[1];
+  var ok=dn<-.0001,dout=[din[0]-2*dn*nn[0],din[1]-2*dn*nn[1]],ti=Math.acos(clamp(-dn,-1,1));return {din:din,nn:nn,dout:dout,ok:ok,ti:ti,al:al};}
+function l3info(){var c=l3calc();$('l3kv').textContent=bn(+$('l3k').value);$('l3mv').textContent=bn(+$('l3m').value);
+  $('l3t').innerHTML=c.ok?'আপতন কোণ θi = <b>'+f(c.ti*180/Math.PI,0)+'°</b><br>প্রতিফলন কোণ θr = <b>'+f(c.ti*180/Math.PI,0)+'°</b><br><b style="color:#1d7a6f">θi = θr ✅</b><br>আপতিত রশ্মি, প্রতিফলিত রশ্মি ও অভিলম্ব একই সমতলে থাকে।<br><small>আয়না যত ডিগ্রি ঘোরাও, প্রতিফলিত রশ্মি তার দ্বিগুণ ঘোরে। (এটি আমার যোগ করা পর্যবেক্ষণ।)</small>':'<b style="color:#c0392b">আলো আয়নার পেছনের দিকে পড়েছে, প্রতিফলন হচ্ছে না।</b><br>আয়না ঘুরিয়ে বা আলোর দিক বদলে সামনের দিকে আনো।';}
+on(['l3k','l3m'],l3info);
+DRAWS.push(function(){var x=ctxOf('l3c'),c=l3calc(),ox=190,oy=190,L=150;
+  grad(x,0,0,380,300,'#f5f9fc','#e0eaf3');
+  var u=[Math.cos(c.al),Math.sin(c.al)];
+  x.strokeStyle='#7a8794';x.lineWidth=7;x.lineCap='round';x.beginPath();x.moveTo(ox-u[0]*130,oy-u[1]*130);x.lineTo(ox+u[0]*130,oy+u[1]*130);x.stroke();x.lineCap='butt';
+  x.strokeStyle='#c7d2dc';x.lineWidth=3;x.beginPath();x.moveTo(ox-u[0]*130,oy-u[1]*130);x.lineTo(ox+u[0]*130,oy+u[1]*130);x.stroke();
+  for(var i=-6;i<=6;i++){var px=ox+u[0]*i*20,py=oy+u[1]*i*20;ln(x,px,py,px-c.nn[0]*10-u[0]*8,py-c.nn[1]*10-u[1]*8,'#7a8794',1.5);}
+  ln(x,ox,oy,ox+c.nn[0]*110,oy+c.nn[1]*110,'#8899aa',2,[6,5]);tag(x,'অভিলম্ব (লম্ব)',ox+c.nn[0]*120,oy+c.nn[1]*120-4,'#6b7d8e',11);
+  var sx=ox-c.din[0]*L,sy=oy-c.din[1]*L;
+  arrow(x,sx,sy,ox-c.din[0]*6,oy-c.din[1]*6,'#e9a23b',4);tag(x,'আপতিত রশ্মি',sx,sy-14,'#a25a14',12);
+  if(c.ok){var ex=ox+c.dout[0]*L,ey=oy+c.dout[1]*L;arrow(x,ox,oy,ex,ey,'#2b6cb0',4);tag(x,'প্রতিফলিত রশ্মি',ex,ey-14,'#2b6cb0',12);
+    var an=Math.atan2(c.nn[1],c.nn[0]),ai=Math.atan2(-c.din[1],-c.din[0]),ar=Math.atan2(c.dout[1],c.dout[0]);
+    x.lineWidth=3;x.strokeStyle='#e9a23b';x.beginPath();x.arc(ox,oy,46,Math.min(an,ai),Math.max(an,ai));x.stroke();x.strokeStyle='#2b6cb0';x.beginPath();x.arc(ox,oy,56,Math.min(an,ar),Math.max(an,ar));x.stroke();
+    var mi=(an+ai)/2,mr=(an+ar)/2;tag(x,'θi',ox+Math.cos(mi)*72,oy+Math.sin(mi)*72,'#a25a14',14);tag(x,'θr',ox+Math.cos(mr)*80,oy+Math.sin(mr)*80,'#2b6cb0',14);}
+  else{arrow(x,ox,oy,ox-c.din[0]*-60,oy-c.din[1]*-60,'#9aa5b1',3);tag(x,'পেছনে পড়েছে',190,270,'#c0392b',14);}
+  });
+l3info();
+qgame('l3q','l3o','l3fb','l3sc',[
+ ['প্রতিফলনের প্রথম সূত্র কী?','আপতিত রশ্মি, প্রতিফলিত রশ্মি ও অভিলম্ব একই সমতলে',['θi দ্বিগুণ θr','রশ্মি সব সময় লম্ব হয়','আলোর বেগ কমে যায়'],'আপতন বিন্দুর অভিলম্ব ও আপতিত রশ্মি যে সমতল তৈরি করে, প্রতিফলিত রশ্মিও সেখানে থাকে।'],
+ ['প্রতিফলনের দ্বিতীয় সূত্র কী?','প্রতিফলন কোণ = আপতন কোণ',['প্রতিফলন কোণ > আপতন কোণ','প্রতিফলন কোণ < আপতন কোণ','দুটির যোগফল 180°'],'θr = θi।'],
+ ['আপতন কোণ কোন দুটি রেখার মাঝের কোণ?','আপতিত রশ্মি ও অভিলম্ব',['আপতিত রশ্মি ও আয়না','প্রতিফলিত রশ্মি ও আয়না','আয়না ও অভিলম্ব'],'আয়নার তল থেকে নয়, লম্ব (অভিলম্ব) থেকে মাপা হয়।'],
+ ['আপতন কোণ 40° হলে প্রতিফলন কোণ কত?','40°',['50°','80°','20°'],'সমান।'],
+ ['আলো আয়নায় লম্বভাবে পড়লে প্রতিফলন কোণ কত?','0°',['90°','45°','180°'],'লম্ব পড়লে θi = 0°, তাই θr = 0°। আলো একই পথে ফিরে আসে।']]);
+
+/* ===== ল্যাব ৪: মসৃণ ও অমসৃণ ===== */
+var D4={};
+pills('d4p',function(k){$('d4k').value=[0,30,90][k];d4info();});
+function d4info(){var r=+$('d4k').value;$('d4kv').textContent=bn(r);
+  $('d4t').innerHTML=r<4?'<b style="color:#1d7a6f">মসৃণ তল:</b> সমান্তরাল রশ্মি প্রতিফলনের পরও সমান্তরাল। স্পষ্ট প্রতিবিম্ব হয় (আয়না)।':'<b style="color:#c0392b">অমসৃণ তল:</b> প্রতিটি রশ্মি আলাদা কোণে ফেরে, আলো ছড়িয়ে পড়ে (ব্যাপ্ত প্রতিফলন)। স্পষ্ট প্রতিবিম্ব হয় না।<br><small>তবু প্রতিটি রশ্মি আলাদাভাবে প্রতিফলনের সূত্র মানে। তল অমসৃণ বলে প্রতিটি অংশের অভিলম্ব আলাদা। প্রতিফলন মোটামুটি দুই প্রকার: নিয়মিত (মসৃণে) ও ব্যাপ্ত (অমসৃণে)।</small>';}
+on(['d4k'],d4info);
+DRAWS.push(function(){var x=ctxOf('d4c'),r=+$('d4k').value/100,i,N=7;
+  grad(x,0,0,380,300,'#f5f9fc','#e0eaf3');
+  var sy=210;x.fillStyle=r<.04?'#cfe0ee':'#d9c29a';x.beginPath();x.moveTo(10,sy);var pts=[];
+  for(i=0;i<=34;i++){var px=10+i*(360/34),sl=(rp(i*3+1,0,1)-.5)*2*r*1.1,hh=(rp(i*5+2,0,1)-.5)*14*r;pts.push([px,sy+hh]);x.lineTo(px,sy+hh);}
+  x.lineTo(370,290);x.lineTo(10,290);x.closePath();x.fill();x.strokeStyle='#5b7389';x.lineWidth=2.5;x.beginPath();x.moveTo(pts[0][0],pts[0][1]);for(i=1;i<pts.length;i++)x.lineTo(pts[i][0],pts[i][1]);x.stroke();
+  tag(x,r<.04?'মসৃণ তল':'অমসৃণ তল',60,272,'#1f3a5f',13);
+  var a=DEG(35),d=[Math.sin(a),Math.cos(a)];
+  for(i=0;i<7;i++){var hx0=70+i*38,k=Math.round((hx0-10)/(360/34)),hp=pts[k],sl=(rp(k*3+1,0,1)-.5)*2*r*1.6,nn=[Math.sin(sl),-Math.cos(sl)],dn=d[0]*nn[0]+d[1]*nn[1],ro=[d[0]-2*dn*nn[0],d[1]-2*dn*nn[1]];
+    var st=[hp[0]-d[0]*(hp[1]-40)/d[1],40];ln(x,st[0],st[1],hp[0],hp[1],'#e9a23b',2.5);
+    ln(x,hp[0],hp[1],hp[0]+ro[0]*120,hp[1]+ro[1]*120,'#2b6cb0',2.5);
+    if(r>.04)ln(x,hp[0],hp[1],hp[0]+nn[0]*18,hp[1]+nn[1]*18,'#8899aa',1.5);}
+  tag(x,'সমান্তরাল আপতিত রশ্মি',130,22,'#a25a14',12);
+  });
+d4info();
+qgame('d4q','d4o','d4fb','d4sc',[
+ ['আয়নার মতো মসৃণ তলে সমান্তরাল রশ্মি প্রতিফলনের পর কেমন থাকে?','সমান্তরাল',['ছড়িয়ে পড়ে','এক বিন্দুতে মেলে','শোষিত হয়'],'প্রতিটি রশ্মির অভিলম্ব একই দিকে, তাই কোণও সমান।'],
+ ['অমসৃণ তলে কেন প্রতিবিম্ব স্পষ্ট হয় না?','রশ্মিগুলো আলাদা আলাদা কোণে ফেরে',['আলো শোষিত হয়','আলো থেমে যায়','রশ্মি সূত্র মানে না'],'অংশে অংশে তল ভিন্ন কোণে থাকে বলে প্রতিফলিত রশ্মি এলোমেলো ছড়ায়।'],
+ ['অমসৃণ তলে প্রতিটি রশ্মি কি প্রতিফলনের সূত্র মানে?','হ্যাঁ',['না','মাঝেমাঝে','শুধু প্রথম সূত্র'],'মানে। কিন্তু প্রতিটি রশ্মির আপতন বিন্দুর অভিলম্ব আলাদা।'],
+ ['ব্যাপ্ত প্রতিফলন কোন তলে হয়?','অমসৃণ',['মসৃণ','সমতল আয়না','রুপার প্রলেপ'],'অমসৃণ তলে হয়। এজন্যই দেয়াল, কাগজ চারদিক থেকে দেখা যায়।'],
+ ['কাচের পেছনে রুপা বা অ্যালুমিনিয়ামের প্রলেপ দেওয়া হয় কেন?','প্রায় সব আলো প্রতিফলিত করতে',['কাচ শক্ত করতে','রং করতে','ওজন বাড়াতে'],'কাচের সামনের পৃষ্ঠ থেকে মাত্র 4% ফেরে। প্রলেপ থেকে প্রায় সবটাই ফেরে।']]);
+
+/* ===== ল্যাব ৫: শোষণ ও রং ===== */
+var C5={m:0,N:['সাদা','লাল','সবুজ','নীল'],C:['#ffffff','#e63946','#2e9e4f','#2b6cb0']};
+function c5see(obj){var m=C5.m;if(m===0)return obj;return m===obj?obj:-1;}
+function c5info(){var r=c5see(1),l=c5see(2);function nm(v){return v===-1?'কুচকুচে কালো':(v===0?'সাদা':['','লাল','সবুজ'][v]);}
+  $('c5t').innerHTML='আলো: <b>'+C5.N[C5.m]+'</b><br>🌹 লাল ফুল দেখা যায়: <b>'+nm(r)+'</b><br>🌿 সবুজ পাতা দেখা যায়: <b>'+nm(l)+'</b><br><small>সাদা আলোতে সব রং আছে। বস্তু যে রংটি ফেরত দেয়, আমরা সেই রংটিই দেখি। বাকি সব রং শোষণ করে। যে রং আলোতে নেই, সেটি ফেরত আসার সুযোগও নেই।</small>';}
+pills('c5p',function(k){C5.m=k;c5info();});
+DRAWS.push(function(){var x=ctxOf('c5c'),m=C5.m;grad(x,0,0,380,300,'#f5f9fc','#dfe7ee');
+  x.fillStyle='#1d2430';rr(x,10,10,360,60,8);x.fill();sun(x,40,40,16,FR*16);tagd(x,'আলো: '+C5.N[m],80,40,'#fff',14,'left');
+  var cx=[100,280],ry=[1,2];
+  for(var i=0;i<2;i++){var seen=c5see(i+1),X=cx[i],Y=185;
+    for(var j=0;j<3;j++){var sx=X-40+j*40+(m===0?0:0),col=m===0?['#e63946','#2e9e4f','#2b6cb0'][j]:C5.C[m];if(m===0||true){x.globalAlpha=.9;arrow(x,sx*0+X-50+j*50,76,X-50+j*50+10,Y-48,col,3);x.globalAlpha=1;}}
+    if(i===0){circ(x,0,X,Y,34,seen===-1?'#16181d':(seen===0?'#fff':'#e63946'),'#6b2330',3);for(var p=0;p<5;p++){var a=p*1.257;circ(x,0,X+Math.cos(a)*20,Y+Math.sin(a)*20,15,seen===-1?'#1a1c22':'#e63946',null);}circ(x,0,X,Y,10,seen===-1?'#0d0e11':'#b3202e',null);x.strokeStyle='#2d6a3a';x.lineWidth=5;x.beginPath();x.moveTo(X,Y+34);x.lineTo(X,Y+70);x.stroke();}
+    else{x.fillStyle=seen===-1?'#1a1c22':'#2e9e4f';x.strokeStyle='#1d5e32';x.lineWidth=3;x.beginPath();x.ellipse(X,Y+8,52,26,-.3,0,7);x.fill();x.stroke();x.strokeStyle=seen===-1?'#0d0e11':'#1d6e38';x.lineWidth=2;x.beginPath();x.moveTo(X-40,Y+22);x.lineTo(X+40,Y-6);x.stroke();}
+    var rc=(i===0?['#e63946']:['#2e9e4f']);if(seen!==-1){arrow(x,X+28,Y-40,X+50,76,i===0?'#e63946':'#2e9e4f',3);}
+    tag(x,i===0?'লাল গোলাপ':'সবুজ পাতা',X,262,'#1f3a5f',13);tag(x,seen===-1?'কুচকুচে কালো':'দেখি: '+(seen===0?'সাদা':(i===0?'লাল':'সবুজ')),X,282,seen===-1?'#c0392b':'#1d7a6f',13);
+    if(seen===-1)tag(x,'সব শোষিত',X+2,Y-48,'#c0392b',11);}
+  });
+c5info();
+qgame('c5q','c5o','c5fb','c5sc',[
+ ['লাল গোলাপ লাল দেখায় কেন?','লাল রং প্রতিফলিত করে, বাকি রং শোষণ করে',['শুধু লাল রং শোষণ করে','কোনো রং শোষণ করে না','নিজে আলো দেয়'],'যে রং ফিরে আসে, সেটিই দেখি।'],
+ ['সবুজ পাতা সবুজ দেখায় কেন?','সবুজ ফেরত দেয়, বাকি শোষণ করে',['লাল ফেরত দেয়','সব রং ফেরত দেয়','কিছুই ফেরত দেয় না'],'পাতা সবুজ ছাড়া সব রং শোষণ করে নেয়।'],
+ ['লাল আলোতে সবুজ পাতা কেমন দেখায়?','কুচকুচে কালো',['সবুজ','লাল','সাদা'],'লাল আলো পাতা শোষণ করে ফেলে, ফেরত আসার মতো কোনো আলো থাকে না।'],
+ ['সাদা আলো আসলে কী?','দৃশ্যমান সব রঙের আলোর মিশ্রণ',['এক রঙের আলো','রংবিহীন তরঙ্গ নয়','শুধু নীল ও লাল'],'সব তরঙ্গদৈর্ঘ্যই থাকে বলে আলাদা রং চেনা যায় না, তাই সাদা।'],
+ ['সবুজ আলোতে লাল গোলাপ কেমন দেখায়?','কালো',['লাল','সবুজ','সাদা'],'গোলাপ সবুজ আলো শোষণ করে, ফিরিয়ে দেয় না।']]);
+
+
+function cand(x,cx,cy,sc,flip,alpha){x.save();x.globalAlpha=alpha===undefined?1:alpha;x.translate(cx,cy);x.scale(sc,flip?-sc:sc);x.fillStyle='#f4e7c3';x.fillRect(-7,-10,14,40);x.strokeStyle='#b99a55';x.lineWidth=1.5;x.strokeRect(-7,-10,14,40);x.strokeStyle='#444';x.lineWidth=1.5;x.beginPath();x.moveTo(0,-10);x.lineTo(0,-15);x.stroke();
+  var g=x.createRadialGradient(0,-22,1,0,-22,10);g.addColorStop(0,'#fff6b0');g.addColorStop(1,'#ff8a1e');x.fillStyle=g;x.beginPath();x.ellipse(0,-23,5,10,0,0,7);x.fill();x.restore();}
+
+/* ===== ল্যাব ৬: সমতল দর্পণ ===== */
+var I6={m:0};
+pills('i6p',function(k){I6.m=k;i6info();});on(['i6k'],i6info);
+function i6info(){var u=+$('i6k').value;$('i6kv').textContent=bn(u);
+  $('i6t').innerHTML='বস্তুর দূরত্ব XP = <b>'+bn(u)+' cm</b><br>প্রতিবিম্বের দূরত্ব X\'P = <b>'+bn(u)+' cm</b> (আয়নার পেছনে)<br><b style="color:#1d7a6f">প্রতিবিম্ব: অবাস্তব, সোজা, সমান আকারের, বস্তুর সমদূরত্বে।</b><br>প্রমাণ: OPX ও OPX\' ত্রিভুজ দুটি সর্বসম, কারণ ∠XPO = ∠X\'PO = 90°, OP সাধারণ বাহু, আর আপতন কোণ = প্রতিফলন কোণ। তাই XP = X\'P।<br><small>ডান-বাম উল্টে যায় (পার্শ্ব-পরিবর্তন), ওপর-নিচ নয়।</small>';}
+DRAWS.push(function(){var x=ctxOf('i6c'),p=+$('i6k').value,mx=200,xo=mx-p*1.4,xi=mx+p*1.4,ay=235,ty=I6.m?170:195,i;
+  grad(x,0,0,380,300,'#f5f9fc','#e0eaf3');
+  x.fillStyle='rgba(180,215,240,.55)';x.fillRect(mx,40,170,230);x.strokeStyle='#cfdbe6';x.lineWidth=1;for(i=0;i<9;i++){x.beginPath();x.moveTo(mx,60+i*25);x.lineTo(mx+170,60+i*25);x.stroke();}
+  x.fillStyle='#7a8794';x.fillRect(mx-3,34,6,240);tag(x,'A',mx,24,'#1f3a5f',13);tag(x,'B',mx,284,'#1f3a5f',13);tag(x,'আয়না',mx+36,44,'#5b7389',11);tag(x,'পেছনের অংশ (অবাস্তব)',mx+84,262,'#5b7389',10);
+  x.strokeStyle='#8899aa';x.lineWidth=1;x.setLineDash([5,4]);x.beginPath();x.moveTo(10,ay);x.lineTo(370,ay);x.stroke();x.setLineDash([]);
+  var X=[xo,ty],hits=[100,150,205];hits.forEach(function(py){var dx=mx-X[0],dy=py-X[1],t=(mx-26)/dx;ln(x,X[0],X[1],mx,py,'#e9a23b',2);ln(x,mx,py,26,py+dy*t,'#2b6cb0',2);ln(x,mx,py,xi,X[1],'#2b6cb0',1.5,[4,4]);});
+  if(I6.m){arrow(x,xo,ay,xo,ty+3,'#e63946',4);x.strokeStyle='#e63946';x.lineWidth=4;x.setLineDash([4,3]);x.beginPath();x.moveTo(xi,ay);x.lineTo(xi,ty+3);x.stroke();x.setLineDash([]);tag(x,'Y',xo,ay+12,'#e63946',12);tag(x,'Y\'',xi,ay+12,'#e63946',12);tag(x,'X',xo-12,ty,'#e63946',13);tag(x,'X\'',xi+14,ty,'#e63946',13);}
+  else{circ(x,0,xo,ty,7,'#e63946','#fff',2);circ(x,0,xi,ty,7,null,'#e63946',2);tag(x,'X',xo,ty-14,'#e63946',13);tag(x,'X\'',xi,ty-14,'#e63946',13);}
+  tag(x,'ক',xo+(I6.m?12:0),ay-16,'#1f3a5f',14);x.save();x.translate(xi-(I6.m?12:0),ay-16);x.scale(-1,1);x.fillStyle='#1f3a5f';x.font='bold 14px Hind Siliguri';x.textAlign='center';x.fillText('ক',0,0);x.restore();
+  tag(x,'👁',22,128,'#000',16);
+  x.strokeStyle='#1d7a6f';x.lineWidth=2;x.beginPath();x.moveTo(xo,ay+30);x.lineTo(mx,ay+30);x.moveTo(mx,ay+30);x.lineTo(xi,ay+30);x.stroke();tag(x,bn(p)+' cm',(xo+mx)/2,ay+20,'#1d7a6f',11);tag(x,bn(p)+' cm',(xi+mx)/2,ay+20,'#1d7a6f',11);
+  tag(x,'লক্ষ করো: ক-এর প্রতিবিম্বে ডান-বাম উল্টে গেছে',190,12,'#5b7389',10);
+  });
+i6info();
+qgame('i6q','i6o','i6fb','i6sc',[
+ ['সমতল দর্পণে প্রতিবিম্ব আয়না থেকে কত দূরে হয়?','বস্তুর সমান দূরত্বে',['দ্বিগুণ দূরে','অর্ধেক দূরে','আয়নার ওপরেই'],'XP = X\'P।'],
+ ['সমতল দর্পণে প্রতিবিম্ব কোন ধরনের?','অবাস্তব',['বাস্তব','উল্টো','ছোট'],'প্রতিবিম্বের জায়গায় আলো আসলে নেই, তাই অবাস্তব।'],
+ ['সমতল দর্পণের প্রতিবিম্বের আকার কেমন?','বস্তুর সমান',['ছোট','বড়','দ্বিগুণ'],'প্রতিবিম্ব বস্তুর সমান দৈর্ঘ্যের ও সোজা।'],
+ ['সমতল আয়নায় কী উল্টে যায়?','ডান ও বাম',['ওপর ও নিচ','রং','আকার'],'ডান-বাম পাল্টে যায়, ওপর-নিচ নয়।'],
+ ['অবাস্তব প্রতিবিম্ব পর্দায় ফেলা যায় কি?','না',['হ্যাঁ','সব সময়','শুধু সকালে'],'সেখানে সত্যিকার আলো কেন্দ্রীভূত হয় না, তাই পর্দায় ধরা যায় না।']]);
+
+/* ===== ল্যাব ৭: দুই সমান্তরাল আয়না ===== */
+var M7={};
+function m7info(){var d=+$('m7d').value,fr=+$('m7k').value/100,d2=fr*d,d1=(1-fr)*d;$('m7kv').textContent=bn(Math.round(fr*100));$('m7dv').textContent=bn(d);
+  $('m7t').innerHTML='দূরত্ব: মোমবাতি থেকে M₁ = <b>'+f(d1/1.4,0)+'</b>, M₂ = <b>'+f(d2/1.4,0)+'</b> একক<br>প্রথম প্রতিবিম্ব M₁-এর পেছনে একই দূরত্বে, আবার M₂-এর পেছনে একই দূরত্বে।<br>ওই প্রতিবিম্বের প্রতিবিম্ব আবার অন্য আয়নায়... এভাবে চলতেই থাকে।<br><b>প্রতিবিম্ব অসংখ্য!</b> (দূরের গুলো ক্রমশ ক্ষীণ হয়, কারণ আলো কিছুটা শোষিত হয়।)<br><small>একটি আয়নার প্রতিবিম্ব আরেকটি আয়নায় প্রতিবিম্ব তৈরি করে। (বই: চিত্র ৮.০৪)</small>';}
+on(['m7k','m7d'],m7info);
+DRAWS.push(function(){var x=ctxOf('m7c'),d=+$('m7d').value,f=+$('m7k').value/100,xA=190-d/2,xB=190+d/2,x0=xA+f*d,i,n;
+  grad(x,0,0,380,300,'#f5f9fc','#e0eaf3');
+  x.fillStyle='#8fb7d6';x.globalAlpha=.35;x.fillRect(xA,50,d,200);x.globalAlpha=1;
+  [xA,xB].forEach(function(v,j){x.fillStyle='#4c6178';x.fillRect(v-4,46,8,208);tag(x,j?'M₁':'M₂',v,34,'#1f3a5f',13);});
+  var ims=[];for(n=-5;n<=5;n++){if(n!==0)ims.push([x0+2*n*d,Math.abs(2*n)]);ims.push([2*xB-x0+2*n*d,Math.abs(2*n+1)]);}
+  ims.forEach(function(p){if(p[0]>-10&&p[0]<390)cand(x,p[0],200,.95,false,Math.max(.15,1-(p[1]-1)*.16)*(p[1]===0?1:1));});
+  cand(x,x0,200,1.0,false,1);tag(x,'মোমবাতি X',x0,248,'#a25a14',11);
+  var dm=Math.min(xB-x0,60);x.strokeStyle='#1d7a6f';x.lineWidth=2;x.beginPath();x.moveTo(x0,262);x.lineTo(xB,262);x.stroke();tag(x,'d₁',(x0+xB)/2,274,'#1d7a6f',12);
+  x.strokeStyle='#c0392b';x.beginPath();x.moveTo(xA,282);x.lineTo(x0,282);x.stroke();tag(x,'d₂',(xA+x0)/2,292,'#c0392b',12);
+  tag(x,'প্রতিবিম্ব ➜ ক্ষীণ',330,70,'#5b7389',10);tag(x,'← ক্ষীণ প্রতিবিম্ব',52,70,'#5b7389',10);
+  });
+m7info();
+qgame('m7q','m7o','m7fb','m7sc',[
+ ['দুই সমান্তরাল আয়নার মাঝে মোমবাতি রাখলে কয়টি প্রতিবিম্ব হয়?','অসংখ্য',['একটি','দুটি','চারটি'],'প্রতিবিম্বের প্রতিবিম্ব হতেই থাকে।'],
+ ['প্রথম প্রতিবিম্ব আয়নার পেছনে কত দূরে হয়?','মোমবাতি থেকে আয়নার সমান দূরত্বে',['দ্বিগুণ','অর্ধেক','আয়নার ওপরে'],'সমতল দর্পণের নিয়মেই।'],
+ ['দূরের প্রতিবিম্বগুলো ক্ষীণ হয় কেন?','প্রতিফলনে আলো কিছুটা শোষিত হয়',['আলো বাড়ে','আয়না ছোট','কোনো কারণ নেই'],'প্রতিবার সব আলো ফেরে না, তাই ধীরে ধীরে ক্ষীণ হয়।'],
+ ['ক্যালাইডোস্কোপে নকশা হয় কীভাবে?','কাচে বারবার প্রতিফলনে',['রংয়ের জাদুতে','লেন্সে','তাপে'],'তিনটি কাচ ত্রিভুজ করে বসানো, ভেতরে পাথর ঘোরালে নতুন নকশা।'],
+ ['আয়না দুটি আরও কাছে আনলে প্রতিবিম্বের মধ্যকার ফাঁক কী হয়?','কমে যায়',['বাড়ে','একই থাকে','শূন্য হয়ে যায়'],'প্রতিবিম্বের মধ্যকার দূরত্ব 2d, d কমলে কমে।']]);
+
+/* ===== ল্যাব ৮: পূর্ণদৈর্ঘ্য প্রতিবিম্ব ===== */
+function pers(x,px,gy,h,k,col,lw){var hy=gy-h*k;x.strokeStyle=col;x.fillStyle=col;x.lineWidth=lw||3;x.lineCap='round';x.beginPath();x.moveTo(px,gy);x.lineTo(px,gy-h*.5*k);x.lineTo(px,gy-h*.82*k);x.stroke();x.beginPath();x.moveTo(px-h*.14*k,gy);x.lineTo(px,gy-h*.5*k);x.lineTo(px+h*.14*k,gy);x.stroke();x.beginPath();x.moveTo(px-h*.2*k,gy-h*.55*k);x.lineTo(px,gy-h*.8*k);x.lineTo(px+h*.2*k,gy-h*.55*k);x.stroke();x.beginPath();x.arc(px,gy-h*.91*k,h*.085*k,0,7);x.fill();x.lineCap='butt';}
+function h8c(){var h=+$('h8k').value,d=+$('h8d').value,m=+$('h8m').value/100,e=h-10,zc=(h+2*e)/4,Lm=h/2*m,lo=zc-Lm/2,hi=zc+Lm/2,zlo=clamp(2*lo-e,0,h),zhi=clamp(2*hi-e,0,h);return {h:h,d:d,m:m,e:e,Lm:Lm,lo:lo,hi:hi,zlo:zlo,zhi:zhi};}
+function h8info(){var c=h8c();$('h8kv').textContent=bn(c.h);$('h8dv').textContent=bn(c.d);$('h8mv').textContent=bn(Math.round(c.m*100));
+  var seeall=c.zlo<=.5&&c.zhi>=c.h-.5;$('h8t').innerHTML='উচ্চতা h = '+bn(c.h)+' cm ➜ দরকারি আয়না = h/2 = <b>'+f(c.h/2,1)+' cm</b><br>এখনকার আয়না: <b>'+f(c.Lm,1)+' cm</b><br>'+(seeall?'<b style="color:#1d7a6f">নিজেকে মাথা থেকে পা পর্যন্ত দেখতে পাচ্ছ ✅</b>':'<b style="color:#c0392b">দেখা যাচ্ছে শুধু '+f(c.zhi-c.zlo,0)+' cm অংশ। আয়না ছোট!</b>')+'<br>দূরত্ব বদলালেও দরকারি দৈর্ঘ্য একই থাকে।<br><small>বইয়ের উদাহরণ: 1.5 m উচ্চতার জন্য আয়না 0.75 m। (আয়নার অবস্থান উঁচু-নিচু করা ও চোখ মাথার 10 cm নিচে ধরা আমার সুবিধার জন্য।)</small>';}
+on(['h8k','h8d','h8m'],h8info);
+DRAWS.push(function(){var x=ctxOf('h8c'),c=h8c(),gy=272,k=1.15,mx=290,dp=c.d*.25,px=mx-dp,ix=mx+dp;
+  grad(x,0,0,380,300,'#f5f9fc','#e0eaf3');x.fillStyle='#c9d8b4';x.fillRect(0,gy,380,28);
+  x.fillStyle='rgba(180,215,240,.45)';x.fillRect(mx,40,90,gy-40);
+  pers(x,ix,gy,c.h,k,'rgba(140,150,170,.55)',3);
+  pers(x,px,gy,c.h,k,'#9aa5b1',4);
+  x.save();x.beginPath();x.rect(0,gy-c.zhi*k,380,(c.zhi-c.zlo)*k);x.clip();pers(x,px,gy,c.h,k,'#1d7a6f',5);x.restore();
+  var ey=gy-c.e*k;tag(x,'👁',px+8,ey-2,'#000',12);
+  var topz=(c.h+c.e)/2,botz=c.e/2;
+  [[c.h,topz,'#e9a23b'],[0,botz,'#e9a23b']].forEach(function(r){var inside=r[1]<=c.hi+.01&&r[1]>=c.lo-.01;var py=gy-r[1]*k,sy=gy-r[0]*k;var col=inside?'#e9a23b':'#c9ced4';ln(x,px,sy,mx,py,col,2);ln(x,mx,py,px,ey,inside?'#2b6cb0':'#c9ced4',2);});
+  x.strokeStyle='#4c6178';x.lineWidth=9;x.beginPath();x.moveTo(mx,gy-c.hi*k);x.lineTo(mx,gy-c.lo*k);x.stroke();x.strokeStyle='#cfe3f2';x.lineWidth=4;x.beginPath();x.moveTo(mx,gy-c.hi*k);x.lineTo(mx,gy-c.lo*k);x.stroke();
+  tag(x,'আয়না '+f(c.Lm,0)+' cm',mx-6,gy-c.hi*k-12,'#1f3a5f',11,'right');tag(x,'প্রতিবিম্ব (অবাস্তব)',ix,36,'#5b7389',10);tag(x,'তুমি',px,36,'#1d7a6f',12);
+  tag(x,'সবুজ অংশটুকু দেখা যাচ্ছে',110,18,'#1d7a6f',11);
+  });
+h8info();
+qgame('h8q','h8o','h8fb','h8sc',[
+ ['নিজের পুরো প্রতিবিম্ব দেখতে আয়নার দৈর্ঘ্য কত লাগে?','উচ্চতার অর্ধেক',['পুরো উচ্চতা','এক-তৃতীয়াংশ','দ্বিগুণ'],'জ্যামিতি থেকে আয়নার দৈর্ঘ্য h/2।'],
+ ['1.5 m উচ্চতার ব্যক্তির জন্য ন্যূনতম আয়না কত?','0.75 m',['1.5 m','3 m','0.5 m'],'1.5 ÷ 2 = 0.75 m।'],
+ ['আয়না থেকে দূরে সরলে দরকারি আয়নার দৈর্ঘ্য কী হয়?','একই থাকে',['বাড়ে','কমে','দ্বিগুণ হয়'],'দূরত্ব বদলালে আয়নার দৈর্ঘ্য বদলায় না, সব সময় h/2।'],
+ ['পূর্ণদৈর্ঘ্য প্রতিবিম্ব দেখতে পূর্ণদৈর্ঘ্য আয়না লাগে কি?','না, অর্ধদৈর্ঘ্যই যথেষ্ট',['হ্যাঁ','দ্বিগুণ লাগে','তিনগুণ লাগে'],'বইয়ে ফুল লেংথ মিররের বদলে অর্ধদৈর্ঘ্য কেনার কথা আছে।'],
+ ['আয়না দৈর্ঘ্যে ছোট হলে কী হয়?','শরীরের কিছু অংশ দেখা যায় না',['প্রতিবিম্ব ছোট হয়','আয়না ভেঙে যায়','প্রতিবিম্ব উল্টে যায়'],'আয়নার বাইরের জায়গা থেকে আলো চোখে আসে না।']]);
+
+/* ===== ল্যাব ৯: দুই আয়নার কোণ ===== */
+pills('a9p',function(k){var v=[[60,60],[90,30],[45,40]][k];$('a9k').value=v[0];$('a9a').value=v[1];a9info();});on(['a9k','a9a'],a9info);
+function a9trace(){var th=DEG(+$('a9k').value),ai=DEG(+$('a9a').value),V=[50,262],U=[[1,0],[Math.cos(th),-Math.sin(th)]],LM=330,P1=[V[0]+150,V[1]],din=[-Math.sin(ai),Math.cos(ai)],S=[P1[0]+Math.sin(ai)*150,P1[1]-Math.cos(ai)*150],segs=[],P=S.slice(),d=din.slice(),k,mi,hit=0;
+  for(k=0;k<7;k++){var best=null;for(mi=0;mi<2;mi++){var u=U[mi],den=d[0]*u[1]-d[1]*u[0];if(Math.abs(den)<1e-9)continue;var wx=V[0]-P[0],wy=V[1]-P[1],t=(wx*u[1]-wy*u[0])/den,s=(wx*d[1]-wy*d[0])/den;if(t>1e-3&&s>=0&&s<=LM&&(!best||t<best.t))best={t:t,mi:mi};}
+    if(!best){segs.push([P[0],P[1],P[0]+d[0]*260,P[1]+d[1]*260]);break;}
+    var H=[P[0]+d[0]*best.t,P[1]+d[1]*best.t];segs.push([P[0],P[1],H[0],H[1]]);hit++;var u2=U[best.mi],nn=[-u2[1],u2[0]],dn=d[0]*nn[0]+d[1]*nn[1];d=[d[0]-2*dn*nn[0],d[1]-2*dn*nn[1]];P=H;}
+  return {V:V,U:U,LM:LM,segs:segs,hit:hit,din:din,dout:d};}
+function a9info(){var t=a9trace(),dot=t.din[0]*t.dout[0]+t.din[1]*t.dout[1];$('a9kv').textContent=bn(+$('a9k').value);$('a9av').textContent=bn(+$('a9a').value);
+  var back=dot<-.999;$('a9t').innerHTML='প্রতিফলন হয়েছে <b>'+bn(t.hit)+'</b> বার<br>'+(back?'<b style="color:#1d7a6f">শেষ রশ্মি আপতিত রশ্মির ঠিক উল্টো দিকে সমান্তরাল!</b> (বইয়ের উদাহরণে 60° আয়নায় রশ্মি দ্বিতীয় আয়নায় লম্বভাবে পড়ে ফিরে যায়।)':'শেষ রশ্মি আপতিত রশ্মির সাথে সমান্তরাল নয়।')+'<br><small>দুই আয়না 90° তে রাখলে ডান-বাম উল্টায় না (বই: চিত্র ৮.২৬)। প্রতিটি প্রতিফলনে সূত্র θi = θr মানা হয়েছে। 90° আয়নায় ঘুরে আসা রশ্মির সমান্তরাল ও বিপরীত হওয়াটা আমার যাচাই করা।</small>';}
+DRAWS.push(function(){var x=ctxOf('a9c'),t=a9trace(),V=t.V,i;
+  grad(x,0,0,380,300,'#f5f9fc','#e0eaf3');
+  t.U.forEach(function(u,j){x.strokeStyle='#4c6178';x.lineWidth=8;x.beginPath();x.moveTo(V[0],V[1]);x.lineTo(V[0]+u[0]*t.LM,V[1]+u[1]*t.LM);x.stroke();x.strokeStyle='#cfe3f2';x.lineWidth=4;x.beginPath();x.moveTo(V[0],V[1]);x.lineTo(V[0]+u[0]*t.LM,V[1]+u[1]*t.LM);x.stroke();});
+  var th=DEG(+$('a9k').value);x.strokeStyle='#c0392b';x.lineWidth=2;x.beginPath();x.arc(V[0],V[1],38,-th,0);x.stroke();tag(x,bn(+$('a9k').value)+'°',V[0]+54*Math.cos(th/2),V[1]-54*Math.sin(th/2),'#c0392b',12);tag(x,'A',V[0]-12,V[1]+10,'#1f3a5f',12);
+  t.segs.forEach(function(s,j){var col=['#e9a23b','#2b6cb0','#1d7a6f','#8e44ad','#c0392b','#e67e22','#16a085'][j%7];if(j===t.segs.length-1&&j>0)arrow(x,s[0],s[1],s[2],s[3],col,3.5);else if(j===0)arrow(x,s[0],s[1],s[2],s[3],col,3.5);else ln(x,s[0],s[1],s[2],s[3],col,3.5);});
+  t.segs.slice(0,-1).forEach(function(s,j){circ(x,0,s[2],s[3],4,'#fff','#1f3a5f',2);tag(x,bn(j+1),s[2],s[3]-12,'#1f3a5f',11);});
+  tag(x,'আপতিত রশ্মি',270,24,'#a25a14',12);
+  });
+a9info();
+qgame('a9q','a9o','a9fb','a9sc',[
+ ['দুই আয়না 90° কোণে রাখলে ডান-বাম কেমন দেখা যায়?','অবিকৃত (উল্টায় না)',['উল্টে যায়','ওপর-নিচ উল্টায়','প্রতিবিম্ব হয় না'],'দুইবার প্রতিফলনে ডান-বাম আবার ঠিক হয়ে যায়।'],
+ ['দুটি আয়না পরস্পর 60° কোণে। প্রথম আয়নায় 60° কোণে আলো ফেলা হলো। রশ্মি দ্বিতীয় আয়নায় কীভাবে পড়বে?','লম্বভাবে',['সমান্তরালে','45° কোণে','পড়বে না'],'জ্যামিতি থেকে রশ্মি B বিন্দুতে লম্ব পড়ে।'],
+ ['লম্বভাবে পড়া রশ্মি কেমন করে ফেরে?','ঠিক উল্টো পথে',['ছড়িয়ে যায়','অন্য কোণে','থেমে যায়'],'θi = 0 হলে θr = 0, রশ্মি একই পথে ফেরে।'],
+ ['রশ্মি দুবার প্রতিফলিত হলে বাঁ হাত কেমন দেখায়?','বাঁ হাত',['ডান হাত','হাত নেই','উল্টো হাত'],'একবার প্রতিফলনে বাঁ হাত ডান হাত হয়, দুবারে আবার বাঁ হাত।'],
+ ['প্রতিটি প্রতিফলনে কোনটি সত্য?','θi = θr',['θi = 2θr','θi > θr','θi < θr'],'সূত্র সব সময় খাটে।']]);
+
+
+/* ===== ল্যাব ১০: পিনহোল ক্যামেরা ===== */
+function p10info(){var u=+$('p10k').value,s=+$('p10s').value;$('p10kv').textContent=bn(u);$('p10sv').textContent=bn(s);var m=s/u;
+  $('p10t').innerHTML='বস্তু থেকে ফুটো = '+bn(u)+' cm, ফুটো থেকে পর্দা = '+bn(s)+' cm<br>প্রতিবিম্বের আকার = বস্তুর আকার × (পর্দার দূরত্ব ÷ বস্তুর দূরত্ব) = <b>'+f(m,2)+' গুণ</b> ('+(m>1?'বড়':(m<1?'ছোট':'সমান'))+')<br><b style="color:#1d7a6f">প্রতিবিম্ব: বাস্তব, উল্টো।</b> সব দূরত্বে স্পষ্ট, কিন্তু আলো কম।<br><small>বই (চিত্র ৮.১৪): বোর্ডের সূক্ষ্ম ফুটো দিয়ে এভাবে প্রতিবিম্ব তৈরি করা যায়। পিন হোল ক্যামেরা এভাবেই কাজ করে। (সূত্রটি সদৃশ ত্রিভুজ থেকে আমার যোগ করা।)</small>';}
+on(['p10k','p10s'],p10info);
+DRAWS.push(function(){var x=ctxOf('p10c'),u=+$('p10k').value,s=+$('p10s').value,ox=40,cy=165,bx=ox+u,sx=bx+s,m=s/u;
+  grad(x,0,0,380,300,'#2a2f3a','#161922');
+  var g=x.createRadialGradient(ox,cy-10,5,ox,cy-10,110);g.addColorStop(0,'rgba(255,200,90,.35)');g.addColorStop(1,'rgba(255,200,90,0)');x.fillStyle=g;x.fillRect(0,40,200,250);
+  cand(x,ox,cy,1.05,false,1);
+  x.fillStyle='#8a97a6';x.fillRect(bx-4,60,8,cy-60-4);x.fillRect(bx-4,cy+4,8,240-cy-4);circ(x,0,bx,cy,2,'#fff',null);tagd(x,'সূক্ষ্ম ফুটো',bx,52,'#fff',11);
+  x.fillStyle='#f4f1e8';x.fillRect(sx,90,8,150);tagd(x,'পর্দা',sx+4,80,'#fff',11);
+  var top=cy-30,bot=cy+30;ln(x,ox,top,bx,cy,'rgba(255,210,90,.9)',1.8);ln(x,bx,cy,sx,cy+(cy-top)*m,'rgba(255,210,90,.9)',1.8);ln(x,ox,bot,bx,cy,'rgba(255,170,70,.9)',1.8);ln(x,bx,cy,sx,cy-(bot-cy)*m,'rgba(255,170,70,.9)',1.8);
+  x.save();x.beginPath();x.rect(sx-14,92,22,146);x.clip();cand(x,sx-1,cy,1.05*m*.92,true,1);x.restore();
+  tagd(x,'উল্টো প্রতিবিম্ব',clamp(sx,60,320),262,'#ffd37a',12);tagd(x,'আকার ×'+f(m,2),clamp(sx,60,320),280,'#fff',12);tagd(x,'বস্তু',ox,262,'#fff',11);
+  });
+p10info();
+qgame('p10q','p10o','p10fb','p10sc',[
+ ['পিনহোল ক্যামেরায় প্রতিবিম্ব কেমন হয়?','বাস্তব ও উল্টো',['অবাস্তব ও সোজা','বাস্তব ও সোজা','অবাস্তব ও উল্টো'],'রশ্মি ফুটোয় ক্রস করে, তাই ওপর-নিচ উল্টে যায়। আর পর্দায় ধরা যায় বলে বাস্তব।'],
+ ['প্রতিবিম্ব বাস্তব না অবাস্তব? কীভাবে বুঝবে?','পর্দায় ফেলা যায় বলে বাস্তব',['পর্দায় ফেলা যায় না বলে বাস্তব','আয়নায় দেখা যায় বলে বাস্তব','সব সময় অবাস্তব'],'বাস্তব প্রতিবিম্বে সত্যিকার আলো কেন্দ্রীভূত হয়।'],
+ ['পর্দা ফুটো থেকে দূরে সরালে প্রতিবিম্ব কী হয়?','বড় হয়',['ছোট হয়','একই থাকে','অদৃশ্য হয়'],'আকার ∝ পর্দার দূরত্ব।'],
+ ['বস্তু ফুটো থেকে দূরে সরালে প্রতিবিম্ব কী হয়?','ছোট হয়',['বড় হয়','একই','উল্টে যায়'],'আকার ∝ 1/বস্তুর দূরত্ব।'],
+ ['পিনহোল ক্যামেরায় আলো ঢোকে কোন পথে?','ছোট্ট একটি ফুটো দিয়ে',['লেন্স দিয়ে','আয়না দিয়ে','কাচ দিয়ে'],'বইয়ে সূক্ষ্ম ফুটোর কথা আছে।']]);
+
+/* ===== দর্পণ ল্যাব (উত্তল ও অবতল) ===== */
+function mirDraw(x,type,u,r,Px,ay){
+  var S=2.4,fl=r/2,R=r*S,ho=34,conc=type==='cc',Fx=conc?Px-fl*S:Px+fl*S,Cx=conc?Px-R:Px+R;
+  function sxm(dy){var q=Math.sqrt(Math.max(R*R-dy*dy,0));return conc?Cx+q:Cx-q;}
+  ln(x,6,ay,374,ay,'#8899aa',1.5,[6,4]);
+  var a=Math.asin(Math.min(.97,80/R)),i;x.strokeStyle='#4c6178';x.lineWidth=7;x.beginPath();if(conc)x.arc(Cx,ay,R,-a,a);else x.arc(Cx,ay,R,Math.PI-a,Math.PI+a);x.stroke();x.strokeStyle='#cfe3f2';x.lineWidth=3;x.beginPath();if(conc)x.arc(Cx,ay,R,-a,a);else x.arc(Cx,ay,R,Math.PI-a,Math.PI+a);x.stroke();
+  for(i=-5;i<=5;i++){var dy=i*(Math.sin(a)*R/5.5),px0=sxm(dy);ln(x,px0,ay+dy,px0+9,ay+dy+7,'#7a8794',1.5);}
+  function mk(xx,lab,col){if(xx>4&&xx<376){ln(x,xx,ay-6,xx,ay+6,col,2);tag(x,lab,xx,ay+17,col,12);}}
+  mk(Px,'P','#1f3a5f');mk(Fx,'F','#c0392b');mk(Cx,'C','#8e44ad');
+  var xo=Px-u*S,T=[xo,ay-ho];arrow(x,xo,ay,xo,ay-ho,'#e63946',4);tag(x,'বস্তু',xo,ay+17,'#e63946',11);
+  var fs=conc?fl:-fl,inf=conc&&Math.abs(u-fs)<.6,v=inf?0:u*fs/(u-fs),m=inf?0:-v/u,real=v>0;
+  var y1=T[1],H1=[sxm(y1-ay),y1],d1,L=420;
+  if(conc){d1=[Fx-H1[0],ay-H1[1]];}else{d1=[H1[0]-Fx,H1[1]-ay];}var n1=Math.hypot(d1[0],d1[1]);d1=[d1[0]/n1,d1[1]/n1];
+  var dd=conc?(T[0]>Cx?[Cx-T[0],ay-T[1]]:[T[0]-Cx,T[1]-ay]):[Cx-T[0],ay-T[1]];var nd=Math.hypot(dd[0],dd[1]);dd=[dd[0]/nd,dd[1]/nd];
+  var H2=conc?[Cx+R*dd[0],ay+R*dd[1]]:[Cx-R*dd[0],ay-R*dd[1]];
+  ln(x,T[0],T[1],H1[0],H1[1],'#e9a23b',2.2);ln(x,T[0],T[1],H2[0],H2[1],'#e9a23b',2.2);
+  var xi=Px-v*S,ti=ay-m*ho;
+  ln(x,H1[0],H1[1],H1[0]+d1[0]*L,H1[1]+d1[1]*L,'#2b6cb0',2.2);ln(x,H2[0],H2[1],H2[0]-dd[0]*L,H2[1]-dd[1]*L,'#2b6cb0',2.2);
+  if(!conc){ln(x,H1[0],H1[1],Fx,ay,'#2b6cb0',1.4,[4,4]);ln(x,H2[0],H2[1],Cx,ay,'#8e44ad',1.4,[4,4]);}
+  if(!inf&&!real){ln(x,H1[0],H1[1],xi,ti,'#2b6cb0',1.4,[4,4]);ln(x,H2[0],H2[1],xi,ti,'#2b6cb0',1.4,[4,4]);}
+  if(!inf&&xi>5&&xi<375){if(real){arrow(x,xi,ay,xi,ti,'#1d7a6f',4);}else{x.strokeStyle='#1d7a6f';x.lineWidth=4;x.setLineDash([5,4]);x.beginPath();x.moveTo(xi,ay);x.lineTo(xi,ti);x.stroke();x.setLineDash([]);}tag(x,'প্রতিবিম্ব',xi,ay+(m<0?-m*ho:0)+(ay-ti>0?17:17)+(m<0?4:0),'#1d7a6f',11);}
+  else tag(x,inf?'প্রতিবিম্ব অসীম দূরে, গঠিত হয় না':'প্রতিবিম্ব অনেক দূরে',190,22,'#c0392b',12);
+  return {v:v,m:m,real:real,inf:inf,f:fl};}
+var V11={};
+function v11info(){var u=+$('v11k').value,r=+$('v11r').value;$('v11kv').textContent=bn(u);$('v11rv').textContent=bn(r);var fl=r/2,v=u*fl/(u+fl);
+  $('v11t').innerHTML='ফোকাস দূরত্ব f = r/2 = <b>'+f(fl,1)+' cm</b><br>বস্তুর দূরত্ব u = '+bn(u)+' cm ➜ প্রতিবিম্ব আয়নার পেছনে <b>'+f(v,1)+' cm</b> দূরে (1/u + 1/v = 1/f সূত্রে)<br>আকার = বস্তুর <b>'+f(v/u,2)+' গুণ</b> (ছোট)<br><b style="color:#1d7a6f">প্রতিবিম্ব: অবাস্তব, সোজা, খর্বিত, F ও P-এর মাঝে।</b><br><small>বস্তু যত দূরে যাবে, প্রতিবিম্ব তত ছোট হবে ও F-এর কাছে যাবে। (বই: ৮.৫.১) সূত্রে চিহ্ন বিধি আমার বসানো (উত্তলে f ঋণাত্মক ধরে)।</small>';}
+on(['v11k','v11r'],v11info);
+DRAWS.push(function(){var x=ctxOf('v11c');grad(x,0,0,380,300,'#f5f9fc','#e0eaf3');mirDraw(x,'cx',+$('v11k').value,+$('v11r').value,255,165);
+  tag(x,'উত্তল দর্পণ',300,36,'#1f3a5f',13);tag(x,'নীল: প্রতিফলিত রশ্মি, কমলা: আপতিত রশ্মি',190,284,'#5b7389',10);});
+v11info();
+qgame('v11q','v11o','v11fb','v11sc',[
+ ['উত্তল দর্পণে প্রতিবিম্ব কেমন হয়?','অবাস্তব, সোজা ও ছোট',['বাস্তব, উল্টো ও বড়','বাস্তব, সোজা ও ছোট','অবাস্তব, উল্টো ও বড়'],'বইয়ে বলা আছে, উত্তল দর্পণের প্রতিবিম্ব সব সময় অবাস্তব, সোজা ও ছোট।'],
+ ['উত্তল দর্পণে প্রতিবিম্ব কোথায় তৈরি হয়?','ফোকাস ও মেরু বিন্দুর মাঝে',['বক্রতার কেন্দ্রে','অসীমে','দর্পণের সামনে'],'বস্তু দূরে গেলে প্রতিবিম্ব F-এর কাছে আসে।'],
+ ['গোলকের ব্যাসার্ধ r হলে ফোকাস দূরত্ব?','r/2',['r','2r','r/4'],'f = r/2।'],
+ ['গাড়ির রিয়ার ভিউ মিররে কোন আয়না?','উত্তল',['অবতল','সমতল','কোনোটিই নয়'],'উত্তলে ছোট জায়গায় অনেক বড় দৃশ্য ধরা যায়।'],
+ ['সমতল আয়নার ফোকাস দূরত্ব কত?','অসীম',['0','1 m','r/2'],'সমতলকে অসীম ব্যাসার্ধের গোলকের অংশ ধরা যায়।']]);
+
+/* ===== ল্যাব ১২: অবতল দর্পণ ===== */
+function k12info(){var u=+$('k12k').value,r=+$('k12r').value,fl=r/2;$('k12kv').textContent=bn(u);$('k12rv').textContent=bn(r);var z,nat;
+  if(Math.abs(u-fl)<.6){z='ঠিক F-এ';nat='প্রতিবিম্ব গঠিত হয় না (রশ্মি সমান্তরাল হয়ে যায়)';}
+  else if(u<fl){z='F ও P-এর মাঝে';nat='অবাস্তব, সোজা ও বিবর্ধিত, দর্পণের বিপরীত দিকে';}
+  else if(Math.abs(u-r)<.6){z='C-তে';nat='বাস্তব, উল্টো ও সমান আকারের, C-তে';}
+  else if(u<r){z='C ও F-এর মাঝে';nat='বাস্তব, উল্টো ও বিবর্ধিত, C ও অসীমের মাঝে';}
+  else{z='C-র বাইরে';nat='বাস্তব, উল্টো ও খর্বিত, F ও C-র মাঝে';}
+  var v=Math.abs(u-fl)<.6?null:u*fl/(u-fl);
+  $('k12t').innerHTML='f = r/2 = <b>'+f(fl,1)+' cm</b>, বস্তু: <b>'+z+'</b><br>'+(v===null?'':'দূরত্ব v = '+f(Math.abs(v),1)+' cm, বিবর্ধন m = '+f(Math.abs(v/u),2)+'<br>')+'<b style="color:#1d7a6f">'+nat+'</b><br><small>সূত্র: 1/u + 1/v = 1/f। বিবর্ধন m = l\'/l (প্রতিবিম্বের দৈর্ঘ্য ÷ বস্তুর দৈর্ঘ্য)। এই ছয় ধরনের তালিকা বইয়ের সারণি থেকে।</small>';}
+pills('k12p',function(k){var r=+$('k12r').value,fl=r/2,t=[.6*fl,1.5*fl,2*fl,3*fl,fl][k];$('k12k').value=Math.round(t/5)*5||5;if(k===4)$('k12k').value=fl;k12info();});on(['k12k','k12r'],k12info);
+DRAWS.push(function(){var x=ctxOf('k12c');grad(x,0,0,380,330,'#f5f9fc','#e0eaf3');mirDraw(x,'cc',+$('k12k').value,+$('k12r').value,335,175);
+  tag(x,'অবতল দর্পণ',300,36,'#1f3a5f',13);tag(x,'নীল: প্রতিফলিত রশ্মি, কমলা: আপতিত রশ্মি',190,312,'#5b7389',10);});
+k12info();
+qgame('k12q','k12o','k12fb','k12sc',[
+ ['বস্তু অবতল দর্পণের F-এর ভেতরে থাকলে প্রতিবিম্ব কেমন?','অবাস্তব, সোজা ও বিবর্ধিত',['বাস্তব ও উল্টো','অবাস্তব ও ছোট','প্রতিবিম্ব হয় না'],'ম্যাগনিফাইং আয়নার মতো, যেমন চামচের ভেতরে।'],
+ ['বস্তু C-তে থাকলে প্রতিবিম্ব কোথায় এবং কেমন?','C-তে, বাস্তব, উল্টো ও সমান',['F-এ, ছোট','অসীমে','পেছনে সোজা'],'বইয়ের সারণি অনুযায়ী।'],
+ ['বস্তু ঠিক F-এ থাকলে কী হয়?','প্রতিবিম্ব গঠিত হয় না',['খুব বড় হয়','খুব ছোট হয়','অবাস্তব হয়'],'প্রতিফলিত রশ্মি সমান্তরাল হয়ে যায়।'],
+ ['বস্তু C ও F-এর মাঝে থাকলে প্রতিবিম্ব?','বাস্তব, উল্টো ও বিবর্ধিত',['বাস্তব, উল্টো ও খর্বিত','অবাস্তব ও সোজা','সমান'],'প্রতিবিম্ব C ও অসীমের মাঝে।'],
+ ['বস্তু C-র বাইরে (অসীম থেকে C-র মাঝে) থাকলে প্রতিবিম্ব কেমন?','বাস্তব, উল্টো ও খর্বিত',['অবাস্তব, সোজা ও বড়','বাস্তব, সোজা','অবাস্তব, উল্টো'],'F ও C-র মাঝে ছোট উল্টো প্রতিবিম্ব।']]);
+
+/* ===== ল্যাব ১৩: দর্পণের ব্যবহার ===== */
+var U13={m:0};
+pills('u13p',function(k){U13.m=k;u13info();});on(['u13k'],u13info);
+function u13info(){var s=+$('u13k').value,m=U13.m,tx;
+  if(m===0){var off=(s-50)*.6;tx='<b>অবতল আয়না (টর্চ, সার্চলাইট):</b> বাল্ব ঠিক ফোকাস বিন্দুতে বসানো থাকে, তাই আলো সমান্তরাল রশ্মি হয়ে বেরোয়।<br>স্লাইডারে বাল্ব সরাও: '+(Math.abs(off)<2?'<b style="color:#1d7a6f">এখন বাল্ব ফোকাসে ✅ রশ্মি সমান্তরাল!</b>':'<b style="color:#c0392b">বাল্ব ফোকাসে নেই ➜ রশ্মি ছড়ায় বা মিলে যায়।</b>');}
+  else if(m===1)tx='<b>টেলিস্কোপ:</b> পৃথিবীর সবচেয়ে বড় ও সূক্ষ্ম টেলিস্কোপে অবতল আয়না লাগে। আয়না যত বড়, তত বেশি আলো জমা হয়, তাই অল্প আলোর দূরের তারা স্পষ্ট দেখা যায়।<br>স্লাইডারে তারার দিক সামান্য বদলাও।';
+  else if(m===2)tx='<b>উত্তল রিয়ার ভিউ মিরর:</b> ছোট্ট আয়নায় পেছনের অনেক বড় জায়গা দেখা যায়। প্রতিবিম্ব ছোট ও সোজা। স্লাইডারে পেছনের গাড়ির দূরত্ব বদলাও।<br>উত্তলে দেখা যায়: <b>'+bn(u13cnt(38))+' টি গাড়ি</b>';
+  else if(m===3)tx='<b>সমতল আয়নায় (তুলনা):</b> দৃশ্যের ক্ষেত্র ছোট, পেছনের সব গাড়ি দেখা যায় না। এজন্য রিয়ার ভিউয়ে উত্তল ব্যবহার হয়।<br>সমতলে দেখা যায়: <b>'+bn(u13cnt(14))+' টি গাড়ি</b><br><small>দৃশ্যের কোণ (14° ও 38°) আমার আনুমানিক ধরা মান।</small>';
+  else tx='<b>পাহাড়ি বাঁক:</b> বাঁকে 45° কোণে বড় উত্তল আয়না বসানো হয়, তাই রাস্তার দুই পাশের যানবাহন একে অন্যকে দেখতে পায়। এতে গাড়ি চালানো নিরাপদ হয়।<br>স্লাইডারে গাড়ি দুটি বাঁকের দিকে এগিয়ে আনো।';
+  $('u13t').innerHTML=tx+'<br><small>(এই অংশের বর্ণনা বই ৮.৮ অনুযায়ী।)</small>';}
+function u13cnt(fov){var D=40+(+$('u13k').value)*1.6,c=0;[-46,0,46].forEach(function(y){if(Math.atan(Math.abs(y)/D)*180/Math.PI<=fov+.01)c++;});return c;}
+function parab(x,Vx,cy,fp,from,dir,col,len){var d=dir,t,P0=from,hit=null,g=function(px,py){var dy=py-cy;return px-(Vx-dy*dy/(4*fp));};
+  for(t=0;t<520;t+=1){var px=P0[0]+d[0]*t,py=P0[1]+d[1]*t;if(g(px,py)>=0&&Math.abs(py-cy)<95){hit=t;break;}}
+  if(hit===null){ln(x,P0[0],P0[1],P0[0]+d[0]*300,P0[1]+d[1]*300,col,2);return;}
+  var lo=hit-1,hi=hit;for(var k=0;k<12;k++){var mid=(lo+hi)/2;if(g(P0[0]+d[0]*mid,P0[1]+d[1]*mid)>=0)hi=mid;else lo=mid;}
+  var hx=P0[0]+d[0]*hi,hy=P0[1]+d[1]*hi,dy=hy-cy,nn=[1,dy/(2*fp)],nl=Math.hypot(nn[0],nn[1]);nn=[nn[0]/nl,nn[1]/nl];var dn=d[0]*nn[0]+d[1]*nn[1],r=[d[0]-2*dn*nn[0],d[1]-2*dn*nn[1]];
+  ln(x,P0[0],P0[1],hx,hy,'#e9a23b',2);ln(x,hx,hy,hx+r[0]*(len||300),hy+r[1]*(len||300),col,2);}
+function parabMirror(x,Vx,cy,fp){x.strokeStyle='#4c6178';x.lineWidth=7;x.beginPath();for(var dy=-85;dy<=85;dy+=3){var px=Vx-dy*dy/(4*fp);if(dy===-85)x.moveTo(px,cy+dy);else x.lineTo(px,cy+dy);}x.stroke();x.strokeStyle='#cfe3f2';x.lineWidth=3;x.stroke();}
+DRAWS.push(function(){var x=ctxOf('u13c'),m=U13.m,s=+$('u13k').value,i;grad(x,0,0,380,300,'#f5f9fc','#e0eaf3');
+  if(m===0){var Vx=330,cy=150,fp=60,off=(s-50)*.6,L=[Vx-fp+off,cy];parabMirror(x,Vx,cy,fp);
+    for(i=-5;i<=5;i++){var a=i*8.5*Math.PI/180;parab(x,Vx,cy,fp,L,[Math.cos(a),Math.sin(a)],'#2b6cb0',260);}
+    ball(x,L[0],L[1],8,'#ffd23f');tag(x,'বাল্ব',L[0],L[1]+20,'#a25a14',11);circ(x,0,Vx-fp,cy,3,'#c0392b',null);tag(x,'F',Vx-fp,cy-14,'#c0392b',12);
+    tag(x,Math.abs(off)<2?'সমান্তরাল রশ্মি':'ফোকাসের বাইরে',70,26,Math.abs(off)<2?'#1d7a6f':'#c0392b',13);}
+  else if(m===1){var Vx=330,cy=150,fp=60,ph=(s-50)/50*8*Math.PI/180;parabMirror(x,Vx,cy,fp);
+    for(i=-4;i<=4;i++){parab(x,Vx,cy,fp,[16,cy+i*18-Math.tan(ph)*0],[Math.cos(ph),Math.sin(ph)],'#2b6cb0',300);}
+    tag(x,'⭐ দূরের তারা (সমান্তরাল রশ্মি)',120,24,'#5b7389',12);circ(x,0,Vx-fp,cy,3,'#c0392b',null);tag(x,'F',Vx-fp,cy-14,'#c0392b',12);tag(x,'রশ্মি ফোকাসে জমা হয়',200,284,'#1d7a6f',12);}
+  else if(m===2||m===3){var fov=m===2?38:14,D=40+s*1.6,Mx=250,My=160;x.fillStyle='#cfd5da';x.fillRect(0,100,380,120);x.strokeStyle='#fff';x.setLineDash([16,10]);x.lineWidth=2;ln(x,0,137,380,137,'#fff',2,[16,10]);ln(x,0,183,380,183,'#fff',2,[16,10]);
+    x.fillStyle='rgba(60,170,110,.22)';x.beginPath();x.moveTo(Mx,My);x.lineTo(Mx-300,My-300*Math.tan(DEG(fov)));x.lineTo(Mx-300,My+300*Math.tan(DEG(fov)));x.closePath();x.fill();
+    x.fillStyle='#e9a23b';rr(x,Mx-4,My-18,98,36,6);x.fill();tag(x,'তোমার গাড়ি',Mx+48,My+30,'#5a2d00',10);x.fillStyle='#4c6178';x.fillRect(Mx-6,My-3,6,6);circ(x,0,Mx,My,4,m===2?'#4c6178':'#7a8794',null);
+    tag(x,m===2?'উত্তল আয়না, দৃশ্যের ক্ষেত্র ±38°':'সমতল আয়না, দৃশ্যের ক্ষেত্র ±14°',190,18,'#1f3a5f',12);
+    [-46,0,46].forEach(function(yy){var vis=Math.atan(Math.abs(yy)/D)*180/Math.PI<=fov+.01,cx2=Mx-D;x.fillStyle=vis?'#3ba55d':'#9aa5b1';rr(x,cx2-44,My+yy-14,44,28,5);x.fill();x.strokeStyle='#fff';x.lineWidth=2;x.stroke();tagd(x,vis?'✔ দেখা যায়':'✖ দেখা যায় না',cx2-22,My+yy,'#fff',9);});}
+  else{var A=[30+s*1.2,230],B=[198,30+s*1.2];x.fillStyle='#7d8f6a';x.fillRect(0,0,380,300);x.fillStyle='#9aa5b1';x.fillRect(0,210,380,40);x.fillRect(178,0,40,250);ln(x,0,230,380,230,'#fff',2,[14,10]);ln(x,198,0,198,250,'#fff',2,[14,10]);
+    x.fillStyle='#8c7a60';x.beginPath();x.moveTo(0,0);x.lineTo(170,0);x.lineTo(170,198);x.lineTo(0,198);x.closePath();x.fill();tag(x,'⛰️ পাহাড়',80,100,'#fff',18);
+    ln(x,A[0],A[1],B[0],B[1],'#c0392b',1.5,[4,5]);tag(x,'✖ সরাসরি দেখা যায় না',112,258,'#c0392b',11);
+    var M=[225,200];x.save();x.translate(M[0],M[1]);x.rotate(-Math.PI/4);x.fillStyle='#4c6178';x.fillRect(-26,-3,52,6);x.restore();tag(x,'উত্তল আয়না',270,200,'#1f3a5f',11);
+    ln(x,A[0],A[1],M[0],M[1],'#2b6cb0',2);ln(x,M[0],M[1],B[0],B[1],'#2b6cb0',2);tag(x,'আয়না দিয়ে দেখা যায় ✔',280,150,'#1d7a6f',11);
+    x.fillStyle='#e63946';rr(x,A[0]-18,A[1]-8,36,16,4);x.fill();x.fillStyle='#2b6cb0';rr(x,B[0]-8,B[1]-18,16,36,4);x.fill();tag(x,'গাড়ি ক',A[0],A[1]+16,'#1f3a5f',10);tag(x,'গাড়ি খ',B[0]+34,B[1],'#1f3a5f',10);}
+  });
+u13info();
+qgame('u13q','u13o','u13fb','u13sc',[
+ ['টর্চলাইটে বাল্ব কোথায় বসানো থাকে?','অবতল আয়নার ফোকাস বিন্দুতে',['আয়নার পেছনে','বক্রতার কেন্দ্রে','অসীম দূরে'],'ফোকাসের আলো প্রতিফলিত হয়ে সমান্তরাল রশ্মি হয়ে বেরিয়ে যায়।'],
+ ['টেলিস্কোপে কোন আয়না ব্যবহার হয়?','অবতল',['উত্তল','সমতল','বেলনাকার'],'অবতল আয়না যত বড়, তত বেশি আলো জমা হয়।'],
+ ['গাড়ির রিয়ার ভিউ মিররে উত্তল কেন ব্যবহার হয়?','ছোট আয়নায় বড় দৃশ্য ধরা যায়',['বড় প্রতিবিম্ব দেয়','উল্টো প্রতিবিম্ব দেয়','আলো বাড়ায়'],'উত্তল আয়নার দৃষ্টিক্ষেত্র বড়, প্রতিবিম্ব ছোট ও সোজা।'],
+ ['পাহাড়ি বাঁকে কোন আয়না বসানো হয়?','উত্তল (45° কোণে)',['অবতল','সমতল','কোনোটিই নয়'],'বাঁকের দুই পাশের গাড়ি একে অন্যকে দেখতে পায়।'],
+ ['ডাক্তার বা ডেন্টিস্ট কোন আয়না ব্যবহার করেন?','অবতল',['উত্তল','সমতল','প্রিজম'],'অবতল আয়নায় কাছের জিনিস সোজা ও বড় দেখায়।']]);
+
+
+var QUIZ=[];
+function M(q,c,w,e,fix){QUIZ.push({q:q,o:[c].concat(w),a:0,e:e,fix:!!fix});}
+QUIZ.push({q:'উত্তল দর্পণ কোথায় ব্যবহার হয়? (বইয়ের নমুনা প্রশ্ন ১)',o:['গাড়িতে','টর্চলাইটে','সৌরচুল্লিতে','রাডারে'],a:0,fix:true,e:'গাড়ির রিয়ার ভিউ মিররে উত্তল আয়না ব্যবহার হয়, কারণ এতে ছোট জায়গায় অনেক বড় দৃশ্য দেখা যায়। টর্চ ও সৌরচুল্লিতে অবতল আয়না লাগে।'});
+QUIZ.push({q:'প্রতিফলন কত প্রকার? (বইয়ের নমুনা প্রশ্ন ২)',o:['4','3','2','1'],a:2,fix:true,e:'মসৃণ তলে নিয়মিত প্রতিফলন আর অমসৃণ তলে ব্যাপ্ত প্রতিফলন, এই দুই প্রকার। (উত্তর আমার হিসাব, বইয়ে ৮.২.২ অনুযায়ী)'});
+QUIZ.push({q:'সমতল দর্পণে সৃষ্ট প্রতিবিম্ব: i. আকারে লক্ষ্যবস্তুর সমান ii. পর্দায় গঠন করা যায় iii. দর্পণ থেকে বস্তুর দূরত্বের সমান দূরত্বে গঠিত হয়। নিচের কোনটি সঠিক? (বইয়ের নমুনা প্রশ্ন ৩)',o:['i ও ii','ii ও iii','i ও iii','i, ii ও iii'],a:2,fix:true,e:'সমতল দর্পণের প্রতিবিম্ব অবাস্তব, তাই পর্দায় ধরা যায় না (ii ভুল)। আকার সমান (i) ও দূরত্ব সমান (iii) সঠিক।'});
+QUIZ.push({q:'৮.৩১ চিত্রে অবতল দর্পণের সামনে F ও C-র মাঝখানে (B বিন্দুতে) BO বস্তু রাখা আছে। প্রতিবিম্বের আকৃতি কীরূপ হবে? (বইয়ের নমুনা প্রশ্ন ৪)',o:['বিবর্ধিত','খর্বিত','অত্যন্ত বিবর্ধিত','অত্যন্ত খর্বিত'],a:0,fix:true,e:'বস্তু C ও F-এর মাঝে থাকলে প্রতিবিম্ব বাস্তব, উল্টো ও বিবর্ধিত। (চিত্রে F, B, C-র অবস্থান আমার পড়া, উত্তর আমার হিসাব)'});
+QUIZ.push({q:'একই চিত্রে BO বস্তুর প্রতিবিম্বের অবস্থান কোথায় হবে? (বইয়ের নমুনা প্রশ্ন ৫)',o:['ফোকাস ও মেরুর মাঝে','প্রধান ফোকাসে','বক্রতার কেন্দ্রে','বক্রতার কেন্দ্র ও অসীমের মাঝে'],a:3,fix:true,e:'বস্তু C ও F-এর মাঝে হলে প্রতিবিম্ব C ও অসীমের মাঝে গঠিত হয়। (আমার হিসাব)'});
+M('আলো কোন ধরনের তরঙ্গ?','তড়িৎচৌম্বক তরঙ্গ',['যান্ত্রিক তরঙ্গ','শব্দ তরঙ্গ','অনুদৈর্ঘ্য তরঙ্গ'],'আলো তড়িৎ ও চৌম্বক ক্ষেত্রের তরঙ্গ।');
+M('আমরা কত তরঙ্গদৈর্ঘ্যের আলো দেখতে পাই?','400 nm – 700 nm',['4 nm – 7 nm','40 nm – 70 nm','4000 nm – 7000 nm'],'শুধু এই ছোট পরিসরের আলো আমরা দেখি।');
+M('দৃশ্যমান আলোর সবচেয়ে বেশি তরঙ্গদৈর্ঘ্য কোন রঙের?','লাল',['বেগুনি','নীল','সবুজ'],'লালের তরঙ্গদৈর্ঘ্য সবচেয়ে বড়, বেগুনির সবচেয়ে ছোট।');
+M('আলো এক মাধ্যম থেকে অন্য মাধ্যমে গেলে কোনটি ঘটে না?','বিচ্ছুরণ হয় না, এই অধ্যায়ে এটি আলোচিত নয়',['প্রতিফলন','প্রতিসরণ','শোষণ'],'বইয়ে তিনটি ঘটনার কথা আছে: প্রতিফলন, প্রতিসরণ ও শোষণ।');
+M('প্রতিফলনের প্রথম সূত্র অনুযায়ী কোনটি একই সমতলে থাকে?','আপতিত রশ্মি, প্রতিফলিত রশ্মি ও অভিলম্ব',['শুধু আপতিত ও প্রতিফলিত রশ্মি','আয়না ও আলো','অভিলম্ব ও আয়না'],'তিনটিই একই সমতলে থাকে।');
+M('প্রতিফলনের দ্বিতীয় সূত্র কোনটি?','প্রতিফলন কোণ = আপতন কোণ',['প্রতিফলন কোণ = 2 × আপতন কোণ','আপতন কোণ + প্রতিফলন কোণ = 90°','প্রতিফলন কোণ = 0°'],'θr = θi।');
+M('আপতন কোণ 35° হলে প্রতিফলিত রশ্মি ও আপতিত রশ্মির মাঝের কোণ কত?','70°',['35°','90°','145°'],'দুই কোণ 35° + 35° = 70°।');
+M('আলো আয়নায় লম্বভাবে পড়লে প্রতিফলন কোণ কত?','0°',['90°','45°','180°'],'আপতন কোণ 0°, তাই প্রতিফলন কোণও 0°।');
+M('অমসৃণ তলে সমান্তরাল রশ্মি প্রতিফলনের পর কেমন হয়?','ছড়িয়ে পড়ে',['সমান্তরাল থাকে','এক বিন্দুতে মিলে','শোষিত হয়'],'ব্যাপ্ত প্রতিফলন হয়।');
+M('লাল গোলাপ লাল দেখায় কেন?','লাল রং ফেরত দেয়, বাকি রং শোষণ করে',['লাল রং শোষণ করে','সব রং ফেরত দেয়','নিজে আলো ছড়ায়'],'ফেরত আসা রংই আমরা দেখি।');
+M('লাল আলোতে সবুজ পাতা দেখায়','কালো',['সবুজ','লাল','সাদা'],'পাতা লাল আলো শোষণ করে ফেলে, ফেরত দেওয়ার মতো কিছু থাকে না।');
+M('সমতল আয়নায় প্রতিবিম্ব আয়নার পেছনে বস্তুর দূরত্বের কত দূরত্বে হয়?','সমান',['দ্বিগুণ','অর্ধেক','এক-তৃতীয়াংশ'],'XP = X\'P।');
+M('অবাস্তব প্রতিবিম্ব সম্পর্কে কোনটি সঠিক?','পর্দায় ধরা যায় না',['পর্দায় ধরা যায়','সব সময় উল্টো','আলো কেন্দ্রীভূত হয়'],'অবাস্তব প্রতিবিম্বের জায়গায় আসলে আলো নেই।');
+M('সমতল আয়নায় কী উল্টে যায়?','ডান ও বাম',['ওপর ও নিচ','রং','আকার'],'পার্শ্ব পরিবর্তন হয়।');
+M('1.8 m উচ্চতার একজনের পূর্ণদৈর্ঘ্য প্রতিবিম্ব দেখতে কমপক্ষে কত বড় সমতল আয়না লাগে?','0.9 m',['1.8 m','3.6 m','0.45 m'],'আয়নার দৈর্ঘ্য = উচ্চতার অর্ধেক।');
+M('ডান-বাম অবিকৃত দেখতে দুটি আয়না কত কোণে রাখতে হয়?','90°',['45°','60°','180°'],'দুইবার প্রতিফলনে ডান-বাম আবার ঠিক হয়।');
+M('দুই সমান্তরাল আয়নার মাঝে একটি মোমবাতির প্রতিবিম্বের সংখ্যা?','অসংখ্য',['একটি','দুটি','চারটি'],'প্রতিবিম্বের প্রতিবিম্ব হতেই থাকে।');
+M('ক্যালাইডোস্কোপে নকশা কিসের কারণে হয়?','কাচের বারবার প্রতিফলন',['প্রতিসরণ','শোষণ','তাপ'],'তিনটি কাচের বারবার প্রতিফলনে।');
+M('পিনহোল ক্যামেরায় প্রতিবিম্ব কেমন?','বাস্তব ও উল্টো',['অবাস্তব ও সোজা','বাস্তব ও সোজা','অবাস্তব ও উল্টো'],'সূক্ষ্ম ফুটোতে রশ্মি ক্রস করে।');
+M('গোলীয় আয়নার ব্যাসার্ধ 20 cm হলে ফোকাস দূরত্ব কত?','10 cm',['20 cm','40 cm','5 cm'],'f = r/2 = 10 cm।');
+M('সমতল আয়নার ফোকাস দূরত্ব কত?','অসীম',['0','1 cm','r/2'],'সমতল আয়নাকে অসীম ব্যাসার্ধের গোলকের অংশ ভাবা যায়।');
+M('উত্তল আয়নার প্রতিবিম্ব কেমন?','অবাস্তব, সোজা ও ছোট',['বাস্তব ও উল্টো','অবাস্তব ও বড়','বাস্তব ও বড়'],'উত্তল আয়নায় প্রতিবিম্ব সব সময় ছোট হয়।');
+M('প্রধান অক্ষের সমান্তরাল রশ্মি অবতল আয়নায় প্রতিফলনের পর কোথা দিয়ে যায়?','ফোকাস বিন্দু দিয়ে',['বক্রতার কেন্দ্র দিয়ে','মেরু দিয়ে','অসীমে'],'দ্বিতীয় নিয়ম।');
+M('বক্রতার কেন্দ্রমুখী রশ্মি আয়নায় প্রতিফলনের পর কীভাবে ফেরে?','একই পথে',['অক্ষের সমান্তরালে','ফোকাস দিয়ে','ছড়িয়ে'],'কেন্দ্রমুখী রশ্মি লম্বভাবে পড়ে বলে একই পথে ফেরে।');
+M('অবতল আয়নার F-এ বস্তু রাখলে প্রতিবিম্ব?','গঠিত হয় না',['খুব ছোট হয়','অবাস্তব হয়','C-তে হয়'],'প্রতিফলিত রশ্মি সমান্তরাল।');
+M('অবতল আয়নার C-তে বস্তু রাখলে প্রতিবিম্ব কোথায় ও কেমন?','C-তে, বাস্তব, উল্টো, সমান',['F-এ, ছোট','অসীমে','পেছনে, সোজা'],'বইয়ের সারণি।');
+M('অবতল আয়নার F ও P-এর মাঝে বস্তু রাখলে প্রতিবিম্ব?','অবাস্তব, সোজা ও বিবর্ধিত',['বাস্তব ও উল্টো','অবাস্তব ও ছোট','বাস্তব ও সোজা'],'ম্যাগনিফাইং আয়নার মতো।');
+M('সূত্র 1/u + 1/v = 1/f-এ u কী?','বস্তুর দূরত্ব',['প্রতিবিম্বের দূরত্ব','ফোকাস দূরত্ব','বিবর্ধন'],'u বস্তু, v প্রতিবিম্ব, f ফোকাস দূরত্ব।');
+M('বিবর্ধন m কাকে বলে?','প্রতিবিম্বের দৈর্ঘ্য ÷ বস্তুর দৈর্ঘ্য',['বস্তুর দৈর্ঘ্য ÷ প্রতিবিম্বের দৈর্ঘ্য','u ÷ f','f ÷ r'],'m = l\'/l।');
+M('টর্চলাইটে বাল্ব কোথায় থাকে?','অবতল আয়নার ফোকাসে',['বক্রতার কেন্দ্রে','আয়নার পেছনে','মেরুতে'],'ফোকাসের উৎসের আলো প্রতিফলিত হয়ে সমান্তরাল হয়ে বেরোয়।');
+M('টেলিস্কোপে কোন আয়না ব্যবহার হয়?','অবতল',['উত্তল','সমতল','কোনোটিই নয়'],'আয়না যত বড়, তত বেশি আলো জমা হয়।');
+M('গাড়ির রিয়ার ভিউ মিররে কোন আয়না?','উত্তল',['অবতল','সমতল','কোনো আয়না নেই'],'এতে দৃষ্টির ক্ষেত্র বেশি।');
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+
+var QA=[
+ {h:'📝 সৃজনশীল প্রশ্ন ১ (চিত্র ৮.৩৩)',items:[
+  ['<b>উদ্দীপক:</b> PQ একটি সমতল দর্পণ। আলোকরশ্মি দর্পণের তলের সাথে 60° কোণ করে পড়েছে (চিত্র ৮.৩৩)।<br><b>(ক)</b> প্রতিবিম্ব কাকে বলে? (১)','কোনো বস্তু থেকে আসা আলো আয়না বা লেন্সে প্রতিফলিত বা প্রতিসরিত হয়ে যেখানে মিলিত হয় (বা মিলিত হচ্ছে বলে মনে হয়), সেখানে বস্তুর যে রূপ তৈরি হয়, তাকে প্রতিবিম্ব বলে।'],
+  ['<b>(খ)</b> দর্পণে লম্বভাবে আপতিত রশ্মি একই পথে ফিরে আসে কেন? (২)','লম্বভাবে আপতিত রশ্মির আপতন কোণ θi = 0°। প্রতিফলনের দ্বিতীয় সূত্র অনুযায়ী θr = θi = 0°। অর্থাৎ প্রতিফলিত রশ্মিও অভিলম্ব বরাবরই যায়, তাই একই পথে ফিরে আসে।'],
+  ['<b>(গ)</b> চিত্রের আলোকে প্রতিফলন কোণের মান নির্ণয় করো। (৩)','রশ্মি আয়নার তলের সাথে 60° কোণে আছে। আপতন কোণ মাপা হয় অভিলম্ব থেকে, আর অভিলম্ব তলের সাথে 90°।<br>আপতন কোণ θi = 90° − 60° = 30°।<br>প্রতিফলনের সূত্র অনুযায়ী প্রতিফলন কোণ θr = θi = <b>30°</b>।'],
+  ['<b>(ঘ)</b> PQ দর্পণে গঠিত প্রতিবিম্ব অবাস্তব, চিত্রসহ ব্যাখ্যা করো। (৪)','PQ সমতল দর্পণ। বস্তু X থেকে আসা রশ্মিগুলো দর্পণে প্রতিফলিত হয়ে চোখে পৌঁছায়। প্রতিফলিত রশ্মিগুলো আসলে মিলিত হয় না, বরং এদের পেছনে বাড়ালে আয়নার পেছনে X\' বিন্দুতে মিলে বলে মনে হয়।<br>সেখানে সত্যিকার আলো যায় না, তাই প্রতিবিম্বটি পর্দায় ধরা যায় না। অতএব এটি <b>অবাস্তব</b>। (চিত্র: দর্পণ PQ আঁকো, তার সামনে X, প্রতিফলিত রশ্মি নিরেট রেখায়, আয়নার পেছনে তাদের বর্ধিতাংশ ডটেড রেখায় আঁকো, যা X\'-তে মিলে।)<br><small>নোট: চিত্রের 60° কোণটি রশ্মি ও আয়নার তলের মাঝে ধরেছি।</small>']
+ ]},
+ {h:'📝 সৃজনশীল প্রশ্ন ২ (অবতল দর্পণের পরীক্ষা)',items:[
+  ['<b>উদ্দীপক:</b> একদল শিক্ষার্থী ব্যবহারিক ক্লাসে একটি পরীক্ষণের প্রথম পর্যায়ে একটি অবতল দর্পণের সামনে 2 cm দৈর্ঘ্যের একটি কাঠি রাখায় পর্দায় এর 3.51 গুণ বড় প্রতিবিম্ব দেখতে পেল। দ্বিতীয় পর্যায়ে পর্দায় 6 গুণ বড় প্রতিবিম্ব দেখতে পেল।<br><b>(ক)</b> বিবর্ধন কী? (১)','প্রতিবিম্বের দৈর্ঘ্য l\' এবং বস্তুর দৈর্ঘ্য l হলে বিবর্ধন m = l\'/l। অর্থাৎ প্রতিবিম্ব বস্তুর কত গুণ বড়।'],
+  ['<b>(খ)</b> ভিউ মিরর বা দেখার দর্পণ হিসেবে সমতল দর্পণ ব্যবহার করা হয় না কেন? (২)','সমতল দর্পণে দৃষ্টির ক্ষেত্র ছোট, তাই এক সাথে পেছনের অনেকটা জায়গা দেখা যায় না। উত্তল দর্পণে ছোট আয়নায়ই বড় দৃশ্য দেখা যায় (প্রতিবিম্ব সোজা ও ছোট), তাই ভিউ মিররে উত্তল দর্পণ ব্যবহার হয়।'],
+  ['<b>(গ)</b> পরীক্ষণের প্রথম পর্যায়ে কাঠিটির প্রতিবিম্বের দৈর্ঘ্য ও প্রকৃতি নির্ণয় করো। (৩)','m = l\'/l = 3.51, l = 2 cm।<br>l\' = 3.51 × 2 = <b>7.02 cm</b>।<br>প্রতিবিম্ব পর্দায় ধরা গেছে, তাই এটি <b>বাস্তব ও উল্টো</b> এবং বিবর্ধিত। অবতল দর্পণে বস্তু F ও C-র মাঝে থাকলেই বাস্তব, উল্টো ও বিবর্ধিত প্রতিবিম্ব হয়।'],
+  ['<b>(ঘ)</b> পরীক্ষণের দ্বিতীয় পর্যায়ে কী কী পরিবর্তন করা হয়েছিল? (৪)','বিবর্ধন 3.51 থেকে 6 হয়েছে, মানে প্রতিবিম্ব আরও বড় হয়েছে।<br>বইয়ের নিয়ম অনুযায়ী বস্তুকে ফোকাস বিন্দুর যত কাছে আনা হয়, বাস্তব প্রতিবিম্ব তত দূরে ও তত বড় হয়। তাই:<br>(১) <b>কাঠিটিকে ফোকাসের দিকে আরেকটু সরানো হয়েছে</b> (তবে F-এর বাইরেই), অর্থাৎ বস্তুর দূরত্ব u কমানো হয়েছে।<br>(২) <b>পর্দাটিকে দর্পণ থেকে আরও দূরে সরাতে হয়েছে</b>, কারণ প্রতিবিম্ব আরও দূরে সরে গেছে।<br><small>আমার যাচাই: m = v/u এবং 1/u + 1/v = 1/f থেকে u = f(1 + 1/m)। m = 3.51 হলে u ≈ 1.28f আর m = 6 হলে u ≈ 1.17f। দ্বিতীয় ক্ষেত্রে u কম, তাই কাঠি F-এর আরও কাছে।</small>']
+ ]},
+ {h:'✍️ সংক্ষিপ্ত উত্তর প্রশ্ন',items:[
+  ['১. আলোর প্রতিফলন বলতে কী বোঝায়?','আলো এক মাধ্যম থেকে অন্য মাধ্যমে যাওয়ার সময় খানিকটা আলো প্রথম মাধ্যমেই ফিরে আসে। এই ঘটনাকে আলোর প্রতিফলন বলে। (সাধারণত আয়নার তলে আলোর ফিরে আসাকে বোঝায়।)'],
+  ['২. মৃদু আলোতে গাছের পাতা কালো দেখায়, ব্যাখ্যা করো।','পাতা সবুজ রং প্রতিফলিত করে আর বাকি রংগুলো শোষণ করে বলে সবুজ দেখায়। যে আলোতে সবুজ রং নেই (যেমন লাল আলো), সে আলো পাতা পুরো শোষণ করে নেয়। ফেরত আসার মতো কোনো আলো থাকে না, তাই পাতা কুচকুচে কালো দেখায়। আলো খুব কম হলেও ফেরত আসা আলো এত কম যে পাতাকে কালোর মতো দেখায়।<br><small>নোট: প্রশ্নে "মৃদু আলো" লেখা আছে, আমি বইয়ের ব্যাখ্যা (৮.২ শোষণ) অনুযায়ী লাল আলোর উদাহরণ ধরে উত্তর দিয়েছি।</small>'],
+  ['৩. বাস্তব বিম্ব বলতে কী বোঝায়?','যে প্রতিবিম্বের জায়গায় সত্যি সত্যি আলো কেন্দ্রীভূত হয় এবং সেখান থেকে আলোকরশ্মি বের হয়ে আসে, তাকে বাস্তব বিম্ব বলে। একে পর্দায় ধরা যায়। যেমন অবতল আয়না বা পিনহোল ক্যামেরায় পর্দার ওপর তৈরি প্রতিবিম্ব।'],
+  ['৪. দর্পণে লম্বভাবে আপতিত রশ্মি প্রতিফলিত হয়ে একই পথে ফিরে আসে কেন?','লম্বভাবে আপতিত রশ্মির আপতন কোণ 0°। প্রতিফলনের সূত্র θr = θi অনুযায়ী প্রতিফলন কোণও 0°। তাই রশ্মি অভিলম্ব বরাবর একই পথে ফিরে আসে।'],
+  ['৫. (বাড়তি, আমার বানানো) সমতল আয়নায় প্রতিবিম্ব আয়নার পেছনে কত দূরে হয়?','বস্তু আয়না থেকে যত দূরে, প্রতিবিম্বও আয়নার পেছনে ঠিক ততটা দূরে হয়। কারণ XP = X\'P (OPX ও OPX\' ত্রিভুজ সর্বসম)।'],
+  ['৬. (বাড়তি, আমার বানানো) ফোকাস দূরত্ব ও বক্রতার ব্যাসার্ধের সম্পর্ক কী?','গোলীয় দর্পণে ফোকাস দূরত্ব f = r/2, অর্থাৎ ব্যাসার্ধের অর্ধেক।']
+ ]}
+];
+
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+function frame(){FR++;for(var i=0;i<DRAWS.length;i++)DRAWS[i]();requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>

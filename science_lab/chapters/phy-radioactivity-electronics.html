@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>তেজস্ক্রিয়তা ও ইলেকট্রনিকস (পদার্থবিজ্ঞান অধ্যায় ১৩) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+small{color:#567}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/lab-boost.js?v=1"></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#physics">&larr; সব অধ্যায়</a>
+</header><div class="wrap">
+  <div class="crumb">⚛️ পদার্থবিজ্ঞান &rsaquo; ত্রয়োদশ অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">☢️ তেজস্ক্রিয়তা ও ইলেকট্রনিকস (Radioactivity and Electronics)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">⚛️ ল্যাব ১</a><a href="#lab2">☢️ ল্যাব ২</a><a href="#lab3">🛡️ ল্যাব ৩</a><a href="#lab4">🧲 ল্যাব ৪</a><a href="#lab5">⏳ ল্যাব ৫</a><a href="#lab6">🦴 ল্যাব ৬</a><a href="#lab7">🩺 ল্যাব ৭</a><a href="#lab8">💡 ল্যাব ৮</a><a href="#lab9">📅 ল্যাব ৯</a><a href="#lab10">🔲 ল্যাব ১০</a><a href="#lab11">〰️ ল্যাব ১১</a><a href="#lab12">🔢 ল্যাব ১২</a><a href="#lab13">💎 ল্যাব ১৩</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+<section class="panel" id="note">
+<h3>☢️ ১৩.১ তেজস্ক্রিয়তা</h3>
+<ul>
+<li>পরমাণুর কেন্দ্রে <b>নিউক্লিয়াস</b> (প্রোটন + নিউট্রন)। প্রোটন সংখ্যা যত, ইলেকট্রনও তত। প্রোটন ধনাত্মক, তাই নিউট্রন ও শক্তিশালী নিউক্লিয়ার বল নিউক্লিয়াসকে ধরে রাখে।</li>
+<li>প্রোটন সংখ্যা ৮২ ছাড়ালে নিউক্লিয়াস অস্থিতিশীল হতে শুরু করে। অস্থিতিশীল নিউক্লিয়াস বিকিরণ করে স্থিতিশীল হতে চায়, এই প্রক্রিয়াই <b>তেজস্ক্রিয়তা</b>; বের হওয়া বিকিরণ <b>তেজস্ক্রিয় রশ্মি</b>। (৮২-এর কম প্রোটনের নিউক্লিয়াসও তেজস্ক্রিয় হতে পারে।)</li>
+<li><b>আইসোটোপ:</b> একই প্রোটন সংখ্যা, ভিন্ন নিউট্রন সংখ্যা। কার্বনের C-12, C-13, C-14 ➜ শুধু <b>C-14</b> তেজস্ক্রিয়।</li>
+<li>১৮৯৬ সালে হেনরি বেকেরেল ইউরেনিয়াম থেকে প্রথম তেজস্ক্রিয় রশ্মি প্রমাণ করেন। পরে রাদারফোর্ড, পিয়ারে ও মেরি কুরি আরও মৌল আবিষ্কার করেন।</li>
+</ul>
+<h4>তিন ধরনের রশ্মি</h4>
+<ul>
+<li><b>আলফা (α):</b> হিলিয়াম নিউক্লিয়াস (২ প্রোটন + ২ নিউট্রন), চার্জযুক্ত। বাতাসে ~৬ cm যায়, কাগজেই থামে। বিকিরণে পারমাণবিক সংখ্যা ২ ও ভরসংখ্যা ৪ কমে। U₂₃₈ → Th₂₃₄ + He₄</li>
+<li><b>বিটা (β):</b> ইলেকট্রন (ঋণাত্মক)। নিউট্রন ➜ প্রোটন + ইলেকট্রন + অ্যান্টি-নিউট্রিনো। পারমাণবিক সংখ্যা ১ বাড়ে, ভরসংখ্যা একই। C₁₄ → N₁₄ + e + ν̄। কয়েক mm অ্যালুমিনিয়ামে থামে।</li>
+<li><b>গামা (γ):</b> শক্তিশালী তড়িৎচৌম্বকীয় তরঙ্গ, চার্জ নেই। ক্ষেত্রে বাঁকে না। থামাতে কয়েক cm সিসা লাগে। উত্তেজিত নিউক্লিয়াস শক্তি ছেড়ে নিস্তেজ হয়, গঠন বদলায় না।</li>
+</ul>
+<div class="key">⏳ <b>অর্ধায়ু:</b> যে সময়ে অর্ধেক নিউক্লিয়াসের বিকিরণ ঘটে। তেজস্ক্রিয়তা যত বেশি, অর্ধায়ু তত কম। উদাহরণ: ১ kg, অর্ধায়ু ১০০ বছর ➜ ২০০ বছর পর ৩/৪ অংশ বিকিরণ করে ফেলবে।</div>
+<h4>ব্যবহার ও সতর্কতা</h4>
+<ul>
+<li>ট্রেসার হিসেবে শরীরের তথ্য জানা, ক্যান্সার কোষ ধ্বংস, যন্ত্র জীবাণুমুক্ত করা, ধোঁয়া শনাক্ত, খনিজে ধাতুর পরিমাণ, <b>C-14 দিয়ে প্রাচীন জীবাশ্মের বয়স</b>।</li>
+<li>উচ্চমাত্রায় রোগ প্রতিরোধক্ষমতা কমে, বংশ পরম্পরায় বিকলাঙ্গ শিশুও হতে পারে (মেরি কুরি লিউকেমিয়ায় মারা যান)। সতর্কতা চিহ্ন দেখলে সাবধান।</li>
+</ul>
+<h3>💡 ১৩.২ ইলেকট্রনিকসের ক্রমবিকাশ</h3>
+<ul>
+<li><b>ভ্যাকুয়াম টিউব:</b> ১৮৮৩ এডিসন ক্রিয়া; ১৯০৪ ফ্লেমিং-এর দুই ইলেকট্রোডের টিউব (রেকটিফায়ার); ১৯০৬ লি দ্য ফরেস্টের ট্রায়োড (অ্যামপ্লিফায়ার); ১৯৪৫ ENIAC (১৭,৪৬৮ টিউব)।</li>
+<li><b>ট্রানজিস্টর (১৯৪৭):</b> বেল ল্যাবরেটরি, বারডিন-ব্র্যাটেইন-শকলি নোবেল। ছোট, হালকা, কম বিদ্যুৎ, নির্ভরযোগ্য, সস্তা।</li>
+<li><b>ইন্টিগ্রেটেড সার্কিট (IC):</b> ১৯৫২ এ আলোচনা, ষাটের দশকে তৈরি। ট্রানজিস্টর, ডায়োড, রেজিস্টর, ক্যাপাসিটর এক চিপে; পরে LSI ও VLSI।</li>
+<li><b>ভবিষ্যৎ:</b> অপটিক্যাল (আলোয়) তথ্য আদান-প্রদানের IC, প্রোগ্রাম করা যায় এমন FPGA।</li>
+</ul>
+<h3>〰️ ১৩.৩ অ্যানালগ ও ডিজিটাল</h3>
+<ul>
+<li><b>অ্যানালগ সংকেত:</b> নিরবচ্ছিন্নভাবে বদলায়। নয়েজ সহজে ঢুকে মান নষ্ট করে।</li>
+<li><b>ডিজিটাল সংকেত:</b> বিচ্ছিন্ন মান, <b>বাইনারি (০ ও ১)</b>। ১ = ভোল্টেজ আছে, ০ = নেই। নয়েজ সহজে ঢোকে না, মান অবিকৃত থাকে।</li>
+<li>ডিজিটাল ইলেকট্রনিকসের সবচেয়ে বড় অবদান <b>কম্পিউটার</b>; ইন্টারনেটও এতে চলে।</li>
+</ul>
+<h3>💎 ১৩.৪ সেমিকন্ডাক্টর</h3>
+<ul>
+<li>সিলিকনের শেষ কক্ষপথে ৪টি ইলেকট্রন, কিন্তু চারপাশের পরমাণুর সাথে ভাগাভাগি করে ৮টি হয়ে স্থিতিশীল।</li>
+<li>বিশুদ্ধ সেমিকন্ডাক্টরে তাপ বাড়ালে ২–১টা ইলেকট্রন মুক্ত হয়ে সামান্য পরিবাহী হয়।</li>
+<li><b>n-ধরন:</b> ফসফরাস (৫ ইলেকট্রন) মেশালে বাড়তি মুক্ত ইলেকট্রন।</li>
+<li><b>p-ধরন:</b> বোরন (৩ ইলেকট্রন) মেশালে <b>হোল</b> (ধনাত্মক চার্জের মতো আচরণ)।</li>
+<li>n ও p জুড়ে দেওয়াই প্রযুক্তির সবচেয়ে বড় অগ্রগতির সূচনা।</li>
+</ul>
+<div class="warn">⚠️ বইয়ের মূল পাঠ্যে কিছু বানান/সংখ্যায় ছাপার ভুল থাকতে পারে। সন্দেহ হলে শিক্ষকের সাথে মিলিয়ে নিও।</div>
+</section>
+
+  <section class="panel" id="lab1">
+    <h2>⚛️ ল্যাব 1: নিউক্লিয়াস ও আইসোটোপ: C-12, C-13, C-14</h2>
+    <div class="say">👉 পরমাণুর কেন্দ্রে প্রোটন ও নিউট্রন, চারপাশে ঘুরছে ইলেকট্রন। কার্বনের প্রোটন সবসময় ৬টি, কিন্তু নিউট্রন ৬, ৭ বা ৮। এই তিনটি আইসোটোপের মধ্যে শুধু C-14 তেজস্ক্রিয়।</div>
+<div class="pills" id="a1p"><button data-k="0" class="on">C-12 (৬ নিউট্রন)</button><button data-k="1">C-13 (৭ নিউট্রন)</button><button data-k="2">C-14 (৮ নিউট্রন)</button></div>
+    <div class="row"><div><canvas id="a1c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="a1t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="a1q"></div><div class="cls" id="a1o"></div><div class="fb" id="a1fb"></div><small id="a1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>☢️ ল্যাব 2: আলফা, বিটা ও গামা বিকিরণের সময় কী বদলায়</h2>
+    <div class="say">👉 অস্থিতিশীল নিউক্লিয়াস বিকিরণ করে স্থিতিশীল হতে চায়। আলফায় পারমাণবিক সংখ্যা ২ কমে, বিটায় ১ বাড়ে (বইয়ের C-14 ➜ N-14), গামায় কিছুই বদলায় না।</div>
+<div class="pills" id="d2p"><button data-k="0" class="on">α আলফা (U-238)</button><button data-k="1">β বিটা (C-14)</button><button data-k="2">γ গামা</button></div>
+    <div class="btnrow"><button class="btn" id="d2b">☢ বিকিরণ ঘটাও</button></div>
+    <div class="row"><div><canvas id="d2c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="d2t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="d2q"></div><div class="cls" id="d2o"></div><div class="fb" id="d2fb"></div><small id="d2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🛡️ ল্যাব 3: কোন রশ্মি কোন বাধায় থামে (চিত্র ১৩.০১)</h2>
+    <div class="say">👉 আলফা কাগজেই থামে, বিটা থামাতে কয়েক মিলিমিটার অ্যালুমিনিয়াম লাগে, গামা থামাতে কয়েক সেন্টিমিটার সিসা লাগে। বাধা বদলে দেখো।</div>
+<div class="pills" id="p3p"><button data-k="0" class="on">কোনো বাধা নেই</button><button data-k="1">📄 কাগজ</button><button data-k="2">🔩 অ্যালুমিনিয়াম (৩–৫ mm)</button><button data-k="3">🧱 সিসা (৩–৫ cm)</button></div>
+    <div class="row"><div><canvas id="p3c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="p3t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="p3q"></div><div class="cls" id="p3o"></div><div class="fb" id="p3fb"></div><small id="p3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🧲 ল্যাব 4: চৌম্বক ক্ষেত্রে রশ্মির বেঁকে যাওয়া</h2>
+    <div class="say">👉 আলফা ও বিটা চার্জযুক্ত, তাই চৌম্বক ক্ষেত্র তাদের পথ বাঁকায় (বিপরীত চার্জ, তাই উল্টো দিকে)। গামার চার্জ নেই, সে সোজা যায়। (বাঁকের মাত্রা আমার আঁকা, বইয়ে সংখ্যা নেই)</div>
+<div class="pills" id="f4p"><button data-k="0" class="on">ক্ষেত্র চালু</button><button data-k="1">ক্ষেত্র বন্ধ</button></div>
+    <div class="ctl"><label>ক্ষেত্রের তীব্রতা: <span id="f4kv"></span> </label><input type="range" id="f4k" min="1" max="5" step="1" value="3"></div>
+    <div class="row"><div><canvas id="f4c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="f4t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="f4q"></div><div class="cls" id="f4o"></div><div class="fb" id="f4fb"></div><small id="f4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>⏳ ল্যাব 5: অর্ধায়ু: অর্ধেক নিউক্লিয়াস বিকিরণ করতে যত সময় লাগে</h2>
+    <div class="say">👉 অর্ধায়ু যত কম, মৌল তত বেশি তেজস্ক্রিয়। বইয়ের উদাহরণ: ১ kg, অর্ধায়ু ১০০ বছর ➜ ২০০ বছর পর তিন-চতুর্থাংশ নিউক্লিয়াস বিকিরণ করবে।</div>
+    <div class="ctl"><label>অর্ধায়ু: <span id="h5av"></span> বছর</label><input type="range" id="h5a" min="10" max="500" step="10" value="100"><label>কত বছর পর: <span id="h5kv"></span> বছর</label><input type="range" id="h5k" min="0" max="1000" step="10" value="200"></div>
+    <div class="row"><div><canvas id="h5c" class="w" width="380" height="320"></canvas></div><div class="grow"><div class="tlinfo" id="h5t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="h5q"></div><div class="cls" id="h5o"></div><div class="fb" id="h5fb"></div><small id="h5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🦴 ল্যাব 6: প্রাচীন জীবাশ্মের বয়স নির্ণয়</h2>
+    <div class="say">👉 জীবিত অবস্থায় শরীরে C-14 ঢোকে। মারা গেলে নতুন C-14 ঢোকে না, আগেরটা ক্ষয় হয়। কতটা বাকি আছে দেখে বয়স বের করা যায়। (স্লাইডার: কত অর্ধায়ু পেরিয়েছে)</div>
+    <div class="ctl"><label>পেরিয়ে যাওয়া অর্ধায়ু (÷১০): <span id="c6kv"></span> </label><input type="range" id="c6k" min="0" max="50" step="1" value="10"></div>
+    <div class="row"><div><canvas id="c6c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="c6t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="c6q"></div><div class="cls" id="c6o"></div><div class="fb" id="c6fb"></div><small id="c6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>🩺 ল্যাব 7: তেজস্ক্রিয়তার ব্যবহার ও সতর্কতা</h2>
+    <div class="say">👉 চিকিৎসা, ক্যান্সার কোষ ধ্বংস, জীবাণুমুক্ত করা, বয়স নির্ণয়: কোনটা কীভাবে কাজ করে দেখো। শেষে সতর্কতার চিহ্নও (চিত্র ১৩.০২) দেখো।</div>
+<div class="pills" id="u7p"><button data-k="0" class="on">🩺 শরীরের ভেতর ট্রেসার</button><button data-k="1">🎗 ক্যান্সার চিকিৎসা</button><button data-k="2">🧴 জীবাণুমুক্ত করা</button><button data-k="3">🦴 বয়স নির্ণয়</button><button data-k="4">⚠️ সতর্কতা</button></div>
+    <div class="row"><div><canvas id="u7c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="u7t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="u7q"></div><div class="cls" id="u7o"></div><div class="fb" id="u7fb"></div><small id="u7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>💡 ল্যাব 8: এডিসন ক্রিয়া, ডায়োড ও ট্রায়োড</h2>
+    <div class="say">👉 গরম ফিলামেন্ট থেকে ইলেকট্রন ফাঁকা জায়গা পেরিয়ে প্লেটে যায় (এডিসন ক্রিয়া)। দুই ইলেকট্রোডে রেকটিফায়ার, গ্রিড জুড়লে ট্রায়োড, যা প্রবাহ নিয়ন্ত্রণ ও বিবর্ধন করে।</div>
+<div class="pills" id="v8p"><button data-k="0" class="on">ডায়োড (২ ইলেকট্রোড)</button><button data-k="1">ট্রায়োড (৩ ইলেকট্রোড)</button></div>
+    <div class="ctl"><label>ইনপুট সংকেত: <span id="v8kv"></span> </label><input type="range" id="v8k" min="1" max="5" step="1" value="3"></div>
+    <div class="row"><div><canvas id="v8c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="v8t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="v8q"></div><div class="cls" id="v8o"></div><div class="fb" id="v8fb"></div><small id="v8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>📅 ল্যাব 9: ভ্যাকুয়াম টিউব থেকে ইন্টিগ্রেটেড সার্কিট</h2>
+    <div class="say">👉 স্লাইডার সরিয়ে বছর বদলাও আর বইয়ের মূল ঘটনাগুলো দেখো: এডিসন ক্রিয়া, ফ্লেমিং, ট্রায়োড, ENIAC, ট্রানজিস্টর ও IC।</div>
+    <div class="ctl"><label>সাল: <span id="t9kv"></span> </label><input type="range" id="t9k" min="1880" max="2000" step="1" value="1883"></div>
+    <div class="row"><div><canvas id="t9c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="t9t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="t9q"></div><div class="cls" id="t9o"></div><div class="fb" id="t9fb"></div><small id="t9sc"></small>
+  </section>
+
+  <section class="panel" id="lab10">
+    <h2>🔲 ল্যাব 10: একটি চিপে কত ট্রানজিস্টর</h2>
+    <div class="say">👉 প্রযুক্তি উন্নত হওয়ায় অল্প জায়গায় অনেক বেশি ট্রানজিস্টর বসানো শুরু হলো: প্রথমে LSI, পরে VLSI। (ছবির বিন্দুর সংখ্যা শুধু ধারণা দিতে আঁকা, আসল সংখ্যা নয়)</div>
+<div class="pills" id="i10p"><button data-k="0" class="on">একটি ট্রানজিস্টর</button><button data-k="1">IC</button><button data-k="2">LSI</button><button data-k="3">VLSI</button></div>
+    <div class="row"><div><canvas id="i10c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="i10t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="i10q"></div><div class="cls" id="i10o"></div><div class="fb" id="i10fb"></div><small id="i10sc"></small>
+  </section>
+
+  <section class="panel" id="lab11">
+    <h2>〰️ ল্যাব 11: অ্যানালগ বনাম ডিজিটাল সংকেত ও নয়েজ</h2>
+    <div class="say">👉 অ্যানালগে নয়েজ ঢুকলে মান নষ্ট হয়। ডিজিটালে মান ০ ও ১, তাই নয়েজ সহজে ঢোকে না। নয়েজ বাড়িয়ে দেখো।</div>
+<div class="pills" id="g11p"><button data-k="0" class="on">অ্যানালগ</button><button data-k="1">ডিজিটাল</button></div>
+    <div class="ctl"><label>নয়েজ: <span id="g11kv"></span> </label><input type="range" id="g11k" min="0" max="5" step="1" value="2"></div>
+    <div class="row"><div><canvas id="g11c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="g11t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="g11q"></div><div class="cls" id="g11o"></div><div class="fb" id="g11fb"></div><small id="g11sc"></small>
+  </section>
+
+  <section class="panel" id="lab12">
+    <h2>🔢 ল্যাব 12: বাইনারি (০ ও ১) সংখ্যা</h2>
+    <div class="say">👉 ডিজিটাল ইলেকট্রনিকসে ১ মানে ভোল্টেজ আছে, ০ মানে নেই। দশমিক সংখ্যাকে ০ ও ১ দিয়ে লেখা হয়। স্লাইডার সরিয়ে দেখো।</div>
+    <div class="ctl"><label>দশমিক সংখ্যা: <span id="b12kv"></span> </label><input type="range" id="b12k" min="0" max="31" step="1" value="13"></div>
+    <div class="row"><div><canvas id="b12c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="b12t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="b12q"></div><div class="cls" id="b12o"></div><div class="fb" id="b12fb"></div><small id="b12sc"></small>
+  </section>
+
+  <section class="panel" id="lab13">
+    <h2>💎 ল্যাব 13: সিলিকন, n-ধরন ও p-ধরন সেমিকন্ডাক্টর</h2>
+    <div class="say">👉 বিশুদ্ধ সিলিকনে সব ইলেকট্রন আটকে থাকে, তাপে ২–১টা মুক্ত হয়। ফসফরাস মেশালে বাড়তি ইলেকট্রন (n-ধরন), বোরন মেশালে ফাঁকা জায়গা বা হোল (p-ধরন)।</div>
+<div class="pills" id="s13p"><button data-k="0" class="on">বিশুদ্ধ সিলিকন</button><button data-k="1">n-ধরন (ফসফরাস)</button><button data-k="2">p-ধরন (বোরন)</button></div>
+    <div class="ctl"><label>তাপমাত্রা (আপেক্ষিক): <span id="s13kv"></span> </label><input type="range" id="s13k" min="0" max="5" step="1" value="1"></div>
+    <div class="row"><div><canvas id="s13c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="s13t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="s13q"></div><div class="cls" id="s13o"></div><div class="fb" id="s13fb"></div><small id="s13sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। বইয়ের নমুনা প্রশ্নের উত্তরমালা নেই, তাই উত্তরগুলো আমার হিসাব করা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; তেজস্ক্রিয়তা ও ইলেকট্রনিকস (পদার্থবিজ্ঞান অধ্যায় ১৩)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+function opts(correct,wrongs){var seen={},a=[{t:correct,ok:1}];seen[correct]=1;wrongs.forEach(function(w){if(!seen[w]){seen[w]=1;a.push({t:w,ok:0});}});return shuffle(a);}
+function arrow(x,x1,y1,x2,y2,col,lw){var a=Math.atan2(y2-y1,x2-x1);x.strokeStyle=col;x.fillStyle=col;x.lineWidth=lw||3;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-11*Math.cos(a-.4),y2-11*Math.sin(a-.4));x.lineTo(x2-11*Math.cos(a+.4),y2-11*Math.sin(a+.4));x.closePath();x.fill();}
+function person(x,px,py,col){circ(x,0,px,py-22,6,col,null);x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(px,py-16);x.lineTo(px,py-4);x.moveTo(px-6,py-11);x.lineTo(px+6,py-11);x.moveTo(px,py-4);x.lineTo(px-5,py+6);x.moveTo(px,py-4);x.lineTo(px+5,py+6);x.stroke();}
+/* ---------- সাধারণ সহায়ক ---------- */
+function pills(id,fn){$(id).onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var all=$(id).querySelectorAll('button'),i;for(i=0;i<all.length;i++)all[i].classList.toggle('on',all[i]===b);fn(+b.getAttribute('data-k'));};}
+function sci(x){if(!(x>0))return bn(0);var e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);if(+m.toFixed(2)>=10){m/=10;e++;}return bn(parseFloat(m.toFixed(2)))+' × ১০'+(e<0?'⁻':'')+sup(Math.abs(e));}
+function brow(label,val,max,col,txtv){return '<div class="bar"><div class="bl">'+label+'</div><div class="bt"><div class="bf" style="width:'+clamp(val/max*100,1,100)+'%;background:'+col+'"></div></div><b style="min-width:80px;font-size:14px;color:#1f3a5f">'+(txtv||'')+'</b></div>';}
+function on(ids,fn){ids.forEach(function(i){$(i).oninput=fn;$(i).onchange=fn;});}
+var G=9.8;
+function box(x,px,py,w,h,fill,stroke){x.fillStyle=fill;x.fillRect(px,py,w,h);if(stroke){x.strokeStyle=stroke;x.lineWidth=2;x.strokeRect(px,py,w,h);}}
+function wheel(x,px,py,r){circ(x,0,px,py,r,'#333',null);circ(x,0,px,py,r*.4,'#bbb',null);}
+
+
+/* ---------- সুন্দর আঁকার সহায়ক (নতুন) ---------- */
+function shade(c,a){var h=hx(c),o='#';for(var i=0;i<3;i++){var v=clamp(Math.round(h[i]+a),0,255).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function grad(x,px,py,w,h,c1,c2){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1);g.addColorStop(1,c2);x.fillStyle=g;x.fillRect(px,py,w,h);}
+function ball(x,px,py,r,col){var g=x.createRadialGradient(px-r*.35,py-r*.35,r*.08,px,py,r);g.addColorStop(0,'#ffffff');g.addColorStop(.3,col);g.addColorStop(1,shade(col,-55));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();}
+function rr(x,px,py,w,h,r){r=Math.min(r,w/2,h/2);x.beginPath();x.moveTo(px+r,py);x.lineTo(px+w-r,py);x.quadraticCurveTo(px+w,py,px+w,py+r);x.lineTo(px+w,py+h-r);x.quadraticCurveTo(px+w,py+h,px+w-r,py+h);x.lineTo(px+r,py+h);x.quadraticCurveTo(px,py+h,px,py+h-r);x.lineTo(px,py+r);x.quadraticCurveTo(px,py,px+r,py);x.closePath();}
+function tag(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.lineJoin='round';x.lineWidth=4;x.strokeStyle='rgba(255,255,255,.92)';x.strokeText(s,px,py);x.fillStyle=col||NAVY;x.fillText(s,px,py);}
+function wave(x,px,py,w,h,t,c1,c2,amp){amp=amp===undefined?2.5:amp;var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1||'rgba(86,176,240,.88)');g.addColorStop(1,c2||'rgba(22,84,172,.96)');x.fillStyle=g;x.beginPath();x.moveTo(px,py+h);x.lineTo(px,py);var i;for(i=0;i<=w;i+=4)x.lineTo(px+i,py+Math.sin(i/13+t*.05)*amp);x.lineTo(px+w,py+h);x.closePath();x.fill();x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=1.6;x.beginPath();for(i=0;i<=w;i+=4){var yy=py+Math.sin(i/13+t*.05)*amp;if(i===0)x.moveTo(px,yy);else x.lineTo(px+i,yy);}x.stroke();}
+function bubs(x,px,py,w,h,n,t){for(var i=0;i<n;i++){var u=((t*.004*(0.6+rp(i,0,.8))+rp(i+50,0,1))%1),bx=px+rp(i,6,w-6)+Math.sin(t*.04+i)*3,by=py+h-u*h,r=1.5+rp(i+9,0,2.2);if(by<py+4)continue;x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=1.2;x.beginPath();x.arc(bx,by,r,0,7);x.stroke();}}
+function glassBox(x,px,py,w,h){x.strokeStyle='#5b7389';x.lineWidth=3;x.beginPath();x.moveTo(px,py);x.lineTo(px,py+h);x.lineTo(px+w,py+h);x.lineTo(px+w,py);x.stroke();x.fillStyle='rgba(255,255,255,.18)';x.fillRect(px+4,py+4,5,h-8);}
+function sun(x,px,py,r,t){x.save();x.translate(px,py);x.rotate(t*.004);x.strokeStyle='rgba(255,196,60,.7)';x.lineWidth=3;for(var i=0;i<12;i++){x.rotate(Math.PI/6);x.beginPath();x.moveTo(r+4,0);x.lineTo(r+11,0);x.stroke();}x.restore();ball(x,px,py,r,'#ffc83d');}
+function cloud(x,px,py,s,col){x.fillStyle=col||'rgba(255,255,255,.95)';[[0,0,14],[16,-6,17],[34,0,14],[17,6,15]].forEach(function(c){x.beginPath();x.arc(px+c[0]*s,py+c[1]*s,c[2]*s,0,7);x.fill();});}
+function dial(x,cx,cy,r,frac,txtv,col){x.strokeStyle='#dfe7ee';x.lineWidth=9;x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*2.2);x.stroke();x.strokeStyle=col||'#2a9d8f';x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*(.8+1.4*clamp(frac,0,1)));x.stroke();var a=Math.PI*(.8+1.4*clamp(frac,0,1));x.strokeStyle=NAVY;x.lineWidth=3;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a)*(r-6),cy+Math.sin(a)*(r-6));x.stroke();circ(x,0,cx,cy,4,NAVY,null);if(txtv)tag(x,txtv,cx,cy+r*.62,NAVY,12);}
+function sand(x,px,py,w,h){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,'#eccb8a');g.addColorStop(1,'#c99a55');x.fillStyle=g;x.fillRect(px,py,w,h);}
+function atom(x,px,py,r,col,t){ball(x,px,py,r,col);}
+function fmtN(v){if(Math.abs(v)>=1000)return bn(Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g,','));return bn(parseFloat(v.toFixed(2)));}
+
+function tagd(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=4;x.fillStyle=col||'#fff';x.fillText(s,px,py);x.restore();}
+
+
+var DT=.02,TKL=performance.now();
+DRAWS.push(function(){var n=performance.now();DT=Math.min(.05,(n-TKL)/1000);TKL=n;});
+function hm(a,b,t){var A=hx(a),B=hx(b),o='#';t=clamp(t,0,1);for(var i=0;i<3;i++){var v=Math.round(lerp(A[i],B[i],t)).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function ln(x,x1,y1,x2,y2,col,lw,dash){x.strokeStyle=col;x.lineWidth=lw||2;if(dash)x.setLineDash(dash);x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();if(dash)x.setLineDash([]);}
+function sup(s){var m={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻'},o='';String(s).split('').forEach(function(c){o+=m[c]||c;});return o;}
+function sci(v,d){if(v===0)return bn(0);var e=Math.floor(Math.log(Math.abs(v))/Math.LN10),m=v/Math.pow(10,e);if(e>=-2&&e<=4)return f(Math.abs(v),e<0?3:2);return f(Math.abs(m),d||2)+' × 10'+sup(e);}
+function sv(v,d){return (v>0.0001?'+':(v<-0.0001?'−':''))+f(Math.abs(v),d===undefined?1:d);}
+/* বদ্ধ পথ বরাবর অবস্থান (s: 0 থেকে 1) */
+function loopPos(P,s){var n=P.length,L=[],tot=0,i,a,b;for(i=0;i<n;i++){a=P[i];b=P[(i+1)%n];var d=Math.hypot(b[0]-a[0],b[1]-a[1]);L.push(d);tot+=d;}
+  var t=(((s%1)+1)%1)*tot,j=0;while(j<n-1&&t>L[j]){t-=L[j];j++;}a=P[j];b=P[(j+1)%n];var u=L[j]?t/L[j]:0;return [lerp(a[0],b[0],u),lerp(a[1],b[1],u)];}
+function wirePath(x,P,col,lw,closed){x.strokeStyle=col||'#37474f';x.lineWidth=lw||3;x.lineJoin='round';x.beginPath();x.moveTo(P[0][0],P[0][1]);for(var i=1;i<P.length;i++)x.lineTo(P[i][0],P[i][1]);if(closed)x.closePath();x.stroke();}
+function flow(x,P,ph,n,col,r){for(var k=0;k<n;k++){var p=loopPos(P,ph+k/n);circ(x,0,p[0],p[1],r||3.2,col,null);}}
+/* জিগজ্যাগ রোধ */
+function resis(x,x1,y1,x2,y2,col,lw){var L=Math.hypot(x2-x1,y2-y1),ux=(x2-x1)/L,uy=(y2-y1)/L,nx=-uy,ny=ux,ld=L*.2,i,n=6,A=7;x.strokeStyle=col||'#5d4037';x.lineWidth=lw||3;x.lineJoin='round';x.beginPath();x.moveTo(x1,y1);x.lineTo(x1+ux*ld,y1+uy*ld);
+  for(i=0;i<n;i++){var t=ld+(L-2*ld)*(i+.5)/n,s=(i%2?1:-1)*A;x.lineTo(x1+ux*t+nx*s,y1+uy*t+ny*s);}x.lineTo(x2-ux*ld,y2-uy*ld);x.lineTo(x2,y2);x.stroke();}
+/* ব্যাটারির প্রতীক (অনুভূমিক রেখা; উপরে +) */
+function battSym(x,px,py,n){var i;for(i=0;i<(n||1);i++){var yy=py+i*14;ln(x,px-14,yy,px+14,yy,'#c62828',3);ln(x,px-8,yy+7,px+8,yy+7,'#1f3a5f',5);}tag(x,'+',px+22,py,'#c62828',13);tag(x,'−',px+22,py+(n||1)*14,'#1f3a5f',13);}
+function gnd(x,px,py){ln(x,px,py,px,py+8,'#37474f',2);ln(x,px-10,py+8,px+10,py+8,'#37474f',2);ln(x,px-6,py+12,px+6,py+12,'#37474f',2);ln(x,px-2,py+16,px+2,py+16,'#37474f',2);}
+function bulbD(x,px,py,r,b){b=clamp(b,0,1);if(b>.02){var g=x.createRadialGradient(px,py,2,px,py,r*(1.4+b*2.2));g.addColorStop(0,'rgba(255,230,80,'+(.25+b*.6)+')');g.addColorStop(1,'rgba(255,230,80,0)');x.fillStyle=g;x.beginPath();x.arc(px,py,r*(1.4+b*2.2),0,7);x.fill();}
+  circ(x,0,px,py,r,hm('#d9dde2','#fff3a0',b),'#6b7683',2);ln(x,px-r*.6,py-r*.6,px+r*.6,py+r*.6,'#6b7683',1.5);ln(x,px+r*.6,py-r*.6,px-r*.6,py+r*.6,'#6b7683',1.5);}
+function ammD(x,px,py,s){circ(x,0,px,py,14,'#fff','#37474f',2);tag(x,s||'A',px,py,'#1f3a5f',13);}
+function pm(x,s,px,py,r,col){x.strokeStyle=col||'#fff';x.lineWidth=Math.max(1.5,r/4);x.beginPath();x.moveTo(px-r*.6,py);x.lineTo(px+r*.6,py);if(s>0){x.moveTo(px,py-r*.6);x.lineTo(px,py+r*.6);}x.stroke();}
+function eBall(x,px,py,r){ball(x,px,py,r,'#3b82f6');pm(x,-1,px,py,r*.8,'#fff');}
+var BLUE='#2563eb',REDC='#e5484d';
+
+
+function magnet(x,px,py,w,h,leftN){var a=leftN?'N':'S',b=leftN?'S':'N',ca=leftN?'#e5484d':'#3b82f6',cb=leftN?'#3b82f6':'#e5484d';x.fillStyle=ca;x.fillRect(px-w/2,py-h/2,w/2,h);x.fillStyle=cb;x.fillRect(px,py-h/2,w/2,h);x.strokeStyle='#37474f';x.lineWidth=2;x.strokeRect(px-w/2,py-h/2,w,h);tag(x,a,px-w/4,py,'#1f3a5f',16);tag(x,b,px+w/4,py,'#1f3a5f',16);}
+function compass(x,px,py,ang,r){circ(x,0,px,py,r,'#fff','#37474f',1.5);var dx=Math.cos(ang),dy=Math.sin(ang);x.lineWidth=3;x.strokeStyle='#e5484d';x.beginPath();x.moveTo(px,py);x.lineTo(px+dx*r*.85,py+dy*r*.85);x.stroke();x.strokeStyle='#3b82f6';x.beginPath();x.moveTo(px,py);x.lineTo(px-dx*r*.85,py-dy*r*.85);x.stroke();}
+function coilD(x,px,py,w,h,n,col){for(var i=0;i<n;i++){var cx=px+(n>1?i*(w/(n-1)):w/2);x.strokeStyle=col||'#b8672d';x.lineWidth=3;x.beginPath();x.ellipse(cx,py,6,h/2,0,0,7);x.stroke();}}
+
+
+/* ===== ল্যাব ১: কার্বনের আইসোটোপ ===== */
+var A1={m:0,ph:0};
+pills('a1p',function(k){A1.m=k;a1info();});
+function a1info(){var n=[6,7,8][A1.m];$('a1t').innerHTML='<b>C-'+bn(12+A1.m)+'</b>: প্রোটন '+bn(6)+'টি, নিউট্রন '+bn(n)+'টি, ইলেকট্রন '+bn(6)+'টি<br>'+(A1.m===2?'<b style="color:#c62828">এটি অস্থিতিশীল ➜ তেজস্ক্রিয় (বিকিরণ করে)</b>':'<b style="color:#0a7">এটি স্থিতিশীল</b>')+'<br><small>বই: একই মৌলের ভিন্ন নিউট্রন সংখ্যার পরমাণুকে আইসোটোপ বলে। কার্বনের তিন আইসোটোপের মধ্যে শুধু C-14 তেজস্ক্রিয়। (ছবিতে কণাগুলোর সাজানো অবস্থান আমার আঁকা)</small>';}
+DRAWS.push(function(){var x=ctxOf('a1c'),n=[6,7,8][A1.m],i;grad(x,0,0,380,300,'#eef4fa','#fbfdff');A1.ph+=DT*1.4;
+  var cx=190,cy=140;x.strokeStyle='#cfd6df';x.lineWidth=1.5;x.beginPath();x.ellipse(cx,cy,55,55,0,0,7);x.stroke();x.beginPath();x.ellipse(cx,cy,105,105,0,0,7);x.stroke();
+  var pts=[[0,0],[16,0],[-16,0],[8,14],[-8,14],[8,-14],[-8,-14],[24,14],[-24,14],[24,-14],[-24,-14],[0,28],[0,-28],[16,28],[-16,28],[16,-28]];
+  for(i=0;i<6+n;i++){var q=pts[(i*5)%16];var isP=i<6;circ(x,0,cx+q[0]*.8,cy+q[1]*.8,9,isP?'#e5484d':'#9aa5b1','#fff',1.5);}
+  for(i=0;i<6;i++){var r=i<2?55:105,a=A1.ph*(i<2?1.6:1)+(i<2?i*Math.PI:(i-2)*Math.PI/2);circ(x,0,cx+r*Math.cos(a),cy+r*Math.sin(a),6,'#3b82f6','#fff',1.5);}
+  circ(x,0,40,265,8,'#e5484d','#fff',1);tag(x,'প্রোটন (+)',100,265,'#c62828',12);circ(x,0,150,265,8,'#9aa5b1','#fff',1);tag(x,'নিউট্রন',200,265,'#6b7683',12);circ(x,0,250,265,6,'#3b82f6','#fff',1);tag(x,'ইলেকট্রন (−)',310,265,'#1f5fbf',12);
+  tag(x,'C-'+bn(12+A1.m)+(A1.m===2?'  ☢':''),190,22,A1.m===2?'#c62828':'#1f3a5f',18);a1info();});
+a1info();
+qgame('a1q','a1o','a1fb','a1sc',[
+ ['পরমাণুর কেন্দ্রে কী থাকে?','নিউক্লিয়াস (প্রোটন ও নিউট্রন)',['শুধু ইলেকট্রন','শুধু নিউট্রন','কিছুই না'],'বইয়ের প্রথম কথা।'],
+ ['কার্বনের নিউক্লিয়াসে প্রোটন কয়টি?','৬টি',['৭টি','৮টি','১২টি'],'বই: ছয়টি প্রোটন।'],
+ ['C-14 এ নিউট্রন কয়টি?','৮টি',['৬টি','৭টি','১৪টি'],'প্রোটন ৬ + নিউট্রন ৮ = ১৪।'],
+ ['কার্বনের কোন আইসোটোপ তেজস্ক্রিয়?','C-14',['C-12','C-13','তিনটিই'],'বই: C-14 অস্থিতিশীল।'],
+ ['আইসোটোপ কী?','একই মৌলের ভিন্ন নিউট্রন সংখ্যার পরমাণু',['ভিন্ন মৌলের একই নিউট্রন','শুধু ইলেকট্রনের পরিবর্তন','একই ভরের দুই মৌল'],'প্রোটন সংখ্যা একই, নিউট্রন ভিন্ন।']]);
+
+/* ===== ল্যাব ২: বিকিরণ ===== */
+var D2={m:0,t:-1};
+pills('d2p',function(k){D2.m=k;D2.t=-1;d2info();});$('d2b').onclick=function(){D2.t=0;};
+var D2S=[{a:'U-238',b:'Th-234',z1:92,z2:90,m1:238,m2:234,eq:'U₂₃₈ → Th₂₃₄ + He₄'},{a:'C-14',b:'N-14',z1:6,z2:7,m1:14,m2:14,eq:'C₁₄ → N₁₄ + e⁻ + ν̄'},{a:'উত্তেজিত নিউক্লিয়াস',b:'একই নিউক্লিয়াস (নিস্তেজ)',z1:0,z2:0,m1:0,m2:0,eq:'উত্তেজিত → স্থিত + গামা রশ্মি'}];
+function d2info(){var s=D2S[D2.m],done=D2.t>=1;
+  var h=D2.m===0?'আলফা কণা = হিলিয়াম নিউক্লিয়াস (২ প্রোটন + ২ নিউট্রন)। পারমাণবিক সংখ্যা <b>৯২ ➜ ৯০</b> (২ কমে), ভরসংখ্যা <b>২৩৮ ➜ ২৩৪</b> (৪ কমে)।':D2.m===1?'বিটা কণা = ইলেকট্রন। নিউক্লিয়াসের একটা নিউট্রন প্রোটনে বদলায়। পারমাণবিক সংখ্যা <b>৬ ➜ ৭</b> (১ বাড়ে), ভরসংখ্যা <b>১৪ ➜ ১৪</b> একই। সাথে অ্যান্টি-নিউট্রিনোও বের হয়।':'গামা রশ্মি = শক্তিশালী তড়িৎচৌম্বকীয় তরঙ্গ। চার্জ ও ভর নেই, তাই <b>পারমাণবিক সংখ্যা বা নিউক্লিওন সংখ্যা বদলায় না</b>।';
+  $('d2t').innerHTML=(done?'<b>'+s.eq+'</b><br>':(D2.t<0?'<b>"বিকিরণ ঘটাও" বাটন চাপো ☝️</b><br>':'<b>বিকিরণ হচ্ছে…</b><br>'))+h+'<br><small>বইয়ের সমীকরণ থেকে। (অ্যানিমেশনের গতি ও আকার আমার)</small>';}
+DRAWS.push(function(){var x=ctxOf('d2c'),s=D2S[D2.m],i;grad(x,0,0,380,300,'#eef4fa','#fbfdff');if(D2.t>=0&&D2.t<1)D2.t+=DT*.6;if(D2.t>=1)D2.t=1;
+  var t=D2.t,cx=110,cy=140;var done=t>=1;
+  circ(x,0,cx,cy,50,done?'#d9f2e0':'#ffe0e0',done?'#2e7d32':'#c62828',3);
+  for(i=0;i<9;i++){var a=i*2.4,r=(i%3)*12;circ(x,0,cx+r*Math.cos(a)*.7,cy+r*Math.sin(a)*.7,8,i%2?'#e5484d':'#9aa5b1','#fff',1);}
+  tag(x,done?s.b:s.a,cx,cy+78,done?'#1b5e20':'#c62828',13);if(D2.m<2)tag(x,'Z = '+bn(done?s.z2:s.z1),cx,cy+98,'#1f3a5f',13);
+  if(t>=0){var px=cx+30+t*220,col=D2.m===0?'#e5484d':(D2.m===1?'#3b82f6':'#d4a017');
+    if(D2.m===2){x.strokeStyle=col;x.lineWidth=3;x.beginPath();for(i=0;i<80;i++){var xx=cx+55+i*2.8+t*60;if(xx>360)break;var yy=cy+Math.sin(i*.5-t*14)*10;if(i===0)x.moveTo(xx,yy);else x.lineTo(xx,yy);}x.stroke();tag(x,'γ',300,cy-30,col,22);}
+    else{circ(x,0,px,cy-10*(D2.m===1?1:0),D2.m===0?13:7,col,'#fff',2);tag(x,D2.m===0?'He²⁺':'e⁻',px,cy-30,col,16);if(D2.m===1){circ(x,0,px-30,cy+40+t*10,4,'#9aa5b1','#fff',1);tag(x,'ν̄',px-30,cy+58,'#6b7683',13);}}}
+  tag(x,D2.m===0?'আলফা বিকিরণ':(D2.m===1?'বিটা বিকিরণ':'গামা বিকিরণ'),190,24,'#1f3a5f',16);
+  if(t>=1)tag(x,s.eq,190,270,'#1f3a5f',15);d2info();});
+d2info();
+qgame('d2q','d2o','d2fb','d2sc',[
+ ['আলফা কণা আসলে কী?','হিলিয়াম নিউক্লিয়াস',['ইলেকট্রন','হাইড্রোজেন নিউক্লিয়াস','আলোর কণা'],'২ প্রোটন + ২ নিউট্রন।'],
+ ['বিটা কণা আসলে কী?','ইলেকট্রন',['প্রোটন','নিউট্রন','হিলিয়াম'],'নিউট্রন ➜ প্রোটন + ইলেকট্রন + অ্যান্টি-নিউট্রিনো।'],
+ ['আলফা বিকিরণে নিউক্লিয়াসের পারমাণবিক সংখ্যা—','২ কমে',['১ কমে','২ বাড়ে','একই থাকে'],'U (৯২) ➜ Th (৯০)।'],
+ ['বিটা বিকিরণে পারমাণবিক সংখ্যা—','১ বাড়ে',['১ কমে','২ কমে','একই'],'C (৬) ➜ N (৭)।'],
+ ['গামা বিকিরণে নিউক্লিয়াসের গঠন—','বদলায় না',['২ বাড়ে','অর্ধেক হয়','সম্পূর্ণ বদলে যায়'],'চার্জহীন ও ভরহীন।']]);
+
+/* ===== ল্যাব ৩: ভেদন ক্ষমতা ===== */
+var P3={m:0,ph:0};
+pills('p3p',function(k){P3.m=k;p3info();});
+function p3stop(r){return P3.m===1?r===0:(P3.m===2?r<=1:(P3.m===3?true:false));}
+function p3info(){var names=['কিছু নেই','কাগজ','অ্যালুমিনিয়াম (৩–৫ mm)','সিসা (৩–৫ cm)'];$('p3t').innerHTML='বাধা: <b>'+names[P3.m]+'</b><br>আলফা: <b>'+(p3stop(0)?'আটকে গেছে':'পেরিয়ে গেছে')+'</b> · বিটা: <b>'+(p3stop(1)?'আটকে গেছে':'পেরিয়ে গেছে')+'</b> · গামা: <b>'+(p3stop(2)?'আটকে গেছে':'পেরিয়ে গেছে')+'</b><br><small>বই: আলফা কাগজেই থামে, বিটার জন্য কয়েক mm অ্যালুমিনিয়াম, গামার জন্য কয়েক cm সিসা লাগে। (সিসার পুরুত্ব বইয়ের চিত্র অনুযায়ী ৩–৫ cm)</small>';}
+DRAWS.push(function(){var x=ctxOf('p3c'),i;grad(x,0,0,380,300,'#eef4fa','#fbfdff');P3.ph+=DT*.5;
+  var cols=['#e5484d','#3b82f6','#d4a017'],nm=['আলফা (α)','বিটা (β)','গামা (γ)'],ys=[80,150,220];
+  if(P3.m>0){var bw=P3.m===1?8:(P3.m===2?18:40),bc=P3.m===1?'#f8c9d8':(P3.m===2?'#9ec5ef':'#5b626b');x.fillStyle=bc;x.fillRect(200-bw/2,40,bw,220);x.strokeStyle='#37474f';x.lineWidth=2;x.strokeRect(200-bw/2,40,bw,220);tag(x,['','কাগজ','অ্যালুমিনিয়াম','সিসা'][P3.m],200,282,'#1f3a5f',13);}
+  for(i=0;i<3;i++){var y=ys[i],stop=p3stop(i),bx=P3.m>0?200-(P3.m===1?4:(P3.m===2?9:20)):380;tag(x,nm[i],55,y-26,cols[i],13);ln(x,20,y,bx,y,'rgba(150,160,175,.3)',1);
+    for(var k=0;k<4;k++){var t=((P3.ph+k/4)%1),px=20+t*340;if(stop&&px>bx){if(px<bx+10)circ(x,0,bx,y,10*(1-(px-bx)/10),'rgba(255,120,0,.4)',null);continue;}
+      if(i===2){x.strokeStyle=cols[i];x.lineWidth=2.5;x.beginPath();for(var j=0;j<20;j++){var xx=px-j*1.8,yy=y+Math.sin(j*.9)*5;if(j===0)x.moveTo(xx,yy);else x.lineTo(xx,yy);}x.stroke();}else circ(x,0,px,y,i===0?8:5,cols[i],'#fff',1.5);}
+    if(stop)tag(x,'✖',bx-14,y-16,'#c62828',14);}
+  p3info();});
+p3info();
+qgame('p3q','p3o','p3fb','p3sc',[
+ ['কোন রশ্মি কাগজেই থেমে যায়?','আলফা',['বিটা','গামা','কোনোটিই না'],'আলফা খুব বেশি আয়নিত করে শক্তি হারায়।'],
+ ['বিটা রশ্মি থামাতে কী লাগে?','কয়েক mm অ্যালুমিনিয়াম',['কাগজ','কয়েক cm সিসা','কিছুই না'],'বইয়ের চিত্র ১৩.০১।'],
+ ['গামা রশ্মি থামাতে কী লাগে?','কয়েক cm পুরু সিসা',['কাগজ','অ্যালুমিনিয়ামের পাত','কাচ'],'গামার চার্জ নেই, তাই পুরু সিসা লাগে।'],
+ ['কোন রশ্মির ভেদন ক্ষমতা সবচেয়ে বেশি?','গামা',['আলফা','বিটা','সবার সমান'],'তিনটির মধ্যে সবচেয়ে বেশি ভেদ করে।'],
+ ['আলফা বাতাসে প্রায় কত দূর যেতে পারে?','প্রায় ৬ cm',['প্রায় ৬ m','প্রায় ৬ km','অসীম'],'বই: ৬ cm যেতে না যেতেই থেমে যায়।']]);
+
+/* ===== ল্যাব ৪: ক্ষেত্রে বাঁক ===== */
+on(['f4k'],f4info);pills('f4p',function(k){F4.m=k;f4info();});var F4={m:0};
+function f4info(){var k=+$('f4k').value;$('f4kv').textContent=bn(k);$('f4t').innerHTML=(F4.m===0?'ক্ষেত্র চালু (তীব্রতা '+bn(k)+'): <b>আলফা একদিকে, বিটা উল্টো দিকে বেঁকেছে, গামা সোজা।</b>':'ক্ষেত্র বন্ধ ➜ <b>তিনটিই সোজা যাচ্ছে।</b>')+'<br><small>বই: আলফা ও বিটা চার্জযুক্ত, তাই বিদ্যুৎ বা চৌম্বক ক্ষেত্রে প্রভাবিত হয়। গামার চার্জ নেই, তাই প্রভাবিত হয় না। (কে কোন দিকে ও কতটা বাঁকে তা আমার স্কিম্যাটিক আঁকা)</small>';}
+DRAWS.push(function(){var x=ctxOf('f4c'),k=+$('f4k').value,on_=F4.m===0,i;grad(x,0,0,380,300,'#eef4fa','#fbfdff');
+  if(on_){x.fillStyle='rgba(120,140,200,.15)';x.fillRect(130,30,170,240);x.strokeStyle='#9aa5b1';x.lineWidth=1;x.strokeRect(130,30,170,240);for(var a=0;a<4;a++)for(var b=0;b<5;b++)tag(x,'×',155+a*40,55+b*45,'#7b8cc7',14);tag(x,'চৌম্বক ক্ষেত্র',215,288,'#5566aa',12);}
+  circ(x,0,30,150,12,'#6b7683','#fff',2);tag(x,'উৎস',30,178,'#6b7683',11);
+  var cs=[['#e5484d',-1,.00018,'α'],['#3b82f6',1,.00045,'β'],['#d4a017',0,0,'γ']];
+  cs.forEach(function(c){var kk=on_?k:0,cc=c[2]*kk,sg=c[1];x.strokeStyle=c[0];x.lineWidth=3;x.beginPath();x.moveTo(30,150);x.lineTo(130,150);var ey=150;
+    for(var xr=0;xr<=170;xr+=5){ey=150+sg*cc*xr*xr;x.lineTo(130+xr,ey);}var sl=sg*cc*2*170,lx=300,ly=ey;x.lineTo(lx+70,ly+sl*70);x.stroke();tag(x,c[3],362,ly+sl*70,c[0],16);});
+  f4info();});
+f4info();
+qgame('f4q','f4o','f4fb','f4sc',[
+ ['কোন রশ্মি চৌম্বক ক্ষেত্রে প্রভাবিত হয় না?','গামা',['আলফা','বিটা','আলফা ও বিটা'],'গামা চার্জহীন।'],
+ ['আলফা ও বিটা কেন বাঁকে?','এরা চার্জযুক্ত কণা',['এরা ভারী','এরা গরম','এরা আলো'],'বই: বিদ্যুৎ বা চৌম্বক ক্ষেত্র তাদের পথকে প্রভাবিত করে।'],
+ ['আলফা ও বিটা কি একই দিকে বাঁকে?','না, উল্টো দিকে (বিপরীত চার্জ)',['হ্যাঁ, একই দিকে','কেউই বাঁকে না','শুধু আলফা বাঁকে'],'আলফা ধনাত্মক, বিটা ঋণাত্মক।'],
+ ['ক্ষেত্র বন্ধ করলে রশ্মিগুলোর পথ?','সোজা',['বৃত্তাকার','এলোমেলো','থেমে যায়'],'বাঁকানোর বল নেই।'],
+ ['গামা রশ্মি আসলে কী?','শক্তিশালী তড়িৎচৌম্বকীয় তরঙ্গ',['ইলেকট্রনের স্রোত','হিলিয়াম নিউক্লিয়াস','প্রোটনের স্রোত'],'বই: খুব ছোট তরঙ্গদৈর্ঘ্য।']]);
+
+/* ===== ল্যাব ৫: অর্ধায়ু ===== */
+DRAWS.push(function(){var x=ctxOf('h5c'),T=+$('h5a').value,t=+$('h5k').value,fr=Math.pow(.5,t/T),rem=Math.round(100*fr),i;$('h5av').textContent=bn(T);$('h5kv').textContent=bn(t);grad(x,0,0,380,320,'#eef4fa','#fbfdff');
+  for(i=0;i<100;i++){var gx=22+(i%10)*15,gy=28+Math.floor(i/10)*15;circ(x,0,gx,gy,5.5,i<rem?'#e5484d':'#d3d9e0',null);}
+  tag(x,'লাল = এখনও তেজস্ক্রিয়',100,192,'#c62828',11);
+  tag(x,'বাকি: '+bn(f(1000*fr,0))+' g',285,45,'#c62828',16);tag(x,'বিকিরণ হয়েছে: '+bn(f(1000-1000*fr,0))+' g',285,75,'#6b7683',13);tag(x,'অর্ধায়ু পেরিয়েছে: '+bn(f(t/T,1))+' বার',285,105,'#1f3a5f',13);tag(x,'শুরুতে ১০০০ g (১ kg)',285,135,'#6b7683',11);
+  x.fillStyle='#fff';x.fillRect(35,215,320,80);x.strokeStyle='#9aa5b1';x.lineWidth=1;x.strokeRect(35,215,320,80);ln(x,35,255,355,255,'#cfd6df',1);
+  x.strokeStyle='#e5484d';x.lineWidth=2.5;x.beginPath();for(i=0;i<=320;i++){var tt=i/320*1000,y=295-80*Math.pow(.5,tt/T);if(i===0)x.moveTo(35+i,y);else x.lineTo(35+i,y);}x.stroke();
+  circ(x,0,35+t/1000*320,295-80*fr,5,'#1f3a5f','#fff',2);tag(x,'০',28,305,'#6b7683',10);tag(x,'১০০০ বছর',330,310,'#6b7683',10);
+  $('h5t').innerHTML='অর্ধায়ু <b>'+bn(T)+' বছর</b>, '+bn(t)+' বছর পর বাকি <b>'+bn(f(1000*fr,0))+' g</b> তেজস্ক্রিয় মৌল।<br>সূত্র (সরল): বাকি = ১০০০ × (১/২)<sup>t/T</sup><br><small>বইয়ের উদাহরণ ১: অর্ধায়ু ১০০ বছর, ২০০ বছর পর ➜ ২৫০ g বাকি, অর্থাৎ ৩/৪ অংশ বিকিরণ করে ফেলেছে। (গ্রাফ ও সূত্রটা আমার সাজানো, বইয়ে শুধু ধারণা ও উদাহরণ আছে)</small>';});
+qgame('h5q','h5o','h5fb','h5sc',[
+ ['অর্ধায়ু কাকে বলে?','অর্ধেক নিউক্লিয়াসের বিকিরণ ঘটতে যে সময় লাগে',['সম্পূর্ণ ক্ষয়ের সময়','অর্ধেক ভর হারানোর শক্তি','একটা ইলেকট্রনের জীবন'],'বইয়ের সংজ্ঞা।'],
+ ['অর্ধায়ু যত কম, মৌল তত—','বেশি তেজস্ক্রিয়',['কম তেজস্ক্রিয়','স্থিতিশীল','ভারী'],'বই: তেজস্ক্রিয়তা যত বেশি, অর্ধায়ু তত কম।'],
+ ['১ kg, অর্ধায়ু ১০০ বছর। ২০০ বছর পর কত অংশ বিকিরণ করবে?','৩/৪ অংশ',['১/২ অংশ','১/৪ অংশ','সব'],'বইয়ের উদাহরণ।'],
+ ['স্থিতিশীল নিউক্লিয়াসের অর্ধায়ু?','অসীম ধরা যায়',['শূন্য','এক বছর','এক সেকেন্ড'],'বই: স্থিতিশীলের কোনো তেজস্ক্রিয়তা নেই।'],
+ ['কোনো নির্দিষ্ট নিউক্লিয়াস ঠিক কখন বিকিরণ করবে?','বলা সম্ভব নয়, শুধু সম্ভাবনা বলা যায়',['ঠিক অর্ধায়ুতে','সবসময় প্রথম মিনিটে','কখনোই না'],'তাই অর্ধায়ুর ধারণা ব্যবহার হয়।']]);
+
+/* ===== ল্যাব ৬: কার্বন-১৪ দিয়ে বয়স ===== */
+DRAWS.push(function(){var x=ctxOf('c6c'),k=+$('c6k').value/10,fr=Math.pow(.5,k),i;$('c6kv').textContent=f(k,1);grad(x,0,0,380,300,'#eef4fa','#fbfdff');
+  tag(x,'জীবিত থাকতে শরীরে C-14: ১০০%',190,26,'#1f3a5f',13);x.fillStyle='#d3d9e0';x.fillRect(40,40,300,24);x.fillStyle='#e5484d';x.fillRect(40,40,300,24);
+  tag(x,'মারা যাওয়ার '+bn(f(k,1))+' অর্ধায়ু পর',190,100,'#1f3a5f',13);x.fillStyle='#d3d9e0';x.fillRect(40,114,300,24);x.fillStyle='#e5484d';x.fillRect(40,114,300*fr,24);x.strokeStyle='#37474f';x.lineWidth=1.5;x.strokeRect(40,114,300,24);x.strokeRect(40,40,300,24);
+  tag(x,'বাকি C-14: '+bn(f(fr*100,1))+'%',190,160,'#c62828',16);
+  for(i=0;i<60;i++){var gx=50+(i%20)*14.5,gy=190+Math.floor(i/20)*16;circ(x,0,gx,gy,5,i<Math.round(60*fr)?'#e5484d':'#d3d9e0',null);}
+  tag(x,'লাল = বাকি C-14 পরমাণু',190,252,'#6b7683',11);
+  tag(x,fr>.9?'সদ্য মরা ➜ প্রায় সব C-14 আছে':(fr>.3?'মাঝারি পুরনো':'অনেক পুরনো ➜ খুব কম C-14'),190,278,'#1f3a5f',14);
+  $('c6t').innerHTML='C-14 <b>'+bn(f(fr*100,1))+'%</b> বাকি ➜ বয়স ≈ <b>'+bn(f(k,1))+' অর্ধায়ু</b>।<br><small>বই: মারা গেলে নতুন C-14 ঢোকে না, আগেরটা ক্ষয় হয়; কতটা কমেছে দেখে নিখুঁতভাবে বয়স বের করা যায়। (C-14-এর অর্ধায়ুর সংখ্যাটা বইয়ে নেই, তাই আমি বছরে রূপান্তর করিনি। কেবল অর্ধায়ুর সংখ্যায় দেখিয়েছি।)</small>';});
+qgame('c6q','c6o','c6fb','c6sc',[
+ ['প্রাণী মরে গেলে তার শরীরে C-14 এর কী হয়?','নতুন ঢোকে না, আগেরটা ক্ষয় হয়',['বাড়তে থাকে','একই থাকে','সব বের হয়ে যায়'],'বইয়ের ব্যাখ্যা।'],
+ ['C-14 বেশি বাকি থাকলে জীবাশ্ম—','কম পুরনো',['বেশি পুরনো','বয়স বোঝা যায় না','একই বয়স'],'কম ক্ষয় হয়েছে।'],
+ ['১ অর্ধায়ু পর C-14 কতটা বাকি?','অর্ধেক',['সিকি','সব','তিন-চতুর্থাংশ'],'অর্ধায়ুর সংজ্ঞা।'],
+ ['২ অর্ধায়ু পর C-14 কতটা বাকি?','এক-চতুর্থাংশ',['অর্ধেক','এক-অষ্টমাংশ','শূন্য'],'১/২ × ১/২।'],
+ ['বয়স নির্ণয়ে কোন আইসোটোপ ব্যবহার হয়?','C-14',['C-12','C-13','H-1'],'শরীরে নির্দিষ্ট পরিমাণ C-14 থাকে।']]);
+
+/* ===== ল্যাব ৭: ব্যবহার ও সতর্কতা ===== */
+var U7={m:0,ph:0};
+pills('u7p',function(k){U7.m=k;U7.ph=0;u7info();});
+function u7info(){var h=['খুব অল্প তেজস্ক্রিয় পদার্থ শরীরে ঢুকিয়ে বাইরে থেকে তার গতিবিধি দেখে শরীরের তথ্য জানা যায়। অর্ধায়ু খুব কম (কয়েক মিনিট) বলে কয়েক ঘণ্টায় তেজস্ক্রিয়তা প্রায় হারিয়ে যায়।','তেজস্ক্রিয় কণা ক্ষতিকর কোষ ধ্বংস করতে পারে, তাই ক্যান্সার কোষ ধ্বংসে ব্যবহার হয়।','যন্ত্রপাতি জীবাণুমুক্ত করতে তেজস্ক্রিয়তা ব্যবহার হয়।','C-14 এর পরিমাণ দেখে প্রাচীন জীবাশ্মের বয়স নির্ণয় করা যায়।','উচ্চমাত্রার তেজস্ক্রিয়তা শরীরে নানা সমস্যা তৈরি করে, রোগ প্রতিরোধক্ষমতা কমায়, বংশ পরম্পরায় বিকলাঙ্গ শিশুও জন্ম দিতে পারে। মেরি কুরি লিউকেমিয়ায় মারা যান। তাই সতর্কতা চিহ্ন দেখলে খুব সাবধান!'];
+  $('u7t').innerHTML=h[U7.m]+'<br><small>বইয়ের ১৩.১.৫ ও ১৩.১.৬ থেকে। (ছবির দৃশ্যগুলো সরল ইলাস্ট্রেশন, আমার আঁকা)</small>';}
+function u7body(x,cx){circ(x,0,cx,70,22,'#ffe1c9','#a37a50',2);x.fillStyle='#ffe1c9';x.fillRect(cx-32,92,64,110);x.strokeStyle='#a37a50';x.lineWidth=2;x.strokeRect(cx-32,92,64,110);}
+DRAWS.push(function(){var x=ctxOf('u7c'),i;grad(x,0,0,380,300,'#eef4fa','#fbfdff');U7.ph+=DT;var ph=U7.ph;
+  if(U7.m===0){u7body(x,130);for(i=0;i<8;i++){var a=ph*1.2+i,px=130+Math.sin(a)*16,py=120+((i*17+ph*20)%70);circ(x,0,px,py,4,'#c62828',null);}
+    x.fillStyle='#d6e4ff';x.fillRect(250,110,70,60);x.strokeStyle='#37474f';x.strokeRect(250,110,70,60);tag(x,'ডিটেক্টর',285,140,'#1f3a5f',12);for(i=0;i<3;i++){var t=((ph*.7+i/3)%1);ln(x,170+t*70,130+i*10,176+t*70,130+i*10,'#c62828',2);}tag(x,'ট্রেসার (দেহের ভেতর)',130,225,'#c62828',12);}
+  else if(U7.m===1){u7body(x,130);var tg=clamp(1-(ph%6)/5,0,1);for(i=0;i<5;i++)circ(x,0,118+(i%3)*10,130+Math.floor(i/3)*14,5,tg>(i*.15)?'#e5484d':'#b0b7c0','#fff',1);
+    for(i=0;i<4;i++){var t2=((ph*.8+i/4)%1);ln(x,260-t2*100,125+i*4,255-t2*100,125+i*4,'#d4a017',2.5);}rr(x,250,100,70,50,6);x.fillStyle='#9aa5b1';x.fill();tag(x,'রশ্মির উৎস',285,125,'#fff',11);tag(x,'ক্ষতিকর কোষ ধ্বংস হয় (লাল ➜ ধূসর)',190,248,'#1f3a5f',12);}
+  else if(U7.m===2){rr(x,80,120,220,30,10);x.fillStyle='#cfd6df';x.fill();x.strokeStyle='#37474f';x.lineWidth=2;x.stroke();tag(x,'যন্ত্রপাতি',190,135,'#1f3a5f',13);
+    var kl=clamp(1-(ph%7)/6,0,1);for(i=0;i<10;i++){if(kl>i/10)circ(x,0,95+i*21,100+(i%2)*10,4,'#2e7d32',null);}for(i=0;i<5;i++){var t3=((ph*.6+i/5)%1);ln(x,60+t3*260,60,60+t3*260,90,'#d4a017',2.5);}tag(x,'রশ্মি',190,45,'#8a6d00',12);tag(x,'জীবাণু (সবুজ) ক্রমে ধ্বংস',190,200,'#2e7d32',12);}
+  else if(U7.m===3){x.fillStyle='#d9c7a2';x.fillRect(60,100,100,40);tag(x,'প্রাচীন জীবাশ্ম',110,160,'#8a6d00',12);x.fillStyle='#e5484d';x.fillRect(220,100,40,40*.2);x.strokeStyle='#37474f';x.lineWidth=2;x.strokeRect(220,60,40,80);x.fillRect(220,140-80*.25,40,80*.25);tag(x,'C-14 অনেক কম বাকি',240,160,'#c62828',12);tag(x,'বয়স বের করা যায়',190,230,'#1f3a5f',14);arrow(x,165,120,215,120,'#37474f',3);}
+  else{rr(x,110,30,160,200,10);x.fillStyle='#ffe600';x.fill();x.strokeStyle='#111';x.lineWidth=4;x.stroke();var cx=190,cy=125;x.fillStyle='#111';for(i=0;i<3;i++){var a0=i*2*Math.PI/3-Math.PI/2-Math.PI/6;x.beginPath();x.moveTo(cx,cy);x.arc(cx,cy,48,a0,a0+Math.PI/3);x.closePath();x.fill();}circ(x,0,cx,cy,9,'#ffe600','#111',3);tag(x,'DANGER',190,48,'#111',16);tag(x,'RADIOACTIVE',190,200,'#111',13);tag(x,'MATERIAL',190,218,'#111',13);}
+  u7info();});
+u7info();
+qgame('u7q','u7o','u7fb','u7sc',[
+ ['শরীরে ঢোকানো ট্রেসারের অর্ধায়ু কেমন হয়?','খুব কম',['খুব বেশি','অসীম','লক্ষ বছর'],'বই: কয়েক মিনিট, তাই কয়েক ঘণ্টায় তেজস্ক্রিয়তা হারায়।'],
+ ['ক্যান্সার চিকিৎসায় তেজস্ক্রিয় কণা কী করে?','ক্যান্সার কোষ ধ্বংস করে',['রক্ত বাড়ায়','হাড় জোড়া লাগায','ঘুম আনে'],'ক্ষতিকর কোষ ধ্বংস।'],
+ ['তেজস্ক্রিয় পদার্থের বিপদ জানিয়ে কী ব্যবহার হয়?','সতর্কতামূলক চিহ্ন',['ফুলের ছবি','কিছুই না','আলো জ্বালানো'],'বইয়ের চিত্র ১৩.০২।'],
+ ['উচ্চমাত্রার তেজস্ক্রিয়তায় শরীরে কী হতে পারে?','রোগ প্রতিরোধক্ষমতা কমে',['শক্তি বাড়ে','লম্বা হয়','কিছুই হয় না'],'বইয়ের কথা।'],
+ ['মেরি কুরি কীভাবে মারা যান?','লিউকেমিয়ায় (তেজস্ক্রিয় মৌল নিয়ে দীর্ঘদিন কাজের কারণে)',['বিদ্যুৎ ছুঁয়ে','দুর্ঘটনায়','বার্ধক্যে'],'বইয়ের উল্লেখ।']]);
+
+
+/* ===== ল্যাব ৮: ভ্যাকুয়াম টিউব ===== */
+var V8={m:0,ph:0,g:[],e:[]};
+pills('v8p',function(k){V8.m=k;V8.g=[];V8.e=[];});on(['v8k'],function(){});
+DRAWS.push(function(){var x=ctxOf('v8c'),A=+$('v8k').value,tri=V8.m===1,i;$('v8kv').textContent=bn(A);grad(x,0,0,380,300,'#eef4fa','#fbfdff');V8.ph+=DT*2.2;
+  var s=Math.sin(V8.ph),inp=A*.18*s,out=tri?(1.1+A*.18*4*s*.6):Math.max(0,s)*A*.2;
+  x.fillStyle='rgba(180,210,240,.35)';x.strokeStyle='#37474f';x.lineWidth=2.5;x.beginPath();x.ellipse(190,140,62,92,0,0,7);x.fill();x.stroke();
+  x.fillStyle='#8a93a0';x.fillRect(150,56,80,10);tag(x,'প্লেট (+)',190,34,'#1f3a5f',12);
+  var hot=tri||s>0?1:.4;x.strokeStyle='rgba(255,'+(120+80*hot|0)+',0,1)';x.lineWidth=3;x.beginPath();x.moveTo(160,205);for(i=0;i<6;i++)x.lineTo(160+i*14+7,i%2?205:195);x.lineTo(240,205);x.stroke();tag(x,'ফিলামেন্ট (গরম)',190,240,'#c62828',12);
+  if(tri){x.strokeStyle='#2e7d32';x.lineWidth=2;x.beginPath();x.moveTo(152,130);for(i=0;i<9;i++)x.lineTo(152+i*10,130+(i%2?-6:6));x.stroke();tag(x,'গ্রিড',130,130,'#2e7d32',12);}
+  var rate=tri?clamp(out*.5,0,1.3):clamp(s,0,1)*A*.2;if(Math.random()<rate*.5+.02&&rate>0.05)V8.e.push({x:170+Math.random()*60,y:195});
+  for(i=V8.e.length-1;i>=0;i--){var e=V8.e[i];e.y-=DT*(60+rate*60);if(e.y<68){V8.e.splice(i,1);continue;}circ(x,0,e.x,e.y,3,'#3b82f6',null);}
+  V8.g.push([inp,out]);if(V8.g.length>90)V8.g.shift();
+  function gr(px,py,idx,col,sc,label){x.fillStyle='#fff';x.fillRect(px,py,100,70);x.strokeStyle='#9aa5b1';x.lineWidth=1;x.strokeRect(px,py,100,70);ln(x,px,py+35,px+100,py+35,'#e3e8ee',1);x.strokeStyle=col;x.lineWidth=2;x.beginPath();for(var j=0;j<V8.g.length;j++){var yy=py+35-clamp(V8.g[j][idx]*sc,-33,33);if(j===0)x.moveTo(px+j*100/90,yy);else x.lineTo(px+j*100/90,yy);}x.stroke();tag(x,label,px+50,py-10,col,11);}
+  gr(10,90,0,'#e5484d',tri?60:30,tri?'গ্রিডে ইনপুট (ছোট)':'ইনপুট (এসি)');gr(270,90,1,'#2563eb',tri?22:30,tri?'আউটপুট (বড়)':'আউটপুট (একমুখী)');
+  $('v8t').innerHTML=tri?'<b>ট্রায়োড:</b> গ্রিডের ছোট পরিবর্তন প্লেটের প্রবাহকে অনেক বড় করে বদলায় ➜ প্রবাহ নিয়ন্ত্রণ ও <b>বিবর্ধন (অ্যামপ্লিফায়ার)</b>।':'<b>ডায়োড:</b> ইলেকট্রন শুধু গরম ফিলামেন্ট থেকে প্লেটে যেতে পারে ➜ এসি এক দিকে প্রবাহিত হয় (<b>রেকটিফায়ার</b>)।';
+  $('v8t').innerHTML+='<br><small>বই: ১৮৮৩ এ এডিসন ক্রিয়া, ১৯০৪ এ ফ্লেমিং এর দুই ইলেকট্রোড ভ্যাকুয়াম টিউব, ১৯০৬ এ লি দ্য ফরেস্ট তৃতীয় ইলেকট্রোড যোগ করে ট্রায়োড বানান। (গ্রাফের সংখ্যা আমার সরল মডেল)</small>';});
+qgame('v8q','v8o','v8fb','v8sc',[
+ ['১৮৮৩ সালে এডিসন কী দেখেছিলেন?','ফাঁকা জায়গা দিয়েও ফিলামেন্ট থেকে প্লেটে বিদ্যুৎ চলে',['বাল্ব গলে যায়','বিদ্যুৎ চলে না','আলো ঠান্ডা হয়'],'এটাই এডিসন ক্রিয়া।'],
+ ['ফ্লেমিং-এর দুই ইলেকট্রোডের টিউব কীভাবে কাজ করত?','রেকটিফায়ার (এক দিকে প্রবাহ)',['অ্যামপ্লিফায়ার','আলো','শব্দ'],'বইয়ের ১৯০৪।'],
+ ['ট্রায়োডে মোট কয়টি ইলেকট্রোড?','৩টি',['২টি','৪টি','১টি'],'লি দ্য ফরেস্ট তৃতীয় ইলেকট্রোড যোগ করেন।'],
+ ['ট্রায়োড কী কাজে ব্যবহার করা যেত?','প্রবাহ নিয়ন্ত্রণ ও অ্যামপ্লিফায়ার',['শুধু রং করা','তাপ কমানো','শব্দ থামানো'],'বইয়ের ব্যাখ্যা।'],
+ ['১৯৪৫ সালে প্রথম কম্পিউটার ENIAC-এ কয়টি ভ্যাকুয়াম টিউব ছিল?','১৭,৪৬৮টি',['১৭৪টি','১,৭৪৬টি','১ লক্ষ'],'বইয়ের সংখ্যা।']]);
+
+/* ===== ল্যাব ৯: ইলেকট্রনিকসের ক্রমবিকাশ ===== */
+var EV=[[1883,'এডিসন ক্রিয়া','এডিসন দেখলেন লাইট বাল্বের ফিলামেন্ট থেকে ফাঁকা জায়গা দিয়েও আরেকটি ধাতব প্লেটে বিদ্যুৎ যায়।','#d4a017'],[1904,'ফ্লেমিং-এর ভ্যাকুয়াম টিউব','জন ফ্লেমিং প্রথম দুই ইলেকট্রোডের ভ্যাকুয়াম টিউব (রেকটিফায়ার) বানালেন।','#e5484d'],[1906,'ট্রায়োড','লি দ্য ফরেস্ট তৃতীয় ইলেকট্রোড যোগ করে ট্রায়োড বানালেন (অ্যামপ্লিফায়ারও)।','#c62828'],[1945,'ENIAC কম্পিউটার','১৭,৪৬৮টি ভ্যাকুয়াম টিউব দিয়ে প্রথম কম্পিউটার ENIAC তৈরি।','#8a6d00'],[1947,'ট্রানজিস্টর','বেল ল্যাবরেটরিতে প্রথম ট্রানজিস্টর। বারডিন, ব্র্যাটেইন ও শকলি নোবেল পুরস্কার পান।','#2563eb'],[1952,'IC নিয়ে আলোচনা শুরু','ইন্টিগ্রেটেড সার্কিট নিয়ে আলোচনা শুরু।','#2e7d32'],[1960,'IC তৈরি শুরু (ষাটের দশক)','সত্যিকারের ইন্টিগ্রেটেড সার্কিট তৈরি শুরু হয় ষাটের দশকে, পরে LSI ও VLSI।','#6a1b9a']];
+DRAWS.push(function(){var x=ctxOf('t9c'),y=+$('t9k').value,i;$('t9kv').textContent=bn(y);grad(x,0,0,380,300,'#eef4fa','#fbfdff');
+  ln(x,25,90,355,90,'#9aa5b1',3);var cur=null;EV.forEach(function(e,idx){var px=25+(e[0]-1880)/120*330,on_=y>=e[0];if(on_)cur=e;circ(x,0,px,90,on_?8:5,on_?e[3]:'#d3d9e0','#fff',2);tag(x,bn(e[0]),px,[70,50,70,50,70,30,50][idx],on_?e[3]:'#9aa5b1',10);});
+  var cx=25+(y-1880)/120*330;x.fillStyle='#1f3a5f';x.beginPath();x.moveTo(cx,100);x.lineTo(cx-6,114);x.lineTo(cx+6,114);x.fill();tag(x,'▲ '+bn(y),cx,132,'#1f3a5f',13);
+  if(cur){rr(x,25,150,330,120,10);x.fillStyle='#fff';x.fill();x.strokeStyle=cur[3];x.lineWidth=3;x.stroke();tag(x,cur[1],190,175,cur[3],15);var words=cur[2].split(' '),line='',yy=198;words.forEach(function(wd){var tst=line?line+' '+wd:wd;if(x.measureText(tst).width>290&&line){tag(x,line,190,yy,'#1f3a5f',12);yy+=18;line=wd;}else line=tst;});tag(x,line,190,yy,'#1f3a5f',12);}
+  else tag(x,'এখনও কোনো ঘটনা ঘটেনি (১৮৮৩ এর আগে)',190,210,'#6b7683',13);
+  var ph=cur?(cur[0]<1947?'ভ্যাকুয়াম টিউবের যুগ':(cur[0]<1952?'ট্রানজিস্টরের যুগ শুরু':'ট্রানজিস্টর ও IC এর যুগ')):'';$('t9t').innerHTML=(cur?'<b>'+bn(cur[0])+' — '+cur[1]+'</b><br>'+cur[2]:'বছরটা ১৮৮৩ এর পরে নাও।')+'<br><small>বইয়ের ১৩.২ থেকে। ('+ph+' — এই নামটা আমার দেওয়া শিরোনাম)</small>';});
+qgame('t9q','t9o','t9fb','t9sc',[
+ ['বই অনুযায়ী ইলেকট্রনিকসের ক্রমবিকাশের তিন ভাগ কী কী?','ভ্যাকুয়াম টিউব, ট্রানজিস্টর, ইন্টিগ্রেটেড সার্কিট',['রেডিও, টিভি, ফোন','তার, ব্যাটারি, বাল্ব','ডায়োড, রোধ, ধারক'],'বইয়ের শুরু।'],
+ ['প্রথম ট্রানজিস্টর কোন সালে তৈরি হয়?','১৯৪৭',['১৮৮৩','১৯০৪','১৯৬০'],'বেল ল্যাবরেটরিতে।'],
+ ['ট্রানজিস্টর আবিষ্কারের জন্য কারা নোবেল পান?','বারডিন, ব্র্যাটেইন ও শকলি',['এডিসন ও ফ্লেমিং','কুরি দম্পতি','রাদারফোর্ড ও বেকেরেল'],'বইয়ের উল্লেখ।'],
+ ['ভ্যাকুয়াম টিউবের তুলনায় ট্রানজিস্টর—','ছোট, হালকা, কম বিদ্যুৎ লাগে',['বড় ও ভারী','বেশি বিদ্যুৎ খায়','কম নির্ভরযোগ্য'],'বইয়ের ১৩.২.২।'],
+ ['সত্যিকারের IC তৈরি শুরু হয় কখন?','ষাটের দশকে',['১৮৮৩ সালে','১৯০৬ সালে','১৯৪৫ সালে'],'বই: আলোচনা ১৯৫২ এ, তৈরি ষাটের দশকে।']]);
+
+/* ===== ল্যাব ১০: ইন্টিগ্রেটেড সার্কিট ===== */
+var I10={m:0,ph:0};
+pills('i10p',function(k){I10.m=k;});
+DRAWS.push(function(){var x=ctxOf('i10c'),n=[1,3,10,22][I10.m],i,j;grad(x,0,0,380,300,'#eef4fa','#fbfdff');I10.ph+=DT;
+  var S=200,ox=90,oy=50;rr(x,ox,oy,S,S,12);x.fillStyle='#2f3b46';x.fill();x.strokeStyle='#111';x.lineWidth=2.5;x.stroke();
+  for(i=0;i<8;i++){x.fillStyle='#c0c7cf';x.fillRect(ox-12,oy+20+i*22,12,8);x.fillRect(ox+S,oy+20+i*22,12,8);}
+  var cs=S-30,cell=cs/n,cols=['#3b82f6','#f59e0b','#22c55e','#a855f7'];
+  for(i=0;i<n;i++)for(j=0;j<n;j++){var px=ox+15+i*cell+cell/2,py=oy+15+j*cell+cell/2,t=(i*7+j*3)%10,col=I10.m===1?cols[t%4]:(t<8||I10.m>=2?'#3b82f6':cols[t%4]);circ(x,0,px,py,Math.max(1.2,cell*.32),col,null);if(n<8)for(var k2=0;k2<2;k2++){}}
+  var nm=['একটি ট্রানজিস্টর','IC (ট্রানজিস্টর + ডায়োড, রেজিস্টর, ক্যাপাসিটর)','LSI (Large Scale Integration)','VLSI (Very Large Scale Integration)'];
+  tag(x,nm[I10.m],190,28,'#1f3a5f',I10.m===1?11:14);tag(x,'সমান আকারের চিপ',190,282,'#6b7683',12);
+  $('i10t').innerHTML='<b>'+['একটি ট্রানজিস্টর','IC','LSI','VLSI'][I10.m]+'</b><br>'+['ট্রানজিস্টর ভ্যাকুয়াম টিউবের জায়গা নিয়ে নেয়। এটি একা একটি যন্ত্রাংশ।','প্রযুক্তি বদলে শুধু ট্রানজিস্টর না, ডায়োড, রেজিস্টর ও ক্যাপাসিটর বসিয়ে পূর্ণাঙ্গ সার্কিট এক চিপে। নাম ইন্টিগ্রেটেড সার্কিট (আইসি)।','অল্প জায়গায় অনেক বেশি ট্রানজিস্টর, নাম লার্জ স্কেল ইন্টিগ্রেশন (LSI)।','আরও বেশি ট্রানজিস্টর, নাম ভেরি লার্জ স্কেল ইন্টিগ্রেশন (VLSI)।'][I10.m]+'<br><small>বইয়ের ১৩.২.৩ থেকে। (বিন্দুর সংখ্যা আমার আঁকা, শুধু ঘনত্বের ধারণা দিতে। আসল সংখ্যা নয়)</small>';});
+qgame('i10q','i10o','i10fb','i10sc',[
+ ['IC এর পুরো নাম কী?','ইন্টিগ্রেটেড সার্কিট (সমন্বিত বর্তনী)',['ইনার কয়েল','ইলেকট্রিক চার্জ','আইসোটোপ কোর'],'বইয়ের ১৩.২.৩।'],
+ ['IC তে ট্রানজিস্টরের সাথে আর কী বসানো হয়?','ডায়োড, রেজিস্টর ও ক্যাপাসিটর',['শুধু তার','শুধু ব্যাটারি','কিছুই না'],'বইয়ের ব্যাখ্যা।'],
+ ['LSI মানে?','লার্জ স্কেল ইন্টিগ্রেশন',['লো স্পিড ইন্টারনেট','লাইট সার্কিট ইউনিট','লেড সুইচ ইনপুট'],'বইয়ের নাম।'],
+ ['প্রযুক্তি এগোনোর সাথে IC তে ট্রানজিস্টরের সংখ্যা—','বেড়েছে',['কমেছে','একই আছে','শূন্য হয়েছে'],'অল্প জায়গায় অনেক বেশি।'],
+ ['কোনটি IC ছাড়া সম্ভব হতো না?','মাইক্রোকম্পিউটার, ভিডিও ক্যামেরা, যোগাযোগের স্যাটেলাইট',['শুধু মোমবাতি','কাঠের চেয়ার','সাধারণ পেন্সিল'],'বইয়ের শেষ কথা।']]);
+
+
+/* ===== ল্যাব ১১: অ্যানালগ ও ডিজিটাল ===== */
+var G11={m:0,ph:0,nz:[],t:0};
+for(var g11i=0;g11i<80;g11i++)G11.nz.push((Math.random()-.5)*2);
+pills('g11p',function(k){G11.m=k;});on(['g11k'],function(){});
+var G11B=[1,0,1,1,0,1,0,0,1,1];
+DRAWS.push(function(){var x=ctxOf('g11c'),N=+$('g11k').value,dg=G11.m===1,i;$('g11kv').textContent=bn(N);grad(x,0,0,380,300,'#eef4fa','#fbfdff');G11.t+=DT;if(G11.t>.12){G11.t=0;G11.nz.shift();G11.nz.push((Math.random()-.5)*2);}
+  function sg(u){return dg?G11B[Math.floor(u*10)%10]:.5+.4*Math.sin(u*9)+.1*Math.sin(u*23);}
+  function panel(py,label,fn,col){x.fillStyle='#fff';x.fillRect(30,py,320,70);x.strokeStyle='#9aa5b1';x.lineWidth=1;x.strokeRect(30,py,320,70);ln(x,30,py+35,350,py+35,'#eef1f5',1);x.strokeStyle=col;x.lineWidth=2;x.beginPath();for(var j=0;j<=160;j++){var u=j/160,yy=py+62-fn(u,j)*54;if(j===0)x.moveTo(30+j*2,yy);else x.lineTo(30+j*2,yy);}x.stroke();tag(x,label,190,py-9,col,12);}
+  var nzv=function(j){return G11.nz[Math.floor(j/2)%80]*N*(dg?.12:.1);};
+  panel(24,'১. পাঠানো সংকেত ('+(dg?'ডিজিটাল':'অ্যানালগ')+')',function(u){return sg(u);},'#2563eb');
+  panel(120,'২. পৌঁছাল (নয়েজসহ)',function(u,j){return sg(u)+nzv(j);},'#e5484d');
+  var err=0;
+  if(dg){panel(216,'৩. পুনরুদ্ধার (০/১ সিদ্ধান্ত)',function(u,j){var v=sg(u)+nzv(j);return v>.5?1:0;},'#2e7d32');for(i=0;i<10;i++){var ok=((function(){var cnt=0,tot=0;for(var j=i*16;j<i*16+16;j++){var v=G11B[i]+nzv(j);cnt+=(v>.5?1:0)===G11B[i]?1:0;tot++;}return cnt/tot>.5;})());if(!ok)err++;}}
+  else{tag(x,'৩. নয়েজ একবার ঢুকলে আর আলাদা করা যায় না',190,252,'#c62828',13);}
+  $('g11t').innerHTML=dg?('ডিজিটালে মান শুধু ০ বা ১। নয়েজ <b>'+bn(N)+'</b> হলেও ০.৫ এর ওপরে/নিচে দেখে সঠিক বিট ফিরে পাওয়া যায়। ভুল বিট: <b>'+bn(err)+'</b>টি'+(N>=5?' (নয়েজ অনেক বেশি হলে ডিজিটালও ভুল করতে পারে)':'')):('অ্যানালগে নয়েজ সরাসরি সংকেতে মিশে গিয়ে <b>গুণগত মান নষ্ট</b> করে। নয়েজ যত বেশি, বিকৃতি তত বেশি।');
+  $('g11t').innerHTML+='<br><small>বই: অ্যানালগে নয়েজ সহজে ঢুকে মান নষ্ট করে, ডিজিটালে সহজে অনুপ্রবেশ করতে পারে না। (নয়েজের মাপ ও থ্রেশহোল্ড আমার সরল মডেল)</small>';});
+qgame('g11q','g11o','g11fb','g11sc',[
+ ['নিরবচ্ছিন্নভাবে বদলানো তথ্যের সংকেত কী?','অ্যানালগ সংকেত',['ডিজিটাল সংকেত','বাইনারি সংকেত','কোনোটিই না'],'বইয়ের সংজ্ঞা।'],
+ ['কোন সংকেতে নয়েজ সহজে ঢুকে মান নষ্ট করে?','অ্যানালগ',['ডিজিটাল','দুটোতেই সমান','কোনোটিতেই না'],'বইয়ের ১৩.৩।'],
+ ['ডিজিটাল ইলেকট্রনিকসে সংখ্যা কীভাবে প্রকাশ করা হয়?','বাইনারি (০ ও ১)',['দশমিক','রোমান','ভগ্নাংশ'],'১ = ভোল্টেজ আছে, ০ = নেই।'],
+ ['শব্দ, ছবি ও ভিডিও সিগন্যাল শুরুতে কী ধরনের?','অ্যানালগ',['ডিজিটাল','বাইনারি','কোনোটিই না'],'পরে ডিজিটালে রূপান্তর করে প্রক্রিয়া করা হয়।'],
+ ['ডিজিটাল ইলেকট্রনিকসের সবচেয়ে বড় অবদান কী?','কম্পিউটার',['মোমবাতি','টেলিগ্রাফ','কম্পাস'],'বইয়ের কথা।']]);
+
+/* ===== ল্যাব ১২: বাইনারি ===== */
+var B12={ph:0};
+on(['b12k'],function(){});
+DRAWS.push(function(){var x=ctxOf('b12c'),d=+$('b12k').value,i;$('b12kv').textContent=bn(d);grad(x,0,0,380,300,'#eef4fa','#fbfdff');B12.ph+=DT*3;
+  var w=[16,8,4,2,1],bits=[];for(i=0;i<5;i++)bits.push((d&w[i])?1:0);
+  for(i=0;i<5;i++){var px=40+i*62;tag(x,'ঘরের মান '+bn(w[i]),px+22,34,'#6b7683',11);rr(x,px,48,44,60,8);x.fillStyle=bits[i]?'#fff3a0':'#e3e8ee';x.fill();x.strokeStyle=bits[i]?'#d4a017':'#9aa5b1';x.lineWidth=2.5;x.stroke();tag(x,''+bits[i],px+22,78,bits[i]?'#c62828':'#6b7683',30);
+    if(bits[i]){x.fillStyle='rgba(255,230,0,.35)';x.beginPath();x.arc(px+22,78,34+Math.sin(B12.ph+i)*2,0,7);x.fill();}tag(x,bits[i]?'ভোল্টেজ আছে':'নেই',px+22,128,bits[i]?'#c62828':'#9aa5b1',10);}
+  x.fillStyle='#fff';x.fillRect(30,150,320,80);x.strokeStyle='#9aa5b1';x.lineWidth=1;x.strokeRect(30,150,320,80);x.strokeStyle='#2563eb';x.lineWidth=2.5;x.beginPath();for(i=0;i<5;i++){var y=bits[i]?165:215;if(i===0)x.moveTo(30,y);else x.lineTo(30+i*64,y);x.lineTo(30+(i+1)*64,y);}x.stroke();tag(x,'১',22,165,'#2563eb',11);tag(x,'০',22,215,'#2563eb',11);tag(x,'ভোল্টেজ সংকেত (বামে বড় ঘর আগে)',190,244,'#6b7683',11);
+  var terms=[];for(i=0;i<5;i++)if(bits[i])terms.push(w[i]);
+  tag(x,bn(d)+' = '+(terms.length?terms.map(bn).join(' + '):bn(0)),190,270,'#1f3a5f',15);
+  $('b12t').innerHTML='দশমিক <b>'+bn(d)+'</b> = বাইনারি <b>'+bits.join('')+'</b><br>প্রতিটি ঘর ২ গুণ করে বাড়ে (১, ২, ৪, ৮, ১৬)। যে ঘরে ১ আছে তাদের মান যোগ করলেই দশমিক সংখ্যা পাওয়া যায়।<br><small>বই: ১ মানে এক ধরনের ভোল্টেজ আর ০ মানে শূন্য ভোল্টেজ ধরা হয়। ০ ও ১ দিয়ে লেখা সংখ্যাকে বাইনারি সংখ্যা বলে। (ঘরের মানের নিয়মটা আমি দেখিয়েছি, বইয়ে বিস্তারিত নেই)</small>';});
+qgame('b12q','b12o','b12fb','b12sc',[
+ ['বাইনারি সংখ্যা কী?','০ ও ১ দিয়ে প্রকাশিত সংখ্যা',['০ থেকে ৯ দিয়ে','শুধু ৯ দিয়ে','অক্ষর দিয়ে'],'বইয়ের সংজ্ঞা।'],
+ ['ডিজিটাল ইলেকট্রনিকসে ১ মানে?','এক ধরনের ভোল্টেজ আছে',['কোনো ভোল্টেজ নেই','নয়েজ','তাপ'],'১ = ভোল্টেজ, ০ = শূন্য ভোল্টেজ।'],
+ ['বাইনারি 101 এর দশমিক মান (৪+০+১)?','৫',['৩','৭','১০'],'৪ + ১ = ৫।'],
+ ['দশমিক ১৩ এর বাইনারি (৮+৪+১)?','01101',['10110','11100','00111'],'৮, ৪, ১ ঘরে ১।'],
+ ['আমরা দৈনন্দিন জীবনে কোন ভিত্তির সংখ্যা ব্যবহার করি?','দশভিত্তিক (দশমিক)',['দ্বিভিত্তিক','আটভিত্তিক','কোনোটিই না'],'বইয়ের কথা।']]);
+
+/* ===== ল্যাব ১৩: সেমিকন্ডাক্টর ===== */
+var S13={m:0,ph:0,e:[],h:{c:1,r:1,t:0}};
+pills('s13p',function(k){S13.m=k;S13.h={c:1,r:1,t:0};});on(['s13k'],function(){});
+DRAWS.push(function(){var x=ctxOf('s13c'),T=+$('s13k').value,m=S13.m,i,j;$('s13kv').textContent=bn(T);grad(x,0,0,380,300,'#eef4fa','#fbfdff');S13.ph+=DT;
+  var C=5,R=3,gx=50,gy=60,sp=70;
+  for(i=0;i<C;i++)for(j=0;j<R;j++){var px=gx+i*sp,py=gy+j*sp;
+    if(i<C-1)ln(x,px,py,px+sp,py,'#cfd6df',1.5);if(j<R-1)ln(x,px,py,px,py+sp,'#cfd6df',1.5);}
+  var special=(i0,j0)=>(i0===2&&j0===1);
+  for(i=0;i<C;i++)for(j=0;j<R;j++){var px2=gx+i*sp,py2=gy+j*sp,sp_=special(i,j);var col='#8a93a0',lab='Si';if(sp_&&m===1){col='#22c55e';lab='P';}if(sp_&&m===2){col='#f59e0b';lab='B';}
+    circ(x,0,px2,py2,17,col,'#fff',2);tag(x,lab,px2,py2,'#fff',13);
+    var nb=[[1,0],[-1,0],[0,1],[0,-1]];nb.forEach(function(d){var ni=i+d[0],nj=j+d[1];if(ni<0||nj<0||ni>=C||nj>=R)return;var hole=(sp_&&m===2)&&true;});}
+  for(i=0;i<C;i++)for(j=0;j<R;j++){var cx0=gx+i*sp,cy0=gy+j*sp;if(i<C-1){var sp2=(i===2&&j===1)||(i+1===2&&j===1);var nbSp=sp2;var mid=cx0+sp/2;if(!(nbSp&&m===2&&i===2&&j===1)){circ(x,0,mid-5,cy0,3.5,'#3b82f6',null);circ(x,0,mid+5,cy0,3.5,'#3b82f6',null);}else{circ(x,0,mid-5,cy0,3.5,'#3b82f6',null);circ(x,0,mid+5,cy0,3.5,'#fff','#3b82f6',1.5);}}
+    if(j<R-1){var midy=cy0+sp/2;circ(x,0,cx0,midy-5,3.5,'#3b82f6',null);circ(x,0,cx0,midy+5,3.5,'#3b82f6',null);}}
+  var free=m===0?(T===0?0:(T<=2?1:2)):(m===1?1+(T>3?1:0):0);
+  if(m===1||m===0){for(i=0;i<free;i++){var a=S13.ph*(0.8+T*.25)+i*2.4,ex=190+Math.cos(a*.7+i)*110,ey=130+Math.sin(a*1.1+i*2)*80;circ(x,0,ex,ey,6,'#1d4ed8','#fff',1.5);tag(x,'e⁻',ex,ey-14,'#1d4ed8',11);}}
+  if(m===2){S13.h.t+=DT*(.4+T*.3);if(S13.h.t>1){S13.h.t=0;var nc=clamp(S13.h.c+(Math.random()<.5?1:-1),1,3);S13.h.c=nc;}
+    var hx=190-sp*(S13.h.c<2?1:0)+(S13.h.c-2)*sp*.5*0+Math.sin(S13.ph*1.3)*sp*.9,hy=130;circ(x,0,hx,hy,9,'#fff','#e5484d',2.5);tag(x,'+',hx,hy,'#e5484d',16);tag(x,'হোল',hx,hy-18,'#e5484d',11);}
+  tag(x,['বিশুদ্ধ সিলিকন','n-ধরন সেমিকন্ডাক্টর','p-ধরন সেমিকন্ডাক্টর'][m],190,22,'#1f3a5f',16);tag(x,'নীল বিন্দু = শেষ কক্ষপথের ইলেকট্রন (ভাগাভাগি করা)',190,282,'#6b7683',11);
+  var h=['<b>বিশুদ্ধ সিলিকন:</b> প্রতিটি পরমাণু চারপাশের পরমাণুর সাথে শেষ কক্ষপথের ইলেকট্রন ভাগ করে ফলে ৮টি ইলেকট্রন, স্থিতিশীল। তাপ বাড়ালে হয়তো একটা-দুটো ইলেকট্রন মুক্ত হয়, তখন খানিকটা পরিবাহী।','<b>n-ধরন:</b> সিলিকনে ফসফরাস (শেষ কক্ষপথে ৫টি ইলেকট্রন) মেশালে বাড়তি পঞ্চম ইলেকট্রন মুক্তভাবে ঘোরে, ফলে বিদ্যুৎ পরিবহন সহজ হয়।','<b>p-ধরন:</b> বোরন (শেষ কক্ষপথে ৩টি ইলেকট্রন) মেশালে একটা ফাঁকা জায়গা বা <b>হোল</b> তৈরি হয়। পাশের ইলেকট্রন সেখানে এসে ভরাট করে, হোল সরে যায়। মনে হয় ধনাত্মক চার্জ ঘুরছে।'];
+  $('s13t').innerHTML=h[m]+'<br><small>বইয়ের ১৩.৪ থেকে। (ছবিতে জালিকা সমতলে, আসল সিলিকন ত্রিমাত্রিক। হোলের নড়াচড়া ও তাপমাত্রার স্কেল আমার সরল আঁকা)</small>';});
+qgame('s13q','s13o','s13fb','s13sc',[
+ ['সিলিকনের শেষ কক্ষপথে ইলেকট্রন কয়টি?','৪টি',['৩টি','৫টি','৮টি'],'বইয়ে: চারটি, কিন্তু ভাগাভাগিতে ৮টি মনে হয়।'],
+ ['n-ধরন বানাতে সিলিকনে কী মেশানো হয়?','ফসফরাস',['বোরন','তামা','লোহা'],'বইয়ের উদাহরণ।'],
+ ['p-ধরন বানাতে সিলিকনে কী মেশানো হয়?','বোরন',['ফসফরাস','সোনা','পারদ'],'শেষ কক্ষপথে ৩টি ইলেকট্রন।'],
+ ['হোল (Hole) কী?','ইলেকট্রনের অভাবে তৈরি ফাঁকা জায়গা (ধনাত্মক চার্জের মতো আচরণ)',['একটি নতুন ইলেকট্রন','একটি প্রোটন','একটি নিউট্রন'],'বইয়ের ব্যাখ্যা।'],
+ ['n ও p ধরনের সেমিকন্ডাক্টর জুড়লে কী হয়েছিল?','বিজ্ঞান ও প্রযুক্তিতে সবচেয়ে বড় অগ্রগতি',['কিছুই হয়নি','বিস্ফোরণ','তেজস্ক্রিয়তা'],'বইয়ের শেষ লাইন।']]);
+
+var QUIZ=[];function M(q,c,w,e,fix){var o=[c].concat(w);QUIZ.push({q:q,o:o,a:0,e:e,fix:!!fix});}
+M('তেজস্ক্রিয় মৌল থেকে নির্গত আলফা কণা কী?','একটি হিলিয়াম নিউক্লিয়াস',['একটি হাইড্রোজেন নিউক্লিয়াস','একটি তড়িৎ নিরপেক্ষ কণা','একটি ঋণাত্মক কণা'],'২ প্রোটন + ২ নিউট্রন।',true);
+M('তেজস্ক্রিয় ক্ষয়ে নির্গত বিটা রশ্মি আসলে কী?','ঋণাত্মক ইলেকট্রনের স্রোত',['একটি তড়িৎ নিরপেক্ষ কণা','একটি হালকা মৌলের নিউক্লিয়াস','ধনাত্মক প্রোটনের স্রোত'],'বিটা কণা = ইলেকট্রন।',true);
+M('সিলিকন চিপে লক্ষ লক্ষ বর্তনী সংযোজিত হলে তাকে কী বলে?','সমন্বিত বর্তনী',['সমান্তরাল বর্তনী','অর্ধপরিবাহী ট্রানজিস্টর','অর্ধপরিবাহী ডায়োড'],'IC।',true);
+M('সমন্বিত বর্তনী— i. সহজে ব্যবহার করা যায় ii. অর্ধপরিবাহী পদার্থ দিয়ে তৈরি iii. ব্যবহার করে ইলেকট্রনিক যন্ত্রপাতির ওজন কমানো যায়। কোনটি সঠিক?','i, ii ও iii',['i ও ii','i ও iii','ii ও iii'],'তিনটি বক্তব্যই ঠিক।',true);
+M('তেজস্ক্রিয়তা আবিষ্কার করেন প্রথম প্রমাণকারী—','হেনরি বেকেরেল',['এডিসন','ফ্লেমিং','শকলি'],'১৮৯৬, ইউরেনিয়াম থেকে।');
+M('ছয়টি প্রোটন ও ছয়টি নিউট্রনের কার্বন আইসোটোপ—','C-12',['C-13','C-14','C-6'],'৬+৬ = ১২।');
+M('কার্বনের কোন আইসোটোপ তেজস্ক্রিয়?','C-14',['C-12','C-13','কোনোটিই না'],'৮টি নিউট্রন।');
+M('আলফা কণা বাতাসে প্রায় কত দূর যেতে পারে?','প্রায় ৬ cm',['প্রায় ৬ m','প্রায় ৬০০ m','কয়েক km'],'বই।');
+M('কোন রশ্মি কাগজেই থামে?','আলফা',['বিটা','গামা','তিনটিই'],'চিত্র ১৩.০১।');
+M('বিটা রশ্মি থামাতে লাগে—','কয়েক mm অ্যালুমিনিয়াম',['কাগজ','কয়েক cm সিসা','কিছুই না'],'বই।');
+M('গামা রশ্মি থামাতে লাগে—','কয়েক cm সিসা',['কাগজ','অ্যালুমিনিয়াম পাত','কাচ'],'বই।');
+M('গামা রশ্মির চার্জ—','নেই',['ধনাত্মক','ঋণাত্মক','কখনো ধনাত্মক কখনো ঋণাত্মক'],'চার্জহীন, ভরহীন।');
+M('আলফা বিকিরণে পারমাণবিক সংখ্যা—','২ কমে',['১ কমে','২ বাড়ে','একই'],'U (৯২) ➜ Th (৯০)।');
+M('বিটা বিকিরণে নিউক্লিয়াসে কী ঘটে?','একটি নিউট্রন প্রোটনে পরিবর্তিত হয়',['একটি প্রোটন নিউট্রনে বদলায়','দুটো প্রোটন চলে যায়','কিছুই বদলায় না'],'বইয়ের ব্যাখ্যা।');
+M('গামা বিকিরণে নিউক্লিয়াসের পারমাণবিক সংখ্যা—','বদলায় না',['১ বাড়ে','২ কমে','অর্ধেক হয়'],'চার্জ ও ভর নেই।');
+M('অর্ধায়ুর সংজ্ঞা—','অর্ধেক নিউক্লিয়াসের বিকিরণের সময়',['সব নিউক্লিয়াস ক্ষয়ের সময়','একটা পরমাণুর জীবনকাল','বিকিরণের গতি'],'বই।');
+M('১ kg, অর্ধায়ু ১০০ বছর। ২০০ বছর পর কত অংশ বিকিরণ করবে?','৩/৪ অংশ',['১/২ অংশ','১/৪ অংশ','সবটুকু'],'বইয়ের উদাহরণ।');
+M('অর্ধায়ু কম হলে মৌলটি—','বেশি তেজস্ক্রিয়',['কম তেজস্ক্রিয়','স্থিতিশীল','ভারী'],'বইয়ের কথা।');
+M('প্রাচীন জীবাশ্মের বয়স নির্ণয়ে ব্যবহার হয়—','C-14',['C-12','U-238','H-1'],'বই।');
+M('তেজস্ক্রিয়তার সতর্কতা চিহ্ন কেন দেওয়া হয়?','ঝুঁকিপূর্ণ বলে সাবধানে ব্যবহারের জন্য',['সাজানোর জন্য','দাম বোঝাতে','রং বোঝাতে'],'চিত্র ১৩.০২।');
+M('এডিসন ক্রিয়ায় কী ঘটে?','ফিলামেন্ট থেকে ফাঁকা জায়গা দিয়ে প্লেটে বিদ্যুৎ যায়',['বাল্ব ফাটে','আলো নিভে যায়','কিছুই ঘটে না'],'১৮৮৩ সাল।');
+M('ট্রায়োড বানান—','লি দ্য ফরেস্ট',['এডিসন','ফ্লেমিং','মার্কনি'],'১৯০৬।');
+M('প্রথম কম্পিউটার ENIAC কতটি ভ্যাকুয়াম টিউব দিয়ে তৈরি?','১৭,৪৬৮টি',['১৭৪টি','১,৭৪৬টি','১০০টি'],'১৯৪৫।');
+M('প্রথম ট্রানজিস্টর তৈরি হয়—','১৯৪৭ সালে',['১৮৮৩ সালে','১৯০৬ সালে','১৯৭০ সালে'],'বেল ল্যাবরেটরিতে।');
+M('ভ্যাকুয়াম টিউবের তুলনায় ট্রানজিস্টর—','ছোট ও হালকা, কম বিদ্যুৎ লাগে',['বড় ও ভারী','বেশি বিদ্যুৎ লাগে','কম নির্ভরযোগ্য'],'বইয়ের ১৩.২.২।');
+M('অ্যানালগ সংকেতে নয়েজ ঢুকলে—','গুণগত মান নষ্ট হয়',['মান ভালো হয়','কিছুই হয় না','সংকেত দ্বিগুণ হয়'],'বইয়ের ১৩.৩।');
+M('ডিজিটাল ইলেকট্রনিকসে সংখ্যা প্রকাশ করা হয়—','বাইনারি (০ ও ১) দিয়ে',['দশমিক দিয়ে','রোমান দিয়ে','ভগ্নাংশ দিয়ে'],'বই।');
+M('শব্দ, ছবি, ভিডিও সংকেত শুরুতে থাকে—','অ্যানালগ',['ডিজিটাল','বাইনারি','কোনোটিই না'],'বইয়ের ১৩.৩।');
+M('সবচেয়ে বেশি ব্যবহৃত সেমিকন্ডাক্টর—','সিলিকন',['তামা','সোনা','লোহা'],'বই।');
+M('সিলিকনে ফসফরাস মেশালে হয়—','n-ধরন সেমিকন্ডাক্টর',['p-ধরন','কুপরিবাহী','তেজস্ক্রিয় পদার্থ'],'বাড়তি ইলেকট্রন।');
+M('সিলিকনে বোরন মেশালে হয়—','p-ধরন সেমিকন্ডাক্টর',['n-ধরন','অপরিবাহী','চুম্বক'],'হোল তৈরি হয়।');
+M('হোল আচরণ করে—','ধনাত্মক চার্জের মতো',['ঋণাত্মক চার্জের মতো','নিরপেক্ষ কণার মতো','ফোটনের মতো'],'বই।');
+M('বিশুদ্ধ সেমিকন্ডাক্টরে তাপ বাড়ালে—','কিছু ইলেকট্রন মুক্ত হয়ে সামান্য পরিবাহী হয়',['সব ইলেকট্রন চলে যায়','আরও অপরিবাহী হয়','চুম্বক হয়'],'বইয়ের ব্যাখ্যা।');
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+var QA=[
+{h:'সৃজনশীল প্রশ্ন (বইয়ের প্রশ্ন, উত্তর আমার লেখা, শিক্ষকের সাথে মিলিয়ে নিও)',items:[
+['১. পদার্থবিজ্ঞান ল্যাবে তন্ময় একটি তেজস্ক্রিয় মৌল নিয়ে গবেষণা করছিল। ১ kg নমুনা রেখে ৯০০ বছর পর নমুনাটিতে তেজস্ক্রিয় মৌলের পরমাণুর ভর ২৫০ gm পাওয়া যায়। একটি রশ্মির ভর ইলেকট্রনের সমান এবং ঋণাত্মক চার্জযুক্ত। আরেকটি রশ্মি আলোর বেগে চলে এবং চৌম্বকক্ষেত্রে প্রভাবিত হয় না। (ক) বাইনারি সংখ্যা কী? (খ) ভ্যাকুয়াম টিউবের পরিবর্তে ট্রানজিস্টর ব্যবহার অধিক সুবিধাজনক ব্যাখ্যা কর। (গ) মৌলটির অর্ধায়ু নির্ণয় কর। (ঘ) রশ্মিদ্বয় চিহ্নিতপূর্বক এদের বৈশিষ্ট্যের তুলনামূলক বিশ্লেষণ কর।',
+ '(ক) ০ ও ১ দিয়ে প্রকাশিত সংখ্যা (১ = ভোল্টেজ আছে, ০ = নেই)।<br>(খ) ট্রানজিস্টর আকারে ছোট, ওজনে হালকা, খুব কম বিদ্যুৎ লাগে, বেশি নির্ভরযোগ্য ও কম খরচে বানানো যায়। তাই ভ্যাকুয়াম টিউবের চেয়ে সুবিধাজনক।<br>(গ) ১০০০ g থেকে ২৫০ g = ১/৪ অংশ বাকি। ১/২ × ১/২ = ১/৪, অর্থাৎ ২টি অর্ধায়ু পেরিয়েছে। ২ × T = ৯০০ বছর ➜ T = ৪৫০ বছর। (এটা আমার সমাধান, শিক্ষকের সাথে মিলিয়ে নিও।)<br>(ঘ) প্রথম রশ্মি = বিটা (ইলেকট্রন, ঋণাত্মক চার্জ), দ্বিতীয় রশ্মি = গামা। বিটা চার্জযুক্ত, চৌম্বক ক্ষেত্রে বাঁকে, কয়েক mm অ্যালুমিনিয়ামে থামে। গামার চার্জ ও ভর নেই, ক্ষেত্রে বাঁকে না, তড়িৎচৌম্বকীয় তরঙ্গ, থামাতে কয়েক cm সিসা লাগে, ভেদন ক্ষমতা সবচেয়ে বেশি।']]},
+{h:'সংক্ষিপ্ত উত্তর প্রশ্ন (বইয়ের, উত্তর আমার লেখা)',items:[
+['১. তেজস্ক্রিয়তা বলতে কী বুঝ ব্যাখ্যা কর।','অস্থিতিশীল নিউক্লিয়াস কোনো ধরনের বিকিরণ ঘটিয়ে স্থিতিশীল হওয়ার চেষ্টা করে। এই প্রক্রিয়াকে তেজস্ক্রিয়তা বলে, আর নিউক্লিয়াস থেকে যা বের হয় তাকে তেজস্ক্রিয় রশ্মি বলে।'],
+['২. আলফা ও বিটা কণার দুইটি পার্থক্য দেখাও।','আলফা = হিলিয়াম নিউক্লিয়াস (ধনাত্মক), বিটা = ইলেকট্রন (ঋণাত্মক)। আলফা কাগজেই থামে, বিটা থামাতে কয়েক mm অ্যালুমিনিয়াম লাগে।'],
+['৩. তাপমাত্রা বাড়লে অর্ধপরিবাহীর রোধে কী পরিবর্তন ঘটে ব্যাখ্যা কর।','তাপ বাড়লে কিছু ইলেকট্রন বন্ধন থেকে মুক্ত হয়ে চলাচল করতে পারে, তাই অর্ধপরিবাহী আরও বেশি পরিবাহী হয়। অর্থাৎ রোধ কমে। (বইয়ে "খানিকটা পরিবাহীর মতো" বলা আছে। "রোধ কমে" এই সিদ্ধান্তটি আমার, শিক্ষকের সাথে মিলিয়ে নিও।)'],
+['৪. তেজস্ক্রিয় মৌলের অর্ধায়ু বলতে কী বোঝায়?','যে সময়ে কোনো তেজস্ক্রিয় নমুনার অর্ধেক নিউক্লিয়াসের বিকিরণ ঘটে সেই সময়কে অর্ধায়ু বলে।']]},
+{h:'অতিরিক্ত অনুশীলন (আমার তৈরি)',items:[
+['১. অর্ধায়ু ২০ বছর হলে ৮০ বছর পর ১ kg নমুনার কত ভর তেজস্ক্রিয় থাকবে?','৮০ ÷ ২০ = ৪ অর্ধায়ু। ১ kg × (১/২)⁴ = ১/১৬ kg = ৬২.৫ g।'],
+['২. বাইনারি ১০১১ এর দশমিক মান কত?','৮ + ০ + ২ + ১ = ১১।'],
+['৩. আলফা বিকিরণে U₂₃₈ (Z = ৯২) থেকে নতুন নিউক্লিয়াসের ভরসংখ্যা ও পারমাণবিক সংখ্যা কত?','ভরসংখ্যা ২৩৮ − ৪ = ২৩৪, পারমাণবিক সংখ্যা ৯২ − ২ = ৯০ (Th-234)।']]}];
+
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+function frame(){FR++;for(var i=0;i<DRAWS.length;i++)DRAWS[i]();requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>

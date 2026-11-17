@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>তরঙ্গ ও শব্দ (পদার্থবিজ্ঞান অধ্যায় ৭) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+small{color:#567}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/lab-boost.js?v=1"></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#physics">&larr; সব অধ্যায়</a>
+</header><div class="wrap">
+  <div class="crumb">⚛️ পদার্থবিজ্ঞান &rsaquo; সপ্তম অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🌊 তরঙ্গ ও শব্দ (Waves and Sound)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🔩 ল্যাব ১</a><a href="#lab2">🕰️ ল্যাব ২</a><a href="#lab3">〰️ ল্যাব ৩</a><a href="#lab4">🪢 ল্যাব ৪</a><a href="#lab5">➕ ল্যাব ৫</a><a href="#lab6">🔊 ল্যাব ৬</a><a href="#lab7">✖️ ল্যাব ৭</a><a href="#lab8">📈 ল্যাব ৮</a><a href="#lab9">🔔 ল্যাব ৯</a><a href="#lab10">🗣️ ল্যাব ১০</a><a href="#lab11">🏁 ল্যাব ১১</a><a href="#lab12">👂 ল্যাব ১২</a><a href="#lab13">🏙️ ল্যাব ১৩</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> সরল দোলকের গতি ও পর্যায়কাল বুঝতে; পর্যায়কাল, কম্পাঙ্ক, বিস্তার ও দশা ব্যাখ্যা করতে; অনুদৈর্ঘ্য ও অনুপ্রস্থ তরঙ্গের পার্থক্য বলতে; v = fλ দিয়ে হিসাব করতে; শব্দের উৎপত্তি, বেগ ও প্রতিধ্বনি ব্যাখ্যা করতে; শ্রাব্যতার সীমা, সুর ও শব্দদূষণ বুঝতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের ক্রম মেনে সহজ ভাষায় লেখা। বইয়ের "নমুনা প্রশ্ন"-এর উত্তরমালা নেই, তাই MCQ ও প্রশ্নের উত্তর আমি হিসাব করে ব্যাখ্যাসহ দিয়েছি।</div>
+
+    <h3>৭.১ পর্যাবৃত্ত গতি ও সরল ছন্দিত স্পন্দন ⭐⭐⭐</h3>
+    <ul>
+      <li><b>পর্যায়বৃত্ত গতি:</b> যে গতি নির্দিষ্ট সময় পরপর নিজেকে পুনরাবৃত্তি করে। যেমন ঘড়ির কাঁটা, দোলনা।</li>
+      <li><b>স্পন্দন গতি:</b> একটি নির্দিষ্ট বিন্দুর দুপাশে আসা-যাওয়া। স্প্রিংয়ে ঝোলানো ভর বা সরল দোলক।</li>
+      <li><b>স্প্রিংয়ের ভর:</b> সরণ x হলে ফিরিয়ে আনা বল F = −kx। পর্যায়কাল T = 2π√(m/k)। ভর বাড়লে T বাড়ে, স্প্রিং শক্ত (k বেশি) হলে T কমে।</li>
+      <li><b>সরল দোলক:</b> ছোট কোণে দুললে T = 2π√(l/g)। দৈর্ঘ্য 1 m হলে পৃথিবীতে T ≈ 2.0 s। T ভরের ওপর নির্ভর করে না।</li>
+      <li><b>পর্যায়কাল (T):</b> এক পূর্ণ স্পন্দনের সময়। <b>কম্পাঙ্ক (f):</b> প্রতি সেকেন্ডে স্পন্দন সংখ্যা, f = 1/T, একক Hz। <b>বিস্তার (a):</b> সাম্যাবস্থান থেকে সর্বোচ্চ সরণ।</li>
+      <li><b>দশা:</b> কোনো মুহূর্তে কণার অবস্থান ও গতির দিক। একই অবস্থান ও একই গতির দিক হলে দশা এক।</li>
+    </ul>
+
+    <h3>৭.২ তরঙ্গ ⭐⭐⭐</h3>
+    <ul>
+      <li><b>তরঙ্গ</b> হলো মাধ্যমের ভেতর দিয়ে বিক্ষোভের (শক্তির) প্রবাহ। কণা নিজের জায়গায় কাঁপে, শক্তি সামনে যায়।</li>
+      <li><b>যান্ত্রিক তরঙ্গ:</b> মাধ্যম লাগে (শব্দ, পানির ঢেউ, দড়ির ঢেউ)। <b>তড়িৎচৌম্বক তরঙ্গ:</b> মাধ্যম লাগে না (আলো, বেতার তরঙ্গ)।</li>
+      <li><b>অনুপ্রস্থ তরঙ্গ:</b> কণার কম্পন তরঙ্গের গতির সাথে লম্ব (পানির ঢেউ, দড়ি)। <b>অনুদৈর্ঘ্য তরঙ্গ:</b> কণার কম্পন তরঙ্গের গতির দিকেই (শব্দ)। এতে সংকোচন ও প্রসারণ তৈরি হয়।</li>
+      <li><b>তরঙ্গদৈর্ঘ্য (λ):</b> এক পর্যায়কালে তরঙ্গ যতটুকু যায়, বা পরপর একই দশার দুই বিন্দুর দূরত্ব।</li>
+      <li><b>তরঙ্গের বেগ:</b> v = fλ = λ/T।</li>
+      <li>উদাহরণ: 1 kHz শব্দের λ বাতাসে (334 m/s) 0.334 m, পানিতে (1493 m/s) 1.49 m, লোহায় (5130 m/s) 5.13 m। মাধ্যম বদলালে f একই থাকে।</li>
+      <li>উদাহরণ: f = 5 Hz, λ = 1 m ➜ v = 5 m/s।</li>
+    </ul>
+
+    <h3>৭.৩ শব্দ ⭐⭐⭐</h3>
+    <ul>
+      <li><b>শব্দের উৎপত্তি:</b> কম্পনশীল বস্তু (স্বরযন্ত্র, ঘণ্টা, তার) থেকে। শব্দ একটি যান্ত্রিক অনুদৈর্ঘ্য তরঙ্গ, তাই শূন্যস্থানে চলে না (বেলজারের পরীক্ষা)।</li>
+      <li><b>শ্রাব্যতার সীমা:</b> 20 Hz – 20,000 Hz। 20 Hz-এর কম হলে ইনফ্রাসাউন্ড, 20 kHz-এর বেশি হলে আল্ট্রাসাউন্ড। বাদুড় প্রায় 100 kHz আল্ট্রাসাউন্ড তৈরি করে।</li>
+      <li><b>প্রতিধ্বনি:</b> শব্দ প্রতিফলিত হয়ে ফিরে এসে আলাদা শোনা। কানে অনুভূতি 0.1 s থাকে, তাই ফিরে আসার সময় ≥ 0.1 s হতে হবে। প্রতিফলক কমপক্ষে প্রায় 16.5 m দূরে হওয়া চাই।</li>
+      <li><b>শব্দের বেগ:</b> বাতাসে 0°C-এ প্রায় 332 m/s। তাপমাত্রা বাড়লে বেগ বাড়ে (v ∝ √T, T কেলভিনে)। উদাহরণ: 338 m/s ➜ 349.6 m/s। আর্দ্রতা বাড়লে বেগও সামান্য বাড়ে।</li>
+      <li><b>টেবিল ৭.০১ (বেগ, m/s):</b> বাতাস 330, হাইড্রোজেন 1284, পারদ 1450, পানি 1493, লোহা 5130, হীরা 12000। কঠিনে বেশি, তরলে কম, গ্যাসে সবচেয়ে কম।</li>
+      <li><b>ব্যবহার:</b> আল্ট্রাসনোগ্রাফি, ত্রিমাত্রিক ভূকম্পন জরিপ, আল্ট্রাসাউন্ড ক্লিনার।</li>
+      <li><b>সুরেলা শব্দ:</b> সুর (বাঁশি, সেতার) নিয়মিত কম্পন থেকে হয়। বাদ্যযন্ত্র তিন ধরনের: তারের, বায়ুর, আঘাতের।</li>
+      <li><b>শব্দদূষণ (টেবিল ৭.০২):</b> জেট ইঞ্জিন 110–140 dB, ট্রাফিক 80–90, গাড়ি 60–80, টেলিভিশন 50–60, কথাবার্তা 40–60, নিঃশ্বাস 10, মশার পাখা 0 dB।</li>
+      <li><b>দূষণ কমানোর উপায়:</b> শব্দদূষণ-বিরোধী আইন, জনসচেতনতা, কম হর্ন, শব্দশোষক যন্ত্র, প্রচুর গাছ লাগানো।</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🔩 ল্যাব 1: সরল স্পন্দন গতি: স্প্রিং ও ভর</h2>
+    <div class="say">👉 ভর আর স্প্রিং ধ্রুবক বদলাও। ভরটি টেনে ছেড়ে দিলে স্প্রিং ওঠানামা করে। সাম্যাবস্থায় গতি সবচেয়ে বেশি, দুই প্রান্তে গতি শূন্য।</div>
+    <div class="ctl"><label>ভর m: <span id="o1mv"></span> kg</label><input type="range" id="o1m" min="1" max="20" step="1" value="5"><label>স্প্রিং ধ্রুবক k: <span id="o1kv"></span> N/m</label><input type="range" id="o1k" min="5" max="100" step="5" value="20"><label>টেনে নামানো a: <span id="o1av"></span> cm</label><input type="range" id="o1a" min="20" max="60" step="1" value="40"></div>
+    <div class="row"><div><canvas id="o1c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="o1t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="o1q"></div><div class="cls" id="o1o"></div><div class="fb" id="o1fb"></div><small id="o1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🕰️ ল্যাব 2: সরল দোলক: T = 2π√(l/g)</h2>
+    <div class="say">👉 সুতার দৈর্ঘ্য আর g বদলাও, ভর বদলে দেখো। দোলনকাল ভরের ওপর নির্ভর করে না, শুধু দৈর্ঘ্য আর g-এর ওপর।</div>
+<div class="pills" id="p2p"><button data-k="0" class="on">🌍 পৃথিবী</button><button data-k="1">🌙 চাঁদ</button><button data-k="2">🪐 বৃহস্পতি</button></div>
+    <div class="ctl"><label>সুতার দৈর্ঘ্য l: <span id="p2kv"></span> cm</label><input type="range" id="p2k" min="10" max="300" step="10" value="100"><label>ভর (পাথর): <span id="p2mv"></span> gm</label><input type="range" id="p2m" min="10" max="200" step="10" value="10"></div>
+    <div class="row"><div><canvas id="p2c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="p2t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="p2q"></div><div class="cls" id="p2o"></div><div class="fb" id="p2fb"></div><small id="p2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>〰️ ল্যাব 3: পর্যায়কাল, কম্পাঙ্ক ও বিস্তার</h2>
+    <div class="say">👉 কম্পাঙ্ক আর বিস্তার বদলাও। একটি পূর্ণ স্পন্দনে যে সময় লাগে তা পর্যায়কাল T, আর প্রতি সেকেন্ডে স্পন্দন সংখ্যা f = 1/T।</div>
+    <div class="ctl"><label>কম্পাঙ্ক f: <span id="f3kv"></span> ×০.১ Hz</label><input type="range" id="f3k" min="5" max="40" step="1" value="10"><label>বিস্তার a: <span id="f3av"></span> ×০.১ cm</label><input type="range" id="f3a" min="10" max="60" step="1" value="40"></div>
+    <div class="row"><div><canvas id="f3c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="f3t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="f3q"></div><div class="cls" id="f3o"></div><div class="fb" id="f3fb"></div><small id="f3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🪢 ল্যাব 4: দড়িতে তরঙ্গ: প্রতিফলন ও প্রতিসরণ</h2>
+    <div class="say">👉 একটি ঝাঁকুনি (স্পন্দ) দড়ি দিয়ে এগোচ্ছে। শেষ প্রান্ত কেমন তা বেছে নাও। প্রান্তে পৌঁছে তরঙ্গ প্রতিফলিত হয়, আর মাধ্যম বদলালে কিছুটা প্রতিসরিতও হয়।</div>
+<div class="pills" id="u4p"><button data-k="0" class="on">🧱 দৃঢ় প্রান্ত</button><button data-k="1">🪝 মুক্ত প্রান্ত</button><button data-k="2">🧵 সরু ➜ মোটা তার</button><button data-k="3">🪢 মোটা ➜ সরু তার</button></div>
+    <div class="btnrow"><button class="btn" id="u4go">↺ আবার ছাড়ো</button></div>
+    <div class="row"><div><canvas id="u4c" class="w" width="380" height="290"></canvas></div><div class="grow"><div class="tlinfo" id="u4t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="u4q"></div><div class="cls" id="u4o"></div><div class="fb" id="u4fb"></div><small id="u4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>➕ ল্যাব 5: তরঙ্গের উপরিপাতন</h2>
+    <div class="say">👉 দুটি তরঙ্গ একই বিন্দুতে এলে যোগ হয়ে যায়। দশা সমান হলে বড় তরঙ্গ, বিপরীত হলে একে অন্যকে নিঃশেষ করে।</div>
+<div class="pills" id="v5p"><button data-k="0" class="on">⬆️ সমদশা (0°)</button><button data-k="1">↕️ বিপরীত দশা (180°)</button><button data-k="2">↗️ ৯০° পার্থক্য</button></div>
+    <div class="ctl"><label>প্রথম তরঙ্গের বিস্তার: <span id="v5av"></span> </label><input type="range" id="v5a" min="1" max="5" step="1" value="3"><label>দ্বিতীয় তরঙ্গের বিস্তার: <span id="v5bv"></span> </label><input type="range" id="v5b" min="1" max="5" step="1" value="3"><label>দশা পার্থক্য: <span id="v5kv"></span> °</label><input type="range" id="v5k" min="0" max="360" step="10" value="0"></div>
+    <div class="row"><div><canvas id="v5c" class="w" width="380" height="350"></canvas></div><div class="grow"><div class="tlinfo" id="v5t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="v5q"></div><div class="cls" id="v5o"></div><div class="fb" id="v5fb"></div><small id="v5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🔊 ল্যাব 6: অনুদৈর্ঘ্য ও অনুপ্রস্থ তরঙ্গ</h2>
+    <div class="say">👉 ওপরে শব্দের মতো অনুদৈর্ঘ্য তরঙ্গ, নিচে দড়ির মতো অনুপ্রস্থ তরঙ্গ। লাল কণাটি দেখো। কণা শুধু নিজের জায়গায় কাঁপে, তরঙ্গের সাথে সামনে যায় না।</div>
+    <div class="ctl"><label>তরঙ্গদৈর্ঘ্য λ: <span id="l6kv"></span> px</label><input type="range" id="l6k" min="60" max="160" step="5" value="100"><label>তরঙ্গের গতি: <span id="l6fv"></span> %</label><input type="range" id="l6f" min="20" max="100" step="5" value="50"></div>
+    <div class="row"><div><canvas id="l6c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="l6t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="l6q"></div><div class="cls" id="l6o"></div><div class="fb" id="l6fb"></div><small id="l6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>✖️ ল্যাব 7: তরঙ্গের বেগ v = f λ</h2>
+    <div class="say">👉 মাধ্যম বেছে নাও আর কম্পাঙ্ক বদলাও। কম্পাঙ্ক একই থাকে, কিন্তু মাধ্যম বদলালে বেগ বদলায় আর তাই তরঙ্গদৈর্ঘ্যও বদলায়। (ডানে ২ m অংশ দেখানো)</div>
+<div class="pills" id="m7p"><button data-k="0" class="on">💨 বাতাস (334 m/s)</button><button data-k="1">🌊 পানি (1493 m/s)</button><button data-k="2">🔩 লোহা (5130 m/s)</button></div>
+    <div class="ctl"><label>কম্পাঙ্ক f: <span id="m7kv"></span> ×১০০ Hz</label><input type="range" id="m7k" min="1" max="50" step="1" value="10"></div>
+    <div class="row"><div><canvas id="m7c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="m7t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="m7q"></div><div class="cls" id="m7o"></div><div class="fb" id="m7fb"></div><small id="m7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>📈 ল্যাব 8: লেখচিত্র দেখে বিস্তার, T, λ, v বের করা</h2>
+    <div class="say">👉 বিস্তার, তরঙ্গদৈর্ঘ্য আর পর্যায়কাল বদলাও। ওপরে অবস্থানের লেখচিত্র থেকে a আর λ, নিচে সময়ের লেখচিত্র থেকে T পাওয়া যায়। তারপর f = 1/T আর v = fλ।</div>
+<div class="pills" id="r8p"><button data-k="0" class="on">📖 বইয়ের উদাহরণ</button><button data-k="1">🌊 বড় ঢেউ</button><button data-k="2">⚡ দ্রুত</button></div>
+    <div class="ctl"><label>বিস্তার a: <span id="r8av"></span> ×০.০১ m</label><input type="range" id="r8a" min="5" max="20" step="1" value="10"><label>তরঙ্গদৈর্ঘ্য λ: <span id="r8lv"></span> ×০.১ m</label><input type="range" id="r8l" min="5" max="30" step="1" value="10"><label>পর্যায়কাল T: <span id="r8kv"></span> ×০.১ s</label><input type="range" id="r8k" min="1" max="10" step="1" value="2"></div>
+    <div class="row"><div><canvas id="r8c" class="w" width="380" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="r8t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="r8q"></div><div class="cls" id="r8o"></div><div class="fb" id="r8fb"></div><small id="r8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>🔔 ল্যাব 9: বেলজারে বাজানো ঘণ্টা</h2>
+    <div class="say">👉 বেলজার থেকে বায়ু পাম্প করে বের করো। ঘণ্টা কাঁপতেই থাকে, কিন্তু বায়ু কমলে শব্দ ক্ষীণ হয়, সম্পূর্ণ বায়ুশূন্য হলে বাইরে কিছুই শোনা যায় না। শব্দের জন্য মাধ্যম দরকার।</div>
+    <div class="ctl"><label>বায়ু পাম্প করে বের করা: <span id="b9kv"></span> %</label><input type="range" id="b9k" min="0" max="100" step="1" value="0"></div>
+    <div class="row"><div><canvas id="b9c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="b9t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="b9q"></div><div class="cls" id="b9o"></div><div class="fb" id="b9fb"></div><small id="b9sc"></small>
+  </section>
+
+  <section class="panel" id="lab10">
+    <h2>🗣️ ল্যাব 10: প্রতিধ্বনি কখন শোনা যায়?</h2>
+    <div class="say">👉 দেয়ালের দূরত্ব আর তাপমাত্রা বদলাও। প্রতিধ্বনি আলাদা করে শুনতে হলে শব্দ আর তার প্রতিধ্বনির মাঝে কমপক্ষে 0.1 s ফাঁক দরকার।</div>
+<div class="pills" id="e10p"><button data-k="0" class="on">🧒 ফারহান: শীত (10°C)</button><button data-k="1">☀️ ফারহান: গ্রীষ্ম (30°C)</button><button data-k="2">🏭 নাভিদ (16.6 m)</button></div>
+    <div class="ctl"><label>দেয়ালের দূরত্ব d: <span id="e10kv"></span> ×০.১ m</label><input type="range" id="e10k" min="50" max="600" step="0.5" value="172.5"><label>তাপমাত্রা: <span id="e10wv"></span> °C</label><input type="range" id="e10w" min="0" max="40" step="1" value="10"></div>
+    <div class="btnrow"><button class="btn" id="e10go">📣 চিৎকার করো</button></div>
+    <div class="row"><div><canvas id="e10c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="e10t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="e10q"></div><div class="cls" id="e10o"></div><div class="fb" id="e10fb"></div><small id="e10sc"></small>
+  </section>
+
+  <section class="panel" id="lab11">
+    <h2>🏁 ল্যাব 11: কোন মাধ্যমে শব্দ কত দ্রুত যায়</h2>
+    <div class="say">👉 মাধ্যম বেছে নাও আর দূরত্ব বদলাও। বাতাস আর নির্বাচিত মাধ্যমে একই সাথে শব্দ ছাড়া হলো, কে আগে পৌঁছায় দেখো। ঘন, শক্ত মাধ্যমে শব্দ বেশি দ্রুত যায়।</div>
+<div class="pills" id="s11p"><button data-k="0" class="on">💧 পানি</button><button data-k="1">🧪 পারদ</button><button data-k="2">🔩 লোহা</button><button data-k="3">🔷 হীরা</button><button data-k="4">🎈 হাইড্রোজেন</button></div>
+    <div class="ctl"><label>দূরত্ব: <span id="s11kv"></span> m</label><input type="range" id="s11k" min="100" max="5000" step="100" value="1000"></div>
+    <div class="btnrow"><button class="btn" id="s11go">▶ ছাড়ো</button></div>
+    <div class="row"><div><canvas id="s11c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="s11t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="s11q"></div><div class="cls" id="s11o"></div><div class="fb" id="s11fb"></div><small id="s11sc"></small>
+  </section>
+
+  <section class="panel" id="lab12">
+    <h2>👂 ল্যাব 12: শ্রাব্যতার সীমা: ২০ Hz থেকে ২০ kHz</h2>
+    <div class="say">👉 কম্পাঙ্ক বদলাও। মানুষ শুধু প্রায় 20 Hz থেকে 20,000 Hz পর্যন্ত শুনতে পায়। এর নিচে ইনফ্রাসাউন্ড, ওপরে আল্ট্রাসাউন্ড। বাদুড় আল্ট্রাসাউন্ড তৈরি ও শোনে।</div>
+<div class="pills" id="h12p"><button data-k="0" class="on">⬇️ ইনফ্রাসাউন্ড</button><button data-k="1">👨 পুরুষ কণ্ঠ</button><button data-k="2">👩 নারী কণ্ঠ</button><button data-k="3">🦇 বাদুড় (100 kHz)</button></div>
+    <div class="ctl"><label>কম্পাঙ্ক (লগ স্কেল): <span id="h12kv"></span> </label><input type="range" id="h12k" min="0" max="100" step="1" value="40"></div>
+    <div class="btnrow"><button class="btn" id="h12go">🔊 শোনো</button></div>
+    <div class="row"><div><canvas id="h12c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="h12t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="h12q"></div><div class="cls" id="h12o"></div><div class="fb" id="h12fb"></div><small id="h12sc"></small>
+  </section>
+
+  <section class="panel" id="lab13">
+    <h2>🏙️ ল্যাব 13: শব্দের তীব্রতা ও শব্দদূষণ</h2>
+    <div class="say">👉 কোন উৎসের শব্দ কত ডেসিবেল (dB) দেখো। গাছ বা শব্দশোষক দেয়াল থাকলে শব্দ কমে। বেশি শব্দ বেশিক্ষণ শুনলে শ্রবণশক্তির ক্ষতি হয়।</div>
+<div class="pills" id="d13p"><button data-k="0" class="on">✈️ জেট ইঞ্জিন</button><button data-k="1">🚌 ট্রাফিক</button><button data-k="2">🚗 গাড়ি</button><button data-k="3">📺 টেলিভিশন</button><button data-k="4">🗣️ কথাবার্তা</button><button data-k="5">😮‍💨 নিঃশ্বাস</button><button data-k="6">🦟 মশা</button></div>
+    <div class="ctl"><label class="sw"><input type="checkbox" id="d13b"> 🌳 গাছ ও শব্দশোষক দেয়াল</label></div>
+    <div class="row"><div><canvas id="d13c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="d13t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="d13q"></div><div class="cls" id="d13o"></div><div class="fb" id="d13fb"></div><small id="d13sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। বইয়ের নমুনা প্রশ্নের উত্তরমালা নেই, তাই উত্তরগুলো আমার হিসাব করা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; তরঙ্গ ও শব্দ (পদার্থবিজ্ঞান অধ্যায় ৭)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+function opts(correct,wrongs){var seen={},a=[{t:correct,ok:1}];seen[correct]=1;wrongs.forEach(function(w){if(!seen[w]){seen[w]=1;a.push({t:w,ok:0});}});return shuffle(a);}
+function arrow(x,x1,y1,x2,y2,col,lw){var a=Math.atan2(y2-y1,x2-x1);x.strokeStyle=col;x.fillStyle=col;x.lineWidth=lw||3;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-11*Math.cos(a-.4),y2-11*Math.sin(a-.4));x.lineTo(x2-11*Math.cos(a+.4),y2-11*Math.sin(a+.4));x.closePath();x.fill();}
+function person(x,px,py,col){circ(x,0,px,py-22,6,col,null);x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(px,py-16);x.lineTo(px,py-4);x.moveTo(px-6,py-11);x.lineTo(px+6,py-11);x.moveTo(px,py-4);x.lineTo(px-5,py+6);x.moveTo(px,py-4);x.lineTo(px+5,py+6);x.stroke();}
+/* ---------- সাধারণ সহায়ক ---------- */
+function pills(id,fn){$(id).onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var all=$(id).querySelectorAll('button'),i;for(i=0;i<all.length;i++)all[i].classList.toggle('on',all[i]===b);fn(+b.getAttribute('data-k'));};}
+function sci(x){if(!(x>0))return bn(0);var e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);if(+m.toFixed(2)>=10){m/=10;e++;}return bn(parseFloat(m.toFixed(2)))+' × ১০'+(e<0?'⁻':'')+sup(Math.abs(e));}
+function brow(label,val,max,col,txtv){return '<div class="bar"><div class="bl">'+label+'</div><div class="bt"><div class="bf" style="width:'+clamp(val/max*100,1,100)+'%;background:'+col+'"></div></div><b style="min-width:80px;font-size:14px;color:#1f3a5f">'+(txtv||'')+'</b></div>';}
+function on(ids,fn){ids.forEach(function(i){$(i).oninput=fn;$(i).onchange=fn;});}
+var G=9.8;
+function box(x,px,py,w,h,fill,stroke){x.fillStyle=fill;x.fillRect(px,py,w,h);if(stroke){x.strokeStyle=stroke;x.lineWidth=2;x.strokeRect(px,py,w,h);}}
+function wheel(x,px,py,r){circ(x,0,px,py,r,'#333',null);circ(x,0,px,py,r*.4,'#bbb',null);}
+
+
+/* ---------- সুন্দর আঁকার সহায়ক (নতুন) ---------- */
+function shade(c,a){var h=hx(c),o='#';for(var i=0;i<3;i++){var v=clamp(Math.round(h[i]+a),0,255).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function grad(x,px,py,w,h,c1,c2){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1);g.addColorStop(1,c2);x.fillStyle=g;x.fillRect(px,py,w,h);}
+function ball(x,px,py,r,col){var g=x.createRadialGradient(px-r*.35,py-r*.35,r*.08,px,py,r);g.addColorStop(0,'#ffffff');g.addColorStop(.3,col);g.addColorStop(1,shade(col,-55));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();}
+function rr(x,px,py,w,h,r){r=Math.min(r,w/2,h/2);x.beginPath();x.moveTo(px+r,py);x.lineTo(px+w-r,py);x.quadraticCurveTo(px+w,py,px+w,py+r);x.lineTo(px+w,py+h-r);x.quadraticCurveTo(px+w,py+h,px+w-r,py+h);x.lineTo(px+r,py+h);x.quadraticCurveTo(px,py+h,px,py+h-r);x.lineTo(px,py+r);x.quadraticCurveTo(px,py,px+r,py);x.closePath();}
+function tag(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.lineJoin='round';x.lineWidth=4;x.strokeStyle='rgba(255,255,255,.92)';x.strokeText(s,px,py);x.fillStyle=col||NAVY;x.fillText(s,px,py);}
+function wave(x,px,py,w,h,t,c1,c2,amp){amp=amp===undefined?2.5:amp;var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1||'rgba(86,176,240,.88)');g.addColorStop(1,c2||'rgba(22,84,172,.96)');x.fillStyle=g;x.beginPath();x.moveTo(px,py+h);x.lineTo(px,py);var i;for(i=0;i<=w;i+=4)x.lineTo(px+i,py+Math.sin(i/13+t*.05)*amp);x.lineTo(px+w,py+h);x.closePath();x.fill();x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=1.6;x.beginPath();for(i=0;i<=w;i+=4){var yy=py+Math.sin(i/13+t*.05)*amp;if(i===0)x.moveTo(px,yy);else x.lineTo(px+i,yy);}x.stroke();}
+function bubs(x,px,py,w,h,n,t){for(var i=0;i<n;i++){var u=((t*.004*(0.6+rp(i,0,.8))+rp(i+50,0,1))%1),bx=px+rp(i,6,w-6)+Math.sin(t*.04+i)*3,by=py+h-u*h,r=1.5+rp(i+9,0,2.2);if(by<py+4)continue;x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=1.2;x.beginPath();x.arc(bx,by,r,0,7);x.stroke();}}
+function glassBox(x,px,py,w,h){x.strokeStyle='#5b7389';x.lineWidth=3;x.beginPath();x.moveTo(px,py);x.lineTo(px,py+h);x.lineTo(px+w,py+h);x.lineTo(px+w,py);x.stroke();x.fillStyle='rgba(255,255,255,.18)';x.fillRect(px+4,py+4,5,h-8);}
+function sun(x,px,py,r,t){x.save();x.translate(px,py);x.rotate(t*.004);x.strokeStyle='rgba(255,196,60,.7)';x.lineWidth=3;for(var i=0;i<12;i++){x.rotate(Math.PI/6);x.beginPath();x.moveTo(r+4,0);x.lineTo(r+11,0);x.stroke();}x.restore();ball(x,px,py,r,'#ffc83d');}
+function cloud(x,px,py,s,col){x.fillStyle=col||'rgba(255,255,255,.95)';[[0,0,14],[16,-6,17],[34,0,14],[17,6,15]].forEach(function(c){x.beginPath();x.arc(px+c[0]*s,py+c[1]*s,c[2]*s,0,7);x.fill();});}
+function dial(x,cx,cy,r,frac,txtv,col){x.strokeStyle='#dfe7ee';x.lineWidth=9;x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*2.2);x.stroke();x.strokeStyle=col||'#2a9d8f';x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*(.8+1.4*clamp(frac,0,1)));x.stroke();var a=Math.PI*(.8+1.4*clamp(frac,0,1));x.strokeStyle=NAVY;x.lineWidth=3;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a)*(r-6),cy+Math.sin(a)*(r-6));x.stroke();circ(x,0,cx,cy,4,NAVY,null);if(txtv)tag(x,txtv,cx,cy+r*.62,NAVY,12);}
+function sand(x,px,py,w,h){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,'#eccb8a');g.addColorStop(1,'#c99a55');x.fillStyle=g;x.fillRect(px,py,w,h);}
+function atom(x,px,py,r,col,t){ball(x,px,py,r,col);}
+function fmtN(v){if(Math.abs(v)>=1000)return bn(Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g,','));return bn(parseFloat(v.toFixed(2)));}
+
+function tagd(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=4;x.fillStyle=col||'#fff';x.fillText(s,px,py);x.restore();}
+
+
+var DT=.02,TKL=performance.now();
+DRAWS.push(function(){var n=performance.now();DT=Math.min(.05,(n-TKL)/1000);TKL=n;});
+function hm(a,b,t){var A=hx(a),B=hx(b),o='#';t=clamp(t,0,1);for(var i=0;i<3;i++){var v=Math.round(lerp(A[i],B[i],t)).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function axes(x,gx,gy,gw,gh,xl,yl){x.fillStyle='#fff';rr(x,gx-8,gy-8,gw+16,gh+16,8);x.fill();x.strokeStyle='#cfd9e1';x.lineWidth=1.5;x.stroke();x.strokeStyle='#e1e8ee';x.beginPath();x.moveTo(gx,gy+gh/2);x.lineTo(gx+gw,gy+gh/2);x.stroke();if(xl)tag(x,xl,gx+gw-4,gy+gh-6,'#5b7389',10,'right');if(yl)tag(x,yl,gx+4,gy+8,'#5b7389',10,'left');}
+
+/* ===== ল্যাব ১: স্প্রিং ===== */
+var O1={t:0};
+function o1p(){var m=+$('o1m').value/10,k=+$('o1k').value,a=+$('o1a').value;return {m:m,k:k,a:a,T:2*Math.PI*Math.sqrt(m/k)};}
+function o1info(){var p=o1p();$('o1mv').textContent=bn(p.m);$('o1kv').textContent=bn(p.k);$('o1av').textContent=bn(p.a);
+  $('o1t').innerHTML='হুকের সূত্র: F = −kx<br>দোলনকাল T = 2π√(m/k) = 2 × 3.14 × √('+f(p.m,1)+' ÷ '+bn(p.k)+') = <b>'+f(p.T,2)+' s</b><br>কম্পাঙ্ক f = 1/T = <b>'+f(1/p.T,2)+' Hz</b><br><b style="color:#1d7a6f">বিস্তার বদলালে T বদলায় না!</b> ভর বাড়ালে T বাড়ে, k বাড়ালে T কমে।<br><small>শক্তি পাল্টাপাল্টি হয়: সাম্যাবস্থায় গতিশক্তি সবচেয়ে বেশি, প্রান্তে স্থিতিশক্তি সবচেয়ে বেশি।</small>';}
+on(['o1m','o1k','o1a'],function(){O1.t=0;o1info();});
+DRAWS.push(function(){var x=ctxOf('o1c'),p=o1p(),i;O1.t+=DT;var w=2*Math.PI/p.T,u=Math.cos(w*O1.t),px=1.4,eq=150,my=eq+p.a*px*u;
+  grad(x,0,0,380,300,'#f5f9fc','#e0eaf3');
+  x.fillStyle='#8896a5';x.fillRect(30,14,120,10);for(i=0;i<12;i++){x.strokeStyle='#8896a5';x.lineWidth=2;x.beginPath();x.moveTo(36+i*10,14);x.lineTo(30+i*10,6);x.stroke();}
+  var top=24,bot=my-6,n=14;x.strokeStyle='#4b5968';x.lineWidth=3;x.beginPath();x.moveTo(90,top);for(i=0;i<n;i++){var yy=top+(bot-top)*(i+.5)/n;x.lineTo(i%2?74:106,yy);}x.lineTo(90,bot);x.stroke();
+  x.setLineDash([4,4]);x.strokeStyle='#1d7a6f';x.lineWidth=1.5;x.beginPath();x.moveTo(30,eq);x.lineTo(150,eq);x.stroke();x.setLineDash([]);tag(x,'সাম্যাবস্থা',2,eq-9,'#1d7a6f',10,'left');
+  var bw=34+p.m*14;rr(x,90-bw/2,my-6,bw,30,5);x.fillStyle='#f0a35b';x.fill();x.strokeStyle='#a25a14';x.lineWidth=2;x.stroke();tag(x,f(p.m,1)+' kg',90,my+9,'#5a2d00',11);
+  var fx=-(my-eq);if(Math.abs(fx)>3)arrow(x,138,my+9,138,my+9+fx*.5,RED,3);tag(x,'F=−kx',146,my+9+fx*.25,RED,10,'left');
+  if(Math.abs(u)>.96)tag(x,'v = 0',40,my+9,'#c0392b',12,'left');else if(Math.abs(u)<.12)tag(x,'v সর্বোচ্চ',40,my+9,'#1d7a6f',12,'left');
+  var gx=190,gy=30,gw=170,gh=230;axes(x,gx,gy,gw,gh,'সময় ➜','অবস্থান');
+  var W=3*p.T;x.strokeStyle='#e9a23b';x.lineWidth=3;x.beginPath();for(i=0;i<=gw;i+=2){var tt=O1.t-W+i/gw*W,yv=Math.cos(w*tt)*p.a*px;if(i===0)x.moveTo(gx+i,gy+gh/2+yv*.7);else x.lineTo(gx+i,gy+gh/2+yv*.7);}x.stroke();
+  circ(x,0,gx+gw,gy+gh/2+u*p.a*px*.7,6,RED,'#fff',2);
+  var c1=gx+gw-p.T/W*gw;x.strokeStyle='#2b6cb0';x.lineWidth=2;x.beginPath();x.moveTo(c1,gy+gh-18);x.lineTo(gx+gw,gy+gh-18);x.stroke();tag(x,'T = '+f(p.T,2)+' s',(c1+gx+gw)/2,gy+gh-30,'#2b6cb0',12);
+  });
+o1info();
+qgame('o1q','o1o','o1fb','o1sc',[
+ ['স্প্রিংয়ের প্রত্যয়নী বল কোনটি?','F = −kx',['F = kx²','F = m/k','F = k/x'],'হুকের সূত্র অনুযায়ী F = −kx। ঋণাত্মক চিহ্ন মানে বল সাম্যাবস্থার দিকে।'],
+ ['স্প্রিংয়ে ঝোলানো ভরের দোলনকাল কত?','T = 2π√(m/k)',['T = 2π√(k/m)','T = 2π m k','T = m/k'],'ভর m বাড়লে T বাড়ে, k বাড়লে T কমে।'],
+ ['বিস্তার বাড়ালে দোলনকাল কী হয়?','একই থাকে',['বাড়ে','কমে','দ্বিগুণ হয়'],'T = 2π√(m/k)-তে বিস্তার নেই, তাই T বদলায় না।'],
+ ['সাম্যাবস্থায় ভরের বেগ কেমন?','সর্বোচ্চ',['শূন্য','ঋণাত্মক','অসীম'],'সাম্যাবস্থায় সব স্থিতিশক্তি গতিশক্তি হয়, তাই বেগ সর্বোচ্চ।'],
+ ['দোলনের দুই প্রান্তে বেগ কত?','শূন্য',['সর্বোচ্চ','অর্ধেক','অসীম'],'প্রান্তে ভর একটু থেমে দিক বদলায়, তাই v = 0।']]);
+
+/* ===== ল্যাব ২: সরল দোলক ===== */
+var P2={g:9.8,t:0,gi:0};
+var P2G=[9.8,1.62,24.8],P2N=['পৃথিবী','চাঁদ','বৃহস্পতি'];
+function p2p(){var l=+$('p2k').value/100,m=+$('p2m').value,g=P2G[P2.gi];return {l:l,m:m,g:g,T:2*Math.PI*Math.sqrt(l/g)};}
+function p2info(){var p=p2p();$('p2kv').textContent=bn(p.l*100);$('p2mv').textContent=bn(p.m);
+  $('p2t').innerHTML='স্থান: <b>'+P2N[P2.gi]+'</b>, g = '+bn(p.g)+' m/s²<br>T = 2π√(l/g) = 2 × 3.14 × √('+f(p.l,2)+' ÷ '+bn(p.g)+') = <b>'+f(p.T,2)+' s</b><br><b style="color:#1d7a6f">ভর বদলালেও T একই!</b> (বই: 1 m সুতায় T = 2.0 s)<br><small>দোলনকাল মেপে উল্টো করে g বের করা যায়: g = 4π²l/T²। (চাঁদ ও বৃহস্পতির g আমার যোগ করা, বইয়ে নেই।)</small>';}
+pills('p2p',function(k){P2.gi=k;P2.t=0;p2info();});$('p2p').querySelector('button').classList.add('on');on(['p2k','p2m'],function(){P2.t=0;p2info();});
+DRAWS.push(function(){var x=ctxOf('p2c'),p=p2p(),i;P2.t+=DT;var th=.26*Math.cos(2*Math.PI*P2.t/p.T),L=20+p.l*66,px0=110,py0=34;
+  grad(x,0,0,380,300,'#f5f9fc','#e0eaf3');x.fillStyle='#8896a5';x.fillRect(60,24,100,10);
+  var bx=px0+Math.sin(th)*L,by=py0+Math.cos(th)*L,r=7+p.m/18;
+  x.setLineDash([4,4]);x.strokeStyle='rgba(60,100,150,.4)';x.beginPath();x.moveTo(px0,py0);x.lineTo(px0,py0+L+r);x.stroke();x.setLineDash([]);
+  x.strokeStyle='rgba(60,100,150,.25)';x.beginPath();x.arc(px0,py0,L,Math.PI/2-.26,Math.PI/2+.26);x.stroke();
+  x.strokeStyle='#4b5968';x.lineWidth=2;x.beginPath();x.moveTo(px0,py0);x.lineTo(bx,by);x.stroke();ball(x,bx,by,r,'#8a6339');tag(x,bn(p.m)+' gm',bx,by+r+10,'#5a2d00',10);
+  tag(x,'l = '+f(p.l,2)+' m',px0-48,py0+L/2,'#2b6cb0',12);
+  var gx=210,gy=40,gw=150,gh=150;axes(x,gx,gy,gw,gh,'l ➜','T ➜');x.strokeStyle='#e9a23b';x.lineWidth=3;x.beginPath();for(i=0;i<=gw;i+=3){var ll=.1+i/gw*2.9,Tt=2*Math.PI*Math.sqrt(ll/p.g);var yy=gy+gh-Tt/8*gh;if(i===0)x.moveTo(gx+i,yy);else x.lineTo(gx+i,yy);}x.stroke();
+  circ(x,0,gx+(p.l-.1)/2.9*gw,gy+gh-p.T/8*gh,6,RED,'#fff',2);tag(x,'T ∝ √l',gx+gw/2,gy+24,'#a25a14',13);
+  tag(x,'দোলন সংখ্যা: '+bn(Math.floor(P2.t/p.T)),280,230,NAVY,14);tag(x,'সময়: '+f(P2.t,1)+' s',280,252,'#5b7389',12);
+  });
+p2info();
+qgame('p2q','p2o','p2fb','p2sc',[
+ ['সরল দোলকের দোলনকাল কত?','T = 2π√(l/g)',['T = 2π√(g/l)','T = 2π l g','T = l/g'],'দৈর্ঘ্য l আর g-এর ওপর নির্ভর করে।'],
+ ['1 m সুতার দোলকের দোলনকাল প্রায় কত?','2.0 s',['1 s','0.5 s','10 s'],'T = 2π√(1/9.8) = 2.0 s।'],
+ ['ভারী পাথর ঝোলালে দোলনকাল কী হবে?','একই থাকবে',['বাড়বে','কমবে','শূন্য'],'দোলনকাল ভরের ওপর নির্ভর করে না।'],
+ ['সুতা লম্বা করলে দোলনকাল কী হয়?','বাড়ে',['কমে','একই থাকে','অসীম হয়'],'T ∝ √l, তাই l বাড়লে T বাড়ে।'],
+ ['দোলকের T মেপে আমরা কী বের করতে পারি?','g-এর মান',['ভর','তাপমাত্রা','ঘনত্ব'],'T = 2π√(l/g) থেকে g = 4π²l/T²।']]);
+
+/* ===== ল্যাব ৩: পর্যায়কাল, কম্পাঙ্ক, বিস্তার ===== */
+var F3={t:0};
+function f3info(){var fr=+$('f3k').value/10,a=+$('f3a').value/10;$('f3kv').textContent=bn(fr);$('f3av').textContent=bn(a);
+  $('f3t').innerHTML='কম্পাঙ্ক f = <b>'+f(fr,1)+' Hz</b> (প্রতি সেকেন্ডে '+f(fr,1)+' বার)<br>পর্যায়কাল T = 1/f = <b>'+f(1/fr,2)+' s</b><br>বিস্তার a = <b>'+f(a,1)+' cm</b> (সাম্যাবস্থা থেকে সর্বোচ্চ সরণ)<br><small>একটি পূর্ণ স্পন্দনে কণা একই দশায় ফিরে আসে। 2 → 3 → 4 → 5 হয়ে 2-তে ফিরলে এক স্পন্দন, কিন্তু 2 থেকে 4-এ গেলে হয় না, কারণ সেখানে দশা এক নয়।</small>';}
+on(['f3k','f3a'],f3info);
+DRAWS.push(function(){var x=ctxOf('f3c'),fr=+$('f3k').value/10,a=+$('f3a').value/10,i;F3.t+=DT;var A=a*10,w=2*Math.PI*fr,T=1/fr;
+  grad(x,0,0,380,300,'#f5f9fc','#e0eaf3');
+  var cx=44,cy=150;x.strokeStyle='#b8c4d0';x.lineWidth=2;x.setLineDash([4,4]);x.beginPath();x.moveTo(8,cy);x.lineTo(80,cy);x.stroke();x.setLineDash([]);
+  x.strokeStyle='#c0392b';x.lineWidth=2;x.beginPath();x.moveTo(94,cy-A);x.lineTo(94,cy+A);x.stroke();tag(x,'a',104,cy-A/2,'#c0392b',13,'left');
+  var yv=Math.sin(w*F3.t)*A;ball(x,cx,cy-yv,14,'#e9a23b');
+  var gx=124,gy=40,gw=240,gh=220,ppx=60,W=4;axes(x,gx,gy,gw,gh,'সময় ➜','অবস্থান');
+  x.strokeStyle='#2b6cb0';x.lineWidth=3;x.beginPath();for(i=0;i<=gw;i+=2){var tt=F3.t-W+i/gw*W;var yy=gy+gh/2-Math.sin(w*tt)*A;if(i===0)x.moveTo(gx+i,yy);else x.lineTo(gx+i,yy);}x.stroke();
+  circ(x,0,gx+gw,gy+gh/2-yv,6,RED,'#fff',2);x.strokeStyle='rgba(233,162,59,.6)';x.lineWidth=1.5;x.setLineDash([3,3]);x.beginPath();x.moveTo(cx+16,cy-yv);x.lineTo(gx+gw,cy-yv);x.stroke();x.setLineDash([]);
+  var n=Math.floor(F3.t*fr-.25),t1=(n+.25)/fr,t0=(n-1+.25)/fr,X1=gx+gw-(F3.t-t1)/W*gw,X0=gx+gw-(F3.t-t0)/W*gw;
+  if(X0>gx){x.strokeStyle='#1d7a6f';x.lineWidth=2.5;var yb=gy+gh/2-A-18;x.beginPath();x.moveTo(X0,yb);x.lineTo(X1,yb);x.stroke();x.beginPath();x.moveTo(X0,yb-5);x.lineTo(X0,yb+5);x.moveTo(X1,yb-5);x.lineTo(X1,yb+5);x.stroke();tag(x,'T = '+f(T,2)+' s',(X0+X1)/2,yb-10,'#1d7a6f',12);}
+  tag(x,'স্পন্দন সংখ্যা: '+bn(Math.floor(F3.t*fr)),60,40,NAVY,13,'center');
+  });
+f3info();
+qgame('f3q','f3o','f3fb','f3sc',[
+ ['কম্পাঙ্ক ও পর্যায়কালের সম্পর্ক কোনটি?','f = 1/T',['f = T','f = T²','f = 2T'],'কম্পাঙ্ক হলো প্রতি সেকেন্ডে পূর্ণ স্পন্দন সংখ্যা, T-এর উল্টো।'],
+ ['কম্পাঙ্কের একক কোনটি?','হার্টজ (Hz) বা s⁻¹',['মিটার','জুল','নিউটন'],'1 Hz = প্রতি সেকেন্ডে 1টি পূর্ণ স্পন্দন।'],
+ ['কম্পাঙ্ক 5 Hz হলে পর্যায়কাল কত?','0.2 s',['5 s','2 s','0.5 s'],'T = 1/5 = 0.2 s।'],
+ ['বিস্তার বলতে কী বোঝায়?','সাম্যাবস্থা থেকে সর্বোচ্চ সরণ',['দুই চূড়ার দূরত্ব','এক স্পন্দনের সময়','তরঙ্গের গতি'],'সরল স্পন্দিত গতিতে সাম্যাবস্থা থেকে সবচেয়ে বেশি যে সরণ হয় তাই বিস্তার।']]);
+
+/* ===== ল্যাব ৪: দড়িতে তরঙ্গ, প্রতিফলন ===== */
+var U4={m:0,t:0};
+function u4cfg(){var m=U4.m;return [{r:-1,tu:0,s:1},{r:1,tu:0,s:1},{r:-.25,tu:.75,s:.6},{r:.26,tu:1.26,s:1.7}][m];}
+function u4info(){var m=U4.m,tx=['দৃঢ় প্রান্ত: তরঙ্গ <b>উল্টে</b> (বিপরীত দশায়) ফিরে আসে। কোনো তরঙ্গ ওপারে যায় না।','মুক্ত প্রান্ত: তরঙ্গ <b>একই দিকে (উল্টে না গিয়ে)</b> প্রতিফলিত হয়।','সরু থেকে মোটা তারে: কিছুটা <b>উল্টো</b> হয়ে প্রতিফলিত, কিছুটা ছোট ও ধীর হয়ে প্রতিসরিত (বই চিত্র ৭.০২ক)।','মোটা থেকে সরু তারে: কিছুটা <b>সোজা</b> প্রতিফলিত, আর প্রতিসরিত তরঙ্গ বড় ও দ্রুত (বই চিত্র ৭.০২খ)।'][m];
+  $('u4t').innerHTML=tx+'<br><small>এক মাধ্যম থেকে আরেক মাধ্যমে যাওয়ার সময় তরঙ্গের কিছু অংশ ফিরে আসাকে প্রতিফলন, আর অন্য মাধ্যমে ঢোকাকে প্রতিসরণ বলে। শব্দের প্রতিধ্বনি আসলে প্রতিফলিত শব্দ। (ছবির তরঙ্গ সরলীকৃত মডেল।)</small>';}
+pills('u4p',function(k){U4.m=k;U4.t=0;u4info();});$('u4p').querySelector('button').classList.add('on');$('u4go').onclick=function(){U4.t=0;};
+function g4(u,s){u/=s;return Math.exp(-u*u/(2*15*15));}
+DRAWS.push(function(){var x=ctxOf('u4c'),cf=u4cfg(),m=U4.m,xb=250,v=70,x0=40,A=46,i,H=140;U4.t+=DT;var t=U4.t%7.5,c=x0+v*t;
+  grad(x,0,0,380,290,'#f5f9fc','#e0eaf3');
+  function Y(X){var y=0;if(X<=xb){y+=A*g4(X-c,1);y+=cf.r*A*g4(X-(2*xb-c),1);}else{y+=cf.tu*A*g4(X-(xb+(c-xb)*cf.s),cf.s);}return y;}
+  var th1=m===2?2.5:(m===3?6:4),th2=m===2?6:(m===3?2.5:4);
+  x.lineCap='round';x.lineJoin='round';
+  x.strokeStyle='#2b6cb0';x.lineWidth=th1;x.beginPath();for(i=10;i<=xb;i+=2){var yy=H-Y(i);if(i===10)x.moveTo(i,yy);else x.lineTo(i,yy);}x.stroke();
+  if(m>=2){x.strokeStyle='#c0392b';x.lineWidth=th2;x.beginPath();for(i=xb;i<=360;i+=2){yy=H-Y(i);if(i===xb)x.moveTo(i,yy);else x.lineTo(i,yy);}x.stroke();}
+  if(m===0){x.fillStyle='#6b4a2b';x.fillRect(xb,H-70,14,140);for(i=0;i<8;i++){x.strokeStyle='#4a2f10';x.lineWidth=2;x.beginPath();x.moveTo(xb+14,H-66+i*17);x.lineTo(xb+22,H-58+i*17);x.stroke();}}
+  if(m===1){x.strokeStyle='#4b5968';x.lineWidth=5;x.beginPath();x.moveTo(xb,H-70);x.lineTo(xb,H+70);x.stroke();circ(x,0,xb,H-Y(xb),6,'#e9a23b','#a25a14',2);}
+  if(m>=2){x.setLineDash([3,4]);x.strokeStyle='rgba(60,80,110,.5)';x.lineWidth=1.5;x.beginPath();x.moveTo(xb,H-60);x.lineTo(xb,H+60);x.stroke();x.setLineDash([]);tag(x,m===2?'সরু':'মোটা',130,H+78,'#2b6cb0',12);tag(x,m===2?'মোটা':'সরু',310,H+78,'#c0392b',12);}
+  var ph=c<xb-30?'আপতিত তরঙ্গ ➜':(c<xb+60?'প্রান্তে পৌঁছাচ্ছে…':(m===0?'⬅ উল্টো হয়ে ফিরছে':(m===1?'⬅ সোজা ফিরছে':'⬅ প্রতিফলিত  |  প্রতিসরিত ➜')));
+  tag(x,ph,190,36,'#c0392b',14);
+  x.fillStyle='#e9a23b';rr(x,12,H-9,16,18,3);x.fill();tag(x,'হাত',20,H+22,'#5b7389',10);
+  var bx=20,by=205;x.fillStyle='#fff';rr(x,10,by-2,360,70,8);x.fill();x.strokeStyle='#cfd9e1';x.stroke();tag(x,'তরঙ্গের বেগ নির্ভর করে মাধ্যমের ওপর, কম্পাঙ্ক নয়',190,by+14,'#1f3a5f',12);tag(x,'নীল = প্রথম মাধ্যম, '+(m>=2?'লাল = দ্বিতীয় মাধ্যম':'প্রান্ত = '+(m===0?'দেয়াল':'মুক্ত')),190,by+38,'#5b7389',12);
+  });
+u4info();
+qgame('u4q','u4o','u4fb','u4sc',[
+ ['দৃঢ় প্রান্ত থেকে তরঙ্গ ফিরে এলে কী হয়?','উল্টে যায়',['সোজা থাকে','ভেঙে যায়','গতি দ্বিগুণ হয়'],'দৃঢ় প্রান্তে প্রতিফলিত তরঙ্গের দশা উল্টে যায়।'],
+ ['এক মাধ্যম থেকে আরেক মাধ্যমে তরঙ্গের প্রবেশকে কী বলে?','প্রতিসরণ',['প্রতিফলন','উপরিপাতন','প্রতিধ্বনি'],'অন্য মাধ্যমে ঢোকা অংশই প্রতিসরণ।'],
+ ['শব্দের প্রতিধ্বনি আসলে কী?','প্রতিফলিত শব্দ',['নতুন শব্দ','প্রতিসরিত শব্দ','আলো'],'শব্দ কোনো তলে আঘাত করে ফিরে এলে আমরা প্রতিধ্বনি শুনি।'],
+ ['তরঙ্গের বেগ কিসের ওপর নির্ভর করে?','মাধ্যমের প্রকৃতির ওপর',['শুধু কম্পাঙ্কের ওপর','শুধু বিস্তারের ওপর','রঙের ওপর'],'যে মাধ্যমের মধ্য দিয়ে প্রবাহিত হয় তার প্রকৃতির ওপর বেগ নির্ভর করে।']]);
+
+/* ===== ল্যাব ৫: উপরিপাতন ===== */
+var V5={t:0};
+function v5info(){var A=+$('v5a').value,B=+$('v5b').value,p=+$('v5k').value,R=Math.sqrt(A*A+B*B+2*A*B*Math.cos(p*Math.PI/180));$('v5av').textContent=bn(A);$('v5bv').textContent=bn(B);$('v5kv').textContent=bn(p);
+  var st=R>A+B-.2?'<b style="color:#1d7a6f">সর্বোচ্চ বর্ধক ব্যতিচার: বড় তরঙ্গ!</b>':(R<.2?'<b style="color:#c0392b">পুরোপুরি নিঃশেষ! তরঙ্গ নেই।</b>':(R<Math.abs(A-B)+.25?'প্রায় বিনাশী: তরঙ্গ ছোট হয়ে গেছে।':'আংশিক যোগ।'));
+  $('v5t').innerHTML='প্রথম বিস্তার '+bn(A)+', দ্বিতীয় '+bn(B)+', দশা পার্থক্য '+bn(p)+'°<br>যোগফল তরঙ্গের বিস্তার = <b>'+f(R,2)+'</b><br>'+st+'<br><small>উপরিপাতন: দুটি তরঙ্গ একে অপরকে বড়ও করতে পারে, আবার ধ্বংসও করতে পারে। (সূত্রটি আমার যোগ করা, বইয়ে ছবি দিয়ে দেখানো।)</small>';}
+pills('v5p',function(k){var v=[0,180,90][k];$('v5k').value=v;v5info();});$('v5p').querySelector('button').classList.add('on');on(['v5a','v5b','v5k'],v5info);
+DRAWS.push(function(){var x=ctxOf('v5c'),A=+$('v5a').value,B=+$('v5b').value,p=+$('v5k').value*Math.PI/180,i;V5.t+=DT;var k=2*Math.PI/130,w=k*50,s=8;
+  grad(x,0,0,380,320,'#f5f9fc','#e0eaf3');
+  function band(cy,fn,col,lab,hh){hh=hh||44;x.fillStyle='#fff';rr(x,8,cy-hh,364,hh*2,8);x.fill();x.strokeStyle='#e1e8ee';x.lineWidth=1.5;x.stroke();x.strokeStyle='#e1e8ee';x.beginPath();x.moveTo(8,cy);x.lineTo(372,cy);x.stroke();x.strokeStyle=col;x.lineWidth=3;x.beginPath();for(i=10;i<=370;i+=2){var yy=cy-fn(i)*s;if(i===10)x.moveTo(i,yy);else x.lineTo(i,yy);}x.stroke();tag(x,lab,16,cy-hh+10,col,12,'left');}
+  var f1=function(X){return A*Math.sin(k*X-w*V5.t);},f2=function(X){return B*Math.sin(k*X-w*V5.t+p);};
+  band(48,f1,'#2b6cb0','তরঙ্গ ১');band(138,f2,'#e9822b','তরঙ্গ ২');band(264,function(X){return f1(X)+f2(X);},'#1d7a6f','যোগফল',84);
+  x.strokeStyle='rgba(30,120,100,.35)';x.lineWidth=1.5;x.setLineDash([3,4]);x.beginPath();x.moveTo(8,184);x.lineTo(372,184);x.stroke();x.setLineDash([]);tag(x,'⬇ যোগ করলে',190,172,'#1d7a6f',12);
+  });
+v5info();
+qgame('v5q','v5o','v5fb','v5sc',[
+ ['দুটি সমান ও সমদশার তরঙ্গ যোগ হলে কী হয়?','দ্বিগুণ বিস্তারের তরঙ্গ',['শূন্য তরঙ্গ','অর্ধেক বিস্তার','কিছুই হয় না'],'সমদশায় বিস্তার যোগ হয়, তাই বড় তরঙ্গ।'],
+ ['সমান বিস্তারের দুটি তরঙ্গের দশা বিপরীত হলে?','একে অপরকে নিঃশেষ করে',['দ্বিগুণ হয়','একই থাকে','দিক পাল্টায়'],'চূড়া ও খাদ মিলে শূন্য, তরঙ্গ ধ্বংস হয়ে যায়।'],
+ ['তরঙ্গের এই বৈশিষ্ট্যের নাম কী?','উপরিপাতন',['প্রতিফলন','প্রতিসরণ','বিচ্ছুরণ'],'দুটি তরঙ্গ একই বিন্দুতে এলে যোগ হওয়াকে উপরিপাতন বলে।'],
+ ['উপরিপাতনে তরঙ্গ দুটির মান কীভাবে মেশে?','প্রতি বিন্দুতে মান যোগ হয়',['গুণ হয়','ভাগ হয','বাদ যায়'.replace('বাদ যায','বিয়োগ হয')],'একটি তরঙ্গের মান ধনাত্মক ও অন্যটির ঋণাত্মক হলে যোগফল কমে যায়।']]);
+
+
+/* ===== ল্যাব ৬: অনুদৈর্ঘ্য ও অনুপ্রস্থ ===== */
+var L6={t:0};
+function l6info(){var lam=+$('l6k').value;$('l6kv').textContent=bn(lam);$('l6fv').textContent=bn(+$('l6f').value);
+  $('l6t').innerHTML='<b>অনুদৈর্ঘ্য (শব্দ):</b> কণার কম্পনের দিক = তরঙ্গের গতির দিক। কণাগুলো কোথাও ঘন (সংকোচন), কোথাও পাতলা (প্রসারণ)।<br><b>অনুপ্রস্থ (দড়ির ঢেউ, পানির ঢেউ):</b> কণার কম্পনের দিক তরঙ্গের গতির দিকের সাথে লম্ব।<br>তরঙ্গদৈর্ঘ্য λ = এক পর্যায়কালে তরঙ্গ যতটুকু যায়।<br><small>লাল কণাটি শুধু নিজের জায়গায় কাঁপে, সামনে যায় না।</small>';}
+on(['l6k','l6f'],l6info);
+DRAWS.push(function(){var x=ctxOf('l6c'),lam=+$('l6k').value,sp=+$('l6f').value/100,i;L6.t+=DT;var k=2*Math.PI/lam,w=k*60*sp*1.4,N=36,amp=14;
+  grad(x,0,0,380,300,'#f5f9fc','#e0eaf3');
+  x.fillStyle='#fff';rr(x,8,8,364,138,8);x.fill();x.strokeStyle='#cfd9e1';x.stroke();rr(x,8,154,364,138,8);x.fill();x.stroke();
+  tag(x,'অনুদৈর্ঘ্য তরঙ্গ (শব্দ)',20,22,NAVY,13,'left');tag(x,'অনুপ্রস্থ তরঙ্গ (দড়ি)',20,168,NAVY,13,'left');
+  for(i=0;i<N;i++){var X0=22+i*(336/(N-1)),d=amp*Math.sin(k*X0-w*L6.t),X=X0+d,dens=Math.cos(k*X0-w*L6.t);
+    for(var r=-2;r<=2;r++){var col=i===12&&r===0?RED:hm('#7aa7e0','#2b4f9c',(1-dens)/2);ball(x,X,76+r*14,i===12&&r===0?6.5:4.6,col);}}
+  x.strokeStyle=RED;x.lineWidth=2;x.beginPath();x.moveTo(22+12*(336/(N-1))-amp,126);x.lineTo(22+12*(336/(N-1))+amp,126);x.stroke();tag(x,'কণার কম্পন ↔',22+12*(336/(N-1)),138,RED,11);
+  var bx0=22,bx1=22+lam;x.strokeStyle='#1d7a6f';x.lineWidth=2;x.beginPath();x.moveTo(300-lam,47);x.lineTo(300,47);x.stroke();tag(x,'λ',300-lam/2,38,'#1d7a6f',13);
+  arrow(x,330,128,362,128,'#c0392b',3);tag(x,'তরঙ্গ ➜',336,140,'#c0392b',10,'left');
+  var cy=232;x.strokeStyle='#b8c4d0';x.lineWidth=1.5;x.beginPath();x.moveTo(14,cy);x.lineTo(366,cy);x.stroke();
+  x.strokeStyle='#2b6cb0';x.lineWidth=3;x.beginPath();for(i=0;i<=345;i+=3){var yy=cy-amp*2*Math.sin(k*(i)-w*L6.t);if(i===0)x.moveTo(20+i,yy);else x.lineTo(20+i,yy);}x.stroke();
+  for(i=0;i<N;i++){var X1=22+i*(336/(N-1)),yv=amp*2*Math.sin(k*(X1-20)-w*L6.t);ball(x,X1,cy-yv,i===12?6.5:4.2,i===12?RED:'#7aa7e0');}
+  x.strokeStyle=RED;x.lineWidth=2;var cx2=22+12*(336/(N-1)),yv2=amp*2*Math.sin(k*(cx2-20)-w*L6.t);x.beginPath();x.moveTo(cx2,cy-amp*2);x.lineTo(cx2,cy+amp*2);x.stroke();tag(x,'কণার কম্পন ↕',cx2+46,cy+amp*2+8,RED,11);
+  tag(x,'λ',300-lam/2,cy-amp*2-12,'#1d7a6f',13);x.strokeStyle='#1d7a6f';x.beginPath();x.moveTo(300-lam,cy-amp*2-2);x.lineTo(300,cy-amp*2-2);x.stroke();
+  });
+l6info();
+qgame('l6q','l6o','l6fb','l6sc',[
+ ['শব্দ কোন ধরনের তরঙ্গ?','অনুদৈর্ঘ্য',['অনুপ্রস্থ','তড়িৎচৌম্বক','বেতার'],'শব্দে কণার কম্পনের দিক ও তরঙ্গের গতির দিক একই।'],
+ ['পানির ঢেউ কোন ধরনের তরঙ্গ?','অনুপ্রস্থ',['অনুদৈর্ঘ্য','শব্দ','আলট্রাসাউন্ড'],'পানির কণা ওপর-নিচে কাঁপে, তরঙ্গ সামনে যায়, তাই কম্পন ও গতি লম্ব।'],
+ ['তরঙ্গদৈর্ঘ্য কাকে বলে?','এক পর্যায়কালে তরঙ্গ যে দূরত্ব যায়',['তরঙ্গের উচ্চতা','কম্পনের সংখ্যা','বেগের অর্ধেক'],'পরপর একই দশার দুটি বিন্দুর দূরত্বই তরঙ্গদৈর্ঘ্য λ।'],
+ ['তরঙ্গ প্রবাহের সময় মাধ্যমের কণা কী করে?','নিজের জায়গায় থেকে স্পন্দিত হয়',['তরঙ্গের সাথে চলে যায়','স্থির থাকে','উধাও হয়'],'কণা শুধু স্পন্দিত হয়, নিজেরা তরঙ্গের দিকে সরে যায় না।'],
+ ['যান্ত্রিক তরঙ্গ প্রবাহের জন্য কী দরকার?','মাধ্যম',['শূন্যস্থান','আলো','চুম্বক'],'বায়বীয়, তরল বা কঠিন মাধ্যম ছাড়া যান্ত্রিক তরঙ্গ চলে না।']]);
+
+/* ===== ল্যাব ৭: v = fλ ===== */
+var M7={m:0,t:0,V:[334,1493,5130],N:['বাতাস','পানি','লোহা']};
+function m7p(){var f=+$('m7k').value*100,v=M7.V[M7.m];return {f:f,v:v,lam:v/f};}
+function m7info(){var p=m7p();$('m7kv').textContent=bn(p.f/100);
+  $('m7t').innerHTML='মাধ্যম: <b>'+M7.N[M7.m]+'</b>, বেগ v = '+bn(p.v)+' m/s<br>কম্পাঙ্ক f = <b>'+fmtN(p.f)+' Hz</b><br>তরঙ্গদৈর্ঘ্য λ = v ÷ f = '+bn(p.v)+' ÷ '+fmtN(p.f)+' = <b>'+f(p.lam,3)+' m</b><br><small>বইয়ের উদাহরণ (1 kHz): বাতাসে 0.334 m, পানিতে 1.49 m, লোহায় 5.13 m। মাধ্যম বদলালে f একই, v ও λ বদলায়।</small>';}
+pills('m7p',function(k){M7.m=k;m7info();});$('m7p').querySelector('button').classList.add('on');on(['m7k'],m7info);
+DRAWS.push(function(){var x=ctxOf('m7c'),p=m7p(),i;M7.t+=DT;
+  grad(x,0,0,380,300,'#f5f9fc','#e0eaf3');
+  var cols=['#cfe8f7','#8fc8ee','#9aa5b1'],gx=20,gy=40,gw=340,gh=120,win=2;
+  x.fillStyle=cols[M7.m];rr(x,gx,gy,gw,gh,10);x.fill();x.strokeStyle='#5b7389';x.lineWidth=2;x.stroke();
+  tag(x,M7.N[M7.m]+' (২ m অংশ)',gx+gw/2,24,NAVY,14);
+  var k=2*Math.PI/(p.lam/win*gw),pxs=Math.min(p.v,150)*.6;var w=2*Math.PI*Math.min(p.f/400,1.5);
+  x.strokeStyle='#1f3a5f';x.lineWidth=3;x.beginPath();for(i=0;i<=gw;i+=2){var yy=gy+gh/2-34*Math.sin(k*i-w*M7.t);if(i===0)x.moveTo(gx+i,yy);else x.lineTo(gx+i,yy);}x.stroke();
+  var cnt=Math.min(p.f/400,1.5);
+  var lw=p.lam/win*gw;if(lw<gw){x.strokeStyle='#c0392b';x.lineWidth=2.5;x.beginPath();x.moveTo(gx+10,gy+gh-14);x.lineTo(gx+10+Math.min(lw,gw-20),gy+gh-14);x.stroke();tag(x,'λ = '+f(p.lam,2)+' m',gx+10+Math.min(lw,gw-20)/2,gy+gh-28,'#c0392b',13);}else tag(x,'λ = '+f(p.lam,2)+' m (২ m-এর চেয়ে বেশি)',gx+gw/2,gy+gh-18,'#c0392b',13);
+  x.fillStyle='#fff';rr(x,20,180,340,100,10);x.fill();x.strokeStyle='#cfd9e1';x.stroke();
+  tag(x,'v = f × λ',190,200,NAVY,20);tag(x,bn(p.v)+' m/s = '+fmtN(p.f)+' Hz × '+f(p.lam,3)+' m',190,232,'#c0392b',16);
+  tag(x,'f একই থাকে, v বাড়লে λ বাড়ে',190,260,'#5b7389',12);
+  });
+m7info();
+qgame('m7q','m7o','m7fb','m7sc',[
+ ['তরঙ্গের বেগের সূত্র কোনটি?','v = f λ',['v = f/λ','v = λ/T²','v = f + λ'],'বেগ = কম্পাঙ্ক × তরঙ্গদৈর্ঘ্য।'],
+ ['1 kHz শব্দের তরঙ্গদৈর্ঘ্য বাতাসে (334 m/s) কত?','0.334 m',['3.34 m','334 m','0.0334 m'],'λ = v/f = 334 ÷ 1000 = 0.334 m।'],
+ ['মাধ্যম বদলালে কোনটি বদলায় না?','কম্পাঙ্ক',['তরঙ্গদৈর্ঘ্য','বেগ','কিছুই নয়'],'উৎসের কম্পাঙ্ক স্থির, তাই কম্পাঙ্ক বদলায় না, বেগ ও λ বদলায়।'],
+ ['পানিতে (1493 m/s) 1 kHz শব্দের λ কত?','1.49 m',['0.334 m','5.13 m','14.9 m'],'λ = 1493 ÷ 1000 = 1.49 m।'],
+ ['1 m তরঙ্গদৈর্ঘ্য, 5 Hz হলে বেগ কত?','5 m/s',['0.2 m/s','6 m/s','1 m/s'],'v = fλ = 5 × 1 = 5 m/s।']]);
+
+/* ===== ল্যাব ৮: লেখচিত্র ===== */
+var R8={t:0};
+function r8p(){return {a:+$('r8a').value/100,lam:+$('r8l').value/10,T:+$('r8k').value/10};}
+function r8info(){var p=r8p(),fr=1/p.T,v=fr*p.lam;$('r8av').textContent=f(p.a,2);$('r8lv').textContent=f(p.lam,1);$('r8kv').textContent=f(p.T,1);
+  $('r8t').innerHTML='অবস্থান-লেখচিত্র থেকে: বিস্তার a = <b>'+f(p.a,2)+' m</b>, তরঙ্গদৈর্ঘ্য λ = <b>'+f(p.lam,1)+' m</b><br>সময়-লেখচিত্র থেকে: পর্যায়কাল T = <b>'+f(p.T,1)+' s</b> ➜ f = 1/T = <b>'+f(fr,1)+' Hz</b><br>বেগ v = f λ = '+f(fr,1)+' × '+f(p.lam,1)+' = <b>'+f(v,1)+' m/s</b><br><b>দশা:</b> A ও C-তে দশা এক। A ও B-তে মান সমান কিন্তু দশা বিপরীত। D ও E-তে মান সমান কিন্তু দশা এক নয়।<br><small>শুধু একটি লেখচিত্র থেকে v বের করা যায় না। বইয়ের উদাহরণ: a = 0.1 m, λ = 1 m, T = 0.2 s ➜ f = 5 Hz, v = 5 m/s।</small>';}
+pills('r8p',function(k){var v=[[10,10,2],[20,25,6],[8,6,1]][k];$('r8a').value=v[0];$('r8l').value=v[1];$('r8k').value=v[2];r8info();});$('r8p').querySelector('button').classList.add('on');on(['r8a','r8l','r8k'],r8info);
+DRAWS.push(function(){var x=ctxOf('r8c'),p=r8p(),i;R8.t+=DT;
+  grad(x,0,0,380,330,'#f5f9fc','#e0eaf3');
+  var A=p.a/.2*40;
+  var gx=40,gy=14,gw=320,gh=130;axes(x,gx,gy,gw,gh,'দূরত্ব (m) ➜','');tag(x,'অবস্থান ➜ বিস্তার',gx+4,gy+10,'#5b7389',10,'left');
+  var kk=2*Math.PI/(gw/2);x.strokeStyle='#2b6cb0';x.lineWidth=3;x.beginPath();for(i=0;i<=gw;i+=2){var yy=gy+gh/2-A*Math.sin(kk*i-Math.PI*2*R8.t/p.T*.0);if(i===0)x.moveTo(gx+i,yy);else x.lineTo(gx+i,yy);}x.stroke();
+  x.strokeStyle='#c0392b';x.lineWidth=2;x.beginPath();x.moveTo(gx+gw/4,gy+gh/2);x.lineTo(gx+gw/4,gy+gh/2-A);x.stroke();tag(x,'a = '+f(p.a,2)+' m',gx+gw/4+4,gy+gh/2-A/2,'#c0392b',11,'left');
+  x.strokeStyle='#1d7a6f';x.beginPath();x.moveTo(gx,gy+gh-10);x.lineTo(gx+gw/2,gy+gh-10);x.stroke();tag(x,'λ = '+f(p.lam,1)+' m',gx+gw/4,gy+gh-22,'#1d7a6f',12);
+  var P=[['A',30],['B',150],['C',390],['D',210],['E',330]];P.forEach(function(q){var ph=q[1]*Math.PI/180,X=gx+ph/(2*Math.PI)*(gw/2),Y=gy+gh/2-A*Math.sin(ph);if(X<gx+gw){circ(x,0,X,Y,5.5,'#e9822b','#fff',2);tag(x,q[0],X,Y+(Y<gy+gh/2?-13:13),'#a25a14',13);}});
+  var hy=170,hh=130;axes(x,gx,hy,gw,hh,'সময় (s) ➜','');tag(x,'সরণ ➜',gx+4,hy+10,'#5b7389',10,'left');
+  var kt=2*Math.PI/(gw/2);x.strokeStyle='#e9822b';x.lineWidth=3;x.beginPath();for(i=0;i<=gw;i+=2){yy=hy+hh/2-A*Math.sin(kt*i);if(i===0)x.moveTo(gx+i,yy);else x.lineTo(gx+i,yy);}x.stroke();
+  x.strokeStyle='#1d7a6f';x.lineWidth=2;x.beginPath();x.moveTo(gx,hy+hh-10);x.lineTo(gx+gw/2,hy+hh-10);x.stroke();tag(x,'T = '+f(p.T,1)+' s',gx+gw/4,hy+hh-22,'#1d7a6f',12);
+  var u=(R8.t%p.T)/p.T,ang=u*Math.PI*2;circ(x,0,gx+u*gw/2,hy+hh/2-A*Math.sin(ang),6,RED,'#fff',2);
+  tag(x,'v = fλ = '+f(p.lam/p.T,1)+' m/s',190,hy+hh+22,'#c0392b',16);
+  });
+r8info();
+qgame('r8q','r8o','r8fb','r8sc',[
+ ['অবস্থান-লেখচিত্র থেকে কী কী বের করা যায়?','বিস্তার ও তরঙ্গদৈর্ঘ্য',['পর্যায়কাল','কম্পাঙ্ক','বেগ'],'অবস্থানের সাপেক্ষে লেখচিত্রে a ও λ পাওয়া যায়, বেগ নয়।'],
+ ['সময়-লেখচিত্র থেকে প্রথমে কী বের হয়?','পর্যায়কাল',['তরঙ্গদৈর্ঘ্য','বেগ','ভর'],'এক পূর্ণ স্পন্দনের সময় থেকে T, তারপর f = 1/T।'],
+ ['T = 0.2 s হলে কম্পাঙ্ক কত?','5 Hz',['0.2 Hz','2 Hz','50 Hz'],'f = 1/0.2 = 5 Hz।'],
+ ['λ = 1 m, f = 5 Hz হলে v কত?','5 m/s',['0.2 m/s','6 m/s','50 m/s'],'v = fλ = 5 m/s।'],
+ ['লেখচিত্রে A ও C বিন্দুর দশা কেমন?','এক',['বিপরীত','কোনো সম্পর্ক নেই','৯০° ব্যবধান'],'A ও C-তে মান ও গতির দিক একই, তাই দশা এক।']]);
+
+/* ===== ল্যাব ৯: বেলজারে ঘণ্টা ===== */
+var B9={t:0,ps:[]};
+for(var qi9=0;qi9<40;qi9++)B9.ps.push({x:rnd(120,230),y:rnd(90,230),vx:rnd(-1,1),vy:rnd(-1,1)});
+function b9info(){var pm=+$('b9k').value,air=100-pm;$('b9kv').textContent=bn(pm);
+  $('b9t').innerHTML='বেলজারে বায়ু আছে: <b>'+bn(air)+'%</b><br>বাইরে শোনা শব্দের তীব্রতা: <b style="color:'+(air>50?'#1d7a6f':'#c0392b')+'">'+(air<2?'কিছুই না (নিস্তব্ধ)':bn(Math.round(air*air/100))+'%')+'</b><br>'+(air<2?'<b>বায়ুশূন্য! ঘণ্টা কাঁপছে, কিন্তু শব্দ বাইরে আসছে না।</b>':'শব্দ তরঙ্গ বায়ুর কণার কম্পনের মধ্য দিয়ে কানে পৌঁছাচ্ছে।')+'<br><small>তড়িৎচৌম্বক তরঙ্গের (আলো ইত্যাদি) জন্য মাধ্যম লাগে না, কিন্তু শব্দের মতো যান্ত্রিক তরঙ্গের জন্য লাগে।</small>';}
+on(['b9k'],b9info);
+DRAWS.push(function(){var x=ctxOf('b9c'),pm=+$('b9k').value,air=(100-pm)/100,i,p;B9.t+=DT;
+  grad(x,0,0,380,300,'#f5f9fc','#dfe8f1');
+  x.fillStyle='#d9c7a3';x.fillRect(80,250,190,12);x.fillStyle='#b9a37a';x.fillRect(60,262,230,8);
+  x.fillStyle='rgba(190,225,250,.35)';x.beginPath();x.moveTo(100,250);x.lineTo(100,110);x.quadraticCurveTo(100,66,175,66);x.quadraticCurveTo(250,66,250,110);x.lineTo(250,250);x.closePath();x.fill();x.strokeStyle='#6b829a';x.lineWidth=3;x.stroke();
+  var n=Math.round(air*40);for(i=0;i<n;i++){p=B9.ps[i];p.x+=p.vx;p.y+=p.vy;if(p.x<110||p.x>240)p.vx*=-1;if(p.y<90||p.y>240)p.vy*=-1;circ(x,0,p.x,p.y,2.6,'rgba(60,120,190,.65)',null);}
+  var sw=Math.sin(B9.t*34)*5;x.fillStyle='#8896a5';x.fillRect(172,66,6,40);x.strokeStyle='#4b5968';x.lineWidth=2;x.beginPath();x.moveTo(175,106);x.lineTo(175,196);x.stroke();
+  x.fillStyle='#e9a23b';x.beginPath();x.arc(175+sw*.3,214,24,Math.PI,0);x.lineTo(199+sw*.3,222);x.lineTo(151+sw*.3,222);x.closePath();x.fill();x.strokeStyle='#a25a14';x.stroke();circ(x,0,175+sw,230,6,'#4b5968',null);
+  tag(x,'ঘণ্টা কাঁপছে ('+(sw>0?'›':'‹')+')',175,52,NAVY,12);
+  for(i=0;i<3;i++){var u=((B9.t*.8+i/3)%1),rr0=40+u*100;if(air>.01){x.strokeStyle='rgba(30,120,100,'+((1-u)*air)+')';x.lineWidth=3;x.beginPath();x.arc(175,230,rr0,-.8,.8);x.stroke();}}
+  var ex=320,ey=170;ball(x,ex,ey,16,'#f2c9a0');x.fillStyle='#f2c9a0';x.beginPath();x.ellipse(ex-14,ey,5,9,0,0,7);x.fill();tag(x,'👂',ex+2,ey,'#000',16);
+  tag(x,'শব্দ: '+(air<.02?'নেই':bn(Math.round(air*air*100))+'%'),ex,ey+34,air<.02?'#c0392b':'#1d7a6f',14);
+  tag(x,'🔌 পাম্প',175,288,'#5b7389',12);
+  });
+b9info();
+qgame('b9q','b9o','b9fb','b9sc',[
+ ['বেলজার বায়ুশূন্য করলে বাইরে ঘণ্টার শব্দ শোনা যায় না কেন?','শব্দের জন্য মাধ্যম দরকার',['ঘণ্টা থেমে যায়','শব্দ আলোর মতো','কান কাজ করে না'],'শব্দ যান্ত্রিক তরঙ্গ, তাই বায়ু (মাধ্যম) না থাকলে প্রবাহিত হয় না।'],
+ ['যান্ত্রিক তরঙ্গ কাকে বলে?','যার প্রবাহে মাধ্যম লাগে',['যার মাধ্যম লাগে না','শুধু আলো','চৌম্বক তরঙ্গ'],'বায়বীয়, তরল বা কঠিন মাধ্যম প্রয়োজন এমন তরঙ্গ যান্ত্রিক তরঙ্গ।'],
+ ['কোনটির জন্য মাধ্যম লাগে না?','আলোর তরঙ্গ',['শব্দ','পানির ঢেউ','দড়ির তরঙ্গ'],'আলো তড়িৎচৌম্বকীয় তরঙ্গ, শূন্যেও চলে।'],
+ ['শব্দ কোন কোন মাধ্যমে সঞ্চালিত হয়?','কঠিন, তরল ও গ্যাস',['শুধু গ্যাস','শুধু কঠিন','শুধু শূন্য'],'তরল ও কঠিনের ভেতর দিয়েও শব্দ প্রবাহিত হয়।']]);
+
+
+/* ===== ল্যাব ১০: প্রতিধ্বনি ===== */
+var E10={s:-1,go:false};
+function e10p(){var d=+$('e10k').value/10,T=+$('e10w').value,v=332*Math.sqrt((273+T)/273),t=2*d/v;return {d:d,T:T,v:v,t:t,dmin:.1*v/2};}
+function e10info(){var p=e10p(),ok=p.t>=.1-1e-9;$('e10kv').textContent=f(p.d,2);$('e10wv').textContent=bn(p.T);
+  $('e10t').innerHTML='শব্দের বেগ v = 332√((273 + T)/273) = <b>'+f(p.v,1)+' m/s</b> ('+bn(p.T)+'°C-এ)<br>যাওয়া-আসা দূরত্ব = 2d = '+f(2*p.d,2)+' m, সময় t = 2d/v = <b>'+f(p.t,4)+' s</b><br>'+(ok?'<b style="color:#1d7a6f">t ≥ 0.1 s ✅ প্রতিধ্বনি আলাদা করে শোনা যাবে।</b>':'<b style="color:#c0392b">t < 0.1 s ❌ প্রতিধ্বনি মিশে যাবে, আলাদা শোনা যাবে না।</b>')+'<br>এই তাপমাত্রায় প্রতিফলকের ন্যূনতম দূরত্ব = 0.1 × v ÷ 2 = <b>'+f(p.dmin,2)+' m</b><br><small>কানে অনুভূতি 0.1 s পর্যন্ত থাকে। (0°C-এ v = 332 m/s বইয়ের প্রশ্ন থেকে নিয়েছি; v ∝ √T বইয়ে আছে।)</small>';}
+pills('e10p',function(k){var v=[[172.5,10],[172.5,30],[166,0]][k];$('e10k').value=v[0]*10;$('e10w').value=v[1];E10.s=0;E10.go=true;e10info();});$('e10p').querySelector('button').classList.add('on');
+on(['e10k','e10w'],function(){E10.s=0;E10.go=true;e10info();});$('e10go').onclick=function(){E10.s=0;E10.go=true;};
+DRAWS.push(function(){var x=ctxOf('e10c'),p=e10p(),i;if(E10.go){E10.s+=DT/14;}
+  grad(x,0,0,380,300,'#e8f3fb','#f4efe3');
+  var x0=40,ppm=(310-x0)/60,wx=x0+p.d*ppm,gy=190;
+  x.fillStyle='#c8d6a4';x.fillRect(0,gy,380,110);
+  x.fillStyle='#b05a3c';x.fillRect(wx,gy-84,22,84);for(i=0;i<6;i++){x.strokeStyle='#7e3a24';x.lineWidth=1;x.beginPath();x.moveTo(wx,gy-84+i*14);x.lineTo(wx+22,gy-84+i*14);x.stroke();}
+  person(x,x0,gy,'#2b6cb0');
+  var sr=E10.s*p.v*ppm;
+  if(E10.go||E10.s>0){
+    var out=Math.min(sr,p.d*ppm),back=sr-p.d*ppm;
+    x.lineWidth=3;if(sr<p.d*ppm){x.strokeStyle='rgba(30,120,100,.8)';x.beginPath();x.arc(x0,gy-20,out,-.35,.35);x.stroke();x.beginPath();x.arc(x0,gy-20,out*.7,-.35,.35);x.stroke();}
+    else if(back>0&&back<p.d*ppm){x.strokeStyle='rgba(192,57,43,.85)';x.beginPath();x.arc(wx,gy-20,back,Math.PI-.45,Math.PI+.45);x.stroke();x.beginPath();x.arc(wx,gy-20,back*.7,Math.PI-.45,Math.PI+.45);x.stroke();}
+    else if(back>=p.d*ppm){tag(x,p.t>=.1?'👂 প্রতিধ্বনি শোনা গেল!':'👂 আলাদা করে শোনা গেল না',190,50,p.t>=.1?'#1d7a6f':'#c0392b',16);}
+    if(sr<p.d*ppm)tag(x,'📣 শব্দ যাচ্ছে ➜',190,50,'#1d7a6f',14);else if(back>0&&back<p.d*ppm)tag(x,'⬅ প্রতিফলিত শব্দ ফিরছে',190,50,'#c0392b',14);
+  }
+  tag(x,'d = '+f(p.d,2)+' m',(x0+wx)/2,gy+22,'#1f3a5f',13);x.strokeStyle='#1f3a5f';x.lineWidth=1.5;x.beginPath();x.moveTo(x0,gy+10);x.lineTo(wx,gy+10);x.stroke();
+  var bx=20,by=232,bw=340;x.fillStyle='#fff';rr(x,bx-8,by-22,bw+16,76,8);x.fill();x.strokeStyle='#cfd9e1';x.lineWidth=1.5;x.stroke();
+  x.fillStyle='#e8eef3';x.fillRect(bx,by+8,bw,12);var maxT=.5,tw=Math.min(p.t/maxT,1)*bw;x.fillStyle=p.t>=.1?'#1d7a6f':'#c0392b';x.fillRect(bx,by+8,tw,12);
+  x.strokeStyle='#1f3a5f';x.lineWidth=2.5;var th=.1/maxT*bw;x.beginPath();x.moveTo(bx+th,by+2);x.lineTo(bx+th,by+28);x.stroke();tag(x,'0.1 s',bx+th,by+38,'#1f3a5f',12);
+  tag(x,'t = '+f(p.t,3)+' s',bx+Math.max(tw,60),by-8,p.t>=.1?'#1d7a6f':'#c0392b',13,'right');tag(x,'০',bx,by+38,'#5b7389',10);tag(x,'0.5 s',bx+bw,by+38,'#5b7389',10,'right');
+  });
+e10info();
+qgame('e10q','e10o','e10fb','e10sc',[
+ ['প্রতিধ্বনি কাকে বলে?','প্রতিফলিত শব্দকে আলাদা করে শোনা',['দ্বিগুণ শব্দ','উচ্চ কম্পাঙ্কের শব্দ','শব্দের বেগ'],'শব্দ কোনো তলে প্রতিফলিত হয়ে ফিরে এসে আলাদা শোনা গেলে তাকে প্রতিধ্বনি বলে।'],
+ ['প্রতিধ্বনি আলাদা শুনতে ন্যূনতম সময়ের ব্যবধান কত?','0.1 s',['1 s','0.01 s','0.5 s'],'কানে শব্দের অনুভূতি 0.1 s পর্যন্ত থাকে।'],
+ ['330 m/s বেগে ন্যূনতম কত দূরে প্রতিফলক দরকার?','প্রায় 16.5 m',['33 m','165 m','1.65 m'],'d = 0.1 × 330 ÷ 2 = 16.5 m।'],
+ ['তাপমাত্রা বাড়লে প্রতিধ্বনির সময় কী হয়?','কমে',['বাড়ে','একই থাকে','দ্বিগুণ হয়'],'তাপমাত্রা বাড়লে শব্দের বেগ বাড়ে, তাই যাওয়া-আসার সময় কমে।'],
+ ['বাদুড় অন্ধকারে ধাক্কা খায় না কেন?','প্রতিধ্বনি দিয়ে দূরত্ব আন্দাজ করে',['খুব ভালো দেখে','আলো তৈরি করে','চুম্বক ব্যবহার করে'],'বাদুড় আল্ট্রাসাউন্ড তৈরি করে, প্রতিধ্বনি ফিরে আসতে কত সময় লাগল তা থেকে দূরত্ব জানে।']]);
+
+/* ===== ল্যাব ১১: শব্দের বেগ ===== */
+var S11={m:0,s:0,go:false,N:['পানি','পারদ','লোহা','হীরা','হাইড্রোজেন'],V:[1493,1450,5130,12000,1284]};
+function s11p(){var d=+$('s11k').value,v=S11.V[S11.m];return {d:d,v:v,ta:d/330,tm:d/v};}
+function s11info(){var p=s11p();$('s11kv').textContent=fmtN(p.d);
+  $('s11t').innerHTML='দূরত্ব '+fmtN(p.d)+' m<br>বাতাসে (330 m/s): <b>'+f(p.ta,2)+' s</b><br>'+S11.N[S11.m]+'তে ('+fmtN(p.v)+' m/s): <b>'+f(p.tm,3)+' s</b> (বাতাসের চেয়ে প্রায় '+bn(Math.round(p.v/330*10)/10)+' গুণ দ্রুত)<br><small>শব্দের বেগ মাধ্যমের স্থিতিস্থাপকতার ওপর নির্ভর করে। তরল ও কঠিনে বেগ বাতাসের চেয়ে বেশি। (টেবিল ৭.০১: বাতাস 330, হাইড্রোজেন 1284, পারদ 1450, পানি 1493, লোহা 5130, হীরা 12000 m/s)</small>';}
+pills('s11p',function(k){S11.m=k;S11.s=0;S11.go=true;s11info();});$('s11p').querySelector('button').classList.add('on');on(['s11k'],function(){S11.s=0;S11.go=true;s11info();});$('s11go').onclick=function(){S11.s=0;S11.go=true;};
+DRAWS.push(function(){var x=ctxOf('s11c'),p=s11p(),i;if(S11.go)S11.s+=DT*(p.ta/6);
+  grad(x,0,0,380,300,'#f5f9fc','#e0eaf3');
+  function lane(y,label,tt,col,bg){x.fillStyle=bg;rr(x,20,y-20,340,42,8);x.fill();x.strokeStyle='#cfd9e1';x.lineWidth=1.5;x.stroke();tag(x,label,28,y-9,col,11,'left');var u=clamp(S11.s/tt,0,1),px=34+u*312;
+    for(var j=0;j<3;j++){x.strokeStyle=col;x.globalAlpha=1-j*.3;x.lineWidth=3;x.beginPath();x.arc(px-j*9,y+5,7+j*3,-1,1);x.stroke();x.globalAlpha=1;}
+    if(u>=1){tag(x,'✔ পৌঁছেছে '+f(tt,2)+' s',346,y+10,col,12,'right');}ball(x,34,y+5,6,'#e9a23b');circ(x,0,346,y+5,4,col,null);}
+  lane(48,'💨 বাতাস',p.ta,'#2b6cb0','#eaf4fb');lane(110,'🔊 '+S11.N[S11.m],p.tm,'#c0392b','#fdecea');
+  tag(x,'শব্দের বেগ (m/s)',190,162,NAVY,13);
+  var names=['বাতাস','হাইড্রোজেন','পারদ','পানি','লোহা','হীরা'],vals=[330,1284,1450,1493,5130,12000],sel=['',S11.N[4],S11.N[1],S11.N[0],S11.N[2],S11.N[3]];
+  for(i=0;i<6;i++){var y=176+i*19,w=Math.log10(vals[i]/100)/Math.log10(120)*230;x.fillStyle=(sel[i]===S11.N[S11.m])?'#c0392b':(i===0?'#2b6cb0':'#b8c4d0');rr(x,70,y,Math.max(w,6),13,4);x.fill();tag(x,names[i],64,y+7,'#1f3a5f',11,'right');tag(x,fmtN(vals[i]),76+w,y+7,'#5b7389',11,'left');}
+  });
+s11info();
+qgame('s11q','s11o','s11fb','s11sc',[
+ ['কোন মাধ্যমে শব্দের বেগ সবচেয়ে বেশি?','কঠিন',['তরল','গ্যাস','সব সমান'],'কঠিনে শব্দের বেগ সবচেয়ে বেশি, তরলে তার চেয়ে কম, বায়বীয় মাধ্যমে সবচেয়ে কম।'],
+ ['বাতাসে শব্দের বেগ প্রায় কত?','330 m/s',['3 m/s','3,300 m/s','33 m/s'],'টেবিল ৭.০১-এ বাতাসে 330 m/s।'],
+ ['লোহায় শব্দের বেগ বাতাসের চেয়ে প্রায় কত গুণ?','১৫ গুণের বেশি',['২ গুণ','সমান','অর্ধেক'],'5130 ÷ 330 ≈ 15.5।'],
+ ['টেবিলের এক মাথায় কান লাগিয়ে অন্য মাথায় টোকা দিলে শব্দ স্পষ্ট শোনা যায় কেন?','কঠিন মাধ্যম বাতাসের চেয়ে ভালো সঞ্চালক',['টেবিল ভারী','বাতাস নেই','শব্দ বেড়ে যায়'],'কঠিন পদার্থে শব্দ জোরে ও দ্রুত চলে।'],
+ ['শব্দের বেগ কিসের ওপর নির্ভর করে?','মাধ্যমের স্থিতিস্থাপকতা ও ঘনত্ব',['শব্দের রঙ','উৎসের নাম','শ্রোতার বয়স'],'মাধ্যমের স্থিতিস্থাপকতার ওপর বেগ নির্ভর করে, তাই মাধ্যম বদলালে বেগ বদলায়।']]);
+
+/* ===== ল্যাব ১২: শ্রাব্যতা ===== */
+var H12={t:0,ac:null};
+function h12f(){return Math.pow(10,+$('h12k').value*5/100);}
+function h12cat(fr){return fr<20?0:(fr>20000?2:1);}
+function h12info(){var fr=h12f(),c=h12cat(fr);$('h12kv').textContent=fmtN(Math.round(fr));
+  var nm=['ইনফ্রাসাউন্ড (শব্দের নিচে)','শ্রাব্য শব্দ ✅','আল্ট্রাসাউন্ড (শব্দোত্তর)'][c];
+  $('h12t').innerHTML='কম্পাঙ্ক = <b>'+fmtN(Math.round(fr))+' Hz</b><br>ধরন: <b style="color:'+['#2b6cb0','#1d7a6f','#c0392b'][c]+'">'+nm+'</b><br>'+(c===1?'মানুষ এই শব্দ শুনতে পায়।':'মানুষ এই কম্পাঙ্ক <b>শুনতে পায় না</b>।')+'<br><small>শ্রাব্যতার সীমা: 20 Hz থেকে 20,000 Hz (20 kHz)। পুরুষের কণ্ঠে কম কম্পাঙ্ক (মোটা স্বর), নারী ও শিশুর বেশি (তীক্ষ্ণ স্বর)। বাদুড় প্রায় 100 kHz আল্ট্রাসাউন্ড তৈরি করে। (পুরুষ ≈ 120 Hz, নারী ≈ 250 Hz আনুমানিক মান আমার যোগ করা।)</small>';}
+pills('h12p',function(k){$('h12k').value=[20,42,48,100][k];h12info();});$('h12p').querySelector('button').classList.add('on');on(['h12k'],h12info);
+$('h12go').onclick=function(){var fr=h12f();if(fr<20||fr>20000){$('h12t').innerHTML+='<br><b style="color:#c0392b">🔇 এই কম্পাঙ্ক মানুষ শুনতে পায় না, তাই বাজানো হলো না।</b>';return;}
+  try{var AC=window.AudioContext||window.webkitAudioContext;if(!H12.ac)H12.ac=new AC();var o=H12.ac.createOscillator(),g=H12.ac.createGain();o.frequency.value=fr;g.gain.value=.06;o.connect(g);g.connect(H12.ac.destination);o.start();o.stop(H12.ac.currentTime+.8);}catch(e){}};
+DRAWS.push(function(){var x=ctxOf('h12c'),fr=h12f(),c=h12cat(fr),i;H12.t+=DT;
+  grad(x,0,0,380,300,'#f5f9fc','#e0eaf3');
+  var bx=20,bw=340,by=70,bh=36;function X(f){return bx+Math.log10(f)/5*bw;}
+  x.fillStyle='#bcd3ee';x.fillRect(bx,by,X(20)-bx,bh);x.fillStyle='#a8e0c2';x.fillRect(X(20),by,X(20000)-X(20),bh);x.fillStyle='#f4b8ae';x.fillRect(X(20000),by,bx+bw-X(20000),bh);
+  x.strokeStyle='#5b7389';x.lineWidth=2;x.strokeRect(bx,by,bw,bh);
+  tag(x,'ইনফ্রা',(bx+X(20))/2,by+bh/2,'#2b4f9c',10);tag(x,'শ্রাব্য (20 Hz – 20 kHz)',(X(20)+X(20000))/2,by+bh/2,'#14654f',12);tag(x,'আল্ট্রা',(X(20000)+bx+bw)/2,by+bh/2,'#a02818',10);
+  [1,10,100,1000,10000,100000].forEach(function(f0){x.strokeStyle='#5b7389';x.beginPath();x.moveTo(X(f0),by+bh);x.lineTo(X(f0),by+bh+6);x.stroke();tag(x,fmtN(f0),X(f0),by+bh+16,'#5b7389',10);});
+  x.fillStyle='#c0392b';x.beginPath();x.moveTo(X(fr),by-4);x.lineTo(X(fr)-7,by-16);x.lineTo(X(fr)+7,by-16);x.closePath();x.fill();tag(x,fmtN(Math.round(fr))+' Hz',clamp(X(fr),50,330),by-28,'#c0392b',14);
+  var cx=70,cy=200;x.fillStyle='#4b5968';rr(x,cx-22,cy-36,26,72,5);x.fill();var vib=Math.sin(H12.t*Math.min(fr,12)*Math.PI*2)*(c===1?5:3);x.beginPath();x.moveTo(cx+4,cy-14);x.lineTo(cx+30+vib,cy-40);x.lineTo(cx+30+vib,cy+40);x.lineTo(cx+4,cy+14);x.closePath();x.fillStyle='#8896a5';x.fill();
+  var cyc=clamp(Math.log10(fr)*2.6,1,12),gx=130,gw=230;x.strokeStyle=['#2b6cb0','#1d7a6f','#c0392b'][c];x.lineWidth=3;x.beginPath();for(i=0;i<=gw;i+=2){var yy=cy-28*Math.sin(2*Math.PI*cyc*i/gw-H12.t*Math.min(fr,10)*1.5);if(i===0)x.moveTo(gx+i,yy);else x.lineTo(gx+i,yy);}x.stroke();
+  tag(x,['কম কম্পাঙ্ক: ধীর, ঘন নয়','সুরের সীমায়','অতি উচ্চ কম্পাঙ্ক'][c],250,252,['#2b6cb0','#1d7a6f','#c0392b'][c],13);
+  tag(x,c===1?'👂 শুনতে পাচ্ছি':'👂 ❌ শুনতে পাচ্ছি না',70,252,c===1?'#1d7a6f':'#c0392b',13);
+  if(fr>50000)tag(x,'🦇',320,190,'#000',26);
+  });
+h12info();
+qgame('h12q','h12o','h12fb','h12sc',[
+ ['মানুষের শ্রাব্যতার সীমা কত?','20 Hz থেকে 20,000 Hz',['2 Hz থেকে 200 Hz','200 Hz থেকে 2 MHz','0 Hz থেকে 1000 Hz'],'20 Hz থেকে 20 kHz পর্যন্ত কম্পাঙ্কের শব্দ আমরা শুনি।'],
+ ['20 Hz-এর কম কম্পাঙ্কের শব্দকে কী বলে?','ইনফ্রাসাউন্ড',['আল্ট্রাসাউন্ড','শব্দদূষণ','সুর'],'20 Hz-এর কম হলে ইনফ্রাসাউন্ড বা শব্দের নিচের শব্দ।'],
+ ['20 kHz-এর বেশি কম্পাঙ্কের শব্দকে কী বলে?','আল্ট্রাসাউন্ড',['ইনফ্রাসাউন্ড','প্রতিধ্বনি','তরঙ্গ'],'20 kHz-এর বেশি হলে শব্দোত্তর বা আল্ট্রাসাউন্ড।'],
+ ['পুরুষের কণ্ঠস্বর মোটা কেন?','কম কম্পাঙ্কের শব্দ তৈরি করে',['বেশি কম্পাঙ্ক','ভর বেশি','তাপমাত্রা বেশি'],'পুরুষের ভোকাল কর্ড শক্ত, তাই কম কম্পাঙ্কের শব্দ হয়।'],
+ ['বাদুড় প্রায় কত কম্পাঙ্কের শব্দ তৈরি করতে পারে?','100 kHz',['100 Hz','1 kHz','10 Hz'],'বাদুড় আল্ট্রাসাউন্ড তৈরি করে, যা আমরা শুনতে পাই না।']]);
+
+/* ===== ল্যাব ১৩: শব্দদূষণ ===== */
+var D13={s:1,t:0,D:[125,85,70,55,50,10,0],N:['জেট ইঞ্জিন','ট্রাফিক','গাড়ি','টেলিভিশন','কথাবার্তা','নিঃশ্বাস','মশার পাখার শব্দ'],R:['110–140','80–90','60–80','50–60','40–60','10','0']};
+function d13db(){return Math.max(0,D13.D[D13.s]-($('d13b').checked?12:0));}
+function d13info(){var db=d13db(),z=db<60?'শান্ত, নিরাপদ':(db<85?'বেশ জোরালো, বিরক্তিকর':'অত্যন্ত জোরে, দূষণের মাত্রা');
+  $('d13t').innerHTML='উৎস: <b>'+D13.N[D13.s]+'</b> (টেবিল ৭.০২: '+D13.R[D13.s]+' dB)<br>এখানে ধরা হয়েছে: <b>'+bn(Math.round(D13.D[D13.s]))+' dB</b>'+($('d13b').checked?', গাছ/দেয়ালে কমে <b style="color:#1d7a6f">'+bn(db)+' dB</b>':'')+'<br>অবস্থা: <b style="color:'+(db<60?'#1d7a6f':(db<85?'#e9822b':'#c0392b'))+'">'+z+'</b><br><small>দূষণ কমাতে: শব্দের বিরুদ্ধে আইন, জনসচেতনতা, কম হর্ন, শব্দশোষণ যন্ত্র, আর ফাঁকা জায়গায় প্রচুর গাছ। (সংখ্যা মধ্যবর্তী মান। 85 dB-এর ওপর দীর্ঘ সময় শুনলে ক্ষতির কথা এবং গাছে −12 dB আমার আনুমানিক যোগ করা।)</small>';}
+pills('d13p',function(k){D13.s=k;d13info();});$('d13p').querySelectorAll('button')[0].classList.remove('on');$('d13p').querySelectorAll('button')[1].classList.add('on');on(['d13b'],d13info);
+DRAWS.push(function(){var x=ctxOf('d13c'),db=d13db(),i;D13.t+=DT;
+  grad(x,0,0,380,300,'#d9ecfb','#f2f6e8');x.fillStyle='#9aa5b1';x.fillRect(0,210,380,90);x.strokeStyle='#fff';x.setLineDash([14,10]);x.lineWidth=3;x.beginPath();x.moveTo(0,255);x.lineTo(380,255);x.stroke();x.setLineDash([]);
+  var sx=50,sy=170;x.fillStyle='#c0392b';rr(x,sx-24,sy-10,48,34,6);x.fill();tag(x,['✈️','🚌','🚗','📺','🗣️','😮‍💨','🦟'][D13.s],sx,sy+7,'#000',22);
+  var mag=db/140;for(i=0;i<4;i++){var u=((D13.t*.7+i/4)%1),r0=20+u*(190*Math.max(mag,.08)+30);x.strokeStyle=(db<60?'rgba(30,150,110,':(db<85?'rgba(230,130,40,':'rgba(200,50,40,'))+(1-u)*.8*(.3+mag)+')';x.lineWidth=2+mag*5;x.beginPath();x.arc(sx,sy,r0,-.6,.6);x.stroke();}
+  if($('d13b').checked){for(i=0;i<3;i++){x.fillStyle='#7a4a2b';x.fillRect(158+i*18,172,6,36);x.fillStyle='#2e8b57';x.beginPath();x.arc(161+i*18,166,15,0,7);x.fill();}tag(x,'🌳 শব্দ শোষণ',178,148,'#1d7a6f',11);}
+  var px=320,py=205,sh=db>85?Math.sin(D13.t*30)*1.5:0;person(x,px+sh,py,'#2b6cb0');if(db>85)tag(x,'😖',px,py-34,'#000',20);else if(db<60)tag(x,'🙂',px,py-34,'#000',20);else tag(x,'😐',px,py-34,'#000',20);
+  dial(x,200,60,40,db/140,bn(Math.round(db))+' dB',db<60?'#1d7a6f':(db<85?'#e9822b':'#c0392b'));
+  });
+d13info();
+qgame('d13q','d13o','d13fb','d13sc',[
+ ['কোন উৎসের শব্দ সবচেয়ে বেশি (টেবিল ৭.০২)?','জেট ইঞ্জিন',['কথাবার্তা','নিঃশ্বাস','টেলিভিশন'],'জেট ইঞ্জিন 110–140 dB।'],
+ ['কথাবার্তার শব্দের পরিমাণ প্রায় কত?','40–60 dB',['110–140 dB','0 dB','80–90 dB'],'টেবিল ৭.০২ অনুযায়ী কথাবার্তা 40–60 dB।'],
+ ['মশার পাখার শব্দ কত ডেসিবেল ধরা হয়েছে?','0 dB',['10 dB','50 dB','100 dB'],'টেবিলে মশার পাখার শব্দ 0 dB।'],
+ ['শব্দদূষণ কমানোর একটি উপায় কোনটি?','ফাঁকা জায়গায় প্রচুর গাছ লাগানো',['হর্ন বাড়ানো','মাইক বাড়ানো','হেডফোনে জোরে গান'],'গাছ শব্দ শোষণ করে। আইন, সচেতনতা, কম হর্নও কাজে লাগে।'],
+ ['শব্দদূষণের একটি ক্ষতি কী?','শোনার ক্ষমতা কমে যাওয়া',['দৃষ্টি বাড়ে','ওজন কমে','তাপ বাড়ে'],'দীর্ঘদিন শব্দদূষণে থাকলে শ্রবণশক্তি ক্ষতিগ্রস্ত হয়।']]);
+
+
+var QUIZ=[];
+function M(q,c,w,e,fix){QUIZ.push({q:q,o:[c].concat(w),a:0,e:e,fix:!!fix});}
+QUIZ.push({q:'শব্দ কোন ধরনের তরঙ্গ? (বইয়ের নমুনা প্রশ্ন ১)',o:['অনুপ্রস্থ তরঙ্গ','তড়িৎচৌম্বক তরঙ্গ','অনুদৈর্ঘ্য তরঙ্গ','বেতার তরঙ্গ'],a:2,fix:true,e:'শব্দে কণার কম্পন ও তরঙ্গের গতি একই দিকে, তাই অনুদৈর্ঘ্য।'});
+QUIZ.push({q:'শব্দের বেগ কোন মাধ্যমে সবচেয়ে বেশি? (বইয়ের নমুনা প্রশ্ন ২)',o:['কঠিন','তরল','গ্যাসীয়','প্লাজমা'],a:0,fix:true,e:'কঠিনে স্থিতিস্থাপকতা বেশি, তাই বেগ সবচেয়ে বেশি।'});
+QUIZ.push({q:'বৈদ্যুতিক লাইনে মৃত বাদুড় ঝুলে থাকতে দেখা যায় কেন? i. তড়িৎক্ষেত্রে আকৃষ্ট হওয়ায় ii. সামনের শব্দোত্তর তরঙ্গের প্রতিধ্বনি শুনতে না পাওয়ায় iii. একটি তারে ঝুলে অপর তারটি স্পর্শ করায় (বইয়ের নমুনা প্রশ্ন ৩)',o:['i ও ii','i ও iii','ii ও iii','i, ii ও iii'],a:2,fix:true,e:'বাদুড় আল্ট্রাসাউন্ডের প্রতিধ্বনি দিয়ে বাধা চিনে। তার চিনতে না পেরে ধাক্কা খায় (ii) এবং দুই তার ছুঁয়ে মারা যায় (iii)। (উত্তর আমার হিসাব)'});
+QUIZ.push({q:'৭.১৬ চিত্রে শব্দের বেগ 332 m/s ধরলে পানির উচ্চতা h সর্বোচ্চ কত পর্যন্ত প্রতিধ্বনি শোনা যাবে? (বইয়ের নমুনা প্রশ্ন ৪)',o:['30 m','13.40 m','10 m','3.40 cm'],a:1,fix:true,e:'প্রতিফলক ≥ 16.6 m দূরে হলে প্রতিধ্বনি শোনা যায়। S থেকে তলার দূরত্ব 30 m, তাই 30 − h ≥ 16.6 ➜ h ≤ 13.4 m। (আমার চিত্র-ব্যাখ্যা)'});
+QUIZ.push({q:'৭.১৬ চিত্রের ক্ষেত্রে প্রতিধ্বনি শুনতে কত সময় লাগবে? (বইয়ের নমুনা প্রশ্ন ৫)',o:['0.10 s','0.12 s','0.14 s','0.18 s'],a:1,fix:true,e:'পানির তল S থেকে 20 m দূরে। যাওয়া-আসা 40 m, t = 40 ÷ 332 ≈ 0.12 s। (আমার চিত্র-ব্যাখ্যা)'});
+M('সরল দোলকের পর্যায়কাল কোন সূত্রে পাওয়া যায়?','T = 2π√(l/g)',['T = 2π√(g/l)','T = 2πlg','T = l/g'],'দৈর্ঘ্য বাড়লে T বাড়ে, g বাড়লে T কমে।');
+M('সরল দোলকের পর্যায়কাল কিসের ওপর নির্ভর করে না?','ঝুলন্ত বস্তুর ভর',['দৈর্ঘ্য','g-এর মান','কোনোটিই নয়'],'T = 2π√(l/g) সূত্রে ভর নেই।');
+M('1 m দৈর্ঘ্যের সরল দোলকের পর্যায়কাল পৃথিবীতে প্রায় কত?','2.0 s',['1.0 s','0.5 s','4 s'],'T = 2π√(1/9.8) ≈ 2.0 s।');
+M('পর্যায়কাল 0.5 s হলে কম্পাঙ্ক কত?','2 Hz',['0.5 Hz','5 Hz','1 Hz'],'f = 1/T = 2 Hz।');
+M('কম্পাঙ্কের একক কী?','হার্টজ (Hz)',['মিটার','সেকেন্ড','নিউটন'],'প্রতি সেকেন্ডে স্পন্দন সংখ্যার একক Hz।');
+M('বিস্তার কাকে বলে?','সাম্যাবস্থান থেকে সর্বোচ্চ সরণ',['দুই চূড়ার দূরত্ব','এক স্পন্দনের সময়','তরঙ্গের বেগ'],'দোলনের সর্বোচ্চ দূরত্বই বিস্তার।');
+M('স্প্রিংয়ের ভর চারগুণ করলে পর্যায়কাল কত গুণ হবে?','২ গুণ',['৪ গুণ','অর্ধেক','একই'],'T ∝ √m, √4 = 2।');
+M('শক্ত স্প্রিং (k বেশি) হলে পর্যায়কাল কী হয়?','কমে',['বাড়ে','একই থাকে','অসীম হয়'],'T = 2π√(m/k), k বাড়লে T কমে।');
+M('পানির ঢেউ কোন ধরনের তরঙ্গ?','অনুপ্রস্থ',['অনুদৈর্ঘ্য','শব্দ','তড়িৎচৌম্বক'],'কণা ওপর-নিচে কাঁপে, তরঙ্গ সামনে যায়।');
+M('কোনটি তড়িৎচৌম্বক তরঙ্গ?','আলো',['শব্দ','পানির ঢেউ','দড়ির ঢেউ'],'আলো শূন্যেও চলে, মাধ্যম লাগে না।');
+M('তরঙ্গের বেগের সূত্র কোনটি?','v = fλ',['v = f/λ','v = λ/f²','v = f + λ'],'বেগ = কম্পাঙ্ক × তরঙ্গদৈর্ঘ্য।');
+M('f = 5 Hz, λ = 1 m হলে v কত?','5 m/s',['0.2 m/s','6 m/s','1 m/s'],'v = 5 × 1 = 5 m/s।');
+M('সংকোচন ও প্রসারণ কোন তরঙ্গে তৈরি হয়?','অনুদৈর্ঘ্য',['অনুপ্রস্থ','দুটোতেই নয়','শুধু আলোতে'],'অনুদৈর্ঘ্য তরঙ্গে মাধ্যম কোথাও ঘন, কোথাও পাতলা হয়।');
+M('শব্দ শূন্যস্থানে চলে না কেন?','এটি যান্ত্রিক তরঙ্গ, মাধ্যম লাগে',['এটি আলো','এটি খুব দ্রুত','এটি খুব ধীর'],'বেলজারের পরীক্ষায় বায়ু বের করলে শব্দ শোনা যায় না।');
+M('মানুষের শ্রাব্যতার সীমা কত?','20 Hz – 20,000 Hz',['2 Hz – 200 Hz','200 Hz – 2 MHz','0 – 1000 Hz'],'এর বাইরে ইনফ্রা বা আল্ট্রাসাউন্ড।');
+M('20 kHz-এর বেশি কম্পাঙ্কের শব্দকে কী বলে?','আল্ট্রাসাউন্ড',['ইনফ্রাসাউন্ড','সুর','প্রতিধ্বনি'],'শব্দোত্তর তরঙ্গ বা আল্ট্রাসাউন্ড।');
+M('প্রতিধ্বনি আলাদা শুনতে ন্যূনতম সময় কত?','0.1 s',['1 s','0.01 s','0.5 s'],'কানে শব্দের অনুভূতি 0.1 s থাকে।');
+M('330 m/s বেগে প্রতিধ্বনির জন্য ন্যূনতম দূরত্ব কত?','প্রায় 16.5 m',['33 m','165 m','1.65 m'],'d = 0.1 × 330 ÷ 2 = 16.5 m।');
+M('তাপমাত্রা বাড়লে শব্দের বেগ কী হয়?','বাড়ে',['কমে','একই','শূন্য'],'v ∝ √T।');
+M('লোহায় শব্দের বেগ আনুমানিক কত?','5130 m/s',['330 m/s','1493 m/s','12000 m/s'],'টেবিল ৭.০১।');
+M('কোন মাধ্যমে শব্দের বেগ সবচেয়ে কম?','বাতাস',['পানি','লোহা','হীরা'],'টেবিলে বাতাসে 330 m/s, সবচেয়ে কম।');
+M('বাদুড় অন্ধকারে ধাক্কা খায় না কেন?','আল্ট্রাসাউন্ডের প্রতিধ্বনি ব্যবহার করে',['খুব ভালো দেখে','আলো ছড়ায়','চুম্বক ব্যবহার করে'],'প্রতিধ্বনি ফিরতে কত সময় লাগল তা থেকে দূরত্ব আন্দাজ করে।');
+M('কোনটি আল্ট্রাসাউন্ডের ব্যবহার?','আল্ট্রাসনোগ্রাফি',['রেডিও সম্প্রচার','বিদ্যুৎ উৎপাদন','রান্না'],'দেহের ভেতরের ছবি তুলতে আল্ট্রাসাউন্ড ব্যবহার হয়।');
+M('শব্দের তীব্রতার (লাউডনেস) একক কী?','ডেসিবেল (dB)',['হার্টজ','মিটার','ওয়াট'],'শব্দের পরিমাণ মাপা হয় dB-তে।');
+M('শব্দদূষণ কমানোর একটি উপায় কোনটি?','প্রচুর গাছ লাগানো',['হর্ন বাড়ানো','মাইক চালানো','জেট ইঞ্জিন বাড়ানো'],'গাছ শব্দ শোষণ করে।');
+M('শব্দদূষণের ক্ষতি কোনটি?','শ্রবণশক্তি কমা',['দৃষ্টি বাড়া','ওজন কমা','রং বদলানো'],'বেশি শব্দে দীর্ঘ সময় থাকলে কানের ক্ষতি হয়।');
+M('বেলজারে বায়ু বের করলে ঘণ্টার শব্দ কী হয়?','ক্রমশ কমে যায়',['বাড়ে','একই থাকে','তীক্ষ্ণ হয়'],'মাধ্যম কমলে শব্দ বাইরে পৌঁছায় না।');
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+
+var QA=[
+ {h:'📝 সৃজনশীল প্রশ্ন ১ (নাভিদের বাসা ও কারখানা)',items:[
+  ['<b>উদ্দীপক:</b> নাভিদের বাসা থেকে একটি কারখানার দূরত্ব 16.6 m। প্রতিদিন কারখানার মেশিনের শব্দ ও ৬ ঘণ্টা পরপর এলার্মের শব্দ শোনা যায়। ফলে তার পড়াশোনায় ব্যাঘাত ঘটে, সে মাথাব্যথা ও অনিদ্রায় ভুগছে। (বায়ুতে শব্দের বেগ 332 m/s)<br><b>(ক)</b> প্রতিধ্বনি কী? (১)','শব্দ কোনো প্রতিফলকে প্রতিফলিত হয়ে ফিরে এসে মূল শব্দ থেকে আলাদাভাবে শোনা গেলে তাকে প্রতিধ্বনি বলে।'],
+  ['<b>(খ)</b> বায়ু অপেক্ষা পানিতে শব্দের বেগ বেশি কেন? ব্যাখ্যা করো। (২)','শব্দের বেগ মাধ্যমের স্থিতিস্থাপকতার ওপর নির্ভর করে। পানির স্থিতিস্থাপকতা বায়ুর চেয়ে অনেক বেশি, তাই পানিতে শব্দ দ্রুত চলে (বায়ুতে প্রায় 330, পানিতে প্রায় 1493 m/s)।'],
+  ['<b>(গ)</b> কারখানার এলার্মের শব্দ নাভিদের বাসায় পৌঁছাতে কত সময় লাগে নির্ণয় করো। (৩)','t = d ÷ v = 16.6 ÷ 332 = <b>0.05 s</b>।'],
+  ['<b>(ঘ)</b> নাভিদের সমস্যার কারণ ও সমাধানে সম্ভাব্য সুপারিশ করো। (৪)','কারণ: কারখানার মেশিন ও এলার্মের উচ্চ শব্দ, অর্থাৎ শব্দদূষণ। এতে ঘুম, মনোযোগ ও স্বাস্থ্যের ক্ষতি হয়।<br>সুপারিশ: (১) শব্দদূষণ-বিরোধী আইন মানা ও প্রয়োগ। (২) কারখানা ও বাসার মাঝে প্রচুর গাছ লাগানো। (৩) কারখানার ভেতরে শব্দশোষক যন্ত্র বা দেয়াল ব্যবহার। (৪) জানালায় মোটা পর্দা বা ডাবল গ্লাস। (৫) এলার্ম কম আওয়াজে বা শুধু প্রয়োজনে বাজানো। (৬) জনসচেতনতা বাড়ানো।']
+ ]},
+ {h:'📝 সৃজনশীল প্রশ্ন ২ (দেয়াল ও চিত্র ৭.১৭)',items:[
+  ['<b>উদ্দীপক:</b> শব্দের কম্পাঙ্ক 1200 Hz, বায়ুর তাপমাত্রা 30°C। উৎস S থেকে দেয়ালের দূরত্ব 18 m।<br><b>(ক)</b> পর্যায়বৃত্ত গতি কাকে বলে? (১)','যে গতি নির্দিষ্ট সময় পরপর নিজেকে পুনরাবৃত্তি করে, তাকে পর্যায়বৃত্ত গতি বলে। যেমন ঘড়ির কাঁটার গতি।'],
+  ['<b>(খ)</b> পানির ঢেউ অনুপ্রস্থ তরঙ্গ কেন? ব্যাখ্যা করো। (২)','পানির ঢেউ প্রবাহের সময় পানির কণাগুলো ওপর-নিচে কাঁপে, আর ঢেউ সামনে যায়। অর্থাৎ কণার কম্পনের দিক তরঙ্গের গতির দিকের সাথে লম্ব। তাই এটি অনুপ্রস্থ তরঙ্গ।'],
+  ['<b>(গ)</b> শব্দের তরঙ্গদৈর্ঘ্য নির্ণয় করো। (৩)','v = 332√(303/273) = 332 × 1.0535 ≈ 349.8 m/s।<br>λ = v ÷ f = 349.8 ÷ 1200 ≈ <b>0.29 m</b>।'],
+  ['<b>(ঘ)</b> S অবস্থান থেকে প্রতিধ্বনি শোনা সম্ভব কি? গাণিতিক যুক্তিসহ যাচাই করো। (৪)','যাওয়া-আসা দূরত্ব = 2 × 18 = 36 m। সময় t = 36 ÷ 349.8 ≈ 0.103 s।<br>0.103 s &gt; 0.1 s, তাই <b>প্রতিধ্বনি শোনা সম্ভব</b>।<br>(যাচাই: ন্যূনতম দূরত্ব = 0.1 × 349.8 ÷ 2 ≈ 17.5 m, আর দেয়াল 18 m দূরে, তাই শোনা যায়।)']
+ ]},
+ {h:'📝 সৃজনশীল প্রশ্ন ৩ (ফারহানের চিৎকার)',items:[
+  ['<b>উদ্দীপক:</b> শীতের সকালে ফারহান স্কুলের মাঠে একটি দেয়াল থেকে 17.25 m দূরে দাঁড়িয়ে চিৎকার করলে প্রতিধ্বনি শুনতে পায়। কিন্তু একই স্থানে গরমের একদিনে চিৎকার করে প্রতিধ্বনি শুনতে পেল না। [0°C-এ শব্দের বেগ 332 m/s, শীতের দিনের তাপমাত্রা 10°C, গরমের দিনের 30°C]<br><b>(ক)</b> পর্যায়কাল কী? (১)','একটি পূর্ণ স্পন্দন সম্পন্ন করতে যে সময় লাগে, তাকে পর্যায়কাল বলে।'],
+  ['<b>(খ)</b> শব্দ একটি যান্ত্রিক তরঙ্গ, ব্যাখ্যা করো। (২)','শব্দ প্রবাহের জন্য বায়ু, পানি বা কঠিনের মতো মাধ্যম লাগে। মাধ্যমের কণাগুলোর স্পন্দনের মাধ্যমে শব্দ ছড়ায়। বেলজারের বায়ু বের করলে শব্দ শোনা যায় না। তাই শব্দ যান্ত্রিক তরঙ্গ।'],
+  ['<b>(গ)</b> উদ্দীপক অনুসারে গরমের দিনে শব্দের বেগ কত? (৩)','v = 332√((273 + 30)/273) = 332 × 1.0535 ≈ <b>349.8 m/s</b>।'],
+  ['<b>(ঘ)</b> একই স্থান থেকেও প্রতিধ্বনি শোনা বা না শোনার কারণ বিশ্লেষণ করো। (৪)','যাওয়া-আসা দূরত্ব = 2 × 17.25 = 34.5 m।<br><b>শীতে (10°C):</b> v = 332√(283/273) ≈ 338.0 m/s। t = 34.5 ÷ 338.0 ≈ 0.102 s, যা ≥ 0.1 s, তাই প্রতিধ্বনি শোনা যায়।<br><b>গরমে (30°C):</b> v ≈ 349.8 m/s। t = 34.5 ÷ 349.8 ≈ 0.0986 s, যা &lt; 0.1 s, তাই শোনা যায় না।<br>কারণ: তাপমাত্রা বাড়লে শব্দের বেগ বাড়ে, ফলে ফিরে আসার সময় কমে 0.1 s-এর নিচে নেমে যায়।']
+ ]},
+ {h:'✍️ সংক্ষিপ্ত উত্তর প্রশ্ন',items:[
+  ['১. অনুদৈর্ঘ্য ও অনুপ্রস্থ তরঙ্গের মধ্যে দুইটি পার্থক্য লেখো।','(১) অনুদৈর্ঘ্য তরঙ্গে কণার কম্পনের দিক তরঙ্গের গতির দিকেই, অনুপ্রস্থে লম্ব। (২) অনুদৈর্ঘ্যে সংকোচন ও প্রসারণ তৈরি হয়, অনুপ্রস্থে চূড়া ও খাঁজ তৈরি হয়। (যেমন: শব্দ অনুদৈর্ঘ্য, পানির ঢেউ অনুপ্রস্থ।)'],
+  ['২. সরল দোলকের গতি কোন ধরনের গতি? ব্যাখ্যা করো।','এটি পর্যায়বৃত্ত ও স্পন্দন গতি। দোলক নির্দিষ্ট সময় পরপর একই পথে আসা-যাওয়া করে। ছোট কোণে দুললে এটি সরল ছন্দিত স্পন্দন, কারণ তখন ফিরিয়ে আনা বল সরণের সমানুপাতিক।'],
+  ['৩. শব্দের প্রতিফলনের জন্য প্রতিফলক বড় হওয়া প্রয়োজন কেন?','প্রতিফলকের আকার শব্দের তরঙ্গদৈর্ঘ্যের চেয়ে বড় বা সমান না হলে শব্দ প্রতিফলিত না হয়ে ঘুরে চলে যায়। তাই ভালো প্রতিফলনের জন্য প্রতিফলক বড় হতে হয়।'],
+  ['৪. ধানের ক্ষেতে বাতাসের দোলন কোন ধরনের তরঙ্গ? ব্যাখ্যা করো।','ধানের গাছ ওপর-নিচে বা পাশে দুলে, আর ঢেউ ক্ষেতের ওপর দিয়ে সামনে চলে। কম্পনের দিক ঢেউয়ের গতির লম্ব, তাই এটি অনুপ্রস্থ তরঙ্গের মতো।']
+ ]}
+];
+
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+function frame(){FR++;for(var i=0;i<DRAWS.length;i++)DRAWS[i]();requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>

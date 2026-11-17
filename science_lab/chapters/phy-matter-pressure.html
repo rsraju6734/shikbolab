@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>পদার্থের অবস্থা ও চাপ (পদার্থবিজ্ঞান অধ্যায় ৫) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+small{color:#567}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/lab-boost.js?v=1"></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#physics">&larr; সব অধ্যায়</a>
+</header><div class="wrap">
+  <div class="crumb">⚛️ পদার্থবিজ্ঞান &rsaquo; পঞ্চম অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🌊 পদার্থের অবস্থা ও চাপ (State of Matter and Pressure)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">👣 ল্যাব ১</a><a href="#lab2">⚖️ ল্যাব ২</a><a href="#lab3">🤿 ল্যাব ৩</a><a href="#lab4">⛲ ল্যাব ৪</a><a href="#lab5">👑 ল্যাব ৫</a><a href="#lab6">🛟 ল্যাব ৬</a><a href="#lab7">🏗️ ল্যাব ৭</a><a href="#lab8">🥫 ল্যাব ৮</a><a href="#lab9">🏔️ ল্যাব ৯</a><a href="#lab10">🌡️ ল্যাব ১০</a><a href="#lab11">🧵 ল্যাব ১১</a><a href="#lab12">🧊 ল্যাব ১২</a><a href="#lab13">⚡ ল্যাব ১৩</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> বল ও ক্ষেত্রফলের সাথে চাপের সম্পর্ক বলতে; তরলের ভেতরে চাপ হিসাব করতে (P = hρg); আর্কিমিডিসের সূত্র ও প্লবতা বোঝাতে; কেন বস্তু ভাসে বা ডোবে ব্যাখ্যা করতে; প্যাসকেলের সূত্র ও তার প্রয়োগ দেখাতে; বায়ুর চাপ ও টরিসেলির পরীক্ষা বুঝতে; পীড়ন, বিকৃতি ও হুকের সূত্র জানতে; এবং কঠিন, তরল, গ্যাস ও প্লাজমার আণবিক গতিতত্ত্ব ব্যাখ্যা করতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের ক্রম মেনে সহজ ভাষায় লেখা। বইয়ের "নমুনা প্রশ্ন"-এর উত্তরমালা নেই, তাই MCQ ও প্রশ্নের উত্তর আমি হিসাব করে ব্যাখ্যাসহ দিয়েছি।</div>
+
+    <h3>৫.১ চাপ (Pressure) ⭐⭐⭐</h3>
+    <ul>
+      <li>একই বল প্রয়োগ করলেও কতটুকু জায়গার ওপর প্রয়োগ হচ্ছে, তার ওপর চাপ নির্ভর করে। বল F, ক্ষেত্রফল A হলে: <p class="eq"><b>P = F ÷ A</b></p></li>
+      <li>একক: <b>N/m² বা প্যাসকেল (Pa)</b>। 1 N বল 1 m² ক্ষেত্রফলে লাগলে 1 Pa চাপ হয়। মাত্রা: <b>[P] = ML⁻¹T⁻²</b>।</li>
+      <li>বল ভেক্টর, কিন্তু <b>চাপ স্কেলার</b>। চাপের কোনো দিক নেই, তাই তরল বা গ্যাসের চাপ সব দিকে সমান। (ক্ষেত্রফলকে ভেক্টর ধরলে F = P A লেখা যায়।)</li>
+      <li><b>উদাহরণ:</b> 50 kg ভর, ওজন = 50 × 9.8 = 490 N। পিঠের ক্ষেত্রফল 0.5 m², দুই পায়ের তলা 0.03 m²।<br>শুয়ে থাকলে P = 490 ÷ 0.5 = <b>980 Pa</b>। দাঁড়ালে P = 490 ÷ 0.03 = <b>16,333 Pa</b>।<br>তাই চোরাবালিতে পড়লে শুয়ে পড়তে হয়, ক্ষেত্রফল বেশি হলে চাপ কম, ডুবে যাওয়ার ভয় কম। (ল্যাব ১)</li>
+      <li>উল্টোটাও সত্যি: ক্ষেত্রফল কম হলে চাপ বেশি। তাই পেরেকের সূচালো মাথা, ছুরির ধার সহজে ঢোকে বা কাটে।</li>
+    </ul>
+
+    <h3>৫.২ ঘনত্ব (Density) ⭐⭐⭐</h3>
+    <ul>
+      <li>একক আয়তনে ভরের পরিমাণ: <p class="eq"><b>ρ = m ÷ V</b></p> একক: <b>kg/m³ বা gm/cc</b>। মাত্রা: <b>[ρ] = ML⁻³</b>।</li>
+      <li>বইয়ের টেবিল (gm/cc): বাতাস 0.00127, কর্ক 0.25, কাঠ 0.4–0.5, মানবদেহ 0.995, পানি 1.00, কাচ 2.60, লোহা 7.80, পারদ 13.6, সোনা 19.30।</li>
+      <li>তাপমাত্রা বাড়লে আয়তন বাড়ে, কিন্তু ভর একই থাকে, তাই <b>ঘনত্ব কমে</b>। ঘনত্ব বলতে হলে তাপমাত্রাও বলতে হয়। (ল্যাব ২)</li>
+      <li><b>উদাহরণ ১:</b> 1 kg পানিতে 0.25 kg লবণ গুলে আয়তন 1200 cc। ঘনত্ব = 1.25 kg ÷ (1200 × 10⁻⁶ m³) = <b>1.04 × 10³ kg/m³</b>।</li>
+      <li><b>উদাহরণ ২:</b> ডেড সি-র পানির ঘনত্ব 1.24 kg/লিটার। 1 kg পানির আয়তন = 1 ÷ 1.24 = <b>0.81 লিটার</b>।</li>
+      <li><b>উদাহরণ ৩ (নিউক্লিয়াস):</b> নিউক্লিয়াসের ঘনত্ব প্রায় <b>0.204 × 10¹⁸ kg/m³</b>। এক চা-চামচ (≈ 1 cc) নিউক্লিয়াসের ভর প্রায় 2 × 10¹¹ kg, মোটামুটি পৃথিবীর সব মানুষের মিলিত ভরের সমান!</li>
+    </ul>
+    <h4>৫.২.১ দৈনন্দিন জীবনে ঘনত্ব</h4>
+    <ul>
+      <li><b>পানি গরম করা (পরিচলন):</b> নিচের পানি গরম হয়ে প্রসারিত হয়, ঘনত্ব কমে ওপরে ওঠে। ওপরের ঠান্ডা (বেশি ঘনত্বের) পানি নিচে নামে। এভাবে সারা পানি গরম হয়।</li>
+      <li><b>পুকুরে ঝাঁপ দিলে</b> ওপরের পানি উষ্ণ, নিচের পানি শীতল, কারণ গরম পানি হালকা হয়ে ওপরেই থেকে যায়।</li>
+      <li><b>বেলুন:</b> ভেতরে বাতাসের চেয়ে হালকা গ্যাস (হিলিয়াম, হাইড্রোজেন, গরম বাতাস) ভরলে ওপরে ওড়ে। ফানুসের নিচে আগুন জ্বালিয়ে বাতাস হালকা করা হয়।</li>
+      <li><b>পচা ডিম:</b> যথেষ্ট পচলে ঘনত্ব পানির চেয়ে কমে যায়, তাই ভেসে ওঠে।</li>
+    </ul>
+
+    <h3>৫.৩ তরলের ভেতর চাপ ⭐⭐⭐</h3>
+    <ul>
+      <li>তরলের ভেতর কোনো বিন্দুর ওপর যে তরলস্তম্ভ থাকে, তার ওজনই চাপ তৈরি করে। A ক্ষেত্রফলের ওপর h উচ্চতা, ঘনত্ব ρ: ওজন = mg = (Ahρ)g। তাই <p class="eq"><b>P = hρg</b></p></li>
+      <li>গভীরতা বাড়লে চাপ বাড়ে। <b>পানিতে প্রতি 10 m গভীরতায় চাপ প্রায় 1 atm বাড়ে।</b> বায়ুমণ্ডলের চাপ 1 atm = <b>101325 Pa</b>। (ল্যাব ৩, ৪)</li>
+      <li>তরলকে বাতাসের মতো চাপ দিয়ে সংকুচিত করা যায় না, তাই তরলের ঘনত্ব প্রায় স্থির, আর চাপ সমান হারে বাড়ে (লেখচিত্র ৫.০৩ সরলরেখা)।</li>
+      <li><b>উদাহরণ:</b> তিমি মাছ 2,100 m গভীরে গেলে চাপ = 2100 ÷ 10 = <b>210 atm</b>। ডুবুরিরা 305 m গভীরে গেলে চাপ = 305 ÷ 10 = <b>30.5 atm</b>।</li>
+      <li>50 cm গভীরে চাপ: কেরোসিন (800) = 0.5 × 800 × 9.8 = <b>3920 N/m²</b>, পানি (1000) = <b>4900 N/m²</b>, পারদ (13,600) = <b>66,640 N/m²</b>।</li>
+      <li>1 atm-এর সমান চাপ হতে গভীরতা: পারদে 76 cm, পানিতে 76 × 13.6 = <b>1034 cm = 10.34 m</b>, কেরোসিনে 10.34 × 1.25 = <b>12.92 m</b>।</li>
+    </ul>
+    <h4>৫.৩.১ আর্কিমিডিসের নীতি ও প্লবতা ⭐⭐⭐</h4>
+    <ul>
+      <li>বস্তু তরলে ডোবালে যতটুকু তরল অপসারণ করে, সেই তরলের ওজন বস্তুর ওজন থেকে কমে যায়।</li>
+      <li>ডোবানো সিলিন্ডারের ওপরের পৃষ্ঠে চাপ P₁ = h₁ρg, নিচের পৃষ্ঠে P₂ = h₂ρg। পাশের চাপগুলো একে অন্যকে কাটাকাটি করে দেয়। নিট ঊর্ধ্বমুখী বল: <p class="eq"><b>F = F₂ − F₁ = A(h₂ − h₁)ρg = Ahρg</b></p></li>
+      <li>Ah সিলিন্ডারের আয়তন, তাই F = <b>অপসারিত তরলের ওজন</b>। এই ঊর্ধ্বমুখী বলকে <b>প্লবতা (Buoyancy)</b> বলে। (ল্যাব ৫)</li>
+      <li><b>নিজে করো:</b> রাবার ব্যান্ডে আলু ঝুলিয়ে পানিতে ডোবালে ব্যান্ড ছোট হয়ে যায়, কারণ ডুবন্ত অবস্থায় ওজন কম।</li>
+    </ul>
+    <h4>৫.৩.২ বস্তুর ভাসা বা ডুবে যাওয়া ⭐⭐⭐</h4>
+    <ul>
+      <li>প্লবতা বস্তুর ওজনের বেশি হলে বস্তু ভাসে। ভাসলে যতটুকু ডোবে, ততটুকু অংশের সমান ওজনের পানি অপসারিত হয়।</li>
+      <li>বস্তুর ওজন অপসারিত পানির ওজনের চেয়ে বেশি হলে <b>ডুবে যায়</b>। (তবু ডুবন্ত অবস্থায় তার ওজন কম মনে হয়।)</li>
+      <li>ওজন ঠিক সমান হলে বস্তু যেখানে রাখা হবে সেখানেই থাকবে। সাবমেরিন এভাবে পানির নিচে চলে। (ল্যাব ৬)</li>
+      <li><b>উদাহরণ ১:</b> কাঠ (ρ = 0.5 × 10³) নদীর পানিতে ভাসালে V₁/V = ρ ÷ ρ<sub>w</sub> = 0.5, অর্থাৎ <b>50%</b> ডোবে।</li>
+      <li><b>উদাহরণ ২:</b> 10 kg কাঠ নদীতে অর্ধেক ডোবে, সমুদ্রের পানিতে (1.03 × 10³): V₁/V = 0.5 ÷ 1.03 = <b>48.5%</b> ডোবে।</li>
+      <li><b>উদাহরণ ৩ (মুকুট):</b> মুকুটের ভর বাতাসে 10 kg, পানিতে 9.4 kg। 0.6 kg পানির ওজন সরেছে, V = 0.6 × 10⁻³ m³। ঘনত্ব = 10 ÷ (0.6 × 10⁻³) = <b>16,666 kg/m³</b>। সোনার আসল ঘনত্ব 19,300, তাই মুকুটে খাদ মেশানো!</li>
+      <li><b>কঠিন বস্তুর ঘনত্ব মাপা:</b> বস্তুর ওজন M₁ (বাতাসে), M₂ (পানিতে)। আয়তন = (M₁ − M₂) cc, ঘনত্ব = M₁ ÷ (M₁ − M₂) gm/cc।</li>
+    </ul>
+    <h4>৫.৩.৩ প্যাসকেলের সূত্র ⭐⭐⭐</h4>
+    <ul>
+      <li><b>সূত্র:</b> আবদ্ধ পাত্রে তরল বা বায়বীয় পদার্থে বাইরে থেকে চাপ দিলে সেই চাপ <b>সমানভাবে সঞ্চালিত</b> হয়ে পাত্রের সংলগ্ন গায়ে লম্বভাবে কাজ করে।</li>
+      <li><b>হাইড্রলিক যন্ত্র:</b> দুটি সিলিন্ডার নল দিয়ে জোড়া। ছোট পিস্টনে (A₁) F₁ বল দিলে চাপ P = F₁/A₁ সব দিকে যাবে। বড় পিস্টনে (A₂) বল: <p class="eq"><b>F₂ = F₁ (A₂ ÷ A₁)</b></p></li>
+      <li>A₂/A₁ = 100 হলে F₂ = 100 F₁। এই পদ্ধতি <b>বল বৃদ্ধি</b> করে, কিন্তু <b>শক্তি বাড়ায় না</b>।</li>
+      <li><b>শক্তি সংরক্ষণ:</b> ছোট পিস্টন l₁ নামলে কাজ W₁ = F₁l₁। তরলের আয়তন সমান: l₁A₁ = l₂A₂। বড় পিস্টনে কাজ W₂ = F₂l₂ = F₁(A₂/A₁)·l₁(A₁/A₂) = F₁l₁ = <b>W₁</b>। (ল্যাব ৭)</li>
+    </ul>
+
+    <h3>৫.৪ বায়ুর চাপ (Air Pressure) ⭐⭐⭐</h3>
+    <ul>
+      <li>পৃথিবীপৃষ্ঠে বাতাসের চাপ প্রায় <b>10⁵ N/m²</b>। 1 m² জায়গার ওপরে বাতাসের স্তম্ভের ওজন প্রায় 10⁵ N, মোটামুটি একটা হাতির ওজন!</li>
+      <li>আমরা টের পাই না, কারণ শরীরের ভেতর থেকেও সমান চাপ বাইরে ঠেলে। মহাকাশে বাতাস নেই, তাই মহাকাশচারীদের চাপ-নিরোধক স্যুট পরতে হয়।</li>
+      <li>চাপ ভেক্টর নয়, তাই বাতাসের চাপ ডানে-বামে, সামনে-পেছনে, ওপরে-নিচে সমান।</li>
+      <li><b>ক্যান ও বোতল:</b> ভেতরের বাতাস পাম্প করে সরালে ভেতরের চাপ কমে যায়। বাইরের চাপ চারদিক থেকে চেপে ক্যান দুমড়ে দেয়। প্লাস্টিকের বোতলে গরম পানি ঢেলে ঢাকনা লাগিয়ে ঠান্ডা করলেও একই হয়। (ল্যাব ৮)</li>
+      <li><b>উচ্চতার সাথে:</b> ওপরে উঠলে বাতাসের স্তম্ভ ছোট হয়, তাই চাপ কমে। প্রায় <b>5 km</b> উচ্চতায় চাপ অর্ধেক। বাতাসের ঘনত্বও কমে, তাই অক্সিজেন কমে। (ল্যাব ৯)</li>
+      <li>এভারেস্টের চূড়ায় (29,032 ft = 8.849 km) বাতাসের চাপ সমুদ্রপৃষ্ঠের প্রায় 35% (বইয়ের লেখচিত্র থেকে), তাই অক্সিজেন প্রায় <b>এক-তৃতীয়াংশ</b>।</li>
+    </ul>
+    <h4>৫.৪.১ টরিসেলির পরীক্ষা ⭐⭐</h4>
+    <ul>
+      <li>স্ট্র দিয়ে কোল্ড ড্রিংকস টানলে মুখের ভেতর চাপ কমে, বাইরে বাতাসের চাপ তরলকে ওপরে ঠেলে দেয়। (মুখে কেবল ১০.৩ m পর্যন্ত টানা যেত, তার বেশি নয়।)</li>
+      <li><b>টরিসেলি (১৬৪৩):</b> এক মুখ বন্ধ নলে পারদ ভরে পারদভর্তি পাত্রে উল্টে ধরলেন। পারদ নেমে ঠিক <b>76 cm</b> এসে থামল। ওপরে ফাঁকা অংশ, সেখানে (প্রায়) শূন্যস্থান।</li>
+      <li>বাইরের বায়ুচাপ পারদস্তম্ভের ওজনকে ধরে রাখে। এটাই <b>ব্যারোমিটার</b> (বায়ুচাপ মাপার যন্ত্র)। চাপ বাড়লে স্তম্ভ 76 cm-এর বেশি, কমলে কম। (ল্যাব ১০)</li>
+    </ul>
+    <h4>৫.৪.২ বায়ুচাপ ও আবহাওয়া ⭐</h4>
+    <ul>
+      <li>বাতাসে জলীয় বাষ্প বাড়লে বাতাস হালকা হয়, কারণ পানির আণবিক ভর 18, নাইট্রোজেনের 28, অক্সিজেনের 32। তখন চাপ কমে।</li>
+      <li><b>নিম্নচাপ</b> (ব্যারোমিটারে চাপ কম) মানে ঝড়-বৃষ্টির আশঙ্কা, ঘূর্ণিঝড়ও হতে পারে। <b>উচ্চচাপ</b> মানে আবহাওয়া শুষ্ক ও ভালো।</li>
+    </ul>
+
+    <h3>৫.৫ স্থিতিস্থাপকতা (Elasticity) ⭐⭐⭐</h3>
+    <ul>
+      <li>বল প্রয়োগে বস্তুর আকার বা দৈর্ঘ্য বদলায়, এর নাম <b>বিকৃতি</b>। বল সরালে আগের অবস্থায় ফিরে আসার ধর্মকে <b>স্থিতিস্থাপকতা</b> বলে। তবে একটা <b>সীমা (স্থিতিস্থাপক সীমা)</b> আছে, তা পেরোলে স্থায়ী বিকৃতি থেকে যায়।</li>
+      <li><b>বিকৃতি</b> = (L − L₀) ÷ L₀। এর কোনো একক নেই, এটি একটি সংখ্যা।</li>
+      <li><b>পীড়ন</b> = F ÷ A, একক Pa। বিকৃতির কারণে ভেতরে যে প্রত্যয়নী বল তৈরি হয়, তা-ই পীড়ন।</li>
+      <li><b>হুকের সূত্র:</b> স্থিতিস্থাপক সীমার মধ্যে <b>পীড়ন ∝ বিকৃতি</b>। অর্থাৎ পীড়ন = ধ্রুবক × বিকৃতি। (ল্যাব ১১)</li>
+      <li><b>ইয়ং মডুলাস (Y):</b> T/A = Y (L − L₀)/L₀। একক Nm⁻² (Pa)। বইয়ের টেবিল (GPa): রাবার 0.01–0.1, হাড় 9, কাঠ 10, কাচ 50–90, অ্যালুমিনিয়াম 69, তামা 117, লোহা 200, হীরা 1220। Y বেশি হলে একই টানে দৈর্ঘ্য কম বাড়ে।</li>
+      <li><b>আয়তন গুণাঙ্ক (Bulk Modulus, B):</b> গ্যাস বা তরলের আয়তন কমানোর ক্ষেত্রে পীড়ন P, বিকৃতি (V − V₀)/V₀। P = B (V − V₀)/V₀, একক Pa।</li>
+    </ul>
+
+    <h3>৫.৬ পদার্থের তিন অবস্থা ⭐⭐⭐</h3>
+    <ul>
+      <li>পদার্থের ধর্ম অণুতে বজায় থাকে, তাই অণুকেই ছোট একক ধরা হয়। অণুগুলো কীভাবে সাজানো আছে, তার ওপর নির্ভর করে পদার্থ কঠিন, তরল না গ্যাস। (পানি তিন রূপেই: বরফ, পানি, জলীয় বাষ্প।)</li>
+      <li><b>কঠিন:</b> অণুগুলো খুব কাছাকাছি, নিজ জায়গায় কাঁপে, জায়গা বদলাতে পারে না। নির্দিষ্ট আকার ও আয়তন, সংকোচন যায় না, প্রবাহিত হয় না।</li>
+      <li><b>তরল:</b> অণুগুলো কাছাকাছি, কিন্তু একটার পাশ দিয়ে আরেকটা যেতে পারে। নির্দিষ্ট আয়তন, নির্দিষ্ট আকার নেই, সংকোচন যায় না, প্রবাহিত হয়।</li>
+      <li><b>গ্যাস:</b> অণুগুলো অনেক দূরে দূরে, মুক্ত। নির্দিষ্ট আকার বা আয়তন নেই, পুরো পাত্রে ছড়ায়, সংকুচিত করা যায়, সহজে প্রবাহিত হয়। (ল্যাব ১২)</li>
+    </ul>
+    <h4>৫.৬.১ আণবিক গতিতত্ত্ব ও গ্যাসের চাপ</h4>
+    <ul>
+      <li>আবদ্ধ পাত্রে গ্যাসের অণুগুলো ছোটাছুটি করে দেয়ালে ধাক্কা দিয়ে ফিরে আসে। নিউটনের তৃতীয় সূত্র অনুযায়ী দেয়াল একটা পাল্টা বল অণুকে দেয়। অসংখ্য অণুর সম্মিলিত বলই <b>গ্যাসের চাপ</b>।</li>
+      <li>তাপ বাড়ালে অণুর গতিশক্তি বাড়ে, আরও জোরে দেয়ালে আঘাত করে, তাই চাপ বাড়ে।</li>
+      <li><b>নিজে করো:</b> বেলুন ফুলিয়ে স্কচটেপ লাগিয়ে সুচ ফোটালে বেলুন ফাটে না, ফুটো দিয়ে বাতাস বেরোয়।</li>
+    </ul>
+    <h4>৫.৬.২ পদার্থের চতুর্থ অবস্থা: প্লাজমা ⭐⭐</h4>
+    <ul>
+      <li>প্রচণ্ড তাপ বা শক্তিশালী বৈদ্যুতিক ক্ষেত্র দিয়ে গ্যাসকে আয়নিত করলে পরমাণু ইলেকট্রন হারায়। তখন <b>আয়ন ও মুক্ত ইলেকট্রনের মিশ্রণ</b> তৈরি হয়, এটিই প্লাজমা।</li>
+      <li>গ্যাসের মতো দেখালেও প্লাজমার সব ধর্ম গ্যাসের মতো নয়। যেমন চৌম্বক ক্ষেত্র দিয়ে প্লাজমার নির্দিষ্ট আকার তৈরি করা যায়।</li>
+      <li><b>উদাহরণ:</b> টিউবলাইট ও নিয়ন বাতির ভেতরের উজ্জ্বল আলো, বজ্রপাতের বিজলি, দূর নক্ষত্র। ফিউশন শক্তির জন্য হালকা নিউক্লিয়াস একত্র করতে প্লাজমা ব্যবহারের গবেষণা চলছে। (ল্যাব ১৩)</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>👣 ল্যাব 1: চাপ P = F ÷ A</h2>
+    <div class="say">👉 ভর আর ক্ষেত্রফল বদলাও। বালির ওপর বস্তুটি কতটা গভীর দাগ কাটে দেখো। একই বল, কিন্তু ক্ষেত্রফল কম হলে চাপ বেশি।</div>
+<div class="pills" id="p1p"><button data-k="0">🛌 শুয়ে (৫০ kg)</button><button data-k="1">🧍 দাঁড়িয়ে (৫০ kg)</button><button data-k="2">🔪 ধারালো প্রান্ত</button><button data-k="3">🧱 ভোঁতা প্রান্ত</button></div>
+    <div class="ctl"><label>ভর m: <span id="p1mv"></span> kg</label><input type="range" id="p1m" min="1" max="100" step="1" value="50"><label>ক্ষেত্রফল A (সরু ← → চওড়া): <span id="p1av"></span> </label><input type="range" id="p1a" min="0" max="100" step="1" value="60"> <b>= <span id="p1av"></span> cm²</b></div>
+    <div class="row"><div><canvas id="p1c" class="w" width="380" height="260"></canvas></div><div class="grow"><div class="tlinfo" id="p1t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="p1q"></div><div class="cls" id="p1o"></div><div class="fb" id="p1fb"></div><small id="p1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>⚖️ ল্যাব 2: ঘনত্ব ρ = m ÷ V</h2>
+    <div class="say">👉 একটি পদার্থ বেছে নাও আর আয়তন বদলাও। ঘনত্ব বেশি মানে একই জায়গায় অনেক বেশি কণা ঠাসা, তাই ভরও বেশি।</div>
+<div class="pills" id="d2p"><button data-k="0" class="on">💨 বাতাস</button><button data-k="1">🍾 কর্ক</button><button data-k="2">🪵 কাঠ</button><button data-k="3">💧 পানি</button><button data-k="4">🪟 কাচ</button><button data-k="5">🔩 লোহা</button><button data-k="6">🪞 পারদ</button><button data-k="7">🥇 সোনা</button></div>
+    <div class="ctl"><label>আয়তন V: <span id="d2vv"></span> cc</label><input type="range" id="d2v" min="1" max="100" step="1" value="40"></div>
+    <div class="row"><div><canvas id="d2c" class="w" width="380" height="260"></canvas></div><div class="grow"><div class="tlinfo" id="d2t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="d2q"></div><div class="cls" id="d2o"></div><div class="fb" id="d2fb"></div><small id="d2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🤿 ল্যাব 3: তরলের ভেতরে চাপ P = hρg</h2>
+    <div class="say">👉 তরল বেছে নাও আর ডুবুরিকে নিচে নামাও (গভীরতা বাড়াও)। গভীরে গেলে চাপ কত বাড়ে আর সব দিকে সমান কেন, দেখো।</div>
+<div class="pills" id="h3p"><button data-k="0">🛢️ কেরোসিন</button><button data-k="1" class="on">💧 পানি</button><button data-k="2">🌊 সমুদ্রের পানি</button><button data-k="3">🪞 পারদ</button></div>
+    <div class="ctl"><label>গভীরতা h: <span id="h3hv"></span> cm</label><input type="range" id="h3h" min="0" max="1000" step="10" value="300"><label class="sw"><input type="checkbox" id="h3a"> বায়ুমণ্ডলের চাপও ধরো</label></div>
+    <div class="row"><div><canvas id="h3c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="h3t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="h3q"></div><div class="cls" id="h3o"></div><div class="fb" id="h3fb"></div><small id="h3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>⛲ ল্যাব 4: তিনটি ছিদ্র, তিন রকম ফোয়ারা</h2>
+    <div class="say">👉 পানির উচ্চতা বদলাও। যে ছিদ্র যত গভীরে, সেখানে চাপ তত বেশি, তাই পানি তত জোরে ছিটকে বেরোয়।</div>
+    <div class="ctl"><label>পানির উচ্চতা H: <span id="j4hv"></span> cm</label><input type="range" id="j4h" min="30" max="100" step="5" value="100"></div>
+    <div class="row"><div><canvas id="j4c" class="w" width="380" height="270"></canvas></div><div class="grow"><div class="tlinfo" id="j4t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="j4q"></div><div class="cls" id="j4o"></div><div class="fb" id="j4fb"></div><small id="j4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>👑 ল্যাব 5: আর্কিমিডিসের নীতি ও প্লবতা</h2>
+    <div class="say">👉 বস্তুটিকে ধীরে ধীরে পানিতে নামাও। যতটুকু ডুবছে, ততটুকু পানি সরে যাচ্ছে (ডান দিকের কাপে জমছে), আর স্প্রিং ব্যালেন্সে ওজন কমছে।</div>
+<div class="pills" id="a5p"><button data-k="0" class="on">🔩 লোহা</button><button data-k="1">🪟 কাচ</button><button data-k="2">🥇 খাঁটি সোনার মুকুট</button><button data-k="3">👑 ভেজাল মুকুট</button></div>
+    <div class="ctl"><label>বাতাসে ভর M₁: <span id="a5mv"></span> kg</label><input type="range" id="a5m" min="1" max="20" step="1" value="10"><label>নামানো (ওপর ← → নিচ): <span id="a5dv"></span> </label><input type="range" id="a5d" min="0" max="100" step="1" value="0"></div>
+    <div class="row"><div><canvas id="a5c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="a5t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="a5q"></div><div class="cls" id="a5o"></div><div class="fb" id="a5fb"></div><small id="a5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🛟 ল্যাব 6: কেন ভাসে, কেন ডোবে</h2>
+    <div class="say">👉 তরল আর বস্তু বেছে "ছেড়ে দাও" চাপো। বস্তুর ঘনত্ব তরলের চেয়ে কম হলে ভাসে, বেশি হলে ডোবে। ভেসে থাকলে কতটুকু ডুবে থাকে, তাও দেখো।</div>
+<b>তরল:</b><div class="pills" id="f6l"><button data-k="0" class="on">💧 পানি</button><button data-k="1">🌊 সমুদ্রের পানি</button><button data-k="2">🪞 পারদ</button><button data-k="3">🛢️ কেরোসিন</button><button data-k="4">🧂 লবণের দ্রবণ</button></div><b>বস্তু:</b><div class="pills" id="f6ob"><button data-k="0" class="on">🍾 কর্ক</button><button data-k="1">🪵 কাঠ</button><button data-k="2">🧊 বরফ</button><button data-k="3">🥚 পচা ডিম</button><button data-k="4">🥚 তাজা ডিম</button><button data-k="5">🪟 কাচ</button><button data-k="6">🔩 লোহা</button></div>
+    <div class="ctl"><span id="f6sw"><label>লবণের দ্রবণের ঘনত্ব: <span id="f6sv"></span> kg/m³</label><input type="range" id="f6s" min="1000" max="1200" step="10" value="1000"></span></div>
+    <div class="btnrow"><button class="btn" id="f6go">⬇️ ছেড়ে দাও</button><button class="btn alt" id="f6up">↻ ওপরে তোলো</button></div>
+    <div class="row"><div><canvas id="f6c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="f6t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="f6q"></div><div class="cls" id="f6o"></div><div class="fb" id="f6fb"></div><small id="f6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>🏗️ ল্যাব 7: প্যাসকেলের সূত্র: হাইড্রলিক প্রেস</h2>
+    <div class="say">👉 ছোট পিস্টনে সামান্য বল দিয়ে বড় পিস্টনে বিশাল বল পাওয়া যায়। "পাম্প করো" চাপো আর কাজের পরিমাণ মিলিয়ে দেখো।</div>
+    <div class="ctl"><label>ছোট পিস্টনে বল F₁: <span id="q7fv"></span> N</label><input type="range" id="q7f" min="10" max="200" step="10" value="50"><label>ছোট পিস্টনের ক্ষেত্রফল A₁: <span id="q7av"></span> cm²</label><input type="range" id="q7a" min="5" max="50" step="5" value="10"><label>বড় পিস্টনের ক্ষেত্রফল A₂: <span id="q7bv"></span> cm²</label><input type="range" id="q7b" min="100" max="1000" step="50" value="500"><label>গাড়ির ভর: <span id="q7wv"></span> kg</label><input type="range" id="q7w" min="100" max="2000" step="100" value="200"></div>
+    <div class="btnrow"><button class="btn" id="q7go">🦾 পাম্প করো</button><button class="btn alt" id="q7rs">↻ নামিয়ে দাও</button></div>
+    <div class="row"><div><canvas id="q7c" class="w" width="380" height="290"></canvas></div><div class="grow"><div class="tlinfo" id="q7t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="q7q"></div><div class="cls" id="q7o"></div><div class="fb" id="q7fb"></div><small id="q7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>🥫 ল্যাব 8: বায়ুর চাপ: ক্যান ও বোতল চ্যাপ্টা হয় কেন</h2>
+    <div class="say">👉 ভেতর থেকে বাতাস সরালে বাইরের বাতাসের চাপ ক্যান বা বোতলকে চারদিক থেকে চেপে দুমড়ে দেয়।</div>
+<div class="pills" id="c8p"><button data-k="0" class="on">🥫 টিনের ক্যান</button><button data-k="1">🍼 প্লাস্টিকের বোতল</button></div>
+    <div class="ctl"><label>ভেতরের বাতাস সরানো / ঠান্ডা করা: <span id="c8sv"></span> %</label><input type="range" id="c8s" min="0" max="100" step="1" value="0"></div>
+    <div class="row"><div><canvas id="c8c" class="w" width="380" height="290"></canvas></div><div class="grow"><div class="tlinfo" id="c8t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="c8q"></div><div class="cls" id="c8o"></div><div class="fb" id="c8fb"></div><small id="c8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>🏔️ ল্যাব 9: উচ্চতার সাথে বায়ুর চাপ কমে</h2>
+    <div class="say">👉 উচ্চতা বাড়াও। ওপরে বাতাস পাতলা হয়, তাই চাপ আর অক্সিজেনও কমে যায়। কণাগুলোর ঘনত্ব লক্ষ করো।</div>
+<div class="pills" id="k9p"><button data-k="0">🏖️ সমুদ্রপৃষ্ঠ</button><button data-k="1">🧗 এভারেস্ট ৮.৮৫ km</button><button data-k="2">✈️ উড়োজাহাজ ১০ km</button><button data-k="3">🎈 ২০ km</button></div>
+    <div class="ctl"><label>উচ্চতা: <span id="k9hv"></span> km</label><input type="range" id="k9h" min="0" max="25" step="0.05" value="0"></div>
+    <div class="row"><div><canvas id="k9c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="k9t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="k9q"></div><div class="cls" id="k9o"></div><div class="fb" id="k9fb"></div><small id="k9sc"></small>
+  </section>
+
+  <section class="panel" id="lab10">
+    <h2>🌡️ ল্যাব 10: টরিসেলির পরীক্ষা ও ব্যারোমিটার</h2>
+    <div class="say">👉 তরল বেছে বায়ুচাপ বদলাও। নলের ভেতরের তরলস্তম্ভ বাতাসের চাপ মাপে। পারদের ক্ষেত্রে স্বাভাবিক চাপে 76 cm।</div>
+<div class="pills" id="b10p"><button data-k="0" class="on">🪞 পারদ</button><button data-k="1">💧 পানি</button><button data-k="2">🛢️ কেরোসিন</button></div>
+    <div class="ctl"><label>বায়ুর চাপ: <span id="b10sv"></span> kPa</label><input type="range" id="b10s" min="90" max="105" step="0.5" value="101.5"></div>
+    <div class="row"><div><canvas id="b10c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="b10t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="b10q"></div><div class="cls" id="b10o"></div><div class="fb" id="b10fb"></div><small id="b10sc"></small>
+  </section>
+
+  <section class="panel" id="lab11">
+    <h2>🧵 ল্যাব 11: স্থিতিস্থাপকতা ও হুকের সূত্র</h2>
+    <div class="say">👉 রাবার ব্যান্ডে ভর ঝোলাও আর সরাও। কম ভরে ব্যান্ড ফিরে আসে (হুকের সূত্র মানে), বেশি ভরে আর পুরো ফিরে আসে না।</div>
+    <div class="ctl"><label>ঝোলানো ভর M: <span id="e11mv"></span> kg</label><input type="range" id="e11m" min="0" max="5" step="0.2" value="0"></div>
+    <div class="btnrow"><button class="btn" id="e11on">⬇️ ভর ঝোলাও</button><button class="btn alt" id="e11off">⬆️ ভর সরাও</button></div>
+    <div class="row"><div><canvas id="e11c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="e11t"></div><h4>🧱 ইয়ং মডুলাস: একই টানে কে কতটা বাড়ে</h4><div class="ctl"><label>টান T/A: <span id="e11kv"></span> MPa</label><input type="range" id="e11k" min="1" max="50" step="1" value="10"></div><div id="e11y"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="e11q"></div><div class="cls" id="e11o"></div><div class="fb" id="e11fb"></div><small id="e11sc"></small>
+  </section>
+
+  <section class="panel" id="lab12">
+    <h2>🧊 ল্যাব 12: কঠিন, তরল ও গ্যাসের অণু</h2>
+    <div class="say">👉 অবস্থা বেছে তাপমাত্রা বাড়াও। গ্যাসের ক্ষেত্রে পিস্টন নামিয়ে আয়তন কমাও। অণুগুলো দেয়ালে ধাক্কা দিয়ে চাপ তৈরি করে।</div>
+<div class="pills" id="g12p"><button data-k="0">🧊 কঠিন</button><button data-k="1">💧 তরল</button><button data-k="2" class="on">💨 গ্যাস</button></div>
+    <div class="ctl"><label>তাপমাত্রা: <span id="g12kv"></span> %</label><input type="range" id="g12k" min="10" max="100" step="5" value="40"><label>আয়তন (গ্যাস): <span id="g12vv"></span> %</label><input type="range" id="g12v" min="40" max="100" step="5" value="100"></div>
+    <div class="row"><div><canvas id="g12c" class="w" width="380" height="290"></canvas></div><div class="grow"><div class="tlinfo" id="g12t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="g12q"></div><div class="cls" id="g12o"></div><div class="fb" id="g12fb"></div><small id="g12sc"></small>
+  </section>
+
+  <section class="panel" id="lab13">
+    <h2>⚡ ল্যাব 13: পদার্থের চতুর্থ অবস্থা: প্লাজমা</h2>
+    <div class="say">👉 তাপমাত্রা বাড়াও। প্রচণ্ড তাপে পরমাণু থেকে ইলেকট্রন ছুটে যায়, তখন তৈরি হয় আয়ন ও মুক্ত ইলেকট্রনের মিশ্রণ, অর্থাৎ প্লাজমা। চৌম্বক ক্ষেত্র দিয়ে এটিকে আটকে রাখা যায়।</div>
+    <div class="ctl"><label>তাপমাত্রা: <span id="z13kv"></span> %</label><input type="range" id="z13k" min="0" max="100" step="1" value="10"><label class="sw"><input type="checkbox" id="z13b"> 🧲 চৌম্বক ক্ষেত্র</label></div>
+    <div class="row"><div><canvas id="z13c" class="w" width="380" height="280"></canvas></div><div class="grow"><div class="tlinfo" id="z13t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="z13q"></div><div class="cls" id="z13o"></div><div class="fb" id="z13fb"></div><small id="z13sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। বইয়ের নমুনা প্রশ্নের উত্তরমালা নেই, তাই উত্তরগুলো আমার হিসাব করা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; পদার্থের অবস্থা ও চাপ (পদার্থবিজ্ঞান অধ্যায় ৫)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+function opts(correct,wrongs){var seen={},a=[{t:correct,ok:1}];seen[correct]=1;wrongs.forEach(function(w){if(!seen[w]){seen[w]=1;a.push({t:w,ok:0});}});return shuffle(a);}
+function arrow(x,x1,y1,x2,y2,col,lw){var a=Math.atan2(y2-y1,x2-x1);x.strokeStyle=col;x.fillStyle=col;x.lineWidth=lw||3;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-11*Math.cos(a-.4),y2-11*Math.sin(a-.4));x.lineTo(x2-11*Math.cos(a+.4),y2-11*Math.sin(a+.4));x.closePath();x.fill();}
+function person(x,px,py,col){circ(x,0,px,py-22,6,col,null);x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(px,py-16);x.lineTo(px,py-4);x.moveTo(px-6,py-11);x.lineTo(px+6,py-11);x.moveTo(px,py-4);x.lineTo(px-5,py+6);x.moveTo(px,py-4);x.lineTo(px+5,py+6);x.stroke();}
+/* ---------- সাধারণ সহায়ক ---------- */
+function pills(id,fn){$(id).onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var all=$(id).querySelectorAll('button'),i;for(i=0;i<all.length;i++)all[i].classList.toggle('on',all[i]===b);fn(+b.getAttribute('data-k'));};}
+function sci(x){if(!(x>0))return bn(0);var e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);if(+m.toFixed(2)>=10){m/=10;e++;}return bn(parseFloat(m.toFixed(2)))+' × ১০'+(e<0?'⁻':'')+sup(Math.abs(e));}
+function brow(label,val,max,col,txtv){return '<div class="bar"><div class="bl">'+label+'</div><div class="bt"><div class="bf" style="width:'+clamp(val/max*100,1,100)+'%;background:'+col+'"></div></div><b style="min-width:80px;font-size:14px;color:#1f3a5f">'+(txtv||'')+'</b></div>';}
+function on(ids,fn){ids.forEach(function(i){$(i).oninput=fn;$(i).onchange=fn;});}
+var G=9.8;
+function box(x,px,py,w,h,fill,stroke){x.fillStyle=fill;x.fillRect(px,py,w,h);if(stroke){x.strokeStyle=stroke;x.lineWidth=2;x.strokeRect(px,py,w,h);}}
+function wheel(x,px,py,r){circ(x,0,px,py,r,'#333',null);circ(x,0,px,py,r*.4,'#bbb',null);}
+
+
+/* ---------- সুন্দর আঁকার সহায়ক (নতুন) ---------- */
+function shade(c,a){var h=hx(c),o='#';for(var i=0;i<3;i++){var v=clamp(Math.round(h[i]+a),0,255).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function grad(x,px,py,w,h,c1,c2){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1);g.addColorStop(1,c2);x.fillStyle=g;x.fillRect(px,py,w,h);}
+function ball(x,px,py,r,col){var g=x.createRadialGradient(px-r*.35,py-r*.35,r*.08,px,py,r);g.addColorStop(0,'#ffffff');g.addColorStop(.3,col);g.addColorStop(1,shade(col,-55));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();}
+function rr(x,px,py,w,h,r){r=Math.min(r,w/2,h/2);x.beginPath();x.moveTo(px+r,py);x.lineTo(px+w-r,py);x.quadraticCurveTo(px+w,py,px+w,py+r);x.lineTo(px+w,py+h-r);x.quadraticCurveTo(px+w,py+h,px+w-r,py+h);x.lineTo(px+r,py+h);x.quadraticCurveTo(px,py+h,px,py+h-r);x.lineTo(px,py+r);x.quadraticCurveTo(px,py,px+r,py);x.closePath();}
+function tag(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.lineJoin='round';x.lineWidth=4;x.strokeStyle='rgba(255,255,255,.92)';x.strokeText(s,px,py);x.fillStyle=col||NAVY;x.fillText(s,px,py);}
+function wave(x,px,py,w,h,t,c1,c2,amp){amp=amp===undefined?2.5:amp;var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1||'rgba(86,176,240,.88)');g.addColorStop(1,c2||'rgba(22,84,172,.96)');x.fillStyle=g;x.beginPath();x.moveTo(px,py+h);x.lineTo(px,py);var i;for(i=0;i<=w;i+=4)x.lineTo(px+i,py+Math.sin(i/13+t*.05)*amp);x.lineTo(px+w,py+h);x.closePath();x.fill();x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=1.6;x.beginPath();for(i=0;i<=w;i+=4){var yy=py+Math.sin(i/13+t*.05)*amp;if(i===0)x.moveTo(px,yy);else x.lineTo(px+i,yy);}x.stroke();}
+function bubs(x,px,py,w,h,n,t){for(var i=0;i<n;i++){var u=((t*.004*(0.6+rp(i,0,.8))+rp(i+50,0,1))%1),bx=px+rp(i,6,w-6)+Math.sin(t*.04+i)*3,by=py+h-u*h,r=1.5+rp(i+9,0,2.2);if(by<py+4)continue;x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=1.2;x.beginPath();x.arc(bx,by,r,0,7);x.stroke();}}
+function glassBox(x,px,py,w,h){x.strokeStyle='#5b7389';x.lineWidth=3;x.beginPath();x.moveTo(px,py);x.lineTo(px,py+h);x.lineTo(px+w,py+h);x.lineTo(px+w,py);x.stroke();x.fillStyle='rgba(255,255,255,.18)';x.fillRect(px+4,py+4,5,h-8);}
+function sun(x,px,py,r,t){x.save();x.translate(px,py);x.rotate(t*.004);x.strokeStyle='rgba(255,196,60,.7)';x.lineWidth=3;for(var i=0;i<12;i++){x.rotate(Math.PI/6);x.beginPath();x.moveTo(r+4,0);x.lineTo(r+11,0);x.stroke();}x.restore();ball(x,px,py,r,'#ffc83d');}
+function cloud(x,px,py,s,col){x.fillStyle=col||'rgba(255,255,255,.95)';[[0,0,14],[16,-6,17],[34,0,14],[17,6,15]].forEach(function(c){x.beginPath();x.arc(px+c[0]*s,py+c[1]*s,c[2]*s,0,7);x.fill();});}
+function dial(x,cx,cy,r,frac,txtv,col){x.strokeStyle='#dfe7ee';x.lineWidth=9;x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*2.2);x.stroke();x.strokeStyle=col||'#2a9d8f';x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*(.8+1.4*clamp(frac,0,1)));x.stroke();var a=Math.PI*(.8+1.4*clamp(frac,0,1));x.strokeStyle=NAVY;x.lineWidth=3;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a)*(r-6),cy+Math.sin(a)*(r-6));x.stroke();circ(x,0,cx,cy,4,NAVY,null);if(txtv)tag(x,txtv,cx,cy+r*.62,NAVY,12);}
+function sand(x,px,py,w,h){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,'#eccb8a');g.addColorStop(1,'#c99a55');x.fillStyle=g;x.fillRect(px,py,w,h);}
+function atom(x,px,py,r,col,t){ball(x,px,py,r,col);}
+function fmtN(v){if(Math.abs(v)>=1000)return bn(Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g,','));return bn(parseFloat(v.toFixed(2)));}
+
+function tagd(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=4;x.fillStyle=col||'#fff';x.fillText(s,px,py);x.restore();}
+
+
+/* ================= ল্যাব ১: চাপ ================= */
+var P1={A:3000,d:0};
+function p1set(m,A){$('p1m').value=m;P1.A=A;$('p1a').value=Math.round(Math.log10(A)/0.0378);p1info();}
+function p1info(){var m=+$('p1m').value,A=P1.A,F=m*G,P=F/(A/10000);$('p1mv').textContent=bn(m);$('p1av').textContent=bn(A);
+  $('p1t').innerHTML='ওজন F = m g = '+bn(m)+' × ৯.৮ = <b>'+f(F,1)+' N</b><br>ক্ষেত্রফল A = '+bn(A)+' cm² = '+f(A/10000,4)+' m²<br>চাপ P = F ÷ A = <b style="font-size:18px">'+fmtN(P)+' Pa</b>'+
+  (P>10000?'<br><span style="color:#c0392b">⚠️ চাপ অনেক বেশি, তাই বালিতে গভীর দাগ। (এজন্য চোরাবালিতে দাঁড়ালে ডুবে যায়, শুয়ে পড়লে ডোবে না।)</span>':'<br><span style="color:#1d7a6f">চাপ কম, তাই হালকা দাগ।</span>')+
+  '<br><small>বই: 50 kg-এর মানুষ শুয়ে থাকলে (0.5 m²) চাপ 980 Pa, দাঁড়ালে (0.03 m²) প্রায় 16,333 Pa।</small>';}
+pills('p1p',function(k){if(k===0)p1set(50,5000);else if(k===1)p1set(50,300);else if(k===2)p1set(5,2);else p1set(5,200);});
+on(['p1m'],function(){p1info();});
+$('p1a').oninput=function(){P1.A=Math.max(1,Math.round(Math.pow(10,+this.value*0.0378)));p1info();};
+DRAWS.push(function(){var x=ctxOf('p1c'),m=+$('p1m').value,A=P1.A,P=m*G/(A/10000),tgt=46*(1-Math.exp(-P/12000));P1.d+=(tgt-P1.d)*.035;
+  grad(x,0,0,380,260,'#bfe3ff','#f6fbff');sun(x,330,44,18,FR);cloud(x,70,50,1,'rgba(255,255,255,.95)');cloud(x,230,34,.7,'rgba(255,255,255,.85)');
+  var gy=176,w=clamp(14+Math.sqrt(A)*2.3,16,236),cx=190,d=P1.d;
+  var g=x.createLinearGradient(0,gy,0,260);g.addColorStop(0,'#efd292');g.addColorStop(1,'#bf8f4a');x.fillStyle=g;
+  x.beginPath();x.moveTo(0,260);x.lineTo(0,gy);x.lineTo(cx-w/2-26,gy);x.quadraticCurveTo(cx-w/2-6,gy,cx-w/2,gy+d);x.lineTo(cx+w/2,gy+d);x.quadraticCurveTo(cx+w/2+6,gy,cx+w/2+26,gy);x.lineTo(380,gy);x.lineTo(380,260);x.closePath();x.fill();
+  for(var i=0;i<40;i++){x.fillStyle='rgba(120,80,30,.25)';x.fillRect(rp(i,0,378),gy+8+rp(i+7,0,70),2,2);}
+  var bh=clamp(34+m*.5,36,88),by=gy+d-bh;
+  x.save();x.shadowColor='rgba(0,0,0,.3)';x.shadowBlur=8;x.shadowOffsetY=3;
+  if(w<44){var gg=x.createLinearGradient(cx-22,0,cx+22,0);gg.addColorStop(0,'#5b8def');gg.addColorStop(1,'#2a4fa8');x.fillStyle=gg;x.beginPath();x.moveTo(cx-22,by);x.lineTo(cx+22,by);x.lineTo(cx+w/2,by+bh);x.lineTo(cx-w/2,by+bh);x.closePath();x.fill();}
+  else{var g2=x.createLinearGradient(0,by,0,by+bh);g2.addColorStop(0,'#6f9bff');g2.addColorStop(1,'#2f55b5');x.fillStyle=g2;rr(x,cx-w/2,by,w,bh,6);x.fill();}
+  x.restore();
+  tag(x,bn(m)+' kg',cx,by+bh/2,'#1f3a5f',14);
+  arrow(x,cx,by-44,cx,by-4,RED,4);tag(x,'F = '+f(m*G,0)+' N',cx+46,by-26,RED,13,'left');
+  var n=Math.max(2,Math.min(9,Math.round(w/18))),al=clamp(6+Math.log10(P+1)*4.2,8,32);
+  for(i=0;i<n;i++){var ax=cx-w/2+(i+.5)*w/n;arrow(x,ax,gy+d+2,ax,gy+d+2+al,'#a25a14',2.4);}
+  tag(x,'চাপ P = '+fmtN(P)+' Pa',190,16,NAVY,14);});
+p1set(50,300);
+qgame('p1q','p1o','p1fb','p1sc',[
+ ['100 N বল 0.5 m² ক্ষেত্রফলে লাগলে চাপ কত?','200 Pa',['50 Pa','100 Pa','20 Pa'],'P = F ÷ A = 100 ÷ 0.5 = 200 Pa।'],
+ ['একই বলে ক্ষেত্রফল অর্ধেক হলে চাপ কী হবে?','দ্বিগুণ',['অর্ধেক','একই','চার গুণ'],'P = F/A, A অর্ধেক হলে P দ্বিগুণ।'],
+ ['পেরেকের সূচালো মাথা সহজে কাঠে ঢোকে কেন?','ক্ষেত্রফল কম, তাই চাপ বেশি',['ক্ষেত্রফল বেশি','ভর বেশি','ঘনত্ব কম'],'ক্ষেত্রফল খুব কম, তাই একই বলে চাপ অনেক বেশি।'],
+ ['চাপের একক কোনটি?','প্যাসকেল (Pa)',['জুল (J)','ওয়াট (W)','নিউটন (N)'],'1 Pa = 1 N/m²।'],
+ ['চোরাবালিতে পড়লে শুয়ে পড়া ভালো কেন?','ক্ষেত্রফল বাড়ে, চাপ কমে',['ওজন কমে','বল বাড়ে','ঘনত্ব বাড়ে'],'শুয়ে পড়লে ক্ষেত্রফল বাড়ে, তাই চাপ কমে।'],
+ ['চাপ কোন ধরনের রাশি?','স্কেলার',['ভেক্টর','দুটোই','কোনোটিই নয়'],'চাপের কোনো নির্দিষ্ট দিক নেই, এটি স্কেলার।']]);
+
+
+/* ================= ল্যাব ২: ঘনত্ব ================= */
+var D2L=[['বাতাস',0.00127,'#7fc4ee'],['কর্ক',0.25,'#d9a86a'],['কাঠ',0.45,'#b9803f'],['পানি',1,'#4aa3e8'],['কাচ',2.6,'#5fc2b4'],['লোহা',7.8,'#7f8c9b'],['পারদ',13.6,'#aeb4c0'],['সোনা',19.3,'#eab80f']];
+var D2={k:3};
+function d2info(){var L=D2L[D2.k],V=+$('d2v').value,m=L[1]*V;$('d2vv').textContent=bn(V);
+  $('d2t').innerHTML='<b>'+L[0]+'</b>-এর ঘনত্ব ρ = '+bn(L[1])+' gm/cc = <b>'+fmtN(L[1]*1000)+' kg/m³</b><br>আয়তন V = '+bn(V)+' cm³<br>ভর m = ρ × V = '+bn(L[1])+' × '+bn(V)+' = <b>'+bn(parseFloat(m.toFixed(2)))+' gm</b><br><small>ঘনত্ব = ভর ÷ আয়তন। একই আয়তনে সোনার ভর বাতাসের প্রায় ১৫,০০০ গুণ!</small>';}
+pills('d2p',function(k){D2.k=k;d2info();});on(['d2v'],d2info);
+DRAWS.push(function(){var x=ctxOf('d2c'),L=D2L[D2.k],V=+$('d2v').value,s=48+88*Math.cbrt(V/100),x0=24,y0=222-s,dd=s*.26,i,j;
+  grad(x,0,0,380,260,'#eef6fb','#dce9f3');x.fillStyle='#cdd9e3';x.fillRect(0,222,380,38);x.fillStyle='rgba(0,0,0,.08)';x.beginPath();x.ellipse(x0+s/2+dd/2,224,s*.62,7,0,0,7);x.fill();
+  x.fillStyle=shade(L[2],40);x.beginPath();x.moveTo(x0,y0);x.lineTo(x0+dd,y0-dd);x.lineTo(x0+s+dd,y0-dd);x.lineTo(x0+s,y0);x.closePath();x.fill();
+  x.fillStyle=shade(L[2],-35);x.beginPath();x.moveTo(x0+s,y0);x.lineTo(x0+s+dd,y0-dd);x.lineTo(x0+s+dd,y0+s-dd);x.lineTo(x0+s,y0+s);x.closePath();x.fill();
+  x.fillStyle=shade(L[2],12);x.fillRect(x0,y0,s,s);
+  var sp=clamp(30/(0.8+Math.sqrt(L[1])),6.5,30),c=0;
+  for(i=sp/2;i<s;i+=sp)for(j=sp/2;j<s;j+=sp){var jx=Math.sin(FR*.05+c*1.7)*1.3,jy=Math.cos(FR*.045+c*2.3)*1.3;ball(x,x0+i+jx,y0+j+jy,Math.min(2.6,sp*.3),shade(L[2],-70));c++;}
+  tag(x,'ভর = '+bn(parseFloat((L[1]*V).toFixed(1)))+' gm',x0+s/2,244,NAVY,13);
+  tag(x,bn(V)+' cm³',x0+s/2,y0-dd-10,'#2a6f66',13);
+  for(i=0;i<D2L.length;i++){var by=30+i*25,w=clamp((Math.log10(D2L[i][1])+3)/4.4*104,3,104),on_=i===D2.k;
+    tag(x,D2L[i][0],210,by+8,on_?'#c0392b':NAVY,12,'left');x.fillStyle='#e4ecf2';rr(x,262,by,104,16,8);x.fill();x.fillStyle=D2L[i][2];rr(x,262,by,Math.max(8,w),16,8);x.fill();
+    if(on_){x.strokeStyle='#c0392b';x.lineWidth=2;rr(x,260,by-2,108,20,10);x.stroke();}}
+  tag(x,'ঘনত্ব (লগ স্কেল)',314,14,'#4b5d6e',12);});
+d2info();
+qgame('d2q','d2o','d2fb','d2sc',[
+ ['ঘনত্ব = ?','ভর ÷ আয়তন',['আয়তন ÷ ভর','ভর × আয়তন','বল ÷ ক্ষেত্রফল'],'ρ = m / V।'],
+ ['পানির ঘনত্ব কত?','1000 kg/m³',['100 kg/m³','13600 kg/m³','1 kg/m³'],'পানির ঘনত্ব 1 gm/cc = 1000 kg/m³।'],
+ ['কোনটির ঘনত্ব সবচেয়ে বেশি?','সোনা',['লোহা','কাচ','পানি'],'বইয়ের টেবিলে সোনা 19.30 gm/cc।'],
+ ['10 cc আয়তনের লোহার (7.8 gm/cc) ভর কত?','78 gm',['7.8 gm','780 gm','1.28 gm'],'m = ρV = 7.8 × 10 = 78 gm।'],
+ ['তাপমাত্রা বাড়লে সাধারণত পদার্থের ঘনত্ব কী হয়?','কমে',['বাড়ে','একই থাকে','দ্বিগুণ হয়'],'তাপে আয়তন বাড়ে, ভর একই, তাই ঘনত্ব কমে।'],
+ ['1 gm/cc = কত kg/m³?','1000',['1','10','100000'],'1 gm/cc = 1000 kg/m³।']]);
+
+/* ================= ল্যাব ৩: তরলের গভীরতা ও চাপ ================= */
+var H3L=[['কেরোসিন',800,'rgba(244,208,96,.86)','rgba(196,126,22,.96)'],['পানি',1000,'rgba(86,176,240,.88)','rgba(22,84,172,.96)'],['সমুদ্রের পানি',1030,'rgba(64,168,200,.9)','rgba(10,72,134,.97)'],['পারদ',13600,'rgba(214,218,226,.96)','rgba(120,126,142,1)']];
+var H3={k:1};
+function h3calc(){var L=H3L[H3.k],h=+$('h3h').value/100,P=h*L[1]*G;return {L:L,h:h,P:P,tot:P+($('h3a').checked?101325:0)};}
+function h3info(){var c=h3calc();$('h3hv').textContent=bn(c.h*100);
+  $('h3t').innerHTML='সূত্র: <b>P = h ρ g</b> (g = ৯.৮)<br>P = '+bn(parseFloat(c.h.toFixed(2)))+' × '+fmtN(c.L[1])+' × ৯.৮ = <b style="font-size:18px">'+fmtN(c.P)+' Pa</b><br>= '+bn(parseFloat((c.P/101325).toFixed(3)))+' atm'+($('h3a').checked?'<br>বাতাসসহ মোট = '+fmtN(c.tot)+' Pa = <b>'+bn(parseFloat((c.tot/101325).toFixed(2)))+' atm</b>':'')+'<br><small>পানিতে প্রতি 10 m গভীরতায় চাপ প্রায় 1 atm (101325 Pa) করে বাড়ে। কোনো বিন্দুতে চাপ সব দিকে সমান।</small>';}
+pills('h3p',function(k){H3.k=k;h3info();});on(['h3h','h3a'],h3info);
+DRAWS.push(function(){var x=ctxOf('h3c'),c=h3calc(),L=c.L,tx=60,tw=200,ty=46,th=230,py=ty+c.h/10*th,i;
+  grad(x,0,0,380,300,'#e9f3fa','#d6e6f1');
+  wave(x,tx,ty,tw,th,FR,L[2],L[3],2.2);bubs(x,tx,ty,tw,th,10,FR);glassBox(x,tx,ty-20,tw,th+20);
+  if($('h3a').checked){for(i=0;i<5;i++){var ax=tx+22+i*38;arrow(x,ax,ty-34,ax,ty-6,'#8a97a6',2.4);}tag(x,'বায়ুমণ্ডলের চাপ',tx+tw/2,ty-42,'#5d6b7a',12);}
+  for(i=0;i<=10;i++){var ry=ty+i*th/10;x.strokeStyle='rgba(255,255,255,.5)';x.lineWidth=1;x.beginPath();x.moveTo(tx+tw-12,ry);x.lineTo(tx+tw,ry);x.stroke();if(i%2===0)tag(x,bn(i)+' m',tx+tw+30,ry,'#4b5d6e',12);}
+  var len=10+14*Math.log10(1+c.tot/1000),cx=tx+tw/2-10;
+  arrow(x,cx,py-14-len,cx,py-14,'#e63946',3);arrow(x,cx,py+14+len,cx,py+14,'#e63946',3);arrow(x,cx-14-len,py,cx-14,py,'#e63946',3);arrow(x,cx+14+len,py,cx+14,py,'#e63946',3);
+  ball(x,cx,py,13,'#f5b25a');x.fillStyle='#2b3d4f';rr(x,cx-9,py-5,18,7,3);x.fill();x.fillStyle='rgba(150,220,255,.85)';x.fillRect(cx-7,py-4,5,5);x.fillRect(cx+2,py-4,5,5);
+  tag(x,'h = '+bn(c.h*100)+' cm',cx,py+52+len*0+10,NAVY,13);
+  dial(x,338,84,28,Math.log10(1+c.tot/1000)/Math.log10(1+1.4e6/1000),bn(parseFloat((c.tot/101325).toFixed(1)))+' atm','#e63946');tag(x,'চাপমাপক',338,44,NAVY,12);});
+h3info();
+qgame('h3q','h3o','h3fb','h3sc',[
+ ['তরলের ভেতরে চাপ কীসের সমানুপাতিক?','গভীরতার',['ক্ষেত্রফলের','ঘনত্বের ব্যস্তানুপাতিক','আয়তনের'],'P = hρg, তাই গভীরতা h-এর সমানুপাতিক।'],
+ ['পানিতে প্রতি 10 m গভীরতায় চাপ প্রায় কত বাড়ে?','1 atm',['10 atm','0.1 atm','100 atm'],'প্রতি 10 m-এ প্রায় 1 atm।'],
+ ['5 m গভীরতায় পানির চাপ কত? (ρ = 1000, g = 9.8)','49000 Pa',['4900 Pa','5000 Pa','98000 Pa'],'P = 5 × 1000 × 9.8 = 49000 Pa।'],
+ ['একই গভীরতায় পানি ও পারদের মধ্যে কোনটিতে চাপ বেশি?','পারদে',['পানিতে','সমান','কোনোটিতে নয়'],'পারদের ঘনত্ব বেশি, তাই P = hρg বেশি।'],
+ ['তরলের ভেতরে কোনো বিন্দুতে চাপ কোন দিকে কাজ করে?','সব দিকে সমান',['শুধু নিচে','শুধু ওপরে','শুধু পাশে'],'তরলের চাপের নির্দিষ্ট দিক নেই, সব দিকে সমান।'],
+ ['1 atm = কত Pa?','101325',['1000','10132','1013250'],'1 atm = 101325 Pa।']]);
+
+/* ================= ল্যাব ৪: ছিদ্রের ফোয়ারা ================= */
+var J4Z=[20,45,70];
+function j4info(){var H=+$('j4h').value,h='';$('j4hv').textContent=bn(H);
+  J4Z.forEach(function(z,i){var y=H-z;h+=(i?'<br>':'')+'<b>ছিদ্র '+bn(i+1)+'</b> (নিচ থেকে '+bn(z)+' cm): ';if(y<=0)h+='পানির ওপরে, তাই ধারা নেই';else{h+='গভীরতা '+bn(y)+' cm, বেগ v = √(2gy) = <b>'+bn(parseFloat(Math.sqrt(2*G*y/100).toFixed(2)))+' m/s</b>, পাল্লা = <b>'+bn(parseFloat((2*Math.sqrt(y*z)).toFixed(1)))+' cm</b>';}});
+  $('j4t').innerHTML=h+'<br><small>গভীরে চাপ বেশি, তাই বেগ বেশি। (পাল্লা সবচেয়ে বেশি হয় মাঝামাঝি ছিদ্রে।)</small>';}
+on(['j4h'],j4info);
+DRAWS.push(function(){var x=ctxOf('j4c'),H=+$('j4h').value,gy=232,S=1.5,tx=24,tw=80,wt=gy-H*S,i,k;
+  grad(x,0,0,380,270,'#eaf3fa','#d9e8f2');grad(x,0,gy,380,38,'#c79a63','#9c7040');x.fillStyle='rgba(0,0,0,.12)';x.fillRect(0,gy,380,3);
+  wave(x,tx,wt,tw,gy-wt,FR,'rgba(86,176,240,.9)','rgba(22,84,172,.96)',2);glassBox(x,tx,gy-150-14,tw,164);
+  J4Z.forEach(function(z,i){var y=H-z,hy=gy-z*S;if(y<=0){circ(x,0,tx+tw,hy,3,'#888',null);return;}
+    var rg=2*Math.sqrt(y*z),vn=Math.sqrt(y/100);
+    x.strokeStyle='rgba(96,180,240,.38)';x.lineWidth=4;x.beginPath();for(k=0;k<=40;k++){var dx=rg*k/40,dy=dx*dx/(4*y);x.lineTo(tx+tw+dx*S,hy+dy*S);if(!k)x.moveTo(tx+tw,hy);}x.stroke();
+    for(k=0;k<10;k++){var s=((FR*.0065*(0.6+vn)+k/10)%1),dx=s*rg,dy=dx*dx/(4*y);circ(x,0,tx+tw+dx*S,hy+dy*S,2.6,'#dff3ff','#4aa3e8',1.2);}
+    circ(x,0,tx+tw,hy,3.2,'#2b3d4f',null);arrow(x,tx+tw-12-Math.min(52,y*.55),hy,tx+tw-8,hy,'#e63946',2.6);tag(x,bn(i+1),tx+tw+12,hy-10,NAVY,13);});
+  tag(x,'পানির উচ্চতা H = '+bn(H)+' cm',tx+tw/2+30,20,NAVY,13);tag(x,'টেবিল',330,252,'#4a2f10',12);});
+j4info();
+qgame('j4q','j4o','j4fb','j4sc',[
+ ['কোন ছিদ্র দিয়ে পানি সবচেয়ে জোরে বেরোয়?','সবচেয়ে নিচের ছিদ্র',['সবচেয়ে ওপরের ছিদ্র','মাঝের ছিদ্র','সবগুলো সমান'],'গভীরে চাপ বেশি, তাই নিচের ছিদ্রে বেগ বেশি।'],
+ ['পানির উচ্চতা কমালে ধারার বেগ কী হয়?','কমে',['বাড়ে','একই থাকে','শূন্য হয়'],'গভীরতা কমলে চাপ কমে, তাই বেগ কমে।'],
+ ['পানির স্তরের ওপরের ছিদ্রে কী হবে?','পানি বেরোবে না',['জোরে বেরোবে','ধীরে বেরোবে','পাল্টে যাবে'],'ছিদ্র পানির ওপরে থাকলে গভীরতা শূন্য।'],
+ ['ছিদ্রে পানির চাপ কীসের ওপর নির্ভর করে?','তরলের গভীরতা',['পাত্রের আকার','ছিদ্রের রং','পাত্রের ভর'],'P = hρg।']]);
+
+
+/* ================= ল্যাব ৫: আর্কিমিডিসের নীতি ================= */
+var A5L=[['লোহা',7800],['কাচ',2600],['খাঁটি সোনার মুকুট',19300],['ভেজাল মুকুট',16666]];
+var A5={k:0,cur:0};
+function a5calc(){var M=+$('a5m').value,rho=A5L[A5.k][1],VL=M/rho*1000,s=14+26*Math.cbrt(VL);return {M:M,rho:rho,VL:VL,s:s};}
+function a5sub(c){var ytop=lerp(140-c.s-34,150,A5.cur);return {ytop:ytop,sub:clamp((ytop+c.s-140)/c.s,0,1)};}
+function a5info(){var c=a5calc(),q=a5sub(c),Vs=q.sub*c.VL,M2=c.M-Vs;$('a5mv').textContent=bn(c.M);
+  var h='বাতাসে ওজন M₁ = <b>'+bn(c.M)+' kg</b><br>পানিতে ওজন M₂ = <b>'+bn(parseFloat(M2.toFixed(2)))+' kg</b><br>সরে যাওয়া পানির ওজন (প্লবতা) = M₁ − M₂ = <b>'+bn(parseFloat((c.M-M2).toFixed(2)))+' kg-wt</b><br>';
+  if(q.sub>=.99){var d=c.M/(c.M-M2);h+='পুরো ডুবেছে, তাই আয়তন V = (M₁−M₂) ÷ ρ<sub>w</sub> = '+bn(parseFloat(c.VL.toFixed(2)))+' লিটার<br><b>ঘনত্ব = M₁ ÷ (M₁−M₂) = '+bn(parseFloat(d.toFixed(2)))+' gm/cc</b>';
+    if(A5.k===3)h+='<br><span style="color:#c0392b">⚠️ খাঁটি সোনার ঘনত্ব 19.3 gm/cc। এটি কম, তাই মুকুটে খাদ মেশানো (বইয়ের হিসাবে ≈ 16,666 kg/m³)।</span>';
+    if(A5.k===2)h+='<br><span style="color:#1d7a6f">✅ ঘনত্ব 19.3 gm/cc, মুকুট খাঁটি।</span>';}
+  else h+='<small>আরও নামাও। আংশিক ডুবলে প্লবতা কম।</small>';
+  $('a5t').innerHTML=h;}
+pills('a5p',function(k){A5.k=k;a5info();});on(['a5m'],a5info);
+$('a5d').oninput=function(){a5info();};
+DRAWS.push(function(){var x=ctxOf('a5c'),c=a5calc(),tg=+$('a5d').value/100,mov=Math.abs(tg-A5.cur)>.004;A5.cur+=(tg-A5.cur)*.07;var q=a5sub(c),Vs=q.sub*c.VL,M2=c.M-Vs,i;
+  if(mov)a5info();
+  grad(x,0,0,380,300,'#eef5fa','#dbe8f1');
+  /* স্প্রিং ব্যালেন্স */
+  x.fillStyle='#8896a5';x.fillRect(150,0,50,6);x.strokeStyle='#8896a5';x.lineWidth=3;x.beginPath();x.moveTo(175,6);x.lineTo(175,16);x.stroke();
+  grad(x,158,16,34,52,'#f7fafc','#cfd9e2');x.strokeStyle='#5b7389';x.lineWidth=2;x.strokeRect(158,16,34,52);
+  for(i=0;i<6;i++){x.fillStyle='#5b7389';x.fillRect(162,22+i*7,i%2?6:12,1.5);}
+  var py=22+clamp(M2/20,0,1)*36;x.fillStyle='#e63946';x.fillRect(160,py,30,3);
+  tag(x,bn(parseFloat(M2.toFixed(1)))+' kg',250,34,'#c0392b',15);tag(x,'স্প্রিং ব্যালেন্স',250,16,NAVY,12);
+  x.strokeStyle='#6a7886';x.lineWidth=2;x.beginPath();x.moveTo(175,68);x.lineTo(175,q.ytop);x.stroke();
+  /* বস্তু */
+  var cols=['#8a96a4','#6fd0c0','#f0c030','#d8a825'],s=c.s,ox=175-s/2;
+  x.save();x.shadowColor='rgba(0,0,0,.25)';x.shadowBlur=6;grad(x,ox,q.ytop,s,s,shade(cols[A5.k],40),shade(cols[A5.k],-40));x.restore();
+  tag(x,bn(c.M)+' kg',175,q.ytop+s/2,'#1f3a5f',12);
+  /* পাত্র ও পানি */
+  wave(x,100,140,150,132,FR,'rgba(86,176,240,.55)','rgba(22,84,172,.6)',1.6);
+  x.strokeStyle='#5b7389';x.lineWidth=3;x.beginPath();x.moveTo(100,112);x.lineTo(100,272);x.lineTo(250,272);x.lineTo(250,140);x.lineTo(278,152);x.stroke();x.beginPath();x.moveTo(250,112);x.lineTo(250,140);x.stroke();
+  tag(x,'ওভারফ্লো পাত্র',175,288,NAVY,12);
+  /* কাপ */
+  var ch=clamp(Vs*30,0,58);x.fillStyle='rgba(86,176,240,.8)';x.fillRect(288,272-ch,52,ch);x.strokeStyle='#5b7389';x.lineWidth=3;x.beginPath();x.moveTo(286,206);x.lineTo(288,272);x.lineTo(340,272);x.lineTo(342,206);x.stroke();
+  if(mov&&Vs>.001&&A5.cur>0.02)for(i=0;i<4;i++){var u=((FR*.04+i/4)%1);circ(x,0,278+u*14,152+u*u*100,2.4,'#7fc4ee',null);}
+  tag(x,'সরে যাওয়া পানি',315,198,NAVY,12);tag(x,bn(parseFloat(Vs.toFixed(2)))+' L',315,258,NAVY,13);});
+a5info();
+qgame('a5q','a5o','a5fb','a5sc',[
+ ['আর্কিমিডিসের নীতিতে প্লবতা = ?','সরে যাওয়া তরলের ওজন',['বস্তুর ওজন','তরলের ঘনত্ব','পাত্রের ওজন'],'বস্তু যতটুকু তরল সরায়, তার ওজনই ওপরের দিকে প্লবতা।'],
+ ['বস্তু পানিতে ডুবালে ওজন কম মনে হয় কেন?','ওপরের দিকে প্লবতা কাজ করে',['ভর কমে যায়','g কমে যায়','ঘনত্ব বাড়ে'],'প্লবতা ওজনকে আংশিক সামলায়।'],
+ ['বাতাসে 10 kg, পানিতে 9.4 kg হলে প্লবতা কত?','0.6 kg-wt',['9.4 kg-wt','10 kg-wt','19.4 kg-wt'],'10 − 9.4 = 0.6 kg-wt।'],
+ ['সোনার মুকুটের ঘনত্ব খাঁটি সোনার চেয়ে কম পেলে কী বোঝা যায়?','খাদ মেশানো',['খাঁটি','ভারী','আরও দামি'],'কম ঘনত্ব মানে অন্য হালকা ধাতু মেশানো।'],
+ ['প্লবতার দিক কোনটি?','ওপরের দিকে',['নিচের দিকে','পাশে','কোনো দিক নেই'],'প্লবতা ঊর্ধ্বমুখী বল।'],
+ ['আর্কিমিডিসের নীতি কীসের ওপর নির্ভর করে?','সরে যাওয়া তরলের আয়তন ও ঘনত্ব',['বস্তুর রং','পাত্রের আকার','আলো'],'F = Vρg।']]);
+
+/* ================= ল্যাব ৬: ভাসা-ডোবা ================= */
+var F6L=[['পানি',1000,H3L[1]],['সমুদ্রের পানি',1030,H3L[2]],['পারদ',13600,H3L[3]],['কেরোসিন',800,H3L[0]],['লবণের দ্রবণ',1000,H3L[1]]];
+var F6O=[['কর্ক',250,'#d9a86a'],['কাঠ',500,'#b9803f'],['বরফ',917,'#cfeeff'],['পচা ডিম',980,'#f3e3c3'],['তাজা ডিম',1080,'#f1d9a9'],['কাচ',2600,'#6fcfbf'],['লোহা',7800,'#7f8c9b']];
+var F6={l:0,o:0,y:60,v:0,run:0};
+function f6rl(){return F6.l===4?+$('f6s').value:F6L[F6.l][1];}
+function f6info(){var rl=f6rl(),ro=F6O[F6.o][1],fl=ro<rl,h;$('f6sv').textContent=bn(rl);$('f6sw').style.display=F6.l===4?'inline':'none';
+  h='<b>'+F6O[F6.o][0]+'</b> ঘনত্ব = '+fmtN(ro)+' kg/m³<br><b>'+F6L[F6.l][0]+'</b> ঘনত্ব = '+fmtN(rl)+' kg/m³<br>';
+  if(ro<rl)h+='<span style="color:#1d7a6f">বস্তুর ঘনত্ব কম ⇒ <b>ভাসবে</b>।</span> ডুবে থাকবে V<sub>1</sub>/V = ρ ÷ ρ<sub>w</sub> = '+bn(parseFloat((ro/rl*100).toFixed(1)))+'%';
+  else if(ro===rl)h+='ঘনত্ব সমান ⇒ যেখানে রাখা হবে সেখানেই থাকবে।';
+  else h+='<span style="color:#c0392b">বস্তুর ঘনত্ব বেশি ⇒ <b>ডুবে যাবে</b>।</span>';
+  if(F6.o===4&&F6.l===4)h+='<br><small>তাজা ডিম ভাসাতে লবণের দ্রবণের ঘনত্ব 1080-এর বেশি করতে হবে।</small>';
+  $('f6t').innerHTML=h+'<br><small>বইয়ের উদাহরণ: কাঠ (500) পানিতে 50% ডোবে, সমুদ্রের পানিতে (1030) প্রায় 48.5%।</small>';}
+function f6reset(){F6.y=60;F6.v=0;F6.run=0;}
+pills('f6l',function(k){F6.l=k;f6reset();f6info();});pills('f6ob',function(k){F6.o=k;f6reset();f6info();});on(['f6s'],function(){f6reset();f6info();});
+$('f6go').onclick=function(){f6reset();F6.run=1;};$('f6up').onclick=function(){f6reset();};
+$('f6l').querySelector('button').classList.add('on');$('f6ob').querySelector('button').classList.add('on');
+DRAWS.push(function(){var x=ctxOf('f6c'),rl=f6rl(),ro=F6O[F6.o][1],L=F6L[F6.l],ys=130,bot=272,s=46,i;
+  if(F6.run){var sub=clamp((F6.y+s/2-ys)/s,0,1),a=clamp(.11*(1-rl*sub/ro),-.3,.3);F6.v+=a;F6.v*=(F6.y+s/2>ys?.9:.995);F6.y+=F6.v;if(F6.y+s/2>bot){F6.y=bot-s/2;F6.v=0;}}
+  grad(x,0,0,380,300,'#eef5fa','#dbe8f1');
+  var c1=L[2][2],c2=L[2][3];if(F6.l===4){var t=(rl-1000)/200;c1='rgba('+Math.round(lerp(86,150,t))+','+Math.round(lerp(176,200,t))+',240,.88)';}
+  var ox=167;x.save();x.shadowColor='rgba(0,0,0,.25)';x.shadowBlur=6;grad(x,ox,F6.y-s/2,s,s,shade(F6O[F6.o][2],35),shade(F6O[F6.o][2],-35));x.restore();
+  tag(x,F6O[F6.o][0],ox+s/2,F6.y,'#1f3a5f',12);
+  wave(x,70,ys,240,bot-ys,FR,c1,c2,2);bubs(x,70,ys,240,bot-ys,6,FR);glassBox(x,70,ys-34,240,bot-ys+34);
+  var sub2=clamp((F6.y+s/2-ys)/s,0,1);
+  if(F6.run&&Math.abs(F6.v)<.02&&F6.y>ys-s/2){x.strokeStyle='#e63946';x.setLineDash([4,3]);x.beginPath();x.moveTo(ox-14,ys);x.lineTo(ox+s+14,ys);x.stroke();x.setLineDash([]);tag(x,'ডুবে আছে '+bn(Math.round(sub2*100))+'%',ox+s/2,ys-48,'#c0392b',13);}
+  var fy=F6.y>ys-s/2?(ro<rl?'ভাসছে':(F6.y+s/2>=bot-1?'ডুবে গেছে':'ডুবছে...')):'';if(fy&&F6.run)tag(x,fy,335,60,NAVY,13,'right');});
+f6info();
+qgame('f6q','f6o','f6fb','f6sc',[
+ ['কোন শর্তে বস্তু তরলে ভাসে?','বস্তুর ঘনত্ব তরলের চেয়ে কম হলে',['বস্তু ভারী হলে','বস্তু বড় হলে','তরল ঠান্ডা হলে'],'ρ বস্তু < ρ তরল হলে ভাসে।'],
+ ['কাঠ (ρ = 500) পানিতে কত শতাংশ ডুবে থাকবে?','50%',['25%','75%','100%'],'ডুবন্ত অংশ = ρ ÷ ρ<sub>w</sub> = 500 ÷ 1000 = 50%।'],
+ ['লোহার জাহাজ ভাসে কেন?','গড় ঘনত্ব পানির চেয়ে কম (ভেতরে ফাঁপা)',['লোহা হালকা','পানি ঘন','জাহাজ ছোট'],'ফাঁপা আকারের জন্য সরানো পানির ওজন জাহাজের ওজনের সমান হয়।'],
+ ['তাজা ডিম ভাসাতে কী করতে হবে?','পানিতে লবণ মেশাতে হবে',['চিনি ছাড়া','গরম করতে হবে','ঢেকে রাখতে হবে'],'লবণ মেশালে দ্রবণের ঘনত্ব বাড়ে।'],
+ ['পারদে লোহা (7.8 gm/cc) ভাসবে কি?','ভাসবে, কারণ পারদ 13.6 gm/cc',['ডুববে','ভাসবে না, দ্রবীভূত হবে','কিছুই হবে না'],'লোহার ঘনত্ব পারদের চেয়ে কম।'],
+ ['বস্তুর ঘনত্ব তরলের সমান হলে কী হয়?','যেখানে রাখা হয় সেখানেই থাকে',['ডুবে যায়','ভাসে','ওপরে ওঠে'],'ওজন ও প্লবতা সমান, তাই ভেসেও ওঠে না, ডুবেও যায় না।']]);
+
+
+/* ================= ল্যাব ৭: হাইড্রলিক প্রেস ================= */
+var Q7={st:-1,n:0,rise:0,todo:0};
+function q7calc(){var F1=+$('q7f').value,A1=+$('q7a').value,A2=+$('q7b').value,m=+$('q7w').value;return {F1:F1,A1:A1,A2:A2,m:m,P:F1/(A1/10000),F2:F1*A2/A1,wt:m*G,l2:10*A1/A2};}
+function q7info(){var c=q7calc();$('q7fv').textContent=bn(c.F1);$('q7av').textContent=bn(c.A1);$('q7bv').textContent=bn(c.A2);$('q7wv').textContent=bn(c.m);
+  var ok=c.F2>=c.wt,W=c.F1*0.1;
+  $('q7t').innerHTML='ছোট পিস্টনে চাপ P = F₁ ÷ A₁ = <b>'+fmtN(c.P)+' Pa</b> (তরল এটি সব দিকে সমান পৌঁছে দেয়)<br>বড় পিস্টনে বল F₂ = F₁ × (A₂ ÷ A₁) = <b>'+fmtN(c.F2)+' N</b> (বল '+bn(parseFloat((c.A2/c.A1).toFixed(1)))+' গুণ)<br>গাড়ির ওজন = '+fmtN(c.wt)+' N '+(ok?'<span style="color:#1d7a6f">⇒ গাড়ি উঠবে ✅</span>':'<span style="color:#c0392b">⇒ বল যথেষ্ট নয়, উঠবে না ❌</span>')+
+  '<br>ছোট পিস্টন 10 cm নামলে বড়টি l₂ = l₁A₁/A₂ = <b>'+bn(parseFloat(c.l2.toFixed(3)))+' cm</b> ওঠে<br>কাজ W₁ = F₁l₁ = '+bn(parseFloat(W.toFixed(2)))+' J, W₂ = F₂l₂ = <b>'+bn(parseFloat((c.F2*c.l2/100).toFixed(2)))+' J</b> (সমান!)<br><small>বল বাড়ে, শক্তি বাড়ে না। (চিত্রে বড় পিস্টনের সরণ অনেক বাড়িয়ে দেখানো।)</small>';}
+on(['q7f','q7a','q7b','q7w'],function(){q7info();});
+$('q7go').onclick=function(){if(Q7.st<0){Q7.todo=5;Q7.st=0;}};
+$('q7rs').onclick=function(){Q7.rise=0;Q7.st=-1;Q7.todo=0;Q7.n=0;};
+DRAWS.push(function(){var x=ctxOf('q7c'),c=q7calc(),ok=c.F2>=c.wt,wl=clamp(18+c.A1*.85,22,60),wr=clamp(46+c.A2*.115,60,160),lx=76,rx=266,i;
+  if(Q7.st>=0){Q7.st+=.022;if(Q7.st<.7&&ok)Q7.rise=Math.min(78,Q7.rise+clamp(c.l2*3*8,1.2,26)/32);if(Q7.st>=1){Q7.n++;if(Q7.todo>0){Q7.todo--;Q7.st=0;}else Q7.st=-1;}}
+  var down=Q7.st<0?0:(Q7.st<.7?Q7.st/.7:1-(Q7.st-.7)/.3)*(ok?26:6),pl=104+down,pr=172-Q7.rise;
+  grad(x,0,0,380,290,'#eef5fa','#d9e7f1');grad(x,0,250,380,40,'#aeb9c4','#8d99a5');
+  x.fillStyle='#74b8ea';x.fillRect(lx-wl/2,pl,wl,240-pl);x.fillRect(lx-wl/2,222,rx-lx+(wr+wl)/2,18);x.fillRect(rx-wr/2,pr,wr,240-pr);
+  x.strokeStyle='#4b5d6e';x.lineWidth=4;x.beginPath();x.moveTo(lx-wl/2,80);x.lineTo(lx-wl/2,240);x.lineTo(rx+wr/2,240);x.lineTo(rx+wr/2,112);x.moveTo(lx+wl/2,80);x.lineTo(lx+wl/2,222);x.lineTo(rx-wr/2,222);x.lineTo(rx-wr/2,112);x.stroke();
+  grad(x,lx-wl/2,pl-9,wl,9,'#cfd6dd','#7e8a96');x.fillStyle='#7e8a96';x.fillRect(lx-3,pl-44,6,36);
+  grad(x,rx-wr/2,pr-9,wr,9,'#cfd6dd','#7e8a96');
+  var cw=Math.min(wr-8,104);x.save();x.shadowColor='rgba(0,0,0,.3)';x.shadowBlur=6;grad(x,rx-cw/2,pr-44,cw,28,'#e63946','#a82430');x.fillStyle='#e63946';rr(x,rx-cw*.28,pr-62,cw*.56,20,6);x.fill();x.restore();
+  x.fillStyle='rgba(190,230,255,.85)';x.fillRect(rx-cw*.22,pr-58,cw*.18,11);x.fillRect(rx+cw*.04,pr-58,cw*.18,11);circ(x,0,rx-cw*.28,pr-14,8,'#222',null);circ(x,0,rx+cw*.28,pr-14,8,'#222',null);
+  tag(x,bn(c.m)+' kg',rx,pr-30,'#fff',12);
+  arrow(x,lx,pl-86,lx,pl-48,RED,4);tag(x,'F₁ = '+bn(c.F1)+' N',lx+8,pl-76,RED,13,'left');
+  var al=clamp(14+Math.log10(c.F2)*14,16,70);arrow(x,rx+wr/2-18,236,rx+wr/2-18,236-al*.8,'#2a9d8f',5);tag(x,'F₂ = '+fmtN(c.F2)+' N',rx,262,'#1d7a6f',13);
+  if(Q7.st>=0){for(i=0;i<5;i++){var u=((FR*.03+i/5)%1);arrow(x,lx+10+u*(rx-lx-20),231,lx+22+u*(rx-lx-20),231,'#e9a23b',2.2);}}
+  tag(x,'পাম্প: '+bn(Q7.n),70,20,NAVY,13,'left');if(!ok)tag(x,'⚠️ বল যথেষ্ট নয়',200,20,'#c0392b',13);});
+q7info();
+qgame('q7q','q7o','q7fb','q7sc',[
+ ['প্যাসকেলের সূত্র কী বলে?','আবদ্ধ তরলে চাপ সব দিকে সমান সঞ্চালিত হয়',['তরল সংকুচিত হয়','চাপ ওপরে বাড়ে','তরল ভর হারায়'],'আবদ্ধ তরলে বাইরে থেকে দেওয়া চাপ সমানভাবে সব দিকে পৌঁছায়।'],
+ ['A₁ = 10 cm², A₂ = 500 cm², F₁ = 20 N হলে F₂ কত?','1000 N',['400 N','10000 N','50 N'],'F₂ = F₁ × A₂/A₁ = 20 × 50 = 1000 N।'],
+ ['হাইড্রলিক প্রেসে কী বাড়ে না?','শক্তি (কাজ)',['বল','চাপ','সরণ'],'বল বাড়ে, কিন্তু সরণ কমে, কাজ সমান থাকে।'],
+ ['বড় পিস্টনের সরণ ছোটটির তুলনায় কেমন?','কম',['বেশি','সমান','শূন্য'],'l₂ = l₁ A₁/A₂, A₂ বড় হলে l₂ ছোট।'],
+ ['কোন যন্ত্রে প্যাসকেলের সূত্র ব্যবহার হয়?','গাড়ির হাইড্রলিক ব্রেক',['থার্মোমিটার','ব্যারোমিটার','স্প্রিং ব্যালেন্স'],'হাইড্রলিক জ্যাক ও ব্রেক প্যাসকেলের সূত্রে চলে।']]);
+
+/* ================= ল্যাব ৮: বায়ুচাপে চ্যাপ্টা ================= */
+var C8={k:0,d:0};
+function c8info(){var s=+$('c8s').value;$('c8sv').textContent=bn(s);
+  $('c8t').innerHTML='বাইরের চাপ = <b>1 atm ≈ 10⁵ Pa</b> (চারদিক থেকে)<br>ভেতরের চাপ = 1 atm-এর <b>'+bn(100-s)+'%</b><br>নিট ভেতরমুখী চাপ ≈ <b>'+fmtN(101325*s/100)+' Pa</b>'+(s>60?'<br><span style="color:#c0392b">💥 বাইরের চাপ জিতেছে, তাই চ্যাপ্টা!</span>':(s>0?'<br>ভেতরে চাপ কমছে, দুমড়ে যাওয়ার আগের ধাপ।':'<br><span style="color:#1d7a6f">ভেতর-বাইরে সমান চাপ, তাই কিছু হয় না।</span>'))+'<br><small>সমুদ্রপৃষ্ঠে 1 m² জায়গার ওপর বাতাসের ওজন প্রায় 10⁵ N, মোটামুটি একটা হাতির ওজন। আমরা টের পাই না, কারণ আমাদের শরীরের ভেতর থেকেও সমান চাপ বাইরে ঠেলে।</small>';}
+pills('c8p',function(k){C8.k=k;c8info();});on(['c8s'],c8info);
+DRAWS.push(function(){var x=ctxOf('c8c'),s=+$('c8s').value,T=clamp((s-30)/55,0,1);C8.d+=(T-C8.d)*.05;var d=C8.d,cx=190,top=70,bot=232,w=C8.k?70:96,i;
+  grad(x,0,0,380,290,'#eef5fa','#d7e5f0');grad(x,0,236,380,54,'#b9a58b','#8f7b5e');
+  var pts=[],N=22;for(i=0;i<=N;i++){var u=i/N,y=top+u*(bot-top),bw=w/2;if(C8.k){bw=u<.22?w*.2:(u<.3?lerp(w*.2,w/2,(u-.22)/.08):w/2);}var off=d*bw*.55*(.45+.55*Math.sin(u*Math.PI))+d*(rp(i*3,-5,5)*(.4+u));pts.push([bw-off,y]);}
+  var body=C8.k?['rgba(170,215,250,.85)','rgba(120,180,235,.9)']:['#cfd6dd','#8e99a6'];
+  var gg=x.createLinearGradient(cx-w/2,0,cx+w/2,0);gg.addColorStop(0,body[1]);gg.addColorStop(.35,body[0]);gg.addColorStop(1,body[1]);x.fillStyle=gg;
+  x.beginPath();for(i=0;i<=N;i++)x.lineTo(cx-pts[i][0],pts[i][1]);for(i=N;i>=0;i--)x.lineTo(cx+pts[i][0],pts[i][1]);x.closePath();x.fill();x.strokeStyle='#52606e';x.lineWidth=2;x.stroke();
+  if(d>.15)for(i=0;i<7;i++){var yy=top+30+i*20+rp(i,-3,3);x.strokeStyle='rgba(60,70,85,'+(.15+d*.35)+')';x.lineWidth=1.5;x.beginPath();x.moveTo(cx-pts[2][0]*.6,yy);x.lineTo(cx+pts[2][0]*.4,yy+rp(i+5,-8,8)*d);x.stroke();}
+  if(C8.k){x.fillStyle='#2a79c7';rr(x,cx-w*.24,top-12,w*.48,13,4);x.fill();}else{x.fillStyle='#6b7783';x.fillRect(cx-8,top-24,16,26);x.fillStyle='#4b5d6e';x.fillRect(cx+8,top-18,40,6);x.fillStyle='#e9a23b';rr(x,cx+46,top-30,18,24,4);x.fill();tag(x,'পাম্প',cx+82,top-18,NAVY,12);}
+  var ys=[110,145,180,212],al=26;
+  for(i=0;i<ys.length;i++){arrow(x,cx-w/2-60,ys[i],cx-w/2-14+pts[0][0]*0-(d*14),ys[i],'#2b6cb0',3.4);arrow(x,cx+w/2+60,ys[i],cx+w/2+14+(d*14),ys[i],'#2b6cb0',3.4);
+    var il=Math.max(0,al*(1-s/100));if(il>5){arrow(x,cx-8,ys[i],cx-8-il*.7,ys[i],'#e9962b',2.6);arrow(x,cx+8,ys[i],cx+8+il*.7,ys[i],'#e9962b',2.6);}}
+  tag(x,'বাইরের চাপ (1 atm)',64,262,'#2b6cb0',12);tag(x,'ভেতরের চাপ '+bn(100-s)+'%',320,262,'#c47a12',12);
+  if(d>.6)tag(x,'💥 চ্যাপ্টা!',cx,30,'#c0392b',18);});
+c8info();
+qgame('c8q','c8o','c8fb','c8sc',[
+ ['ক্যানের ভেতর থেকে বাতাস সরালে ক্যান দুমড়ে যায় কেন?','বাইরের বাতাসের চাপ বেশি হয়ে যায়',['ক্যান গলে যায়','ভর কমে যায়','মাধ্যাকর্ষণ বাড়ে'],'ভেতরের চাপ কমে, তাই বাইরের চাপ জিতে যায়।'],
+ ['বাতাসের চাপ কোন দিকে কাজ করে?','সব দিকে সমান',['শুধু নিচে','শুধু ওপরে','শুধু পাশে'],'চাপের নির্দিষ্ট দিক নেই।'],
+ ['পৃথিবীপৃষ্ঠে বাতাসের চাপ প্রায় কত?','10⁵ N/m²',['10 N/m²','10² N/m²','10⁸ N/m²'],'≈ 1.01 × 10⁵ N/m²।'],
+ ['আমরা বাতাসের চাপ টের পাই না কেন?','শরীরের ভেতর থেকেও সমান চাপ বাইরে আসে',['চাপ খুব কম','আমরা শক্ত','বাতাসে ভর নেই'],'ভেতর ও বাইরের চাপ সমান।'],
+ ['মহাকাশে মহাকাশচারীরা বিশেষ পোশাক পরেন কেন?','বাইরে বাতাসের চাপ নেই, শরীর ফুলে যেতে পারে',['ঠান্ডা লাগে','রং ভালো','ওজন কমাতে'],'বাইরে চাপ না থাকলে ভেতরের চাপে শরীর ফেটে যেতে পারে।']]);
+
+/* ================= ল্যাব ৯: উচ্চতা ও বায়ুচাপ ================= */
+function k9P(h){return Math.exp(-h/7.5);}
+function k9info(){var h=+$('k9h').value,P=k9P(h);$('k9hv').textContent=bn(parseFloat(h.toFixed(2)));
+  $('k9t').innerHTML='উচ্চতা = <b>'+bn(parseFloat(h.toFixed(2)))+' km</b><br>বায়ুর চাপ ≈ সমুদ্রপৃষ্ঠের <b>'+bn(Math.round(P*100))+'%</b> ≈ '+bn(parseFloat((P*1.01325).toFixed(2)))+' atm<br>অক্সিজেনের পরিমাণও প্রায় <b>'+bn(Math.round(P*100))+'%</b>'+(h>=8?'<br><span style="color:#c0392b">⚠️ এভারেস্টের চূড়ায় (8.849 km) বাতাসে অক্সিজেন প্রায় এক-তৃতীয়াংশ; বইয়ের লেখচিত্র থেকে চাপ ≈ 35%।</span>':'')+'<br><small>প্রায় 5 km ওপরে উঠলে চাপ অর্ধেক হয়ে যায়। উচ্চতার সাথে বাতাসের ঘনত্বও কমে, তাই প্লেনে ঘর্ষণ কম, কিন্তু ইঞ্জিনের জ্বালানি পোড়াতে অক্সিজেন কম পড়ে।</small>';}
+pills('k9p',function(k){$('k9h').value=[0,8.85,10,20][k];k9info();});on(['k9h'],k9info);
+DRAWS.push(function(){var x=ctxOf('k9c'),h=+$('k9h').value,i,Y=function(k){return 292-k*11.5;};
+  var g=x.createLinearGradient(0,0,0,300);g.addColorStop(0,'#0b1d3f');g.addColorStop(.45,'#2b5fae');g.addColorStop(1,'#bfe3ff');x.fillStyle=g;x.fillRect(0,0,260,300);
+  x.fillStyle='#e6edf3';x.fillRect(0,0,380,0);
+  for(i=0;i<170;i++){var py=rp(i*2,4,290),alt=(292-py)/11.5,vis=rp(i*5+1,0,1)<k9P(alt);if(!vis)continue;var px=rp(i,4,256)+Math.sin(FR*.03+i)*3;circ(x,0,px,py+Math.cos(FR*.04+i*1.3)*3,2,'rgba(255,255,255,.85)',null);}
+  x.fillStyle='#6b7a68';x.beginPath();x.moveTo(0,300);x.lineTo(0,270);x.lineTo(60,250);x.lineTo(140,Y(8.85));x.lineTo(175,240);x.lineTo(260,262);x.lineTo(260,300);x.closePath();x.fill();x.fillStyle='#f4f8fb';x.beginPath();x.moveTo(140,Y(8.85));x.lineTo(124,Y(7.1));x.lineTo(156,Y(7.1));x.closePath();x.fill();
+  [5,10,15,20,25].forEach(function(k){x.strokeStyle='rgba(255,255,255,.35)';x.setLineDash([3,4]);x.beginPath();x.moveTo(0,Y(k));x.lineTo(260,Y(k));x.stroke();x.setLineDash([]);tagd(x,bn(k)+' km',8,Y(k)-8,'#eaf3fb',12,'left');});
+  var my=Y(h),mx=198;x.strokeStyle='#ffd24a';x.lineWidth=2;x.setLineDash([4,3]);x.beginPath();x.moveTo(0,my);x.lineTo(260,my);x.stroke();x.setLineDash([]);
+  ball(x,mx,my,9,'#ffd24a');tag(x,'তুমি '+bn(parseFloat(h.toFixed(2)))+' km',mx-16,my-16,'#7a4b00',12,'right');
+  grad(x,270,30,104,200,'#f6f9fb','#eaf1f6');x.strokeStyle='#5b7389';x.lineWidth=2;x.strokeRect(270,30,104,200);
+  x.strokeStyle='#e63946';x.lineWidth=2.5;x.beginPath();for(i=0;i<=25;i++){var gx=282+i/25*84,gy=216-k9P(i)*170;if(!i)x.moveTo(gx,gy);else x.lineTo(gx,gy);}x.stroke();
+  var gx2=282+h/25*84,gy2=216-k9P(h)*170;circ(x,0,gx2,gy2,5,'#2b6cb0','#fff',2);tag(x,'চাপ-উচ্চতা',322,20,NAVY,12);tag(x,'চাপ ↑',292,42,'#4b5d6e',11);tag(x,'উচ্চতা →',344,222,'#4b5d6e',11);
+  tag(x,bn(Math.round(k9P(h)*100))+'%',322,252,'#c0392b',18);});
+k9info();
+qgame('k9q','k9o','k9fb','k9sc',[
+ ['উচ্চতা বাড়লে বায়ুর চাপ কী হয়?','কমে',['বাড়ে','একই থাকে','দ্বিগুণ হয়'],'ওপরে বাতাসের স্তম্ভ ছোট, তাই চাপ কম।'],
+ ['প্রায় কত উচ্চতায় বায়ুর চাপ অর্ধেক হয়?','5 km',['500 m','50 km','100 m'],'বইয়ের লেখচিত্রে ≈ 5 km।'],
+ ['উচ্চতায় পর্বতারোহীদের কষ্ট হয় কেন?','অক্সিজেন কম থাকে',['মাধ্যাকর্ষণ নেই','আলো কম','বাতাস গরম'],'চাপ ও ঘনত্ব কমে অক্সিজেনও কমে।'],
+ ['উচ্চতার সাথে বাতাসের ঘনত্ব কী হয়?','কমে',['বাড়ে','একই থাকে','শূন্য হয়'],'নিচের বাতাস সংকুচিত, ওপরের বাতাস পাতলা।'],
+ ['এভারেস্টের চূড়ায় বাতাসে অক্সিজেন প্রায় কতটুকু?','এক-তৃতীয়াংশ',['সমান','দ্বিগুণ','শূন্য'],'চাপ ≈ 35%, তাই অক্সিজেন ≈ ⅓।']]);
+
+/* ================= ল্যাব ১০: টরিসেলি ================= */
+var B10L=[['পারদ',13600,'#b9bfc9'],['পানি',1000,'#5fb3ee'],['কেরোসিন',800,'#e8b84a']];
+var B10={k:0};
+function b10h(){var L=B10L[B10.k];return +$('b10s').value*1000/(L[1]*G);}
+function b10info(){var L=B10L[B10.k],P=+$('b10s').value,h=b10h(),u=B10.k===0?bn(parseFloat((h*100).toFixed(1)))+' cm':bn(parseFloat(h.toFixed(2)))+' m';$('b10sv').textContent=bn(P);
+  $('b10t').innerHTML='h = P ÷ (ρ g) = '+bn(parseFloat((P*1000).toFixed(0)))+' ÷ ('+fmtN(L[1])+' × ৯.৮) = <b style="font-size:18px">'+u+'</b><br>1 atm-এ: পারদ <b>76 cm</b>, পানি <b>10.34 m</b>, কেরোসিন <b>12.92 m</b><br>'+(P<98?'<span style="color:#c0392b">নিম্নচাপ ⇒ ঝড়-বৃষ্টির আশঙ্কা ⛈️</span>':(P>103?'<span style="color:#1d7a6f">উচ্চচাপ ⇒ আবহাওয়া শুষ্ক ও ভালো ☀️</span>':'স্বাভাবিক চাপ ⇒ মোটামুটি আবহাওয়া ⛅'))+'<br><small>টরিসেলি ১৬৪৩ সালে নলে পারদ ভরে উল্টে দেখান পারদ ঠিক 76 cm এসে থামে। ওপরে শূন্যস্থান।</small>';}
+pills('b10p',function(k){B10.k=k;b10info();});on(['b10s'],b10info);
+DRAWS.push(function(){var x=ctxOf('b10c'),L=B10L[B10.k],P=+$('b10s').value,hStd=101325/(L[1]*G),px=200/(1.2*hStd),h=b10h(),col=px*h,i;
+  grad(x,0,0,380,300,'#eef5fa','#d9e7f1');var dy=262;
+  var step=B10.k===0?.1:2,unit=B10.k===0?' cm':' m',mul=B10.k===0?100:1;
+  for(var t=0;t*step<=hStd*1.2;t++){var ty=dy-18-t*step*px;x.strokeStyle='#8a97a6';x.lineWidth=1;x.beginPath();x.moveTo(70,ty);x.lineTo(84,ty);x.stroke();tag(x,bn(Math.round(t*step*mul))+unit,58,ty,'#4b5d6e',11,'right');}
+  grad(x,98,dy-34,30,34,'#f6f9fb','#f6f9fb');x.fillStyle=L[2];rr(x,70+22,dy-22,170,22,6);x.fill();
+  var tubeTop=dy-18-200;x.fillStyle='rgba(255,255,255,.9)';x.fillRect(150,tubeTop,22,200);x.fillStyle=L[2];x.fillRect(151,dy-18-col,20,col+2);
+  x.fillStyle='rgba(120,120,160,.12)';x.fillRect(151,tubeTop,20,200-col);tag(x,'শূন্যস্থান',161,tubeTop+16+Math.max(0,(200-col)/2-12),'#6b6b9a',11);
+  x.strokeStyle='#5b7389';x.lineWidth=2.5;x.beginPath();x.moveTo(150,tubeTop+8);x.quadraticCurveTo(150,tubeTop,161,tubeTop);x.quadraticCurveTo(172,tubeTop,172,tubeTop+8);x.moveTo(150,tubeTop+8);x.lineTo(150,dy-4);x.moveTo(172,tubeTop+8);x.lineTo(172,dy-4);x.stroke();
+  var al=14+(P-90)*2.2;for(i=0;i<4;i++){var ax=96+i*52;if(ax>140&&ax<180)continue;arrow(x,ax,dy-18-al-8,ax,dy-26,'#2b6cb0',3);}
+  tag(x,'বায়ুর চাপ',200,dy-18-al-22+8,'#2b6cb0',12);tag(x,'h = '+(B10.k===0?bn(parseFloat((h*100).toFixed(1)))+' cm':bn(parseFloat(h.toFixed(2)))+' m'),161,dy-18-col-14,'#c0392b',13);
+  grad(x,236,24,130,118,P<98?'#7d8794':(P>103?'#9fd8ff':'#cfe6f7'),P<98?'#3e4756':'#eaf6ff');x.strokeStyle='#5b7389';x.lineWidth=2;x.strokeRect(236,24,130,118);
+  if(P>=98){sun(x,330,56,P>103?15:9,FR);}cloud(x,262,60,P<98?1.1:.7,P<98?'#4b5567':'rgba(255,255,255,.95)');
+  if(P<98){for(i=0;i<14;i++){var u=((FR*.03+i/14)%1);x.strokeStyle='#bfe3ff';x.lineWidth=1.6;x.beginPath();x.moveTo(246+i*8,74+u*60);x.lineTo(243+i*8,84+u*60);x.stroke();}if(FR%90<8){x.strokeStyle='#ffe066';x.lineWidth=3;x.beginPath();x.moveTo(300,70);x.lineTo(290,92);x.lineTo(302,92);x.lineTo(292,116);x.stroke();}}
+  dial(x,300,214,32,(P-90)/15,bn(P)+' kPa','#2b6cb0');});
+b10info();
+qgame('b10q','b10o','b10fb','b10sc',[
+ ['বায়ুচাপ মাপার যন্ত্র কোনটি?','ব্যারোমিটার',['থার্মোমিটার','ম্যানোমিটার','সিসমোমিটার'],'ব্যারোমিটার বায়ুচাপ মাপে।'],
+ ['স্বাভাবিক বায়ুচাপে পারদস্তম্ভের উচ্চতা কত?','76 cm',['10 cm','760 cm','7.6 cm'],'টরিসেলির পরীক্ষায় 76 cm।'],
+ ['পারদের বদলে পানি দিলে নলের উচ্চতা প্রায় কত লাগবে?','10.34 m',['76 cm','1 m','100 m'],'পানির ঘনত্ব পারদের ১৩.৬ ভাগের একভাগ, তাই 76 cm × 13.6 ≈ 10.34 m।'],
+ ['বায়ুচাপ হঠাৎ অনেক কমে গেলে কী আশঙ্কা?','ঝড়-বৃষ্টি',['খরা','তুষারপাত','কিছুই নয়'],'নিম্নচাপে ঝড়ের আভাস।'],
+ ['টরিসেলির নলের ওপরের ফাঁকা অংশে কী থাকে?','প্রায় শূন্যস্থান',['বাতাস','পানি','হিলিয়াম'],'নলের ওপরে শূন্যস্থান তৈরি হয়।']]);
+
+
+/* ================= ল্যাব ১১: স্থিতিস্থাপকতা ও হুকের সূত্র ================= */
+var E11D=[[0,10],[.4,12],[1,15],[1.4,17],[2.2,21],[3,25],[4,30],[5,36]],E11R=[[0,10],[3,10],[4,10.2],[5,10.6]];
+function interp(T,v){for(var i=0;i<T.length-1;i++){if(v<=T[i+1][0]){var u=(v-T[i][0])/(T[i+1][0]-T[i][0]);return lerp(T[i][1],T[i+1][1],u);}}return T[T.length-1][1];}
+var E11={L:10,tg:10,hang:0,max:0,perm:10};
+function e11info(){var M=+$('e11m').value;$('e11mv').textContent=bn(parseFloat(M.toFixed(1)));
+  var h='ঝোলানো ভর M = <b>'+bn(parseFloat(E11.hang.toFixed(1)))+' kg</b><br>ব্যান্ডের দৈর্ঘ্য L = <b>'+bn(parseFloat(E11.L.toFixed(1)))+' cm</b> (মূল L₀ = ১০ cm)<br>বিকৃতি = (L − L₀) ÷ L₀ = <b>'+bn(parseFloat(((E11.L-10)/10).toFixed(2)))+'</b> (একক নেই, শুধু সংখ্যা)<br>';
+  if(E11.hang>0)h+=(E11.hang<=3?'<span style="color:#1d7a6f">3 kg পর্যন্ত প্রতি kg-এ 5 cm করে বাড়ে ⇒ পীড়ন ∝ বিকৃতি (হুকের সূত্র)।</span>':'<span style="color:#c0392b">3 kg পেরিয়েছে ⇒ স্থিতিস্থাপক সীমা অতিক্রান্ত, ভর সরালে আর পুরো ফিরবে না।</span>');
+  else if(E11.max>0)h+=(E11.perm>10.01?'<span style="color:#c0392b">ভর সরানোর পর L<sub>1</sub> = '+bn(parseFloat(E11.perm.toFixed(1)))+' cm, স্থায়ী বিকৃতি ঘটেছে!</span>':'<span style="color:#1d7a6f">ভর সরানোর পর আগের ১০ cm-এ ফিরে এসেছে ⇒ স্থিতিস্থাপক আচরণ।</span>');
+  else h+='ভর ঝুলিয়ে দেখো।';
+  $('e11t').innerHTML=h+'<br><small>হুকের সূত্র: স্থিতিস্থাপক সীমার মধ্যে পীড়ন ∝ বিকৃতি (পীড়ন = F/A, একক Pa)।</small>';}
+on(['e11m'],function(){if(E11.hang>0){E11.hang=+$('e11m').value||0;E11.max=Math.max(E11.max,E11.hang);E11.tg=interp(E11D,E11.hang);}e11info();});
+$('e11on').onclick=function(){var M=+$('e11m').value;if(M<=0)return;E11.hang=M;E11.max=Math.max(E11.max,M);E11.tg=interp(E11D,M);e11info();};
+$('e11off').onclick=function(){E11.hang=0;E11.perm=interp(E11R,E11.max);E11.tg=E11.perm;e11info();};
+DRAWS.push(function(){var x=ctxOf('e11c'),i,S=6,y0=24;E11.L+=(E11.tg-E11.L)*.06;if(Math.abs(E11.tg-E11.L)>.05&&FR%6===0)e11info();
+  grad(x,0,0,380,300,'#eef5fa','#dbe8f1');x.fillStyle='#8896a5';x.fillRect(40,12,100,12);for(i=0;i<8;i++){x.strokeStyle='#8896a5';x.beginPath();x.moveTo(44+i*13,12);x.lineTo(38+i*13,4);x.stroke();}
+  var by=y0+E11.L*S;x.strokeStyle='#d96a2b';x.lineWidth=4;x.beginPath();x.moveTo(90,y0);for(i=1;i<=18;i++)x.lineTo(90+(i%2?9:-9)*(1-.2*Math.sin(i)),y0+(by-y0)*i/18);x.lineTo(90,by);x.stroke();
+  x.setLineDash([4,3]);x.strokeStyle='#2a9d8f';x.lineWidth=1.6;x.beginPath();x.moveTo(30,y0+10*S);x.lineTo(150,y0+10*S);x.stroke();x.setLineDash([]);tag(x,'মূল দৈর্ঘ্য',24,y0+10*S-9,'#1d7a6f',11,'left');
+  if(E11.perm>10.01&&E11.hang===0){x.setLineDash([4,3]);x.strokeStyle='#c0392b';x.beginPath();x.moveTo(30,y0+E11.perm*S);x.lineTo(150,y0+E11.perm*S);x.stroke();x.setLineDash([]);tag(x,'স্থায়ী বিকৃতি',24,y0+E11.perm*S+10,'#c0392b',11,'left');}
+  if(E11.hang>0){var bs=22+E11.hang*6;x.save();x.shadowColor='rgba(0,0,0,.3)';x.shadowBlur=5;grad(x,90-bs/2,by,bs,bs,'#5b8def','#2a4fa8');x.restore();tag(x,bn(parseFloat(E11.hang.toFixed(1)))+' kg',90,by+bs/2,'#fff',12);}
+  tag(x,'L = '+bn(parseFloat(E11.L.toFixed(1)))+' cm',90,by+(E11.hang>0?22+E11.hang*6+16:14),NAVY,12);
+  var gx=176,gy=40,gw=190,gh=220;grad(x,gx,gy,gw,gh,'#f9fbfd','#eef3f8');x.strokeStyle='#5b7389';x.lineWidth=2;x.strokeRect(gx,gy,gw,gh);
+  var GX=function(M){return gx+14+M/5*(gw-30);},GY=function(L){return gy+gh-14-(L-10)/26*(gh-32);};
+  x.strokeStyle='#2a9d8f';x.setLineDash([5,4]);x.lineWidth=2;x.beginPath();x.moveTo(GX(0),GY(10));x.lineTo(GX(5),GY(35));x.stroke();x.setLineDash([]);
+  x.strokeStyle='#c0392b';x.setLineDash([3,3]);x.beginPath();x.moveTo(GX(3),gy+8);x.lineTo(GX(3),gy+gh-4);x.stroke();x.setLineDash([]);tag(x,'স্থিতিস্থাপক সীমা',GX(3)-6,gy+16,'#c0392b',11,'right');
+  E11D.forEach(function(p){circ(x,0,GX(p[0]),GY(p[1]),4,'#2b6cb0','#fff',1.5);});
+  circ(x,0,GX(E11.hang),GY(E11.L),6,'#e63946','#fff',2);tag(x,'ভর (kg) →',gx+gw-36,gy+gh+12,'#4b5d6e',11);tag(x,'দৈর্ঘ্য L (cm)',gx+46,gy-10,'#4b5d6e',11);tag(x,'হুকের সূত্র',GX(1.2),GY(10)-30,'#1d7a6f',11);});
+var E11M=[['রাবার',0.05],['কাঠ',10],['কাচ',70],['অ্যালুমিনিয়াম',69],['তামা',117],['লোহা',200],['হীরা',1220]];
+function e11y(){var s=+$('e11k').value,h='';$('e11kv').textContent=bn(s);E11M.forEach(function(m){var dl=s/(m[1]*1000)*1000,w=clamp((Math.log10(dl)+3)/5.2*100,2,100);h+='<div class="bar"><div class="bl">'+m[0]+' (Y = '+bn(m[1])+' GPa)</div><div class="bt"><div class="bf" style="width:'+w+'%;background:'+(m[1]<1?'#e63946':'#2a9d8f')+'"></div></div><b style="min-width:92px;font-size:13px;color:#1f3a5f">1 m রডে '+bn(parseFloat(dl.toPrecision(2)))+' mm</b></div>';});
+  $('e11y').innerHTML=h+'<small>Y বেশি মানে পদার্থ বেশি শক্ত, একই টানে কম বাড়ে। (দৈর্ঘ্য পরিবর্তনের হার = (১/Y)(T/A))</small>';}
+on(['e11k'],e11y);e11y();e11info();
+qgame('e11q','e11o','e11fb','e11sc',[
+ ['হুকের সূত্র অনুসারে স্থিতিস্থাপক সীমার মধ্যে —','পীড়ন ∝ বিকৃতি',['পীড়ন ∝ ঘনত্ব','বিকৃতি ∝ ভর²','পীড়ন = বিকৃতি²'],'পীড়ন ∝ বিকৃতি।'],
+ ['বিকৃতির একক কী?','কোনো একক নেই',['Pa','N','m'],'বিকৃতি = (L−L₀)/L₀, দুটি দৈর্ঘ্যের অনুপাত।'],
+ ['পীড়নের একক কী?','প্যাসকেল (Pa)',['জুল','মিটার','কেলভিন'],'পীড়ন = F/A, চাপের মতোই Pa।'],
+ ['ইয়ং মডুলাস বেশি হলে একই টানে দৈর্ঘ্য —','কম বাড়ে',['বেশি বাড়ে','সমান বাড়ে','কমে যায়'],'(L−L₀)/L₀ = (1/Y)(T/A)।'],
+ ['স্থিতিস্থাপক সীমা পেরোলে বল সরিয়ে নিলে কী হয়?','স্থায়ী বিকৃতি থেকে যায়',['পুরো ফিরে আসে','ভেঙে যায়','ভর বাড়ে'],'বস্তু আর আগের অবস্থায় পুরো ফিরে আসতে পারে না।'],
+ ['কোনটির ইয়ং মডুলাস সবচেয়ে বেশি (বইয়ের টেবিল)?','হীরা',['রাবার','কাঠ','তামা'],'হীরা 1220 GPa।']]);
+
+/* ================= ল্যাব ১২: তিন অবস্থা ও গ্যাসের চাপ ================= */
+var G12={k:2,p:[],hits:0,rate:0};
+function g12init(){G12.p=[];var i,n=36;for(i=0;i<n;i++){var p={vx:rnd(-1,1),vy:rnd(-1,1),ph:rnd(0,6.3)};
+  if(G12.k===0){p.sx=84+(i%6)*40;p.sy=130+Math.floor(i/6)*22;p.x=p.sx;p.y=p.sy;}
+  else if(G12.k===1){p.x=rnd(64,316);p.y=rnd(150,240);}else{p.x=rnd(64,316);p.y=rnd(60,240);}
+  G12.p.push(p);}}
+function g12info(){var k=G12.k,t=+$('g12k').value,v=+$('g12v').value;$('g12kv').textContent=bn(t);$('g12vv').textContent=bn(v);
+  var h=['<b>কঠিন:</b> নির্দিষ্ট আকার ও আয়তন আছে। অণুগুলো কাছাকাছি, নিজ জায়গায় থেকে শুধু কাঁপে। চাপ দিয়ে সংকুচিত করা যায় না।','<b>তরল:</b> নির্দিষ্ট আয়তন আছে, কিন্তু আকার নেই (পাত্রের আকার নেয়)। অণুগুলো কাছাকাছি, একটা আরেকটার পাশ দিয়ে সরে যায়। সংকুচিত করা যায় না।','<b>গ্যাস:</b> নির্দিষ্ট আকার বা আয়তন নেই, পুরো পাত্রে ছড়িয়ে পড়ে। অণুগুলোর মাঝে ফাঁকা অনেক, তাই সংকুচিত করা যায়।'][k];
+  $('g12t').innerHTML=h+(k===2?'<br>অণুগুলো দেয়ালে ধাক্কা দিয়ে ফিরে আসে (নিউটনের তৃতীয় সূত্র), এই সম্মিলিত বলই গ্যাসের চাপ। তাপমাত্রা বাড়লে গতিশক্তি বাড়ে, ধাক্কা জোরে ও ঘন ঘন হয়, চাপ বাড়ে। আয়তন কমালেও ধাক্কা ঘন ঘন হয়।':'<br><small>গ্যাসের পিস্টন নামিয়ে কী হয় দেখতে "গ্যাস" বেছে নাও।</small>');}
+pills('g12p',function(k){G12.k=k;g12init();g12info();});on(['g12k','g12v'],g12info);
+DRAWS.push(function(){var x=ctxOf('g12c'),k=G12.k,T=+$('g12k').value/100,vol=+$('g12v').value/100,top=k===2?40+(1-vol)*180:40,x0=50,x1=330,y1=250,i,h0=0;
+  if(!G12.p.length)g12init();
+  grad(x,0,0,380,290,'#eef5fa','#dbe8f1');
+  if(k===1){var lt=150-T*10;wave(x,x0,lt,x1-x0,y1-lt,FR,'rgba(86,176,240,.55)','rgba(22,84,172,.6)',2);}
+  var sp=(k===2?.7+T*2.4:.5+T*1.3),col=['#e63946','#2b6cb0','#2a9d8f'][k];
+  G12.p.forEach(function(p,j){
+    if(k===0){var a=1+T*6;p.x=p.sx+Math.sin(FR*.12+p.ph)*a;p.y=p.sy+Math.cos(FR*.1+p.ph*1.3)*a;}
+    else{var ymin=k===1?150-T*10+6:top+8;p.x+=p.vx*sp;p.y+=p.vy*sp;if(k===1)p.vy+=.01;
+      if(p.x<x0+8){p.x=x0+8;p.vx=Math.abs(p.vx);h0++;}if(p.x>x1-8){p.x=x1-8;p.vx=-Math.abs(p.vx);h0++;}
+      if(p.y<ymin){p.y=ymin;p.vy=Math.abs(p.vy);h0++;}if(p.y>y1-8){p.y=y1-8;p.vy=-Math.abs(p.vy);h0++;}
+      if(FR%40===0){p.vx+=rnd(-.15,.15);p.vy+=rnd(-.15,.15);var m=Math.hypot(p.vx,p.vy)||1;p.vx/=m;p.vy/=m;}}
+    });
+  if(k===0){x.strokeStyle='rgba(120,130,150,.5)';x.lineWidth=2;G12.p.forEach(function(p,j){var r=j%6,c=Math.floor(j/6);if(r<5)seg(x,p,G12.p[j+1]);if(c<5)seg(x,p,G12.p[j+6]);});}
+  G12.p.forEach(function(p){ball(x,p.x,p.y,6.5,col);});
+  G12.rate=G12.rate*.96+h0*.6;
+  x.strokeStyle='#5b7389';x.lineWidth=4;x.beginPath();x.moveTo(x0,40);x.lineTo(x0,y1);x.lineTo(x1,y1);x.lineTo(x1,40);x.stroke();
+  grad(x,x0,top-10,x1-x0,10,'#cfd6dd','#7e8a96');x.fillStyle='#7e8a96';x.fillRect(190-4,Math.max(0,top-40),8,32);
+  if(k===2){var pb=clamp(G12.rate/(40),0,1);x.fillStyle='#e4ecf2';rr(x,346,50,18,190,9);x.fill();x.fillStyle=pb>.7?'#e63946':'#e9a23b';var bh=Math.max(6,pb*190);rr(x,346,240-bh,18,bh,9);x.fill();tag(x,'চাপ',355,36,NAVY,12);}
+  tag(x,['কঠিন (আকার ঠিক)','তরল (আয়তন ঠিক)','গ্যাস (সব ভরে নেয়)'][k],190,18,NAVY,13);});
+function seg(x,a,b){x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke();}
+g12info();
+qgame('g12q','g12o','g12fb','g12sc',[
+ ['কোন অবস্থার নির্দিষ্ট আয়তন আছে কিন্তু নির্দিষ্ট আকার নেই?','তরল',['কঠিন','গ্যাস','প্লাজমা'],'তরল পাত্রের আকার নেয়।'],
+ ['গ্যাসের চাপের কারণ কী?','অণুর দেয়ালে ধাক্কা',['অণুর ভর','মাধ্যাকর্ষণ','আলো'],'অসংখ্য অণুর ধাক্কার সম্মিলিত বল।'],
+ ['গ্যাসের তাপমাত্রা বাড়ালে চাপ কী হয়?','বাড়ে',['কমে','একই','শূন্য'],'অণুর গতিশক্তি বেড়ে জোরে ও ঘন ঘন ধাক্কা দেয়।'],
+ ['কোন অবস্থায় অণুগুলো নিজ জায়গায় আটকা থেকে শুধু কাঁপে?','কঠিন',['তরল','গ্যাস','প্লাজমা'],'কঠিনে অণু নিজ অবস্থানে দৃঢ়।'],
+ ['গ্যাসকে চাপ দিলে আয়তন কেন কমে?','অণুর মাঝে ফাঁকা অনেক',['অণু ছোট হয়','ভর কমে','তাপ কমে'],'অণুগুলোর মাঝে অনেক ফাঁকা জায়গা থাকে।']]);
+
+/* ================= ল্যাব ১৩: প্লাজমা ================= */
+var Z13={at:[],el:[]};
+(function(){for(var i=0;i<12;i++){var a={x:60+(i%4)*84,y:70+Math.floor(i/4)*76,th:12+i*7,ion:0,ang:rnd(0,6.3)};Z13.at.push(a);Z13.el.push({x:a.x,y:a.y,vx:0,vy:0,ang:0,tr:[]});}})();
+function z13info(){var t=+$('z13k').value,n=Z13.at.filter(function(a){return a.ion;}).length,st=n<2?'গ্যাস (নিরপেক্ষ পরমাণু)':(n<8?'আংশিক আয়নিত গ্যাস':'প্লাজমা');$('z13kv').textContent=bn(t);
+  $('z13t').innerHTML='তাপমাত্রা = '+bn(t)+'% ⇒ আয়নিত পরমাণু <b>'+bn(n)+'/১২</b><br>অবস্থা: <b style="font-size:18px;color:'+(n>=8?'#b5179e':'#1f3a5f')+'">'+st+'</b><br>প্লাজমায় ধনাত্মক আয়ন ও মুক্ত ইলেকট্রনের মিশ্রণ থাকে, তাই এটি বিদ্যুৎ পরিবহন করে ও চৌম্বক ক্ষেত্রে সাড়া দেয়। চৌম্বক ক্ষেত্র দিয়ে প্লাজমার নির্দিষ্ট আকার তৈরি করা যায়।<br><small>উদাহরণ: টিউবলাইট ও নিয়ন বাতি, বজ্রের আলো, নক্ষত্র। ফিউশন শক্তি তৈরির জন্য প্লাজমা ব্যবহারের গবেষণা চলছে।</small>';}
+
+DRAWS.push(function(){var x=ctxOf('z13c'),t=+$('z13k').value,mag=$('z13b').checked,i,nIon=0;
+  Z13.at.forEach(function(a,i){var e=Z13.el[i];a.ion=t>a.th?1:0;if(a.ion){nIon++;if(!e.free){e.free=1;e.x=a.x+14;e.y=a.y;var ang=rnd(0,6.3);e.vx=Math.cos(ang);e.vy=Math.sin(ang);e.ang=ang;e.tr=[];}}else e.free=0;});
+  var frac=nIon/12,g=x.createRadialGradient(190,140,10,190,140,230);g.addColorStop(0,'rgba('+Math.round(lerp(12,150,frac))+','+Math.round(lerp(18,40,frac))+','+Math.round(lerp(40,210,frac))+',1)');g.addColorStop(1,'#0a1020');x.fillStyle=g;x.fillRect(0,0,380,280);
+  if(mag){x.strokeStyle='rgba(255,255,255,.18)';x.lineWidth=1.5;for(i=0;i<8;i++){x.beginPath();x.arc(190,140,40+i*18,0,7);x.stroke();}tagd(x,'🧲 চৌম্বক ক্ষেত্র চালু',190,262,'#dfe6ff',13);}
+  var sp=1+t*.035;
+  Z13.at.forEach(function(a,i){var e=Z13.el[i];a.ang+=.05+t*.002;
+    if(a.ion){ball(x,a.x,a.y,9,'#e63946');tag(x,'+',a.x,a.y,'#fff',12);
+      if(mag){e.ang+=.12;var R=22+rp(i,0,10);e.x=a.x+Math.cos(e.ang)*R;e.y=a.y+Math.sin(e.ang)*R;}else{e.x+=e.vx*sp;e.y+=e.vy*sp;if(e.x<12||e.x>368)e.vx*=-1;if(e.y<12||e.y>268)e.vy*=-1;}
+      e.tr.push([e.x,e.y]);if(e.tr.length>9)e.tr.shift();for(var q=0;q<e.tr.length;q++){circ(x,0,e.tr[q][0],e.tr[q][1],1+q*.25,'rgba(120,200,255,'+(q/12)+')',null);}
+      ball(x,e.x,e.y,4.2,'#6fc3ff');}
+    else{x.strokeStyle='rgba(255,255,255,.3)';x.lineWidth=1;x.beginPath();x.arc(a.x,a.y,16,0,7);x.stroke();ball(x,a.x,a.y,8,'#e63946');ball(x,a.x+Math.cos(a.ang)*16,a.y+Math.sin(a.ang)*16,4,'#6fc3ff');}});
+  tagd(x,frac>.6?'প্লাজমা ⚡':'গ্যাস',20,20,frac>.6?'#ffb3f5':'#dbe9ff',16,'left');
+  if(FR%8===0)z13info();});
+z13info();
+qgame('z13q','z13o','z13fb','z13sc',[
+ ['পদার্থের চতুর্থ অবস্থার নাম কী?','প্লাজমা',['গ্যাস','কঠিন','তরল'],'কঠিন, তরল, গ্যাসের পর চতুর্থ অবস্থা প্লাজমা।'],
+ ['প্লাজমায় কী থাকে?','আয়ন ও মুক্ত ইলেকট্রন',['শুধু নিউট্রন','শুধু পরমাণু','শুধু অণু'],'পরমাণু আয়নিত হয়ে আয়ন ও ইলেকট্রনের মিশ্রণ তৈরি হয়।'],
+ ['কোনটি প্লাজমার উদাহরণ?','টিউবলাইটের ভেতরের আলো',['পানি','বরফ','কাঠ'],'টিউবলাইট, নিয়ন বাতি, বজ্রের আলো প্লাজমা।'],
+ ['প্লাজমার নির্দিষ্ট আকার কীভাবে তৈরি করা যায়?','চৌম্বক ক্ষেত্র দিয়ে',['পানি দিয়ে','ঠান্ডা করে','আলো দিয়ে'],'আয়নিত কণা চৌম্বক ক্ষেত্রে সাড়া দেয়।'],
+ ['প্লাজমা তৈরি করতে কী লাগে?','প্রচণ্ড তাপ বা শক্তিশালী বৈদ্যুতিক ক্ষেত্র',['ঠান্ডা','চাপ কমানো','আলো কমানো'],'তাপ বা বিদ্যুৎ ক্ষেত্র গ্যাসকে আয়নিত করে।']]);
+
+
+var QUIZ=[];
+function M(q,c,w,e,fix){QUIZ.push({q:q,o:[c].concat(w),a:0,e:e,fix:!!fix});}
+QUIZ.push({q:'বায়ুচাপ পরিমাপের যন্ত্রের নাম কী? (বইয়ের নমুনা প্রশ্ন ১)',o:['থার্মোমিটার','ব্যারোমিটার','ম্যানোমিটার','সিসমোমিটার'],a:1,fix:true,e:'বায়ুচাপ মাপার যন্ত্র ব্যারোমিটার। টরিসেলির পদ্ধতিতে পারদ দিয়ে এটি তৈরি।'});
+QUIZ.push({q:'তরলের চাপের পরিমাণ কী হবে? (বইয়ের নমুনা প্রশ্ন ২)',o:['গভীরতার সমানুপাতিক','ক্ষেত্রফলের সমানুপাতিক','ঘনত্বের ব্যস্তানুপাতিক','অভিকর্ষীয় ত্বরণের সমান'],a:0,fix:true,e:'P = hρg, তাই তরলের চাপ গভীরতা h-এর সমানুপাতিক। (ঘনত্বেরও সমানুপাতিক, ব্যস্তানুপাতিক নয়।)'});
+QUIZ.push({q:'পদার্থের চতুর্থ অবস্থার নাম কী? (বইয়ের নমুনা প্রশ্ন ৩)',o:['গ্যাস','প্লাজমা','কঠিন','তরল'],a:1,fix:true,e:'কঠিন, তরল, গ্যাসের পর চতুর্থ অবস্থা প্লাজমা (আয়ন ও মুক্ত ইলেকট্রনের মিশ্রণ)।'});
+QUIZ.push({q:'(চিত্র ৫.১৭: পানির গভীরতা 0.2 m) পাত্রের নিম্নতলে কী পরিমাণ চাপ অনুভূত হবে? (বইয়ের নমুনা প্রশ্ন ৪)',o:['98 Pa','980 Pa','196 Pa','1960 Pa'],a:3,fix:true,e:'P = hρg = 0.2 × 1000 × 9.8 = 1960 Pa। (এখানে পানির চাপই ধরা হয়েছে, বাইরের F আলাদা প্রশ্ন।)'});
+QUIZ.push({q:'পাত্রের মুখে F বল প্রয়োগ করলে —  i. শুধু পাত্রের তলায় চাপ প্রয়োগ করবে  ii. শুধু পাত্রের বক্র তলে চাপ প্রয়োগ করবে  iii. পাত্রের সকল দিকে চাপ প্রয়োগ করবে। কোনটি সঠিক? (বইয়ের নমুনা প্রশ্ন ৫)',o:['i','iii','ii ও iii','i, ii ও iii'],a:1,fix:true,e:'প্যাসকেলের সূত্র: আবদ্ধ তরলে বাইরের চাপ সব দিকে সমানভাবে সঞ্চালিত হয়। তাই শুধু iii সঠিক।'});
+M('বেশি চাপ পেতে হলে —','ক্ষেত্রফল কমাতে হবে',['ক্ষেত্রফল বাড়াতে হবে','বল কমাতে হবে','ঘনত্ব কমাতে হবে'],'P = F/A, A কম হলে P বেশি।');
+M('200 N বল 0.4 m² ক্ষেত্রফলে প্রয়োগ করলে চাপ কত?','500 Pa',['80 Pa','50 Pa','2000 Pa'],'P = 200 ÷ 0.4 = 500 Pa।');
+M('চাপের মাত্রা কোনটি?','ML⁻¹T⁻²',['MLT⁻²','ML²T⁻²','ML⁻³'],'চাপ = বল/ক্ষেত্রফল = MLT⁻²/L² = ML⁻¹T⁻²।');
+M('ঘনত্বের মাত্রা কোনটি?','ML⁻³',['ML⁻¹T⁻²','ML³','M⁻¹L³'],'ঘনত্ব = ভর/আয়তন = M/L³ = ML⁻³।');
+M('2 kg ভরের একটি বস্তুর আয়তন 0.001 m³ হলে ঘনত্ব কত?','2000 kg/m³',['2 kg/m³','200 kg/m³','0.002 kg/m³'],'ρ = 2 ÷ 0.001 = 2000 kg/m³।');
+M('3 m গভীরে পানির চাপ কত? (ρ = 1000 kg/m³, g = 9.8)','29400 Pa',['3000 Pa','9800 Pa','2940 Pa'],'P = hρg = 3 × 1000 × 9.8 = 29400 Pa।');
+M('পানিতে প্রতি 10 m গভীরতায় চাপ প্রায় কত বাড়ে?','1 atm',['10 atm','0.1 atm','100 atm'],'প্রতি 10 m-এ প্রায় 1 atm।');
+M('1 atm = কত Pa?','101325 Pa',['1013 Pa','10132 Pa','1013250 Pa'],'1 atm = 101325 Pa।');
+M('বস্তু তরলে ডোবালে ঊর্ধ্বমুখী বলকে কী বলে?','প্লবতা',['প্রত্যয়নী বল','স্পর্শ বল','ঘর্ষণ বল'],'এটি আর্কিমিডিসের নীতির প্লবতা।');
+M('বাতাসে 10 kg ও পানিতে 9.4 kg হলে বস্তুটির আয়তন কত?','0.6 × 10⁻³ m³',['6 × 10⁻³ m³','0.6 m³','9.4 × 10⁻³ m³'],'সরে যাওয়া পানির ভর 0.6 kg, V = 0.6 ÷ 1000 = 0.6 × 10⁻³ m³।');
+M('কাঠ (ঘনত্ব 600 kg/m³) পানিতে কত শতাংশ ডুবে থাকবে?','60%',['40%','50%','100%'],'ডুবন্ত অংশ = ρ/ρ<sub>w</sub> = 600/1000 = 60%।');
+M('A₂/A₁ = 50 এবং F₁ = 10 N হলে হাইড্রলিক প্রেসে F₂ কত?','500 N',['5 N','60 N','0.2 N'],'F₂ = F₁(A₂/A₁) = 10 × 50 = 500 N।');
+M('হাইড্রলিক প্রেসে কোনটি বাড়ে না?','কাজ বা শক্তি',['বল','চাপ নিয়ন্ত্রণ','বল বৃদ্ধি'],'বল বাড়ে, কিন্তু সরণ কমে; W₁ = W₂।');
+M('পৃথিবীপৃষ্ঠে বায়ুর চাপ প্রায় কত?','10⁵ N/m²',['10 N/m²','10² N/m²','10⁸ N/m²'],'≈ 1.01 × 10⁵ N/m²।');
+M('টরিসেলির পরীক্ষায় স্বাভাবিক চাপে পারদস্তম্ভ কত উচ্চ হয়?','76 cm',['7.6 cm','760 cm','10 cm'],'টরিসেলি দেখান ঠিক 76 cm।');
+M('পারদের বদলে পানি ব্যবহার করলে ব্যারোমিটারের নল প্রায় কত উঁচু লাগবে?','10.34 m',['76 cm','1 m','100 m'],'76 cm × 13.6 = 1034 cm ≈ 10.34 m।');
+M('প্রায় কত উচ্চতায় উঠলে বায়ুর চাপ অর্ধেক হয়?','5 km',['500 m','50 km','100 m'],'বইয়ের লেখচিত্রে প্রায় 5 km।');
+M('ব্যারোমিটারে চাপ হঠাৎ অনেক কমে গেলে কী আশঙ্কা করা হয়?','ঝড়-বৃষ্টির',['খরার','তুষারপাতের','ভূমিকম্পের'],'নিম্নচাপ ঝড়-বৃষ্টির আভাস দেয়।');
+M('হুকের সূত্র অনুসারে স্থিতিস্থাপক সীমার মধ্যে —','পীড়ন ∝ বিকৃতি',['পীড়ন ∝ ঘনত্ব','বিকৃতি ∝ ভর²','পীড়ন = বিকৃতি²'],'পীড়ন ∝ বিকৃতি, ধ্রুবকটি ইয়ং মডুলাস।');
+M('বিকৃতির একক কোনটি?','কোনো একক নেই',['Pa','N','m'],'বিকৃতি (L−L₀)/L₀, দুটি দৈর্ঘ্যের অনুপাত।');
+M('কোন অবস্থায় পদার্থের নির্দিষ্ট আকার ও নির্দিষ্ট আয়তন দুটোই থাকে?','কঠিন',['তরল','গ্যাস','প্লাজমা'],'কঠিনে অণুগুলো নিজ অবস্থানে দৃঢ়।');
+M('গ্যাসের চাপের কারণ কোনটি?','অণুগুলোর পাত্রের দেয়ালে আঘাত',['অণুর ভর','অণুর রং','মাধ্যাকর্ষণ'],'অসংখ্য অণুর আঘাতের সম্মিলিত বল গ্যাসের চাপ।');
+M('প্লাজমা কীসের মিশ্রণ?','আয়ন ও মুক্ত ইলেকট্রন',['শুধু অণু','শুধু নিউট্রন','পানি ও বরফ'],'পরমাণু আয়নিত হলে আয়ন ও ইলেকট্রনের মিশ্রণ তৈরি হয়।');
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+
+var QA=[
+ {h:'📝 সৃজনশীল প্রশ্ন ১ (ভাসমান বস্তু) – চিত্র ৫.১৮',items:[
+  ['<b>উদ্দীপক:</b> পানির পাত্রে 30 mg ভরের একটি বস্তু রাখা হলো। বস্তু নিমজ্জনের আগে পানির অবস্থান 52 cm³ এবং পরে 62 cm³ দাগে। <br><b>(ক)</b> ঘনত্ব কাকে বলে? (১)','একক আয়তনের কোনো বস্তুর ভরকে ঘনত্ব বলে। ঘনত্ব ρ = m/V।'],
+  ['<b>(খ)</b> ইস্পাত রাবারের তুলনায় বেশি স্থিতিস্থাপক — ব্যাখ্যা করো। (২)','স্থিতিস্থাপকতা মানে বল সরালে আগের অবস্থায় ফিরে আসার ধর্ম। ইস্পাতের ইয়ং মডুলাস (≈ 200 GPa) রাবারের (0.01–0.1 GPa) চেয়ে অনেক বেশি। একই পীড়নে ইস্পাতের বিকৃতি অনেক কম হয় এবং বেশি বল পর্যন্ত আগের আকারে ফিরে আসে। তাই ইস্পাত বেশি স্থিতিস্থাপক।'],
+  ['<b>(গ)</b> বস্তুটির ঘনত্ব নির্ণয় করো। (৩)','<b>আমার পড়া:</b> চিত্র অনুযায়ী পানির আয়তন 52 cm³ থেকে 62 cm³ হয়েছে, অর্থাৎ বস্তুর আয়তন V = 62 − 52 = 10 cm³ = 10⁻⁵ m³। ভর m = 30 mg = 3 × 10⁻⁵ kg।<br>ঘনত্ব ρ = m/V = 3 × 10⁻⁵ ÷ 10⁻⁵ = <b>3 kg/m³</b> (= 0.003 gm/cc)।<br><small>(চিত্রের সংখ্যাগুলো আমি বইয়ের ছবি দেখে পড়েছি, একবার মিলিয়ে নিও।)</small>'],
+  ['<b>(ঘ)</b> চিত্রে বস্তুটির এভাবে ভেসে থাকার কারণ গাণিতিক যুক্তিসহ ব্যাখ্যা করো। (৪)','ভাসার শর্ত: বস্তুর ঘনত্ব তরলের ঘনত্বের চেয়ে কম।<br>বস্তুর ঘনত্ব ρ = 3 kg/m³, পানির ঘনত্ব ρ<sub>w</sub> = 1000 kg/m³। যেহেতু ρ < ρ<sub>w</sub>, বস্তুটি ভাসবে।<br>ভাসলে ওজন = প্লবতা: Vρg = V₁ρ<sub>w</sub>g ⇒ V₁/V = ρ/ρ<sub>w</sub> = 3/1000 = 0.003 = <b>0.3%</b>। অর্থাৎ আয়তনের খুব সামান্য অংশ ডুবে থাকে।<br>সুতরাং বস্তুর ওজনের সমান ওজনের পানি অপসারিত হওয়ায় বস্তুটি ভেসে থাকে।']
+ ]},
+ {h:'📝 সৃজনশীল প্রশ্ন ২ (রাবার ব্যান্ড)',items:[
+  ['<b>উদ্দীপক:</b> ফাহিম L₁ = 10 cm দৈর্ঘ্যের রাবার ব্যান্ডের এক মাথা দেয়ালে বেঁধে অপর মাথায় M ভর ঝুলিয়ে দেখল, ভর (0, 0.4, 1, 1.4, 2.2, 3, 4, 5 kg) হলে ঝোলানো অবস্থায় দৈর্ঘ্য L₂ = 10, 12, 15, 17, 21, 25, 30, 36 cm। ভর সরালে দৈর্ঘ্য L₁ = 10, 10, 10, 10, 10, 10, 10.2, 10.6 cm। <br><b>(ক)</b> হুকের সূত্রটি লেখো। (১)','স্থিতিস্থাপক সীমার মধ্যে পীড়ন বিকৃতির সমানুপাতিক। (পীড়ন ∝ বিকৃতি, অর্থাৎ পীড়ন = ধ্রুবক × বিকৃতি)'],
+  ['<b>(খ)</b> বিকৃতির একক নেই কেন? (২)','বিকৃতি = (L − L₀) ÷ L₀। এটি একই এককের দুটি রাশির (দৈর্ঘ্য পরিবর্তন ও মূল দৈর্ঘ্য) অনুপাত, তাই একক কাটাকাটি হয়ে যায় এবং কোনো একক থাকে না। এটি একটি সংখ্যা।'],
+  ['<b>(গ)</b> M = 2.7 kg হলে L₂ = ? হিসাব করো। (৩)','সারণি থেকে 3 kg পর্যন্ত প্রতি 1 kg ভরে দৈর্ঘ্য 5 cm করে বাড়ে (যেমন 1 kg → 15, 2.2 kg → 21, 3 kg → 25)।<br>অর্থাৎ L₂ = 10 + 5M।<br>M = 2.7 kg-এর জন্য L₂ = 10 + 5 × 2.7 = 10 + 13.5 = <b>23.5 cm</b>।'],
+  ['<b>(ঘ)</b> ছকের তথ্য বিশ্লেষণ করে রাবার ব্যান্ডের স্থিতিস্থাপক সীমা সম্পর্কে যৌক্তিক মতামত দাও। (৪)','<b>৩ kg পর্যন্ত:</b> ভর সরালে দৈর্ঘ্য ঠিক 10 cm-এ ফিরে আসে (L₁ = 10), আর দৈর্ঘ্য সমান হারে (প্রতি kg-এ 5 cm) বাড়ে। তাই এই পর্যন্ত ব্যান্ড স্থিতিস্থাপক এবং হুকের সূত্র মানে।<br><b>৪ kg-এ:</b> ভর সরানোর পর দৈর্ঘ্য 10.2 cm, আগের অবস্থায় আর পুরো ফেরেনি, অর্থাৎ স্থায়ী বিকৃতি শুরু। ৫ kg-এ 10.6 cm এবং L₂ = 36 cm (রৈখিক হলে 35 হতো), রৈখিকতাও ভেঙেছে।<br>সুতরাং ব্যান্ডের <b>স্থিতিস্থাপক সীমা প্রায় 3 kg ভর (3 kg ও 4 kg-এর মাঝামাঝি, 3 kg-এর কাছে)</b>। এর বেশি ভর ঝোলানো ঠিক নয়।']
+ ]},
+ {h:'✍️ সংক্ষিপ্ত প্রশ্ন ও উত্তর',items:[
+  ['টরিসেলির শূন্যস্থান কি প্রকৃতপক্ষে শূন্য? ব্যাখ্যা করো। (বইয়ের প্রশ্ন ১)','নলের ওপরের ফাঁকা অংশে বাইরের বাতাস ঢোকে না, তাই সেখানে বাতাসের চাপ নেই। বইয়ে একে প্রায় শূন্যস্থান বলা হয়েছে। (আমার ব্যাখ্যা: পারদের সামান্য বাষ্প ওখানে থাকে, তাই একেবারে নিখুঁত শূন্য নয়, প্রায় শূন্য।)'],
+  ['সোনার ঘনত্ব 19.3 gm/cc বলতে কী বোঝায়? (বইয়ের প্রশ্ন ২)','1 cm³ (1 cc) আয়তনের সোনার ভর 19.3 gm। অর্থাৎ একক আয়তনে সোনার ভর 19.3 gm।'],
+  ['সমান গভীরতায় পানি ও পারদের মধ্যে কোনটিতে চাপ বেশি হবে এবং কেন? (বইয়ের প্রশ্ন ৩)','পারদে চাপ বেশি হবে। P = hρg সূত্রে h ও g সমান, কিন্তু পারদের ঘনত্ব (13,600 kg/m³) পানির (1000 kg/m³) চেয়ে 13.6 গুণ বেশি। তাই চাপও 13.6 গুণ বেশি।'],
+  ['বস্তুর ভেসে থাকা বা ডুবে যাওয়ার কারণ ব্যাখ্যা করো। (বইয়ের প্রশ্ন ৪)','বস্তু তরলে ডুবালে যতটুকু তরল সরায়, তার ওজনের সমান ঊর্ধ্বমুখী প্লবতা পায়। প্লবতা বস্তুর ওজনের বেশি (বা সমান) হলে বস্তু ভাসে; ওজন বেশি হলে ডুবে যায়। বস্তুর ঘনত্ব তরলের চেয়ে কম হলে ভাসে, বেশি হলে ডোবে।'],
+  ['চাপ কাকে বলে? এর একক লেখো। (আমার বানানো)','একক ক্ষেত্রফলে লম্বভাবে প্রযুক্ত বলকে চাপ বলে। P = F/A। একক N/m² বা প্যাসকেল (Pa)।'],
+  ['একজন মানুষ শুয়ে থাকলে চাপ কম হয় কেন? (বইয়ের উদাহরণ)','শুয়ে থাকলে শরীরের ক্ষেত্রফল (0.5 m²) বেশি, ওজন একই (490 N), তাই চাপ = 490/0.5 = 980 Pa। দাঁড়ালে ক্ষেত্রফল 0.03 m², চাপ ≈ 16,333 Pa। ক্ষেত্রফল বেশি হলে চাপ কম হয়।'],
+  ['আর্কিমিডিসের নীতিটি লেখো। (আমার বানানো)','কোনো বস্তু তরলে আংশিক বা সম্পূর্ণ ডুবালে সেটি যতটুকু তরল অপসারণ করে, সেই তরলের ওজনের সমান ওজন বস্তুর ওজন থেকে কমে যায় (ঊর্ধ্বমুখী প্লবতা)।'],
+  ['প্যাসকেলের সূত্র লেখো। হাইড্রলিক প্রেসে শক্তি বাড়ে কি না? (আমার বানানো)','আবদ্ধ পাত্রে তরল বা গ্যাসে বাইরে থেকে চাপ দিলে সেই চাপ সমানভাবে সব দিকে সঞ্চালিত হয়ে পাত্রের গায়ে লম্বভাবে কাজ করে। হাইড্রলিক প্রেসে বল F₂ = F₁(A₂/A₁) বাড়ে, কিন্তু সরণ কমে যায় (l₂ = l₁A₁/A₂)। কাজ W₁ = W₂, তাই শক্তি বাড়ে না।'],
+  ['তিমি মাছ সমুদ্রপৃষ্ঠ থেকে 2,100 m গভীরে গেলে কত চাপ সহ্য করে? (বইয়ের উদাহরণ)','প্রতি 10 m-এ 1 atm চাপ বাড়ে। চাপ = 2100 ÷ 10 = 210 atm।'],
+  ['কাঠের টুকরো পানিতে ভাসলে কত শতাংশ ডুবে থাকবে? (ρ কাঠ = 0.5 × 10³ kg/m³) (বইয়ের উদাহরণ)','ডুবন্ত অংশ V₁/V = ρ/ρ<sub>w</sub> = 0.5 × 10³ ÷ 10³ = 0.5 = 50%।'],
+  ['মুকুটের ভর বাতাসে 10 kg ও পানিতে 9.4 kg হলে ঘনত্ব কত? খাঁটি সোনা কি? (বইয়ের উদাহরণ)','অপসারিত পানির ভর = 0.6 kg ⇒ V = 0.6 × 10⁻³ m³। ঘনত্ব = 10 ÷ (0.6 × 10⁻³) ≈ 16,666 kg/m³। খাঁটি সোনার ঘনত্ব 19,300 kg/m³, তাই মুকুট খাঁটি নয়, খাদ মেশানো।'],
+  ['বায়ুর চাপ উচ্চতার সাথে কমে কেন? (আমার বানানো)','ওপরে উঠলে আমাদের ওপরে বাতাসের স্তম্ভের উচ্চতা ও ওজন কমে যায়। তাছাড়া ওপরের বাতাসের ঘনত্বও কম (নিচের বাতাস বেশি সংকুচিত)। তাই চাপ কমে। প্রায় 5 km উচ্চতায় চাপ অর্ধেক হয়।'],
+  ['টরিসেলির পরীক্ষা সংক্ষেপে লেখো। (আমার বানানো)','এক মুখ বন্ধ কাচের নলে পারদ ভরে মুখ আঙুলে চেপে পারদভর্তি পাত্রে উল্টে ধরলে পারদ নেমে ঠিক 76 cm উচ্চতায় থেমে যায়। বাইরের বায়ুচাপই এই পারদস্তম্ভকে ধরে রাখে। এভাবে ব্যারোমিটার তৈরি হয়।'],
+  ['পীড়ন ও বিকৃতির সংজ্ঞা লেখো। (আমার বানানো)','বিকৃতি = দৈর্ঘ্যের পরিবর্তন ÷ মূল দৈর্ঘ্য = (L − L₀)/L₀ (একক নেই)। পীড়ন = বিকৃতির কারণে একক ক্ষেত্রফলে সৃষ্ট প্রত্যয়নী বল = F/A (একক Pa)।'],
+  ['কঠিন, তরল ও গ্যাসের মধ্যে পার্থক্য আণবিক গতিতত্ত্ব দিয়ে লেখো। (আমার বানানো)','কঠিন: অণু খুব কাছাকাছি, নিজ স্থানে কাঁপে; আকার ও আয়তন নির্দিষ্ট। তরল: অণু কাছাকাছি কিন্তু একটার পাশ দিয়ে আরেকটা যেতে পারে; আয়তন নির্দিষ্ট, আকার নেই। গ্যাস: অণু দূরে দূরে, মুক্ত; আকার ও আয়তন কোনোটাই নির্দিষ্ট নয়, সংকুচিত করা যায়।'],
+  ['প্লাজমা কী? উদাহরণ দাও। (আমার বানানো)','প্রচণ্ড তাপ বা শক্তিশালী বৈদ্যুতিক ক্ষেত্রে গ্যাসের পরমাণু আয়নিত হয়ে যে আয়ন ও মুক্ত ইলেকট্রনের মিশ্রণ তৈরি হয়, তাকে প্লাজমা বলে। এটি পদার্থের চতুর্থ অবস্থা। উদাহরণ: টিউবলাইট, নিয়ন বাতি, বজ্রের আলো, নক্ষত্র।']
+ ]}
+];
+
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+function frame(){FR++;for(var i=0;i<DRAWS.length;i++)DRAWS[i]();requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>

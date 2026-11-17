@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>চল বিদ্যুৎ (পদার্থবিজ্ঞান অধ্যায় ১১) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+small{color:#567}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/lab-boost.js?v=1"></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#physics">&larr; সব অধ্যায়</a>
+</header><div class="wrap">
+  <div class="crumb">⚛️ পদার্থবিজ্ঞান &rsaquo; একাদশ অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🔌 চল বিদ্যুৎ (Current Electricity)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🔌 ল্যাব ১</a><a href="#lab2">🔋 ল্যাব ২</a><a href="#lab3">🌡️ ল্যাব ৩</a><a href="#lab4">⏱️ ল্যাব ৪</a><a href="#lab5">📐 ল্যাব ৫</a><a href="#lab6">🧵 ল্যাব ৬</a><a href="#lab7">🎚️ ল্যাব ৭</a><a href="#lab8">🧭 ল্যাব ৮</a><a href="#lab9">🔗 ল্যাব ৯</a><a href="#lab10">🔀 ল্যাব ১০</a><a href="#lab11">💡 ল্যাব ১১</a><a href="#lab12">🏭 ল্যাব ১২</a><a href="#lab13">🛡️ ল্যাব ১৩</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> বিদ্যুৎপ্রবাহ ও ইএমএফ ব্যাখ্যা করতে; ওহমের সূত্র ও রোধ বুঝতে; শ্রেণি ও সমান্তরাল সংযোগে তুল্য রোধ বের করতে; সার্কিটের প্রতিটি বিন্দুর ভোল্টেজ হিসাব করতে; তড়িৎ ক্ষমতা ও বিদ্যুৎ বিল বের করতে; সিস্টেম লস, লোডশেডিং ও বিদ্যুতের নিরাপদ ব্যবহার বর্ণনা করতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের ক্রম মেনে সহজ ভাষায় লেখা। বইয়ের "নমুনা প্রশ্ন"-এর উত্তরমালা নেই, তাই MCQ ও প্রশ্নের উত্তর আমি হিসাব করে ব্যাখ্যাসহ দিয়েছি। আমার নিজের যোগ করা তথ্য আলাদা করে লেখা আছে।</div>
+
+    <h3>১১.১ বিদ্যুৎপ্রবাহ ⭐⭐⭐</h3>
+    <ul>
+      <li>দুটি বস্তুর বিভব আলাদা হলে চার্জ <b>বেশি বিভব থেকে কম বিভবে</b> প্রবাহিত হয়। যতক্ষণ বিভব সমান না হয়, ততক্ষণ প্রবাহ চলে। একে বিদ্যুৎপ্রবাহ (ইলেকট্রিসিটি) বলে (চিত্র ১১.০১)।</li>
+      <li>সব সময় বিদ্যুৎ চাইলে বিভব পার্থক্য <b>ধরে রাখতে</b> হয়। ব্যাটারি বা জেনারেটর তা করে।</li>
+      <li>স্থির বিদ্যুতের ধারক (ক্যাপাসিটর) চার্জ জমা রাখতে পারে, কিন্তু তার দুই পাত তার দিয়ে জুড়লে মুহূর্তে সব চার্জ চলে যায়। তাই সার্বক্ষণিক বিদ্যুতের জন্য ব্যাটারি লাগে।</li>
+    </ul>
+    <h4>১১.১.১ তড়িৎ চালক শক্তি ও বিভব পার্থক্য ⭐⭐⭐</h4>
+    <ul>
+      <li>ব্যাটারির ভেতরে রাসায়নিক বিক্রিয়ায় বিভব পার্থক্য তৈরি হয়। সাধারণ ব্যাটারির দুই প্রান্তে (Pole) 1.5 V।</li>
+      <li>কম বিভব থেকে বেশি বিভবে Q চার্জ আনতে W কাজ হলে: <b>EMF = W / Q</b>। এটিই তড়িৎ চালক শক্তি বা ইএমএফ।</li>
+      <li>নাম "বল" আর "শক্তি" বললেও ইএমএফ <b>বলও নয়, শক্তিও নয়</b>, এটি বিভব পার্থক্য।</li>
+      <li>বিভবের মান গুরুত্বপূর্ণ নয়, <b>পার্থক্য</b> গুরুত্বপূর্ণ। একই ব্যাটারি দিয়ে +1.5 V বা −1.5 V দুটোই বানানো যায় (কোন প্রান্ত ভূ-সংযুক্ত তার ওপর নির্ভর করে)। দুটি 1.5 V ব্যাটারি দিয়ে 1.5, 3.0, ±1.5, −3.0 V বানানো সম্ভব (চিত্র ১১.০২, ১১.০৩)।</li>
+    </ul>
+    <h4>১১.১.২ পরিবাহী, অপরিবাহী ও অর্ধপরিবাহী ⭐⭐⭐</h4>
+    <ul>
+      <li><b>পরিবাহী:</b> কিছু ইলেকট্রন প্রায় মুক্ত, তাই সহজে প্রবাহ চলে (সোনা, রুপা, তামা, অ্যালুমিনিয়াম)। প্রবাহ হয় নেগেটিভ চার্জের ইলেকট্রন দিয়ে।</li>
+      <li><b>অপরিবাহী:</b> মুক্ত ইলেকট্রন নেই (প্লাস্টিক, রাবার, কাঠ, কাচ)। মূলত অধাতুগুলো।</li>
+      <li><b>অর্ধপরিবাহী:</b> পরিবাহী ও অপরিবাহীর মাঝামাঝি। তাপমাত্রা বাড়ালে পরিবহন ক্ষমতা বাড়ে (সিলিকন, জার্মেনিয়াম)।</li>
+    </ul>
+    <h4>১১.১.৩ বিদ্যুৎপ্রবাহের দিক ⭐⭐⭐</h4>
+    <ul>
+      <li>A থেকে B-তে ধনাত্মক চার্জ গেছে বলা মানে আসলে <b>B থেকে A-তে ইলেকট্রন</b> গেছে। তাই বিদ্যুতের দিক আর ইলেকট্রনের দিক <b>বিপরীত</b>।</li>
+      <li>সময় t-তে Q চার্জ প্রবাহিত হলে: <b>I = Q / t</b>। একক <b>অ্যাম্পিয়ার (A) = C/s</b>। 1 সেকেন্ডে 1 কুলম্ব চার্জ গেলে 1 A।</li>
+    </ul>
+
+    <h3>১১.২ বিভব পার্থক্য ও প্রবাহের সম্পর্ক ⭐⭐⭐</h3>
+    <h4>১১.২.১ ওহমের সূত্র</h4>
+    <ul>
+      <li>ভোল্টমিটারে বিভব পার্থক্য, অ্যামিটারে প্রবাহ মাপা হয়। একটি তারের দুই প্রান্তে বিভব পার্থক্য বাড়ালে প্রবাহ বাড়ে। গ্রাফে সরলরেখা: <b>I ∝ V</b>।</li>
+      <li>বিভব পার্থক্য উল্টে দিলে প্রবাহের দিকও উল্টে যায়।</li>
+      <li>অন্য উপাদানের তারে ঢাল আলাদা হয় (চিত্র ১১.০৪)। যে তারে প্রবাহ কম, তার বাধা (রোধ) বেশি।</li>
+      <li><b>ওহমের সূত্র: I = V / R</b>। রোধ বেশি হলে প্রবাহ কম। একক <b>ওহম (Ω)</b>: 1 V-এ 1 A হলে রোধ 1 Ω।</li>
+      <li>V / (I × R) ত্রিভুজে আঙুল দিয়ে যেটা ঢাকবে, সেটা বাকি দুটি দিয়ে বের হবে (চিত্র ১১.০৫)।</li>
+    </ul>
+    <h4>১১.২.২ রোধ ⭐⭐⭐</h4>
+    <ul>
+      <li>তারের দৈর্ঘ্য L বাড়লে রোধ বাড়ে: <b>R ∝ L</b>। প্রস্থচ্ছেদ A বাড়লে রোধ কমে: <b>R ∝ 1/A</b>।</li>
+      <li>সমীকরণ: <b>R = ρ L / A</b>। ρ হলো <b>আপেক্ষিক রোধ</b>, একক Ω m। ρ = R A / L।</li>
+      <li>টেবিল ১১.০১ (Ω m): রুপা 1.59 × 10⁻⁸, তামা 1.68 × 10⁻⁸, সোনা 2.44 × 10⁻⁸, গ্রাফাইট 2.50 × 10⁻⁶, হীরা 1.00 × 10¹², বাতাস 1.30 × 10¹⁶।</li>
+      <li><b>পরিবাহিতা σ = 1/ρ</b>, একক (Ω m)⁻¹। যে পদার্থের ρ কম, তার পরিবাহিতা বেশি।</li>
+      <li>রোধ আসলে অণু-পরমাণুর কাঁপাকাঁপিতে ইলেকট্রনের বাধা। তাই তাপমাত্রা বাড়লে পরিবাহীর রোধ <b>বাড়ে</b> (আর অর্ধপরিবাহীতে কমে, কারণ তাপে বেশি ইলেকট্রন মুক্ত হয়)। রোধ প্রকাশ করতে তাপমাত্রা বলে দিতে হয়।</li>
+      <li><b>স্থির রোধ:</b> নির্দিষ্ট মানের, রঙিন ব্যান্ড দিয়ে মান লেখা থাকে। <b>পরিবর্তী রোধ (রিওস্ট্যাট):</b> মাঝখানে আরেকটি প্রান্ত থাকে, সরণশীল সংযোগ সরিয়ে রোধ বদলানো যায় (চিত্র ১১.০৬)।</li>
+    </ul>
+    <b>উদাহরণ ১ (বই):</b> রুপা, তামা, টাংস্টেন, নাইক্রোমের ρ = 1.6, 1.7, 5.5, 100 (× 10⁻⁸ Ω m)। 1 m² প্রস্থচ্ছেদে 1 Ω রোধ পেতে L = RA/ρ = 1/ρ মিটার লাগে, অর্থাৎ রুপায় 6.25 × 10⁷ m, তামায় 5.9 × 10⁷ m, টাংস্টেনে 1.8 × 10⁷ m, নাইক্রোমে 10⁶ m। অনেক লম্বা! বাস্তবে সরু তার লাগে।<br>
+    <b>উদাহরণ ২ (বই):</b> 0.1 mm ব্যাসার্ধের তারে (A = π r² = 3.14 × 10⁻⁸ m²): 1 Ω-এর জন্য রুপা 1.96 m, তামা 1.84 m, টাংস্টেন 0.57 m (57 cm), নাইক্রোম 0.03 m (3 cm)।
+    <h4>১১.২.৩ সার্কিট বিশ্লেষণ ⭐⭐⭐</h4>
+    <ul>
+      <li>প্রতীক (চিত্র ১১.০৭): কোষ, ব্যাটারি, সুইচ, ফিউজ, বাল্ব, রোধ, রিওস্ট্যাট, অ্যামিটার (A), ভোল্টমিটার (V), গ্যালভানোমিটার (G), ধারক, কুণ্ডলী, ভূ-সংযোগ।</li>
+      <li>(a) উৎস যত বিদ্যুৎ বের করে, পুরো সার্কিট ঘুরে ঠিক ততটাই ফিরে আসে। (b) যেকোনো বিন্দুতে যতটুকু ঢোকে ঠিক ততটুকু বেরোয়, চার্জ ধ্বংস বা সৃষ্টি হয় না। (c) সার্কিটের যেকোনো দুই বিন্দুতে ওহমের সূত্র সত্য: ভোল্টেজ পার্থক্যকে রোধ দিয়ে ভাগ করলে প্রবাহ।</li>
+      <li>ভূ-সংযুক্ত বিন্দুর ভোল্টেজ 0 ধরা হয়। তারের রোধ নেই ধরলে একটি তারের সব জায়গায় বিভব সমান।</li>
+    </ul>
+    <b>উদাহরণ ৩ (বই ১১.০৯ক):</b> 3 V ব্যাটারি, 1 Ω ও 2 Ω শ্রেণিতে, C ও D ভূ-সংযুক্ত। I = 3/(1+2) = 1 A। A = 3 V, B = 3 − 1×1 = 2 V, C = D = 0 V।<br>
+    <b>উদাহরণ ৪ (বই ১১.০৯খ):</b> 6 V, R₁ = 5 Ω, R₂ = 10 Ω, R₃ = 15 Ω (D ভূ-সংযুক্ত)। I = 6/30 = 1/5 A। V₁ = 5 × 1/5 = 1 V ➜ B = 5 V। V₂ = 10 × 1/5 = 2 V ➜ C = 3 V। V₃ = 15 × 1/5 = 3 V ➜ D = 0 ✓। E বিন্দু B-র সাথে যুক্ত, কোনো প্রবাহ নেই, তাই E = 5 V।
+    <h4>১১.২.৪ তুল্য রোধ: শ্রেণি সংযোগ ⭐⭐⭐</h4>
+    <ul>
+      <li>রোধগুলো একটার পর একটা জুড়লে সবগুলোতে <b>প্রবাহ একই</b>, ভোল্টেজ ভাগ হয়।</li>
+      <li><b>R = R₁ + R₂ + R₃ + … + Rₙ</b>। (প্রমাণ: I = (V−V_B)/R₁ = V_B/R₂ থেকে V_B = R₂V/(R₁+R₂), তাই I = V/(R₁+R₂)।)</li>
+    </ul>
+    <h4>১১.২.৫ তুল্য রোধ: সমান্তরাল সংযোগ ⭐⭐⭐</h4>
+    <ul>
+      <li>রোধগুলোর দুই মাথা একই দুই বিন্দুতে জোড়া। <b>ভোল্টেজ সমান</b>, প্রবাহ ভাগ হয়: <b>I = I₁ + I₂</b>, I₁ = V/R₁, I₂ = V/R₂।</li>
+      <li><b>1/R = 1/R₁ + 1/R₂ + … + 1/Rₙ</b>।</li>
+    </ul>
+    <b>উদাহরণ ৫ (বই ১১.১০):</b> 2 V ব্যাটারি, R₁ = 3 Ω, R₂ = 6 Ω সমান্তরালে। I₁ = 2/3 A, I₂ = 2/6 = 1/3 A, মোট I = 1 A।
+
+    <h3>১১.৩ তড়িৎ ক্ষমতা ⭐⭐⭐</h3>
+    <ul>
+      <li>V ভোল্টে Q চার্জ সরাতে কাজ W = VQ। ক্ষমতা = প্রতি সেকেন্ডে কাজ: <b>P = W/t = VI</b>।</li>
+      <li>ওহমের সূত্র বসালে: <b>P = I²R = V²/R</b>।</li>
+      <li>প্রবাহে রোধ গরম হয়, শক্তি তাপ হিসেবে বেরোয় (ফিলামেন্ট বাল্বে আলোর চেয়ে তাপ বেশি, তাই এর চলন কমছে)।</li>
+      <li>বাসার মিটার ইউনিট দিয়ে মাপে: <b>ইউনিট = P × t / 1000</b> কিলোওয়াট-ঘণ্টা (kWh)। একে BOT ইউনিট বলে। বিলের হিসাব এই ইউনিটে।</li>
+    </ul>
+    <b>উদাহরণ ৬ (বই):</b> 220 V — 100 W বাল্বের রোধ R = V²/P = 220²/100 = <b>484 Ω</b>। প্রবাহ I = V/R = 220/484 = <b>0.45 A</b> (বা I = P/V = 100/220)।<br>
+    <b>উদাহরণ ৭ (বই):</b> 60 W বাল্ব রোজ 5 ঘণ্টা করে 30 দিন ➜ ইউনিট = 60 × (5 × 30)/1000 = <b>9 ইউনিট</b>। ইউনিট 10 টাকা হলে খরচ = <b>90 টাকা</b>।
+
+    <h3>১১.৪ বিদ্যুৎ সরবরাহ ⭐⭐⭐</h3>
+    <ul>
+      <li>দূরে বিদ্যুৎ পাঠাতে উচ্চ ভোল্টেজ ব্যবহার হয়। তারের রোধ থাকায় তাপে প্রতি সেকেন্ডে <b>I²R</b> শক্তি নষ্ট হয়। P = VI, তাই ভোল্টেজ 10 গুণ করলে প্রবাহ 10 গুণ কমে, আর অপচয় <b>100 গুণ কমে</b> (রোধ R একই)।</li>
+      <li>এখানে V বলতে তারের বিভব, তারের দুই পাশের বিভব পার্থক্য নয় (ওটা প্রায় শূন্য ও ধর্তব্যের মধ্যে নয়)।</li>
+    </ul>
+    <h4>১১.৪.১ তড়িতের সিস্টেম লস</h4>
+    <ul>
+      <li>প্রতিটি পরিবাহীর রোধ আছে, তাই রোধজনিত তাপে বিদ্যুৎশক্তির যে ক্ষয় হয় তাকে <b>সিস্টেম লস</b> বলে।</li>
+      <li>উৎপাদনের পর <b>স্টেপ আপ ট্রান্সফর্মার</b> দিয়ে ভোল্টেজ বাড়ানো হয়, গ্রাহকের কাছে দেওয়ার আগে <b>স্টেপ ডাউন ট্রান্সফর্মার</b> দিয়ে নামানো হয়।</li>
+    </ul>
+    <h4>১১.৪.২ লোডশেডিং</h4>
+    <ul>
+      <li>বিদ্যুৎকেন্দ্রগুলো জাতীয় গ্রিডে যুক্ত। কোনো এলাকায় চাহিদা উৎপাদনের চেয়ে বেশি হলে সাবস্টেশন সেখানে সরবরাহ বন্ধ রাখতে বাধ্য হয়, একে <b>লোডশেডিং</b> বলে।</li>
+      <li>দীর্ঘ সময় হলে গ্রাহকের সুবিধার জন্য বিভিন্ন জায়গায় আলাদা আলাদা সময়ে চক্রাকারে করা হয়।</li>
+    </ul>
+
+    <h3>১১.৫ বিদ্যুতের নিরাপদ ব্যবহার ⭐⭐⭐</h3>
+    <ul>
+      <li>বাসার 220 V (AC) মানুষকে মেরে ফেলতে পারে। সরাসরি হৃৎপিণ্ডের ভেতর দিয়ে মাত্র <b>10 mA</b>-এও মানুষ মারা যেতে পারে। শুকনো চামড়ার রোধ প্রায় 100,000 Ω, কিন্তু ভেজা হলে হাজার গুণ কমে যায়। ভেজা পায়ে ভেজা মাটিতে দাঁড়িয়ে বিদ্যুৎস্পৃষ্ট হওয়া সবচেয়ে বিপজ্জনক।</li>
+      <li>বিদ্যুৎস্পৃষ্ট হলে হাত-পা নাড়াতে না-ও পারা যায়।</li>
+      <li><b>(a) অপরিবাহী আস্তরণ:</b> তার সবসময় প্লাস্টিক বা অন্য অপরিবাহী দিয়ে ঢাকা। না থাকলে শর্ট সার্কিটে বেশি প্রবাহ, গরম হয়ে আগুন ধরে।</li>
+      <li><b>(b) ভালো সংযোগ:</b> সংযোগ আলগা হলে রোধ বাড়ে, I²R তাপে আস্তরণ পুড়ে যেতে পারে।</li>
+      <li><b>(c) আর্দ্রতা:</b> পানি বিদ্যুৎ পরিবহন করে। ভেজা অবস্থায় ইলেকট্রিক জিনিস ব্যবহার বিপজ্জনক।</li>
+      <li><b>(d) সার্কিট ব্রেকার ও ফিউজ:</b> সার্কিট ব্রেকার নিরাপদ সীমার বেশি প্রবাহে সার্কিট ছিন্ন করে। ফিউজ সরু তার, বেশি প্রবাহে I²R তাপে পুড়ে সরবরাহ বন্ধ করে।</li>
+      <li><b>(e) সঠিক সংযোগ:</b> সরবরাহে দুটি তার, উচ্চ বিভবের <b>লাইভ</b> আর ভোল্টেজহীন <b>নিউট্রাল</b>। সুইচ লাগাতে হয় লাইভ তারে (চিত্র ১১.১৫), তাহলে যন্ত্র বন্ধ থাকলে ভেতরে কোথাও উচ্চ ভোল্টেজ থাকে না।</li>
+      <li><b>(f) গ্রাউন্ড (ভূ-সংযোগ):</b> উচ্চ ও নিউট্রাল ছাড়াও তৃতীয় সংযোগ, যা যন্ত্রের ঢাকনায় লাগানো থাকে। যন্ত্র বিদ্যুতায়িত হলে প্রবাহ সরাসরি ভূমিতে যায়, ফিউজ পুড়ে যন্ত্র বিপদমুক্ত হয়, তাই শক খাওয়ার আশঙ্কা থাকে না।</li>
+    </ul>
+
+    <h3>১১.৬ বাসাবাড়ির তড়িৎ বর্তনীর নকশা ⭐⭐</h3>
+    <ul>
+      <li>বিদ্যুৎকেন্দ্র থেকে সাপ্লাই ক্যাবল দিয়ে বাসায় আসে। লাল তার লাইভ, নীল তার নিউট্রাল, সবুজ তার ভূ-সংযোগ। প্রথমে বৈদ্যুতিক মিটার, যেটা বাসার ব্যবহার রেকর্ড করে।</li>
+      <li>মেইন সুইচের সাথে 5 A, 15 A, 30 A তিনটি সার্কিট ব্রেকার বা ফিউজ। 5 A-এ লাইট ও ফ্যান, 15 A-এ ইলেকট্রিক চুলা, 30 A-এ প্লাগ পয়েন্ট। প্লাগ অংশটি রিংয়ের মতো, তাই বিদ্যুৎ দুই পথে আসতে পারে (চিত্র ১১.১৭)।</li>
+    </ul>
+    <div class="key">🧠 <b>মনে রাখার ছক:</b><br>
+      • I = Q/t (A); EMF = W/Q (V); I = V/R (ওহম); R = ρL/A; σ = 1/ρ<br>
+      • শ্রেণি: R = R₁ + R₂ + …; সব রোধে I সমান<br>
+      • সমান্তরাল: 1/R = 1/R₁ + 1/R₂ + …; সব রোধে V সমান<br>
+      • P = VI = I²R = V²/R (W); ইউনিট = P × t / 1000 (kWh)<br>
+      • সিস্টেম লস = I²R; ভোল্টেজ 10 গুণ ➜ লস 100 গুণ কম<br>
+      • সুইচ লাইভ তারে; 10 mA-এ মৃত্যুঝুঁকি</div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🔌 ল্যাব 1: বিভব পার্থক্য থাকলেই বিদ্যুৎ চলে</h2>
+    <div class="say">👉 গোলক A-তে চার্জ বেশি, B চার্জহীন। তার জোড়ো। চার্জ উঁচু বিভব থেকে নিচু বিভবে যায়, যতক্ষণ বিভব সমান না হয়। লক্ষ করো: বিদ্যুতের দিক আর ইলেকট্রনের দিক উল্টো!</div>
+    <div class="ctl"><label>A গোলকের আধান: <span id="u1kv"></span> একক</label><input type="range" id="u1k" min="2" max="10" step="1" value="8"></div>
+    <div class="btnrow"><button class="btn" id="u1b">🔌 তার জোড়ো</button><button class="btn alt" id="u1r">🔄 আবার শুরু</button></div>
+    <div class="row"><div><canvas id="u1c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="u1t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="u1q"></div><div class="cls" id="u1o"></div><div class="fb" id="u1fb"></div><small id="u1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🔋 ল্যাব 2: ব্যাটারি: তড়িৎ চালক শক্তি (EMF)</h2>
+    <div class="say">👉 প্রতিটি সেল 1.5 V বিভব পার্থক্য তৈরি করে। সেল বাড়াও, উল্টে দাও, আর কোন প্রান্ত ভূ-সংযুক্ত সেটা বদলাও। বই অনুযায়ী +1.5 V, 3.0 V, −1.5 V, −3.0 V সবই বানানো যায়।</div>
+<div class="pills" id="b2p"><button data-k="0" class="on">⏚ নিচের প্রান্ত ভূ-সংযুক্ত (0 V)</button><button data-k="1">⏚ উপরের প্রান্ত ভূ-সংযুক্ত (0 V)</button></div>
+<div class="pills" id="b2s"><button data-k="0" class="on">⬆ সোজা</button><button data-k="1">⬇ উল্টে দাও</button></div>
+    <div class="ctl"><label>সেলের সংখ্যা: <span id="b2kv"></span> টি</label><input type="range" id="b2k" min="1" max="4" step="1" value="1"></div>
+    <div class="row"><div><canvas id="b2c" class="w" width="380" height="320"></canvas></div><div class="grow"><div class="tlinfo" id="b2t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="b2q"></div><div class="cls" id="b2o"></div><div class="fb" id="b2fb"></div><small id="b2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🌡️ ল্যাব 3: তাপমাত্রা বাড়লে রোধের কী হয়?</h2>
+    <div class="say">👉 পদার্থ বেছে নাও আর তাপমাত্রা বাড়াও। ধাতুতে অণু-পরমাণু বেশি কাঁপে, তাই ইলেকট্রন বাধা পায়, রোধ বাড়ে। সিলিকনের মতো অর্ধপরিবাহীতে তাপে বেশি ইলেকট্রন মুক্ত হয়, রোধ কমে।</div>
+<div class="pills" id="m3p"><button data-k="0" class="on">🟠 পরিবাহী (তামা)</button><button data-k="1">🔴 অপরিবাহী (রাবার)</button><button data-k="2">💾 অর্ধপরিবাহী (সিলিকন)</button></div>
+    <div class="ctl"><label>তাপমাত্রা: <span id="m3kv"></span> °C</label><input type="range" id="m3k" min="0" max="100" step="1" value="20"></div>
+    <div class="row"><div><canvas id="m3c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="m3t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="m3q"></div><div class="cls" id="m3o"></div><div class="fb" id="m3fb"></div><small id="m3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>⏱️ ল্যাব 4: তড়িৎ প্রবাহ কাকে বলে?</h2>
+    <div class="say">👉 Q কুলম্ব চার্জ t সেকেন্ডে পার হলে প্রবাহ I = Q/t অ্যাম্পিয়ার। 1 সেকেন্ডে 1 C পার হলে 1 A। শুরু চাপো আর দেখো চার্জ জমছে।</div>
+    <div class="ctl"><label>মোট চার্জ Q: <span id="i4av"></span> C</label><input type="range" id="i4a" min="1" max="20" step="1" value="6"><label>সময় t: <span id="i4dv"></span> s</label><input type="range" id="i4d" min="1" max="10" step="1" value="3"></div>
+    <div class="btnrow"><button class="btn" id="i4go">▶ শুরু</button><button class="btn alt" id="i4r">⏹ থামাও</button></div>
+    <div class="row"><div><canvas id="i4c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="i4t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="i4q"></div><div class="cls" id="i4o"></div><div class="fb" id="i4fb"></div><small id="i4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>📐 ল্যাব 5: ওহমের সূত্র I = V / R</h2>
+    <div class="say">👉 ভোল্টেজ আর রোধ বদলাও। রোধ একই থাকলে ভোল্টেজ বাড়ালে প্রবাহ বাড়ে। গ্রাফের লাইনটা সরলরেখা। নিচের বোতামে আঙুল দিয়ে ঢেকে সূত্র বের করো (বইয়ের চিত্র ১১.০৫)।</div>
+<div class="pills" id="o5p"><button data-k="0" class="on">☝ I ঢাকলাম</button><button data-k="1">☝ V ঢাকলাম</button><button data-k="2">☝ R ঢাকলাম</button></div>
+    <div class="ctl"><label>ভোল্টেজ V: <span id="o5vv"></span> V</label><input type="range" id="o5v" min="0" max="12" step="1" value="6"><label>রোধ R: <span id="o5rv"></span> Ω</label><input type="range" id="o5r" min="1" max="20" step="1" value="3"></div>
+    <div class="row"><div><canvas id="o5c" class="w" width="380" height="340"></canvas></div><div class="grow"><div class="tlinfo" id="o5t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="o5q"></div><div class="cls" id="o5o"></div><div class="fb" id="o5fb"></div><small id="o5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🧵 ল্যাব 6: রোধ R = ρ L / A</h2>
+    <div class="say">👉 তারের দৈর্ঘ্য বাড়ালে রোধ বাড়ে, মোটা করলে রোধ কমে। উপাদানও গুরুত্বপূর্ণ। বইয়ের টেবিল ১১.০১ থেকে ρ নেওয়া হয়েছে। গ্রাফাইটের রোধ তামার চেয়ে অনেক বেশি।</div>
+<div class="pills" id="r6p"><button data-k="0" class="on">🥈 রুপা</button><button data-k="1">🟠 তামা</button><button data-k="2">🥇 সোনা</button><button data-k="3">⚫ গ্রাফাইট</button></div>
+    <div class="ctl"><label>দৈর্ঘ্য L: <span id="r6lv"></span> m</label><input type="range" id="r6l" min="1" max="100" step="1" value="10"><label>প্রস্থচ্ছেদ A: <span id="r6av"></span> mm²</label><input type="range" id="r6a" min="1" max="10" step="1" value="2"></div>
+    <div class="row"><div><canvas id="r6c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="r6t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="r6q"></div><div class="cls" id="r6o"></div><div class="fb" id="r6fb"></div><small id="r6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>🎚️ ল্যাব 7: রিওস্ট্যাট: রোধ বদলে বাল্বের উজ্জ্বলতা</h2>
+    <div class="say">👉 স্থির রোধের মান বদলায় না। রিওস্ট্যাটে সরণশীল সংযোগ সরিয়ে রোধ বদলানো যায়। রোধ কমলে প্রবাহ বাড়ে, বাল্ব উজ্জ্বল হয়। ফ্যানের রেগুলেটরও এমন।</div>
+<div class="pills" id="h7p"><button data-k="0" class="on">🧱 স্থির রোধ (10 Ω)</button><button data-k="1">🎚️ রিওস্ট্যাট (0–20 Ω)</button></div>
+    <div class="ctl"><label>সরণশীল সংযোগের অবস্থান: <span id="h7kv"></span> %</label><input type="range" id="h7k" min="0" max="100" step="1" value="30"></div>
+    <div class="row"><div><canvas id="h7c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="h7t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="h7q"></div><div class="cls" id="h7o"></div><div class="fb" id="h7fb"></div><small id="h7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>🧭 ল্যাব 8: সার্কিট বিশ্লেষণ: প্রতি বিন্দুতে ভোল্টেজ</h2>
+    <div class="say">👉 বইয়ের উদাহরণ: D বিন্দুকে ভূ-সংযুক্ত (0 V) ধরা হয়েছে। ব্যাটারির পজিটিভ প্রান্ত A-তে 6 V। রোধ পার হলে ভোল্টেজ কমে (V = RI)। B, C এর ভোল্টেজ বের করো। E বিন্দু B-র সাথে যুক্ত, কিন্তু কোনো প্রবাহ নেই।</div>
+<div class="pills" id="p8p"><button data-k="0" class="on">📘 বই ১১.০৯(খ): 6 V; 5, 10, 15 Ω</button><button data-k="1">📗 বই ১১.০৯(ক): 3 V; 1, 2 Ω</button></div>
+    <div class="ctl"><label>ব্যাটারি V: <span id="p8vv"></span> V</label><input type="range" id="p8v" min="1" max="12" step="1" value="6"><label>R₁: <span id="p8av"></span> Ω</label><input type="range" id="p8a" min="1" max="20" step="1" value="5"><label>R₂: <span id="p8bv"></span> Ω</label><input type="range" id="p8b" min="1" max="20" step="1" value="10"><label>R₃: <span id="p8dv"></span> Ω</label><input type="range" id="p8d" min="0" max="20" step="1" value="15"></div>
+    <div class="row"><div><canvas id="p8c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="p8t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="p8q"></div><div class="cls" id="p8o"></div><div class="fb" id="p8fb"></div><small id="p8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>🔗 ল্যাব 9: শ্রেণি সংযোগ: R = R₁ + R₂ + R₃</h2>
+    <div class="say">👉 রোধগুলো একটার পর একটা জোড়া। সব রোধে প্রবাহ একই, ভোল্টেজ ভাগ হয়ে যায়। তুল্য রোধ হলো যোগফল। বইয়ের MCQ: 2 Ω, 3 Ω, 4 Ω শ্রেণিতে ➜ 9 Ω।</div>
+    <div class="ctl"><label>ব্যাটারি V: <span id="s9vv"></span> V</label><input type="range" id="s9v" min="1" max="12" step="1" value="9"><label>R₁: <span id="s9av"></span> Ω</label><input type="range" id="s9a" min="1" max="20" step="1" value="2"><label>R₂: <span id="s9bv"></span> Ω</label><input type="range" id="s9b" min="1" max="20" step="1" value="3"><label>R₃: <span id="s9dv"></span> Ω</label><input type="range" id="s9d" min="1" max="20" step="1" value="4"></div>
+    <div class="row"><div><canvas id="s9c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="s9t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="s9q"></div><div class="cls" id="s9o"></div><div class="fb" id="s9fb"></div><small id="s9sc"></small>
+  </section>
+
+  <section class="panel" id="lab10">
+    <h2>🔀 ল্যাব 10: সমান্তরাল সংযোগ: 1/R = 1/R₁ + 1/R₂</h2>
+    <div class="say">👉 রোধগুলোর দুই মাথা একই দুই বিন্দুতে জোড়া। দুই রোধেই ভোল্টেজ সমান, প্রবাহ ভাগ হয়ে যায়। বইয়ের MCQ ৫ দেখতে মিশ্র মোডে 12 V, 2 Ω, 3 Ω ∥ 6 Ω বেছে নাও।</div>
+<div class="pills" id="l10p"><button data-k="0" class="on">🔀 শুধু সমান্তরাল</button><button data-k="1">🧩 মিশ্র (সিরিজে R₀ + সমান্তরাল)</button></div>
+    <div class="ctl"><label>ব্যাটারি V: <span id="l10vv"></span> V</label><input type="range" id="l10v" min="1" max="12" step="1" value="6"><label>R₁: <span id="l10av"></span> Ω</label><input type="range" id="l10a" min="1" max="20" step="1" value="3"><label>R₂: <span id="l10bv"></span> Ω</label><input type="range" id="l10b" min="1" max="20" step="1" value="6"><label>R₀ (শুধু মিশ্র মোডে): <span id="l10xv"></span> Ω</label><input type="range" id="l10x" min="1" max="10" step="1" value="2"></div>
+    <div class="row"><div><canvas id="l10c" class="w" width="380" height="320"></canvas></div><div class="grow"><div class="tlinfo" id="l10t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="l10q"></div><div class="cls" id="l10o"></div><div class="fb" id="l10fb"></div><small id="l10sc"></small>
+  </section>
+
+  <section class="panel" id="lab11">
+    <h2>💡 ল্যাব 11: তড়িৎ ক্ষমতা P = VI এবং বিদ্যুৎ বিল</h2>
+    <div class="say">👉 বাল্বের ওয়াট, রোজ কত ঘণ্টা, কত দিন জ্বলে আর ইউনিটের দাম দাও। বই অনুযায়ী ইউনিট = P × t / 1000 কিলোওয়াট-ঘণ্টা। 220 V লাইনে ধরা হয়েছে।</div>
+    <div class="ctl"><label>বাল্বের ক্ষমতা: <span id="w11pv"></span> W</label><input type="range" id="w11p" min="10" max="200" step="10" value="60"><label>রোজ কত ঘণ্টা: <span id="w11hv"></span> h</label><input type="range" id="w11h" min="1" max="12" step="1" value="5"><label>কত দিন: <span id="w11dv"></span> দিন</label><input type="range" id="w11d" min="1" max="30" step="1" value="30"><label>প্রতি ইউনিটের দাম: <span id="w11rv"></span> টাকা</label><input type="range" id="w11r" min="1" max="15" step="1" value="10"></div>
+    <div class="row"><div><canvas id="w11c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="w11t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="w11q"></div><div class="cls" id="w11o"></div><div class="fb" id="w11fb"></div><small id="w11sc"></small>
+  </section>
+
+  <section class="panel" id="lab12">
+    <h2>🏭 ল্যাব 12: বিদ্যুৎ সরবরাহ: সিস্টেম লস আর লোডশেডিং</h2>
+    <div class="say">👉 লাইনের রোধে তাপ হয়ে শক্তি নষ্ট হয় (I²R)। ভোল্টেজ 10 গুণ করলে প্রবাহ 10 গুণ কমে, লস 100 গুণ কমে। অন্য মোডে চাহিদার চেয়ে উৎপাদন কম হলে এলাকা ঘুরিয়ে লোডশেডিং হয়।</div>
+<div class="pills" id="x12p"><button data-k="0" class="on">📉 সিস্টেম লস</button><button data-k="1">🌃 লোডশেডিং</button></div>
+    <div class="ctl"><label>সরবরাহের ভোল্টেজ (লস মোডে): <span id="x12vv"></span> kV</label><input type="range" id="x12v" min="2" max="100" step="1" value="10"><label>উৎপাদন, চাহিদার (লোডশেডিং মোডে): <span id="x12sv"></span> %</label><input type="range" id="x12s" min="25" max="100" step="25" value="50"></div>
+    <div class="row"><div><canvas id="x12c" class="w" width="380" height="320"></canvas></div><div class="grow"><div class="tlinfo" id="x12t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="x12q"></div><div class="cls" id="x12o"></div><div class="fb" id="x12fb"></div><small id="x12sc"></small>
+  </section>
+
+  <section class="panel" id="lab13">
+    <h2>🛡️ ল্যাব 13: নিরাপদ বিদ্যুৎ: ফিউজ, শক, সঠিক সংযোগ</h2>
+    <div class="say">👉 তিনটি মোড: (১) ফিউজ বেশি প্রবাহে গলে সার্কিট কেটে দেয়, (২) ভেজা হাতে শরীরের রোধ কমে মারাত্মক প্রবাহ চলে, (৩) সুইচ লাইভ তারে না নিউট্রাল তারে লাগানো, তা নিরাপত্তায় বড় পার্থক্য আনে।</div>
+<div class="pills" id="f13p"><button data-k="0" class="on">🔥 ফিউজ ও সার্কিট ব্রেকার</button><button data-k="1">⚡ বৈদ্যুতিক শক</button><button data-k="2">🔀 সঠিক সংযোগ</button></div>
+<div class="pills" id="f13s"><button data-k="0" class="on">ফিউজ 5 A</button><button data-k="1">ফিউজ 10 A</button></div>
+    <div class="ctl"><label>চালু যন্ত্রের সংখ্যা (ফিউজ মোডে): <span id="f13kv"></span> টি</label><input type="range" id="f13k" min="1" max="10" step="1" value="3"></div>
+    <div class="btnrow"><button class="btn" id="f13b">💥 শর্ট সার্কিট</button><button class="btn alt" id="f13r">🔧 ফিউজ বদলাও</button></div>
+    <div class="row"><div><canvas id="f13c" class="w" width="380" height="320"></canvas></div><div class="grow"><div class="tlinfo" id="f13t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="f13q"></div><div class="cls" id="f13o"></div><div class="fb" id="f13fb"></div><small id="f13sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। বইয়ের নমুনা প্রশ্নের উত্তরমালা নেই, তাই উত্তরগুলো আমার হিসাব করা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; চল বিদ্যুৎ (পদার্থবিজ্ঞান অধ্যায় ১১)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+function opts(correct,wrongs){var seen={},a=[{t:correct,ok:1}];seen[correct]=1;wrongs.forEach(function(w){if(!seen[w]){seen[w]=1;a.push({t:w,ok:0});}});return shuffle(a);}
+function arrow(x,x1,y1,x2,y2,col,lw){var a=Math.atan2(y2-y1,x2-x1);x.strokeStyle=col;x.fillStyle=col;x.lineWidth=lw||3;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-11*Math.cos(a-.4),y2-11*Math.sin(a-.4));x.lineTo(x2-11*Math.cos(a+.4),y2-11*Math.sin(a+.4));x.closePath();x.fill();}
+function person(x,px,py,col){circ(x,0,px,py-22,6,col,null);x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(px,py-16);x.lineTo(px,py-4);x.moveTo(px-6,py-11);x.lineTo(px+6,py-11);x.moveTo(px,py-4);x.lineTo(px-5,py+6);x.moveTo(px,py-4);x.lineTo(px+5,py+6);x.stroke();}
+/* ---------- সাধারণ সহায়ক ---------- */
+function pills(id,fn){$(id).onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var all=$(id).querySelectorAll('button'),i;for(i=0;i<all.length;i++)all[i].classList.toggle('on',all[i]===b);fn(+b.getAttribute('data-k'));};}
+function sci(x){if(!(x>0))return bn(0);var e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);if(+m.toFixed(2)>=10){m/=10;e++;}return bn(parseFloat(m.toFixed(2)))+' × ১০'+(e<0?'⁻':'')+sup(Math.abs(e));}
+function brow(label,val,max,col,txtv){return '<div class="bar"><div class="bl">'+label+'</div><div class="bt"><div class="bf" style="width:'+clamp(val/max*100,1,100)+'%;background:'+col+'"></div></div><b style="min-width:80px;font-size:14px;color:#1f3a5f">'+(txtv||'')+'</b></div>';}
+function on(ids,fn){ids.forEach(function(i){$(i).oninput=fn;$(i).onchange=fn;});}
+var G=9.8;
+function box(x,px,py,w,h,fill,stroke){x.fillStyle=fill;x.fillRect(px,py,w,h);if(stroke){x.strokeStyle=stroke;x.lineWidth=2;x.strokeRect(px,py,w,h);}}
+function wheel(x,px,py,r){circ(x,0,px,py,r,'#333',null);circ(x,0,px,py,r*.4,'#bbb',null);}
+
+
+/* ---------- সুন্দর আঁকার সহায়ক (নতুন) ---------- */
+function shade(c,a){var h=hx(c),o='#';for(var i=0;i<3;i++){var v=clamp(Math.round(h[i]+a),0,255).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function grad(x,px,py,w,h,c1,c2){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1);g.addColorStop(1,c2);x.fillStyle=g;x.fillRect(px,py,w,h);}
+function ball(x,px,py,r,col){var g=x.createRadialGradient(px-r*.35,py-r*.35,r*.08,px,py,r);g.addColorStop(0,'#ffffff');g.addColorStop(.3,col);g.addColorStop(1,shade(col,-55));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();}
+function rr(x,px,py,w,h,r){r=Math.min(r,w/2,h/2);x.beginPath();x.moveTo(px+r,py);x.lineTo(px+w-r,py);x.quadraticCurveTo(px+w,py,px+w,py+r);x.lineTo(px+w,py+h-r);x.quadraticCurveTo(px+w,py+h,px+w-r,py+h);x.lineTo(px+r,py+h);x.quadraticCurveTo(px,py+h,px,py+h-r);x.lineTo(px,py+r);x.quadraticCurveTo(px,py,px+r,py);x.closePath();}
+function tag(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.lineJoin='round';x.lineWidth=4;x.strokeStyle='rgba(255,255,255,.92)';x.strokeText(s,px,py);x.fillStyle=col||NAVY;x.fillText(s,px,py);}
+function wave(x,px,py,w,h,t,c1,c2,amp){amp=amp===undefined?2.5:amp;var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1||'rgba(86,176,240,.88)');g.addColorStop(1,c2||'rgba(22,84,172,.96)');x.fillStyle=g;x.beginPath();x.moveTo(px,py+h);x.lineTo(px,py);var i;for(i=0;i<=w;i+=4)x.lineTo(px+i,py+Math.sin(i/13+t*.05)*amp);x.lineTo(px+w,py+h);x.closePath();x.fill();x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=1.6;x.beginPath();for(i=0;i<=w;i+=4){var yy=py+Math.sin(i/13+t*.05)*amp;if(i===0)x.moveTo(px,yy);else x.lineTo(px+i,yy);}x.stroke();}
+function bubs(x,px,py,w,h,n,t){for(var i=0;i<n;i++){var u=((t*.004*(0.6+rp(i,0,.8))+rp(i+50,0,1))%1),bx=px+rp(i,6,w-6)+Math.sin(t*.04+i)*3,by=py+h-u*h,r=1.5+rp(i+9,0,2.2);if(by<py+4)continue;x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=1.2;x.beginPath();x.arc(bx,by,r,0,7);x.stroke();}}
+function glassBox(x,px,py,w,h){x.strokeStyle='#5b7389';x.lineWidth=3;x.beginPath();x.moveTo(px,py);x.lineTo(px,py+h);x.lineTo(px+w,py+h);x.lineTo(px+w,py);x.stroke();x.fillStyle='rgba(255,255,255,.18)';x.fillRect(px+4,py+4,5,h-8);}
+function sun(x,px,py,r,t){x.save();x.translate(px,py);x.rotate(t*.004);x.strokeStyle='rgba(255,196,60,.7)';x.lineWidth=3;for(var i=0;i<12;i++){x.rotate(Math.PI/6);x.beginPath();x.moveTo(r+4,0);x.lineTo(r+11,0);x.stroke();}x.restore();ball(x,px,py,r,'#ffc83d');}
+function cloud(x,px,py,s,col){x.fillStyle=col||'rgba(255,255,255,.95)';[[0,0,14],[16,-6,17],[34,0,14],[17,6,15]].forEach(function(c){x.beginPath();x.arc(px+c[0]*s,py+c[1]*s,c[2]*s,0,7);x.fill();});}
+function dial(x,cx,cy,r,frac,txtv,col){x.strokeStyle='#dfe7ee';x.lineWidth=9;x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*2.2);x.stroke();x.strokeStyle=col||'#2a9d8f';x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*(.8+1.4*clamp(frac,0,1)));x.stroke();var a=Math.PI*(.8+1.4*clamp(frac,0,1));x.strokeStyle=NAVY;x.lineWidth=3;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a)*(r-6),cy+Math.sin(a)*(r-6));x.stroke();circ(x,0,cx,cy,4,NAVY,null);if(txtv)tag(x,txtv,cx,cy+r*.62,NAVY,12);}
+function sand(x,px,py,w,h){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,'#eccb8a');g.addColorStop(1,'#c99a55');x.fillStyle=g;x.fillRect(px,py,w,h);}
+function atom(x,px,py,r,col,t){ball(x,px,py,r,col);}
+function fmtN(v){if(Math.abs(v)>=1000)return bn(Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g,','));return bn(parseFloat(v.toFixed(2)));}
+
+function tagd(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=4;x.fillStyle=col||'#fff';x.fillText(s,px,py);x.restore();}
+
+
+var DT=.02,TKL=performance.now();
+DRAWS.push(function(){var n=performance.now();DT=Math.min(.05,(n-TKL)/1000);TKL=n;});
+function hm(a,b,t){var A=hx(a),B=hx(b),o='#';t=clamp(t,0,1);for(var i=0;i<3;i++){var v=Math.round(lerp(A[i],B[i],t)).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function ln(x,x1,y1,x2,y2,col,lw,dash){x.strokeStyle=col;x.lineWidth=lw||2;if(dash)x.setLineDash(dash);x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();if(dash)x.setLineDash([]);}
+function sup(s){var m={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻'},o='';String(s).split('').forEach(function(c){o+=m[c]||c;});return o;}
+function sci(v,d){if(v===0)return bn(0);var e=Math.floor(Math.log(Math.abs(v))/Math.LN10),m=v/Math.pow(10,e);if(e>=-2&&e<=4)return f(Math.abs(v),e<0?3:2);return f(Math.abs(m),d||2)+' × 10'+sup(e);}
+function sv(v,d){return (v>0.0001?'+':(v<-0.0001?'−':''))+f(Math.abs(v),d===undefined?1:d);}
+/* বদ্ধ পথ বরাবর অবস্থান (s: 0 থেকে 1) */
+function loopPos(P,s){var n=P.length,L=[],tot=0,i,a,b;for(i=0;i<n;i++){a=P[i];b=P[(i+1)%n];var d=Math.hypot(b[0]-a[0],b[1]-a[1]);L.push(d);tot+=d;}
+  var t=(((s%1)+1)%1)*tot,j=0;while(j<n-1&&t>L[j]){t-=L[j];j++;}a=P[j];b=P[(j+1)%n];var u=L[j]?t/L[j]:0;return [lerp(a[0],b[0],u),lerp(a[1],b[1],u)];}
+function wirePath(x,P,col,lw,closed){x.strokeStyle=col||'#37474f';x.lineWidth=lw||3;x.lineJoin='round';x.beginPath();x.moveTo(P[0][0],P[0][1]);for(var i=1;i<P.length;i++)x.lineTo(P[i][0],P[i][1]);if(closed)x.closePath();x.stroke();}
+function flow(x,P,ph,n,col,r){for(var k=0;k<n;k++){var p=loopPos(P,ph+k/n);circ(x,0,p[0],p[1],r||3.2,col,null);}}
+/* জিগজ্যাগ রোধ */
+function resis(x,x1,y1,x2,y2,col,lw){var L=Math.hypot(x2-x1,y2-y1),ux=(x2-x1)/L,uy=(y2-y1)/L,nx=-uy,ny=ux,ld=L*.2,i,n=6,A=7;x.strokeStyle=col||'#5d4037';x.lineWidth=lw||3;x.lineJoin='round';x.beginPath();x.moveTo(x1,y1);x.lineTo(x1+ux*ld,y1+uy*ld);
+  for(i=0;i<n;i++){var t=ld+(L-2*ld)*(i+.5)/n,s=(i%2?1:-1)*A;x.lineTo(x1+ux*t+nx*s,y1+uy*t+ny*s);}x.lineTo(x2-ux*ld,y2-uy*ld);x.lineTo(x2,y2);x.stroke();}
+/* ব্যাটারির প্রতীক (অনুভূমিক রেখা; উপরে +) */
+function battSym(x,px,py,n){var i;for(i=0;i<(n||1);i++){var yy=py+i*14;ln(x,px-14,yy,px+14,yy,'#c62828',3);ln(x,px-8,yy+7,px+8,yy+7,'#1f3a5f',5);}tag(x,'+',px+22,py,'#c62828',13);tag(x,'−',px+22,py+(n||1)*14,'#1f3a5f',13);}
+function gnd(x,px,py){ln(x,px,py,px,py+8,'#37474f',2);ln(x,px-10,py+8,px+10,py+8,'#37474f',2);ln(x,px-6,py+12,px+6,py+12,'#37474f',2);ln(x,px-2,py+16,px+2,py+16,'#37474f',2);}
+function bulbD(x,px,py,r,b){b=clamp(b,0,1);if(b>.02){var g=x.createRadialGradient(px,py,2,px,py,r*(1.4+b*2.2));g.addColorStop(0,'rgba(255,230,80,'+(.25+b*.6)+')');g.addColorStop(1,'rgba(255,230,80,0)');x.fillStyle=g;x.beginPath();x.arc(px,py,r*(1.4+b*2.2),0,7);x.fill();}
+  circ(x,0,px,py,r,hm('#d9dde2','#fff3a0',b),'#6b7683',2);ln(x,px-r*.6,py-r*.6,px+r*.6,py+r*.6,'#6b7683',1.5);ln(x,px+r*.6,py-r*.6,px-r*.6,py+r*.6,'#6b7683',1.5);}
+function ammD(x,px,py,s){circ(x,0,px,py,14,'#fff','#37474f',2);tag(x,s||'A',px,py,'#1f3a5f',13);}
+function pm(x,s,px,py,r,col){x.strokeStyle=col||'#fff';x.lineWidth=Math.max(1.5,r/4);x.beginPath();x.moveTo(px-r*.6,py);x.lineTo(px+r*.6,py);if(s>0){x.moveTo(px,py-r*.6);x.lineTo(px,py+r*.6);}x.stroke();}
+function eBall(x,px,py,r){ball(x,px,py,r,'#3b82f6');pm(x,-1,px,py,r*.8,'#fff');}
+var BLUE='#2563eb',REDC='#e5484d';
+
+/* ===== ল্যাব ১: বিদ্যুৎপ্রবাহ ===== */
+var U1={qa:8,qb:0,on:0,ph:0,last:''};
+function u1reset(){U1.qa=+$('u1k').value;U1.qb=0;U1.on=0;$('u1b').textContent='🔌 তার জোড়ো';}
+on(['u1k'],function(){u1reset();});
+$('u1b').onclick=function(){U1.on=!U1.on;this.textContent=U1.on?'✂️ তার খোলো':'🔌 তার জোড়ো';};
+$('u1r').onclick=function(){u1reset();};
+function u1info(){var d=U1.qa-U1.qb,s;$('u1kv').textContent=bn(+$('u1k').value);
+  s='<b>A-র বিভব = '+f(U1.qa,1)+' V, B-র বিভব = '+f(U1.qb,1)+' V</b><br>বিভব পার্থক্য = '+f(Math.max(0,d),1)+' V<br>';
+  if(!U1.on)s+='তার খোলা, তাই কোনো প্রবাহ নেই। "তার জোড়ো" চাপো।';
+  else if(d>.08)s+='<span style="color:#c62828">চার্জ প্রবাহিত হচ্ছে</span>: A (বেশি বিভব) ➜ B (কম বিভব)। বিদ্যুতের দিক A ➜ B, আসলে ইলেকট্রন যাচ্ছে B ➜ A।';
+  else s+='<b style="color:#0a7">বিভব সমান হয়ে গেছে ➜ প্রবাহ বন্ধ।</b>';
+  s+='<br><small>বইয়ে: যতক্ষণ বিভব সমান না হয়, চার্জের প্রবাহ হতে থাকে। (আধানের এক একককে 1 V ধরেছি, আমার সরল মডেল)</small>';
+  if(s!==U1.last){U1.last=s;$('u1t').innerHTML=s;}}
+DRAWS.push(function(){var x=ctxOf('u1c'),i;grad(x,0,0,380,300,'#eaf2fb','#f8fbff');
+  if(U1.on){var d=U1.qa-U1.qb,dq=d*.5*(1-Math.exp(-1.5*DT));U1.qa-=dq;U1.qb+=dq;U1.ph-=DT*.35*Math.min(1,d/4);}
+  var W=[[133,120],[180,120]],W2=[[200,120],[247,120]];
+  ln(x,133,120,180,120,'#37474f',3);ln(x,200,120,247,120,'#37474f',3);
+  if(U1.on)ln(x,180,120,200,120,'#37474f',3);else ln(x,180,120,196,100,'#37474f',3);
+  circ(x,0,180,120,3,'#37474f',null);circ(x,0,200,120,3,'#37474f',null);
+  [[85,'A',U1.qa],[295,'B',U1.qb]].forEach(function(s){var px=s[0],q=s[2];ball(x,px,120,48,'#c9d3de');
+    var n=Math.round(q);for(i=0;i<n;i++){var a=i*2.399,r=10+30*Math.sqrt((i+.5)/10);pm(x,1,px+Math.cos(a)*r,120+Math.sin(a)*r,6,'#e5484d');}
+    tag(x,s[1],px,186,'#1f3a5f',16);});
+  if(U1.on&&U1.qa-U1.qb>.08){var d2=U1.qa-U1.qb;for(i=0;i<7;i++){var s2=((U1.ph+i/7)%1+1)%1,px2=247-s2*114;circ(x,0,px2,120,3.2,BLUE,null);}
+    arrow(x,150,98,228,98,REDC,3);tag(x,'বিদ্যুতের দিক',190,84,REDC,12);arrow(x,228,142,150,142,BLUE,3);tag(x,'ইলেকট্রনের দিক',190,158,BLUE,12);}
+  ln(x,70,280,310,280,'#37474f',2);
+  [[110,U1.qa,'A'],[250,U1.qb,'B']].forEach(function(b){var h=b[1]*6.2;x.fillStyle=hm('#ffd6d6','#e5484d',b[1]/10);x.fillRect(b[0]-24,280-h,48,h);x.strokeStyle='#37474f';x.lineWidth=1;x.strokeRect(b[0]-24,280-h,48,h);tag(x,'V'+b[2]+' = '+f(b[1],1),b[0],280-h-10,'#1f3a5f',12);});
+  u1info();});
+qgame('u1q','u1o','u1fb','u1sc',[
+ ['চার্জ কোন দিকে প্রবাহিত হয়?','বেশি বিভব থেকে কম বিভবে',['কম বিভব থেকে বেশি বিভবে','সমান বিভবের দিকে','কোনো দিকেই না'],'বই: বেশি বিভব থেকে কম বিভবের দিকে চার্জ প্রবাহিত হয়।'],
+ ['কখন চার্জের প্রবাহ থেমে যায়?','দুই বস্তুর বিভব সমান হলে',['চার্জ শেষ হলে','বস্তু ঠান্ডা হলে','কখনোই থামে না'],'যতক্ষণ বিভব সমান না হয়, প্রবাহ চলে।'],
+ ['A থেকে B তে ধনাত্মক চার্জ গেছে বলা মানে প্রকৃতপক্ষে কী ঘটেছে?','B থেকে A তে ইলেকট্রন গেছে',['A থেকে B তে ইলেকট্রন গেছে','কিছুই ঘটেনি','নিউট্রন গেছে'],'বইয়ের ব্যাখ্যা: ইলেকট্রনের অভাব মানে পজিটিভ চার্জ।'],
+ ['তড়িৎ প্রবাহের দিক আর ইলেকট্রন প্রবাহের দিক—','পরস্পর বিপরীত',['একই','লম্ব','কোনো সম্পর্ক নেই'],'ইলেকট্রনের চার্জকে পজিটিভ ধরলে সমস্যা মিটত, কিন্তু সেটা নিয়ে এখন দেরি হয়ে গেছে।'],
+ ['প্রবাহ ধরে রাখতে হলে কী দরকার?','বিভব পার্থক্য ধরে রাখা (যেমন ব্যাটারি)',['কেবল তার','কেবল চার্জ','ঠান্ডা পরিবেশ'],'ব্যাটারি বিভব পার্থক্য বজায় রাখে।']]);
+
+/* ===== ল্যাব ২: ব্যাটারি ও ইএমএফ ===== */
+var B2={g:0,dir:1};
+pills('b2p',function(k){B2.g=k;b2info();});pills('b2s',function(k){B2.dir=k?-1:1;b2info();});on(['b2k'],b2info);
+function b2v(){var n=+$('b2k').value,E=B2.dir*n*1.5,vt,vb;if(B2.g===0){vb=0;vt=E;}else{vt=0;vb=-E;}return {n:n,E:E,vt:vt,vb:vb};}
+function b2info(){var c=b2v();$('b2kv').textContent=bn(c.n);
+  $('b2t').innerHTML='সেল '+bn(c.n)+' টি, প্রতিটি 1.5 V ➜ মোট তড়িৎ চালক শক্তি (EMF) = <b>'+sv(c.E)+' V</b><br>উপরের প্রান্ত = <b>'+sv(c.vt)+' V</b>, নিচের প্রান্ত = <b>'+sv(c.vb)+' V</b><br>EMF = W / Q ➜ 1 C চার্জকে সার্কিটে ঘুরিয়ে আনতে ব্যাটারি '+f(Math.abs(c.E),1)+' J কাজ করে।<br><small>বই: ইএমএফ আসলে বলও নয়, শক্তিও নয়, এটি বিভব পার্থক্য। পার্থক্য সবসময় সমান থাকে, শুধু কোন প্রান্তকে 0 V ধরা হয় তা বদলায় (চিত্র ১১.০২, ১১.০৩)।</small>';}
+function vcol(v){return v>0.01?'#c62828':(v<-0.01?'#1f5fbf':'#555');}
+DRAWS.push(function(){var x=ctxOf('b2c'),c=b2v(),n=c.n,y0=90,H=44,y1=y0+n*H,i,cx=170;grad(x,0,0,380,320,'#eef3f9','#fbfdff');
+  ln(x,cx,y0-38,cx,y0,'#37474f',3);ln(x,cx,y1,cx,y1+38,'#37474f',3);
+  for(i=0;i<n;i++){var yy=y0+i*H;rr(x,cx-48,yy+4,96,H-8,8);x.fillStyle='#dde6f0';x.fill();x.strokeStyle='#37474f';x.lineWidth=2;x.stroke();tag(x,'1.5 V',cx,yy+H/2,'#1f3a5f',12);
+    tag(x,B2.dir>0?'+':'−',cx-34,yy+8,B2.dir>0?'#c62828':'#1f5fbf',13);tag(x,B2.dir>0?'−':'+',cx-34,yy+H-8,B2.dir>0?'#1f5fbf':'#c62828',13);}
+  var topY=y0-38,botY=y1+38;circ(x,0,cx,topY,5,vcol(c.vt),'#37474f',2);circ(x,0,cx,botY,5,vcol(c.vb),'#37474f',2);
+  tag(x,sv(c.vt)+' V',cx+54,topY,vcol(c.vt),16,'left');tag(x,sv(c.vb)+' V',cx+54,botY,vcol(c.vb),16,'left');
+  var gy=B2.g===0?botY:topY;ln(x,cx,gy,cx-60,gy,'#37474f',2);gnd(x,cx-60,gy);tag(x,'ভূ-সংযুক্ত (0 V)',cx-66,gy+30,'#37474f',11,'right');
+  tag(x,'EMF = '+sv(c.E)+' V',190,24,'#1f3a5f',18);});
+b2info();
+qgame('b2q','b2o','b2fb','b2sc',[
+ ['ব্যাটারির দুই প্রান্তের বিভব পার্থক্যকে কী বলে?','তড়িৎ চালক শক্তি (ইএমএফ)',['রোধ','চার্জ','ধারকত্ব'],'ব্যাটারি যে পরিমাণ বিভব পার্থক্য তৈরি করে, সেটাই তার ইএমএফ।'],
+ ['দুটি 1.5 V সেল একই দিকে জুড়লে মোট ইএমএফ?','3.0 V',['1.5 V','0 V','2.25 V'],'বই: 2 × 1.5 = 3.0 V।'],
+ ['একটি সেলের এক প্রান্ত ভূ-সংযুক্ত হলে অন্য প্রান্ত কত হতে পারে?','+1.5 V বা −1.5 V',['কেবল +1.5 V','কেবল −1.5 V','সবসময় 0 V'],'বইয়ের চিত্র ১১.০২: দুটোই সম্ভব।'],
+ ['ইএমএফ-এর সূত্র কোনটি?','EMF = W / Q',['EMF = Q / W','EMF = W × Q','EMF = W + Q'],'Q চার্জকে কম থেকে বেশি বিভবে আনতে W কাজ হলে।'],
+ ['ইএমএফ প্রকৃতপক্ষে কী?','বিভব পার্থক্য',['বল','শক্তি','আধান'],'নামে "বল" থাকলেও এটি বল নয়, শক্তিও নয়।']]);
+
+/* ===== ল্যাব ৩: পরিবাহী/অপরিবাহী/অর্ধপরিবাহী ===== */
+var M3={m:0,E:[]};for(var m3i=0;m3i<20;m3i++)M3.E.push({x:Math.random()*300+40,y:Math.random()*110+85,vx:0,vy:0});
+pills('m3p',function(k){M3.m=k;m3info();});on(['m3k'],m3info);
+function m3c(){var T=+$('m3k').value,m=M3.m,cur=m===0?100/(1+T/40):(m===1?0:Math.min(100,8+.92*T)),ne=m===0?14:(m===1?0:Math.round(2+T*.14));return {T:T,cur:cur,ne:ne};}
+function m3info(){var c=m3c(),m=M3.m;$('m3kv').textContent=bn(c.T);var s;
+  if(m===0)s='<b>পরিবাহী (তামা):</b> মুক্ত ইলেকট্রন অনেক। তাপ বাড়লে অণু-পরমাণু বেশি কাঁপে, ইলেকট্রন বেশি ধাক্কা খায় ➜ <b>রোধ বাড়ে, প্রবাহ কমে</b>।';
+  else if(m===1)s='<b>অপরিবাহী (রাবার):</b> মুক্ত ইলেকট্রন নেই, তাই প্রবাহ প্রায় শূন্য।';
+  else s='<b>অর্ধপরিবাহী (সিলিকন):</b> সাধারণ তাপে মুক্ত ইলেকট্রন কম। তাপ বাড়লে আরও ইলেকট্রন মুক্ত হয় ➜ <b>রোধ কমে, প্রবাহ বাড়ে</b>।';
+  $('m3t').innerHTML=s+'<br>আপেক্ষিক প্রবাহ = <b>'+f(c.cur,0)+'%</b><br><small>বইয়ে: অর্ধপরিবাহী পরিবাহী ও অপরিবাহীর মাঝামাঝি, তাপ বাড়ালে পরিবহন ক্ষমতা বাড়ে। শতকরা সংখ্যাগুলো আমার সরল মডেল।</small>';}
+DRAWS.push(function(){var x=ctxOf('m3c'),c=m3c(),i,j,amp=1+c.T*.04;grad(x,0,0,380,300,'#f4f7fb','#e9eff7');
+  x.fillStyle=M3.m===0?'#fbe3c2':(M3.m===1?'#f6d6d6':'#d9e4f5');x.fillRect(24,60,332,160);x.strokeStyle='#6b7683';x.lineWidth=2;x.strokeRect(24,60,332,160);
+  for(i=0;i<6;i++)for(j=0;j<3;j++){var ax=64+i*50+Math.sin(performance.now()/90+i*3+j)*amp,ay=95+j*50+Math.cos(performance.now()/80+i+j*5)*amp;ball(x,ax,ay,11,M3.m===0?'#d9822b':(M3.m===1?'#b45a5a':'#5a7fb0'));}
+  var drift=c.cur*.55;for(i=0;i<20;i++){var e=M3.E[i];if(i>=c.ne)continue;e.vx+=(Math.random()-.5)*60*DT*10;e.vy+=(Math.random()-.5)*60*DT*10;e.vx=clamp(e.vx,-40,40);e.vy=clamp(e.vy,-30,30);e.x+=(e.vx+drift)*DT;e.y+=e.vy*DT;if(e.x>348)e.x=32;if(e.x<32)e.x=348;if(e.y<68)e.y=68;if(e.y>212)e.y=212;eBall(x,e.x,e.y,5);}
+  tagd(x,'ইলেকট্রন ➜ ডান দিকে ঠেলা, 🔋 বামে',190,40,'#1f3a5f',12);
+  x.fillStyle='#d6dde6';x.fillRect(40,248,300,16);x.fillStyle=hm('#35a0d8','#e5484d',c.T/100);x.fillRect(40,248,3*c.cur,16);x.strokeStyle='#37474f';x.lineWidth=1.5;x.strokeRect(40,248,300,16);tag(x,'আপেক্ষিক প্রবাহ '+f(c.cur,0)+'%',190,282,'#1f3a5f',12);});
+m3info();
+qgame('m3q','m3o','m3fb','m3sc',[
+ ['তাপমাত্রা বাড়লে পরিবাহীর রোধ—','বাড়ে',['কমে','অপরিবর্তিত থাকে','শূন্য হয়'],'পরমাণুর কাঁপাকাঁপি বাড়ে, ইলেকট্রনের বাধা বাড়ে।'],
+ ['তাপমাত্রা বাড়লে সিলিকনের মতো অর্ধপরিবাহীর রোধ—','কমে',['বাড়ে','অপরিবর্তিত থাকে','অসীম হয়'],'বইয়ের কথা: তাপমাত্রা বাড়ালে রোধ কমে যায়।'],
+ ['অর্ধপরিবাহীর রোধ তাপে কমে কেন?','বেশি ইলেকট্রন মুক্ত হয়ে প্রবাহে অংশ নেয়',['পরমাণু থেমে যায়','ইলেকট্রন কমে যায়','বিদ্যুৎ থেমে যায়'],'পরিবাহীতে মুক্ত ইলেকট্রন আগে থেকেই আছে, অর্ধপরিবাহীতে তাপে তৈরি হয়।'],
+ ['কোনটি অর্ধপরিবাহী?','সিলিকন',['তামা','সোনা','রাবার'],'বইয়ের উদাহরণ: সিলিকন ও জার্মেনিয়াম।'],
+ ['রাবার অপরিবাহী কেন?','মুক্ত ইলেকট্রন নেই',['অনেক মুক্ত ইলেকট্রন আছে','খুব ভারী','খুব নরম'],'যে পদার্থে মুক্ত ইলেকট্রন নেই সেটি অপরিবাহী।']]);
+
+/* ===== ল্যাব ৪: I = Q/t ===== */
+var I4={on:0,tm:0,ph:0};
+function i4I(){return (+$('i4a').value)/(+$('i4d').value);}
+function i4info(){var Q=+$('i4a').value,t=+$('i4d').value,I=Q/t;$('i4av').textContent=bn(Q);$('i4dv').textContent=bn(t);var q=I*Math.min(I4.tm,t);
+  $('i4t').innerHTML='<b>I = Q / t = '+bn(Q)+' ÷ '+bn(t)+' = '+f(I,2)+' A</b><br>এখন পর্যন্ত পার হয়েছে: <b>'+f(q,2)+' C</b> ('+f(Math.min(I4.tm,t),1)+' s)<br><small>বই: 1 A মানে প্রতি সেকেন্ডে 1 C চার্জ প্রবাহ। প্রবাহের একক A = C/s। সার্কিটের বাইরের তারে ইলেকট্রন ব্যাটারির − প্রান্ত থেকে + প্রান্তের দিকে যায়, বিদ্যুতের দিক উল্টো।</small>';}
+on(['i4a','i4d'],function(){I4.tm=0;I4.on=0;});
+$('i4go').onclick=function(){I4.tm=0;I4.on=1;};$('i4r').onclick=function(){I4.on=0;I4.tm=0;};
+DRAWS.push(function(){var x=ctxOf('i4c'),Q=+$('i4a').value,t=+$('i4d').value,I=Q/t,P=[[40,80],[340,80],[340,200],[40,200]],i;grad(x,0,0,380,300,'#eef4fa','#fbfdff');
+  if(I4.on){I4.tm+=DT;if(I4.tm>=t){I4.tm=t;I4.on=0;}I4.ph-=DT*(.03+Math.min(I,15)*.025);}
+  wirePath(x,P,'#37474f',4,true);x.fillStyle='#fbfdff';x.fillRect(30,112,20,30);battSym(x,40,118,1);
+  ln(x,190,60,190,100,'#c62828',2,[5,4]);tag(x,'এই বিন্দু দিয়ে চার্জ গোনা হচ্ছে',130,46,'#c62828',12);
+  flow(x,P,I4.ph,20,BLUE,3.4);arrow(x,230,64,300,64,REDC,3);tag(x,'I (বিদ্যুৎ)',265,50,REDC,12);arrow(x,300,216,230,216,BLUE,3);tag(x,'ইলেকট্রন',265,232,BLUE,12);
+  var q=I*Math.min(I4.tm,t);x.fillStyle='#d6dde6';x.fillRect(40,250,300,16);x.fillStyle='#35a0d8';x.fillRect(40,250,300*q/Q,16);x.strokeStyle='#37474f';x.lineWidth=1.5;x.strokeRect(40,250,300,16);tag(x,'জমা চার্জ '+f(q,1)+' / '+f(Q,0)+' C',190,282,'#1f3a5f',12);
+  tag(x,'I = '+f(I,2)+' A',190,140,'#1f3a5f',20);i4info();});
+qgame('i4q','i4o','i4fb','i4sc',[
+ ['তড়িৎ প্রবাহের সূত্র কোনটি?','I = Q / t',['I = Q × t','I = t / Q','I = Q + t'],'Q চার্জ t সময়ে প্রবাহিত হলে।'],
+ ['তড়িৎ প্রবাহের একক কী?','অ্যাম্পিয়ার (A)',['ভোল্ট','ওহম','ওয়াট'],'A = C/s।'],
+ ['6 C চার্জ 3 s এ পার হলে প্রবাহ কত?','2 A',['18 A','0.5 A','3 A'],'I = 6 ÷ 3 = 2 A।'],
+ ['1 অ্যাম্পিয়ার বলতে কী বোঝায়?','প্রতি সেকেন্ডে 1 C চার্জ প্রবাহ',['প্রতি মিনিটে 1 C','1 জুল শক্তি','1 ভোল্ট বিভব'],'বইয়ের ব্যাখ্যা।'],
+ ['ব্যাটারির সার্কিটে বাইরের তারে ইলেকট্রন কোন দিকে চলে?','ঋণাত্মক প্রান্ত থেকে ধনাত্মক প্রান্তের দিকে',['ধনাত্মক থেকে ঋণাত্মকে','চলে না','এক জায়গায় ঘোরে'],'বিদ্যুতের দিকের উল্টো।']]);
+
+
+/* ===== ল্যাব ৫: ওহমের সূত্র ===== */
+var O5={m:0,ph:0};
+pills('o5p',function(k){O5.m=k;o5info();});on(['o5v','o5r'],o5info);
+function o5info(){var V=+$('o5v').value,R=+$('o5r').value,I=V/R;$('o5vv').textContent=bn(V);$('o5rv').textContent=bn(R);
+  var cv=['<b>☝</b>','V','R'],tri;var a=O5.m===0?'☝':'I',b=O5.m===1?'☝':'V',c=O5.m===2?'☝':'R';
+  var res=O5.m===0?'I = V / R = '+bn(V)+' ÷ '+bn(R)+' = <b>'+f(I,2)+' A</b>':(O5.m===1?'V = I × R = '+f(I,2)+' × '+bn(R)+' = <b>'+f(V,2)+' V</b>':'R = V / I = '+bn(V)+' ÷ '+(I>0?f(I,2):'০')+' = <b>'+bn(R)+' Ω</b>');
+  $('o5t').innerHTML='<div style="font-size:18px;margin-bottom:4px"><b>'+b+'</b> ÷ ( <b>'+a+'</b> × <b>'+c+'</b> )&nbsp;&nbsp;<small>(আঙুল যেটা ঢাকে সেটা বের হবে)</small></div>'+res+'<br>I = V/R। R বেশি হলে প্রবাহ কম, R কম হলে প্রবাহ বেশি।<br><small>বই: 1 V পার্থক্যে 1 A প্রবাহ হলে রোধ 1 Ω। (গ্রাফ: প্রবাহ ∝ ভোল্টেজ, লাইনের ঢাল = 1/R)</small>';}
+DRAWS.push(function(){var x=ctxOf('o5c'),V=+$('o5v').value,R=+$('o5r').value,I=V/R,i,P=[[50,40],[330,40],[330,110],[50,110]];grad(x,0,0,380,340,'#eef4fa','#fbfdff');
+  O5.ph-=DT*Math.min(.4,I*.03);wirePath(x,P,'#37474f',3,true);resis(x,130,40,250,40,'#5d4037',3);tag(x,'R = '+bn(R)+' Ω',190,22,'#5d4037',13);
+  x.fillStyle='#fafcff';x.fillRect(44,64,12,24);battSym(x,50,68,1);ammD(x,330,75,'A');tag(x,f(I,2)+' A',330,98,'#1f3a5f',12);tag(x,bn(V)+' V',50,126,'#c62828',12);
+  flow(x,P,O5.ph,14,BLUE,3);
+  var gx=50,gy=310,gw=290,gh=160;ln(x,gx,gy,gx+gw,gy,'#37474f',2);ln(x,gx,gy,gx,gy-gh,'#37474f',2);
+  for(i=0;i<=12;i+=2){var xx=gx+i*gw/12;ln(x,xx,gy,xx,gy-gh,'#dde4ec',1);tag(x,bn(i),xx,gy+10,'#37474f',10);}
+  for(i=0;i<=12;i+=3){var yy=gy-i*gh/12;ln(x,gx,yy,gx+gw,yy,'#dde4ec',1);tag(x,bn(i),gx-10,yy,'#37474f',10);}
+  tag(x,'V (ভোল্ট)',gx+gw-30,gy+24,'#37474f',11);tag(x,'I (A)',gx+4,gy-gh-8,'#37474f',11);
+  var vmax=Math.min(12,12*R);x.strokeStyle='#2563eb';x.lineWidth=3;x.beginPath();x.moveTo(gx,gy);x.lineTo(gx+vmax*gw/12,gy-(vmax/R)*gh/12);x.stroke();
+  var px=gx+V*gw/12,py=gy-I*gh/12;ln(x,px,gy,px,py,'#c62828',1.5,[4,3]);ln(x,gx,py,px,py,'#c62828',1.5,[4,3]);circ(x,0,px,py,6,'#e5484d','#fff',2);
+  o5info();});
+qgame('o5q','o5o','o5fb','o5sc',[
+ ['ওহমের সূত্র কোনটি?','I = V / R',['I = V × R','I = R / V','V = I / R'],'রোধ বেশি হলে প্রবাহ কম।'],
+ ['রোধ একই রেখে ভোল্টেজ দ্বিগুণ করলে প্রবাহ—','দ্বিগুণ হয়',['অর্ধেক হয়','একই থাকে','চার গুণ হয়'],'I ∝ V।'],
+ ['রোধের একক কী?','ওহম (Ω)',['অ্যাম্পিয়ার','ভোল্ট','কুলম্ব'],'1 V পার্থক্যে 1 A প্রবাহ হলে রোধ 1 Ω।'],
+ ['V = 10 V, R = 5 Ω হলে প্রবাহ কত?','2 A',['50 A','0.5 A','15 A'],'I = 10 ÷ 5।'],
+ ['10 V পার্থক্যে 10 A প্রবাহ চললে রোধ কত? (বইয়ের MCQ ৩ এর মতো, সংখ্যা অন্য)','1 Ω',['100 Ω','0.1 Ω','10 Ω'],'R = V / I = 10 ÷ 10 = 1 Ω।']]);
+
+/* ===== ল্যাব ৬: R = ρL/A ===== */
+var R6={m:1,M:[['রুপা',1.59e-8,'#cfd8dc'],['তামা',1.68e-8,'#c8742e'],['সোনা',2.44e-8,'#e0b23c'],['গ্রাফাইট',2.50e-6,'#4a4a4a']],ph:0};
+pills('r6p',function(k){R6.m=k;r6info();});on(['r6l','r6a'],r6info);
+function r6c(){var L=+$('r6l').value,A=+$('r6a').value,rho=R6.M[R6.m][1],R=rho*L/(A*1e-6);return {L:L,A:A,rho:rho,R:R,L1:A*1e-6/rho};}
+function r6info(){var c=r6c();$('r6lv').textContent=bn(c.L);$('r6av').textContent=bn(c.A);
+  $('r6t').innerHTML='<b>'+R6.M[R6.m][0]+'</b>: আপেক্ষিক রোধ ρ = '+sci(c.rho)+' Ω m, পরিবাহিতা σ = 1/ρ<br>R = ρL/A = <b>'+sci(c.R)+' Ω</b><br>এই উপাদানে 1 mm² তারে 1 Ω রোধ পেতে লাগবে প্রায় '+sci(c.A*1e-6/c.rho*1/1)+' m দৈর্ঘ্য (বইয়ের L = RA/ρ)।<br><small>বই: দৈর্ঘ্য বাড়লে R বাড়ে (R ∝ L), প্রস্থচ্ছেদ বাড়লে R কমে (R ∝ 1/A)। ρ-এর মান টেবিল ১১.০১ থেকে। ঘরের তাপমাত্রা ধরা।</small>';}
+DRAWS.push(function(){var x=ctxOf('r6c'),c=r6c(),i,col=R6.M[R6.m][2];grad(x,0,0,380,300,'#eef3f9','#fbfdff');
+  var len=30+c.L*3.1,th=8+Math.sqrt(c.A)*7.5,y=110;R6.ph+=DT*30;
+  x.fillStyle=col;rr(x,20,y-th/2,len,th,th/2.5);x.fill();x.strokeStyle='#37474f';x.lineWidth=2;x.stroke();
+  for(i=0;i<16;i++){var ex=20+((R6.ph*(1.2)+i*(len/16))%len),ey=y-th/2+4+((i*37)%100)/100*(th-8);eBall(x,ex,ey,3.5);}
+  tag(x,'L = '+bn(c.L)+' m',20+len/2,y-th/2-16,'#1f3a5f',13);tag(x,'A = '+bn(c.A)+' mm²',20+len/2,y+th/2+16,'#1f3a5f',13);
+  var lg=clamp((Math.log10(c.R)+3)/6,0,1);x.fillStyle='#d6dde6';x.fillRect(40,200,300,18);x.fillStyle=hm('#35a0d8','#e5484d',lg);x.fillRect(40,200,300*lg,18);x.strokeStyle='#37474f';x.lineWidth=1.5;x.strokeRect(40,200,300,18);
+  tag(x,'রোধ R = '+sci(c.R)+' Ω',190,240,'#1f3a5f',16);tag(x,'(স্কেল: 0.001 Ω থেকে 1000 Ω, লগ স্কেল)',190,262,'#6b7683',11);});
+r6info();
+qgame('r6q','r6o','r6fb','r6sc',[
+ ['তারের দৈর্ঘ্য বাড়ালে রোধ—','বাড়ে',['কমে','একই থাকে','শূন্য হয়'],'R ∝ L।'],
+ ['তারের প্রস্থচ্ছেদ বাড়ালে রোধ—','কমে',['বাড়ে','একই থাকে','দ্বিগুণ হয়'],'R ∝ 1/A, চওড়া পথে সহজে প্রবাহ চলে।'],
+ ['রোধ, দৈর্ঘ্য ও প্রস্থচ্ছেদের সম্পর্ক কোনটি?','R = ρ L / A',['R = ρ A / L','R = L A / ρ','R = ρ L A'],'ρ ধ্রুবক, আপেক্ষিক রোধ।'],
+ ['আপেক্ষিক রোধের একক কী?','Ω m',['Ω','m','Ω / m'],'বইয়ের টেবিল ১১.০১: একক Ω m।'],
+ ['টেবিল ১১.০১ অনুযায়ী কোনটির আপেক্ষিক রোধ সবচেয়ে বেশি?','গ্রাফাইট',['রুপা','তামা','সোনা'],'গ্রাফাইট 2.50 × 10⁻⁶ Ω m, বাকিগুলোর প্রায় 10⁻⁸।'],
+ ['পরিবাহিতা σ = ?','1 / ρ',['ρ','ρ²','ρ × L'],'σ-এর একক (Ω m)⁻¹।']]);
+
+/* ===== ল্যাব ৭: স্থির ও পরিবর্তী রোধ ===== */
+var H7={m:0,ph:0};
+pills('h7p',function(k){H7.m=k;h7info();});on(['h7k'],h7info);
+function h7c(){var pos=+$('h7k').value,Rr=H7.m===0?10:20*pos/100,I=6/(10+Rr),b=clamp(I*I*10/3.6,0,1);return {pos:pos,Rr:Rr,I:I,b:b};}
+function h7info(){var c=h7c();$('h7kv').textContent=bn(c.pos);
+  $('h7t').innerHTML='ব্যাটারি 6 V, বাল্বের রোধ 10 Ω<br>রোধ = <b>'+f(c.Rr,1)+' Ω</b> ➜ মোট রোধ '+f(10+c.Rr,1)+' Ω ➜ প্রবাহ I = 6 ÷ '+f(10+c.Rr,1)+' = <b>'+f(c.I,2)+' A</b><br>বাল্বের উজ্জ্বলতা: <b>'+f(c.b*100,0)+'%</b><br><small>বই: স্থির রোধের দুই প্রান্ত থাকে। রিওস্ট্যাটে মাঝখানে আরেকটি প্রান্ত (সরণশীল সংযোগ) থাকে, সেখান থেকে ইচ্ছামতো রোধ পাওয়া যায়। (বাল্ব ও ব্যাটারির মান আমার সরল মডেল)</small>';}
+DRAWS.push(function(){var x=ctxOf('h7c'),c=h7c(),P=[[50,70],[330,70],[330,210],[50,210]];grad(x,0,0,380,300,'#eef4fa','#fbfdff');
+  H7.ph-=DT*Math.min(.5,c.I*.4);wirePath(x,P,'#37474f',3,true);x.fillStyle='#fafcff';x.fillRect(40,126,20,28);battSym(x,50,128,1);
+  resis(x,100,70,260,70,'#5d4037',3);
+  if(H7.m===1){var cx=100+160*c.pos/100;x.fillStyle='rgba(229,72,77,.28)';x.fillRect(100,56,cx-100,28);ln(x,cx,28,cx,60,'#1f3a5f',3);x.fillStyle='#1f3a5f';x.beginPath();x.moveTo(cx,64);x.lineTo(cx-7,50);x.lineTo(cx+7,50);x.fill();tag(x,'সরণশীল সংযোগ',cx,18,'#1f3a5f',11);}
+  else tag(x,'স্থির রোধ 10 Ω',180,42,'#5d4037',12);
+  bulbD(x,330,140,16,c.b);tag(x,'বাল্ব',330,172,'#1f3a5f',11);ammD(x,190,210,'A');tag(x,f(c.I,2)+' A',190,234,'#1f3a5f',12);
+  flow(x,P,H7.ph,18,BLUE,3);tag(x,'রোধ = '+f(c.Rr,1)+' Ω',190,270,'#1f3a5f',15);});
+h7info();
+qgame('h7q','h7o','h7fb','h7sc',[
+ ['রিওস্ট্যাট কী?','পরিবর্তনশীল রোধ',['স্থির রোধ','ব্যাটারি','ধারক'],'রিওস্ট্যাটের রোধ নির্দিষ্ট সীমার ভেতর বদলানো যায়।'],
+ ['সার্কিটে রোধ কমালে বাল্বের উজ্জ্বলতা—','বাড়ে',['কমে','একই থাকে','শূন্য হয়'],'রোধ কমলে প্রবাহ বাড়ে।'],
+ ['স্থির রোধের কয়টি প্রান্ত থাকে?','দুটি',['তিনটি','চারটি','একটিও না'],'বই: স্থির রোধের দুটি প্রান্ত থাকে।'],
+ ['পরিবর্তী রোধের বাড়তি প্রান্তটি কোথায় থাকে?','মাঝখানে (সরণশীল সংযোগ)',['ব্যাটারিতে','বাল্বে','ভূমিতে'],'সেখান থেকে ইচ্ছামতো রোধের মান পাওয়া যায়।'],
+ ['ভোল্টেজ একই রেখে রোধ দ্বিগুণ করলে প্রবাহ—','অর্ধেক',['দ্বিগুণ','একই','চার গুণ'],'I = V / R।']]);
+
+/* ===== ল্যাব ৮: সার্কিটের বিভব ===== */
+var P8={ph:0};
+pills('p8p',function(k){var s=k===0?[6,5,10,15]:[3,1,2,0];$('p8v').value=s[0];$('p8a').value=s[1];$('p8b').value=s[2];$('p8d').value=s[3];p8info();});on(['p8v','p8a','p8b','p8d'],p8info);
+function p8c(){var V=+$('p8v').value,a=+$('p8a').value,b=+$('p8b').value,d=+$('p8d').value,I=V/(a+b+d),VA=V,VB=V-I*a,VC=VB-I*b,VD=VC-I*d;return {V:V,a:a,b:b,d:d,I:I,VA:VA,VB:VB,VC:VC,VD:VD};}
+function p8info(){var c=p8c();$('p8vv').textContent=bn(c.V);$('p8av').textContent=bn(c.a);$('p8bv').textContent=bn(c.b);$('p8dv').textContent=bn(c.d);
+  $('p8t').innerHTML='প্রবাহ I = V / (R₁+R₂+R₃) = '+bn(c.V)+' ÷ '+bn(c.a+c.b+c.d)+' = <b>'+f(c.I,2)+' A</b><br>A = '+f(c.VA,2)+' V<br>B = A − R₁I = '+f(c.VB,2)+' V<br>C = B − R₂I = '+f(c.VC,2)+' V<br>D = C − R₃I = '+f(c.VD,2)+' V (ভূ-সংযুক্ত ✓)<br>E = B = '+f(c.VB,2)+' V (প্রবাহ নেই, তাই ভোল্টেজ বদলায় না)<br><small>বই: R₃ = 0 রাখলে বই ১১.০৯(ক) এর মতো (C আর D একই বিন্দু)।</small>';}
+DRAWS.push(function(){var x=ctxOf('p8c'),c=p8c(),P=[[60,70],[215,70],[215,230],[60,230]],i;grad(x,0,0,380,300,'#eef4fa','#fbfdff');
+  P8.ph-=DT*Math.min(.5,c.I*.35);wirePath(x,P,'#37474f',3,true);ln(x,215,70,285,70,'#37474f',3);circ(x,0,285,70,5,'#fff','#37474f',2);
+  x.fillStyle='#fafcff';x.fillRect(50,134,20,26);battSym(x,60,138,1);
+  resis(x,95,70,180,70,'#5d4037',3);tag(x,'R₁ = '+bn(c.a)+' Ω',138,52,'#5d4037',12);
+  resis(x,215,105,215,195,'#5d4037',3);tag(x,'R₂ = '+bn(c.b)+' Ω',250,150,'#5d4037',12);
+  if(c.d>0){resis(x,180,230,95,230,'#5d4037',3);tag(x,'R₃ = '+bn(c.d)+' Ω',138,250,'#5d4037',12);}
+  gnd(x,60,236);
+  flow(x,P,P8.ph,16,BLUE,3);
+  [[60,70,'A',c.VA,-1,-14],[215,70,'B',c.VB,0,-1],[215,230,'C',c.VC,22,16],[60,230,'D',c.VD,0,0],[285,70,'E',c.VB,0,-1]].forEach(function(p){circ(x,0,p[0],p[1],5,'#fff','#c62828',2);});
+  tag(x,'A: '+f(c.VA,2)+' V',60,50,'#c62828',12);tag(x,'B: '+f(c.VB,2)+' V',215,50,'#c62828',12);tag(x,'C: '+f(c.VC,2)+' V',250,244,'#c62828',12);tag(x,'D: '+f(c.VD,2)+' V',100,266,'#c62828',12);tag(x,'E: '+f(c.VB,2)+' V',302,50,'#c62828',12);
+  var sx=350,y0=230,y1=70;ln(x,sx,y0,sx,y1,'#9aa5b1',2);[[c.VA,'A'],[c.VB,'B'],[c.VC,'C'],[c.VD,'D']].forEach(function(s){var yy=y0-s[0]/12*(y0-y1);circ(x,0,sx,yy,5,'#e5484d','#fff',1.5);tag(x,s[1],sx+14,yy,'#1f3a5f',11);});
+  tag(x,'বিভবের ধাপ',sx-4,y0+24,'#6b7683',10);p8info();});
+p8info();
+qgame('p8q','p8o','p8fb','p8sc',[
+ ['D বিন্দু ভূ-সংযুক্ত হলে তার বিভব কত ধরা হয়?','0 V',['সবচেয়ে বেশি','ব্যাটারির সমান','অসীম'],'পৃথিবীকে শূন্য বিভব ধরা হয়।'],
+ ['রোধ R পার হলে ভোল্টেজ কত কমে?','V = R × I',['V = R / I','V = I / R','কমে না'],'ওহমের সূত্র।'],
+ ['যে অংশে কোনো প্রবাহ নেই (B–E), সেখানে ভোল্টেজ—','B ও E-তে সমান',['E তে শূন্য','B তে শূন্য','ক্রমে কমে'],'বই: ভোল্টেজের কোনো পরিবর্তন নেই।'],
+ ['6 V ব্যাটারি, 5 Ω, 10 Ω, 15 Ω শ্রেণিতে। প্রবাহ কত?','0.2 A',['0.5 A','2 A','5 A'],'বই: I = 6 / 30 = 1/5 A।'],
+ ['নিচের প্রান্ত ভূ-সংযুক্ত না করে উপরের প্রান্ত করলে সার্কিটের প্রবাহ—','একই থাকে (শুধু বিভবের মান বদলায়)',['দ্বিগুণ হয়','অর্ধেক হয়','শূন্য হয়'],'বই: বিভবের মান বদলায় কিন্তু পার্থক্য বদলায় না।']]);
+
+
+/* ===== ল্যাব ৯: শ্রেণি সংযোগ ===== */
+var S9={ph:0};
+on(['s9v','s9a','s9b','s9d'],s9info);
+function s9c(){var V=+$('s9v').value,a=+$('s9a').value,b=+$('s9b').value,d=+$('s9d').value,R=a+b+d,I=V/R;return {V:V,a:a,b:b,d:d,R:R,I:I,v1:I*a,v2:I*b,v3:I*d};}
+function s9info(){var c=s9c();$('s9vv').textContent=bn(c.V);$('s9av').textContent=bn(c.a);$('s9bv').textContent=bn(c.b);$('s9dv').textContent=bn(c.d);
+  $('s9t').innerHTML='তুল্য রোধ R = '+bn(c.a)+' + '+bn(c.b)+' + '+bn(c.d)+' = <b>'+bn(c.R)+' Ω</b><br>প্রবাহ I = V / R = '+bn(c.V)+' ÷ '+bn(c.R)+' = <b>'+f(c.I,2)+' A</b> (সব রোধে একই)<br>V₁ = '+f(c.v1,2)+' V, V₂ = '+f(c.v2,2)+' V, V₃ = '+f(c.v3,2)+' V ➜ যোগ করলে '+f(c.v1+c.v2+c.v3,2)+' V<br><small>বই: R = R₁ + R₂ + R₃ + … + Rₙ</small>';}
+DRAWS.push(function(){var x=ctxOf('s9c'),c=s9c(),P=[[40,90],[340,90],[340,200],[40,200]],i;grad(x,0,0,380,300,'#eef4fa','#fbfdff');
+  S9.ph-=DT*Math.min(.5,c.I*.25);wirePath(x,P,'#37474f',3,true);x.fillStyle='#fafcff';x.fillRect(30,134,20,28);battSym(x,40,138,1);
+  var R=[[75,145,c.a,c.v1,'R₁'],[160,230,c.b,c.v2,'R₂'],[245,315,c.d,c.v3,'R₃']];
+  R.forEach(function(r){resis(x,r[0],90,r[1],90,'#5d4037',3);tag(x,r[4]+' = '+bn(r[2])+' Ω',(r[0]+r[1])/2,68,'#5d4037',11);tag(x,'V = '+f(r[3],2),(r[0]+r[1])/2,114,'#c62828',11);});
+  flow(x,P,S9.ph,18,BLUE,3);tag(x,'I = '+f(c.I,2)+' A (সব জায়গায় সমান)',190,150,'#1f3a5f',14);
+  var cols=['#4f8ef7','#f2a93b','#52b788'],cx=40,tot=300;x.strokeStyle='#37474f';x.lineWidth=1.5;
+  [c.v1,c.v2,c.v3].forEach(function(v,k){var w=tot*v/c.V;x.fillStyle=cols[k];x.fillRect(cx,236,w,22);x.strokeRect(cx,236,w,22);cx+=w;});
+  tag(x,'ব্যাটারির '+bn(c.V)+' V তিন ভাগে ভাগ হয়েছে',190,280,'#1f3a5f',12);s9info();});
+s9info();
+qgame('s9q','s9o','s9fb','s9sc',[
+ ['শ্রেণি সংযোগে তুল্য রোধের সূত্র কোনটি?','R = R₁ + R₂ + R₃',['1/R = 1/R₁ + 1/R₂','R = R₁ × R₂','R = R₁ − R₂'],'রোধগুলো যোগ হয়।'],
+ ['2 Ω, 3 Ω, 4 Ω শ্রেণিতে তুল্য রোধ কত? (বইয়ের MCQ ২)','9 Ω',['8 Ω','7 Ω','20 Ω'],'2 + 3 + 4 = 9।'],
+ ['শ্রেণি সংযোগে সব রোধে কোনটি একই থাকে?','প্রবাহ',['ভোল্টেজ','রোধ','ক্ষমতা'],'একটা পথেই সব চার্জ যায়।'],
+ ['শ্রেণি সংযোগে ব্যাটারির ভোল্টেজ রোধগুলোর মধ্যে—','ভাগ হয়ে যায়',['প্রতিটিতে পুরোটা পড়ে','শূন্য হয়ে যায়','দ্বিগুণ হয়'],'V = V₁ + V₂ + V₃।'],
+ ['9 V ব্যাটারি, শ্রেণিতে মোট রোধ 9 Ω হলে প্রবাহ কত?','1 A',['81 A','0.1 A','9 A'],'I = 9 ÷ 9 = 1 A।']]);
+
+/* ===== ল্যাব ১০: সমান্তরাল / মিশ্র ===== */
+var L10={m:0,p1:0,p2:0};
+pills('l10p',function(k){L10.m=k;l10info();});on(['l10v','l10a','l10b','l10x'],l10info);
+function l10c(){var V=+$('l10v').value,a=+$('l10a').value,b=+$('l10b').value,r0=L10.m===1?+$('l10x').value:0,Rp=a*b/(a+b),Rt=r0+Rp,I=V/Rt,Vp=I*Rp;return {V:V,a:a,b:b,r0:r0,Rp:Rp,Rt:Rt,I:I,Vp:Vp,I1:Vp/a,I2:Vp/b};}
+function l10info(){var c=l10c();$('l10vv').textContent=bn(c.V);$('l10av').textContent=bn(c.a);$('l10bv').textContent=bn(c.b);$('l10xv').textContent=bn(+$('l10x').value);
+  var s='1/Rₚ = 1/'+bn(c.a)+' + 1/'+bn(c.b)+' ➜ Rₚ = <b>'+f(c.Rp,2)+' Ω</b><br>';
+  if(L10.m===1)s+='মোট রোধ = R₀ + Rₚ = '+bn(c.r0)+' + '+f(c.Rp,2)+' = <b>'+f(c.Rt,2)+' Ω</b><br>';
+  s+='মোট প্রবাহ I = <b>'+f(c.I,2)+' A</b>, সমান্তরাল অংশের ভোল্টেজ = '+f(c.Vp,2)+' V<br>I₁ = '+f(c.I1,2)+' A, I₂ = '+f(c.I2,2)+' A, I₁ + I₂ = '+f(c.I1+c.I2,2)+' A<br><small>বই: ভোল্টেজ দুই শাখাতেই সমান, প্রবাহ ভাগ হয়, I = I₁ + I₂। বইয়ের MCQ ৫: মিশ্র মোডে 12 V, R₀ = 2 Ω, 3 Ω ∥ 6 Ω ➜ I₁ = 2 I₂।</small>';
+  $('l10t').innerHTML=s;}
+DRAWS.push(function(){var x=ctxOf('l10c'),c=l10c(),A=[[45,70],[190,70],[190,250],[45,250]],B=[[45,70],[300,70],[300,250],[45,250]];grad(x,0,0,380,320,'#eef4fa','#fbfdff');
+  L10.p1-=DT*Math.min(.5,c.I1*.25);L10.p2-=DT*Math.min(.5,c.I2*.25);
+  wirePath(x,B,'#37474f',3,true);ln(x,190,70,190,250,'#37474f',3);
+  x.fillStyle='#fafcff';x.fillRect(35,142,20,28);battSym(x,45,146,1);
+  x.fillStyle='#fafcff';if(L10.m===1){x.fillRect(80,60,70,20);resis(x,70,70,160,70,'#5d4037',3);tag(x,'R₀ = '+bn(c.r0)+' Ω',115,50,'#5d4037',12);}
+  resis(x,190,115,190,205,'#5d4037',3);resis(x,300,115,300,205,'#5d4037',3);tag(x,'R₁ = '+bn(c.a)+' Ω',154,160,'#5d4037',12);tag(x,'R₂ = '+bn(c.b)+' Ω',264,160,'#5d4037',12);
+  flow(x,A,L10.p1,12,'#2563eb',3);flow(x,B,L10.p2,12,'#7c3aed',3);
+  tag(x,'I₁ = '+f(c.I1,2)+' A',190,226,'#2563eb',12);tag(x,'I₂ = '+f(c.I2,2)+' A',300,226,'#7c3aed',12);tag(x,'মোট I = '+f(c.I,2)+' A',120,276,'#1f3a5f',14);tag(x,'Vₚ = '+f(c.Vp,2)+' V',245,276,'#c62828',13);
+  l10info();});
+l10info();
+qgame('l10q','l10o','l10fb','l10sc',[
+ ['সমান্তরাল সংযোগে তুল্য রোধের সূত্র?','1/R = 1/R₁ + 1/R₂',['R = R₁ + R₂','R = R₁ × R₂','R = R₁ − R₂'],'বইয়ের সূত্র।'],
+ ['সমান্তরাল সংযোগে দুই রোধে কোনটি সমান?','ভোল্টেজ',['প্রবাহ','রোধ','ক্ষমতা'],'দুই মাথা একই দুই বিন্দুতে জোড়া।'],
+ ['সমান্তরালে মোট প্রবাহ I = ?','I₁ + I₂',['I₁ − I₂','I₁ × I₂','I₁ / I₂'],'প্রবাহ ভাগ হয়ে আবার এক হয়।'],
+ ['3 Ω ও 6 Ω সমান্তরালে তুল্য রোধ কত?','2 Ω',['9 Ω','4.5 Ω','18 Ω'],'1/R = 1/3 + 1/6 = 1/2।'],
+ ['বইয়ের MCQ ৬ (R₀ = 2 Ω সিরিজে, 3 Ω ∥ 6 Ω): I₁ ও I₂ এর সম্পর্ক কী?','I₁ = 2 I₂',['I₁ = I₂','I₂ = 2 I₁','I₁ = 3 I₂'],'ভোল্টেজ সমান, তাই I = V/R; 3 Ω-এ দ্বিগুণ প্রবাহ।']]);
+
+/* ===== ল্যাব ১১: তড়িৎ ক্ষমতা ও বিল ===== */
+var W11={ang:0};
+on(['w11p','w11h','w11d','w11r'],w11info);
+function w11c(){var P=+$('w11p').value,h=+$('w11h').value,d=+$('w11d').value,pr=+$('w11r').value,u=P*h*d/1000;return {P:P,h:h,d:d,pr:pr,R:220*220/P,I:P/220,u:u,bill:u*pr};}
+function w11info(){var c=w11c();$('w11pv').textContent=bn(c.P);$('w11hv').textContent=bn(c.h);$('w11dv').textContent=bn(c.d);$('w11rv').textContent=bn(c.pr);
+  $('w11t').innerHTML='220 V — '+bn(c.P)+' W বাল্ব: রোধ R = V²/P = <b>'+f(c.R,0)+' Ω</b>, প্রবাহ I = P/V = <b>'+f(c.I,2)+' A</b><br>ইউনিট = P × t / 1000 = '+bn(c.P)+' × ('+bn(c.h)+' × '+bn(c.d)+') / 1000 = <b>'+f(c.u,2)+' ইউনিট (kWh)</b><br>মোট খরচ = '+f(c.u,2)+' × '+bn(c.pr)+' = <b>'+f(c.bill,1)+' টাকা</b><br><small>বইয়ের উদাহরণ: 60 W, রোজ 5 ঘণ্টা, 30 দিন, ইউনিট 10 টাকা ➜ 9 ইউনিট, 90 টাকা।</small>';}
+DRAWS.push(function(){var x=ctxOf('w11c'),c=w11c();grad(x,0,0,380,300,'#eef3f9','#fbfdff');W11.ang+=DT*c.P*.03;
+  ln(x,95,40,95,60,'#37474f',3);bulbD(x,95,100,28,c.P/200);ln(x,80,130,110,130,'#6b7683',5);tag(x,bn(c.P)+' W',95,152,'#1f3a5f',14);
+  ln(x,125,100,235,100,'#37474f',3);circ(x,0,280,100,44,'#fff','#37474f',3);tag(x,'kWh',280,80,'#1f3a5f',12);var a=W11.ang;ln(x,280,100,280+Math.cos(a)*34,100+Math.sin(a)*34,'#e5484d',3);circ(x,0,280,100,4,'#37474f',null);tag(x,'মিটার',280,160,'#1f3a5f',12);
+  rr(x,30,190,320,86,10);x.fillStyle='#fff';x.fill();x.strokeStyle='#37474f';x.lineWidth=2;x.stroke();
+  tag(x,'ইউনিট = '+f(c.u,2)+' kWh',190,212,'#1f3a5f',15);tag(x,'বিল = '+f(c.u,2)+' × '+bn(c.pr)+' = '+f(c.bill,1)+' টাকা',190,246,'#c62828',17);w11info();});
+w11info();
+qgame('w11q','w11o','w11fb','w11sc',[
+ ['তড়িৎ ক্ষমতার সূত্র কোনটি?','P = V I',['P = V / I','P = I / V','P = V + I'],'ক্ষমতা = ভোল্টেজ × প্রবাহ।'],
+ ['তড়িৎ ক্ষমতার একক কী?','ওয়াট (W)',['ওহম','কুলম্ব','ফ্যারাড'],'W = J/s।'],
+ ['220 V — 100 W বাল্বের ফিলামেন্টের রোধ কত?','484 Ω',['2.2 Ω','22 Ω','100 Ω'],'R = V²/P = 220² / 100 (বইয়ের উদাহরণ)।'],
+ ['60 W বাল্ব রোজ 5 ঘণ্টা করে 30 দিন জ্বললে কত ইউনিট খরচ?','9 ইউনিট',['90 ইউনিট','0.9 ইউনিট','300 ইউনিট'],'60 × 150 / 1000 = 9।'],
+ ['বিদ্যুৎ বিলের প্রচলিত একক কী?','কিলোওয়াট-ঘণ্টা (kWh)',['ওয়াট','অ্যাম্পিয়ার','ভোল্ট'],'বইয়ে: ইউনিটকে BOT ইউনিট বলে।'],
+ ['রোধ R-এর ওপর ক্ষমতার আরেকটি সূত্র?','P = I²R',['P = I / R','P = R / I²','P = IR²'],'P = VI-এ V = RI বসালে পাওয়া যায়।']]);
+
+/* ===== ল্যাব ১২: সিস্টেম লস ও লোডশেডিং ===== */
+var X12={m:0,ph:0,rot:0,tm:0};
+pills('x12p',function(k){X12.m=k;x12info();});on(['x12v','x12s'],x12info);
+function x12c(){var V=+$('x12v').value,s=+$('x12s').value,P=1000,I=P/V,loss=I*I*1/1000;return {V:V,s:s,P:P,I:I,loss:loss,pc:loss/P*100,n:Math.round(s/25)};}
+function x12info(){var c=x12c();$('x12vv').textContent=bn(c.V);$('x12sv').textContent=bn(c.s);var h;
+  if(X12.m===0)h='পাঠানো ক্ষমতা 1000 kW, লাইনের রোধ 1 Ω ধরা হয়েছে (আমার সরল মান)<br>I = P / V = <b>'+f(c.I,1)+' A</b><br>তাপে অপচয় I²R = <b>'+f(c.loss,2)+' kW</b> = পাঠানো শক্তির <b>'+f(c.pc,1)+'%</b>'+(c.pc>=100?' <b style="color:#c62828">(অসম্ভব! ভোল্টেজ আরও বাড়াও)</b>':'')+'<br>বইয়ের কথা: ভোল্টেজ 10 গুণ হলে প্রবাহ 10 গুণ কমে, তাপের অপচয় 100 গুণ কমে।';
+  else h='চাহিদা 100%, উৎপাদন <b>'+bn(c.s)+'%</b> ➜ একসাথে '+bn(4)+'টির মধ্যে মাত্র <b>'+bn(c.n)+'টি</b> এলাকায় বিদ্যুৎ থাকে। বাকিগুলোতে লোডশেডিং, আর পালা করে ঘোরানো হয়।<br><small>বই: উৎপাদনের চেয়ে চাহিদা বেশি হলে সাবস্টেশন কোনো এলাকায় সরবরাহ বন্ধ রাখে। একনাগাড়ে কয়েক ঘণ্টা হলে চক্রাকারে বিভিন্ন জায়গায় করা হয়।</small>';
+  $('x12t').innerHTML=h;}
+DRAWS.push(function(){var x=ctxOf('x12c'),c=x12c(),i;grad(x,0,0,380,320,'#e8f0f8','#f9fbfe');
+  if(X12.m===0){X12.ph+=DT*Math.min(1.5,c.I/200);var g=clamp(c.pc/25,0,1);
+    rr(x,20,130,50,60,4);x.fillStyle='#8a93a0';x.fill();x.fillRect(30,100,10,32);x.fillRect(48,110,8,22);tag(x,'বিদ্যুৎকেন্দ্র',45,204,'#1f3a5f',10);
+    ln(x,70,150,95,150,'#37474f',3);rr(x,92,130,34,46,6);x.fillStyle='#e3d4ff';x.fill();x.strokeStyle='#37474f';x.lineWidth=2;x.stroke();tag(x,'স্টেপ আপ',109,188,'#1f3a5f',10);
+    var lc=hm('#37474f','#ff5a00',g);x.strokeStyle=lc;x.lineWidth=3+g*5;x.beginPath();x.moveTo(126,150);x.lineTo(254,150);x.stroke();
+    if(g>.1){x.fillStyle='rgba(255,100,0,'+(g*.35)+')';x.fillRect(126,134,128,32);}
+    for(i=0;i<10;i++){var px=126+((X12.ph*128+i*12.8)%128);circ(x,0,px,150,2.6,'#fff',null);}
+    tag(x,'উচ্চ ভোল্টেজ '+bn(c.V)+' kV',190,118,'#1f3a5f',12);tag(x,'I = '+f(c.I,0)+' A',190,184,'#c62828',12);
+    rr(x,254,130,34,46,6);x.fillStyle='#d4f0e0';x.fill();x.strokeStyle='#37474f';x.lineWidth=2;x.stroke();tag(x,'স্টেপ ডাউন',271,188,'#1f3a5f',10);ln(x,288,150,318,150,'#37474f',3);
+    x.fillStyle='#e3b178';x.fillRect(318,140,40,30);x.fillStyle='#b45a4a';x.beginPath();x.moveTo(314,140);x.lineTo(338,120);x.lineTo(362,140);x.fill();x.fillStyle='#ffe066';x.fillRect(330,150,10,12);tag(x,'বাসা',338,184,'#1f3a5f',10);
+    x.fillStyle='#d6dde6';x.fillRect(40,236,300,18);x.fillStyle=hm('#52b788','#e5484d',clamp(c.pc/25,0,1));x.fillRect(40,236,300*clamp(c.pc/100,0,1)*1,18);x.strokeStyle='#37474f';x.lineWidth=1.5;x.strokeRect(40,236,300,18);tag(x,'অপচয় '+f(c.pc,1)+'% (স্কেল 0–100%)',190,274,'#1f3a5f',13);}
+  else{X12.tm+=DT;if(X12.tm>3){X12.tm=0;X12.rot=(X12.rot+1)%4;}
+    for(i=0;i<4;i++){var gx=60+(i%2)*140,gy=50+Math.floor(i/2)*110,onn=((i-X12.rot+4)%4)<c.n;x.fillStyle=onn?'#fff3b0':'#3a4252';rr(x,gx,gy,120,90,10);x.fill();x.strokeStyle='#37474f';x.lineWidth=2;x.stroke();
+      for(var k=0;k<3;k++){x.fillStyle=onn?'#ffd23f':'#1f2530';x.fillRect(gx+14+k*34,gy+22,24,26);}(onn?tag:tagd)(x,'এলাকা '+bn(i+1)+(onn?' ✅':' ❌'),gx+60,gy+72,onn?'#1f3a5f':'#fff',12);}
+    tag(x,'উৎপাদন '+bn(c.s)+'% / চাহিদা ১০০%',190,285,'#1f3a5f',14);}
+  x12info();});
+x12info();
+qgame('x12q','x12o','x12fb','x12sc',[
+ ['দূর-দূরান্তে বিদ্যুৎ পাঠাতে উচ্চ ভোল্টেজ ব্যবহার হয় কেন?','প্রবাহ কমিয়ে তাপে শক্তির অপচয় কমাতে',['বিদ্যুৎ ধীরে পাঠাতে','তার সস্তা করতে','রোধ বাড়াতে'],'বই: 10 গুণ ভোল্টেজে 100 গুণ কম অপচয়।'],
+ ['তারে তাপ হিসেবে শক্তির অপচয়ের হার কত?','I²R',['IR','V/I','I/R²'],'প্রতি সেকেন্ডে অপচয় = I²R।'],
+ ['ভোল্টেজ 10 গুণ বাড়ালে (একই ক্ষমতায়) তাপের অপচয় কত গুণ কমে?','100 গুণ',['10 গুণ','2 গুণ','কমে না'],'প্রবাহ 10 গুণ কমে, I² 100 গুণ কমে।'],
+ ['তড়িতের সিস্টেম লস কী?','রোধের কারণে তাপ হয়ে বিদ্যুৎশক্তির ক্ষয়',['বাল্ব নষ্ট হওয়া','বিদ্যুৎ চুরি','ব্যাটারি ফুরানো'],'বইয়ের সংজ্ঞা।'],
+ ['লোডশেডিং কী?','চাহিদার চেয়ে উৎপাদন কম হলে কিছু এলাকায় সাময়িক সরবরাহ বন্ধ',['বাল্ব বদলানো','বিদ্যুতের দাম বাড়ানো','তার কেটে দেওয়া'],'সাবস্টেশন কোনো এলাকায় সরবরাহ বন্ধ রাখে।'],
+ ['গ্রাহকের কাছে দেওয়ার আগে ভোল্টেজ কমানো হয় কীভাবে?','স্টেপ ডাউন ট্রান্সফর্মার দিয়ে',['স্টেপ আপ ট্রান্সফর্মার দিয়ে','ব্যাটারি দিয়ে','ফিউজ দিয়ে'],'বই: স্টেপ ডাউন ট্রান্সফর্মার।']]);
+
+/* ===== ল্যাব ১৩: নিরাপদ ব্যবহার ===== */
+var F13={m:0,s:0,blown:0,heat:0,short:0,touch:0,sw:1,ph:0};
+var F13L=[['ফিউজ 5 A','ফিউজ 10 A'],['✋ শুকনো হাত','💧 ভেজা হাত'],['সুইচ লাইভ তারে ✅','সুইচ নিউট্রাল তারে ❌']],F13B=['💥 শর্ট সার্কিট','⚡ হাত লাগাও','🔘 সুইচ চাপো'];
+function f13sub(){$('f13s').innerHTML=F13L[F13.m].map(function(t,k){return '<button data-k="'+k+'"'+(k===0?' class="on"':'')+'>'+t+'</button>';}).join('');F13.s=0;$('f13b').textContent=F13B[F13.m];f13reset();}
+function f13reset(){F13.blown=0;F13.heat=0;F13.short=0;F13.touch=0;F13.sw=1;}
+pills('f13p',function(k){F13.m=k;f13sub();f13info();});pills('f13s',function(k){F13.s=k;f13reset();f13info();});on(['f13k'],f13info);
+$('f13b').onclick=function(){if(F13.m===0)F13.short=1;else if(F13.m===1)F13.touch=!F13.touch;else F13.sw=!F13.sw;};
+$('f13r').onclick=f13reset;
+function f13c(){var n=+$('f13k').value,rate=F13.s?10:5,I=F13.blown?0:(F13.short?200:n*.6);return {n:n,rate:rate,I:I};}
+function f13info(){var c=f13c(),h;$('f13kv').textContent=bn(c.n);
+  if(F13.m===0)h='প্রতিটি যন্ত্র প্রায় 0.6 A টানে (আমার ধরা মান)। এখন প্রবাহ = <b>'+f(c.I,1)+' A</b>, ফিউজ '+bn(c.rate)+' A।<br>'+(F13.blown?'<b style="color:#c62828">ফিউজ গলে গেছে ➜ সার্কিট কাটা ➜ কোনো প্রবাহ নেই।</b> "ফিউজ বদলাও" চাপো।':(c.I>c.rate?'<b style="color:#c62828">প্রবাহ সীমার ওপরে! ফিউজ গরম হচ্ছে…</b>':'সীমার ভেতরে, ফিউজ ঠিক আছে। যন্ত্র বাড়াও বা শর্ট সার্কিট চাপো।'))+'<br><small>বই: ফিউজ একটি সরু তার, বেশি প্রবাহে I²R তাপে গরম হয়ে পুড়ে সরবরাহ বন্ধ করে। সার্কিট ব্রেকারও এমন কাজ করে, কিন্তু আবার চালু করা যায়।</small>';
+  else if(F13.m===1){var R=F13.s?100:100000,I=220/R;h='শরীরের রোধ ≈ <b>'+bn(R)+' Ω</b> (বইয়ে শুকনো চামড়ায় প্রায় 100,000 Ω, ভেজা হলে হাজার গুণ কম)<br>I = V/R = 220 ÷ '+bn(R)+' = <b>'+f(I*1000,1)+' mA</b>'+(F13.touch?(I>=.01?' <b style="color:#c62828">➜ মারাত্মক! (মাত্র 10 mA-এই মানুষ মারা যেতে পারে)</b>':' ➜ কম, কিন্তু তবুও বিপজ্জনক হতে পারে'):'<br>"হাত লাগাও" চাপো (শুধু দেখার জন্য, সাবধান!)')+'<br><small>ভেজা হাতে বা ভেজা পায়ে কখনো বৈদ্যুতিক জিনিস ধরবে না।</small>';}
+  else h='বই: সুইচ সবসময় <b>উচ্চ ভোল্টেজের (লাইভ) তারে</b> লাগাতে হয়, তাহলে যন্ত্র বন্ধ থাকলে ভেতরে কোথাও উচ্চ ভোল্টেজ থাকে না।<br>'+(F13.s===0?'এখন সুইচ লাইভ তারে ✅ ➜ বন্ধ করলে যন্ত্রের সাথে লাইভ তার কাটা, নিরাপদ।':'এখন সুইচ নিউট্রাল তারে ❌ ➜ বন্ধ করলেও যন্ত্রের ভেতর লাইভ তারের 220 V থেকে যায়, বিপজ্জনক!')+'<br><small>চিত্রটি বইয়ের ১১.১৫-র মতো, আমার সরল আঁকা।</small>';
+  $('f13t').innerHTML=h;}
+DRAWS.push(function(){var x=ctxOf('f13c'),c=f13c(),i;grad(x,0,0,380,320,'#eef3f9','#fbfdff');
+  if(F13.m===0){if(!F13.blown){if(c.I>c.rate)F13.heat+=DT*Math.min(4,Math.pow(c.I/c.rate,2))*.5;else F13.heat=Math.max(0,F13.heat-DT*.8);if(F13.heat>1.2)F13.blown=1;}
+    var P=[[45,70],[335,70],[335,230],[45,230]];F13.ph-=DT*Math.min(.6,c.I*.05);wirePath(x,P,'#37474f',3,true);circ(x,0,45,150,18,'#fff','#37474f',2);tag(x,'~',45,150,'#1f3a5f',18);
+    var g=clamp(F13.heat/1.2,0,1);rr(x,150,56,80,28,5);x.fillStyle='#fffaf0';x.fill();x.strokeStyle='#37474f';x.lineWidth=2;x.stroke();
+    if(F13.blown){ln(x,158,70,180,70,'#b0b7bf',3);ln(x,202,70,222,70,'#b0b7bf',3);for(i=0;i<4;i++)circ(x,0,190+Math.random()*20,70+(Math.random()-.5)*14,1.8,'#ffb703',null);tag(x,'ফিউজ গলে গেছে',190,40,'#c62828',13);}
+    else{ln(x,158,70,222,70,hm('#9aa5b1','#ff5a00',g),2+g*2);tag(x,'ফিউজ '+bn(c.rate)+' A'+(g>.3?' 🔥':''),190,40,g>.3?'#c62828':'#1f3a5f',13);}
+    if(!F13.blown)flow(x,P,F13.ph,16,BLUE,3);
+    for(i=0;i<c.n;i++){var bx=100+(i%5)*40,by=130+Math.floor(i/5)*46;bulbD(x,bx,by,12,F13.blown?0:.8);}
+    tag(x,'I = '+f(c.I,1)+' A (সীমা '+bn(c.rate)+' A)',190,272,'#1f3a5f',15);tag(x,F13.short?'শর্ট সার্কিট!':'যন্ত্র '+bn(c.n)+'টি',190,296,F13.short?'#c62828':'#6b7683',13);}
+  else if(F13.m===1){var R=F13.s?100:100000,I=220/R,lg=clamp((Math.log10(I)+4)/4,0,1);
+    ln(x,40,60,160,60,'#c62828',4);tag(x,'লাইভ তার 220 V',100,40,'#c62828',12);person(x,200,130,'#37474f');x.font='38px sans-serif';
+    if(F13.touch){ln(x,160,60,190,112,'#c62828',3,[5,4]);tag(x,'⚡',175,86,'#c62828',22);}
+    tag(x,F13.s?'ভেজা হাত 💧':'শুকনো হাত ✋',260,118,'#1f3a5f',13);
+    x.fillStyle='#d6dde6';x.fillRect(40,220,300,20);x.fillStyle=F13.touch?(I>=.01?'#e5484d':'#52b788'):'#c9d3de';x.fillRect(40,220,300*lg,20);x.strokeStyle='#37474f';x.lineWidth=1.5;x.strokeRect(40,220,300,20);
+    var mx=40+300*(Math.log10(.01)+4)/4;ln(x,mx,212,mx,248,'#c62828',2.5);tag(x,'10 mA (বিপজ্জনক সীমা)',mx,256,'#c62828',11);
+    tag(x,'প্রবাহ = '+f(I*1000,1)+' mA',190,284,'#1f3a5f',15);if(F13.touch&&I>=.01)tag(x,'⚠ মারাত্মক',190,176,'#c62828',18);}
+  else{var live=F13.s===0?(F13.sw?1:0):1,neu=F13.s===1?(F13.sw?0:1):0,run=F13.sw;
+    function wc(e,cl){return e?'#c62828':cl;}
+    ln(x,40,70,310,70,'#c62828',4);ln(x,40,250,310,250,'#2563eb',4);tag(x,'লাইভ (220 V)',70,50,'#c62828',12);tag(x,'নিউট্রাল (0 V)',70,270,'#2563eb',12);
+    var swY=F13.s===0?70:250;x.fillStyle='#fafcff';x.fillRect(150,swY-8,60,16);ln(x,150,swY,170,swY,'#37474f',4);ln(x,210,swY,230,swY,'#37474f',4);
+    if(F13.sw)ln(x,170,swY,210,swY,'#37474f',4);else ln(x,170,swY,205,swY-22,'#37474f',4);tag(x,'সুইচ '+(F13.sw?'চালু':'বন্ধ'),190,swY+(swY<150?-22:22),'#1f3a5f',12);
+    var danger=(F13.s===1&&!F13.sw);
+    rr(x,255,115,90,95,12);x.fillStyle=danger?'#ffd6d6':(run?'#dff5e6':'#e7ecf2');x.fill();x.strokeStyle=danger?'#c62828':'#37474f';x.lineWidth=danger?4:2;x.stroke();
+    tag(x,run?'🌀 চলছে':'বন্ধ',300,150,'#1f3a5f',14);tag(x,danger?'⚡ 220 V ভেতরে!':(F13.sw?'':'নিরাপদ ✅'),300,180,danger?'#c62828':'#0a7',12);
+    ln(x,300,70,300,115,wc(live,'#37474f'),3);ln(x,300,210,300,250,wc(neu,'#37474f'),3);
+    tag(x,danger?'বিপজ্জনক!':(F13.sw?'যন্ত্র চালু':'সুইচ বন্ধ'),190,300,danger?'#c62828':'#1f3a5f',15);}
+  f13info();});
+f13sub();f13info();
+qgame('f13q','f13o','f13fb','f13sc',[
+ ['ফিউজ কী কাজ করে?','বেশি প্রবাহে গলে সার্কিট কেটে দেয়',['প্রবাহ বাড়ায়','ভোল্টেজ বাড়ায়','বিদ্যুৎ জমা রাখে'],'সরু তার, বেশি I²R তাপে পুড়ে যায়।'],
+ ['বইয়ের সঠিক নিয়মে সুইচ কোন তারে লাগানো হয়?','উচ্চ ভোল্টেজের (লাইভ) তারে',['নিউট্রাল তারে','দুটিতেই না','মাটির তারে'],'যন্ত্র বন্ধ থাকলে ভেতরে উচ্চ ভোল্টেজ থাকে না।'],
+ ['ভেজা অবস্থায় শরীরের রোধ—','অনেক কমে যায়',['বেড়ে যায়','একই থাকে','অসীম হয়'],'তাই 220 V-এ প্রবাহ মারাত্মক হতে পারে।'],
+ ['প্রায় কত mA প্রবাহ হৃৎপিণ্ডের ভেতর দিয়ে গেলে মানুষ মারা যেতে পারে?','10 mA',['10 A','1000 A','0.0001 mA'],'বইয়ে: মাত্র 10 mA বিদ্যুতেই।'],
+ ['ভূ-সংযোগ (আর্থ) তার কেন থাকে?','যন্ত্র বিদ্যুতায়িত হলে প্রবাহ সরাসরি ভূমিতে যেতে',['যন্ত্র দ্রুত চালাতে','বিল কমাতে','আলো দিতে'],'তখন ফিউজ পুড়ে যন্ত্র বিপদমুক্ত হয়ে যায়।'],
+ ['তারের ওপর অপরিবাহী আস্তরণ কেন থাকে?','শর্ট সার্কিট ও শক এড়াতে',['দেখতে সুন্দর করতে','রোধ বাড়াতে','ওজন বাড়াতে'],'বই: আস্তরণ অক্ষত রাখা জরুরি।']]);
+
+
+var QUIZ=[];
+function M(q,c,w,e,fix){QUIZ.push({q:q,o:[c].concat(w),a:0,e:e,fix:!!fix});}
+QUIZ.push({q:'যে সকল পদার্থের মধ্য দিয়ে খুব সহজেই তড়িৎপ্রবাহ চলতে পারে তাদেরকে কী বলে? (বইয়ের নমুনা প্রশ্ন ১)',o:['অপরিবাহী','কুপরিবাহী','অর্ধপরিবাহী','পরিবাহী'],a:3,fix:true,e:'যে পদার্থে সহজে বিদ্যুৎ চলে তাকে পরিবাহী বলে।'});
+QUIZ.push({q:'2 Ω, 3 Ω ও 4 Ω মানের তিনটি রোধ শ্রেণি সমবায়ে সংযুক্ত থাকলে তুল্য রোধের মান হবে— (বইয়ের নমুনা প্রশ্ন ২)',o:['8 Ω','7 Ω','9 Ω','20 Ω'],a:2,fix:true,e:'শ্রেণিতে R = 2 + 3 + 4 = 9 Ω। (উত্তর আমার হিসাব)'});
+QUIZ.push({q:'কোনো পরিবাহীর দুই প্রান্তের বিভব পার্থক্য 100 V এবং তড়িৎপ্রবাহমাত্রা 10 A হলে এর রোধ কত? (বইয়ের নমুনা প্রশ্ন ৩)',o:['1000 Ω','0.1 Ω','10 Ω','1 Ω'],a:2,fix:true,e:'R = V / I = 100 ÷ 10 = 10 Ω।'});
+QUIZ.push({q:'বর্তনীতে বৈদ্যুতিক অবস্থা পরিমাপের জন্য ব্যবহার করা হয়— i. ভোল্টমিটার ii. অ্যামিটার iii. জেনারেটর (বইয়ের নমুনা প্রশ্ন ৪)',o:['i ও ii','i ও iii','ii ও iii','i, ii ও iii'],a:0,fix:true,e:'ভোল্টমিটার ও অ্যামিটার মাপে। জেনারেটর বিদ্যুৎ তৈরি করে, মাপে না। (উত্তর আমার হিসাব)'});
+QUIZ.push({q:'(চিত্র ১১.১৯) বর্তনীর তুল্যরোধ কত? বর্তনী: 12 V ব্যাটারি, 2 Ω রোধ শ্রেণিতে, তারপর 3 Ω ও 6 Ω সমান্তরালে (বইয়ের নমুনা প্রশ্ন ৫)',o:['11 Ω','4 Ω','1.64 Ω','0.61 Ω'],a:1,fix:true,e:'3 Ω ∥ 6 Ω = 2 Ω; তারপর 2 + 2 = 4 Ω। (চিত্র পড়ে আমার হিসাব)'});
+QUIZ.push({q:'(চিত্র ১১.১৯) উদ্দীপকে— i. I₁ = I₂ ii. I₁ > I₂ iii. I₁ = 2 I₂। কোনটি সঠিক? (বইয়ের নমুনা প্রশ্ন ৬)',o:['i ও ii','ii ও iii','i ও iii','i, ii ও iii'],a:1,fix:true,e:'সমান্তরাল অংশে V সমান। I₁ = V/3, I₂ = V/6, তাই I₁ = 2 I₂ এবং I₁ > I₂। (চিত্র পড়ে আমার হিসাব)'});
+M('তড়িৎ প্রবাহ I = ?','Q / t',['Q × t','t / Q','Q + t'],'Q চার্জ t সময়ে।');
+M('প্রবাহের একক কী?','অ্যাম্পিয়ার',['ভোল্ট','ওহম','কুলম্ব'],'A = C/s।');
+M('বিদ্যুতের দিক আর ইলেকট্রনের দিক—','বিপরীত',['একই','লম্ব','কোনো সম্পর্ক নেই'],'বইয়ের ব্যাখ্যা।');
+M('বিভব পার্থক্য ধরে রাখে কোনটি?','ব্যাটারি বা জেনারেটর',['সুইচ','রোধ','তার'],'এরা চার্জকে ঘুরিয়ে আনে।');
+M('ইএমএফ-এর সংজ্ঞা সূত্র কোনটি?','EMF = W / Q',['EMF = Q / W','EMF = W Q','EMF = Q + W'],'Q চার্জকে কম থেকে বেশি বিভবে আনতে W কাজ।');
+M('একটি সাধারণ ব্যাটারির দুই প্রান্তে বিভব পার্থক্য প্রায়—','1.5 V',['220 V','9 A','100 W'],'বইয়ে দেওয়া।');
+M('ইএমএফ কী?','বিভব পার্থক্য',['বল','শক্তি','প্রবাহ'],'বই: ইএমএফ বলও নয়, শক্তিও নয়।');
+M('দুটি 1.5 V ব্যাটারি একই দিকে জুড়লে মোট ইএমএফ?','3.0 V',['1.5 V','0 V','2.25 V'],'2 × 1.5।');
+M('বইয়ের সংজ্ঞা অনুযায়ী পরিবাহীতে চার্জ প্রবাহের বাহক কী?','ইলেকট্রন',['প্রোটন','নিউট্রন','আয়ন'],'নেগেটিভ চার্জের ইলেকট্রন।');
+M('অর্ধপরিবাহী কোনটি?','সিলিকন',['তামা','রুপা','রাবার'],'আরও আছে জার্মেনিয়াম।');
+M('তাপমাত্রা বাড়লে পরিবাহীর রোধ—','বাড়ে',['কমে','একই থাকে','শূন্য হয়'],'অণু-পরমাণু বেশি কাঁপে।');
+M('তাপমাত্রা বাড়লে অর্ধপরিবাহীর রোধ—','কমে',['বাড়ে','একই থাকে','অসীম হয়'],'বেশি ইলেকট্রন মুক্ত হয়।');
+M('ওহমের সূত্র কোনটি?','I = V / R',['I = V R','V = I / R','R = V I'],'রোধ বেশি হলে প্রবাহ কম।');
+M('রোধের একক কী?','ওহম (Ω)',['ভোল্ট','ওয়াট','অ্যাম্পিয়ার'],'1 V এ 1 A ➜ 1 Ω।');
+M('R ও দৈর্ঘ্য L-এর সম্পর্ক?','R ∝ L',['R ∝ 1/L','R স্বাধীন','R ∝ L²'],'বই অনুযায়ী।');
+M('R ও প্রস্থচ্ছেদ A-এর সম্পর্ক?','R ∝ 1/A',['R ∝ A','R স্বাধীন','R ∝ A²'],'মোটা তারে রোধ কম।');
+M('আপেক্ষিক রোধের একক কী?','Ω m',['Ω','m','Ω / m'],'ρ = R A / L।');
+M('পরিবাহিতা σ = ?','1 / ρ',['ρ','ρ²','ρ L'],'একক (Ω m)⁻¹।');
+M('কোনটির আপেক্ষিক রোধ সবচেয়ে কম (টেবিল ১১.০১)?','রুপা',['গ্রাফাইট','হীরা','বাতাস'],'1.59 × 10⁻⁸ Ω m।');
+M('রিওস্ট্যাট হলো—','পরিবর্তী রোধ',['স্থির রোধ','ধারক','ব্যাটারি'],'সরণশীল সংযোগ দিয়ে রোধ বদলানো যায়।');
+M('বর্তনীতে ভোল্টমিটারের প্রতীক কোনটি?','বৃত্তের ভেতরে V',['বৃত্তের ভেতরে A','বৃত্তের ভেতরে G','জিগজ্যাগ রেখা'],'A অ্যামিটার, G গ্যালভানোমিটার।');
+M('ভূ-সংযুক্ত বিন্দুর বিভব ধরা হয়—','0 V',['1 V','220 V','অসীম'],'পৃথিবী শূন্য বিভব।');
+M('6 V, 5 Ω + 10 Ω + 15 Ω শ্রেণিতে, প্রবাহ কত?','0.2 A',['0.5 A','5 A','2 A'],'6 ÷ 30।');
+M('3 Ω ও 6 Ω সমান্তরালে তুল্য রোধ?','2 Ω',['9 Ω','4.5 Ω','18 Ω'],'1/3 + 1/6 = 1/2।');
+M('সমান্তরাল সংযোগে সব রোধে কোনটি সমান?','ভোল্টেজ',['প্রবাহ','রোধ','ক্ষমতা'],'এক জোড়া বিন্দুর মধ্যে।');
+M('শ্রেণি সংযোগে সব রোধে কোনটি সমান?','প্রবাহ',['ভোল্টেজ','রোধ','ক্ষমতা'],'একই পথ।');
+M('তড়িৎ ক্ষমতা P = ?','V I',['V / I','I / V','V + I'],'ক্ষমতা = ভোল্টেজ × প্রবাহ।');
+M('রোধ R-এ ক্ষমতা P = ?','V² / R',['V R','R / V²','V / R²'],'P = V I-এ I = V/R বসালে।');
+M('220 V — 100 W বাল্বের ফিলামেন্টের রোধ কত?','484 Ω',['2.2 Ω','100 Ω','22000 Ω'],'বইয়ের উদাহরণ।');
+M('220 V — 100 W বাল্বে প্রবাহ প্রায় কত?','0.45 A',['2.2 A','100 A','22 A'],'I = 220 / 484।');
+M('বিদ্যুৎ বিলের একক কী?','কিলোওয়াট-ঘণ্টা',['ওয়াট','ভোল্ট','অ্যাম্পিয়ার'],'এক ইউনিট = 1 kWh।');
+M('60 W বাল্ব রোজ 5 ঘণ্টা, 30 দিন জ্বললে কত ইউনিট? (বই)','9 ইউনিট',['90 ইউনিট','0.9 ইউনিট','300 ইউনিট'],'60 × 150 / 1000।');
+M('উপরের প্রশ্নে ইউনিট 10 টাকা হলে মোট খরচ? (বই)','90 টাকা',['9 টাকা','900 টাকা','19 টাকা'],'9 × 10।');
+M('দূর-দূরান্তে বিদ্যুৎ পাঠাতে উচ্চ ভোল্টেজ লাগে কেন?','তাপের অপচয় কমানোর জন্য',['তার সস্তা হয় বলে','গতি বাড়ে বলে','রোধ বাড়ে বলে'],'প্রবাহ কমে ➜ I²R কমে।');
+M('ভোল্টেজ 10 গুণ করলে তাপের অপচয়—','100 গুণ কমে',['10 গুণ কমে','একই থাকে','100 গুণ বাড়ে'],'I 10 গুণ কমে, I² 100 গুণ।');
+M('সিস্টেম লস কী?','রোধজনিত তাপে বিদ্যুৎশক্তির ক্ষয়',['বাল্ব ফেটে যাওয়া','বিদ্যুৎ চুরি','ব্যাটারি ফুরানো'],'বইয়ের সংজ্ঞা।');
+M('লোডশেডিং কখন করতে হয়?','চাহিদা উৎপাদনের চেয়ে বেশি হলে',['উৎপাদন বেশি হলে','দিনের বেলায়','শীতকালে'],'সাবস্টেশন সরবরাহ বন্ধ রাখে।');
+M('গ্রাহকের কাছে দেওয়ার আগে ভোল্টেজ কমানো হয়—','স্টেপ ডাউন ট্রান্সফর্মার দিয়ে',['স্টেপ আপ ট্রান্সফর্মার দিয়ে','ফিউজ দিয়ে','ব্যাটারি দিয়ে'],'বই।');
+M('প্রায় কত mA বিদ্যুতে মানুষ মারা যেতে পারে?','10 mA',['10 A','1000 mA','0.01 mA'],'সরাসরি হৃৎপিণ্ডের ভেতর দিয়ে গেলে।');
+M('ফিউজ কীভাবে কাজ করে?','বেশি প্রবাহে গলে সার্কিট কেটে দেয়',['প্রবাহ বাড়ায়','আলো দেয়','চার্জ জমা রাখে'],'সরু তার, বেশি তাপে পুড়ে যায়।');
+M('সুইচ লাগানো উচিত—','উচ্চ ভোল্টেজের (লাইভ) তারে',['নিউট্রাল তারে','মাটির তারে','কোথাও না'],'বইয়ের সঠিক সংযোগ নিয়ম।');
+M('ভূ-সংযোগ (গ্রাউন্ড) তার লাগানো হয়—','যন্ত্রের ঢাকনায়',['শুধু সুইচে','শুধু বাল্বে','কোথাও না'],'যন্ত্র বিদ্যুতায়িত হলে প্রবাহ মাটিতে যায়।');
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+
+var QA=[
+ {h:'📝 সৃজনশীল প্রশ্ন ১ (আলভি ও আলিফের বাতি)',items:[
+  ['<b>উদ্দীপক:</b> পড়ার সময় আলভি 220 V – 100 W এর একটি বাতি দৈনিক ৩ ঘণ্টা করে ব্যবহার করে। অন্যদিকে তার ভাই আলিফ 220 V – 40 W একটি টেবিল ল্যাম্প দৈনিক ৪ ঘণ্টা করে ব্যবহার করে। প্রতি ইউনিট বিদ্যুৎ শক্তির মূল্য ৬ টাকা।<br><b>(ক)</b> ও\'মের সূত্রটি লেখ। (১)','নির্দিষ্ট তাপমাত্রায় কোনো পরিবাহীর দুই প্রান্তের বিভব পার্থক্য V ও তড়িৎপ্রবাহ I সমানুপাতিক। I = V / R, যেখানে R হলো পরিবাহীর রোধ (ধ্রুবক)।'],
+  ['<b>(খ)</b> নির্দিষ্ট তাপমাত্রা, উপাদান ও প্রস্থচ্ছেদের পরিবাহকের দৈর্ঘ্য ৫ গুণ বড় করলে রোধের কী পরিবর্তন হবে ব্যাখ্যা কর। (২)','R = ρL/A। এখানে ρ ও A ধ্রুবক, তাই R ∝ L। দৈর্ঘ্য L যদি 5 গুণ হয় তাহলে রোধ R-ও <b>5 গুণ</b> হবে। কারণ লম্বা পথে ইলেকট্রন বেশি পরমাণুর বাধা পায়।'],
+  ['<b>(গ)</b> আলিফের বাতির প্রবাহমাত্রা নির্ণয় কর। (৩)','দেওয়া আছে: V = 220 V, P = 40 W।<br>P = V I ➜ I = P / V = 40 ÷ 220 = 0.18 A (সঠিক মান 2/11 A ≈ <b>0.18 A</b>)।'],
+  ['<b>(ঘ)</b> আর্থিক দিক বিবেচনায় আলভি ও আলিফের মধ্যে কে মিতব্যয়ী? গাণিতিক যুক্তিসহ বিশ্লেষণ কর। (৪)','ইউনিট = P × t / 1000 (kWh)।<br>• আলভি: 100 × 3 / 1000 = 0.3 ইউনিট/দিন ➜ খরচ 0.3 × 6 = <b>1.80 টাকা/দিন</b> (30 দিনে 54 টাকা)।<br>• আলিফ: 40 × 4 / 1000 = 0.16 ইউনিট/দিন ➜ খরচ 0.16 × 6 = <b>0.96 টাকা/দিন</b> (30 দিনে 28.80 টাকা)।<br>আলিফের খরচ কম, তাই <b>আলিফ মিতব্যয়ী</b>। (দৈনিক খরচ থেকে মাসিক খরচ আমি হিসাব করে দিয়েছি, উদ্দীপকে শুধু "দৈনিক" দেওয়া)']
+ ]},
+ {h:'📝 সৃজনশীল প্রশ্ন ২ (220 V – 100 W বাল্ব)',items:[
+  ['<b>উদ্দীপক:</b> আমাদের দেশে বিদ্যুৎ সরবরাহ লাইনের তড়িৎ চালক শক্তি 220 ভোল্ট। একটি বৈদ্যুতিক বাল্বের ফিলামেন্টের রোধ 484 ওহম। বাল্বের গায়ে লেখা আছে 220 V–100 W।<br><b>(ক)</b> অ্যাম্পিয়ারের সংজ্ঞা দাও। (১)','কোনো পরিবাহীর মধ্য দিয়ে প্রতি সেকেন্ডে 1 কুলম্ব চার্জ প্রবাহিত হলে সেই প্রবাহকে 1 অ্যাম্পিয়ার বলে। A = C/s।'],
+  ['<b>(খ)</b> একটি ড্রাইসেলের তড়িৎচালক শক্তি 1.5 V বলতে কী বোঝায়? (২)','1.5 V ইএমএফ বলতে বোঝায়, ঐ সেলের দুই প্রান্তের মধ্যে 1.5 V বিভব পার্থক্য তৈরি হয়। অর্থাৎ 1 C চার্জকে সার্কিটের ভেতর দিয়ে ঘুরিয়ে আনতে সেল 1.5 J কাজ করে (EMF = W/Q)।'],
+  ['<b>(গ)</b> বাল্বটি সরবরাহ লাইনে সংযুক্ত করা হলে তড়িৎ প্রবাহ কত হবে তা নির্ণয় কর। (৩)','I = V / R = 220 ÷ 484 = 0.4545 ≈ <b>0.45 A</b>।<br>(অন্যভাবে: I = P / V = 100 ÷ 220 = 0.45 A, মিলে যায়।)'],
+  ['<b>(ঘ)</b> বাল্বের গায়ে লেখা 220 V–100 W এর সত্যতা যাচাইয়ে একটি পরীক্ষণ প্রস্তাব কর। (৪)','<b>প্রস্তাবিত পরীক্ষা (আমার প্রস্তাব, শিক্ষকের তত্ত্বাবধানে করবে):</b><br>১) বাল্বকে 220 V লাইনে একটি অ্যামিটারের সাথে শ্রেণিতে জুড়ি, আর বাল্বের দুই প্রান্তে ভোল্টমিটার সমান্তরালে জুড়ি।<br>২) চালু করে ভোল্টমিটার থেকে V আর অ্যামিটার থেকে I পড়ি। ধরা যাক V = 220 V, I ≈ 0.45 A।<br>৩) P = V I = 220 × 0.45 ≈ 99 W ≈ 100 W এলে লেখাটি সত্য।<br>৪) রোধও দেখতে পারি: R = V/I = 220 ÷ 0.45 ≈ 489 Ω, তত্ত্বের 484 Ω-এর কাছাকাছি।<br>(ফিলামেন্ট গরম হলে রোধ বাড়ে, তাই ঠান্ডা অবস্থায় রোধ আলাদা হবে, এটা মনে রেখো।)']
+ ]},
+ {h:'✏️ সংক্ষিপ্ত উত্তর প্রশ্ন (বই থেকে)',items:[
+  ['১. দূর-দূরান্তে বিদ্যুৎ সরবরাহ করার জন্য উচ্চ ভোল্টেজ প্রয়োগ করা হয় কেন?','তারের রোধ থাকায় প্রতি সেকেন্ডে I²R শক্তি তাপ হয়ে নষ্ট হয়। P = VI, তাই ভোল্টেজ বাড়ালে একই ক্ষমতা পাঠাতে প্রবাহ I কমে যায়। ভোল্টেজ 10 গুণ হলে প্রবাহ 10 গুণ কমে এবং অপচয় 100 গুণ কমে। তাই দূরে পাঠাতে উচ্চ ভোল্টেজ ব্যবহার করা হয়।'],
+  ['২. ও\'মের সূত্র ব্যাখ্যা কর।','নির্দিষ্ট তাপমাত্রায় কোনো পরিবাহীর দুই প্রান্তের বিভব পার্থক্য V বাড়ালে তার ভেতর দিয়ে প্রবাহ I সমানুপাতে বাড়ে, অর্থাৎ I ∝ V। সমানুপাতিক ধ্রুবকটিকে বলা হয় 1/R। তাই I = V/R। R-কে রোধ বলে, একক ওহম (Ω)। রোধ বেশি হলে প্রবাহ কম হয়, রোধ কম হলে প্রবাহ বেশি হয়।'],
+  ['৩. তাপমাত্রা বাড়লে পরিবাহীর রোধ বাড়ে কেন? ব্যাখ্যা কর।','রোধ হলো ইলেকট্রন প্রবাহের বাধা। তাপমাত্রা বাড়লে পরিবাহীর অণু-পরমাণু বেশি কাঁপাকাঁপি করে। ফলে প্রবাহের সময় ইলেকট্রন অণু-পরমাণুর সাথে বেশি ধাক্কা খায় ও বেশি বাধাপ্রাপ্ত হয়। তাই পরিবাহীর রোধ বা আপেক্ষিক রোধ বেড়ে যায়।'],
+  ['৪. তড়িতের সিস্টেম লস বলতে কী বোঝায়?','প্রতিটি পরিবাহীর কিছু না কিছু রোধ থাকে। বিদ্যুৎ শক্তিকে এক জায়গা থেকে অন্য জায়গায় পাঠানোর সময় তারের রোধ R-এর ভেতর দিয়ে প্রবাহ I গেলে সব সময় I²R তাপ তৈরি হয়ে বিদ্যুৎশক্তির ক্ষয় হয়। এই ক্ষয়কেই সিস্টেম লস বলে।']
+ ]},
+ {h:'💡 বাড়তি অনুশীলন (আমার বানানো, বইয়ের সূত্র দিয়ে)',items:[
+  ['৫. 12 V ব্যাটারিতে 4 Ω রোধ জুড়লে প্রবাহ কত?','I = V / R = 12 ÷ 4 = <b>3 A</b>।'],
+  ['৬. 4 Ω ও 12 Ω সমান্তরালে জুড়লে তুল্য রোধ কত?','1/R = 1/4 + 1/12 = 4/12 ➜ R = <b>3 Ω</b>।'],
+  ['৭. 5 A প্রবাহে 20 Ω রোধে ক্ষমতা কত?','P = I²R = 25 × 20 = <b>500 W</b>।'],
+  ['৮. 1000 W হিটার রোজ 2 ঘণ্টা, 30 দিন চললে কত ইউনিট? 8 টাকা ইউনিটে বিল কত?','ইউনিট = 1000 × (2 × 30) / 1000 = <b>60 ইউনিট</b>। বিল = 60 × 8 = <b>480 টাকা</b>।']
+ ]}
+];
+
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+function frame(){FR++;for(var i=0;i<DRAWS.length;i++)DRAWS[i]();requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>

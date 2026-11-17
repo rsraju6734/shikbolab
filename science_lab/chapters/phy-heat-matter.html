@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>বস্তুর ওপর তাপের প্রভাব (পদার্থবিজ্ঞান অধ্যায় ৬) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+small{color:#567}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/lab-boost.js?v=1"></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#physics">&larr; সব অধ্যায়</a>
+</header><div class="wrap">
+  <div class="crumb">⚛️ পদার্থবিজ্ঞান &rsaquo; ষষ্ঠ অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🔥 বস্তুর ওপর তাপের প্রভাব (Effects of Heat on Matter)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🌡️ ল্যাব ১</a><a href="#lab2">♨️ ল্যাব ২</a><a href="#lab3">🧪 ল্যাব ৩</a><a href="#lab4">📏 ল্যাব ৪</a><a href="#lab5">🚆 ল্যাব ৫</a><a href="#lab6">🧊 ল্যাব ৬</a><a href="#lab7">🧴 ল্যাব ৭</a><a href="#lab8">🎈 ল্যাব ৮</a><a href="#lab9">🫕 ল্যাব ৯</a><a href="#lab10">💧 ল্যাব ১০</a><a href="#lab11">🥄 ল্যাব ১১</a><a href="#lab12">⚗️ ল্যাব ১২</a><a href="#lab13">🏔️ ল্যাব ১৩</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায় শেষে তুমি পারবে:</b> তাপ ও তাপমাত্রার পার্থক্য বলতে; ফারেনহাইট, সেলসিয়াস ও কেলভিন স্কেলের সম্পর্ক বুঝতে; কঠিনের দৈর্ঘ্য, ক্ষেত্রফল ও আয়তন প্রসারণ ব্যাখ্যা করতে; তরলের আপাত ও প্রকৃত প্রসারণ এবং গ্যাসের প্রসারণ বোঝাতে; আপেক্ষিক তাপ, তাপ ধারণক্ষমতা ও ক্যালোরিমিতির হিসাব করতে; গলন, বাষ্পীভবন, সুপ্ততাপ ও বাষ্পায়ন ব্যাখ্যা করতে; আর চাপের সাথে গলনাঙ্ক ও স্ফুটনাঙ্কের সম্পর্ক জানতে।</div>
+    <div class="warn">ℹ️ নোটটি বইয়ের ক্রম মেনে সহজ ভাষায় লেখা। বইয়ের "নমুনা প্রশ্ন"-এর উত্তরমালা নেই, তাই MCQ ও প্রশ্নের উত্তর আমি হিসাব করে ব্যাখ্যাসহ দিয়েছি।</div>
+
+    <h3>৬.১ তাপ ও তাপমাত্রা ⭐⭐⭐</h3>
+    <ul>
+      <li><b>তাপ হলো এক ধরনের শক্তি।</b> আলো, বিদ্যুৎ বা গতিশক্তির মতোই এটি নতুন একটি রূপ। তাপের একক <b>জুল (J)</b>, আরেকটি একক <b>ক্যালরি (cal)</b>।</li>
+      <li>তাপশক্তি আসলে বস্তুর অণু-পরমাণুর সম্মিলিত গতিশক্তি বা কম্পন। কঠিনে অণু নির্দিষ্ট জায়গায় থেকে কাঁপে। বেশি গরম করলে বন্ধন ছাড়িয়ে সরে যায়, তখন তরল। আরো গরম করলে অণু পুরোপুরি মুক্ত হয়ে ছোটাছুটি করে, তখন গ্যাস। (ল্যাব ১)</li>
+      <li><b>1 ক্যালরি:</b> 1 gm পানির তাপমাত্রা 1°C বাড়াতে যে তাপ লাগে। <b>1 cal = 4.2 J</b>।</li>
+      <li>খাবারের "ক্যালরি" আসলে kcal বা 1000 ক্যালরি। এটি এই অধ্যায়ের বিষয় নয়।</li>
+      <li><b>তাপমাত্রা</b> বলতে বোঝায় বস্তুর অণুগুলোর গড় গতিশক্তির একটি পরিমাপ। অর্থাৎ বস্তু ঠান্ডা না গরম তার মাপ।</li>
+      <li><b>তাপ ও তাপমাত্রার পার্থক্য:</b> তাপ একটি শক্তি, একক J বা cal; তাপমাত্রা হলো তাপীয় অবস্থার মাপ, একক °C, K, °F। তাপ বস্তুর ভর ও পদার্থের ওপর নির্ভর করে, তাপমাত্রা তা করে না। তাপ কোন দিকে যাবে তা ঠিক করে দেয় তাপমাত্রা।</li>
+    </ul>
+    <h4>৬.১.১ অভ্যন্তরীণ শক্তি ও তাপের প্রবাহ</h4>
+    <ul>
+      <li>তাপ সবসময় <b>বেশি তাপমাত্রা থেকে কম তাপমাত্রায়</b> যায়, যতক্ষণ না দুটো বস্তুর তাপমাত্রা সমান হয়। এটি নির্ভর করে তাপমাত্রার ওপর, তাপশক্তির পরিমাণের ওপর নয়।</li>
+      <li>উদাহরণ: গরম আলপিনে অল্প তাপশক্তি থাকলেও সেটি এক গ্লাস ঠান্ডা পানিকে তাপ দেয়, কিন্তু পানির বিশাল তাপশক্তি আলপিনকে দেয় না।</li>
+      <li>তুলনা: দুটি পাত্রে পানির পৃষ্ঠের উচ্চতা ভিন্ন হলে নল দিয়ে জুড়লে উঁচু পাত্র থেকে নিচু পাত্রে পানি যায়। পানির পরিমাণ তাপশক্তির সাথে আর পানির উচ্চতা তাপমাত্রার সাথে তুলনীয়। (চিত্র ৬.০১, ল্যাব ২)</li>
+    </ul>
+
+    <h3>৬.২ পদার্থের তাপমাত্রিক ধর্ম ⭐⭐</h3>
+    <ul>
+      <li>তাপমাত্রা মাপতে যে পদার্থের যে ধর্ম পরিবর্তন কাজে লাগানো হয়, সেটিই <b>তাপমাত্রিক ধর্ম</b>। তাপমাত্রিক পদার্থ ও ধর্মের উদাহরণ:
+        <ul>
+          <li>পারদ থার্মোমিটার: পদার্থ পারদ, ধর্ম আয়তন প্রসারণ।</li>
+          <li>অ্যালকোহল থার্মোমিটার: পদার্থ অ্যালকোহল, ধর্ম তরলের প্রসারণ।</li>
+          <li>গ্যাস থার্মোমিটার: স্থির আয়তনে গ্যাসের চাপ।</li>
+          <li>রোধ থার্মোমিটার: ধাতুর রোধ (রেজিস্ট্যান্স)।</li>
+          <li>থার্মোকাপল: দুই ধাতুর সংযোগে ইএমএফ। এটি −200°C থেকে 1000°C মাপতে পারে, তাই শিল্পে বহুল ব্যবহৃত।</li>
+        </ul>
+      </li>
+      <li>জ্বর মাপা থার্মোমিটারের গোড়ার সরু বক্রতার কারণে পারদ একবার উঠে গেলে নিজে নামে না, ঝাঁকিয়ে নামাতে হয়। (ল্যাব ৩)</li>
+      <li><b>সেলসিয়াস স্কেল:</b> 1 atm-এ বরফ গলার তাপমাত্রা 0°C, পানি ফোটার তাপমাত্রা 100°C।</li>
+      <li><b>কেলভিন স্কেল (K):</b> আন্তর্জাতিক একক। T<sub>K</sub> = T<sub>C</sub> + 273.15। সেলসিয়াস ও কেলভিনে পার্থক্যের মান একই, 10°C বাড়া আর 10 K বাড়া একই কথা।</li>
+      <li><b>পরম শূন্য (Absolute Zero):</b> সবচেয়ে কম সম্ভাব্য তাপমাত্রা, <b>−273.15°C = 0 K</b>। এর কাছাকাছি যাওয়া যায়, কিন্তু পৌঁছানো যায় না।</li>
+      <li><b>ত্রৈধ বিন্দু (Triple Point):</b> যে তাপমাত্রা ও চাপে (0.0060373 atm) বরফ, পানি ও জলীয় বাষ্প একসাথে থাকে। এর মান <b>0.01°C = 273.16 K</b>।</li>
+      <li><b>ফারেনহাইট স্কেল:</b> বরফ গলনাঙ্ক 32°F, পানির ফুটনাঙ্ক 212°F।</li>
+    </ul>
+    <h4>৬.২.১ ভিন্ন স্কেলের মাঝে সম্পর্ক (ল্যাব ৪)</h4>
+    <p class="eq"><b>(T<sub>C</sub> − 0)/100 = (T<sub>K</sub> − 273.15)/100 = (T<sub>F</sub> − 32)/180</b></p>
+    <p class="eq"><b>T<sub>C</sub> = T<sub>K</sub> − 273.15 &nbsp;&nbsp; T<sub>C</sub> = (5/9)(T<sub>F</sub> − 32)</b></p>
+    <ul>
+      <li><b>উদাহরণ ১:</b> কোন তাপমাত্রায় সেলসিয়াস ও ফারেনহাইট সমান? T<sub>C</sub> = T<sub>F</sub> ধরলে 9T = 5T − 160, তাই T = <b>−40°</b>।</li>
+      <li><b>উদাহরণ ২:</b> কোন তাপমাত্রায় কেলভিন ও ফারেনহাইট সমান? 4T<sub>K</sub> = 9 × 273.15 − 5 × 32, তাই <b>T<sub>K</sub> = 574.59 K</b>।</li>
+      <li><b>উদাহরণ ৩:</b> সুস্থ দেহের 98.4°F = (5/9)(98.4 − 32) = <b>36.89°C</b> (প্রায় 37°C)।</li>
+      <li>সেলসিয়াস ও কেলভিন কখনোই সমান হয় না।</li>
+    </ul>
+
+    <h3>৬.৩ পদার্থের তাপীয় প্রসারণ ⭐⭐⭐</h3>
+    <p>তাপ দিলে প্রায় সব পদার্থের আয়তন একটু বাড়ে। অণুগুলোকে স্প্রিংয়ে যুক্ত ধরলে, তাপে অণুর কাঁপুনি বাড়ে। স্প্রিং প্রসারিত করতে কম বল লাগে, সংকুচিত করতে বেশি, তাই কাঁপার সময় অণু কাছে আসে কম, দূরে যায় বেশি। ফলে গড় দূরত্ব বেড়ে যায়, পুরো বস্তু প্রসারিত হয়। (চিত্র ৬.০৩)</p>
+    <h4>৬.৩.১ কঠিন পদার্থের প্রসারণ</h4>
+    <ul>
+      <li>দৈর্ঘ্য, প্রস্থ ও উচ্চতা তিন দিকেই সমান প্রসারণ হয়। এর জন্য তিনটি সহগ:</li>
+    </ul>
+    <p class="eq"><b>দৈর্ঘ্য: α = (L₂ − L₁)/[L₁(T₂ − T₁)] ⇒ L₂ = L₁ + αL₁(T₂ − T₁)</b></p>
+    <p class="eq"><b>ক্ষেত্রফল: β = (A₂ − A₁)/[A₁(T₂ − T₁)] ⇒ A₂ = A₁ + βA₁(T₂ − T₁)</b></p>
+    <p class="eq"><b>আয়তন: γ = (V₂ − V₁)/[V₁(T₂ − T₁)] ⇒ V₂ = V₁ + γV₁(T₂ − T₁)</b></p>
+    <ul>
+      <li>তিনটি সহগের একক K⁻¹ (বা /°C), মাত্রা T⁻¹।</li>
+      <li>A = L² নিয়ে বিস্তার করে α² বাদ দিলে <b>β = 2α</b>। V = L³ নিয়ে α², α³ বাদ দিলে <b>γ = 3α</b>। (α খুব ছোট, তাই এগুলো বাদ দিলে ক্ষতি নেই।) (ল্যাব ৫, ৬)</li>
+      <li><b>উদাহরণ ১:</b> 10 m দণ্ড 20°C থেকে 120°C-এ 10.0167 m হলে α = 0.0167 ÷ (10 × 100) = <b>16.7 × 10⁻⁶ °C⁻¹</b>।</li>
+      <li><b>উদাহরণ ২:</b> সোনার ঘনত্ব 19.30 gm/cc, α = 14 × 10⁻⁶ /°C, 100°C বাড়লে V′ = V(1 + 3α × 100) = V(1 + 4.2 × 10⁻³)। ঘনত্ব ρ′ = 0.9958ρ = <b>19.22 gm/cc</b>। 1000°C আরো বাড়ালে সোনার গলনাঙ্ক 1064°C পেরোবে, তাই সোনা গলে যাবে।</li>
+      <li><b>উদাহরণ ৩:</b> গরম পানি ঢাললে কাচের গ্লাস ফাটে, কারণ কোনো অংশের তাপমাত্রা হঠাৎ বেড়ে সেখানে প্রসারণ বেশি হয়।</li>
+      <li><b>বাস্তব জীবনে:</b> রেললাইনের জোড়ায় ফাঁক রাখা হয়, নইলে গরমে লাইন বেঁকে যেত। দাঁতের ক্যাভিটিতে এমন পদার্থ ভরা হয় যার প্রসারণ সহগ দাঁতের সমান, নইলে গরম/ঠান্ডা খাবারে ভরাট খুলে যেত। কৌটার মুখ আটকে গেলে গরম পানি ঢাললে খুলে যায়।</li>
+    </ul>
+    <h4>৬.৩.২ তরল পদার্থের প্রসারণ (ল্যাব ৭)</h4>
+    <ul>
+      <li>তরলের দৈর্ঘ্য বা ক্ষেত্রফল নেই, শুধু <b>আয়তন প্রসারণ</b>। তরল পাত্রে রাখতে হয় বলে পাত্রও প্রসারিত হয়।</li>
+      <li><b>আপাত প্রসারণ:</b> পাত্রের প্রসারণ হিসাবে না ধরে তরলের যতটুকু প্রসারণ দেখা যায়। <b>প্রকৃত প্রসারণ:</b> পাত্রের প্রসারণ যোগ করে পাওয়া সত্যিকার প্রসারণ।</li>
+      <li>সরু নলযুক্ত কাচের বাল্বে A দাগ পর্যন্ত তরল ভরে গরম করলে প্রথমে স্তর B-তে নামে (পাত্র আগে প্রসারিত), তারপর তরলের প্রসারণ বেশি বলে C পর্যন্ত ওঠে। <b>V<sub>a</sub> = V<sub>L</sub> − V<sub>B</sub></b>।</li>
+      <li>থার্মোমিটারে পারদ বাল্ব থেকে সরু নলে ওঠে, এটাই তরলের প্রসারণের প্রয়োগ।</li>
+    </ul>
+    <h4>৬.৩.৩ গ্যাসের প্রসারণ (ল্যাব ৮)</h4>
+    <ul>
+      <li>গ্যাসের নির্দিষ্ট আকার ও আয়তন নেই, তাই চাপ স্থির রেখে প্রসারণ মাপতে হয় (সিলিন্ডারের পিস্টনের ওপর স্থির ওজন রেখে)।</li>
+      <li><b>আদর্শ গ্যাস সূত্র: PV = nRT</b> (R = 8.314 J K⁻¹ mol⁻¹, T কেলভিনে)।</li>
+      <li>স্থির চাপে PV₁ = nRT₁, PV₂ = nRT₂ থেকে <b>γ<sub>P</sub> = (V₂ − V₁)/[V₁(T₂ − T₁)] = 1/T₁</b>।</li>
+      <li>গ্যাসের প্রসারণ সহগ ধ্রুব সংখ্যা নয়। তাপমাত্রা যত কম, প্রসারণ তত বেশি। এটি কঠিনের চেয়ে অনেক বেশি।</li>
+      <li><b>নিজে করো:</b> দুটি বেলুনের একটিতে পানি, অন্যটিতে সমান আয়তনের বাতাস ভরে গরম পানিতে ডুবালে পানিভরা বেলুনের আকার প্রায় একই থাকে, কিন্তু বাতাসভরা বেলুন অনেক ফুলে ওঠে।</li>
+    </ul>
+
+    <h3>৬.৪ অবস্থার পরিবর্তনে তাপের প্রভাব ⭐⭐⭐</h3>
+    <ul>
+      <li><b>গলন:</b> কঠিন গরম করতে থাকলে নির্দিষ্ট তাপমাত্রায় (<b>গলনাঙ্ক</b>) পৌঁছে তরল হতে শুরু করে। গলনের সময় তাপ দিলেও তাপমাত্রা বাড়ে না। (লেখচিত্র ৬.০৮, ল্যাব ৯)</li>
+      <li>এই সময় তাপ আন্তঃআণবিক বন্ধন শিথিল করতে খরচ হয়। পুরো কঠিনকে গলনাঙ্কে তরল করতে যে তাপ লাগে, তাকে <b>গলনের সুপ্ততাপ (L)</b> বলে।</li>
+      <li><b>বাষ্পীভবন:</b> তরলকে গরম করলে নির্দিষ্ট তাপমাত্রায় (<b>স্ফুটনাঙ্ক</b>) ফুটতে শুরু করে। তখনও তাপমাত্রা বাড়ে না। তরলকে গ্যাস করতে যে তাপ লাগে, তাকে <b>বাষ্পীভবনের সুপ্ততাপ</b> বলে। স্ফুটনাঙ্ক চাপের ওপর নির্ভর করে।</li>
+      <li>অনেক তাপে গ্যাসের অণু আয়নিত হয়ে <b>প্লাজমা</b> হয়, সেটি অন্য আলোচনা।</li>
+      <li><b>ঘনীভবন:</b> গ্যাস থেকে তরল। <b>কঠিনীভবন:</b> তরল থেকে কঠিন। তাপ সরিয়ে নিলে এগুলো ঘটে। বাষ্প পানিতে ঘনীভূত হলে সুপ্ততাপ ফিরে আসে। ঘূর্ণিঝড়ের সময় সমুদ্রের জলীয় বাষ্প জলকণা হলে বাষ্পীভবনের সুপ্ততাপ শক্তি হিসেবে বের হয়, আর এটাই ঝড়ের প্রচণ্ড শক্তি।</li>
+      <li>কখনো কঠিন থেকে সরাসরি গ্যাসেও যাওয়া যায়।</li>
+      <li><b>সুপ্ততাপের একটি অনুভব:</b> ঘামলে বাষ্পীভবনের সুপ্ততাপ শরীর থেকে চলে যায়, তাই শরীর শীতল হয়।</li>
+    </ul>
+    <h4>বাষ্পায়ন (Evaporation) (ল্যাব ১০)</h4>
+    <ul>
+      <li>তরল বা কঠিনের পৃষ্ঠ থেকে কিছু অণু যথেষ্ট শক্তি পেয়ে বেরিয়ে যায়। এটি <b>যেকোনো তাপমাত্রায়</b> ঘটে, তাই স্ফুটনাঙ্কে যেতে হয় না। ভেজা জিনিস এমনিতেই শুকায়।</li>
+      <li>বাষ্পায়ন নির্ভর করে: <b>বাতাসের প্রবাহ</b> (বেশি হলে বেশি), <b>তরলের উপরিভাগের ক্ষেত্রফল</b> (বেশি হলে বেশি), <b>তরলের প্রকৃতি</b> (স্ফুটনাঙ্ক কম হলে বেশি, উদ্বায়ী তরলে সবচেয়ে বেশি), <b>বাতাসের চাপ</b> (কম হলে বেশি, শূন্যস্থানে সবচেয়ে বেশি), <b>উষ্ণতা</b> (বেশি হলে বেশি), <b>বাতাসের শুষ্কতা</b> (বেশি শুষ্ক হলে বেশি)।</li>
+      <li>বর্ষায় ভেজা কাপড় শুকায় না কারণ বাতাসে আর্দ্রতা বেশি।</li>
+    </ul>
+
+    <h3>৬.৫ আপেক্ষিক তাপ ⭐⭐⭐</h3>
+    <ul>
+      <li>একই তাপে সব বস্তু একই হারে গরম হয় না। পানি ধাতুর চেয়ে ধীরে গরম হয়, কারণ পানির আপেক্ষিক তাপ বেশি।</li>
+      <li><b>আপেক্ষিক তাপ (s):</b> 1 kg পদার্থের তাপমাত্রা 1 K বাড়াতে যে তাপ লাগে। m ভরের পদার্থের তাপমাত্রা T₁ থেকে T₂ করতে Q তাপ লাগলে:</li>
+    </ul>
+    <p class="eq"><b>s = Q ÷ [m(T₂ − T₁)]</b> &nbsp;&nbsp; একক: J kg⁻¹ K⁻¹</p>
+    <ul>
+      <li><b>তাপ ধারণক্ষমতা (C):</b> বস্তুর তাপমাত্রা 1 K বাড়াতে যে তাপ লাগে। <b>C = ms</b>।</li>
+      <li><b>উদাহরণ:</b> 10 kg সোনার C = 10 × 230 = <b>2300 J/K</b>। 10 kg পানির C = 10 × 4200 = <b>42,000 J/K</b>, প্রায় 20 গুণ বেশি। তাই ধাতুকে সহজে গরম করা যায়, পানিকে নয়। (ল্যাব ১১)</li>
+    </ul>
+
+    <h3>৬.৬ ক্যালোরিমিতির মূলনীতি ⭐⭐⭐</h3>
+    <ul>
+      <li><b>নিয়ম ১:</b> বেশি তাপমাত্রার বস্তু কম তাপমাত্রার বস্তুকে তাপ দিতে থাকে, যতক্ষণ না দুটোর তাপমাত্রা সমান হয়।</li>
+      <li><b>নিয়ম ২:</b> উত্তপ্ত বস্তু যতটুকু তাপ ছাড়ে, শীতল বস্তু ঠিক ততটুকুই গ্রহণ করে (কোনো তাপ নষ্ট হয় না ধরে নিয়ে)।</li>
+      <li><b>উদাহরণ ১ (বরফ ও পানি):</b> 30°C-এর 1 L পানিতে 100 gm বরফ ছাড়লে, m₁L + m₁sT = m₂s(30 − T) থেকে T = (30 × 1 × 4.2 × 10³ − 0.1 × 334 × 10³) ÷ (1.1 × 4.2 × 10³) = <b>20°C</b>।</li>
+      <li><b>উদাহরণ ২ (গরম ও ঠান্ডা পানি):</b> 75°C-এর 2 L-এর সাথে 20°C-এর 1 L মেশালে T = (75 × 2 + 20 × 1) ÷ 3 = <b>56.6°C</b>।</li>
+      <li><b>উদাহরণ ৩ (লোহা ও পানি):</b> 120°C-এর 10 gm লোহা (s = 0.45 × 10³) 30°C-এর 1 kg পানিতে ছাড়লে T = <b>30.1°C</b>। (ল্যাব ১২)</li>
+    </ul>
+
+    <h3>৬.৭ গলনাঙ্ক ও স্ফুটনাঙ্কের ওপর চাপের প্রভাব ⭐⭐</h3>
+    <ul>
+      <li><b>চাপ দিলে বরফের গলনাঙ্ক কমে।</b> তাই চাপ দিয়ে দুই টুকরো বরফকে এক টুকরো করা যায়। যেখানে চাপ পড়ে সেখানকার বরফ গলে যায়, চাপ সরে গেলে গলনাঙ্ক ফিরে পায় ও গলা পানি আবার বরফ হয়।</li>
+      <li>বরফের খণ্ডে সূক্ষ্ম তার ঝুলিয়ে দুই পাশে ওজন দিলে তার বরফ কেটে নিচে নেমে যায়, তবু বরফ অখণ্ড থাকে। (চিত্র ৬.০৯, ল্যাব ১৩)</li>
+      <li><b>চাপ কম হলে স্ফুটনাঙ্ক কমে, চাপ বেশি হলে স্ফুটনাঙ্ক বাড়ে।</b> পর্বতারোহণে উঁচুতে বায়ুচাপ কম, তাই পানি কম তাপমাত্রায় ফোটে এবং রান্না হতে সময় লাগে।</li>
+      <li><b>প্রেশার কুকার</b> নিশ্ছিদ্র পাত্র। বাষ্প আটকে চাপ বাড়ে, ফুটনাঙ্ক বেড়ে যায়, তাই বেশি তাপমাত্রায় তাড়াতাড়ি রান্না হয়।</li>
+      <li>বইয়ে বলা আছে, গ্যাসকে চাপ দিলে তার রূপান্তরের তাপমাত্রা (তরল হওয়ার তাপমাত্রা) বাড়ে, তাই খুব ঠান্ডা না করেই চাপ বাড়িয়ে গ্যাসকে তরল করা যায়। তখন অনেক তাপ তৈরি হয়, সেটি সরিয়ে নিতে হয়।</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🌡️ ল্যাব 1: তাপ আসলে অণুর কাঁপুনি</h2>
+    <div class="say">👉 তাপমাত্রা বাড়াও-কমাও। অণুগুলো কীভাবে নড়ছে দেখো। কঠিনে জায়গায় থেকে কাঁপে, তরলে গড়াগড়ি খায়, গ্যাসে মুক্ত হয়ে ছোটাছুটি করে।</div>
+    <div class="ctl"><label>তাপমাত্রা: <span id="h1kv"></span> °C</label><input type="range" id="h1k" min="-30" max="150" step="2" value="25"></div>
+    <div class="row"><div><canvas id="h1c" class="w" width="380" height="270"></canvas></div><div class="grow"><div class="tlinfo" id="h1t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="h1q"></div><div class="cls" id="h1o"></div><div class="fb" id="h1fb"></div><small id="h1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>♨️ ল্যাব 2: তাপ কোন দিকে যায়?</h2>
+    <div class="say">👉 গরম আর ঠান্ডা বস্তু ছুঁয়ে দাও। তাপ সব সময় বেশি তাপমাত্রা থেকে কম তাপমাত্রার দিকে যায়, যতক্ষণ না দুটোর তাপমাত্রা সমান হয়। ডানে পানির উচ্চতার সাথে তুলনা দেখো।</div>
+    <div class="ctl"><label>গরম বস্তু: <span id="f2av"></span> °C</label><input type="range" id="f2a" min="50" max="100" step="1" value="90"><label>ঠান্ডা বস্তু: <span id="f2bv"></span> °C</label><input type="range" id="f2b" min="0" max="40" step="1" value="10"></div>
+    <div class="btnrow"><button class="btn" id="f2go">🤝 ছুঁয়ে দাও</button><button class="btn alt" id="f2rs">↺ আবার</button></div>
+    <div class="row"><div><canvas id="f2c" class="w" width="380" height="270"></canvas></div><div class="grow"><div class="tlinfo" id="f2t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="f2q"></div><div class="cls" id="f2o"></div><div class="fb" id="f2fb"></div><small id="f2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🧪 ল্যাব 3: থার্মোমিটার কীভাবে কাজ করে</h2>
+    <div class="say">👉 তরল বেছে নাও আর তাপমাত্রা বাড়াও। তাপে তরল প্রসারিত হয়ে সরু নলে উঠে যায়। এই প্রসারণই তাপমাত্রিক ধর্ম।</div>
+<div class="pills" id="m3p"><button data-k="0" class="on">🪞 পারদ</button><button data-k="1">🍷 অ্যালকোহল</button></div>
+    <div class="ctl"><label>তাপমাত্রা: <span id="m3kv"></span> °C</label><input type="range" id="m3k" min="-20" max="100" step="1" value="25"></div>
+    <div class="row"><div><canvas id="m3c" class="w" width="380" height="280"></canvas></div><div class="grow"><div class="tlinfo" id="m3t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="m3q"></div><div class="cls" id="m3o"></div><div class="fb" id="m3fb"></div><small id="m3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>📏 ল্যাব 4: সেলসিয়াস, কেলভিন ও ফারেনহাইট</h2>
+    <div class="say">👉 তিনটি স্কেল পাশাপাশি দেখো। একই তাপমাত্রা তিন স্কেলে আলাদা সংখ্যা দেখায়। পরম শূন্যের নিচে আর যাওয়া যায় না।</div>
+<div class="pills" id="s4p"><button data-k="0">🧊 বরফ গলে</button><button data-k="1">💧 পানি ফোটে</button><button data-k="2">🧍 সুস্থ দেহ</button><button data-k="3">🥶 −৪০ (সমান!)</button><button data-k="4">❄️ পরম শূন্য</button></div>
+    <div class="ctl"><label>সেলসিয়াস: <span id="s4kv"></span> °C</label><input type="range" id="s4k" min="-273" max="150" step="1" value="25"></div>
+    <div class="row"><div><canvas id="s4c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="s4t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="s4q"></div><div class="cls" id="s4o"></div><div class="fb" id="s4fb"></div><small id="s4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🚆 ল্যাব 5: রেললাইনের ফাঁক কেন রাখা হয়?</h2>
+    <div class="say">👉 ধাতু আর তাপমাত্রা বেছে নাও। গরমে রেললাইন লম্বা হয়। ফাঁক না থাকলে লাইন বেঁকে যায়। (আঁকায় প্রসারণ বাড়িয়ে দেখানো হয়েছে।)</div>
+<div class="pills" id="l5p"><button data-k="0" class="on">🔩 লোহা</button><button data-k="1">🟠 তামা</button><button data-k="2">⚪ অ্যালুমিনিয়াম</button><button data-k="3">🥇 সোনা</button></div>
+    <div class="ctl"><label>তাপমাত্রা বৃদ্ধি ΔT: <span id="l5kv"></span> °C</label><input type="range" id="l5k" min="0" max="100" step="1" value="40"><label>দুই লাইনের ফাঁক: <span id="l5gv"></span> mm</label><input type="range" id="l5g" min="0" max="20" step="1" value="8"></div>
+    <div class="row"><div><canvas id="l5c" class="w" width="380" height="270"></canvas></div><div class="grow"><div class="tlinfo" id="l5t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="l5q"></div><div class="cls" id="l5o"></div><div class="fb" id="l5fb"></div><small id="l5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🧊 ল্যাব 6: β = 2α আর γ = 3α</h2>
+    <div class="say">👉 দৈর্ঘ্য প্রসারণ সহগ α বেছে নাও আর গরম করো। দৈর্ঘ্য, ক্ষেত্রফল, আয়তন তিনটিই বাড়ে, কিন্তু আয়তন সবচেয়ে বেশি। (আঁকায় অনেক বাড়িয়ে দেখানো।)</div>
+    <div class="ctl"><label>তাপমাত্রা বৃদ্ধি ΔT: <span id="a6kv"></span> °C</label><input type="range" id="a6k" min="0" max="1000" step="10" value="100"><label>α: <span id="a6av"></span> × ১০⁻⁶ /°C</label><input type="range" id="a6a" min="5" max="30" step="1" value="14"></div>
+    <div class="row"><div><canvas id="a6c" class="w" width="380" height="270"></canvas></div><div class="grow"><div class="tlinfo" id="a6t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="a6q"></div><div class="cls" id="a6o"></div><div class="fb" id="a6fb"></div><small id="a6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>🧴 ল্যাব 7: প্রকৃত ও আপাত প্রসারণ</h2>
+    <div class="say">👉 তরলভরা বাল্ব গরম করো। আগে বাল্ব নিজে প্রসারিত হয় বলে তরল একটু নামে (A থেকে B), তারপর তরলের প্রসারণ বেশি হওয়ায় উঠে যায় (C পর্যন্ত)।</div>
+    <div class="ctl"><label>তাপ: <span id="r7kv"></span> %</label><input type="range" id="r7k" min="0" max="100" step="1" value="0"></div>
+    <div class="btnrow"><button class="btn" id="r7go">🔥 গরম করো</button><button class="btn alt" id="r7rs">↺ আবার</button></div>
+    <div class="row"><div><canvas id="r7c" class="w" width="380" height="290"></canvas></div><div class="grow"><div class="tlinfo" id="r7t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="r7q"></div><div class="cls" id="r7o"></div><div class="fb" id="r7fb"></div><small id="r7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>🎈 ল্যাব 8: গ্যাস সবচেয়ে বেশি প্রসারিত হয়</h2>
+    <div class="say">👉 স্থির চাপে গ্যাস গরম করো। পিস্টন ওপরে ওঠে। গ্যাসের প্রসারণ সহগ γp = 1/T, যা কঠিনের চেয়ে প্রায় ৩০০ গুণ বেশি।</div>
+    <div class="ctl"><label>তাপমাত্রা T: <span id="g8kv"></span> K</label><input type="range" id="g8k" min="100" max="600" step="10" value="273"></div>
+    <div class="row"><div><canvas id="g8c" class="w" width="380" height="290"></canvas></div><div class="grow"><div class="tlinfo" id="g8t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="g8q"></div><div class="cls" id="g8o"></div><div class="fb" id="g8fb"></div><small id="g8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>🫕 ল্যাব 9: তাপ দিলেও তাপমাত্রা বাড়ে না কেন?</h2>
+    <div class="say">👉 ১ kg বরফ −২০°C থেকে গরম করতে থাকো। গলন ও ফোটার সময় তাপমাত্রা থেমে থাকে, কারণ তাপ তখন অণুর বন্ধন ভাঙতে খরচ হয়। এটাই গুপ্ততাপ।</div>
+    <div class="ctl"><label>মোট দেওয়া তাপ: <span id="c9kv"></span> %</label><input type="range" id="c9k" min="0" max="100" step="0.2" value="0"></div>
+    <div class="btnrow"><button class="btn" id="c9go">▶ চালাও</button><button class="btn alt" id="c9rs">↺ আবার</button></div>
+    <div class="row"><div><canvas id="c9c" class="w" width="380" height="300"></canvas></div><div class="grow"><div class="tlinfo" id="c9t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="c9q"></div><div class="cls" id="c9o"></div><div class="fb" id="c9fb"></div><small id="c9sc"></small>
+  </section>
+
+  <section class="panel" id="lab10">
+    <h2>💧 ল্যাব 10: বাষ্পায়ন কিসের ওপর নির্ভর করে?</h2>
+    <div class="say">👉 বাতাস, তলের ক্ষেত্রফল, তাপমাত্রা আর বাতাসের আর্দ্রতা বদলাও। যেকোনো তাপমাত্রায় তরলের পৃষ্ঠ থেকে অণু বেরিয়ে যায়, একে বাষ্পায়ন বলে।</div>
+    <div class="ctl"><label>বাতাসের প্রবাহ: <span id="e10wv"></span> %</label><input type="range" id="e10w" min="0" max="100" step="1" value="10"><label>তলের ক্ষেত্রফল: <span id="e10av"></span> %</label><input type="range" id="e10a" min="30" max="100" step="1" value="50"><label>তাপমাত্রা: <span id="e10kv"></span> °C</label><input type="range" id="e10k" min="10" max="50" step="1" value="25"><label>বাতাসের আর্দ্রতা: <span id="e10hv"></span> %</label><input type="range" id="e10h" min="10" max="95" step="1" value="60"></div>
+    <div class="row"><div><canvas id="e10c" class="w" width="380" height="270"></canvas></div><div class="grow"><div class="tlinfo" id="e10t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="e10q"></div><div class="cls" id="e10o"></div><div class="fb" id="e10fb"></div><small id="e10sc"></small>
+  </section>
+
+  <section class="panel" id="lab11">
+    <h2>🥄 ল্যাব 11: কে আগে গরম হবে?</h2>
+    <div class="say">👉 পদার্থ বেছে নাও। একই তাপ দিলে পানি অনেক ধীরে গরম হয়, কারণ পানির আপেক্ষিক তাপ সবচেয়ে বেশি। একই ভরের দুটি বস্তুর দৌড় দেখো।</div>
+<div class="pills" id="q11p"><button data-k="0" class="on">🔩 লোহা</button><button data-k="1">🟠 তামা</button><button data-k="2">⚪ অ্যালুমিনিয়াম</button><button data-k="3">🥇 সোনা</button></div>
+    <div class="ctl"><label>ভর m: <span id="q11mv"></span> kg</label><input type="range" id="q11m" min="1" max="10" step="1" value="2"><label>তাপমাত্রা বাড়াতে চাই: <span id="q11dv"></span> °C</label><input type="range" id="q11d" min="10" max="80" step="5" value="40"></div>
+    <div class="btnrow"><button class="btn" id="q11go">▶ হিটার চালাও</button><button class="btn alt" id="q11rs">↺ আবার</button></div>
+    <div class="row"><div><canvas id="q11c" class="w" width="380" height="290"></canvas></div><div class="grow"><div class="tlinfo" id="q11t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="q11q"></div><div class="cls" id="q11o"></div><div class="fb" id="q11fb"></div><small id="q11sc"></small>
+  </section>
+
+  <section class="panel" id="lab12">
+    <h2>⚗️ ল্যাব 12: মেশালে শেষ তাপমাত্রা কত?</h2>
+    <div class="say">👉 তিনটি পরীক্ষা বেছে নাও। গরম বস্তু যতটুকু তাপ ছাড়ে, ঠান্ডা বস্তু ঠিক ততটুকুই নেয়, তাই শেষ তাপমাত্রা হিসাব করা যায়। বইয়ের উদাহরণগুলো এখানে আছে।</div>
+<div class="pills" id="k12s"><button data-k="0" class="on">💧 গরম + ঠান্ডা পানি</button><button data-k="1">🧊 বরফ + পানি</button><button data-k="2">🔩 লোহা + পানি</button></div>
+    <div class="ctl"><label>প্রথম বস্তুর ভর: <span id="k12m1v"></span> kg</label><input type="range" id="k12m1" min="1" max="50" step="1" value="20"><label>প্রথম বস্তুর তাপমাত্রা: <span id="k12t1v"></span> °C</label><input type="range" id="k12t1" min="0" max="120" step="1" value="75"><label>পানির ভর: <span id="k12m2v"></span> kg</label><input type="range" id="k12m2" min="1" max="30" step="1" value="10"><label>পানির তাপমাত্রা: <span id="k12t2v"></span> °C</label><input type="range" id="k12t2" min="0" max="60" step="1" value="20"></div>
+    <div class="btnrow"><button class="btn" id="k12go">🥣 মেশাও</button><button class="btn alt" id="k12rs">↺ আবার</button></div>
+    <div class="row"><div><canvas id="k12c" class="w" width="380" height="280"></canvas></div><div class="grow"><div class="tlinfo" id="k12t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="k12q"></div><div class="cls" id="k12o"></div><div class="fb" id="k12fb"></div><small id="k12sc"></small>
+  </section>
+
+  <section class="panel" id="lab13">
+    <h2>🏔️ ল্যাব 13: চাপ দিলে গলনাঙ্ক ও ফুটনাঙ্ক বদলায়</h2>
+    <div class="say">👉 দৃশ্য বেছে নাও। চাপ দিলে বরফের গলনাঙ্ক কমে, তাই তার বরফ কেটে নেমে যায়। আবার চাপ বাড়ালে পানির ফুটনাঙ্ক বাড়ে, প্রেশার কুকারে তাড়াতাড়ি রান্না হয়।</div>
+<div class="pills" id="p13s"><button data-k="0" class="on">🧊 বরফ কাটা তার</button><button data-k="1">🍲 ফুটনাঙ্ক ও চাপ</button></div>
+    <div class="ctl"><label>তারের দুই ঝুলন্ত ওজন: <span id="p13wv"></span> kg</label><input type="range" id="p13w" min="0" max="10" step="1" value="5"><label>বাইরের চাপ: <span id="p13pv"></span> atm</label><input type="range" id="p13p" min="0.3" max="2.5" step="0.1" value="1"></div>
+    <div class="row"><div><canvas id="p13c" class="w" width="380" height="280"></canvas></div><div class="grow"><div class="tlinfo" id="p13t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="p13q"></div><div class="cls" id="p13o"></div><div class="fb" id="p13fb"></div><small id="p13sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। বইয়ের নমুনা প্রশ্নের উত্তরমালা নেই, তাই উত্তরগুলো আমার হিসাব করা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; বস্তুর ওপর তাপের প্রভাব (পদার্থবিজ্ঞান অধ্যায় ৬)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+function ctxOf(id){return $(id).getContext('2d');}
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+function opts(correct,wrongs){var seen={},a=[{t:correct,ok:1}];seen[correct]=1;wrongs.forEach(function(w){if(!seen[w]){seen[w]=1;a.push({t:w,ok:0});}});return shuffle(a);}
+function arrow(x,x1,y1,x2,y2,col,lw){var a=Math.atan2(y2-y1,x2-x1);x.strokeStyle=col;x.fillStyle=col;x.lineWidth=lw||3;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-11*Math.cos(a-.4),y2-11*Math.sin(a-.4));x.lineTo(x2-11*Math.cos(a+.4),y2-11*Math.sin(a+.4));x.closePath();x.fill();}
+function person(x,px,py,col){circ(x,0,px,py-22,6,col,null);x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(px,py-16);x.lineTo(px,py-4);x.moveTo(px-6,py-11);x.lineTo(px+6,py-11);x.moveTo(px,py-4);x.lineTo(px-5,py+6);x.moveTo(px,py-4);x.lineTo(px+5,py+6);x.stroke();}
+/* ---------- সাধারণ সহায়ক ---------- */
+function pills(id,fn){$(id).onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var all=$(id).querySelectorAll('button'),i;for(i=0;i<all.length;i++)all[i].classList.toggle('on',all[i]===b);fn(+b.getAttribute('data-k'));};}
+function sci(x){if(!(x>0))return bn(0);var e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);if(+m.toFixed(2)>=10){m/=10;e++;}return bn(parseFloat(m.toFixed(2)))+' × ১০'+(e<0?'⁻':'')+sup(Math.abs(e));}
+function brow(label,val,max,col,txtv){return '<div class="bar"><div class="bl">'+label+'</div><div class="bt"><div class="bf" style="width:'+clamp(val/max*100,1,100)+'%;background:'+col+'"></div></div><b style="min-width:80px;font-size:14px;color:#1f3a5f">'+(txtv||'')+'</b></div>';}
+function on(ids,fn){ids.forEach(function(i){$(i).oninput=fn;$(i).onchange=fn;});}
+var G=9.8;
+function box(x,px,py,w,h,fill,stroke){x.fillStyle=fill;x.fillRect(px,py,w,h);if(stroke){x.strokeStyle=stroke;x.lineWidth=2;x.strokeRect(px,py,w,h);}}
+function wheel(x,px,py,r){circ(x,0,px,py,r,'#333',null);circ(x,0,px,py,r*.4,'#bbb',null);}
+
+
+/* ---------- সুন্দর আঁকার সহায়ক (নতুন) ---------- */
+function shade(c,a){var h=hx(c),o='#';for(var i=0;i<3;i++){var v=clamp(Math.round(h[i]+a),0,255).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function grad(x,px,py,w,h,c1,c2){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1);g.addColorStop(1,c2);x.fillStyle=g;x.fillRect(px,py,w,h);}
+function ball(x,px,py,r,col){var g=x.createRadialGradient(px-r*.35,py-r*.35,r*.08,px,py,r);g.addColorStop(0,'#ffffff');g.addColorStop(.3,col);g.addColorStop(1,shade(col,-55));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();}
+function rr(x,px,py,w,h,r){r=Math.min(r,w/2,h/2);x.beginPath();x.moveTo(px+r,py);x.lineTo(px+w-r,py);x.quadraticCurveTo(px+w,py,px+w,py+r);x.lineTo(px+w,py+h-r);x.quadraticCurveTo(px+w,py+h,px+w-r,py+h);x.lineTo(px+r,py+h);x.quadraticCurveTo(px,py+h,px,py+h-r);x.lineTo(px,py+r);x.quadraticCurveTo(px,py,px+r,py);x.closePath();}
+function tag(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.lineJoin='round';x.lineWidth=4;x.strokeStyle='rgba(255,255,255,.92)';x.strokeText(s,px,py);x.fillStyle=col||NAVY;x.fillText(s,px,py);}
+function wave(x,px,py,w,h,t,c1,c2,amp){amp=amp===undefined?2.5:amp;var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1||'rgba(86,176,240,.88)');g.addColorStop(1,c2||'rgba(22,84,172,.96)');x.fillStyle=g;x.beginPath();x.moveTo(px,py+h);x.lineTo(px,py);var i;for(i=0;i<=w;i+=4)x.lineTo(px+i,py+Math.sin(i/13+t*.05)*amp);x.lineTo(px+w,py+h);x.closePath();x.fill();x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=1.6;x.beginPath();for(i=0;i<=w;i+=4){var yy=py+Math.sin(i/13+t*.05)*amp;if(i===0)x.moveTo(px,yy);else x.lineTo(px+i,yy);}x.stroke();}
+function bubs(x,px,py,w,h,n,t){for(var i=0;i<n;i++){var u=((t*.004*(0.6+rp(i,0,.8))+rp(i+50,0,1))%1),bx=px+rp(i,6,w-6)+Math.sin(t*.04+i)*3,by=py+h-u*h,r=1.5+rp(i+9,0,2.2);if(by<py+4)continue;x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=1.2;x.beginPath();x.arc(bx,by,r,0,7);x.stroke();}}
+function glassBox(x,px,py,w,h){x.strokeStyle='#5b7389';x.lineWidth=3;x.beginPath();x.moveTo(px,py);x.lineTo(px,py+h);x.lineTo(px+w,py+h);x.lineTo(px+w,py);x.stroke();x.fillStyle='rgba(255,255,255,.18)';x.fillRect(px+4,py+4,5,h-8);}
+function sun(x,px,py,r,t){x.save();x.translate(px,py);x.rotate(t*.004);x.strokeStyle='rgba(255,196,60,.7)';x.lineWidth=3;for(var i=0;i<12;i++){x.rotate(Math.PI/6);x.beginPath();x.moveTo(r+4,0);x.lineTo(r+11,0);x.stroke();}x.restore();ball(x,px,py,r,'#ffc83d');}
+function cloud(x,px,py,s,col){x.fillStyle=col||'rgba(255,255,255,.95)';[[0,0,14],[16,-6,17],[34,0,14],[17,6,15]].forEach(function(c){x.beginPath();x.arc(px+c[0]*s,py+c[1]*s,c[2]*s,0,7);x.fill();});}
+function dial(x,cx,cy,r,frac,txtv,col){x.strokeStyle='#dfe7ee';x.lineWidth=9;x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*2.2);x.stroke();x.strokeStyle=col||'#2a9d8f';x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*(.8+1.4*clamp(frac,0,1)));x.stroke();var a=Math.PI*(.8+1.4*clamp(frac,0,1));x.strokeStyle=NAVY;x.lineWidth=3;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a)*(r-6),cy+Math.sin(a)*(r-6));x.stroke();circ(x,0,cx,cy,4,NAVY,null);if(txtv)tag(x,txtv,cx,cy+r*.62,NAVY,12);}
+function sand(x,px,py,w,h){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,'#eccb8a');g.addColorStop(1,'#c99a55');x.fillStyle=g;x.fillRect(px,py,w,h);}
+function atom(x,px,py,r,col,t){ball(x,px,py,r,col);}
+function fmtN(v){if(Math.abs(v)>=1000)return bn(Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g,','));return bn(parseFloat(v.toFixed(2)));}
+
+function tagd(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=4;x.fillStyle=col||'#fff';x.fillText(s,px,py);x.restore();}
+
+
+function hm(a,b,t){var A=hx(a),B=hx(b),o='#';t=clamp(t,0,1);for(var i=0;i<3;i++){var v=Math.round(lerp(A[i],B[i],t)).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function cmark(x,s,px,py,col,sz,al){tag(x,s,px,py,col,sz,al);}
+function tcol(T){return hm('#3b82f6','#f97316',(T+30)/180);}
+
+/* ===== ল্যাব ১: তাপ = অণুর কাঁপুনি ===== */
+var H1=[];(function(){for(var i=0;i<30;i++){var cx=i%6,cy=Math.floor(i/6);H1.push({hx:92+cx*34,hy:176+cy*14*1.0+cy*6,x:92+cx*34,y:176+cy*20,vx:rnd(-1,1),vy:rnd(-1,1),ph:rnd(0,6.28)});}})();
+function h1st(T){return T<0?0:(T<100?1:2);}
+function h1info(){var T=+$('h1k').value,K=T+273.15,s=h1st(T);$('h1kv').textContent=bn(T);
+  var nm=['কঠিন (বরফ)','তরল (পানি)','গ্যাস (জলীয় বাষ্প)'][s],ex=['অণুগুলো নির্দিষ্ট জায়গায় থেকে কাঁপছে। আকার ও আয়তন ঠিক থাকে।','অণুগুলো কাছাকাছি, কিন্তু একটার পাশ দিয়ে আরেকটা গড়িয়ে যাচ্ছে। আয়তন ঠিক, আকার পাত্রের মতো।','অণুগুলো বন্ধন থেকে মুক্ত, পুরো পাত্রে ছোটাছুটি করছে। আকার ও আয়তন দুটোই পাত্র অনুযায়ী।'][s];
+  $('h1t').innerHTML='তাপমাত্রা = <b>'+bn(T)+' °C</b> = '+f(K,1)+' K<br>অবস্থা: <b style="color:'+['#2b6cb0','#1d7a6f','#c0392b'][s]+'">'+nm+'</b><br>'+ex+'<br><small>তাপশক্তি আসলে অণুগুলোর সম্মিলিত গতিশক্তি। তাপমাত্রা বাড়লে অণুর গড় গতিশক্তি বাড়ে।</small>';}
+on(['h1k'],h1info);
+DRAWS.push(function(){var x=ctxOf('h1c'),T=+$('h1k').value,s=h1st(T),sp=clamp(.5+(T+30)/55,.5,3.6),i,p;
+  grad(x,0,0,380,270,'#eef5fb','#dbe8f3');
+  rr(x,40,50,300,200,10);x.fillStyle='rgba(255,255,255,.65)';x.fill();
+  if(s===1){var g=x.createLinearGradient(0,166,0,250);g.addColorStop(0,'rgba(86,176,240,.35)');g.addColorStop(1,'rgba(40,120,200,.5)');x.fillStyle=g;x.fillRect(42,166,296,82);}
+  if(s===0){x.fillStyle='rgba(180,220,250,.45)';x.fillRect(42,160,296,88);}
+  x.strokeStyle='#5b7389';x.lineWidth=4;x.beginPath();x.moveTo(40,50);x.lineTo(40,250);x.lineTo(340,250);x.lineTo(340,50);x.stroke();
+  for(i=0;i<H1.length;i++){p=H1[i];
+    if(s===0){var am=1+(T+30)/12;var tx=p.hx+Math.sin(FR*.25+p.ph)*am,ty=p.hy+Math.cos(FR*.22+p.ph*1.3)*am;p.x+=(tx-p.x)*.2;p.y+=(ty-p.y)*.2;p.vx=rnd(-1,1);p.vy=rnd(-1,1);}
+    else{var tgt=s===1?sp*.8:sp*1.5,m=Math.hypot(p.vx,p.vy)||1;p.vx*=1+(tgt/m-1)*.08;p.vy*=1+(tgt/m-1)*.08;
+      if(s===1&&p.y<168)p.vy+=.12;if(Math.random()<.02){p.vx+=rnd(-.4,.4);p.vy+=rnd(-.4,.4);}
+      p.x+=p.vx;p.y+=p.vy;var top=s===1?168:56;
+      if(p.x<50){p.x=50;p.vx=Math.abs(p.vx);}if(p.x>330){p.x=330;p.vx=-Math.abs(p.vx);}if(p.y<top){p.y=top;p.vy=Math.abs(p.vy);}if(p.y>240){p.y=240;p.vy=-Math.abs(p.vy);}}
+    ball(x,p.x,p.y,7.5,tcol(T));}
+  if(s===0){x.strokeStyle='rgba(60,100,150,.25)';x.lineWidth=1.5;for(i=0;i<H1.length;i++){var a=H1[i];if(i%6<5){var b=H1[i+1];x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke();}if(i<24){b=H1[i+6];x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke();}}}
+  var fl=clamp((T+30)/180,.05,1);x.save();x.translate(190,262);for(i=0;i<3;i++){x.fillStyle=i===0?'rgba(255,120,30,.9)':'rgba(255,200,60,.9)';var fh=(8+fl*22)*(i===0?1:.6)+Math.sin(FR*.3+i*2)*3;x.beginPath();x.moveTo(-9+i*9-4,0);x.quadraticCurveTo(-9+i*9,-fh,-9+i*9+4,0);x.fill();}x.restore();
+  tag(x,['কঠিন','তরল','গ্যাস'][s]+'  '+bn(T)+' °C',190,28,NAVY,16);
+    });
+h1info();
+qgame('h1q','h1o','h1fb','h1sc',[
+ ['তাপশক্তি আসলে কিসের সমষ্টি?','অণু-পরমাণুর গতিশক্তি',['অণুর ভর','পাত্রের আয়তন','বস্তুর রং'],'বস্তুর অণুগুলোর কাঁপুনি বা গতির সম্মিলিত শক্তিই তাপ।'],
+ ['কঠিন পদার্থ গরম করলে অণুগুলো কী করে?','জায়গায় থেকে বেশি জোরে কাঁপে',['জায়গা ছেড়ে ছুটে যায়','থেমে যায়','ছোট হয়ে যায়'],'কঠিনে অণু নির্দিষ্ট অবস্থানে থেকে কাঁপে, তাপ বাড়লে কাঁপুনি বাড়ে।'],
+ ['কোন অবস্থায় অণুগুলো আণবিক বন্ধন থেকে পুরোপুরি মুক্ত?','গ্যাস',['কঠিন','তরল','বরফ'],'গ্যাসে অণু মুক্ত হয়ে ছোটাছুটি করে।'],
+ ['তরলে অণুগুলো কেমন আচরণ করে?','একটা আরেকটার পাশ দিয়ে গড়িয়ে যায়',['একদম স্থির থাকে','একে অন্যের থেকে অনেক দূরে','বন্ধনহীন'],'তরলে অণু কাছাকাছি থাকে কিন্তু গড়াগড়ি খেয়ে নড়ে।'],
+ ['তাপশক্তির একক কোনটি?','জুল (J)',['ওয়াট (W)','নিউটন (N)','প্যাসকেল (Pa)'],'তাপও শক্তি, তাই একক জুল। ক্যালরিও একক (1 cal = 4.2 J)।']]);
+
+/* ===== ল্যাব ২: তাপের প্রবাহ ===== */
+var F2={A:90,B:10,go:false,px:0};
+function f2reset(){F2.go=false;F2.A=+$('f2a').value;F2.B=+$('f2b').value;F2.px=0;f2info();}
+function f2info(){$('f2av').textContent=bn(+$('f2a').value);$('f2bv').textContent=bn(+$('f2b').value);var d=F2.A-F2.B;
+  $('f2t').innerHTML='গরম বস্তু: <b style="color:#c0392b">'+f(F2.A,1)+' °C</b> &nbsp; ঠান্ডা বস্তু: <b style="color:#2b6cb0">'+f(F2.B,1)+' °C</b><br>'+(F2.go?(d>.3?'তাপ বইছে <b>গরম থেকে ঠান্ডার দিকে</b> 🔥➜🧊':'<b style="color:#1d7a6f">দুটোর তাপমাত্রা সমান, আর তাপ প্রবাহ হচ্ছে না।</b>'):'এখনো বস্তু দুটো আলাদা। "ছুঁয়ে দাও" চাপো।')+'<br><small>তাপ কোন দিকে যাবে তা নির্ভর করে তাপমাত্রার ওপর, তাপশক্তির পরিমাণের ওপর নয়। গরম আলপিনে অল্প তাপশক্তি থাকলেও সেটা ঠান্ডা পানিকে তাপ দেয়, কিন্তু পানির বিশাল তাপশক্তি আলপিনকে নয়।</small>';}
+on(['f2a','f2b'],function(){if(!F2.go)f2reset();else f2info();});
+$('f2go').onclick=function(){F2.go=true;};$('f2rs').onclick=f2reset;
+DRAWS.push(function(){var x=ctxOf('f2c'),d=F2.A-F2.B,i;
+  if(F2.go){var k=.012*d;F2.A-=k;F2.B+=k;F2.px=Math.min(1,F2.px+.03);if(FR%6===0)f2info();}
+  grad(x,0,0,380,270,'#fdf3e3','#e6eef6');
+  var gap=lerp(70,0,ease(F2.px));
+  var lx=50+gap*0,rx=190-gap*1+0;
+  lx=lerp(60,95,ease(F2.px));rx=lerp(220,190,ease(F2.px));
+  rr(x,lx,50,95,90,8);x.fillStyle=hm('#3b82f6','#f97316',F2.A/100);x.fill();x.strokeStyle='rgba(0,0,0,.25)';x.lineWidth=2;x.stroke();
+  rr(x,rx,50,95,90,8);x.fillStyle=hm('#3b82f6','#f97316',F2.B/100);x.fill();x.stroke();
+  tagd(x,'গরম  '+f(F2.A,0)+' °C',lx+47,95,'#fff',14);tagd(x,'ঠান্ডা  '+f(F2.B,0)+' °C',rx+47,95,'#fff',14);
+  if(F2.go&&d>.5){var n=Math.min(6,Math.ceil(d/10));for(i=0;i<n;i++){var u=((FR*.02+i/n)%1);var ax=lx+95-8+u*(rx-lx-95+30),ay=60+i*14;x.fillStyle='rgba(255,140,30,'+(1-u)+')';x.beginPath();x.arc(ax,ay+20,5,0,7);x.fill();}}
+  tag(x,'🔥 তাপ ➜',190,30,'#c0392b',13);
+  var yb=250,la=F2.A/100*70,lb=F2.B/100*70;
+  tag(x,'পানির উচ্চতা (তাপমাত্রার তুলনা)',190,168,NAVY,12);
+  x.fillStyle='#cde6f7';rr(x,70,yb-80,70,80,4);x.fill();rr(x,240,yb-80,70,80,4);x.fill();
+  x.fillStyle='#e8f3fb';x.fillRect(72,yb-80,66,80-0);x.fillRect(242,yb-80,66,80);
+  var mid=(la+lb)/2,cur=F2.go?(la+lb)/2:null;
+  x.fillStyle='rgba(60,150,230,.85)';var tl=la,tr=lb;if(F2.go){var q=1-clamp(d/(+$('f2a').value-+$('f2b').value),0,1);tl=lerp(la,mid,0);tr=lerp(lb,mid,0);}
+  x.fillRect(72,yb-tl,66,tl);x.fillRect(242,yb-tr,66,tr);
+  x.fillStyle='rgba(60,150,230,.85)';x.fillRect(140,yb-10,100,8);
+  x.strokeStyle='#5b7389';x.lineWidth=3;x.beginPath();x.moveTo(70,yb-80);x.lineTo(70,yb);x.lineTo(140,yb);x.lineTo(140,yb-80);x.moveTo(240,yb-80);x.lineTo(240,yb);x.lineTo(310,yb);x.lineTo(310,yb-80);x.stroke();
+  tag(x,'গরম',105,yb+13,'#c0392b',12);tag(x,'ঠান্ডা',275,yb+13,'#2b6cb0',12);
+  });
+f2info();
+qgame('f2q','f2o','f2fb','f2sc',[
+ ['তাপ সবসময় কোন দিকে প্রবাহিত হয়?','বেশি তাপমাত্রা থেকে কম তাপমাত্রায়',['কম থেকে বেশি তাপমাত্রায়','বেশি তাপশক্তি থেকে কম তাপশক্তিতে','যেকোনো দিকে'],'তাপের প্রবাহ নির্ভর করে তাপমাত্রার ওপর, তাপশক্তির পরিমাণের ওপর নয়।'],
+ ['দুটো বস্তুর তাপমাত্রা সমান হলে কী হয়?','তাপ প্রবাহ বন্ধ হয়',['তাপ আরও বাড়ে','বস্তু দুটো গলে যায়','ঠান্ডা বস্তু গরম হতে থাকে'],'যতক্ষণ না দুটোর তাপমাত্রা সমান হয় ততক্ষণ তাপ বইতে থাকে।'],
+ ['তাপমাত্রার তুলনা কীসের সাথে করা হয়েছে?','পানির পৃষ্ঠের উচ্চতা',['পানির আয়তন','পানির ভর','পাত্রের আকার'],'পানি উঁচু থেকে নিচুতে বয়, তাপ বেশি তাপমাত্রা থেকে কম তাপমাত্রায় যায়।']]);
+
+/* ===== ল্যাব ৩: থার্মোমিটার ===== */
+var M3={k:0,hot:0};
+function m3info(){var T=+$('m3k').value,Hg=M3.k===0,gam=Hg?'1.8 × 10⁻⁴':'1.1 × 10⁻³',fr=Hg?-39:-114,bo=Hg?357:78;$('m3kv').textContent=bn(T);
+  var st=T<=fr?'<b style="color:#2b6cb0">তরল জমে গেছে ❄️</b>':(T>=bo?'<b style="color:#c0392b">তরল ফুটে গেছে 💥</b>':'কাজ করছে ✅');
+  $('m3t').innerHTML='তাপমাত্রিক পদার্থ: <b>'+(Hg?'পারদ':'অ্যালকোহল')+'</b>, তাপমাত্রিক ধর্ম: <b>আয়তনের প্রসারণ</b><br>প্রসারণ সহগ ≈ '+bn(gam)+' /°C<br>হিমাঙ্ক ≈ '+bn(fr)+' °C, স্ফুটনাঙ্ক ≈ '+bn(bo)+' °C<br>অবস্থা: '+st+'<br><small>জ্বর মাপার থার্মোমিটারের গোড়ায় সরু বাঁক থাকে, যাতে পারদ নিজে নেমে না আসে। (তরলের মান আমার যোগ করা, বইয়ে নেই।)</small>';}
+pills('m3p',function(k){M3.k=k;m3info();});$('m3p').querySelector('button').classList.add('on');
+on(['m3k'],m3info);
+DRAWS.push(function(){var x=ctxOf('m3c'),T=+$('m3k').value,Hg=M3.k===0,fr=Hg?-39:-114,bo=Hg?357:78,i;
+  grad(x,0,0,380,280,'#f2f8fc','#dde9f3');
+  var top=40,bot=215,frac=(T+50)/160,ly=bot-frac*(bot-top-4);
+  rr(x,112,top-6,28,bot-top+8,14);x.fillStyle='rgba(255,255,255,.9)';x.fill();x.strokeStyle='#8aa0b5';x.lineWidth=3;x.stroke();
+  var col=Hg?'#8a96a6':'#e04b4b';if(T<=fr)col='#9fd3f5';
+  circ(x,0,126,236,24,'rgba(255,255,255,.9)','#8aa0b5',3);circ(x,0,126,236,19,col,null);
+  x.fillStyle=col;x.fillRect(121,ly,10,bot-ly+22);
+  x.strokeStyle='rgba(255,255,255,.7)';x.lineWidth=2;x.beginPath();x.moveTo(124,ly+3);x.lineTo(124,bot);x.stroke();
+  for(i=-50;i<=110;i+=10){var y=bot-(i+50)/160*(bot-top-4);x.strokeStyle='#5b7389';x.lineWidth=i%50===0?2.2:1.2;x.beginPath();x.moveTo(140,y);x.lineTo(i%50===0?152:147,y);x.stroke();if(i%20===0)tag(x,bn(i),166,y,'#5b7389',10,'left');}
+  if(T>=bo){for(i=0;i<5;i++){var u=((FR*.03+i/5)%1);circ(x,0,121+i*3,ly-u*30,3+i%2,'rgba(255,255,255,.8)','#c0392b',1);}}
+  tag(x,'পারদ/তরল ওঠে',126,24,NAVY,12);
+  tag(x,'🔍 অণু (বড় করে)',290,30,NAVY,12);
+  rr(x,225,44,130,120,10);x.fillStyle='rgba(255,255,255,.8)';x.fill();x.strokeStyle='#8aa0b5';x.lineWidth=2;x.stroke();
+  var sp=22+frac*34,cs=Math.floor(106/sp);
+  for(i=0;i<20;i++){var gx=i%4,gy=Math.floor(i/4);var px=232+gx*(sp)+Math.sin(FR*.2+i)*1.6+8,py=52+gy*(sp*.78)+Math.cos(FR*.17+i)*1.6+8;if(px<348&&py<158)ball(x,px,py,5.5,col);}
+  tag(x,'তাপ বাড়লে অণু দূরে সরে',290,176,'#1d7a6f',11);tag(x,'⇒ আয়তন বাড়ে',290,192,'#1d7a6f',11);
+  tag(x,bn(T)+' °C',290,220,Hg?NAVY:'#c0392b',22);
+  });
+m3info();
+qgame('m3q','m3o','m3fb','m3sc',[
+ ['পারদ থার্মোমিটারে তাপমাত্রিক পদার্থ কোনটি?','পারদ',['কাচ','অ্যালকোহল','পানি'],'পারদ হলো তাপমাত্রিক পদার্থ, আর তার আয়তনের প্রসারণ তাপমাত্রিক ধর্ম।'],
+ ['তাপমাত্রিক ধর্ম কাকে বলে?','তাপমাত্রা মাপতে যে ধর্মটি ব্যবহার হয়',['তাপ দিলে রং বদলানো','বস্তুর ভর','পদার্থের ঘনত্ব'],'তাপমাত্রা পরিবর্তনে যে ধর্ম সূক্ষ্মভাবে বদলায় এবং মাপা যায়।'],
+ ['জ্বর মাপা থার্মোমিটারে পারদ নিজে নেমে আসে না কেন?','গোড়ায় সরু বাঁক আছে বলে',['পারদ ভারী বলে','কাচ গরম বলে','চাপ কম বলে'],'সরু বক্রতা থাকায় পারদ একবার উঠলে নিজে নামতে পারে না, ঝাঁকিয়ে নামাতে হয়।'],
+ ['তাপমাত্রা মাপার জন্য আর কোন কোন ধর্ম কাজে লাগে?','রোধের পরিবর্তন, গ্যাসের চাপ, ইএমএফ',['রং ও গন্ধ','ভর ও ওজন','শব্দের তীব্রতা'],'বইয়ে বলা আছে রোধ, গ্যাসের চাপ, থার্মোকাপলের ইএমএফও তাপমাত্রিক ধর্ম।']]);
+
+/* ===== ল্যাব ৪: তিন স্কেল ===== */
+function s4info(){var C=+$('s4k').value,K=C+273.15,F=C*9/5+32;$('s4kv').textContent=bn(C);
+  var eq=Math.abs(C+40)<.5;
+  $('s4t').innerHTML='T<sub>C</sub> = <b>'+f(C,1)+' °C</b><br>T<sub>K</sub> = T<sub>C</sub> + 273.15 = <b>'+f(K,2)+' K</b><br>T<sub>F</sub> = (9/5) T<sub>C</sub> + 32 = <b>'+f(F,1)+' °F</b>'+(eq?'<br><b style="color:#c0392b">🎯 −40°-এ সেলসিয়াস আর ফারেনহাইট সমান!</b>':'')+(C<=-272.5?'<br><b style="color:#2b6cb0">❄️ পরম শূন্য: এর নিচে তাপমাত্রা হয় না। কেলভিনে এটি 0 K।</b>':'')+'<br><small>বইয়ের নিয়ম: ১০°C বাড়া আর ১০ K বাড়া একই কথা। সেলসিয়াস আর কেলভিন কখনোই সমান হয় না, আর কেলভিন ও ফারেনহাইট সমান হয় প্রায় 574.59 K-এ।</small>';}
+pills('s4p',function(k){var v=[0,100,37,-40,-273][k];$('s4k').value=v;s4info();});
+on(['s4k'],s4info);
+DRAWS.push(function(){var x=ctxOf('s4c'),C=+$('s4k').value,i;
+  grad(x,0,0,380,300,'#f4f9fc','#e0ebf4');
+  var top=52,bot=258,fr=(C+273.15)/423.15,ly=bot-fr*(bot-top);
+  var cols=[75,190,305],names=['সেলসিয়াস °C','কেলভিন K','ফারেনহাইট °F'];
+  function Y(c){return bot-(c+273.15)/423.15*(bot-top);}
+  for(i=0;i<3;i++){var cx=cols[i];rr(x,cx-9,top-6,18,bot-top+12,9);x.fillStyle='rgba(255,255,255,.95)';x.fill();x.strokeStyle='#8aa0b5';x.lineWidth=2.5;x.stroke();
+    var g=x.createLinearGradient(0,bot,0,top);g.addColorStop(0,'#3b82f6');g.addColorStop(1,'#ef4444');x.fillStyle=g;x.fillRect(cx-5,ly,10,bot-ly+4);circ(x,0,cx,bot+6,13,'#e04b4b','#8aa0b5',2);
+    tag(x,names[i],cx,30,NAVY,12);
+    var tk=i===0?[-273,-100,0,100]:(i===1?[0,173,273,373]:[-459,-100,32,212]);
+    var cv=i===0?tk:(i===1?tk.map(function(k){return k-273.15;}):tk.map(function(F){return (F-32)*5/9;}));
+    for(var j=0;j<tk.length;j++){var yy=Y(cv[j]);x.strokeStyle='#5b7389';x.lineWidth=1.5;x.beginPath();x.moveTo(cx+9,yy);x.lineTo(cx+17,yy);x.stroke();tag(x,bn(tk[j]),cx+20,yy,'#5b7389',10,'left');}
+    var val=i===0?C:(i===1?C+273.15:C*9/5+32);
+    x.strokeStyle='#c0392b';x.lineWidth=2;x.setLineDash([4,3]);x.beginPath();x.moveTo(cx-40,ly);x.lineTo(cx-9,ly);x.stroke();x.setLineDash([]);
+    tag(x,f(val,1),cx-24,ly-9,'#c0392b',12);}
+  x.strokeStyle='rgba(30,120,100,.35)';x.lineWidth=1.5;x.setLineDash([3,4]);[0,100].forEach(function(c){var yy=Y(c);x.beginPath();x.moveTo(40,yy);x.lineTo(350,yy);x.stroke();});x.setLineDash([]);
+  tag(x,'0°C গলনাঙ্ক',4,Y(0)-8,'#1d7a6f',10,'left');tag(x,'100°C ফুটনাঙ্ক',4,Y(100)-8,'#1d7a6f',10,'left');
+  });
+s4info();
+qgame('s4q','s4o','s4fb','s4sc',[
+ ['সেলসিয়াস স্কেলে বরফের গলনাঙ্ক কত?','0 °C',['100 °C','32 °C','273 °C'],'1 atm চাপে বরফ 0 °C-এ গলে, পানি 100 °C-এ ফোটে।'],
+ ['কেলভিন স্কেলে 0°C কত?','273.15 K',['0 K','100 K','373 K'],'T_K = T_C + 273.15।'],
+ ['কোন তাপমাত্রায় সেলসিয়াস ও ফারেনহাইট স্কেল সমান?','−40°',['0°','32°','100°'],'T_C = (5/9)(T_F − 32) থেকে T_C = T_F = −40।'],
+ ['সুস্থ মানুষের দেহের তাপমাত্রা 98.4°F হলে সেলসিয়াসে কত?','প্রায় 36.9 °C',['প্রায় 98.4 °C','প্রায় 30 °C','প্রায় 45 °C'],'(5/9)(98.4 − 32) = 36.89 °C ≈ 37 °C।'],
+ ['পরম শূন্য তাপমাত্রার মান কত?','−273.15 °C',['0 °C','−100 °C','−32 °C'],'কেলভিন স্কেলে এর মান 0 K।']]);
+
+
+/* ===== ল্যাব ৫: রেললাইন ===== */
+var L5={m:0,AL:[12,16.7,23,14],NM:['লোহা','তামা','অ্যালুমিনিয়াম','সোনা']};
+function l5calc(){var a=L5.AL[L5.m]*1e-6,dT=+$('l5k').value,g=+$('l5g').value,dL=a*12000*dT;return {a:a,dT:dT,g:g,dL:dL,left:g-2*dL};}
+function l5info(){var c=l5calc();$('l5kv').textContent=bn(c.dT);$('l5gv').textContent=bn(c.g);
+  $('l5t').innerHTML='ধাতু: <b>'+L5.NM[L5.m]+'</b>, α = '+bn(L5.AL[L5.m])+' × ১০⁻⁶ /°C<br>প্রতিটি লাইন 12 m, ΔL = αLΔT = '+f(c.dL,2)+' mm<br>দুই লাইন মিলে ফাঁক কমেছে '+f(2*c.dL,2)+' mm, ফাঁক ছিল '+bn(c.g)+' mm<br>'+(c.left>=0?'<b style="color:#1d7a6f">✅ ফাঁক বাকি আছে '+f(c.left,2)+' mm, লাইন নিরাপদ।</b>':'<b style="color:#c0392b">⚠️ ফাঁক ফুরিয়ে লাইন '+f(-c.left,2)+' mm বেশি ঠেলছে, তাই বেঁকে যাবে!</b>')+'<br><small>বইয়ের নিয়ম: L₂ = L₁ + αL₁(T₂ − T₁)। (লোহা, অ্যালুমিনিয়ামের α আমার যোগ করা; তামা ও সোনার মান বইয়ে আছে।)</small>';}
+pills('l5p',function(k){L5.m=k;l5info();});on(['l5k','l5g'],l5info);
+DRAWS.push(function(){var x=ctxOf('l5c'),c=l5calc(),i;
+  grad(x,0,0,380,270,'#bfe3ff',hm('#fff3d8','#ffd9a8',c.dT/100));sun(x,320,46,16+c.dT/12,FR);cloud(x,60,44,.9,'rgba(255,255,255,.9)');
+  x.fillStyle='#8c7a5b';x.fillRect(0,170,380,100);x.fillStyle='#9a8765';for(i=0;i<40;i++)x.fillRect(rp(i,0,378),180+rp(i+9,0,80),3,2);
+  var sc=3,gapPx=c.g*sc,ex=c.dL*sc*1.0,rem=gapPx-2*ex,mid=190;
+  for(i=0;i<19;i++){var sx=i*21+5;x.fillStyle='#6b4a2b';x.fillRect(sx,176,13,70);x.fillStyle='#8a6339';x.fillRect(sx,176,13,5);}
+  var buckle=rem<0,bh=buckle?clamp(-rem*1.4,3,46):0;
+  function rail(x0,x1,dir){x.strokeStyle='#9aa5b1';x.lineWidth=9;x.lineCap='butt';x.beginPath();
+    if(!buckle){x.moveTo(x0,176);x.lineTo(x1,176);}
+    else{x.moveTo(x0,176);var m=(x0+x1)/2;x.quadraticCurveTo(m+(dir>0?-6:6),176-bh*1.9,x1,176-bh);}
+    x.stroke();x.strokeStyle='#d9e0e7';x.lineWidth=2;x.stroke();}
+  var lEnd=mid-Math.max(rem,0)/2,rStart=mid+Math.max(rem,0)/2;
+  if(!buckle){rail(0,lEnd,1);rail(rStart,380,-1);
+    x.fillStyle='#fff';x.strokeStyle='#c0392b';x.lineWidth=1.5;if(rem>2){x.strokeRect(lEnd,164,rem,26);tag(x,f(Math.max(rem/sc,0),1)+' mm',mid,150,'#c0392b',12);}else tag(x,'ফাঁক প্রায় শেষ!',mid,150,'#c0392b',12);}
+  else{x.strokeStyle='#9aa5b1';x.lineWidth=9;x.beginPath();x.moveTo(0,176);x.lineTo(mid-6,176);x.quadraticCurveTo(mid,176-bh*2,mid+6,176);x.lineTo(380,176);x.stroke();
+    x.strokeStyle='#d9e0e7';x.lineWidth=2;x.stroke();tag(x,'💥 লাইন বেঁকে গেছে!',mid,176-bh*1.9-14,'#c0392b',14);}
+  tag(x,'🚆 তাপমাত্রা +'+bn(c.dT)+' °C',70,24,NAVY,14,'left');
+  });
+l5info();
+qgame('l5q','l5o','l5fb','l5sc',[
+ ['রেললাইনের জোড়ায় ফাঁক রাখা হয় কেন?','তাপীয় প্রসারণে লাইন বেঁকে যাওয়া ঠেকাতে',['লোহা বাঁচাতে','শব্দ করানোর জন্য','ওজন কমাতে'],'গরমে লাইন লম্বা হয়। ফাঁক না থাকলে লাইন বেঁকে যায়।'],
+ ['দৈর্ঘ্য প্রসারণ সহগের সূত্র কোনটি?','α = (L₂ − L₁) / [L₁ (T₂ − T₁)]',['α = L₁ / L₂','α = (T₂ − T₁) / L₁','α = L₁ L₂'],'α = (দৈর্ঘ্যের পরিবর্তন) ÷ (মূল দৈর্ঘ্য × তাপমাত্রার পরিবর্তন)।'],
+ ['10 m দণ্ড 20°C থেকে 120°C-এ 10.0167 m হলে α কত?','16.7 × 10⁻⁶ /°C',['1.67 × 10⁻⁶ /°C','167 × 10⁻⁶ /°C','0.0167 /°C'],'α = 0.0167 ÷ (10 × 100) = 16.7 × 10⁻⁶ /°C।'],
+ ['α-এর একক কী?','K⁻¹ বা /°C',['m','J','N'],'α, β ও γ-এর একক K⁻¹, মাত্রা T⁻¹।'],
+ ['কাচের গ্লাসে হঠাৎ গরম পানি ঢাললে গ্লাস ফাটে কেন?','সব অংশ সমান প্রসারিত হয় না',['গ্লাস ঠান্ডা হয়ে যায়','পানির চাপে','আয়তন কমে যায়'],'হঠাৎ কোনো অংশে তাপমাত্রা বেড়ে বেশি প্রসারণ হয়, তাই গ্লাস ফেটে যায়।']]);
+
+/* ===== ল্যাব ৬: ক্ষেত্রফল ও আয়তন ===== */
+function a6info(){var al=+$('a6a').value*1e-6,dT=+$('a6k').value,e=al*dT;$('a6kv').textContent=bn(dT);$('a6av').textContent=bn(+$('a6a').value);
+  var rho=19.30/(1+3*e);
+  $('a6t').innerHTML='α = '+bn(+$('a6a').value)+' × ১০⁻⁶ /°C, ΔT = '+bn(dT)+' °C, αΔT = '+f(e,5)+'<br>দৈর্ঘ্য বাড়ে <b>'+f(e*100,3)+'%</b> (α)<br>ক্ষেত্রফল বাড়ে <b>'+f(2*e*100,3)+'%</b> (β = 2α)<br>আয়তন বাড়ে <b>'+f(3*e*100,3)+'%</b> (γ = 3α)<br>ঘনত্ব কমে: 19.30 gm/cc ➜ <b>'+f(rho,3)+' gm/cc</b><br><small>এখানে ঘনত্ব ρ′ = ρ ÷ (1 + 3αΔT)। বইয়ে সোনার জন্য α = 14 × 10⁻⁶, ΔT = 100°C নিয়ে 19.22 gm/cc পাওয়া গেছে। ভর একই থাকে, আয়তন বাড়ে, তাই ঘনত্ব কমে।</small>';}
+on(['a6k','a6a'],a6info);
+DRAWS.push(function(){var x=ctxOf('a6c'),al=+$('a6a').value*1e-6,dT=+$('a6k').value,e=al*dT,EX=7,fx=1+EX*e*20*0+EX*e*12,i;
+  var s=1+Math.min(e*30,.5);
+  grad(x,0,0,380,270,'#fdf3e3','#eaf0f6');
+  var heat=clamp(dT/1000,0,1),col=hm('#8ab4e8','#ef6a4a',heat),colE=shade(col,-40);
+  function ghost(px,py,w,h){x.strokeStyle='rgba(60,80,110,.55)';x.lineWidth=2;x.setLineDash([5,4]);x.strokeRect(px,py,w,h);x.setLineDash([]);}
+  tag(x,'১) দৈর্ঘ্য',65,28,NAVY,14);tag(x,'২) ক্ষেত্রফল',190,28,NAVY,14);tag(x,'৩) আয়তন',315,28,NAVY,14);
+  var bx=14,by=130,w0=70,h0=16;ghost(bx,by,w0,h0);x.fillStyle=col;x.fillRect(bx,by,w0*s,h0);x.strokeStyle=colE;x.lineWidth=2;x.strokeRect(bx,by,w0*s,h0);
+  var px=138,py=100,sz=56;ghost(px,py,sz,sz);x.fillStyle=col;x.fillRect(px,py,sz*s,sz*s);x.strokeStyle=colE;x.strokeRect(px,py,sz*s,sz*s);
+  var cx0=268,cy0=150,c0=40,c1=c0*s,dx=c1*.45,dy=c1*.45;
+  function cube(cx,cy,w,fillc,edge,ghosting){var ox=w*.45,oy=w*.45;x.strokeStyle=ghosting?'rgba(60,80,110,.55)':edge;x.lineWidth=2;if(ghosting)x.setLineDash([5,4]);
+    if(!ghosting){x.fillStyle=fillc;x.fillRect(cx,cy-w,w,w);x.fillStyle=shade(fillc,25);x.beginPath();x.moveTo(cx,cy-w);x.lineTo(cx+ox,cy-w-oy);x.lineTo(cx+w+ox,cy-w-oy);x.lineTo(cx+w,cy-w);x.closePath();x.fill();x.fillStyle=shade(fillc,-30);x.beginPath();x.moveTo(cx+w,cy-w);x.lineTo(cx+w+ox,cy-w-oy);x.lineTo(cx+w+ox,cy-oy);x.lineTo(cx+w,cy);x.closePath();x.fill();}
+    x.strokeRect(cx,cy-w,w,w);x.beginPath();x.moveTo(cx,cy-w);x.lineTo(cx+ox,cy-w-oy);x.lineTo(cx+w+ox,cy-w-oy);x.lineTo(cx+w,cy-w);x.moveTo(cx+w,cy);x.lineTo(cx+w+ox,cy-oy);x.lineTo(cx+w+ox,cy-w-oy);x.stroke();x.setLineDash([]);}
+  cube(cx0,cy0,c0,col,colE,true);cube(cx0,cy0,c1,col,colE,false);
+  tag(x,'+'+f(e*100,2)+'%',65,170,'#1d7a6f',15);tag(x,'+'+f(2*e*100,2)+'%',190,200,'#1d7a6f',15);tag(x,'+'+f(3*e*100,2)+'%',315,200,'#1d7a6f',15);
+  tag(x,'α',65,196,NAVY,16);tag(x,'β = 2α',190,224,NAVY,14);tag(x,'γ = 3α',315,224,NAVY,14);
+  tag(x,'(ফোঁটা রেখা = আগের আকার)',190,252,'#5b7389',11);
+  });
+a6info();
+qgame('a6q','a6o','a6fb','a6sc',[
+ ['ক্ষেত্রফল প্রসারণ সহগ β = ?','2α',['α','3α','α/2'],'A = L² হলে β = 2α।'],
+ ['আয়তন প্রসারণ সহগ γ = ?','3α',['2α','α','α³'],'V = L³ হলে γ = 3α।'],
+ ['কঠিন পদার্থে α² ও α³-এর পদ বাদ দেওয়া যায় কেন?','মান এত ছোট যে হিসাবে ক্ষতি হয় না',['এগুলো ঋণাত্মক','এগুলো বড়','এগুলো শূন্য'],'α খুব ছোট, তাই α² ও α³ আরও ছোট, বাদ দিলে ক্ষতি হয় না।'],
+ ['পদার্থ গরম করলে ঘনত্ব কী হয়?','কমে',['বাড়ে','একই থাকে','দ্বিগুণ হয়'],'ভর একই থাকে, আয়তন বাড়ে, তাই ρ = m/V কমে।'],
+ ['তাপ প্রয়োগে কঠিনের কোন কোন রাশি বাড়ে?','দৈর্ঘ্য, ক্ষেত্রফল ও আয়তন',['শুধু দৈর্ঘ্য','শুধু ভর','শুধু ওজন'],'তিন দিকেই সমান প্রসারণ হয়, তাই তিনটিই বাড়ে।']]);
+
+/* ===== ল্যাব ৭: তরলের প্রকৃত ও আপাত প্রসারণ ===== */
+var R7={k:0,play:false};
+function r7lv(k){var A=110,B=124,C=76;return k<15?A+(B-A)*ease(k/15):B+(C-B)*ease((k-15)/85);}
+function r7info(){var k=R7.k,y=r7lv(k),A=110,AB=Math.max(0,y-A),stage=k<15?'১ম ধাপ: পাত্র আগে প্রসারিত হলো, তরল একটু নামছে':'২য় ধাপ: তরল প্রসারিত হয়ে উঠছে, যেহেতু তার প্রসারণ বেশি';
+  $('r7kv').textContent=bn(Math.round(k));
+  $('r7t').innerHTML=stage+'<br>পাত্রের প্রসারণ (A→B) ➜ V<sub>B</sub><br>তরলের প্রকৃত প্রসারণ (B→C) ➜ V<sub>L</sub><br>আপাত প্রসারণ (A→C) ➜ V<sub>a</sub><br><b>V<sub>a</sub> = V<sub>L</sub> − V<sub>B</sub></b><br><small>পাত্রে তরলের যে প্রসারণ দেখা যায় তা আপাত প্রসারণ। পাত্রের প্রসারণ যোগ করলে প্রকৃত প্রসারণ পাওয়া যায়।</small>';}
+$('r7go').onclick=function(){if(R7.k>=100)R7.k=0;R7.play=true;};$('r7rs').onclick=function(){R7.play=false;R7.k=0;$('r7k').value=0;r7info();};
+$('r7k').oninput=function(){R7.play=false;R7.k=+this.value;r7info();};
+DRAWS.push(function(){var x=ctxOf('r7c');if(R7.play){R7.k=Math.min(100,R7.k+.22);$('r7k').value=R7.k;if(R7.k>=100)R7.play=false;if(FR%3===0)r7info();}
+  var k=R7.k,y=r7lv(k),A=110,B=124,C=76,i;
+  grad(x,0,0,380,290,'#f4f8fb','#dfeaf3');
+  var fl=k>0&&k<100||R7.play;
+  rr(x,176,28,28,150,12);x.fillStyle='rgba(255,255,255,.85)';x.fill();x.strokeStyle='#6b829a';x.lineWidth=3;x.stroke();
+  circ(x,0,190,206,58+k*.0,'rgba(255,255,255,.7)','#6b829a',3);
+  var c=hm('#2f8fe6','#e5683b',k/100*.7);
+  x.save();x.beginPath();x.arc(190,206,55,0,7);x.clip();x.fillStyle=c;x.fillRect(120,150,140,120);x.restore();
+  x.fillStyle=c;x.fillRect(182,y,16,160-y+14);
+  x.strokeStyle='rgba(255,255,255,.7)';x.lineWidth=2;x.beginPath();x.moveTo(186,y+2);x.lineTo(186,170);x.stroke();
+  [['A',A,'#1d7a6f'],['B',B,'#2b6cb0'],['C',C,'#c0392b']].forEach(function(m){x.strokeStyle=m[2];x.lineWidth=2;x.beginPath();x.moveTo(204,m[1]);x.lineTo(228,m[1]);x.stroke();tag(x,m[0],238,m[1],m[2],15);});
+  x.lineWidth=3;x.strokeStyle='#2b6cb0';x.beginPath();x.moveTo(256,A);x.lineTo(256,B);x.stroke();
+  x.strokeStyle='#c0392b';x.beginPath();x.moveTo(284,B);x.lineTo(284,C);x.stroke();
+  x.strokeStyle='#1d7a6f';x.beginPath();x.moveTo(312,A);x.lineTo(312,C);x.stroke();
+  [['#2b6cb0','VB = পাত্রের প্রসারণ'],['#c0392b','VL = প্রকৃত প্রসারণ'],['#1d7a6f','Va = আপাত প্রসারণ']].forEach(function(m,k){x.fillStyle=m[0];x.fillRect(214,34+k*18,14,4);tag(x,m[1],234,36+k*18,m[0],12,'left');});
+  if(fl){for(i=0;i<3;i++){x.fillStyle=i===0?'rgba(255,120,30,.9)':'rgba(255,200,60,.9)';var fh=(14+i*0)*(i===0?1.5:.9)+Math.sin(FR*.3+i*2)*4;x.beginPath();x.moveTo(166+i*24,282);x.quadraticCurveTo(170+i*24,282-fh-14,174+i*24,282);x.fill();}}
+  x.fillStyle='#8a6339';x.fillRect(150,282,80,6);
+  tag(x,'গরম করো ➜',60,40,'#c0392b',13,'left');
+  });
+r7info();
+qgame('r7q','r7o','r7fb','r7sc',[
+ ['তরল গরম করলে শুরুতে স্তর একটু নেমে যায় কেন?','পাত্র আগে প্রসারিত হয় বলে',['তরল সংকুচিত হয়','বাষ্প হয়ে যায়','তরলের ভর কমে'],'তাপ প্রথমে পাত্রে পৌঁছে বাল্ব প্রসারিত করে, তাই আয়তন বাড়ে আর স্তর নামে।'],
+ ['আপাত প্রসারণ V_a = ?','V_L − V_B',['V_L + V_B','V_B − V_L','V_L × V_B'],'প্রকৃত প্রসারণ থেকে পাত্রের প্রসারণ বাদ দিলে আপাত প্রসারণ।'],
+ ['তরলের প্রসারণ বলতে কোনটি বোঝায়?','আয়তন প্রসারণ',['দৈর্ঘ্য প্রসারণ','ক্ষেত্রফল প্রসারণ','ভর প্রসারণ'],'তরলের দৈর্ঘ্য বা ক্ষেত্রফল নেই, তাই শুধু আয়তন প্রসারণ।'],
+ ['তরলের প্রসারণ সাধারণত কঠিনের চেয়ে কেমন?','বেশি',['কম','সমান','শূন্য'],'তরলের প্রসারণ বেশি না হলে আপাত প্রসারণ দেখাই যেত না।']]);
+
+/* ===== ল্যাব ৮: গ্যাসের প্রসারণ ===== */
+var G8=[];(function(){for(var i=0;i<26;i++)G8.push({x:rnd(60,150),y:rnd(120,240),vx:rnd(-1,1),vy:rnd(-1,1)});})();
+function g8V(){return .08206*(+$('g8k').value);}
+function g8info(){var T=+$('g8k').value,V=g8V(),gp=1/T;$('g8kv').textContent=bn(T);
+  $('g8t').innerHTML='T = '+bn(T)+' K ('+f(T-273.15,0)+' °C), চাপ স্থির (1 atm), n = 1 mol<br>আয়তন V = nRT/P = <b>'+f(V,1)+' লিটার</b><br>গ্যাসের প্রসারণ সহগ γ<sub>p</sub> = 1/T = <b>'+f(gp,5)+' K⁻¹</b><br>তুলনা: কঠিনের γ ≈ ১০⁻⁵ K⁻¹, তাই গ্যাস প্রায় <b>'+bn(Math.round(gp/1e-5))+' গুণ</b> বেশি প্রসারিত হয়!<br><small>গ্যাসের প্রসারণ সহগ ধ্রুব নয়। তাপমাত্রা যত কম, প্রসারণ তত বেশি। (R = 8.314 J/mol·K)</small>';}
+on(['g8k'],g8info);
+DRAWS.push(function(){var x=ctxOf('g8c'),T=+$('g8k').value,V=g8V(),H=V*3.9,i,p;
+  grad(x,0,0,380,290,'#f1f7fb','#dbe7f1');
+  var cl=50,cr=170,bot=252,topy=bot-H;
+  x.fillStyle='rgba(180,215,245,.35)';x.fillRect(cl,topy,cr-cl,H);
+  x.strokeStyle='#5b7389';x.lineWidth=4;x.beginPath();x.moveTo(cl,40);x.lineTo(cl,bot);x.lineTo(cr,bot);x.lineTo(cr,40);x.stroke();
+  var sp=clamp(Math.sqrt(T/273)*1.5,.7,3.4);
+  for(i=0;i<G8.length;i++){p=G8[i];var m=Math.hypot(p.vx,p.vy)||1;p.vx*=1+(sp/m-1)*.1;p.vy*=1+(sp/m-1)*.1;p.x+=p.vx;p.y+=p.vy;
+    if(p.x<cl+8){p.x=cl+8;p.vx=Math.abs(p.vx);}if(p.x>cr-8){p.x=cr-8;p.vx=-Math.abs(p.vx);}if(p.y<topy+8){p.y=topy+8;p.vy=Math.abs(p.vy);}if(p.y>bot-8){p.y=bot-8;p.vy=-Math.abs(p.vy);}
+    ball(x,p.x,p.y,6.5,tcol((T-273)*.6));}
+  x.fillStyle='#8896a5';x.fillRect(cl+2,topy-9,cr-cl-4,9);x.fillStyle='#4b5968';x.fillRect(cl+30,topy-34,60,25);rr(x,cl+30,topy-34,60,25,4);x.fill();tagd(x,'ওজন',cl+60,topy-22,'#fff',12);
+  arrow(x,cr+16,topy-4,cr+16,topy-26,'#1d7a6f',3);tag(x,'চাপ স্থির',cr+22,topy-34,'#1d7a6f',11,'left');
+  var fl=clamp((T-100)/500,.1,1);for(i=0;i<3;i++){x.fillStyle=i===0?'rgba(255,120,30,.9)':'rgba(255,200,60,.9)';var fh=(10+fl*24)*(i===0?1:.6)+Math.sin(FR*.3+i*2)*3;x.beginPath();x.moveTo(78+i*22,276);x.quadraticCurveTo(82+i*22,276-fh,86+i*22,276);x.fill();}
+  tag(x,'V = '+f(V,1)+' L',110,28,NAVY,15);
+  var gx=212,gy=48,gw=150,gh=190;x.fillStyle='#fff';rr(x,gx-8,gy-10,gw+16,gh+30,10);x.fill();x.strokeStyle='#cfd9e1';x.lineWidth=2;x.stroke();
+  x.strokeStyle='#5b7389';x.lineWidth=2;x.beginPath();x.moveTo(gx,gy);x.lineTo(gx,gy+gh);x.lineTo(gx+gw,gy+gh);x.stroke();
+  tag(x,'V',gx-4,gy-4,NAVY,12);tag(x,'T (K) ➜',gx+gw-20,gy+gh+14,NAVY,12);
+  x.strokeStyle='#e9a23b';x.lineWidth=3;x.beginPath();x.moveTo(gx,gy+gh);x.lineTo(gx+gw,gy+gh-gh*(600*.08206)/52);x.stroke();
+  var ppx=gx+gw*(T/600),ppy=gy+gh-gh*(V)/52;circ(x,0,ppx,ppy,6,RED,'#fff',2);tag(x,'V ∝ T',gx+gw/2,gy+30,'#a25a14',14);
+  });
+g8info();
+qgame('g8q','g8o','g8fb','g8sc',[
+ ['আদর্শ গ্যাস সমীকরণ কোনটি?','PV = nRT',['P = nRT V','PV = nR/T','P/V = nRT'],'এখানে P চাপ, V আয়তন, n মোল সংখ্যা, T কেলভিন তাপমাত্রা।'],
+ ['স্থির চাপে গ্যাসের প্রসারণ সহগ γ_p = ?','1/T',['T','T²','R/T'],'PV = nRT থেকে (V₂−V₁)/V₁ ÷ (T₂−T₁) = 1/T₁।'],
+ ['কম তাপমাত্রায় গ্যাসের প্রসারণ কেমন?','বেশি',['কম','একই','শূন্য'],'γ_p = 1/T, T যত কম প্রসারণ তত বেশি।'],
+ ['গ্যাসের আয়তন মাপার সময় চাপ স্থির রাখা হয় কেন?','চাপও আয়তনকে প্রভাবিত করে',['যাতে তাপমাত্রা বাড়ে','ভর বাড়াতে','গ্যাস ঠান্ডা করতে'],'চাপ বদলালেও আয়তন বদলায়, তাই শুধু তাপমাত্রার প্রভাব দেখতে চাপ স্থির রাখতে হয়।'],
+ ['গ্যাস কেন সবচেয়ে বেশি প্রসারিত হয়?','অণুগুলো মুক্ত, বন্ধন নেই',['অণু ভারী','বেশি ঘন','বেশি শীতল'],'গ্যাসে অণুর মাঝে বন্ধন নেই বলে প্রসারণ সবচেয়ে বেশি।']]);
+
+
+/* ===== ল্যাব ৯: গলন ও বাষ্পীভবন (গরম করার লেখচিত্র) ===== */
+var C9={k:0,play:false};
+var C9S=[['কঠিন (বরফ) গরম হচ্ছে','#2b6cb0'],['গলছে (গলনের গুপ্ততাপ)','#1d7a6f'],['তরল (পানি) গরম হচ্ছে','#2b6cb0'],['ফুটছে (বাষ্পীভবনের গুপ্ততাপ)','#c0392b'],['বাষ্প গরম হচ্ছে','#a25a14']];
+function c9st(k){var s=Math.min(4,Math.floor(k/20)),u=(k-s*20)/20;return {s:s,u:clamp(u,0,1)};}
+function c9T(k){var a=c9st(k),s=a.s,u=a.u;return s===0?-20+20*u:(s===1?0:(s===2?100*u:(s===3?100:100+20*u)));}
+function c9Q(k){var a=c9st(k),s=a.s,u=a.u,Qs=[42,334,420,2260,40],q=0,i;for(i=0;i<s;i++)q+=Qs[i];return q+Qs[s]*u;}
+function c9info(){var k=C9.k,a=c9st(k),T=c9T(k);$('c9kv').textContent=bn(Math.round(k));
+  var note=a.s===1?'<br><b style="color:#1d7a6f">তাপ দিলেও তাপমাত্রা বাড়ছে না, কারণ তাপ লাগছে অণুর আন্তঃআণবিক বন্ধন শিথিল করতে। এটি গলনের সুপ্ততাপ: 1 kg বরফের জন্য 334 kJ।</b>':(a.s===3?'<br><b style="color:#c0392b">ফোটার সময়ও তাপমাত্রা 100°C-এ স্থির, তাপ খরচ হচ্ছে তরল থেকে গ্যাস বানাতে। এটি বাষ্পীভবনের সুপ্ততাপ।</b>':'');
+  $('c9t').innerHTML='ধাপ: <b style="color:'+C9S[a.s][1]+'">'+C9S[a.s][0]+'</b><br>তাপমাত্রা = <b>'+f(T,1)+' °C</b>, এ পর্যন্ত নেওয়া তাপ ≈ <b>'+fmtN(c9Q(k))+' kJ</b>'+note+'<br><small>লেখচিত্রের আনুভূমিক অক্ষ সংকুচিত, আসলে ফোটার ধাপে সবচেয়ে বেশি তাপ লাগে। (বরফ ও বাষ্পের আপেক্ষিক তাপ ও বাষ্পীভবনের সুপ্ততাপ 2260 kJ/kg আমার যোগ করা মান, বইয়ে শুধু গলনের 334 kJ/kg আছে।)</small>';}
+$('c9go').onclick=function(){if(C9.k>=100)C9.k=0;C9.play=true;};$('c9rs').onclick=function(){C9.play=false;C9.k=0;$('c9k').value=0;c9info();};
+$('c9k').oninput=function(){C9.play=false;C9.k=+this.value;c9info();};
+DRAWS.push(function(){var x=ctxOf('c9c');if(C9.play){C9.k=Math.min(100,C9.k+.09);$('c9k').value=C9.k;if(C9.k>=100)C9.play=false;if(FR%4===0)c9info();}
+  var k=C9.k,a=c9st(k),T=c9T(k),i;
+  grad(x,0,0,380,300,'#f6f9fc','#dde8f2');
+  var bx=24,bw=130,by=70,bh=150;
+  var lvl=a.s===0?bh*.55:(a.s===1?bh*.55*ease(a.u)+0:(a.s===2?bh*.55:(a.s===3?bh*.55*(1-a.u*.85):bh*.07)));
+  if(a.s===3)lvl=bh*.55*(1-a.u*.85);
+  if(a.s===4)lvl=0;
+  if(lvl>0){x.fillStyle='rgba(60,150,230,.5)';x.fillRect(bx+2,by+bh-lvl,bw-4,lvl);wave(x,bx+2,by+bh-lvl,bw-4,lvl,FR,'rgba(120,200,255,.55)','rgba(40,120,200,.5)',2);}
+  if(a.s<=1){var ic=a.s===0?1:1-a.u;var ib=bh*.55;for(i=0;i<3;i++){var sz=34*Math.sqrt(ic+.02);x.fillStyle='rgba(190,230,250,.92)';rr(x,bx+14+i*38,by+bh-ib-6*i%1*0-sz*(.4+.0)+ (i%2)*3 -0, sz,sz,5);x.fill();x.strokeStyle='#8cc2e6';x.lineWidth=1.5;x.stroke();}}
+  if(a.s===3||(a.s===2&&a.u>.8)){var nb=a.s===3?12:5;bubs(x,bx+4,by+bh-lvl,bw-8,lvl,nb,FR*(a.s===3?2.2:1));}
+  var stm=a.s===3?a.u*.6+.4:(a.s===4?1:(a.s===2?clamp((T-50)/50,0,1)*.3:0));
+  for(i=0;i<7&&stm>0.05;i++){var u=((FR*.012+i/7)%1);x.fillStyle='rgba(180,190,200,'+(0.5*stm*(1-u))+')';x.beginPath();x.arc(bx+20+i*15+Math.sin(FR*.05+i)*6,by-4-u*52,8+u*8,0,7);x.fill();}
+  x.strokeStyle='#5b7389';x.lineWidth=4;x.beginPath();x.moveTo(bx,by);x.lineTo(bx,by+bh);x.lineTo(bx+bw,by+bh);x.lineTo(bx+bw,by);x.stroke();
+  var fl=1;for(i=0;i<3;i++){x.fillStyle=i===0?'rgba(255,120,30,.9)':'rgba(255,200,60,.9)';var fh=(24)*(i===0?1:.6)+Math.sin(FR*.3+i*2)*3;x.beginPath();x.moveTo(bx+30+i*30-4,by+bh+28);x.quadraticCurveTo(bx+30+i*30,by+bh+28-fh,bx+30+i*30+4,by+bh+28);x.fill();}
+  x.fillStyle='#8a6339';x.fillRect(bx+10,by+bh+28,bw-20,5);
+  tag(x,f(T,0)+' °C',bx+bw/2,by-48+22,tcol(T*1.2-20),22);
+  tag(x,['কঠিন','গলছে','তরল','ফুটছে','বাষ্প'][a.s],bx+bw/2,26,C9S[a.s][1],15);
+  var gx=196,gy=50,gw=164,gh=200;x.fillStyle='#fff';rr(x,gx-10,gy-14,gw+22,gh+40,10);x.fill();x.strokeStyle='#cfd9e1';x.lineWidth=2;x.stroke();
+  x.strokeStyle='#5b7389';x.beginPath();x.moveTo(gx,gy);x.lineTo(gx,gy+gh);x.lineTo(gx+gw,gy+gh);x.stroke();
+  tag(x,'তাপমাত্রা (°C)',gx+50,gy-5,NAVY,11);tag(x,'দেওয়া তাপ ➜',gx+gw-30,gy+gh+16,NAVY,11);
+  function Yt(t){return gy+gh-(t+30)/160*gh;}
+  [0,100].forEach(function(t){x.strokeStyle='#e1e8ee';x.beginPath();x.moveTo(gx,Yt(t));x.lineTo(gx+gw,Yt(t));x.stroke();tag(x,bn(t),gx-12,Yt(t),'#5b7389',10);});
+  x.strokeStyle='#e9a23b';x.lineWidth=3;x.beginPath();var pts=[[0,-20],[20,0],[40,0],[60,100],[80,100],[100,120]];pts.forEach(function(p,j){var px=gx+p[0]/100*gw,py=Yt(p[1]);if(j===0)x.moveTo(px,py);else x.lineTo(px,py);});x.stroke();
+  tag(x,'গলন',gx+gw*.3,Yt(0)+12,'#1d7a6f',11);tag(x,'ফোটা',gx+gw*.7,Yt(100)-12,'#c0392b',11);
+  circ(x,0,gx+k/100*gw,Yt(T),6,RED,'#fff',2);
+  });
+c9info();
+qgame('c9q','c9o','c9fb','c9sc',[
+ ['গলনের সময় তাপ দিলেও তাপমাত্রা বাড়ে না কেন?','তাপ বন্ধন শিথিল করতে খরচ হয়',['তাপ হারিয়ে যায়','পাত্র তাপ শুষে নেয়','বরফ তাপ নেয় না'],'তাপ অণুর আন্তঃআণবিক বন্ধন ভাঙতে ব্যয় হয়, তাই তাপমাত্রা বাড়ে না।'],
+ ['গলনের সুপ্ততাপ বলতে কী বোঝায়?','স্থির তাপমাত্রায় কঠিনকে তরল করতে প্রয়োজনীয় তাপ',['তাপমাত্রা বাড়াতে তাপ','তরলকে গ্যাস করার তাপ','পাত্র গরম করার তাপ'],'গলনাঙ্কে পুরো কঠিনকে তরলে রূপান্তর করতে যে তাপ লাগে তা গলনের সুপ্ততাপ।'],
+ ['ফুটন্ত পানির তাপমাত্রা (1 atm-এ) কত?','100 °C',['0 °C','80 °C','120 °C'],'ফোটার সময় তাপমাত্রা স্থির থাকে, 1 atm-এ 100°C।'],
+ ['তরলকে গ্যাসে পরিণত করতে যে তাপ লাগে তার নাম কী?','বাষ্পীভবনের সুপ্ততাপ',['গলনের সুপ্ততাপ','আপেক্ষিক তাপ','তাপ ধারণক্ষমতা'],'বাষ্পীভবনের সময় নেওয়া তাপই বাষ্পীভবনের সুপ্ততাপ।'],
+ ['গলনের উল্টো প্রক্রিয়ার নাম কী?','কঠিনীভবন',['বাষ্পায়ন','ঘনীভবন','স্ফুটন'],'তরল থেকে কঠিন হওয়াকে কঠিনীভবন বলে।']]);
+
+/* ===== ল্যাব ১০: বাষ্পায়ন ===== */
+var E10={ps:[],lv:1};
+function e10R(){var w=+$('e10w').value/100,A=+$('e10a').value/100,T=+$('e10k').value,h=+$('e10h').value/100;return A*(1+2.2*w)*Math.exp((T-25)/17)*(1-h)/0.45*0.5;}
+function e10info(){var w=+$('e10w').value,A=+$('e10a').value,T=+$('e10k').value,h=+$('e10h').value,R=e10R();
+  $('e10wv').textContent=bn(w);$('e10av').textContent=bn(A);$('e10kv').textContent=bn(T);$('e10hv').textContent=bn(h);
+  $('e10t').innerHTML='বাষ্পায়নের হার (আপেক্ষিক): <b style="font-size:18px;color:'+(R>1?'#c0392b':'#1d7a6f')+'">'+f(R*100,0)+'%</b>'+brow('হার',Math.min(R,3),3,R>1?'#e63946':'#1d7a6f','')+'<ul style="margin:4px 0 0 18px"><li>বাতাসের প্রবাহ বেশি ➜ বাষ্পায়ন বেশি</li><li>তলের ক্ষেত্রফল বেশি ➜ বাষ্পায়ন বেশি</li><li>উষ্ণতা বেশি ➜ বাষ্পায়ন বেশি</li><li>বাতাস শুষ্ক (আর্দ্রতা কম) ➜ বাষ্পায়ন বেশি</li></ul><small>বাষ্পায়ন যেকোনো তাপমাত্রায় ঘটে। এই সহজ হিসাব বইয়ের সূত্র নয়, শুধু প্রবণতা দেখানোর জন্য আমার বানানো।</small>';}
+on(['e10w','e10a','e10k','e10h'],e10info);
+DRAWS.push(function(){var x=ctxOf('e10c'),w=+$('e10w').value/100,A=+$('e10a').value/100,T=+$('e10k').value,h=+$('e10h').value/100,R=e10R(),i,p;
+  grad(x,0,0,380,270,hm('#cfe6f7','#fff0d0',(T-10)/40),'#f6fbff');
+  for(i=0;i<Math.round(h*40);i++){x.fillStyle='rgba(120,170,215,.35)';x.beginPath();x.arc(rp(i,10,370)+Math.sin(FR*.02+i)*4,rp(i+5,30,150)+Math.cos(FR*.025+i)*4,3,0,7);x.fill();}
+  if(w>.02){for(i=0;i<6;i++){var u=((FR*.012*(1+w*2)+i/6)%1),yy=40+i*26;x.strokeStyle='rgba(120,150,180,.55)';x.lineWidth=2;x.beginPath();x.moveTo(-20+u*430,yy);x.lineTo(-20+u*430+20+w*30,yy);x.stroke();}tag(x,'🌬️ বাতাস',50,16,'#2b6cb0',12);}
+  sun(x,330,40,12+(T-10)*.4,FR);
+  var W=60+A*170,cx=190,bx=cx-W/2,by=190;
+  E10.lv=E10.lv-R*.00022;if(E10.lv<.05)E10.lv=1;
+  x.fillStyle='#d9c7a3';x.beginPath();x.moveTo(bx-8,by);x.lineTo(bx+W+8,by);x.lineTo(bx+W-14,by+48);x.lineTo(bx+14,by+48);x.closePath();x.fill();x.strokeStyle='#8a6339';x.lineWidth=3;x.stroke();
+  var wl=14*E10.lv+3;x.fillStyle='rgba(70,160,235,.75)';x.beginPath();x.moveTo(bx-4,by+(1-0)*48-wl*.0+8);x.lineTo(bx+W+4,by+8);x.lineTo(bx+W-12,by+8+wl+20);x.lineTo(bx+12,by+8+wl+20);x.closePath();
+  x.fillStyle='rgba(70,160,235,.8)';x.fillRect(bx-2,by+10+(1-E10.lv)*28,W+4,0);
+  x.fillStyle='rgba(70,160,235,.8)';x.beginPath();var topy=by+8+(1-E10.lv)*30;x.moveTo(bx-6+(1-E10.lv)*8,topy);x.lineTo(bx+W+6-(1-E10.lv)*8,topy);x.lineTo(bx+W-13,by+46);x.lineTo(bx+13,by+46);x.closePath();x.fill();
+  wave(x,bx-6+(1-E10.lv)*8,topy-2,W+12-(1-E10.lv)*16,6,FR,'rgba(160,215,255,.8)','rgba(70,160,235,.2)',1.4);
+  if(Math.random()<clamp(R*.2,0,.9)){E10.ps.push({x:bx+rnd(6,W-6),y:topy-3,vx:w*2.4+rnd(-.2,.2),vy:-rnd(.5,1.1),a:1});}
+  for(i=E10.ps.length-1;i>=0;i--){p=E10.ps[i];p.x+=p.vx;p.y+=p.vy;p.a-=.008;p.vy*=.995;ball(x,p.x,p.y,4,'#8fb8e8');if(p.a<=0||p.x>400||p.y<10)E10.ps.splice(i,1);}
+  tag(x,'বাষ্পায়ন হার '+f(R*100,0)+'%',190,250,R>1?'#c0392b':'#1d7a6f',14);
+  });
+e10info();
+qgame('e10q','e10o','e10fb','e10sc',[
+ ['বাষ্পায়ন কোন তাপমাত্রায় ঘটে?','যেকোনো তাপমাত্রায়',['শুধু 100°C-এ','শুধু 0°C-এ','শুধু গরমে'],'বাষ্পায়ন যেকোনো তাপমাত্রায় ঘটে, আর এটি তরলের পৃষ্ঠ থেকে হয়।'],
+ ['কোন অবস্থায় ভেজা কাপড় সবচেয়ে তাড়াতাড়ি শুকায়?','রোদ আছে, বাতাস শুষ্ক, কাপড় মেলে দেওয়া',['বৃষ্টি, ভেজা বাতাস','ভাঁজ করা, ছায়ায়','বদ্ধ ঘরে'],'উষ্ণতা বেশি, বাতাস শুষ্ক, আর ক্ষেত্রফল বেশি হলে বাষ্পায়ন বেশি।'],
+ ['তরলের উপরিভাগের ক্ষেত্রফল বেশি হলে বাষ্পায়ন কেমন হয়?','বেশি',['কম','একই','বন্ধ'],'এক গ্লাস পানি ধীরে শুকায়, কিন্তু বড় থালায় ঢাললে তাড়াতাড়ি শুকায়।'],
+ ['বাষ্পায়ন কোন তরলের সবচেয়ে বেশি?','যার স্ফুটনাঙ্ক কম (উদ্বায়ী)',['যার ঘনত্ব বেশি','যার রং গাঢ়','যার ভর বেশি'],'স্ফুটনাঙ্ক কম হলে বাষ্পায়ন বেশি। উদ্বায়ী তরলের বাষ্পায়ন সবচেয়ে বেশি।'],
+ ['গরমে ঘামলে শরীর ঠান্ডা লাগে কেন?','ঘাম বাষ্প হতে শরীর থেকে সুপ্ততাপ নেয়',['ঘাম ঠান্ডা বলে','ঘাম তাপ দেয়','বাতাস ঠান্ডা বলে'],'বাষ্পীভবনের সুপ্ততাপ শরীর থেকে নিয়ে নেয়, তাই শরীর শীতল হয়।']]);
+
+/* ===== ল্যাব ১১: আপেক্ষিক তাপ ===== */
+var Q11={m:0,S:[450,385,900,230],NM:['লোহা','তামা','অ্যালুমিনিয়াম','সোনা'],t:0,go:false};
+function q11dat(){var m=+$('q11m').value,dT=+$('q11d').value,s=Q11.S[Q11.m],P=2000;return {m:m,dT:dT,s:s,tM:m*s*dT/P,tW:m*4200*dT/P};}
+function q11info(){var d=q11dat();$('q11mv').textContent=bn(d.m);$('q11dv').textContent=bn(d.dT);
+  $('q11t').innerHTML='<b>'+Q11.NM[Q11.m]+'</b>: s = '+bn(d.s)+' J kg⁻¹K⁻¹, তাপ ধারণক্ষমতা C = ms = <b>'+fmtN(d.m*d.s)+' J/K</b><br><b>পানি</b>: s = ৪২০০, C = <b>'+fmtN(d.m*4200)+' J/K</b> (প্রায় '+bn(Math.round(4200/d.s*10)/10)+' গুণ)<br>হিটার 2000 W হলে সময় (Q = msΔT): '+Q11.NM[Q11.m]+' <b>'+fmtN(d.tM)+' s</b>, পানি <b>'+fmtN(d.tW)+' s</b><br><small>আপেক্ষিক তাপ s = Q ÷ [m(T₂ − T₁)], একক J kg⁻¹ K⁻¹। (ধাতুর মানগুলোর মধ্যে বইয়ে লোহা 0.45×10³ ও সোনা 230 আছে, তামা ও অ্যালুমিনিয়াম আমার যোগ করা।)</small>';}
+pills('q11p',function(k){Q11.m=k;Q11.t=0;Q11.go=false;q11info();});on(['q11m','q11d'],function(){Q11.t=0;Q11.go=false;q11info();});
+$('q11go').onclick=function(){if(Q11.t>=1)Q11.t=0;Q11.go=true;};$('q11rs').onclick=function(){Q11.t=0;Q11.go=false;};
+DRAWS.push(function(){var x=ctxOf('q11c'),d=q11dat(),i;
+  if(Q11.go){Q11.t+=1/600;if(Q11.t>=d.tW/d.tW+0.0005){}}
+  var ts=Q11.t*d.tW,TM=Math.min(d.dT,ts/d.tM*d.dT),TW=Math.min(d.dT,ts/d.tW*d.dT);if(Q11.t>=1){Q11.go=false;Q11.t=1;TM=d.dT;TW=d.dT;}
+  grad(x,0,0,380,290,'#f6f9fc','#e0eaf3');
+  function therm(cx,T,col){rr(x,cx-6,60,12,130,6);x.fillStyle='#fff';x.fill();x.strokeStyle='#8aa0b5';x.lineWidth=2;x.stroke();var h=T/80*120;x.fillStyle=col;x.fillRect(cx-3,186-h,6,h);circ(x,0,cx,196,9,col,'#8aa0b5',2);}
+  var mc=hm('#8ab4e8','#f59e42',TM/80),wc=hm('#6fb7ee','#f59e42',TW/80*.9);
+  rr(x,38,110,100,86,8);x.fillStyle=hm('#aab3be',mc.length?mc:'#aab3be',.0);x.fillStyle=mc;x.fill();x.strokeStyle='rgba(0,0,0,.3)';x.lineWidth=2;x.stroke();tagd(x,Q11.NM[Q11.m]+' '+bn(d.m)+' kg',88,152,'#fff',14);
+  therm(170,TM,'#e63946');
+  x.fillStyle='rgba(255,255,255,.8)';rr(x,222,100,106,96,8);x.fill();x.strokeStyle='#5b7389';x.lineWidth=3;x.stroke();
+  x.fillStyle=wc;x.globalAlpha=.8;x.fillRect(225,122,100,72);x.globalAlpha=1;wave(x,225,120,100,8,FR,'rgba(150,215,255,.8)','rgba(70,160,235,.3)',1.6);if(TW>d.dT*.7)bubs(x,226,126,98,66,4,FR);
+  tagd(x,'পানি '+bn(d.m)+' kg',275,160,'#fff',14);therm(352,TW,'#e63946');
+  var fl=Q11.go;for(var b=0;b<2;b++){var bx0=b?248:62;for(i=0;i<3;i++){if(!fl&&Q11.t===0)break;x.fillStyle=i===0?'rgba(255,120,30,.9)':'rgba(255,200,60,.9)';var fh=(16)*(i===0?1:.6)+Math.sin(FR*.3+i*2+b)*3;x.beginPath();x.moveTo(bx0+i*22-4,222);x.quadraticCurveTo(bx0+i*22,222-fh,bx0+i*22+4,222);x.fill();}x.fillStyle='#8a6339';x.fillRect(bx0-8,222,66,5);}
+  tag(x,f(TM,0)+' °C',170,40,TM>=d.dT-.01?'#1d7a6f':NAVY,15);tag(x,f(TW,0)+' °C',340,40,TW>=d.dT-.01?'#1d7a6f':NAVY,15);
+  tag(x,TM>=d.dT-.01?'✅ '+fmtN(d.tM)+' s':'⏱ '+fmtN(Math.min(ts,d.tM))+' s',88,250,TM>=d.dT-.01?'#1d7a6f':'#5b7389',14);
+  tag(x,TW>=d.dT-.01?'✅ '+fmtN(d.tW)+' s':'⏱ '+fmtN(Math.min(ts,d.tW))+' s',275,250,TW>=d.dT-.01?'#1d7a6f':'#5b7389',14);
+  tag(x,'একই ভর, একই তাপ',190,16,NAVY,13);
+  });
+q11info();
+qgame('q11q','q11o','q11fb','q11sc',[
+ ['আপেক্ষিক তাপ কাকে বলে?','1 kg পদার্থের তাপমাত্রা 1 K বাড়াতে প্রয়োজনীয় তাপ',['1 gm পদার্থের ভর','পদার্থের মোট তাপ','1 kg পদার্থ গলাতে তাপ'],'s = Q ÷ [m(T₂ − T₁)]।'],
+ ['আপেক্ষিক তাপের একক কী?','J kg⁻¹ K⁻¹',['J','W','N m'],'s = Q/(mΔT) থেকে একক J kg⁻¹ K⁻¹।'],
+ ['তাপ ধারণক্ষমতা C = ?','ms',['Q/m','s/m','m/s'],'ভর m ও আপেক্ষিক তাপ s গুণ করলে C পাওয়া যায়।'],
+ ['10 kg সোনা ও 10 kg পানির মধ্যে কার তাপ ধারণক্ষমতা বেশি?','পানির (প্রায় ২০ গুণ)',['সোনার','দুটোই সমান','কোনোটিই নয়'],'সোনা 2300 J/K, পানি 42,000 J/K, অর্থাৎ প্রায় ২০ গুণ বেশি।'],
+ ['পানি ধাতুর চেয়ে ধীরে গরম হয় কেন?','আপেক্ষিক তাপ বেশি',['ভর বেশি','ঘনত্ব কম','তরল বলে'],'পানির আপেক্ষিক তাপ ধাতুর চেয়ে অনেক বেশি, তাই একই তাপে কম গরম হয়।']]);
+
+
+/* ===== ল্যাব ১২: ক্যালোরিমিতি ===== */
+var K12={s:0,p:0,go:false};
+function k12sc(){return K12.s===2?.01:.1;}
+function k12calc(){var m1=+$('k12m1').value*k12sc(),t1=+$('k12t1').value,m2=+$('k12m2').value*.1,t2=+$('k12t2').value,T,s=K12.s,note='',melt=1;
+  if(s===0){T=(m1*t1+m2*t2)/(m1+m2);}
+  else if(s===1){var avail=m2*4200*t2,need=m1*334000;if(avail>=need){T=(avail-need)/((m1+m2)*4200);}else{T=0;melt=avail/need;}}
+  else{T=(m1*450*t1+m2*4200*t2)/(m1*450+m2*4200);}
+  return {m1:m1,t1:t1,m2:m2,t2:t2,T:T,melt:melt};}
+function k12info(){var c=k12calc(),s=K12.s;$('k12m1v').textContent=f(c.m1,s===2?2:1);$('k12m2v').textContent=f(c.m2,1);$('k12t1v').textContent=bn(c.t1);$('k12t2v').textContent=bn(c.t2);
+  var form=['T = (m₁T₁ + m₂T₂) ÷ (m₁ + m₂)','m₁L + m₁sT = m₂s(T₂ − T)  ➜  T = (T₂m₂s − m₁L) ÷ [(m₁ + m₂)s]','m₁s₁(T₁ − T) = m₂s₂(T − T₂)  ➜  T = (m₁s₁T₁ + m₂s₂T₂) ÷ (m₁s₁ + m₂s₂)'][s];
+  var nm=['গরম পানি','বরফ (0°C)','লোহা (s = 450)'][s];
+  $('k12t').innerHTML='প্রথম বস্তু: <b>'+nm+'</b> '+f(c.m1,s===2?2:1)+' kg'+(s===1?'':', '+bn(c.t1)+' °C')+'<br>পানি: '+f(c.m2,1)+' kg, '+bn(c.t2)+' °C<br>সূত্র: '+form+'<br>'+(s===1&&c.melt<1?'<b style="color:#2b6cb0">বরফ পুরো গলতে পারেনি, শেষ তাপমাত্রা 0 °C (প্রায় '+f(c.melt*100,0)+'% গলেছে)।</b>':'শেষ তাপমাত্রা <b style="font-size:19px;color:#c0392b">'+f(c.T,1)+' °C</b>')+'<br><small>নিয়ম: গরম বস্তু যতটা তাপ ছাড়ে, ঠান্ডা বস্তু ঠিক ততটাই নেয় (কোনো তাপ নষ্ট হয় না ধরে)। বইয়ের তিনটি উদাহরণ: 56.6°C, 20°C, 30.1°C।</small>';}
+function k12set(a,b,c,d){$('k12m1').value=a;$('k12t1').value=b;$('k12m2').value=c;$('k12t2').value=d;K12.p=0;K12.go=false;k12info();}
+pills('k12s',function(k){K12.s=k;$('k12t1').disabled=(k===1);if(k===0)k12set(20,75,10,20);else if(k===1)k12set(1,0,10,30);else k12set(1,120,10,30);});
+on(['k12m1','k12t1','k12m2','k12t2'],function(){K12.p=0;K12.go=false;k12info();});
+$('k12go').onclick=function(){K12.p=0;K12.go=true;};$('k12rs').onclick=function(){K12.p=0;K12.go=false;};
+DRAWS.push(function(){var x=ctxOf('k12c'),c=k12calc(),s=K12.s,i;
+  if(K12.go){K12.p=Math.min(1,K12.p+.006);if(K12.p>=1)K12.go=false;}
+  var p=K12.p,e=ease(p),mv=ease(clamp(p/.35,0,1)),bl=ease(clamp((p-.35)/.65,0,1));
+  grad(x,0,0,380,280,'#f6f9fc','#e2ebf4');
+  var Tcur=lerp(c.t2,c.T,bl);
+  var bw=130,bx=210,by=100,bh=130,wh=(.4+c.m2*.9)*bh*.5;
+  var addv=s===0?c.m1*.9*bh*.5:0;var lvl=Math.min(bh-10,wh+addv*mv);
+  var wc=hm('#5aa8ea','#f59e42',Tcur/100*.85);
+  x.fillStyle=wc;x.globalAlpha=.75;x.fillRect(bx+2,by+bh-lvl,bw-4,lvl);x.globalAlpha=1;wave(x,bx+2,by+bh-lvl-2,bw-4,8,FR,'rgba(160,215,255,.8)','rgba(70,160,235,.3)',1.5);
+  var ix=lerp(60,bx+bw/2-22,mv),iy=lerp(100,by+bh-lvl-(s===0?0:14)+(s===2?lvl-24:0)+(s===1?0:0),mv);
+  if(s===0&&mv<1){var ph=hm('#5aa8ea','#f59e42',c.t1/100);rr(x,40,100,60,90,6);x.fillStyle=ph;x.globalAlpha=.8;x.fill();x.globalAlpha=1;x.strokeStyle='#5b7389';x.lineWidth=3;x.stroke();tagd(x,'গরম পানি',70,145,'#fff',12);tagd(x,bn(c.t1)+' °C',70,165,'#fff',13);}
+  if(s===1){var ms=clamp(1-bl*(c.melt),0,1);var sz=(24+c.m1*30)*Math.sqrt(ms+.02);if(ms>.03||mv<1){rr(x,ix,iy-sz*.2,sz,sz,4);x.fillStyle='rgba(205,236,252,.95)';x.fill();x.strokeStyle='#8cc2e6';x.lineWidth=2;x.stroke();}if(mv<1)tag(x,'বরফ 0°C',ix+sz/2,iy-sz*.2-12,'#2b6cb0',12);}
+  if(s===2){var iw=22+c.m1*40,ih=iw*.8,col=hm('#9aa5b1','#f59e42',lerp(c.t1,c.T,bl)/120);rr(x,ix,iy,iw,ih,4);x.fillStyle=col;x.fill();x.strokeStyle='#4b5968';x.lineWidth=2;x.stroke();if(mv<1)tag(x,'লোহা '+bn(c.t1)+' °C',ix+iw/2,iy-12,'#c0392b',12);}
+  x.strokeStyle='#5b7389';x.lineWidth=4;x.beginPath();x.moveTo(bx,by-10);x.lineTo(bx,by+bh);x.lineTo(bx+bw,by+bh);x.lineTo(bx+bw,by-10);x.stroke();
+  tag(x,'পানি '+f(c.m2,1)+' kg, '+bn(c.t2)+' °C',bx+bw/2,by-26,'#2b6cb0',12);
+  rr(x,336,60,14,150,7);x.fillStyle='#fff';x.fill();x.strokeStyle='#8aa0b5';x.lineWidth=2;x.stroke();var th=clamp(Tcur/120,0,1)*140;x.fillStyle='#e63946';x.fillRect(339,206-th,8,th);circ(x,0,343,216,10,'#e63946','#8aa0b5',2);
+  tag(x,f(Tcur,1)+' °C',343,40,p>=1?'#c0392b':NAVY,16);
+  if(p>=1)tag(x,'শেষ তাপমাত্রা = '+f(c.T,1)+' °C',190,260,'#c0392b',17);else if(p===0)tag(x,'"মেশাও" চাপো',190,260,'#5b7389',13);
+  });
+k12set(20,75,10,20);
+qgame('k12q','k12o','k12fb','k12sc',[
+ ['75°C-এর 2 L ও 20°C-এর 1 L পানি মেশালে শেষ তাপমাত্রা কত?','প্রায় 56.6 °C',['47.5 °C','95 °C','45 °C'],'T = (75×2 + 20×1) ÷ 3 = 56.6 °C।'],
+ ['ক্যালোরিমিতির প্রথম নিয়ম কী?','বেশি তাপমাত্রার বস্তু তাপ দেয় যতক্ষণ না তাপমাত্রা সমান হয়',['ঠান্ডা বস্তু তাপ দেয়','তাপমাত্রা বাড়তেই থাকে','তাপ হারিয়ে যায়'],'গরম বস্তু কম তাপমাত্রার বস্তুকে তাপ দিতে থাকে যতক্ষণ না দুটোর তাপমাত্রা সমান হয়।'],
+ ['দ্বিতীয় নিয়ম কী?','গরম বস্তুর ছাড়া তাপ = ঠান্ডা বস্তুর নেওয়া তাপ',['ছাড়া তাপ > নেওয়া তাপ','ছাড়া তাপ < নেওয়া তাপ','তাপ নষ্ট হয়'],'উত্তপ্ত বস্তু যতটুকু তাপ ছাড়ে, শীতল বস্তু ঠিক ততটুকুই নেয়।'],
+ ['0°C-এ 0.1 kg বরফ 30°C-এর 1 kg পানিতে মেশালে শেষ তাপমাত্রা প্রায়?','20 °C',['30 °C','25 °C','0 °C'],'T = (30×1×4.2×10³ − 0.1×334×10³) ÷ (1.1×4.2×10³) = 20°C।'],
+ ['বরফ গলার সময় পানির তাপমাত্রা কমে কেন?','বরফ গলতে পানি থেকে তাপ নেয়',['বরফ ঠান্ডা বলে','পানি বাষ্প হয়','বরফ হালকা'],'বরফ গলার সুপ্ততাপ পানি থেকে আসে, তাই পানির তাপমাত্রা কমে।']]);
+
+/* ===== ল্যাব ১৩: চাপের প্রভাব ===== */
+var P13={s:0,d:0,bub:[]};
+function p13Tb(p){return 1/(1/373.15-(8.314/40700)*Math.log(p))-273.15;}
+function p13info(){var w=+$('p13w').value,p=+$('p13p').value,Tb=p13Tb(p);$('p13wv').textContent=bn(w);$('p13pv').textContent=bn(p);
+  if(P13.s===0)$('p13t').innerHTML='ঝুলন্ত ওজন: <b>'+bn(w)+' kg</b> ('+(w===0?'তার নড়বে না':'তার বরফ কেটে নিচে নামবে')+')<br>তারের নিচে চাপ বেশি ➜ <b>গলনাঙ্ক কমে</b> ➜ বরফ গলে যায়<br>তার সরে গেলে চাপ কমে ➜ গলনাঙ্ক আবার আগের মান ➜ পানি আবার জমে<br><small>তাই বরফ খণ্ড টুকরো না হয়েও তার নেমে আসে। (বইয়ের চিত্র ৬.০৯, ওজন বেশি হলে তার দ্রুত নামে।)</small>';
+  else $('p13t').innerHTML='বাইরের চাপ: <b>'+bn(p)+' atm</b><br>পানির ফুটনাঙ্ক ≈ <b style="font-size:18px;color:#c0392b">'+f(Tb,0)+' °C</b><br>'+(p<.9?'🏔️ কম চাপে পানি কম তাপমাত্রায় ফোটে, তাই পাহাড়ে রান্না ধীরে হয়।':(p>1.2?'🍲 বেশি চাপে ফুটনাঙ্ক বাড়ে, তাই প্রেশার কুকারে তাড়াতাড়ি রান্না হয়।':'সাধারণ চাপে পানি 100 °C-এ ফোটে।'))+'<br><small>বই বলে চাপ বাড়লে ফুটনাঙ্ক বাড়ে। সংখ্যাগুলো আমি Clausius–Clapeyron-এর আনুমানিক সূত্রে হিসাব করেছি।</small>';}
+pills('p13s',function(k){P13.s=k;P13.d=0;p13info();});on(['p13w','p13p'],p13info);
+DRAWS.push(function(){var x=ctxOf('p13c'),w=+$('p13w').value,p=+$('p13p').value,i;
+  if(P13.s===0){
+    grad(x,0,0,380,280,'#e8f1f8','#cfdce8');
+    x.fillStyle='#b88a52';x.fillRect(40,150,300,10);x.fillRect(70,160,12,100);x.fillRect(298,160,12,100);
+    var bw=200,bx=90,bt=82,bh=68;
+    P13.d=Math.min(1,P13.d+w*.0009);if(P13.d>=1&&FR%240===0)P13.d=0;
+    var wy=bt+4+P13.d*(bh+4);
+    x.fillStyle='rgba(190,228,250,.92)';rr(x,bx,bt,bw,bh,6);x.fill();x.strokeStyle='#8cc2e6';x.lineWidth=2;x.stroke();
+    x.strokeStyle='rgba(255,255,255,.7)';x.lineWidth=1.5;x.beginPath();x.moveTo(bx+10,bt+14);x.lineTo(bx+60,bt+14);x.moveTo(bx+120,bt+30);x.lineTo(bx+170,bt+30);x.stroke();
+    if(P13.d>0.02){x.strokeStyle='rgba(255,255,255,.9)';x.lineWidth=2;x.setLineDash([3,3]);x.beginPath();x.moveTo(bx+bw/2,bt+2);x.lineTo(bx+bw/2,wy);x.stroke();x.setLineDash([]);}
+    x.strokeStyle='#444';x.lineWidth=2.5;x.beginPath();x.moveTo(bx-14,wy);x.lineTo(bx+bw+14,wy);x.stroke();
+    var wl=Math.min(60,10+w*5);
+    [bx-14,bx+bw+14].forEach(function(px){x.strokeStyle='#444';x.lineWidth=2;x.beginPath();x.moveTo(px,wy);x.lineTo(px,wy+40);x.stroke();if(w>0){var sz=12+w*2.2;rr(x,px-sz/2,wy+40,sz,sz*.8,3);x.fillStyle='#4b5968';x.fill();tagd(x,bn(w)+'kg',px,wy+40+sz*.4,'#fff',10);}});
+    if(w>0)arrow(x,bx+bw/2,wy-22,bx+bw/2,wy-4,RED,3);
+    tag(x,'🧊 বরফের খণ্ড',190,34,NAVY,14);tag(x,P13.d>=1?'তার পার হয়ে গেছে, বরফ অখণ্ড!':(w===0?'ওজন দাও':'চাপে বরফ গলছে'),190,262,P13.d>=1?'#1d7a6f':'#c0392b',13);
+  }else{
+    var Tb=p13Tb(p),alt=clamp((1-p)/.7,0,1);
+    grad(x,0,0,380,280,hm('#bfe3ff','#8fc2f0',alt*.6),'#f4f9fd');
+    if(p<.95){x.fillStyle='#8a9a7a';x.beginPath();x.moveTo(0,200);x.lineTo(110,60);x.lineTo(210,200);x.closePath();x.fill();x.fillStyle='#fff';x.beginPath();x.moveTo(94,80);x.lineTo(110,60);x.lineTo(126,82);x.lineTo(110,76);x.closePath();x.fill();}
+    var px0=130,pw=110,py0=140,ph=76;
+    x.fillStyle='#b9c3cd';rr(x,px0,py0,pw,ph,10);x.fill();x.strokeStyle='#5b7389';x.lineWidth=3;x.stroke();
+    x.fillStyle='rgba(70,160,235,.8)';x.fillRect(px0+4,py0+24,pw-8,ph-28);
+    if(p>1.15){x.fillStyle='#7d8a97';rr(x,px0-6,py0-8,pw+12,14,6);x.fill();x.fillStyle='#c0392b';x.fillRect(px0+pw/2-5,py0-20,10,12);}
+    var boil=Tb;if(FR%4===0&&Math.random()<.9)P13.bub.push({x:px0+rnd(10,pw-10),y:py0+ph-6,r:rnd(2,4.5),v:rnd(.5,1.4)});
+    for(i=P13.bub.length-1;i>=0;i--){var b=P13.bub[i];b.y-=b.v;b.x+=Math.sin(FR*.2+i)*.3;circ(x,0,b.x,b.y,b.r,'rgba(255,255,255,.7)','#fff',1);if(b.y<py0+22)P13.bub.splice(i,1);}
+    for(i=0;i<6;i++){var u=((FR*.012+i/6)%1);x.fillStyle='rgba(180,190,200,'+(.55*(1-u))+')';x.beginPath();x.arc(px0+20+i*14+Math.sin(FR*.05+i)*5,py0-6-u*46,7+u*8,0,7);x.fill();}
+    for(i=0;i<3;i++){x.fillStyle=i===0?'rgba(255,120,30,.9)':'rgba(255,200,60,.9)';var fh=18*(i===0?1:.6)+Math.sin(FR*.3+i*2)*3;x.beginPath();x.moveTo(px0+22+i*32-4,py0+ph+22);x.quadraticCurveTo(px0+22+i*32,py0+ph+22-fh,px0+22+i*32+4,py0+ph+22);x.fill();}
+    x.fillStyle='#8a6339';x.fillRect(px0+8,py0+ph+22,pw-16,5);
+    dial(x,310,120,34,clamp((p-.3)/2.2,0,1),f(p,1)+' atm',p>1.2?'#c0392b':'#2b6cb0');tag(x,'বাইরের চাপ',310,170,NAVY,12);
+    tag(x,'ফুটনাঙ্ক ≈ '+f(Tb,0)+' °C',190,32,'#c0392b',18);tag(x,p<.95?'🏔️ উঁচু জায়গা, কম চাপ':(p>1.15?'🍲 প্রেশার কুকার, বেশি চাপ':'সমতল, 1 atm'),190,262,NAVY,13);
+  }
+  });
+p13info();
+qgame('p13q','p13o','p13fb','p13sc',[
+ ['চাপ দিলে বরফের গলনাঙ্কের কী হয়?','কমে',['বাড়ে','একই থাকে','দ্বিগুণ হয়'],'চাপ দিলে গলনাঙ্ক কমে, তাই দুই টুকরো বরফ চাপ দিয়ে এক টুকরো করা যায়।'],
+ ['চাপ বাড়ালে পানির ফুটনাঙ্কের কী হয়?','বাড়ে',['কমে','একই থাকে','০ হয়ে যায়'],'চাপ বাড়লে স্ফুটনাঙ্ক বাড়ে, তাই প্রেশার কুকারে তাপমাত্রা বেশি হয়।'],
+ ['উঁচু পাহাড়ে রান্না করতে বেশি সময় লাগে কেন?','কম চাপে পানি কম তাপমাত্রায় ফোটে',['পানি বেশি গরম হয়','চাপ বেশি','বাতাস গরম'],'বাতাসের চাপ কম বলে পানি কম তাপমাত্রায় ফোটে, তাপমাত্রা আর বাড়ানো যায় না।'],
+ ['প্রেশার কুকারে রান্না তাড়াতাড়ি হয় কেন?','আবদ্ধ পাত্রে চাপ বেশি, ফুটনাঙ্ক বেশি',['পাত্র ছোট বলে','ঢাকনা ভারী বলে','তাপ কম লাগে'],'বাষ্প আবদ্ধ হয়ে চাপ বাড়ায়, তাই পানির ফুটনাঙ্ক বাড়ে ও বেশি তাপমাত্রায় রান্না হয়।'],
+ ['তার ঝুলিয়ে দিলে বরফের খণ্ড কেটে যায় না কেন?','তার সরলে পানি আবার জমে যায়',['বরফ শক্ত','তার ভারী','বরফ গরম'],'চাপ সরে গেলে গলনাঙ্ক আগের মান পায়, গলা পানি আবার বরফ হয়ে যায়।']]);
+
+
+var QUIZ=[];
+function M(q,c,w,e,fix){QUIZ.push({q:q,o:[c].concat(w),a:0,e:e,fix:!!fix});}
+QUIZ.push({q:'রেললাইন নির্মাণের সময় দুটি রেল যেখানে মিলিত হয় সেখানে একটু ফাঁকা রাখা হয় কেন? (বইয়ের নমুনা প্রশ্ন ১)',o:['লোহা সাশ্রয় করার জন্য','গ্রীষ্মকালে রেললাইনের তাপমাত্রা বৃদ্ধি হ্রাস করার জন্য','রেলগাড়ি চলার সময় খটখট শব্দ করার জন্য','তাপীয় প্রসারণের কারণে রেললাইনের বিকৃতি পরিহার করার জন্য'],a:3,fix:true,e:'গরমে লাইন লম্বা হয়। ফাঁক না থাকলে লাইন বেঁকে যেত, তাই ফাঁক রাখা হয়।'});
+QUIZ.push({q:'ঘর্মাক্ত দেহে পাখার বাতাস আরাম দেয় কেন? (বইয়ের নমুনা প্রশ্ন ২)',o:['পাখার বাতাস গায়ের ঘাম বের হতে দেয় না তাই','বাষ্পায়ন শীতলতা সৃষ্টি করে তাই','পাখার বাতাস শীতল জলীয় বাষ্প ধারণ করে তাই','পাখার বাতাস সরাসরি লোমকূপ দিয়ে শরীরে ঢুকে যায় তাই'],a:1,fix:true,e:'বাতাস বাড়লে ঘামের বাষ্পায়ন বাড়ে। বাষ্পীভবনের সুপ্ততাপ শরীর থেকে যায়, তাই শরীর শীতল লাগে।'});
+QUIZ.push({q:'(চিত্র ৬.১০: বরফ গলনের লেখচিত্র) সম্পূর্ণ বরফ গলতে কত সময় লেগেছিল? (বইয়ের নমুনা প্রশ্ন ৩)',o:['2 মিনিট','4 মিনিট','6 মিনিট','8 মিনিট'],a:2,fix:true,e:'লেখচিত্রে 6 মিনিট পর্যন্ত তাপমাত্রা 0°C-এ স্থির (গলন চলছে)। 6 মিনিটে তাপমাত্রা বাড়তে শুরু করে, অর্থাৎ তখন পুরো বরফ গলে গেছে। (এটি আমার পড়া, বইয়ে উত্তরমালা নেই।)'});
+QUIZ.push({q:'(একই লেখচিত্র) গলিত পানির তাপমাত্রা স্ফুটনাঙ্কে পৌঁছাতে প্রয়োজনীয় সময় কত মিনিট? (বইয়ের নমুনা প্রশ্ন ৪)',o:['6','8','12','18'],a:0,fix:true,e:'তাপমাত্রা 6 মিনিটে শুরু হয়ে 12 মিনিটে 100°C-এ পৌঁছেছে। সময় = 12 − 6 = 6 মিনিট। (আমার পড়া।)'});
+QUIZ.push({q:'সুপ্ততাপের মাধ্যমে: i. বস্তুর তাপমাত্রা বৃদ্ধি হয়  ii. বস্তুর অবস্থার পরিবর্তন হয়  iii. বস্তুর অভ্যন্তরীণ শক্তি বৃদ্ধি পায়। নিচের কোনটি সঠিক? (বইয়ের নমুনা প্রশ্ন ৫)',o:['i','ii','ii ও iii','i, ii ও iii'],a:2,fix:true,e:'সুপ্ততাপে তাপমাত্রা বাড়ে না (i ভুল)। অবস্থার পরিবর্তন হয় এবং অণুর বন্ধন ভাঙতে অভ্যন্তরীণ শক্তি বাড়ে। তাই ii ও iii।'});
+M('তাপ কী ধরনের রাশি?','শক্তির একটি রূপ',['বল','গতি','ভর'],'তাপ এক ধরনের শক্তি, একক জুল (J)।');
+M('1 ক্যালরি কত জুলের সমান?','4.2 J',['42 J','0.42 J','1 J'],'1 cal = 4.2 J।');
+M('1 gm পানির তাপমাত্রা 1°C বাড়াতে যে তাপ লাগে তাকে কী বলে?','1 ক্যালরি',['1 জুল','1 ওয়াট','1 কেলভিন'],'এটিই 1 ক্যালরির সংজ্ঞা।');
+M('তাপমাত্রা হলো অণুগুলোর কিসের পরিমাপ?','গড় গতিশক্তির',['ভরের','আয়তনের','ঘনত্বের'],'তাপমাত্রা অণুর গড় গতিশক্তির একটি পরিমাপ।');
+M('কেলভিন ও সেলসিয়াসের সম্পর্ক কোনটি?','T_K = T_C + 273.15',['T_K = T_C − 273.15','T_K = 9/5 T_C','T_K = T_C × 273'],'কেলভিন = সেলসিয়াস + 273.15।');
+M('1 atm চাপে পানির স্ফুটনাঙ্ক কেলভিনে কত?','373.15 K',['100 K','273.15 K','212 K'],'100 + 273.15 = 373.15 K।');
+M('ত্রৈধ বিন্দুতে পানির তাপমাত্রা কেলভিনে কত?','273.16 K',['273.15 K','0 K','373 K'],'ত্রৈধ বিন্দুর মান 0.01°C = 273.16 K।');
+M('ফারেনহাইট স্কেলে পানির ফুটনাঙ্ক কত?','212°F',['100°F','32°F','180°F'],'বরফ গলনাঙ্ক 32°F, পানির ফুটনাঙ্ক 212°F।');
+M('37°C তাপমাত্রা ফারেনহাইটে কত?','98.6°F',['69°F','37°F','100°F'],'T_F = (9/5)(37) + 32 = 98.6°F।');
+M('কোন তাপমাত্রায় সেলসিয়াস ও ফারেনহাইট সমান?','−40°',['0°','32°','−273°'],'T = (5/9)(T − 32) থেকে T = −40।');
+M('2 m লোহার দণ্ড (α = 12 × 10⁻⁶/°C) 50°C বাড়লে দৈর্ঘ্য কত বাড়বে?','1.2 mm',['12 mm','0.12 mm','12 cm'],'ΔL = αLΔT = 12×10⁻⁶ × 2 × 50 = 1.2×10⁻³ m = 1.2 mm।');
+M('কঠিনের ক্ষেত্রফল প্রসারণ সহগ β ও α-এর সম্পর্ক?','β = 2α',['β = α','β = 3α','β = α²'],'ক্ষেত্রফল দুই দিকে প্রসারিত হয়, তাই β = 2α।');
+M('কঠিনের আয়তন প্রসারণ সহগ γ = ?','3α',['2α','α','α/3'],'আয়তন তিন দিকে প্রসারিত হয়, তাই γ = 3α।');
+M('কঠিন পদার্থ গরম করলে ঘনত্ব কী হয়?','কমে',['বাড়ে','একই থাকে','শূন্য হয়'],'ভর স্থির, আয়তন বাড়ে, তাই ঘনত্ব ρ = m/V কমে।');
+M('তরলের আপাত প্রসারণ কোনটি?','V_L − V_B',['V_L + V_B','V_B − V_L','V_L × V_B'],'পাত্রের প্রসারণ বাদ দিলে আপাত প্রসারণ।');
+M('স্থির চাপে আদর্শ গ্যাসের আয়তন প্রসারণ সহগ কত?','1/T',['T','R/T','nR'],'γ_p = 1/T।');
+M('গলনের সময় তাপ দিলে তাপমাত্রা কী হয়?','স্থির থাকে',['বাড়ে','কমে','দ্বিগুণ হয়'],'তাপ বন্ধন শিথিল করতে ব্যয় হয়, তাই তাপমাত্রা বাড়ে না।');
+M('তরল থেকে গ্যাসে রূপান্তরের জন্য প্রয়োজনীয় তাপকে কী বলে?','বাষ্পীভবনের সুপ্ততাপ',['গলনের সুপ্ততাপ','আপেক্ষিক তাপ','তাপ ধারণক্ষমতা'],'এটাই বাষ্পীভবনের সুপ্ততাপ।');
+M('বাষ্পায়ন কোন তাপমাত্রায় ঘটতে পারে?','যেকোনো তাপমাত্রায়',['শুধু স্ফুটনাঙ্কে','শুধু 0°C-এ','শুধু 100°C-এর ওপরে'],'বাষ্পায়ন তরলের পৃষ্ঠ থেকে যেকোনো তাপমাত্রায় ঘটে।');
+M('আপেক্ষিক তাপের একক কোনটি?','J kg⁻¹ K⁻¹',['J K⁻¹','J kg','W m⁻¹'],'s = Q ÷ [m(T₂ − T₁)]।');
+M('5 kg বস্তুর আপেক্ষিক তাপ 400 J kg⁻¹ K⁻¹ হলে তাপ ধারণক্ষমতা কত?','2000 J/K',['80 J/K','400 J/K','5 J/K'],'C = ms = 5 × 400 = 2000 J/K।');
+M('2 kg পানির তাপমাত্রা 10 K বাড়াতে কত তাপ লাগে? (s = 4200)','84,000 J',['8,400 J','42,000 J','4,200 J'],'Q = msΔT = 2 × 4200 × 10 = 84,000 J।');
+M('1 kg 80°C ও 1 kg 20°C পানি মেশালে শেষ তাপমাত্রা কত?','50°C',['60°C','100°C','40°C'],'ভর সমান, তাই গড় = (80 + 20) ÷ 2 = 50°C।');
+M('চাপ বাড়ালে পানির স্ফুটনাঙ্কের কী হয়?','বাড়ে',['কমে','একই থাকে','০ হয়'],'প্রেশার কুকারে চাপ বেশি, তাই ফুটনাঙ্কও বেশি।');
+M('চাপ দিলে বরফের গলনাঙ্কের কী হয়?','কমে',['বাড়ে','একই থাকে','১০০ হয়'],'চাপে গলনাঙ্ক কমে, তাই চাপ দিয়ে বরফের টুকরো জোড়া লাগানো যায়।');
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+
+var QA=[
+ {h:'📝 সৃজনশীল প্রশ্ন ১ (তামার তার ও খুঁটি)',items:[
+  ['<b>উদ্দীপক:</b> দুটি বৈদ্যুতিক খুঁটির মধ্যবর্তী দূরত্ব 30 m। খুঁটি দুটির সাথে 30.001 m দৈর্ঘ্যের তামার তার যেদিন সংযোগ দেওয়া হয়, ঐ দিন বায়ুর তাপমাত্রা ছিল 30°C। তামার দৈর্ঘ্য প্রসারণ সহগ 16.7 × 10⁻⁶ K⁻¹। শীতকালে একদিন বায়ুর তাপমাত্রা 4°C হলো।<br><b>(ক)</b> পানির ত্রৈধ বিন্দুর সংজ্ঞা দাও। (১)','যে নির্দিষ্ট তাপমাত্রা ও চাপে (0.0060373 atm) বরফ, পানি ও জলীয় বাষ্প একসাথে সহাবস্থান করতে পারে, তাকে পানির ত্রৈধ বিন্দু বলে। এর মান 273.16 K (0.01°C)।'],
+  ['<b>(খ)</b> দুটি বস্তুর তাপ সমান হলেও এদের তাপমাত্রা ভিন্ন হতে পারে কি? ব্যাখ্যা করো। (২)','হ্যাঁ, পারে। তাপ Q = msΔT, তাই তাপ ভর ও আপেক্ষিক তাপের ওপরও নির্ভর করে। যেমন 1 kg পানি ও 1 kg লোহাকে সমান তাপ দিলে লোহার আপেক্ষিক তাপ (450) পানির (4200) চেয়ে কম বলে লোহার তাপমাত্রা অনেক বেশি বাড়ে। তাই সমান তাপ পেলেও তাপমাত্রা ভিন্ন হয়।'],
+  ['<b>(গ)</b> তামার আয়তন প্রসারণ সহগ নির্ণয় করো। (৩)','γ = 3α = 3 × 16.7 × 10⁻⁶ = <b>50.1 × 10⁻⁶ K⁻¹</b> (≈ 5.01 × 10⁻⁵ K⁻¹)।'],
+  ['<b>(ঘ)</b> শীতকালে তারটি ছিঁড়ে যাবে কি না গাণিতিকভাবে বিশ্লেষণ করো। (৪)','30°C-এ তারের দৈর্ঘ্য L₁ = 30.001 m, তাপমাত্রা কমে 4°C হলো, ΔT = 4 − 30 = −26°C।<br>L₂ = L₁ + αL₁ΔT = 30.001 × (1 − 16.7×10⁻⁶ × 26) = 30.001 × (1 − 4.342×10⁻⁴) ≈ <b>29.988 m</b>।<br>কিন্তু দুই খুঁটির দূরত্ব 30 m। তার সংকুচিত হয়ে 29.988 m হলে খুঁটি পর্যন্ত পৌঁছাতে 30 − 29.988 = প্রায় 0.012 m (12 mm) কম পড়ে। তাই তারটি টানে থাকবে (বা খুঁটি ধরে টানবে) এবং যথেষ্ট টান পড়লে ছিঁড়ে যেতে পারে। (এটি আমার বিশ্লেষণ, বইয়ে উত্তরমালা নেই।)']
+ ]},
+ {h:'📝 সৃজনশীল প্রশ্ন ২ (দুটি ধাতব দণ্ড)',items:[
+  ['<b>উদ্দীপক:</b> দুইটি ধাতব দণ্ডের দৈর্ঘ্য 6 m। একটিতে 125,000 J তাপ দেওয়ায় দণ্ডটির তাপমাত্রা 30°C থেকে বেড়ে 80°C হয় এবং দৈর্ঘ্য বেড়ে 6.0051 m হয়। অপর দণ্ডের তাপমাত্রা 20°C থেকে বাড়িয়ে 60°C করায় দৈর্ঘ্য বেড়ে 6.0045 m হয়।<br><b>(ক)</b> 1 ক্যালরি কাকে বলে? (১)','1 gm পানির তাপমাত্রা 1°C বাড়াতে যে পরিমাণ তাপের প্রয়োজন হয় তাকে 1 ক্যালরি বলে। 1 cal = 4.2 J।'],
+  ['<b>(খ)</b> পদার্থের তাপমাত্রিক ধর্ম ব্যাখ্যা করো। (২)','তাপমাত্রা মাপার জন্য কোনো বিশেষ পদার্থের যে ধর্ম পরিবর্তন কাজে লাগানো হয় এবং যে পরিবর্তন সূক্ষ্মভাবে মাপা যায়, তাকে তাপমাত্রিক ধর্ম বলে। যেমন পারদ থার্মোমিটারে পারদ তাপমাত্রিক পদার্থ ও তার আয়তনের প্রসারণ তাপমাত্রিক ধর্ম। এছাড়া গ্যাসের চাপ, ধাতুর রোধ, থার্মোকাপলের ইএমএফও তাপমাত্রিক ধর্ম।'],
+  ['<b>(গ)</b> প্রথম দণ্ডের ভর 6 kg হলে এর আপেক্ষিক তাপ নির্ণয় করো। (৩)','Q = 125,000 J, m = 6 kg, ΔT = 80 − 30 = 50 K।<br>s = Q ÷ (mΔT) = 125,000 ÷ (6 × 50) = <b>416.7 J kg⁻¹K⁻¹</b>।'],
+  ['<b>(ঘ)</b> দণ্ডদুটি একই উপাদানের তৈরি কি না, গাণিতিক ব্যাখ্যাসহ মন্তব্য করো। (৪)','একই উপাদান হলে দুটি দণ্ডের দৈর্ঘ্য প্রসারণ সহগ α সমান হতে হবে।<br>প্রথম দণ্ড: α₁ = (6.0051 − 6) ÷ [6 × (80 − 30)] = 0.0051 ÷ 300 = <b>17 × 10⁻⁶ K⁻¹</b>।<br>দ্বিতীয় দণ্ড: α₂ = (6.0045 − 6) ÷ [6 × (60 − 20)] = 0.0045 ÷ 240 = <b>18.75 × 10⁻⁶ K⁻¹</b>।<br>α₁ ≠ α₂, তাই দণ্ড দুটি <b>একই উপাদানের তৈরি নয়</b>।']
+ ]},
+ {h:'📝 সংক্ষিপ্ত উত্তর প্রশ্ন',items:[
+  ['১. ঘূর্ণিঝড়ের শক্তি সৃষ্টিতে বাষ্পায়নের ভূমিকা ব্যাখ্যা করো।','সমুদ্রের পানি বাষ্পায়িত হয়ে জলীয় বাষ্পে ভরা বাতাস ওপরে ওঠে। ওপরে ঠান্ডায় সেই বাষ্প জলকণায় ঘনীভূত হলে বাষ্পীভবনের সুপ্ততাপ শক্তি হিসেবে বের হয়ে আসে। এই বিপুল শক্তিই ঘূর্ণিঝড়ের প্রচণ্ড শক্তি হিসেবে কাজ করে।'],
+  ['২. তাপ ও তাপমাত্রার মধ্যে দুটি পার্থক্য লেখো।','(১) তাপ একটি শক্তি, তাপমাত্রা হলো বস্তুর তাপীয় অবস্থার পরিমাপ। (২) তাপ ভর, পদার্থ ও তাপমাত্রার ওপর নির্ভর করে (Q = msΔT), তাপমাত্রা অণুর গড় গতিশক্তির পরিমাপ। (৩) তাপের একক J বা cal, তাপমাত্রার একক K, °C বা °F।'],
+  ['৩. পানির ত্রৈধবিন্দুর তাপমাত্রা 273.16 K বলতে কী বোঝায়?','এর অর্থ হলো 273.16 K (0.01°C) তাপমাত্রা ও 0.0060373 atm চাপে বরফ, পানি ও জলীয় বাষ্প একসাথে সাম্যাবস্থায় থাকে।'],
+  ['৪. উঁচু পাহাড়ের ওপর রান্না করতে বেশি সময় লাগে কেন?','উঁচুতে বায়ুচাপ কম, তাই পানি কম তাপমাত্রায় ফোটে। ফুটন্ত পানির তাপমাত্রা আর বাড়ানো যায় না। কম তাপমাত্রায় রান্না হতে সময় বেশি লাগে।'],
+  ['৫. (বাড়তি, আমার বানানো) রেললাইনের জোড়ায় ফাঁক রাখা হয় কেন?','গরমে লাইন তাপীয় প্রসারণে লম্বা হয়। ফাঁক না থাকলে প্রসারণের জায়গা না পেয়ে লাইন বেঁকে যেত, দুর্ঘটনার ঝুঁকি হতো।'],
+  ['৬. (বাড়তি, আমার বানানো) প্রেশার কুকারে রান্না তাড়াতাড়ি হয় কেন?','এটি নিশ্ছিদ্র পাত্র, তাই বাষ্প আবদ্ধ হয়ে চাপ বাড়ায়। চাপ বাড়লে পানির স্ফুটনাঙ্ক বাড়ে, তাই বেশি তাপমাত্রায় খাবার সেদ্ধ হয়।'],
+  ['৭. (বাড়তি, আমার বানানো) আপেক্ষিক তাপ কাকে বলে?','1 kg ভরের কোনো পদার্থের তাপমাত্রা 1 K বাড়াতে যে তাপ প্রয়োজন, তাকে ঐ পদার্থের আপেক্ষিক তাপ বলে। s = Q ÷ [m(T₂ − T₁)], একক J kg⁻¹ K⁻¹।']
+ ]}
+];
+
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+function frame(){FR++;for(var i=0;i<DRAWS.length;i++)DRAWS[i]();requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>
