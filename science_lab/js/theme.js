@@ -1,6 +1,7 @@
 /* ShikboLab চ্যাপ্টার থিম স্ক্রিপ্ট: অ্যানিমেশন ও সুবিধা (js/theme.js) */
 (function(){
  if(window.__thm)return;window.__thm=1;
+ var thisScript=document.currentScript;
  var d=document,h=d.documentElement,rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
  var file=decodeURIComponent(location.pathname.split('/').pop()||'');
  var sub=/^phy/.test(file)?'physics':/^math/.test(file)?'math':/^bio/.test(file)?'biology':'chemistry';
@@ -86,6 +87,12 @@
    nv.innerHTML=(pv?'<a class="pv'+(nx?'':' only')+'" href="../'+pv.file+'"><small>← আগের</small><b>'+nm(pv)+'</b></a>':'')+(nx?'<a class="nx'+(pv?'':' only')+'" href="../'+nx.file+'"><small>পরের →</small><b>'+nm(nx)+'</b></a>':'');
    w.appendChild(nv);
   }
+  /* ভার্চুয়াল ল্যাব স্টেজ (css/stage.css + js/lab-stage.js) */
+  try{
+   var base=(thisScript&&thisScript.src?thisScript.src.replace(/js\/theme\.js.*$/,''):'../');
+   var lk=d.createElement('link');lk.rel='stylesheet';lk.href=base+'css/stage.css?v=3';d.head.appendChild(lk);
+   var ls=d.createElement('script');ls.src=base+'js/lab-stage.js?v=4';d.head.appendChild(ls);
+  }catch(e){}
   if(window.CHAPTERS)buildNav();
   else{var s=d.createElement('script');s.src='../js/chapters.js';s.onload=buildNav;d.head.appendChild(s);}
  });
