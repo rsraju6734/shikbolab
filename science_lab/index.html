@@ -203,6 +203,7 @@ html,body{overflow-x:clip}
 @media(max-width:900px){.play{grid-template-columns:1fr;padding:14px}}
 
 </style>
+<link rel="stylesheet" href="css/home2.css">
 <script src="js/prices.js"></script>
 <script src="js/demo-saas.js?v=4"></script>
 </head>
@@ -215,6 +216,7 @@ html,body{overflow-x:clip}
 <main id="app"></main>
 <footer>&copy; <b>ShikboLab</b> &mdash; বাংলায় ইন্টারঅ্যাকটিভ বিজ্ঞান ল্যাব, কিছু অধ্যায় ফ্রি, বাকিগুলো প্ল্যানে 💙</footer>
 <script src="js/chapters.js"></script>
+<script src="js/home2.js"></script>
 <script>
 (function(){
 "use strict";
@@ -389,6 +391,7 @@ function home(){
  function fill(){var l=ext.filter(function(c){return cur==='all'||c.subject===cur;});bg.innerHTML=l.map(bonusTile).join('')||'<div class="empty">কিছু নেই</div>';rvInit(bg);}
  pills.onclick=function(e){var b=e.target.closest('button');if(!b)return;cur=b.dataset.f;pills.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b);});fill();};
  fill();rvInit(app);
+ if(window.home2)home2(app);
 }
 function subject(k){
  var s=SUBJ[k],live=all.filter(function(c){return c.subject===k;});
