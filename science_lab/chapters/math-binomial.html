@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>দ্বিপদী বিস্তৃতি (উচ্চতর গণিত অধ্যায় ১০) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+canvas{width:100%;height:auto;max-width:700px;display:block;margin:8px auto;border-radius:12px;background:#fff;border:1px solid var(--line);touch-action:none}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.ctl input[type=range]{width:200px;max-width:100%}
+.ctl select,.ctl input[type=text],.ans input{font-family:inherit;font-size:16px;padding:6px 8px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;max-width:100%;width:auto}
+.eqb{background:#eaf7f5;border-radius:10px;padding:10px;text-align:center;font-weight:700;color:var(--navy);margin:8px 0;font-size:18px;overflow-x:auto}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.fb{font-weight:700;margin-top:6px}
+.res{background:#eef6ff;border-radius:10px;padding:10px 12px;margin:8px 0;line-height:1.9}
+.res b{color:#0b5ed7}
+.chips button{margin:3px;padding:6px 12px;border-radius:999px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.chips button.on{background:#0b5ed7;color:#fff;border-color:#0b5ed7}
+.step{background:#fff;border:1px solid var(--line);border-left:5px solid #2a9d8f;border-radius:8px;padding:8px 12px;margin:6px 0;display:none}
+.step.show{display:block}
+.ex{border:2px dashed #b8c7d6;border-radius:12px;padding:10px 14px;margin:14px 0;background:#fcfdff}
+.q{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:#fff}
+.q .opt{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 10px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:16px;cursor:pointer}
+.q .opt.good{background:#d8f3e3;border-color:#2a9d8f}
+.q .opt.bad{background:#fddcdc;border-color:#e76f51}
+.m{font-family:system-ui,'Segoe UI',Arial,sans-serif}
+table.t{border-collapse:collapse;margin:8px 0}
+table.t td,table.t th{border:1px solid #cfd9e1;padding:5px 12px;text-align:center}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/theme.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">📐 গণিত &rsaquo; উচ্চতর গণিত &rsaquo; অধ্যায় ১০ (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🔺 দ্বিপদী বিস্তৃতি</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#ex">🪜 ধাপে ধাপে</a><a href="#lab1">🔺 প্যাসকেল ত্রিভুজ</a><a href="#lab2">🧩 বিস্তৃতি</a><a href="#lab3">🎯 আসন্ন মান</a><a href="#lab4">🔎 নির্দিষ্ট পদ</a><a href="#lab5">⚖️ কোনটি বড়</a><a href="#prac">✍️ প্র্যাকটিস</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্নোত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায়ে শিখবে:</b> দ্বিপদী রাশির ঘাত (শক্তি) সহজে বিস্তৃত করা, প্যাসকেলের ত্রিভুজ, n! ও ⁿCᵣ, সাধারণ পদ এবং নির্দিষ্ট পদ বা সহগ নির্ণয়। (বইয়ে n অ-ঋণাত্মক পূর্ণসংখ্যা)</div>
+
+    <h3>১. দ্বিপদী রাশি ও (1 + y)ⁿ এর বিস্তৃতি ⭐⭐</h3>
+    <ul>
+      <li>দুই পদের যোগ বা বিয়োগে গঠিত রাশিকে <b>দ্বিপদী রাশি</b> বলে। যেমন a + b, x − y, 1 + x।</li>
+      <li>(1 + y) কে বারবার গুণ করে পাই: (1 + y)² = 1 + 2y + y², (1 + y)³ = 1 + 3y + 3y² + y³ ইত্যাদি।</li>
+      <li><b>লক্ষণ:</b> (1 + y)ⁿ এর বিস্তৃতিতে <b>(n + 1) টি পদ</b> থাকে। y এর ঘাত 0 থেকে শুরু হয়ে 1, 2, … n পর্যন্ত বাড়ে।</li>
+      <li>প্রতি y এর ঘাতের সহগকে <b>দ্বিপদী সহগ</b> বলে।</li>
+    </ul>
+
+    <h3>২. প্যাসকেলের ত্রিভুজ ⭐⭐⭐</h3>
+    <ul>
+      <li>সহগগুলো সাজালে একটি ত্রিভুজ তৈরি হয়: n = 0: 1; n = 1: 1 1; n = 2: 1 2 1; n = 3: 1 3 3 1; n = 4: 1 4 6 4 1; n = 5: 1 5 10 10 5 1।</li>
+      <li>দুই পাশে সবসময় 1। ভেতরের প্রতিটি সংখ্যা = উপরের দুটি সংখ্যার যোগফল। যেমন 10 = 4 + 6।</li>
+      <li>বুঝে নাও: (1 + y)⁵ = 1 + 5y + 10y² + 10y³ + 5y⁴ + y⁵ এবং (1 + y)⁶ = 1 + 6y + 15y² + 20y³ + 15y⁴ + 6y⁵ + y⁶।</li>
+      <li>সীমাবদ্ধতা: বড় n এর জন্য আগের সব সারি লিখতে হয়, তাই সরাসরি সূত্র দরকার।</li>
+    </ul>
+
+    <h3>৩. n! (ফ্যাক্টোরিয়াল) ও ⁿCᵣ ⭐⭐⭐</h3>
+    <ul>
+      <li><b>n! = n(n − 1)(n − 2) ··· 3·2·1</b>। যেমন 5! = 120। এবং <b>0! = 1</b>।</li>
+      <li><b>ⁿCᵣ = n! / (r!(n − r)!)</b>। এটাকে (n r) চিহ্নেও লেখা হয়।</li>
+      <li>সহজ উপায়: ⁿCᵣ = [n(n − 1)(n − 2) ··· (n − r + 1)] / (1·2·3 ··· r)। যেমন ⁴C₂ = (4 × 3)/(1 × 2) = 6।</li>
+      <li>ⁿC₀ = ⁿCₙ = 1, ⁿC₁ = n এবং <b>ⁿCᵣ = ⁿC<sub>n−r</sub></b> (প্যাসকেলের ত্রিভুজের প্রতিসমতা)। ⁿCᵣ = ⁿ⁻¹C<sub>r−1</sub> + ⁿ⁻¹Cᵣ (উপরের দুটির যোগ)।</li>
+    </ul>
+
+    <h3>৪. (1 + y)ⁿ এর সূত্র ⭐⭐⭐</h3>
+    <p><b>(1 + y)ⁿ = 1 + ny + n(n − 1)/(1·2) · y² + n(n − 1)(n − 2)/(1·2·3) · y³ + … + yⁿ</b></p>
+    <p>সাধারণ পদ বা (r + 1) তম পদ: T<sub>r+1</sub> = ⁿCᵣ yʳ।</p>
+    <p>উদাহরণ: (1 + 3x)⁵ এ y = 3x বসিয়ে = 1 + 15x + 90x² + 270x³ + 405x⁴ + 243x⁵। আর (1 − 3x)⁵ এ শুধু সহগের চিহ্ন একান্তর (+, −, +, …) হয়: 1 − 15x + 90x² − 270x³ + 405x⁴ − 243x⁵।</p>
+
+    <h3>৫. (x + y)ⁿ এর বিস্তৃতি ⭐⭐⭐</h3>
+    <p>(x + y)ⁿ = xⁿ + ⁿC₁ xⁿ⁻¹y + ⁿC₂ xⁿ⁻²y² + ⁿC₃ xⁿ⁻³y³ + … + yⁿ</p>
+    <ul>
+      <li>প্রতি পদে x ও y এর ঘাতের যোগফল n। x এর ঘাত n থেকে 0 পর্যন্ত কমে, y এর ঘাত 0 থেকে n পর্যন্ত বাড়ে।</li>
+      <li><b>সাধারণ পদ (r + 1) তম পদ:</b> T<sub>r+1</sub> = ⁿCᵣ · xⁿ⁻ʳ · yʳ।</li>
+      <li>মধ্যপদ: n জোড় হলে একটিই মধ্যপদ, (n/2 + 1) তম পদ। n বিজোড় হলে দুটি মধ্যপদ।</li>
+      <li>পদের ভেতরে ঋণাত্মক বা ভগ্নাংশ থাকলে বন্ধনীসহ বসাও। যেমন (x − 1/x²)⁵ এ y = (−1/x²)।</li>
+    </ul>
+
+    <h3>৬. নির্দিষ্ট পদ বা সহগ খোঁজার কৌশল ⭐⭐⭐</h3>
+    <ol>
+      <li>(r + 1) তম পদ লেখো: ⁿCᵣ (প্রথম পদ)ⁿ⁻ʳ (দ্বিতীয় পদ)ʳ।</li>
+      <li>x এর ঘাত r এর মাধ্যমে বের করো। যেমন (x + 1/x²)⁶ এ ঘাত = (6 − r) − 2r = 6 − 3r।</li>
+      <li>ঘাতকে প্রয়োজনীয় মানের সমান করে r বের করো। <b>x মুক্ত পদ</b> মানে ঘাত = 0 ⇒ 6 − 3r = 0 ⇒ r = 2।</li>
+      <li>r একটি পূর্ণসংখ্যা এবং 0 ≤ r ≤ n হতে হবে। নইলে ওই পদ নেই (সহগ 0)।</li>
+      <li>r দিয়ে সহগ হিসাব করো: T₃ = ⁶C₂ = 15।</li>
+    </ol>
+
+    <h3>৭. আসন্ন মান নির্ণয় ⭐⭐</h3>
+    <ul>
+      <li>(1.01)⁸ = (1 + 0.01)⁸ = 1 + 8(0.01) + 28(0.01)² + 56(0.01)³ + … ≈ 1.0829। ছোটো y হলে প্রথম কয়েকটি পদই যথেষ্ট, কারণ y², y³ খুব ছোটো হয়ে যায়।</li>
+      <li>(1.995)⁷ = (2 − 0.005)⁷। এখানে (2 − x/2)⁷ এর x = 0.01 বসিয়ে বইয়ের উত্তর 125.7767।</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="ex">
+    <h2>🪜 ধাপে ধাপে</h2>
+    <div class="say">👉 "পরের ধাপ" চাপতে থাকো। প্রতিটি ধাপ নিজে খাতায় করে মেলাও।</div>
+
+    <div class="ex" id="E1"><b>১) (1 + 3x)⁵ কে বিস্তৃত করো</b> (বই উদাহরণ ১)
+      <div class="step">ধাপ ১: n = 5। প্যাসকেলের ত্রিভুজের ৫ম সারি: 1, 5, 10, 10, 5, 1।</div>
+      <div class="step">ধাপ ২: (1 + y)⁵ = 1 + 5y + 10y² + 10y³ + 5y⁴ + y⁵ তে y = 3x বসাই।</div>
+      <div class="step">ধাপ ৩: 1 + 5(3x) + 10(3x)² + 10(3x)³ + 5(3x)⁴ + (3x)⁵।</div>
+      <div class="step">ধাপ ৪: (3x)² = 9x², (3x)³ = 27x³, (3x)⁴ = 81x⁴, (3x)⁵ = 243x⁵ ⇒ 1 + 15x + 90x² + 270x³ + 405x⁴ + 243x⁵ ✔।</div>
+      <div class="step">ধাপ ৫: (1 − 3x)⁵ এর জন্য শুধু চিহ্ন একান্তর: 1 − 15x + 90x² − 270x³ + 405x⁴ − 243x⁵।</div>
+      <button class="btn" data-ex="E1">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E1">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E2"><b>২) (1 + 2/x)⁸ এর প্রথম ৫ পদ</b> (বই উদাহরণ ৩)
+      <div class="step">ধাপ ১: y = 2/x। সূত্র: 1 + ⁸C₁y + ⁸C₂y² + ⁸C₃y³ + ⁸C₄y⁴।</div>
+      <div class="step">ধাপ ২: ⁸C₁ = 8, ⁸C₂ = (8·7)/(1·2) = 28, ⁸C₃ = (8·7·6)/(1·2·3) = 56, ⁸C₄ = (8·7·6·5)/(1·2·3·4) = 70।</div>
+      <div class="step">ধাপ ৩: 8·(2/x) = 16/x; 28·(4/x²) = 112/x²; 56·(8/x³) = 448/x³; 70·(16/x⁴) = 1120/x⁴।</div>
+      <div class="step">ধাপ ৪: <b>1 + 16/x + 112/x² + 448/x³ + 1120/x⁴ + …</b> ✔।</div>
+      <button class="btn" data-ex="E2">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E2">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E3"><b>৩) (1 − x²/4)⁸ এর x³ ও x⁶ এর সহগ</b> (বই উদাহরণ ৪)
+      <div class="step">ধাপ ১: y = −x²/4। বিস্তৃতিতে y এর ঘাত: 1, y, y², y³ …। y এর ঘাত বাড়লে x এর ঘাত 0, 2, 4, 6, … (সব জোড়)।</div>
+      <div class="step">ধাপ ২: তাই x³ (বিজোড় ঘাত) পদটি নেই। <b>x³ এর সহগ 0</b>।</div>
+      <div class="step">ধাপ ৩: x⁶ আসে y³ থেকে: ⁸C₃ · (−x²/4)³ = 56 · (−x⁶/64) = −(7/8)x⁶।</div>
+      <div class="step">ধাপ ৪: <b>x⁶ এর সহগ = −7/8</b>।</div>
+      <button class="btn" data-ex="E3">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E3">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E4"><b>৪) (x + 1/x²)⁶ এ x মুক্ত পদ</b> (বই উদাহরণ ৬)
+      <div class="step">ধাপ ১: (r + 1) তম পদ T<sub>r+1</sub> = ⁶Cᵣ · x<sup>6−r</sup> · (1/x²)ʳ = ⁶Cᵣ · x<sup>6−3r</sup>।</div>
+      <div class="step">ধাপ ২: x মুক্ত পদ মানে x এর ঘাত 0: 6 − 3r = 0 ⇒ r = 2।</div>
+      <div class="step">ধাপ ৩: r = 2 পূর্ণসংখ্যা এবং 0 ≤ 2 ≤ 6 ✔। তাই T₃ = ⁶C₂ = (6·5)/(1·2) = <b>15</b>।</div>
+      <div class="step">ধাপ ৪: যাচাই: প্রথম পদগুলো x⁶ + 6x³ + 15 + 20/x³ + … ✔। (ল্যাব ৪ এ নিজে করো।)</div>
+      <button class="btn" data-ex="E4">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E4">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E5"><b>৫) (2 − x/2)⁷ এর প্রথম ৪ পদ এবং (1.995)⁷</b> (বই উদাহরণ ৭)
+      <div class="step">ধাপ ১: (x + y)ⁿ সূত্রে x = 2, y = −x/2: 2⁷ + ⁷C₁2⁶(−x/2) + ⁷C₂2⁵(−x/2)² + ⁷C₃2⁴(−x/2)³।</div>
+      <div class="step">ধাপ ২: 128 + 7·64·(−x/2) + 21·32·(x²/4) + 35·16·(−x³/8) = 128 − 224x + 168x² − 70x³।</div>
+      <div class="step">ধাপ ৩: 2 − x/2 = 1.995 ⇒ x/2 = 0.005 ⇒ <b>x = 0.01</b>। বসাই: 128 − 2.24 + 0.0168 − 0.00007 ≈ <b>125.7767</b>।</div>
+      <button class="btn" data-ex="E5">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E5">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E6"><b>৬) (k − x/3)⁷ এ k³ এর সহগ 560 হলে x = ?</b> (বই উদাহরণ ১০ খ)
+      <div class="step">ধাপ ১: k³ হবে যখন k এর ঘাত 7 − r = 3 ⇒ r = 4। চতুর্থের পরের অর্থাৎ পঞ্চম পদ T₅।</div>
+      <div class="step">ধাপ ২: T₅ = ⁷C₄ · k³ · (−x/3)⁴ = 35 · k³ · x⁴/81।</div>
+      <div class="step">ধাপ ৩: সহগ 35x⁴/81 = 560 ⇒ x⁴ = 560 × 81/35 = 16 × 81 = 1296।</div>
+      <div class="step">ধাপ ৪: x⁴ = 1296 = 6⁴ ⇒ <b>x = 6</b> (বাস্তব ধনাত্মক মান; −6 ও চলবে)।</div>
+      <button class="btn" data-ex="E6">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E6">আবার শুরু</button>
+    </div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🔺 ল্যাব ১: প্যাসকেলের ত্রিভুজ ও ⁿCᵣ</h2>
+    <div class="say">👉 সারি n ও অবস্থান r বদলাও। ত্রিভুজে নির্বাচিত সংখ্যা লাল, তার উপরের দুটি সংখ্যা (যাদের যোগফল সে) সবুজ দেখাবে।</div>
+    <div class="ctl"><label>n = <span id="a1nv"></span></label><input type="range" id="a1n" min="0" max="12" step="1" value="6">
+    <label>r = <span id="a1rv"></span></label><input type="range" id="a1r" min="0" max="12" step="1" value="2"></div>
+    <canvas id="a1cv" width="620" height="360"></canvas>
+    <div class="res m" id="a1res"></div>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🧩 ল্যাব ২: (a + bx)ⁿ এর পূর্ণ বিস্তৃতি</h2>
+    <div class="say">👉 a, b ও n বদলাও (যেমন a = ১, b = ৩, n = ৫ দিলে উদাহরণ ১)। প্রতিটি পদের সহগ = ⁿCᵣ · aⁿ⁻ʳ · bʳ। নির্বাচিত পদ r হাইলাইট হবে।</div>
+    <div class="ctl"><label>a = <span id="b1av"></span></label><input type="range" id="b1a" min="-5" max="5" step="1" value="1">
+    <label>b = <span id="b1bv"></span></label><input type="range" id="b1b" min="-5" max="5" step="1" value="3">
+    <label>n = <span id="b1nv"></span></label><input type="range" id="b1n" min="1" max="10" step="1" value="5">
+    <label>পদ r = <span id="b1rv"></span></label><input type="range" id="b1r" min="0" max="10" step="1" value="2"></div>
+    <div class="res m" id="b1res"></div>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🎯 ল্যাব ৩: দ্বিপদী দিয়ে আসন্ন মান (যেমন (1.01)⁸)</h2>
+    <div class="say">👉 (A + δ)ⁿ এর মান প্রথম k টি পদ দিয়ে হিসাব করো এবং আসল মানের সাথে তুলনা করো। δ ছোটো হলে অল্প পদেই প্রায় ঠিক মান পাওয়া যায়।</div>
+    <div class="ctl"><label>A = <span id="c1av"></span></label><input type="range" id="c1a" min="1" max="5" step="1" value="1">
+    <label>δ = <span id="c1dv"></span></label><input type="range" id="c1d" min="-0.1" max="0.1" step="0.005" value="0.01">
+    <label>n = <span id="c1nv"></span></label><input type="range" id="c1n" min="2" max="12" step="1" value="8">
+    <label>পদ সংখ্যা k = <span id="c1kv"></span></label><input type="range" id="c1k" min="1" max="6" step="1" value="3"></div>
+    <div class="res m" id="c1res"></div>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🔎 ল্যাব ৪: নির্দিষ্ট পদ, সহগ ও x মুক্ত পদ</h2>
+    <div class="say">👉 রাশি (a·x<sup>s</sup> + b·x<sup>t</sup>)ⁿ। কোন পদে x এর ঘাত k তা খুঁজে সহগ বের করো। k = ০ দিলে x মুক্ত পদ।</div>
+    <div class="chips" id="d1p"></div>
+    <div class="ctl"><label>a = <span id="d1av"></span></label><input type="range" id="d1a" min="-3" max="3" step="1" value="1">
+    <label>s = <span id="d1sv"></span></label><input type="range" id="d1s" min="-3" max="3" step="1" value="1">
+    <label>b = <span id="d1bv"></span></label><input type="range" id="d1b" min="-3" max="3" step="1" value="1">
+    <label>t = <span id="d1tv"></span></label><input type="range" id="d1t" min="-3" max="3" step="1" value="-2">
+    <label>n = <span id="d1nv"></span></label><input type="range" id="d1n" min="1" max="12" step="1" value="6">
+    <label>খুঁজছি x<sup>k</sup>, k = <span id="d1kv"></span></label><input type="range" id="d1k" min="-20" max="20" step="1" value="0"></div>
+    <div class="res m" id="d1res"></div>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>⚖️ ল্যাব ৫: কোনটি বড়? (m−1)ⁿ + mⁿ নাকি (m+1)ⁿ (অনুশীলনী ১৩ এর মতো)</h2>
+    <div class="say">👉 বইয়ে প্রশ্ন: 99⁵⁰ + 100⁵⁰ ও 101⁵⁰ এর কোনটি বড়? এখানে m = ১০০, n = ৫০। দ্বিপদী বিস্তৃতি দিয়ে (100 ± 1)⁵⁰ লেখা যায়। m ও n বদলে নিজে দেখো।</div>
+    <div class="ctl"><label>m = <span id="e1mv"></span></label><input type="range" id="e1m" min="3" max="200" step="1" value="100">
+    <label>n = <span id="e1nv"></span></label><input type="range" id="e1n" min="2" max="60" step="1" value="50"></div>
+    <div class="res m" id="e1res"></div>
+  </section>
+
+  <section class="panel" id="prac">
+    <h2>✍️ প্র্যাকটিস (বইয়ের ধাঁচে)</h2>
+    <div class="say">👉 উত্তর পূর্ণসংখ্যা বা দশমিক লিখতে পারো। ঋণাত্মক হলে মাইনাস দাও।</div>
+    <div id="pracbox"></div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="fb" id="qscore"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>📖 বই থেকে প্রশ্নোত্তর</h2>
+    <div id="qabox"></div>
+  </section>
+</div>
+
+<footer class="site">&copy; ShikboLab · দ্বিপদী বিস্তৃতি (উচ্চতর গণিত অধ্যায় ১০)</footer>
+<script>
+var BNS='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BNS[d];});}
+function en(s){return String(s).replace(/[০-৯]/g,function(d){return BNS.indexOf(d);});}
+function $(id){return document.getElementById(id);}
+function R2(c){var d=Math.min(2,window.devicePixelRatio||1),w=c.width,h=c.height;c.width=w*d;c.height=h*d;var x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return x;}
+function fm(v,d){d=(d===undefined)?2:d;var k=Math.pow(10,d),r=Math.round(v*k)/k;if(Math.abs(r)<1e-9)r=0;return bn(String(r).replace('-','−'));}
+function sg(v){return v<0?'−'+bn(-v):bn(v);}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t;}return a;}
+function frac(n,d){if(d<0){n=-n;d=-d;}var g=gcd(n,d)||1;n/=g;d/=g;return d===1?sg(n):sg(n)+'/'+bn(d);}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ex){var box=$(b.dataset.ex),s=box.querySelectorAll('.step:not(.show)');if(s.length){s[0].classList.add('show');}if(s.length<=1)b.disabled=true;}
+  if(b.dataset.rs){var bx=$(b.dataset.rs);bx.querySelectorAll('.step').forEach(function(x){x.classList.remove('show');});bx.querySelector('[data-ex]').disabled=false;}
+});
+function CB(n,r){if(r<0||r>n)return 0n;var x=1n,i;for(i=0;i<r;i++)x=x*BigInt(n-i)/BigInt(i+1);return x;}
+function B2s(v){var s=v.toString(),neg=s[0]==='-';if(neg)s=s.slice(1);return (neg?'−':'')+bn(s);}
+function xp(e){return e===0?'':e===1?'x':'x<sup>'+(e<0?'−'+bn(-e):bn(e))+'</sup>';}
+/* ===== ল্যাব ১ ===== */
+var c1=$('a1cv'),x1=R2(c1);
+function lab1(){
+  var n=+$('a1n').value,r=Math.min(+$('a1r').value,n);$('a1r').value=r;$('a1nv').textContent=bn(n);$('a1rv').textContent=bn(r);
+  var x=x1,W=620,H=360;x.clearRect(0,0,W,H);x.fillStyle='#fff';x.fillRect(0,0,W,H);x.textAlign='center';
+  function P(i,j){return [W/2+(j-i/2)*50,22+i*26];}
+  for(var i=0;i<=12;i++)for(var j=0;j<=i;j++){var p=P(i,j),sel=(i===n&&j===r),par=(i===n-1&&(j===r-1||j===r));
+    if(sel||par){x.fillStyle=sel?'#e53935':'#1b9a6f';x.beginPath();x.arc(p[0],p[1]-4,13,0,6.2832);x.fill();}
+    x.fillStyle=(sel||par)?'#fff':(i<=n?'#1f3a5f':'#b7c3cf');x.font=(sel||par?'700 ':'')+(CB(i,j)>999n?'10':'12')+'px system-ui';x.fillText(CB(i,j).toString().replace(/[0-9]/g,function(d){return BNS[d];}),p[0],p[1]);}
+  x.fillStyle='#6b7f95';x.font='11px system-ui';x.textAlign='left';x.fillText('n = ০ ↓ ১২',6,14);
+  var c=CB(n,r),h='n = '+bn(n)+', r = '+bn(r)+': <b>ⁿCᵣ = '+B2s(c)+'</b><br>';
+  var fct=function(k){var f=1n;for(var q=2;q<=k;q++)f*=BigInt(q);return f;};
+  h+='সূত্র: n!/(r!(n−r)!) = '+B2s(fct(n))+'/('+B2s(fct(r))+' × '+B2s(fct(n-r))+') = '+B2s(fct(n)/(fct(r)*fct(n-r)))+' ✔<br>';
+  if(n>0&&r>0&&r<n)h+='প্যাসকেল নিয়ম: ⁿCᵣ = (উপরের দুটি) = '+B2s(CB(n-1,r-1))+' + '+B2s(CB(n-1,r))+' = '+B2s(CB(n-1,r-1)+CB(n-1,r))+' ✔<br>';
+  else h+='সারির দুই প্রান্তে সবসময় ১ (ⁿC₀ = ⁿCₙ = ১)।<br>';
+  h+='প্রতিসমতা: ⁿCᵣ = ⁿC<sub>n−r</sub> = ⁿC'+'<sub>'+bn(n-r)+'</sub> = '+B2s(CB(n,n-r))+' ✔<br>';
+  var s=0n,k;for(k=0;k<=n;k++)s+=CB(n,k);h+='সারির সংখ্যাগুলোর যোগফল = '+B2s(s)+' = ২<sup>'+bn(n)+'</sup> ✔ (কারণ (১+১)ⁿ)।<br>';
+  var row=[];for(k=0;k<=n;k++)row.push(B2s(CB(n,k)));h+='<b>(১ + y)<sup>'+bn(n)+'</sup></b> এর সহগ: '+row.join(', ');
+  $('a1res').innerHTML=h;
+}
+$('a1n').oninput=lab1;$('a1r').oninput=lab1;lab1();
+/* ===== ল্যাব ২ ===== */
+function powB(a,k){return BigInt(a)**BigInt(k);}
+function lab2(){
+  var a=+$('b1a').value,b=+$('b1b').value,n=+$('b1n').value,r=Math.min(+$('b1r').value,n);$('b1r').value=r;
+  $('b1av').textContent=sg(a);$('b1bv').textContent=sg(b);$('b1nv').textContent=bn(n);$('b1rv').textContent=bn(r);
+  var terms=[],k,parts=[];
+  for(k=0;k<=n;k++){var c=CB(n,k)*powB(a,n-k)*powB(b,k);terms.push(c);}
+  terms.forEach(function(c,k){if(c===0n)return;var neg=c<0n,ab=neg?-c:c,body=(ab===1n&&k>0)?'':B2s(ab);var t=(body===''?'':body)+xp(k);if(t==='')t='১';var sgn=parts.length?(neg?' − ':' + '):(neg?'−':'');parts.push(sgn+(k===r?'<span style="background:#ffe08a;border-radius:4px;padding:0 3px">'+t+'</span>':t));});
+  var h='<b>('+sg(a)+' + ('+sg(b)+')x)<sup>'+bn(n)+'</sup></b> = '+(parts.length?parts.join(''):'০')+'<br>';
+  h+='পদসংখ্যা = n + ১ = '+bn(n+1)+' (শূন্য সহগের পদ বাদ দিলে কম দেখাতে পারে)<br>';
+  h+='<b>(r+১) তম পদ</b>, r = '+bn(r)+': T<sub>'+bn(r+1)+'</sub> = ⁿCᵣ · a<sup>n−r</sup> · b<sup>r</sup> · x<sup>r</sup> = '+B2s(CB(n,r))+' × ('+sg(a)+')<sup>'+bn(n-r)+'</sup> × ('+sg(b)+')<sup>'+bn(r)+'</sup> · x<sup>'+bn(r)+'</sup> = <b>'+B2s(terms[r])+xp(r)+'</b><br>';
+  var ok=true,vals=[1,2,-3,5],ver=[];vals.forEach(function(v){var s=0n;terms.forEach(function(c,k){s+=c*powB(v,k);});var ex=(BigInt(a)+BigInt(b)*BigInt(v))**BigInt(n);if(s!==ex)ok=false;});
+  h+='যাচাই: x = ১, ২, −৩, ৫ বসিয়ে পদগুলোর যোগফল = ('+sg(a)+' + '+sg(b)+'x)ⁿ এর মান '+(ok?'✔ মিলেছে':'✘');
+  $('b1res').innerHTML=h;
+}
+['b1a','b1b','b1n','b1r'].forEach(function(i){$(i).oninput=lab2;});lab2();
+/* ===== ল্যাব ৩ ===== */
+function lab3(){
+  var A=+$('c1a').value,d=Math.round(+$('c1d').value*1000)/1000,n=+$('c1n').value,K=+$('c1k').value;$('c1av').textContent=bn(A);$('c1dv').textContent=sg(d);$('c1nv').textContent=bn(n);$('c1kv').textContent=bn(K);
+  var tr=Math.pow(A+d,n),s=0,rows='',j;
+  for(j=0;j<=Math.min(n,K-1);j++){var t=Number(CB(n,j))*Math.pow(A,n-j)*Math.pow(d,j);s+=t;rows+='<tr><td>'+bn(j+1)+'</td><td>ⁿC<sub>'+bn(j)+'</sub> A<sup>'+bn(n-j)+'</sup> δ<sup>'+bn(j)+'</sup></td><td>'+fm(t,6)+'</td><td>'+fm(s,6)+'</td><td>'+fm(tr-s,6)+'</td></tr>';}
+  var h='<b>('+bn(A)+' + ('+sg(d)+'))<sup>'+bn(n)+'</sup></b>, প্রথম '+bn(K)+' টি পদ নিয়ে:<div style="overflow-x:auto"><table class="t"><tr><th>পদ</th><th>পদটি</th><th>মান</th><th>আংশিক যোগফল</th><th>আসল − আংশিক</th></tr>'+rows+'</table></div>';
+  h+='আসন্ন মান = <b>'+fm(s,6)+'</b>, আসল মান = <b>'+fm(tr,6)+'</b>, ভুল = '+fm(Math.abs(tr-s),6);
+  if(K>=n+1)h+=' (সব পদ নিলে হুবহু ✔)';
+  $('c1res').innerHTML=h;
+}
+['c1a','c1d','c1n','c1k'].forEach(function(i){$(i).oninput=lab3;});lab3();
+/* ===== ল্যাব ৪ ===== */
+var PD=[['(x + 1/x²)⁶, x মুক্ত',[1,1,1,-2,6,0]],['(x² + 1/x²)⁴, x মুক্ত',[1,2,1,-2,4,0]],['(x − 1/x²)⁵, x²',[1,1,-1,-2,5,2]],['(x² + 2/x)⁶, x³ (k = ২)',[1,2,2,-1,6,3]],['(2x² − 1/x²)⁸, x¹⁶',[2,2,-1,-2,8,16]]];
+function xs(e){return e===0?'':e===1?'x':'x<sup>'+(e<0?'−'+bn(-e):bn(e))+'</sup>';}
+function lab4(){
+  var a=+$('d1a').value,s=+$('d1s').value,b=+$('d1b').value,t=+$('d1t').value,n=+$('d1n').value,k=+$('d1k').value;
+  $('d1av').textContent=sg(a);$('d1sv').textContent=sg(s);$('d1bv').textContent=sg(b);$('d1tv').textContent=sg(t);$('d1nv').textContent=bn(n);$('d1kv').textContent=sg(k);
+  var h='রাশি: ('+sg(a)+'·'+(xs(s)||'১')+' + ('+sg(b)+')·'+(xs(t)||'১')+')<sup>'+bn(n)+'</sup><br>(r+১) তম পদ T<sub>r+১</sub> = ⁿCᵣ ('+sg(a)+')<sup>n−r</sup>('+sg(b)+')<sup>r</sup> x<sup>s(n−r) + t·r</sup>। এখানে x এর ঘাত = '+sg(s)+'('+bn(n)+' − r) + ('+sg(t)+')r = '+bn(s*n)+(t-s<0?' − '+bn(s-t):' + '+bn(t-s))+'r<br>';
+  var rows='',match=-1,r;
+  for(r=0;r<=n;r++){var e=s*(n-r)+t*r,c=CB(n,r)*powB(a,n-r)*powB(b,r);if(e===k&&s!==t&&match<0)match=r;rows+='<tr'+(e===k?' style="background:#ffe08a"':'')+'><td>'+bn(r+1)+'</td><td>'+B2s(c)+'</td><td>'+sg(e)+'</td></tr>';}
+  if(s===t){var tot=BigInt(a+b)**BigInt(n);h+='s = t হওয়ায় সব পদে x এর ঘাত একই ('+sg(s*n)+')। সবগুলো মিলে (a + b)ⁿ x<sup>'+sg(s*n)+'</sup> = '+B2s(tot)+' x<sup>'+sg(s*n)+'</sup>।';}
+  else{var rr=(k-s*n)/(t-s);h+='x<sup>'+sg(k)+'</sup> এর জন্য: '+sg(s*n)+' + ('+sg(t-s)+')r = '+sg(k)+' ⇒ r = '+(Number.isInteger(rr)?bn(rr):fm(rr,3))+'।<br>';
+    if(match>=0){var c2=CB(n,match)*powB(a,n-match)*powB(b,match);h+='r পূর্ণসংখ্যা এবং ০ ≤ r ≤ '+bn(n)+' ✔ ⇒ <b>T<sub>'+bn(match+1)+'</sub> = '+B2s(c2)+' x<sup>'+sg(k)+'</sup></b>। অর্থাৎ <b>'+(k===0?'x মুক্ত পদ = ':'x<sup>'+sg(k)+'</sup> এর সহগ = ')+B2s(c2)+'</b>';}
+    else h+='r পূর্ণসংখ্যা নয় বা ০ থেকে '+bn(n)+' এর বাইরে ⇒ <b>এমন পদ নেই, সহগ ০</b> (যেমন ১ম উদাহরণে x³ নেই)।';}
+  h+='<div style="overflow-x:auto"><table class="t"><tr><th>পদ</th><th>সহগ</th><th>x এর ঘাত</th></tr>'+rows+'</table></div>';
+  $('d1res').innerHTML=h;
+}
+$('d1p').innerHTML=PD.map(function(p,i){return '<button data-i="'+i+'">'+p[0]+'</button>';}).join('');
+$('d1p').onclick=function(e){var bt=e.target.closest('button');if(!bt)return;var p=PD[+bt.dataset.i][1];['d1a','d1s','d1b','d1t','d1n','d1k'].forEach(function(id,i){$(id).value=p[i];});lab4();};
+['d1a','d1s','d1b','d1t','d1n','d1k'].forEach(function(i){$(i).oninput=lab4;});lab4();
+/* ===== ল্যাব ৫ ===== */
+function lab5(){
+  var m=+$('e1m').value,n=+$('e1n').value;$('e1mv').textContent=bn(m);$('e1nv').textContent=bn(n);
+  var M=BigInt(m),N=BigInt(n),L=(M-1n)**N+M**N,R=(M+1n)**N,big=R>L?'(m+1)ⁿ':L>R?'(m−1)ⁿ + mⁿ':'সমান',d=R>L?R-L:L-R;
+  var h='m = '+bn(m)+', n = '+bn(n)+'<br>বামপক্ষ ('+bn(m-1)+')<sup>'+bn(n)+'</sup> + '+bn(m)+'<sup>'+bn(n)+'</sup> এর অঙ্ক সংখ্যা = '+bn(L.toString().length)+'; ডানপক্ষ '+bn(m+1)+'<sup>'+bn(n)+'</sup> এর অঙ্ক সংখ্যা = '+bn(R.toString().length)+'<br>';
+  h+='<b>বড়: '+(R>L?bn(m+1)+'<sup>'+bn(n)+'</sup>':L>R?bn(m-1)+'<sup>'+bn(n)+'</sup> + '+bn(m)+'<sup>'+bn(n)+'</sup>':'দুটি সমান')+'</b>; পার্থক্য '+bn(d.toString().length)+' অঙ্কের একটি সংখ্যা।<br>';
+  var ap=2*n/m,ratio=Math.pow(1+1/m,n)-Math.pow(1-1/m,n)-1;
+  h+='দ্বিপদী বিস্তৃতিতে: (m+১)ⁿ − (m−১)ⁿ = ২[n·m<sup>n−১</sup> + ⁿC₃ m<sup>n−৩</sup> + …]। প্রথম পদ থেকে বোঝা যায় এটি প্রায় (২n/m)·mⁿ = '+fm(ap,3)+' mⁿ। আরও পদ যোগ করলে মান আরও বাড়ে, তাই সঠিক অনুপাত ((m+১)ⁿ − (m−১)ⁿ − mⁿ)/mⁿ = '+fm(ratio,4)+' ('+(ratio>0?'ধনাত্মক ⇒ (m+১)ⁿ বড়':ratio<0?'ঋণাত্মক ⇒ (m−১)ⁿ + mⁿ বড়':'শূন্য')+')।';
+  $('e1res').innerHTML=h;
+}
+$('e1m').oninput=lab5;$('e1n').oninput=lab5;lab5();
+/* ===== প্র্যাকটিস ===== */
+var PR=[
+ ['⁵C₂ এর মান কত?',[10],'(5 × 4)/(1 × 2) = 10।'],
+ ['6!/(4! × 2!) এর মান কত?',[15],'6!/(4!2!) = (6 × 5)/(2 × 1) = 15 = ⁶C₂।'],
+ ['⁷C₄ এর মান কত?',[35],'(7·6·5·4)/(1·2·3·4) = 35।'],
+ ['(1 + y)⁸ এর বিস্তৃতিতে y³ এর সহগ কত?',[56],'⁸C₃ = (8·7·6)/(1·2·3) = 56।'],
+ ['(x + y)⁵ এর বিস্তৃতিতে x³y² এর সহগ কত?',[10],'⁵C₂ = 10 (বা ⁵C₃)।'],
+ ['(1 + 3x)⁵ এর বিস্তৃতিতে x² এর সহগ কত?',[90],'⁵C₂ · 3² = 10 × 9 = 90।'],
+ ['(1 − 2x)⁵ এর বিস্তৃতিতে x³ এর সহগ কত?',[-80],'⁵C₃ · (−2)³ = 10 × (−8) = −80।'],
+ ['(x + 1/x²)⁶ এর বিস্তৃতিতে x মুক্ত পদ কত?',[15],'6 − 3r = 0 ⇒ r = 2 ⇒ ⁶C₂ = 15।'],
+ ['(x² + 1/x²)⁴ এর বিস্তৃতিতে x মুক্ত পদ কত?',[6],'ঘাত = 2(4 − r) − 2r = 8 − 4r = 0 ⇒ r = 2 ⇒ ⁴C₂ = 6।'],
+ ['(1.01)⁸ এর আসন্ন মান কত? (চার দশমিক স্থান)',[1.0829],'1 + 8(0.01) + 28(0.01)² + 56(0.01)³ = 1 + 0.08 + 0.0028 + 0.000056 ≈ 1.0829।'],
+ ['(2 − x/2)⁷ এর বিস্তৃতিতে x² এর সহগ কত?',[168],'⁷C₂ · 2⁵ · (1/2)² = 21 × 32/4 = 168।'],
+ ['ⁿC₅ = ⁿC₇ হলে n = ?',[12],'ⁿCᵣ = ⁿC<sub>n−r</sub>। তাই 5 + 7 = n ⇒ n = 12।']
+];
+(function(){var h='';PR.forEach(function(p,i){h+='<div class="q"><b>'+bn(i+1)+'.</b> '+p[0]+'<div class="ans"> <input type="text" id="pi'+i+'" size="10"> <button class="btn" data-pc="'+i+'">যাচাই</button> <button class="btn alt" data-ph="'+i+'">সমাধান</button></div><div class="fb" id="pf'+i+'"></div></div>';});$('pracbox').innerHTML=h;})();
+function numOf(s){s=en(s).replace(/[−–]/g,'-').replace(/\s+/g,'');var m=s.match(/^(-?\d+)\/(\d+)$/);if(m)return +m[1]/+m[2];if(/^-?\d*\.?\d+$/.test(s))return parseFloat(s);return NaN;}
+$('pracbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.pc!==undefined){var i=+b.dataset.pc,raw=$('pi'+i).value,v=numOf(raw),ok=!isNaN(v)&&PR[i][1].some(function(a){return Math.abs(a-v)<=0.0151;});
+    $('pf'+i).innerHTML=raw.trim()===''?'আগে উত্তর লেখো।':(ok?'✅ ঠিক! সাবাশ।':'❌ আবার চেষ্টা করো, বা "সমাধান" দেখো।');}
+  if(b.dataset.ph!==undefined){var j=+b.dataset.ph;$('pf'+j).innerHTML='💡 '+PR[j][2];}
+});
+/* ===== কুইজ ===== */
+var QZ=[];function M(q,c,w,e){QZ.push({q:q,o:[c].concat(w),e:e});}
+M('(1 + y)ⁿ এর বিস্তৃতিতে মোট পদ—','n + ১ টি',['n টি','n − ১ টি','২n টি'],'y এর ঘাত 0 থেকে n পর্যন্ত।');
+M('প্যাসকেলের ত্রিভুজে ভেতরের প্রতিটি সংখ্যা—','উপরের দুটি সংখ্যার যোগফল',['উপরের দুটির গুণফল','উপরের দুটির বিয়োগফল','সবসময় ১'],'যেমন 10 = 4 + 6।');
+M('(1 + y)⁵ এর সহগগুলো—','১, ৫, ১০, ১০, ৫, ১',['১, ৫, ১০, ৫, ১','১, ৪, ৬, ৪, ১','১, ৬, ১৫, ২০, ১৫, ৬, ১'],'প্যাসকেলের ৫ম সারি।');
+M('(1 + y)⁴ =','1 + 4y + 6y² + 4y³ + y⁴',['1 + 4y + 4y² + 4y³ + y⁴','1 + 3y + 3y² + y³','1 + 5y + 10y² + 10y³ + y⁴'],'৪র্থ সারি: 1 4 6 4 1।');
+M('ⁿC₀ =','১',['০','n','n!'],'ⁿC₀ = n!/(0! n!) = 1।');
+M('ⁿCₙ =','১',['০','n','n!'],'সব n টি বেছে নেওয়ার একটি উপায়।');
+M('ⁿCᵣ এর সূত্র—','n!/(r!(n − r)!)',['n!/(r!)','n!/(n − r)!','(n − r)!/r!'],'বইয়ের সংজ্ঞা।');
+M('০! এর মান—','১',['০','অসংজ্ঞায়িত','২'],'ⁿCₙ = 1 = n!/(n! 0!) ⇒ 0! = 1।');
+M('৫! এর মান—','১২০',['২৫','৬০','১০০'],'5 × 4 × 3 × 2 × 1।');
+M('⁵C₂ এর মান—','১০',['২০','৫','২৫'],'(5 × 4)/(1 × 2) = 10।');
+M('ⁿCᵣ = ?','ⁿC<sub>n−r</sub>',['ⁿC<sub>n+r</sub>','ⁿ⁺¹Cᵣ','ⁿCᵣ₊₁'],'প্যাসকেলের ত্রিভুজ প্রতিসম।');
+M('ⁿC₁ =','n',['১','n!','n − ১'],'n!/(1!(n − 1)!) = n।');
+M('(x + y)ⁿ এর (r + 1) তম পদ—','ⁿCᵣ xⁿ⁻ʳ yʳ',['ⁿCᵣ xʳ yⁿ⁻ʳ','ⁿCᵣ₊₁ xⁿ⁻ʳ yʳ','ⁿCᵣ xⁿ yʳ'],'সাধারণ পদ।');
+M('(x + y)ⁿ এর প্রতি পদে x ও y এর ঘাতের যোগফল—','n',['n + ১','n − ১','২n'],'xⁿ⁻ʳ yʳ এ (n − r) + r = n।');
+M('(1 + 3x)⁵ এর বিস্তৃতিতে x² এর সহগ—','৯০',['১০','৩০','২৭০'],'⁵C₂ · 9 = 90।');
+M('(1 + 3x)⁵ এর চতুর্থ পদ—','২৭০x³',['৯০x²','৪০৫x⁴','১০x³'],'⁵C₃ · 27x³ = 270x³।');
+M('(x + y)⁵ এ x³y² এর সহগ—','১০',['৫','২০','১'],'⁵C₂ = 10।');
+M('(x + y)⁸ এর বিস্তৃতিতে পদসংখ্যা—','৯',['৮','১০','১৬'],'n + 1 = 9।');
+M('(1 − 3x)⁵ এ x³ এর সহগ—','−২৭০',['২৭০','−৯০','৯০'],'⁵C₃(−3)³ = 10 × (−27)।');
+M('(x + 1/x²)⁶ এ x মুক্ত পদ—','১৫',['৬','২০','১'],'r = 2 ⇒ ⁶C₂ = 15।');
+M('(x + 1/x²)⁶ এ x মুক্ত পদ পেতে r এর মান—','২',['৩','১','৬'],'6 − 3r = 0।');
+M('(1 + y)ⁿ এর সব সহগের যোগফল—','২ⁿ',['n','n²','২n'],'y = 1 বসালে (1 + 1)ⁿ = 2ⁿ।');
+M('(1 + y)⁶ এ y² এর সহগ—','১৫',['৬','২০','১২'],'⁶C₂ = 15।');
+M('(x + y)⁴ এর মধ্যপদ (তৃতীয় পদ)—','৬x²y²',['৪x²y²','৪x³y','৬xy³'],'⁴C₂ = 6।');
+M('ⁿC₅ = ⁿC₇ হলে n =','১২',['৬','১৩','৩৫'],'5 + 7 = n।');
+M('(1.01)⁸ এর আসন্ন মান (প্রথম দুটি পদ নিয়ে)—','১.০৮',['১.০১','১.১','১.৮'],'1 + 8(0.01) = 1.08।');
+M('(a + bx)ⁿ এ xʳ এর সহগ—','ⁿCᵣ aⁿ⁻ʳ bʳ',['ⁿCᵣ aʳ bⁿ⁻ʳ','ⁿCᵣ a bʳ','aⁿ bʳ'],'প্রথম পদের ঘাত (n − r), দ্বিতীয়ের r।');
+M('(1 − x²/4)⁸ এর বিস্তৃতিতে x³ এর সহগ—','০',['১','−২','৮'],'সব পদের ঘাত জোড় (x⁰, x², x⁴ …), x³ নেই।');
+M('(1 − x²/4)⁸ এর বিস্তৃতিতে x⁶ এর সহগ—','−৭/৮',['৭/৮','৭/৪','−৭/৪'],'⁸C₃(−1/4)³ = 56 × (−1/64) = −7/8।');
+M('99⁵⁰ + 100⁵⁰ ও 101⁵⁰ এর মধ্যে বড়—','101⁵⁰',['99⁵⁰ + 100⁵⁰','দুটি সমান','বলা যায় না'],'দ্বিপদী বিস্তৃতি ও ল্যাব ৫ থেকে 101⁵⁰ বড়।');
+(function(){
+  var done=0,sc=0;
+  QZ.forEach(function(q){var ord=q.o.map(function(t,i){return {t:t,c:i===0};});
+    for(var i=ord.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),k=ord[i];ord[i]=ord[j];ord[j]=k;}q.ord=ord;});
+  var h='';QZ.forEach(function(q,qi){h+='<div class="q" id="qq'+qi+'"><b>'+bn(qi+1)+'.</b> '+q.q+q.ord.map(function(o,oi){return '<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+o.t+'</button>';}).join('')+'<div class="fb" id="qe'+qi+'"></div></div>';});
+  $('quizbox').innerHTML=h;
+  $('quizbox').addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b||b.parentNode.dataset.done)return;
+    var qi=+b.dataset.q,q=QZ[qi],o=q.ord[+b.dataset.o];b.parentNode.dataset.done=1;done++;
+    var btns=b.parentNode.querySelectorAll('.opt');btns.forEach(function(x,i){if(q.ord[i].c)x.classList.add('good');});
+    if(o.c){sc++;$('qe'+qi).textContent='✅ ঠিক! '+q.e;}else{b.classList.add('bad');$('qe'+qi).textContent='❌ ভুল। '+q.e;}
+    $('qscore').textContent='স্কোর: '+bn(sc)+' / '+bn(done)+' (মোট '+bn(QZ.length)+'টি)';
+    try{if(done===QZ.length){localStorage.setItem('sl_done_math-binomial','1');var xp=+(localStorage.getItem('sl_xp')||0);localStorage.setItem('sl_xp',xp+sc);}}catch(er){}
+  });
+})();
+/* ===== প্রশ্নোত্তর ===== */
+var QA=[
+ {h:'অনুশীলনী ১০.১',items:[
+  ['১. (1 + y)⁵ এর বিস্তৃতি; (1 − y)⁵ ও (1 + 2x)⁵','(1 + y)⁵ = 1 + 5y + 10y² + 10y³ + 5y⁴ + y⁵। (1 − y)⁵ = 1 − 5y + 10y² − 10y³ + 5y⁴ − y⁵। (1 + 2x)⁵ = 1 + 10x + 40x² + 80x³ + 80x⁴ + 32x⁵।'],
+  ['২. (1 + 4x)⁶ ও (1 − 3x)⁷ এর প্রথম চারটি পদ','(1 + 4x)⁶ = 1 + 24x + 240x² + 1280x³ + …। (1 − 3x)⁷ = 1 − 21x + 189x² − 945x³ + …'],
+  ['৩. (1 + x²)⁸ এর প্রথম চার পদ এবং (1.01)⁸','1 + 8x² + 28x⁴ + 56x⁶ + …। x² = 0.01 বসিয়ে: 1 + 0.08 + 0.0028 + 0.000056 ≈ 1.0829।'],
+  ['৪. (1 − 2x)⁵ ও (1 + 3x)⁹ এর প্রথম তিন পদ','(1 − 2x)⁵ = 1 − 10x + 40x² − …। (1 + 3x)⁹ = 1 + 27x + 324x² + …'],
+  ['৫ ক. (2 + 3x)⁶ এর প্রথম চার পদ','64 + 576x + 2160x² + 4320x³ + …'],
+  ['৫ খ. (4 − 1/(2x))⁵ এর প্রথম চার পদ','1024 − 640/x + 160/x² − 20/x³ + …'],
+  ['৬. (p − x/2)⁶ = r − 96x + sx² + … হলে p, r, s','x এর সহগ: 6p⁵(−1/2) = −3p⁵ = −96 ⇒ p⁵ = 32 ⇒ p = 2। r = p⁶ = 64। s = ⁶C₂p⁴(1/4) = 15 × 16/4 = 60।'],
+  ['৭. (2 + x/4)⁶ এর x³ পর্যন্ত বিস্তৃতি এবং (1.9975)⁶','64 + 48x + 15x² + (5/2)x³ + …। 2 + x/4 = 1.9975 ⇒ x = −0.01। বসিয়ে 64 − 0.48 + 0.0015 − 0.0000025 ≈ 63.5215।'],
+  ['৮. (1.99)⁵ চার দশমিক স্থান পর্যন্ত','(2 − 0.01)⁵ = 32 − 5·16·0.01 + 10·8·0.0001 − … = 32 − 0.8 + 0.008 − 0.00004 ≈ 31.2080।'],
+  ['৯. (1 + x/4)ⁿ এ তৃতীয় পদের সহগ চতুর্থের দ্বিগুণ। n, পদসংখ্যা, মধ্যপদ','ⁿC₂/16 = 2·ⁿC₃/64 ⇒ ⁿC₂/ⁿC₃ = 1/2 ⇒ 3/(n − 2) = 1/2 ⇒ n = 8। পদসংখ্যা 9। মধ্যপদ (৫ম) = ⁸C₄(x/4)⁴ = 70x⁴/256 = 35x⁴/128।'],
+  ['১০. (x² + k/x)⁶ এ x³ এর সহগ 160, k = ?','ঘাত 2(6 − r) − r = 12 − 3r = 3 ⇒ r = 3। সহগ ⁶C₃k³ = 20k³ = 160 ⇒ k³ = 8 ⇒ k = 2।'],
+  ['১১ খ. B = 3, n = 7, x⁴ এর সহগ 22680। A = ?','⁷C₄ A³ · 3⁴ = 35 × 81 A³ = 2835A³ = 22680 ⇒ A³ = 8 ⇒ A = 2।'],
+  ['১১ গ. A = 2, B = 1, পঞ্চম ও ষষ্ঠ পদের সহগ সমান। n = ?','ⁿC₄2ⁿ⁻⁴ = ⁿC₅2ⁿ⁻⁵ ⇒ 2ⁿC₄ = ⁿC₅ ⇒ 2 = (n − 4)/5 ⇒ n = 14।'],
+  ['১৩. 99⁵⁰ + 100⁵⁰ ও 101⁵⁰ এর কোনটি বড়?','101⁵⁰ = (100 + 1)⁵⁰ ও 99⁵⁰ = (100 − 1)⁵⁰ বিস্তৃত করলে 101⁵⁰ − 99⁵⁰ = 2[50·100⁴⁹ + ⁵⁰C₃100⁴⁷ + …]। প্রথম পদই 100⁵⁰ এর সমান, বাকি পদগুলো ধনাত্মক, তাই 101⁵⁰ − 99⁵⁰ > 100⁵⁰। অর্থাৎ 101⁵⁰ বড় (ল্যাব ৫ এ যাচাই করো)।']]},
+ {h:'অনুশীলনী ১০.২ ও নমুনা প্রশ্ন',items:[
+  ['১০.২ (১). (x + y)⁵ এর দ্বিপদী সহগ','খ. 1, 5, 10, 10, 5, 1।'],
+  ['১০.২ (২). (x² + 1/x²)⁴ এ x মুক্ত পদ','খ. 6।'],
+  ['১০.২ (৪ ক). (2 + x²)⁵ বিস্তৃত করো','32 + 80x² + 80x⁴ + 40x⁶ + 10x⁸ + x¹⁰।'],
+  ['১০.২ (৪ খ). (2 − 1/(2x))⁶ বিস্তৃত করো','64 − 96/x + 60/x² − 20/x³ + 15/(4x⁴) − 3/(8x⁵) + 1/(64x⁶)।'],
+  ['MCQ ১. (1 − x)(1 + x/2)⁸ এ x এর সহগ','(1 + x/2)⁸ = 1 + 4x + …। (1 − x) গুণ করে x এর সহগ = 4 − 1 = 3 (গ)।'],
+  ['MCQ ২. (1 + 2x + x²)³ এ (i) পদসংখ্যা 7 (ii) ২য় পদ 6x (iii) শেষ পদ x⁶','(1 + x)⁶ বিস্তৃত: ৭টি পদ, ২য় পদ 6x, শেষ x⁶। সঠিক: i, ii ও iii (ঘ)।'],
+  ['MCQ ৩, ৪. (x + 1/x)ⁿ এ (r + 1) তম পদ x বর্জিত হলে r? n = 4 হলে চতুর্থ পদ?','ঘাত n − 2r = 0 ⇒ r = n/2। n = 4: চতুর্থ পদ = ⁴C₃ x · (1/x)³ = 4/x²।'],
+  ['সৃজনশীল ৫ (খ). B = (1 − x)⁸ দিয়ে (0.99)⁸','(1 − 0.01)⁸ = 1 − 0.08 + 0.0028 − 0.000056 ≈ 0.9227।'],
+  ['সৃজনশীল ৫ (গ). AB এর বিস্তৃতিতে x⁷ এর সহগ','AB = (1 + x)⁷(1 − x)⁸ = (1 − x²)⁷(1 − x)। x⁷ আসে −x × (1 − x²)⁷ এর x⁶ পদ থেকে: ⁷C₃(−1)³ = −35, তাই −x × (−35x⁶)। সহগ = 35।'],
+  ['সৃজনশীল ৬ (ক). A = (2x² − 1/(2x³))¹⁰ এর মধ্যপদ','n = 10, মধ্যপদ ষষ্ঠ (r = 5): ¹⁰C₅(2x²)⁵(−1/(2x³))⁵ = 252 × 32x¹⁰ × (−1/(32x¹⁵)) = −252/x⁵।'],
+  ['সৃজনশীল ৬ (খ). A এর x মুক্ত পদ','ঘাত 2(10 − r) − 3r = 20 − 5r = 0 ⇒ r = 4। ¹⁰C₄·2⁶·(−1/2)⁴ = 210 × 64/16 = 840।'],
+  ['সংক্ষিপ্ত ৭ (ক). (1 − 2x²)⁵','1 − 10x² + 40x⁴ − 80x⁶ + 80x⁸ − 32x¹⁰।'],
+  ['সংক্ষিপ্ত ৭ (খ). (1 + x/2)⁸ এর x³ এর সহগ','⁸C₃/8 = 56/8 = 7।'],
+  ['সংক্ষিপ্ত ৭ (গ). (2k − x/2)⁵ এ k³ এর সহগ 720, x = ?','k³ ⇒ r = 2: ⁵C₂(2)³(x/2)² = 10 × 8 × x²/4 = 20x² = 720 ⇒ x² = 36 ⇒ x = ±6।'],
+  ['সংক্ষিপ্ত ৭ (ঘ). ⁿC₅ = ⁿC₇','n = 5 + 7 = 12।']]}
+];
+(function(){var h='';QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){h+='<details class="ex"><summary><b>'+it[0]+'</b></summary><p>'+it[1]+'</p></details>';});});$('qabox').innerHTML=h;})();
+
+</script>
+</body>
+</html>
