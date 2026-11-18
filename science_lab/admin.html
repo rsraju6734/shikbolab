@@ -30,6 +30,44 @@
 .ad-big div{background:#fff;border:1px solid #e3eaf0;border-radius:20px;padding:16px;box-shadow:0 8px 20px rgba(31,58,95,.06)}
 .ad-big small{color:#5b6b78;font-weight:600;display:block}.ad-big b{font-size:30px;color:#1f3a5f;line-height:1.2}
 .ad-lock{max-width:440px;margin:40px auto}
+/* ===== Phase 2: নতুন অ্যাডমিন শেল ===== */
+body.sl-page>.sl-top,body.sl-page>.sl-foot{display:none}
+#app.sl-wrap{max-width:none;padding:0}
+.ad-shell{--bg:#f3f6fa;--card:#fff;--ink:#1f3a5f;--mut:#5b6b78;--line:#e3eaf0;--side:#14233a;--sideink:#cfdcec;--acc:#3f6fd1;display:flex;min-height:100vh;background:var(--bg);color:#22303c}
+.ad-side{width:268px;flex:none;background:var(--side);color:var(--sideink);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;transition:width .25s;z-index:60}
+.ad-side .bd{display:flex;align-items:center;gap:10px;padding:16px 18px;font-weight:700;font-size:22px;color:#fff;text-decoration:none}.ad-side .bd span{color:#ff8e6e}
+.ad-nav{flex:1;overflow-y:auto;padding:4px 10px 16px}
+.ad-nav .gp{font-size:12px;letter-spacing:.06em;color:#7d92ad;padding:14px 10px 4px;font-weight:700}
+.ad-nav button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:9px 12px;margin:1px 0;border:0;border-radius:12px;background:transparent;color:var(--sideink);font:600 15px 'Hind Siliguri',sans-serif;cursor:pointer}
+.ad-nav button:hover{background:rgba(255,255,255,.07)}.ad-nav button.on{background:var(--acc);color:#fff}
+.ad-nav .ic{width:22px;text-align:center;flex:none}.ad-nav .tg{margin-left:auto;font-size:11px;padding:1px 8px;border-radius:999px;background:rgba(255,255,255,.12);color:#cfdcec}
+.ad-shell.col .ad-side{width:68px}.ad-shell.col .ad-nav .lb,.ad-shell.col .ad-nav .tg,.ad-shell.col .ad-nav .gp,.ad-shell.col .ad-side .bd .tx{display:none}.ad-shell.col .ad-nav button{justify-content:center}
+.ad-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.ad-topbar{display:flex;align-items:center;gap:10px;padding:12px clamp(12px,2.4vw,28px);background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.ad-topbar button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:8px 12px;font:700 15px 'Hind Siliguri',sans-serif;cursor:pointer}
+.ad-gs{position:relative;flex:1;max-width:520px}.ad-gs input{width:100%;padding:10px 14px;border:2px solid var(--line);border-radius:14px;font:500 15.5px 'Hind Siliguri',sans-serif;background:var(--bg);color:inherit}
+.ad-gres{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 40px rgba(0,0,0,.18);max-height:60vh;overflow:auto;display:none;z-index:80}
+.ad-gres div{padding:9px 14px;cursor:pointer;border-bottom:1px solid var(--line);font-weight:600;color:var(--ink)}.ad-gres div:hover{background:var(--bg)}.ad-gres small{color:var(--mut);display:block;font-weight:500}
+.ad-demo{background:#fff4dc;color:#8a5a00;border-radius:999px;padding:4px 12px;font-weight:700;font-size:13px;white-space:nowrap}
+.ad-page{padding:clamp(12px,2.4vw,28px);max-width:1240px;width:100%}
+.ad-page h1{margin:0 0 14px;font-size:clamp(24px,3.4vw,34px);color:var(--ink)}.ad-page .sub{color:var(--mut);margin:0 0 14px}
+.ad-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:6px}
+.ad-cards div{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 8px 20px rgba(31,58,95,.06)}
+.ad-cards small{color:var(--mut);font-weight:600;display:block}.ad-cards b{font-size:30px;color:var(--ink);line-height:1.2}.ad-cards em{display:block;font-style:normal;font-size:12.5px;color:var(--mut);margin-top:2px}
+.ad-cards .off{opacity:.62;border-style:dashed}.ad-cards .off b{font-size:20px}
+.ad-bars{display:grid;gap:9px}.ad-bars .r{display:grid;grid-template-columns:120px 1fr 44px;align-items:center;gap:10px;font-weight:600;color:var(--ink)}
+.ad-bars .tr{background:var(--bg);border-radius:999px;height:14px;overflow:hidden}.ad-bars .tr i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#3f6fd1,#2a9d8f)}
+.ad-soon{text-align:center;padding:34px 18px}.ad-soon .big{font-size:54px}.ad-soon ul{display:inline-block;text-align:left;color:var(--mut);line-height:1.8}
+.ad-fil{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}.ad-fil input,.ad-fil select{padding:9px 12px;border:2px solid var(--line);border-radius:12px;font:500 15px 'Hind Siliguri',sans-serif;background:var(--card);color:inherit}
+.ad-ov{display:none}
+@media(max-width:900px){.ad-side{position:fixed;left:0;top:0;transform:translateX(-100%);transition:transform .25s;width:280px!important}.ad-shell.open .ad-side{transform:none}.ad-shell.open .ad-ov{display:block;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:55}.ad-shell.col .ad-nav .lb,.ad-shell.col .ad-nav .tg,.ad-shell.col .ad-nav .gp{display:initial}.ad-shell.col .ad-nav button{justify-content:flex-start}.ad-bars .r{grid-template-columns:88px 1fr 38px}}
+.ad-shell.dk{--bg:#0f1a26;--card:#17232f;--ink:#e6eef7;--mut:#9fb0bd;--line:#2a3a4a;--side:#0a121c;color:#d7e2ec}
+.ad-shell.dk .sl-box,.ad-shell.dk .ad-big div,.ad-shell.dk .ad-panel,.ad-shell.dk .ad-tabs button{background:var(--card);border-color:var(--line);color:var(--ink)}
+.ad-shell.dk .sl-box h2,.ad-shell.dk .ad-row .nm,.ad-shell.dk .ad-big b,.ad-shell.dk .ad-panel h4,.ad-shell.dk .ad-f label,.ad-shell.dk .sl-f label{color:var(--ink)}
+.ad-shell.dk [style*="5b6b78"],.ad-shell.dk .ad-big small,.ad-shell.dk .ad-row .nm small{color:var(--mut)!important}
+.ad-shell.dk input,.ad-shell.dk select,.ad-shell.dk textarea{background:#0f1a26!important;color:#e6eef7!important;border-color:var(--line)!important}
+.ad-shell.dk .sl-note{background:#2b2616;color:#f0dca8}.ad-shell.dk .ad-demo{background:#3a2f12;color:#ffd98a}
+.ad-shell.dk .sl-tbl td{color:#d7e2ec;border-color:var(--line)}.ad-shell.dk .ad-row{border-color:var(--line)}
 </style>
 </head>
 <body class="sl-page" data-nobar>
@@ -76,17 +114,18 @@
   if(CLOUD){var a=CACHE.acc[email];if(!a)return;fn(a);dbSave(email);return;}
   var x=SL.get(),a=x.acc[email];if(!a)return;fn(a,x);SL.put(x);
  }
- function approveReq(em,rid){mut(em,function(a){var r=(a.reqs||[]).filter(function(x){return x.id===rid;})[0];if(!r||r.status!=='pending')return;a.kind=r.plan;adjust(a,r.period==='week'?7:30);a.pays.unshift({t:Date.now(),plan:r.plan,period:r.period,price:r.price,trx:r.trx,req:rid});r.status='approved';});toast('✅ অনুমোদিত, প্ল্যান চালু হয়েছে');}
+ function approveReq(em,rid){mut(em,function(a){var r=(a.reqs||[]).filter(function(x){return x.id===rid;})[0];if(!r||r.status!=='pending')return;a.kind=r.plan;if(r.plan==='custom'){a.seats=r.seats||1;a.subs=r.subs||[];}adjust(a,r.period==='week'?7:30);a.pays.unshift({t:Date.now(),plan:r.plan,period:r.period,price:r.price,trx:r.trx,req:rid});r.status='approved';});toast('✅ অনুমোদিত, প্ল্যান চালু হয়েছে');}
  function rejectReq(em,rid){mut(em,function(a){var r=(a.reqs||[]).filter(function(x){return x.id===rid;})[0];if(r&&r.status==='pending')r.status='rejected';});toast('অনুরোধ বাতিল করা হয়েছে');}
  function pendList(){var o=[];list().forEach(function(a){(a.reqs||[]).forEach(function(r){if(r.status==='pending')o.push([a,r]);});});return o;}
  function pendBadge(a){var n=(a.reqs||[]).filter(function(r){return r.status==='pending';}).length;return n?'<span class="bdg x">🔔 '+bn(n)+' অনুরোধ</span>':'';}
- function reqLine(a,r,pre){return '<div class="ad-row"><div class="nm">'+esc(a.school||a.name)+' · '+((C.PLANS[r.plan]||{name:r.plan}).name)+' ('+(r.period==='week'?'সাপ্তাহিক':'মাসিক')+')<small>'+esc(a.email)+' · TrxID: '+esc(r.trx)+' · '+fd(r.t)+'</small></div><b>'+money(r.price)+'</b><button class="slb o ad-sm" data-'+pre+'a="'+esc(a.email)+'|'+r.id+'">✅ অনুমোদন</button><button class="slb r" data-'+pre+'r="'+esc(a.email)+'|'+r.id+'">বাতিল</button></div>';}
+ function reqLine(a,r,pre){return '<div class="ad-row"><div class="nm">'+esc(a.school||a.name)+' · '+((C.PLANS[r.plan]||{name:r.plan}).name)+' ('+(r.period==='week'?'সাপ্তাহিক':'মাসিক')+')<small>'+esc(a.email)+(r.plan==='custom'?' · 🧩 '+bn(r.seats||1)+' জন, '+(r.subs||[]).map(function(k){return SL.SUBJ[k];}).join('+'):'')+' · '+(r.method==='nagad'?'🟠 নগদ':r.method==='bkash'?'🟣 বিকাশ':'')+(r.from?' <b>'+esc(r.from)+'</b>':'')+' · TrxID: <b>'+esc(r.trx)+'</b> · '+fd(r.t)+'</small></div><b>'+money(r.price)+'</b><button class="slb o ad-sm" data-'+pre+'a="'+esc(a.email)+'|'+r.id+'">✅ অনুমোদন</button><button class="slb r" data-'+pre+'r="'+esc(a.email)+'|'+r.id+'">বাতিল</button></div>';}
  function reqPanel(a){var p=(a.reqs||[]).filter(function(r){return r.status==='pending';});return p.length?'<div><h4>🔔 পেমেন্ট অনুরোধ</h4>'+p.map(function(r){return reqLine(a,r,'p');}).join('')+'</div>':'';}
  function progHTML(a){
   var pg=dbProg(a.email),pl=SL.profiles(a),h='',any=false;
   pl.forEach(function(p){var o=pg[p.id]||{},ks=Object.keys(o);if(!ks.length)return;any=true;var avg=Math.round(ks.reduce(function(x,k){return x+o[k].pc;},0)/ks.length);h+='<div style="padding:2px 0">'+esc(p.name)+': <b>'+bn(ks.length)+'টি অধ্যায়, গড় '+bn(avg)+'%</b></div>';});
   return '<div><h4>📈 অগ্রগতি</h4>'+(any?h:'<small style="color:#5b6b78">এখনও কুইজ দেয়নি</small>')+'</div>';
  }
+ function customEd(a){var S=SL.SUBJ,subs=a.subs||[];return '<div class="ad-inl"><b>🧩 কাস্টম প্ল্যান:</b> জন <input type="number" id="cseat" min="1" max="30" value="'+(a.seats||1)+'" style="width:80px">'+Object.keys(S).map(function(k){return '<label style="display:inline-flex;gap:4px;align-items:center"><input type="checkbox" class="csub" value="'+k+'"'+(subs.indexOf(k)>-1?' checked':'')+'>'+S[k]+'</label>';}).join(' ')+'<button class="slb s ad-sm" data-cs="1">💾 সেভ</button></div>';}
  function addPay(a,price,trx,days){if(price>0||trx)a.pays.unshift({t:Date.now(),plan:a.kind,period:'manual',price:+price||0,trx:trx||'ম্যানুয়াল',days:days});}
  function adjust(a,days){ /* দিন যোগ/কমানো */
   var n=Date.now(),s=SL.status(a),base=(s.state==='trial'||s.state==='active')?Math.max(a.trialEnd||0,a.paidUntil||0):n;
@@ -108,16 +147,114 @@
   dbLoad().then(function(ok){if(ok)go();else if(er)er('টোকেন ভুল, বা ইন্টারনেট/ক্লাউড URL-এ সমস্যা।');});
  }
  function exit(){localStorage.removeItem('sl_admin_until');gateView();}
+ /* ---------- Phase 2: নতুন শেল (সাইডবার, ডার্ক মোড, গ্লোবাল সার্চ) ---------- */
+ var dark=false,col=false,side=false,chq='',chs='',cht='',cha='';
+ try{dark=localStorage.getItem('sl_admin_theme')==='dark';col=localStorage.getItem('sl_admin_col')==='1';}catch(e){}
+ var NAV=[
+  {g:'প্রধান'},{k:'ov',i:'📊',t:'ওভারভিউ'},
+  {g:'শিক্ষা কনটেন্ট'},
+  {k:'cls',i:'🏫',t:'ক্লাস',ph:3},{k:'sbj',i:'📚',t:'বিষয়'},{k:'chp',i:'📖',t:'অধ্যায়'},{k:'les',i:'📝',t:'লেসন',ph:3},{k:'lab',i:'🧪',t:'ভার্চুয়াল ল্যাব',ph:4},
+  {k:'s_biology',i:'🧬',t:'জীববিজ্ঞান ম্যানেজার'},{k:'s_physics',i:'⚡',t:'পদার্থবিজ্ঞান ম্যানেজার'},{k:'s_chemistry',i:'⚗️',t:'রসায়ন ম্যানেজার'},{k:'s_math',i:'📐',t:'গণিত ম্যানেজার'},
+  {k:'qb',i:'❓',t:'প্রশ্নব্যাংক',ph:5},{k:'qz',i:'🏆',t:'কুইজ ম্যানেজার',ph:5},
+  {g:'মানুষ'},
+  {k:'ac',i:'🎓',t:'শিক্ষার্থী ও অ্যাকাউন্ট'},{k:'nw',i:'➕',t:'নতুন অ্যাকাউন্ট'},{k:'tch',i:'👩‍🏫',t:'শিক্ষক',ph:6,be:1},{k:'adm',i:'🛡️',t:'অ্যাডমিন অ্যাকাউন্ট',ph:6,be:1},
+  {g:'ব্যবসা'},{k:'pr',i:'🏷️',t:'সাবস্ক্রিপশন ও প্রাইস'},{k:'pm',i:'💰',t:'পেমেন্ট'},
+  {g:'সিস্টেম'},
+  {k:'ntf',i:'🔔',t:'নোটিফিকেশন',ph:8},{k:'an',i:'📈',t:'অ্যানালিটিক্স',ph:8},{k:'aud',i:'🧾',t:'অডিট লগ',ph:9,be:1},{k:'web',i:'🌐',t:'ওয়েবসাইট সেটিংস',ph:8},{k:'sec',i:'🔐',t:'সিকিউরিটি'},{k:'st',i:'💾',t:'ব্যাকআপ ও সেটিংস'}
+ ];
+ var SOON={
+  cls:['ক্লাস ১–৫, ৬–৮, ৯–১০, ১১–১২ বানানো ও এডিট','ক্রম বদলানো, চালু/বন্ধ করা','ক্লাসে বিষয় বসানো'],
+  les:['লেসন বানানো ও সাজানো (লেখা, ছবি, ভিডিও)','প্রকাশের আগে প্রিভিউ','ড্রাফট → রিভিউ → পাবলিশ'],
+  lab:['ল্যাবের তথ্য: কঠিনতা, উদ্দেশ্য, নির্দেশনা, পর্যবেক্ষণ প্রশ্ন','ফ্রি/প্রিমিয়াম ঠিক করা','⚠️ সিমুলেশন কোড আলাদা থাকবে, অ্যাডমিন ইনপুটে JavaScript চালানো যাবে না'],
+  qb:['৭ ধরনের প্রশ্ন বানানো, ইমপোর্ট/এক্সপোর্ট','অধ্যায়/বিষয়/ক্লাস অনুযায়ী ট্যাগ','কঠিনতা, নম্বর, সময়'],
+  qz:['প্রশ্ন বেছে কুইজ বানানো, র‍্যান্ডম ক্রম','পাস মার্ক, সময়, পাবলিশ/আনপাবলিশ'],
+  tch:['শিক্ষক অ্যাকাউন্ট ও ক্লাস দেওয়া','শিক্ষক শুধু নিজের ক্লাসের তথ্য দেখবে'],
+  adm:['Super Admin / Admin / Teacher / Content Editor / Student রোল','পারমিশন দেওয়া ও কেড়ে নেওয়া','প্রতিটি কাজ সার্ভারে যাচাই হবে'],
+  ntf:['ঘোষণা বানানো, সময় ঠিক করা','ক্লাস/শিক্ষক/সবার জন্য পাঠানো','শিক্ষার্থীর ড্যাশবোর্ডে দেখানো'],
+  an:['দৈনিক/সাপ্তাহিক/মাসিক সক্রিয় শিক্ষার্থী','জনপ্রিয় অধ্যায় ও ল্যাব, কুইজ গড়','CSV এক্সপোর্ট','শুধু আসল রেকর্ড থেকে, বানানো সংখ্যা নয়'],
+  aud:['কে, কখন, কী করল (লগইন, পারমিশন, প্রকাশ, মুছে ফেলা, প্রাইস বদল)','সার্ভারে রাখা হবে যাতে বদলানো না যায়'],
+  web:['সাইটের নাম, লোগো, হোমপেজ লেখা, যোগাযোগ, ঘোষণা ব্যানার','মেইন্টেন্যান্স মোড','ভুল সেটিং যাতে লেআউট না ভাঙে সে সুরক্ষা']
+ };
+ function CH(){return (window.CHAPTERS||[]).map(function(c){var f=String(c.file||'').split('/').pop().replace(/\.html.*$/,'');return {t:c.title,s:c.subject,st:c.status,f:f,file:c.file,x:!!c.extra,free:SL.isFree(f),d:c.desc||''};});}
+ function navOf(k){return NAV.filter(function(x){return x.k===k;})[0];}
+ function vPlat(){
+  var A=CH(),S=SL.SUBJ,L=list(),live=A.filter(function(c){return c.st==='live';}).length,fr=A.filter(function(c){return c.free;}).length,mx=1,bars='';
+  var cnt={};Object.keys(S).forEach(function(k){cnt[k]=A.filter(function(c){return c.s===k;}).length;mx=Math.max(mx,cnt[k]);});
+  Object.keys(S).forEach(function(k){bars+='<div class="r"><span>'+S[k]+'</span><div class="tr"><i style="width:'+Math.round(cnt[k]*100/mx)+'%"></i></div><b>'+bn(cnt[k])+'</b></div>';});
+  var off=function(t,w){return '<div class="off"><small>'+t+'</small><b>—</b><em>'+w+'</em></div>';};
+  return '<h2 style="margin:4px 0 10px;color:var(--ink)">🌐 প্ল্যাটফর্ম (সাইটের আসল তালিকা থেকে)</h2><div class="ad-cards"><div><small>📖 মোট অধ্যায়/ল্যাব পেজ</small><b>'+bn(A.length)+'</b><em>chapters.js থেকে</em></div><div><small>✅ প্রকাশিত</small><b>'+bn(live)+'</b></div><div><small>⏳ শীঘ্রই আসছে</small><b>'+bn(A.length-live)+'</b></div><div><small>📚 বিষয়</small><b>'+bn(Object.keys(S).length)+'</b></div><div><small>🎁 ফ্রি অধ্যায়</small><b>'+bn(fr)+'</b></div><div><small>🎓 অ্যাকাউন্ট (এই ব্রাউজারে)</small><b>'+bn(L.length)+'</b></div></div>'
+  +'<div class="sl-box"><h2>📊 বিষয় অনুযায়ী অধ্যায়</h2><div class="ad-bars">'+bars+'</div></div>'
+  +'<h2 style="margin:4px 0 10px;color:var(--ink)">🔒 এগুলো আসল ডাটাবেস ছাড়া দেখানো যাবে না</h2><div class="ad-cards">'+off('👩‍🏫 শিক্ষক','Phase 6 + backend')+off('🛡️ অ্যাডমিন','Phase 6 + backend')+off('📝 কুইজ অ্যাটেম্পট','Phase 8 + backend')+off('🧪 ল্যাব ব্যবহার','Phase 8 + backend')+off('📈 সক্রিয় শিক্ষার্থী','Phase 8 + backend')+'</div><div class="sl-note">কোনো সংখ্যা বানিয়ে দেখানো হয় না। যেগুলোর আসল রেকর্ড নেই, সেগুলো "—" দেখাচ্ছে।</div>'
+  +'<h2 style="margin:18px 0 10px;color:var(--ink)">💼 অ্যাকাউন্ট ও আয় (নিচের অংশ)</h2>';
+ }
+ function chBadge(c){return (c.st==='live'?'<span class="bdg">✅ প্রকাশিত</span>':'<span class="bdg t">⏳ শীঘ্রই</span>')+(c.x?' <span class="bdg s">⭐ বোনাস</span>':'');}
+ function vChp(sub){
+  var S=SL.SUBJ,A=CH().filter(function(c){return !sub||c.s===sub;}),live=A.filter(function(c){return c.st==='live';}).length,fr=A.filter(function(c){return c.free;}).length;
+  var h='<div class="ad-cards"><div><small>মোট অধ্যায়</small><b>'+bn(A.length)+'</b></div><div><small>✅ প্রকাশিত</small><b>'+bn(live)+'</b></div><div><small>⏳ শীঘ্রই</small><b>'+bn(A.length-live)+'</b></div><div><small>🎁 ফ্রি</small><b>'+bn(fr)+'</b></div></div>'
+  +'<div class="sl-box"><div class="ad-fil"><input id="cq" placeholder="🔍 অধ্যায় খোঁজো" value="'+esc(chq)+'" style="flex:1;min-width:180px">'
+  +(sub?'':'<select id="cs"><option value="">সব বিষয়</option>'+Object.keys(S).map(function(k){return '<option value="'+k+'"'+(chs===k?' selected':'')+'>'+S[k]+'</option>';}).join('')+'</select>')
+  +'<select id="ct"><option value="">সব অবস্থা</option><option value="live"'+(cht==='live'?' selected':'')+'>প্রকাশিত</option><option value="soon"'+(cht==='soon'?' selected':'')+'>শীঘ্রই</option></select>'
+  +'<select id="ca"><option value="">ফ্রি + পেইড</option><option value="free"'+(cha==='free'?' selected':'')+'>শুধু ফ্রি</option><option value="paid"'+(cha==='paid'?' selected':'')+'>শুধু পেইড</option></select></div><div class="sl-scroll" id="chtb"></div></div>'
+  +'<div class="sl-note">👀 এখন শুধু <b>দেখার মোড</b>। অধ্যায় যোগ/এডিট/সাজানো/প্রকাশ Phase 3 ও 4-এ আসবে। ফ্রি তালিকা এখনও <code>demo-saas.js</code>-এর FREE থেকে আসছে।</div>';
+  q('body').innerHTML=h;
+  function draw(){
+   chq=q('cq').value;cht=q('ct').value;cha=q('ca').value;if(q('cs'))chs=q('cs').value;
+   var t=chq.toLowerCase(),R=A.filter(function(c){return (!t||(c.t+' '+c.d).toLowerCase().indexOf(t)>-1)&&(sub||!chs||c.s===chs)&&(!cht||c.st===cht)&&(!cha||(cha==='free')===c.free);});
+   q('chtb').innerHTML=R.length?'<table class="sl-tbl"><tr><th>অধ্যায়</th><th>বিষয়</th><th>অবস্থা</th><th>অ্যাক্সেস</th><th>খোলো</th></tr>'+R.map(function(c){return '<tr><td>'+esc(c.t)+'</td><td>'+esc(S[c.s]||c.s)+'</td><td>'+chBadge(c)+'</td><td>'+(c.free?'<span class="bdg">🎁 ফ্রি</span>':'<span class="bdg s">💳 পেইড</span>')+'</td><td>'+(c.st==='live'?'<a href="'+esc(c.file)+'" target="_blank" rel="noopener">↗</a>':'—')+'</td></tr>';}).join('')+'</table>':'<p style="color:var(--mut)">কিছু পাওয়া যায়নি।</p>';
+  }
+  ['cq','ct','ca','cs'].forEach(function(i){if(q(i)){q(i).oninput=draw;q(i).onchange=draw;}});draw();
+ }
+ function vSbj(){
+  var S=SL.SUBJ,A=CH(),I={biology:'🧬',physics:'⚡',chemistry:'⚗️',math:'📐'};
+  q('body').innerHTML='<div class="ad-cards">'+Object.keys(S).map(function(k){var a=A.filter(function(c){return c.s===k;});return '<div><small>'+(I[k]||'📘')+' '+S[k]+'</small><b>'+bn(a.length)+'</b><em>'+bn(a.filter(function(c){return c.st==='live';}).length)+'টি প্রকাশিত</em><button class="slb s ad-sm" style="margin-top:8px" data-nv="s_'+k+'">ম্যানেজার খোলো</button></div>';}).join('')+'</div><div class="sl-note">👀 দেখার মোড। বিষয় যোগ/এডিট/আইকন/ক্লাসে বসানো Phase 3-এ আসবে।</div>';
+  bindNav();
+ }
+ function vSec(){
+  q('body').innerHTML='<div class="sl-box"><h2>🔐 সিকিউরিটির সত্যিকারের অবস্থা</h2><p style="color:var(--mut);margin-top:0">যা আসলে আছে, আর যা নেই, দুটোই সোজাসুজি:</p><table class="sl-tbl"><tr><th>বিষয়</th><th>অবস্থা</th></tr>'
+  +'<tr><td>অ্যাডমিন লগইন</td><td><span class="bdg x">ডেমো, নিরাপদ নয়</span></td></tr>'
+  +'<tr><td>পাসওয়ার্ড কোথায় থাকে</td><td><span class="bdg t">ব্রাউজারে (hash)</span></td></tr>'
+  +'<tr><td>পেইড/ট্রায়াল তালা</td><td><span class="bdg x">শুধু ফ্রন্টএন্ড</span></td></tr>'
+  +'<tr><td>রোল ও পারমিশন (RBAC)</td><td><span class="bdg s">এখনও নেই</span></td></tr>'
+  +'<tr><td>অডিট লগ</td><td><span class="bdg s">এখনও নেই</span></td></tr>'
+  +'<tr><td>রেট লিমিট, CSRF</td><td><span class="bdg s">এখনও নেই</span></td></tr>'
+  +'<tr><td>ক্লাউড সিঙ্ক ('+(CLOUD?'চালু':'বন্ধ')+')</td><td><span class="bdg '+(CLOUD?'t':'s')+'">'+(CLOUD?'Apps Script, শেয়ার্ড টোকেন':'চালু নেই')+'</span></td></tr></table>'
+  +'<div class="sl-note">⚠️ যে কেউ ব্রাউজারের console দিয়ে নিজেকে "অ্যাডমিন" বানাতে পারে। তাই <b>আসল গ্রাহকের অ্যাকাউন্ট বা আসল পেমেন্ট এই ডেমোতে রেখো না।</b> বিক্রির আগে Phase 9-এ আসল backend বসানো হবে।</div></div>';
+ }
+ function vSoon(n){
+  var l=(SOON[n.k]||[]).map(function(x){return '<li>'+x+'</li>';}).join('');
+  q('body').innerHTML='<div class="sl-box ad-soon"><div class="big">'+n.i+'</div><h2>'+n.t+'</h2><p style="color:var(--mut)">এটা <b>Phase '+bn(n.ph)+'</b>-এ আসবে। এখনও তৈরি হয়নি, তাই কোনো ডাটা দেখাচ্ছি না।</p><ul>'+l+'</ul>'+(n.be?'<div class="sl-note" style="text-align:left">🔒 এটা নিরাপদভাবে করতে আসল backend (Phase ৯) লাগবে। ফ্রন্টএন্ডে বানালে সেটা শুধু দেখতে সুন্দর হতো, নিরাপদ হতো না।</div>':'')+'</div>';
+ }
+ function bindNav(){[].forEach.call(document.querySelectorAll('[data-nv]'),function(b){b.onclick=function(){tab=b.dataset.nv;side=false;render();};});}
+ function gsearch(v){
+  var box=q('gres');v=(v||'').trim().toLowerCase();if(!v){box.style.display='none';return;}
+  var r=[];
+  NAV.forEach(function(n){if(n.k&&n.t.toLowerCase().indexOf(v)>-1)r.push(['মেনু',n.i+' '+n.t,'',function(){tab=n.k;}]);});
+  CH().filter(function(c){return c.t.toLowerCase().indexOf(v)>-1;}).slice(0,6).forEach(function(c){r.push(['অধ্যায়',c.t,SL.SUBJ[c.s]||'',function(){tab='chp';chq=c.t;chs='';cht='';cha='';}]);});
+  list().filter(function(a){return (a.name+' '+a.email+' '+(a.school||'')).toLowerCase().indexOf(v)>-1;}).slice(0,6).forEach(function(a){r.push(['অ্যাকাউন্ট',a.school||a.name,a.email,function(){tab='ac';openId=a.email;search='';}]);});
+  box.innerHTML=r.length?r.map(function(x,i){return '<div data-i="'+i+'">'+esc(x[1])+'<small>'+x[0]+(x[2]?' · '+esc(x[2]):'')+'</small></div>';}).join(''):'<div style="cursor:default">কিছু পাওয়া যায়নি</div>';
+  box.style.display='block';
+  [].forEach.call(box.querySelectorAll('[data-i]'),function(d){d.onclick=function(){r[+d.dataset.i][3]();side=false;render();};});
+ }
  /* ---------- মূল ---------- */
  function render(){
   if(!SL.isAdmin())return gateView();
   if(CLOUD&&!loaded){app.innerHTML='<p style="text-align:center;padding:60px;color:#5b6b78;font-size:18px">☁️ ক্লাউড থেকে লোড হচ্ছে...</p>';dbLoad().then(function(ok){if(ok)render();else{localStorage.removeItem('sl_admin_until');gateView();}});return;}
-  var T=[['ov','📊 ওভারভিউ'],['ac','👥 অ্যাকাউন্ট'],['nw','➕ নতুন অ্যাকাউন্ট'],['pm','💰 পেমেন্ট'],['pr','🏷️ প্রাইস ও ছাড়'],['st','⚙️ সেটিংস ও ব্যাকআপ']];
-  app.innerHTML='<div class="sl-hero" style="margin-bottom:6px"><span class="sl-chip">👑 সুপার অ্যাডমিন · সব ফ্রি</span><h1>অ্যাডমিন প্যানেল</h1></div>'
-   +'<div class="ad-tabs">'+T.map(function(t){return '<button data-t="'+t[0]+'" class="'+(t[0]===tab?'on':'')+'">'+t[1]+'</button>';}).join('')+(CLOUD?'<button id="rf" style="margin-left:auto">🔄 রিফ্রেশ</button>':'')+'<button id="lo"'+(CLOUD?'':' style="margin-left:auto"')+'>🚪 লগআউট</button></div><div id="body"></div>';
-  [].forEach.call(app.querySelectorAll('.ad-tabs [data-t]'),function(b){b.onclick=function(){tab=b.dataset.t;if(CLOUD&&(tab==='ov'||tab==='ac'||tab==='pm'))dbLoad().then(render);else render();};});
+  var cur=navOf(tab)||navOf('ov');tab=cur.k;
+  var nav=NAV.map(function(n){if(n.g)return '<div class="gp">'+n.g+'</div>';return '<button data-nv="'+n.k+'" class="'+(n.k===tab?'on':'')+'" title="'+esc(n.t)+'"><span class="ic">'+n.i+'</span><span class="lb">'+n.t+'</span>'+(n.ph?'<span class="tg">P'+n.ph+'</span>':'')+'</button>';}).join('');
+  app.innerHTML='<div class="ad-shell'+(dark?' dk':'')+(col?' col':'')+(side?' open':'')+'"><aside class="ad-side"><a class="bd" href="index.html"><span>👑</span><span class="tx">Shikbo<span>Lab</span></span></a><nav class="ad-nav" aria-label="অ্যাডমিন মেনু">'+nav+'</nav></aside><div class="ad-ov" id="adov"></div>'
+   +'<div class="ad-main"><div class="ad-topbar"><button id="tgs" aria-label="মেনু">☰</button><div class="ad-gs"><input id="gs" placeholder="🔍 অধ্যায়, অ্যাকাউন্ট বা মেনু খোঁজো" autocomplete="off" aria-label="গ্লোবাল সার্চ"><div class="ad-gres" id="gres"></div></div><span class="ad-demo">🧪 ডেমো মোড</span><span style="flex:1"></span>'+(CLOUD?'<button id="rf" title="রিফ্রেশ">🔄</button>':'')+'<button id="thm" title="থিম বদলাও" aria-label="থিম">'+(dark?'☀️':'🌙')+'</button><button id="lo">🚪 লগআউট</button></div>'
+   +'<div class="ad-page"><h1>'+cur.i+' '+cur.t+'</h1><div id="body"></div></div></div></div>';
+  bindNav();
   q('lo').onclick=exit;if(q('rf'))q('rf').onclick=function(){dbLoad().then(function(ok){if(ok)toast('✅ ক্লাউড থেকে নতুন তথ্য এসেছে');render();});};
-  ({ov:vOv,ac:vAc,nw:vNw,pm:vPm,pr:vPr,st:vSt})[tab]();
+  q('thm').onclick=function(){dark=!dark;try{localStorage.setItem('sl_admin_theme',dark?'dark':'light');}catch(e){}render();};
+  q('tgs').onclick=function(){if(window.innerWidth<=900){side=!side;}else{col=!col;try{localStorage.setItem('sl_admin_col',col?'1':'0');}catch(e){}}render();};
+  q('adov').onclick=function(){side=false;render();};
+  var gs=q('gs');gs.oninput=function(){gsearch(gs.value);};gs.onkeydown=function(e){if(e.key==='Escape'){gs.value='';gsearch('');}};
+  document.addEventListener('click',function h(e){var b=q('gres');if(!b){document.removeEventListener('click',h);return;}if(!e.target.closest||!e.target.closest('.ad-gs'))b.style.display='none';});
+  if(CLOUD&&(tab==='ov'||tab==='ac'||tab==='pm')&&!window.__fresh){window.__fresh=1;dbLoad().then(function(){window.__fresh=0;});}
+  var V={ov:function(){vOv();q('body').insertAdjacentHTML('afterbegin',vPlat());bindNav();},ac:vAc,nw:vNw,pm:vPm,pr:vPr,st:vSt,sbj:vSbj,chp:function(){vChp('');},sec:vSec,
+   s_biology:function(){vChp('biology');},s_physics:function(){vChp('physics');},s_chemistry:function(){vChp('chemistry');},s_math:function(){vChp('math');}};
+  (V[tab]||function(){vSoon(cur);})();
  }
  function list(){var x={acc:accMap()};return Object.keys(x.acc).map(function(k){return x.acc[k];}).sort(function(a,b){return (b.created||0)-(a.created||0);});}
  /* ওভারভিউ */
@@ -158,8 +295,9 @@
   +'<div class="ad-inl" style="margin-top:8px"><input type="number" id="amt" placeholder="টাকা পেয়েছি (ঐচ্ছিক)" style="width:190px"><input id="trx" placeholder="TrxID (ঐচ্ছিক)" style="width:160px"><small style="color:#5b6b78">টাকা লিখলে "যোগ" করার সময় পেমেন্টের খাতায় উঠবে</small></div></div>'
   +'<div class="ad-inl"><b>প্ল্যান:</b><select id="pk">'+Object.keys(C.PLANS).map(function(k){return '<option value="'+k+'"'+(k===a.kind?' selected':'')+'>'+C.PLANS[k].name+'</option>';}).join('')+'</select><button class="slb s ad-sm" data-pk="1">বদলাও</button>'
   +'<b style="margin-left:10px">পাসওয়ার্ড:</b><input id="np" placeholder="নতুন পাসওয়ার্ড"><button class="slb s ad-sm" data-pw="1">রিসেট</button></div>'
+  +(a.kind==='custom'?customEd(a):'')
   +'<div><h4>👥 সদস্য ('+bn(c.students)+' শিক্ষার্থী, '+bn(c.teachers)+' শিক্ষক)</h4>'+((a.members||[]).length?(a.members.map(function(m){return '<div class="ad-inl" style="padding:3px 0"><span>'+esc(m.name)+' <small style="color:#5b6b78">('+SL.ROLE[m.role]+')</small></span><button class="slb r" data-rm="'+m.id+'">মুছো</button></div>';}).join('')):'<small style="color:#5b6b78">কেউ নেই</small>')
-  +'<div class="ad-inl" style="margin-top:6px"><input id="mn" placeholder="সদস্যের নাম"><select id="mr"><option value="student">শিক্ষার্থী</option>'+(a.kind==='school'?'<option value="teacher">শিক্ষক</option>':'')+'</select><button class="slb s ad-sm" data-am="1">➕ যোগ</button></div></div>'
+  +'<div class="ad-inl" style="margin-top:6px"><input id="mn" placeholder="সদস্যের নাম"><select id="mr"><option value="student">শিক্ষার্থী</option>'+(P.isSchool?'<option value="teacher">শিক্ষক</option>':'')+'</select><button class="slb s ad-sm" data-am="1">➕ যোগ</button></div></div>'
   +reqPanel(a)+progHTML(a)+'<div class="ad-inl"><button class="slb p ad-sm" data-lk="1">'+(CLOUD?'📋 গ্রাহকের বার্তা তৈরি করো':'🔗 আপডেট লিংক তৈরি করো')+'</button><button class="slb s ad-sm" data-sp="1">'+(a.suspended?'✅ চালু করো (বন্ধ ছিল)':'🚫 সাময়িক বন্ধ করো')+'</button><button class="slb r" data-del="1">🗑 মুছে ফেলো</button></div>'
   +'<div class="ad-out" id="lkout"><b>এই বার্তা গ্রাহককে পাঠাও (WhatsApp/মেসেজে):</b><textarea id="lkt" rows="5" readonly></textarea><div class="ad-inl"><button class="slb o ad-sm" id="lkc">📋 কপি করো</button></div></div></div>';
   return h;
@@ -173,7 +311,8 @@
   [].forEach.call(P.querySelectorAll('[data-d]'),function(e){e.onclick=function(){days(+e.dataset.d);};});
   var xn=P.querySelector('[data-x]');if(xn)xn.onclick=function(){mut(em,function(a){a.trialEnd=Date.now()-1000;a.paidUntil=0;});toast('মেয়াদ শেষ করা হয়েছে');vAc();};
   [].forEach.call(P.querySelectorAll('[data-cd]'),function(e){e.onclick=function(){var n=Math.abs(+q('cd').value||0)*(+e.dataset.cd);if(!n)return toast('দিন লেখো');days(n);};});
-  P.querySelector('[data-pk]').onclick=function(){mut(em,function(a){a.kind=q('pk').value;});toast('✅ প্ল্যান বদলেছে');vAc();};
+  P.querySelector('[data-pk]').onclick=function(){mut(em,function(a){a.kind=q('pk').value;if(a.kind==='custom'&&!(a.subs||[]).length){a.seats=a.seats||1;a.subs=Object.keys(SL.SUBJ);}});toast('✅ প্ল্যান বদলেছে');vAc();};
+  var csb=P.querySelector('[data-cs]');if(csb)csb.onclick=function(){var sb=[].map.call(P.querySelectorAll('.csub:checked'),function(e){return e.value;});if(!sb.length)return toast('কমপক্ষে একটা বিষয় বেছে নাও');mut(em,function(a){a.seats=Math.min(30,Math.max(1,+q('cseat').value||1));a.subs=sb;});toast('✅ কাস্টম প্ল্যান আপডেট হয়েছে');vAc();};
   P.querySelector('[data-pw]').onclick=function(){var p=q('np').value;if(p.length<6)return toast('কমপক্ষে ৬ অক্ষর');SL.hash(p).then(function(h){mut(em,function(a){a.hash=h;});toast(CLOUD?'✅ পাসওয়ার্ড রিসেট। গ্রাহককে নতুন পাসওয়ার্ড জানাও।':'✅ পাসওয়ার্ড রিসেট। নতুন লিংক পাঠাও।');});};
   [].forEach.call(P.querySelectorAll('[data-rm]'),function(e){e.onclick=function(){mut(em,function(a){a.mv=Date.now();a.members=a.members.filter(function(m){return m.id!==e.dataset.rm;});});vAc();};});
   P.querySelector('[data-am]').onclick=function(){var n=q('mn').value.trim();if(!n)return toast('নাম লেখো');mut(em,function(a){a.mv=Date.now();a.members.push({id:'m'+Date.now().toString(36)+Math.floor(Math.random()*99),name:n,role:q('mr').value});});vAc();};
@@ -184,25 +323,26 @@
   var lc=q('lkc');if(lc)lc.onclick=function(){copy('lkt');};
  }
  function msgFor(a,lk,pw){var P=C.PLANS[a.kind]||C.PLANS.student,s=stat(a);
-  return 'আসসালামু আলাইকুম! ShikboLab 🎉\nপ্ল্যান: '+P.name+'\nমেয়াদ: '+(s.state==='suspended'?'বন্ধ':fd(Math.max(a.trialEnd||0,a.paidUntil||0))+' পর্যন্ত ('+bn(s.left)+' দিন)')+'\nইমেইল: '+a.email+(pw?'\nপাসওয়ার্ড: '+pw:'')+(CLOUD?'\n\nএই লিংকে গিয়ে ইমেইল ও পাসওয়ার্ড দিয়ে লগইন করুন:\n':'\n\nএই লিংকে একবার ক্লিক করুন, তারপর লগইন করুন:\n')+lk;}
+  return 'আসসালামু আলাইকুম! ShikboLab 🎉\nপ্ল্যান: '+P.name+(a.kind==='custom'?' ('+bn(a.seats||1)+' জন, '+(a.subs||[]).map(function(k){return SL.SUBJ[k];}).join('+')+')':'')+'\nমেয়াদ: '+(s.state==='suspended'?'বন্ধ':fd(Math.max(a.trialEnd||0,a.paidUntil||0))+' পর্যন্ত ('+bn(s.left)+' দিন)')+'\nইমেইল: '+a.email+(pw?'\nপাসওয়ার্ড: '+pw:'')+(CLOUD?'\n\nএই লিংকে গিয়ে ইমেইল ও পাসওয়ার্ড দিয়ে লগইন করুন:\n':'\n\nএই লিংকে একবার ক্লিক করুন, তারপর লগইন করুন:\n')+lk;}
  /* নতুন অ্যাকাউন্ট */
  function vNw(){
   q('body').innerHTML='<div class="sl-box"><h2>➕ নতুন অ্যাকাউন্ট বানাও (ম্যানুয়াল)</h2><p style="color:#5b6b78;margin-top:0">তুমি অ্যাকাউন্ট বানিয়ে লিংক পাঠাবে। গ্রাহক লিংকে ক্লিক করে তোমার দেওয়া পাসওয়ার্ড দিয়ে লগইন করবে।</p>'
   +'<form id="nf" class="ad-f"><div><label>ধরন</label><select id="k">'+Object.keys(C.PLANS).map(function(k){return '<option value="'+k+'">'+C.PLANS[k].emoji+' '+C.PLANS[k].name+'</option>';}).join('')+'</select></div>'
-  +'<div id="sw"><label>স্কুল/প্রতিষ্ঠানের নাম</label><input id="sc"></div><div><label>গ্রাহকের নাম *</label><input id="n"></div><div><label>ইমেইল *</label><input id="e" type="email"></div>'
+  +'<div id="sw"><label>স্কুল/প্রতিষ্ঠানের নাম</label><input id="sc"></div><div id="cw" style="display:none;grid-column:1/-1"><label>🧩 কাস্টম: কত জন ও কোন বিষয়</label><div class="ad-inl"><input type="number" id="cn" min="1" max="30" value="1" style="width:80px"> জন '+Object.keys(SL.SUBJ).map(function(k){return '<label style="display:inline-flex;gap:4px;align-items:center"><input type="checkbox" class="ncs" value="'+k+'" checked>'+SL.SUBJ[k]+'</label>';}).join(' ')+'</div></div><div><label>গ্রাহকের নাম *</label><input id="n"></div><div><label>ইমেইল *</label><input id="e" type="email"></div>'
   +'<div><label>পাসওয়ার্ড *</label><div class="ad-inl" style="flex-wrap:nowrap"><input id="p" style="flex:1"><button type="button" class="slb s ad-sm" id="rp">🎲</button></div></div>'
   +'<div><label>শুরুতে কত দিন?</label><input id="dd" type="number" value="30"></div><div><label>ধরন</label><select id="ty"><option value="paid">✅ পেইড/গিফট (সব ফিচার)</option><option value="trial">🎁 ফ্রি ট্রায়াল</option></select></div>'
   +'<div><label>টাকা পেয়েছি (ঐচ্ছিক)</label><input id="am" type="number" placeholder="০"></div><div><label>TrxID (ঐচ্ছিক)</label><input id="tx"></div>'
   +'<div style="grid-column:1/-1"><div id="ne" class="sl-err"></div><button class="slb o" type="submit">✅ অ্যাকাউন্ট বানাও</button></div></form>'
   +'<div class="ad-out" id="nout"><b>🎉 তৈরি! এই বার্তা গ্রাহককে পাঠাও:</b><textarea id="nt" rows="9" readonly></textarea><button class="slb o ad-sm" id="nc">📋 কপি করো</button></div></div>';
-  function sync(){q('sw').style.display=q('k').value==='school'?'block':'none';}q('k').onchange=sync;sync();
+  function sync(){var pk=C.PLANS[q('k').value]||{};q('sw').style.display=pk.isSchool?'block':'none';q('cw').style.display=pk.custom?'block':'none';}q('k').onchange=sync;sync();
   q('rp').onclick=function(){var c='abcdefghjkmnpqrstuvwxyz23456789',r='';for(var i=0;i<8;i++)r+=c[Math.floor(Math.random()*c.length)];q('p').value=r;};
   q('nf').onsubmit=function(e){e.preventDefault();var ne=q('ne');function er(t){ne.textContent=t;ne.style.display='block';}ne.style.display='none';
    var em=q('e').value.trim().toLowerCase(),pw=q('p').value,nm=q('n').value.trim(),k=q('k').value,sc=q('sc').value.trim(),dd=Math.max(0,+q('dd').value||0);
-   if(!nm)return er('নাম লেখো।');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))return er('সঠিক ইমেইল লেখো।');if(pw.length<6)return er('পাসওয়ার্ড কমপক্ষে ৬ অক্ষর।');if(k==='school'&&!sc)return er('স্কুলের নাম লেখো।');
+   if(!nm)return er('নাম লেখো।');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))return er('সঠিক ইমেইল লেখো।');if(pw.length<6)return er('পাসওয়ার্ড কমপক্ষে ৬ অক্ষর।');if((C.PLANS[k]||{}).isSchool&&!sc)return er('স্কুলের নাম লেখো।');var nsb=[].map.call(document.querySelectorAll('.ncs:checked'),function(e){return e.value;});if(k==='custom'&&!nsb.length)return er('কমপক্ষে একটা বিষয় বেছে নাও।');
    if(accMap()[em])return er('এই ইমেইলে অ্যাকাউন্ট আগেই আছে।');
    SL.hash(pw).then(function(h){var n=Date.now(),paid=q('ty').value==='paid';
     var a={email:em,hash:h,name:nm,kind:k,school:sc,logo:'',created:n,trialEnd:paid?n:n+dd*DAY,paidUntil:paid?n+dd*DAY:0,suspended:false,members:[],mv:0,active:'owner',pays:[],reqs:[]};
+    if(k==='custom'){a.seats=Math.min(30,Math.max(1,+q('cn').value||1));a.subs=nsb;}
     addPay(a,+q('am').value||0,q('tx').value.trim(),dd);dbCreate(a);
     q('nt').value=msgFor(a,link(a,false),pw);q('nout').style.display='block';q('nout').scrollIntoView({behavior:'smooth'});toast('✅ অ্যাকাউন্ট তৈরি হয়েছে');});};
   q('nc').onclick=function(){copy('nt');};
@@ -238,7 +378,9 @@
   q('body').innerHTML='<div class="sl-box"><h2>💾 ব্যাকআপ ও রিস্টোর</h2><p style="color:#5b6b78;margin-top:0">ব্রাউজারের ডাটা মুছে গেলে সব অ্যাকাউন্ট হারাবে। তাই নিয়মিত ব্যাকআপ ফাইল নামিয়ে রাখো (যেমন সপ্তাহে একবার)।</p><div class="ad-inl"><button class="slb p" id="ex">⬇️ ব্যাকআপ নামাও</button><label class="slb s" style="cursor:pointer">⬆️ ব্যাকআপ থেকে ফেরাও<input type="file" id="im" accept=".json" style="display:none"></label></div></div>'
   +'<div class="sl-box"><h2>🔑 অ্যাডমিন পাসওয়ার্ড বদলাও</h2><div class="ad-inl"><input type="password" id="op" placeholder="বর্তমান"><input type="password" id="n1" placeholder="নতুন (৬+)"><button class="slb s ad-sm" id="cp">বদলাও</button></div></div>'
   +'<div class="sl-box"><h2>📋 বর্তমান কনফিগ (দাম বদলাতে 🏷️ প্রাইস ট্যাব)</h2><div class="sl-scroll"><table class="sl-tbl"><tr><th></th><th>মাসিক</th><th>সাপ্তাহিক</th><th>শিক্ষার্থী</th><th>শিক্ষক</th></tr>'+Object.keys(C.PLANS).map(function(k){var p=C.PLANS[k],m=SL.price(k,'month'),w=SL.price(k,'week');return '<tr><td>'+p.emoji+' '+p.name+'</td><td>'+(m.disc?'<s>'+money(m.base)+'</s> ':'')+money(m.eff)+'</td><td>'+(w.disc?'<s>'+money(w.base)+'</s> ':'')+money(w.eff)+'</td><td>'+bn(p.students)+'</td><td>'+bn(p.teachers)+'</td></tr>';}).join('')+'</table></div><p style="margin:10px 0 0;color:#5b6b78">ট্রায়াল: '+bn(C.TRIAL_DAYS)+' দিন · বিকাশ: '+esc(C.PAY.bkash)+' · নগদ: '+esc(C.PAY.nagad)+' · WhatsApp: '+esc(C.PAY.wa)+' · ইনস্ট্যান্ট ডেমো পেমেন্ট: '+(C.INSTANT?'চালু':'বন্ধ')+'</p></div>'
+  +(CLOUD?'<div class="sl-box"><h2>💳 পেমেন্ট নম্বর (গ্রাহক এটাই দেখবে)</h2><p style="color:#5b6b78;margin-top:0">গ্রাহক প্ল্যান নিতে গেলে এই নম্বরগুলো দেখবে। টাকা পাঠিয়ে TrxID দিলে তুমি যাচাই করে অনুমোদন করবে।</p><div class="ad-inl"><input id="pbk" placeholder="বিকাশ নম্বর" inputmode="numeric"><input id="png" placeholder="নগদ নম্বর" inputmode="numeric"><input id="pwa" placeholder="WhatsApp (8801...)" inputmode="numeric"><button class="slb o ad-sm" id="psn">💾 সেভ করো</button></div></div>':'')
   +'<div class="sl-box"><h2>🧹 ডেঞ্জার জোন</h2><button class="slb r" id="wp">সব ডেমো ডাটা মুছে ফেলো</button></div>';
+  if(CLOUD){SL.loadCfg().then(function(){var P=C.PAY;q('pbk').value=/X/i.test(P.bkash)?'':P.bkash;q('png').value=/X/i.test(P.nagad)?'':P.nagad;q('pwa').value=/X/i.test(P.wa)?'':P.wa;});q('psn').onclick=function(){var pay={bkash:q('pbk').value.trim(),nagad:q('png').value.trim(),wa:q('pwa').value.trim()};if(pay.bkash.replace(/\D/g,'').length<10&&pay.nagad.replace(/\D/g,'').length<10)return toast('অন্তত একটা সঠিক নম্বর দাও');SL.api({a:'adm_cfg',k:TOK,pay:pay}).then(function(r){if(r.ok){C.PAY.bkash=r.pay.bkash;C.PAY.nagad=r.pay.nagad;C.PAY.wa=r.pay.wa;try{localStorage.setItem('sl_pay',JSON.stringify(r.pay));}catch(e){}toast('✅ নম্বর সেভ হয়েছে, সবার জন্য লাইভ');}else toast('❌ '+(r.err||'সেভ হয়নি'));});};}
   if(CLOUD){q('im').parentNode.style.display='none';var wpb=q('wp');if(wpb)wpb.parentNode.style.display='none';}
   q('ex').onclick=function(){var x={v:1,t:Date.now(),data:CLOUD?{acc:CACHE.acc,prog:CACHE.prog,ses:null}:SL.get(),admin:admHash()};var b=new Blob([JSON.stringify(x)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='shikbolab-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('✅ ব্যাকআপ নামছে');};
   q('im').onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var x=JSON.parse(r.result);if(!x.data||!x.data.acc)throw 0;if(!confirm('বর্তমান সব ডাটা এই ব্যাকআপ দিয়ে বদলে যাবে। নিশ্চিত?'))return;SL.put(x.data);if(x.admin)localStorage.setItem('sl_admin',JSON.stringify(x.admin));toast('✅ ফেরানো হয়েছে');render();}catch(e){toast('❌ ফাইলটা ঠিক নেই');}};r.readAsText(f);};
