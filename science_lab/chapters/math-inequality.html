@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>অসমতা (উচ্চতর গণিত অধ্যায় ৬) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+canvas{width:100%;height:auto;max-width:700px;display:block;margin:8px auto;border-radius:12px;background:#fff;border:1px solid var(--line);touch-action:none}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.ctl input[type=range]{width:200px;max-width:100%}
+.ctl select,.ctl input[type=text],.ans input{font-family:inherit;font-size:16px;padding:6px 8px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;max-width:100%;width:auto}
+.eqb{background:#eaf7f5;border-radius:10px;padding:10px;text-align:center;font-weight:700;color:var(--navy);margin:8px 0;font-size:18px;overflow-x:auto}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.fb{font-weight:700;margin-top:6px}
+.res{background:#eef6ff;border-radius:10px;padding:10px 12px;margin:8px 0;line-height:1.9}
+.res b{color:#0b5ed7}
+.chips button{margin:3px;padding:6px 12px;border-radius:999px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.chips button.on{background:#0b5ed7;color:#fff;border-color:#0b5ed7}
+.step{background:#fff;border:1px solid var(--line);border-left:5px solid #2a9d8f;border-radius:8px;padding:8px 12px;margin:6px 0;display:none}
+.step.show{display:block}
+.ex{border:2px dashed #b8c7d6;border-radius:12px;padding:10px 14px;margin:14px 0;background:#fcfdff}
+.q{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:#fff}
+.q .opt{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 10px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:16px;cursor:pointer}
+.q .opt.good{background:#d8f3e3;border-color:#2a9d8f}
+.q .opt.bad{background:#fddcdc;border-color:#e76f51}
+.m{font-family:system-ui,'Segoe UI',Arial,sans-serif}
+table.t{border-collapse:collapse;margin:8px 0}
+table.t td,table.t th{border:1px solid #cfd9e1;padding:5px 12px;text-align:center}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">📐 গণিত &rsaquo; উচ্চতর গণিত &rsaquo; অধ্যায় ৬ (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">⚖️ অসমতা</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#ex">🪜 ধাপে ধাপে</a><a href="#lab1">📏 এক চলক</a><a href="#lab2">🗺️ লেখচিত্র</a><a href="#lab3">🛒 বাজেট</a><a href="#lab4">🎯 দুই অসমতা</a><a href="#prac">✍️ প্র্যাকটিস</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্নোত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায়ে শিখবে:</b> অসমতা কী, অসমতার নিয়ম, এক চলকের অসমতা সমাধান ও সংখ্যারেখায় দেখানো, বাস্তব সমস্যাকে অসমতা বানানো, এবং দুই চলকের অসমতার লেখচিত্র (ছায়াচিত্র)।</div>
+
+    <h3>১. অসমতার ধারণা ⭐⭐</h3>
+    <ul>
+      <li>সমীকরণে দুই পক্ষ <b>সমান</b>। অসমতায় একপক্ষ অপরপক্ষ থেকে <b>বড় বা ছোট</b>। চিহ্ন: &gt; (বড়), &lt; (ছোট), ≥ (বড় অথবা সমান), ≤ (ছোট অথবা সমান)।</li>
+      <li>a &gt; b ⇔ (a − b) ধনাত্মক এবং a &lt; b ⇔ (a − b) ঋণাত্মক।</li>
+      <li>a ≥ b মানে a &gt; b <b>অথবা</b> a = b। তাই 3 ≥ 1 সত্য (কারণ 3 &gt; 1) এবং 2 ≤ 4 সত্য।</li>
+      <li>a &lt; b &lt; c মানে a &lt; b <b>এবং</b> b &lt; c।</li>
+      <li>বাস্তব জীবনে ব্যবহার: ক্লাসে উপস্থিত ছাত্র 0 &lt; x &lt; 200, পরীক্ষার নম্বর 0 ≤ x ≤ 1000, ইত্যাদি।</li>
+    </ul>
+
+    <h3>২. অসমতার বিধি ⭐⭐⭐</h3>
+    <ul>
+      <li>a &lt; b ⇔ b &gt; a।</li>
+      <li>a &gt; b হলে যেকোনো c এর জন্য a + c &gt; b + c এবং a − c &gt; b − c। অর্থাৎ <b>যোগ-বিয়োগে দিক বদলায় না</b>।</li>
+      <li>a &gt; b এবং <b>c &gt; 0</b> হলে ac &gt; bc, a/c &gt; b/c। (দিক ঠিক থাকে)</li>
+      <li>a &gt; b এবং <b>c &lt; 0</b> হলে ac &lt; bc, a/c &lt; b/c। (<b>দিক উল্টে যায়!</b>)</li>
+    </ul>
+    <div class="warn">⚠️ <b>সবচেয়ে বড় ভুল:</b> ঋণাত্মক সংখ্যা দিয়ে গুণ বা ভাগ করলে অসমতার চিহ্ন উল্টাতে ভুলে যাওয়া। যেমন −2x &gt; 10 ⇒ x &lt; −5 (x &gt; −5 নয়)।</div>
+
+    <h3>৩. এক চলকের অসমতা সমাধান ⭐⭐⭐</h3>
+    <ul>
+      <li>সমীকরণের মতোই x এক পাশে আনো (যোগ/বিয়োগ করে), তারপর x এর সহগ দিয়ে ভাগ করো। সহগ ঋণাত্মক হলে চিহ্ন উল্টাও।</li>
+      <li>উদাহরণ ৩: 4x + 4 &gt; 16 ⇒ 4x &gt; 12 ⇒ x &gt; 3। সমাধান সেট S = {x ∈ R : x &gt; 3}।</li>
+      <li>সমাধান সেট সাধারণত বাস্তব সংখ্যার একটি <b>অসীম উপসেট</b> (সমীকরণের মতো কয়েকটি মান নয়)।</li>
+      <li>সাধারণ রূপ: a(x + b) &lt; c। a &gt; 0 হলে x &lt; c/a − b, আর a &lt; 0 হলে x &gt; c/a − b।</li>
+      <li><b>বিশেষ দ্রষ্টব্য:</b> a = 0 হলে 0·(x + b) &lt; c। c ধনাত্মক হলে x এর <b>যেকোনো মানের জন্য সত্য</b>, c ঋণাত্মক হলে <b>কোনো সমাধান নেই</b>।</li>
+    </ul>
+
+    <h3>৪. সংখ্যারেখায় দেখানো ⭐⭐</h3>
+    <ul>
+      <li><b>খালি বৃত্ত ○</b>: বিন্দুটি সমাধানের মধ্যে নেই (&gt; বা &lt; এর জন্য)।</li>
+      <li><b>ভরাট বৃত্ত ●</b>: বিন্দুটি সমাধানের মধ্যে আছে (≥ বা ≤ এর জন্য)।</li>
+      <li>x &gt; 3 হলে বৃত্ত থেকে <b>ডানে</b> তীর, x &lt; −5 হলে <b>বামে</b> তীর।</li>
+    </ul>
+
+    <h3>৫. অসমতার ব্যবহার ⭐⭐⭐</h3>
+    <ul>
+      <li>"অনূর্ধ্ব" বা "বেশি নয়" মানে ≤। "কমপক্ষে" বা "সর্বনিম্ন" মানে ≥। "অপেক্ষা কম/বেশি" মানে &lt; / &gt;।</li>
+      <li>উদাহরণ ৬: রমা পেয়েছে 5x + 6x নম্বর, কুমকুম 4x + 84। রমা পায়নি বেশি ⇒ 11x &lt; 4x + 84 ⇒ x &lt; 12। আবার কুমকুমের বাংলা সর্বনিম্ন 40 ⇒ 4x ≥ 40 ⇒ x ≥ 10। তাই <b>10 ≤ x &lt; 12</b>।</li>
+      <li>উদাহরণ ৭: 5x + 8(x + 4) ≤ 97 ⇒ 13x ≤ 65 ⇒ x ≤ 5। তাই সর্বাধিক <b>৫টি</b> পেন্সিল।</li>
+      <li>উত্তর বাস্তবসম্মত কিনা দেখো (গুনতি সংখ্যা হলে পূর্ণসংখ্যা, ঋণাত্মক নয়)।</li>
+    </ul>
+
+    <h3>৬. দুই চলকের অসমতা ও লেখচিত্র ⭐⭐⭐</h3>
+    <ul>
+      <li>ax + by + c = 0 একটি <b>সরলরেখা</b>। রেখাটি সমতলকে তিনটি অংশে ভাগ করে: রেখার এক পাশ, অপর পাশ, আর রেখার উপরের বিন্দুগুলো।</li>
+      <li>এক পাশের সব বিন্দুতে ax + by + c <b>ধনাত্মক</b>, অপর পাশে <b>ঋণাত্মক</b>, রেখার উপর <b>শূন্য</b>।</li>
+      <li><b>পরীক্ষা বিন্দু:</b> মূলবিন্দু (0, 0) (রেখার উপর না থাকলে) বসিয়ে দেখো অসমতা সত্য কিনা। সত্য হলে মূলবিন্দুর পাশ, মিথ্যা হলে বিপরীত পাশ ছায়া দাও।</li>
+      <li>উদাহরণ: x + y − 3 &gt; 0। মূলবিন্দুতে −3 &gt; 0 মিথ্যা। তাই রেখার <b>যে পাশে মূলবিন্দু নেই</b>, সেই পাশ।</li>
+      <li>&gt; বা &lt; হলে রেখা <b>ডটেড (ছাড়া)</b>, ≥ বা ≤ হলে রেখা <b>অন্তর্ভুক্ত (পূর্ণ রেখা)</b>।</li>
+      <li>y ≤ 2x হলে মূলবিন্দু রেখার উপরেই, তাই অন্য বিন্দু যেমন (1, 0) দিয়ে পরীক্ষা করো।</li>
+      <li>x &gt; −5/2 এর মতো অসমতা Y অক্ষের সমান্তরাল রেখার একপাশ।</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="ex">
+    <h2>🪜 ধাপে ধাপে</h2>
+    <div class="say">👉 "পরের ধাপ" চাপতে থাকো।</div>
+
+    <div class="ex" id="E1"><b>১) x − 9 &gt; 3x + 1</b> (বই উদাহরণ ৪): সমাধান ও সংখ্যারেখা
+      <div class="step">ধাপ ১: দুই পক্ষে 9 যোগ করি: x &gt; 3x + 10।</div>
+      <div class="step">ধাপ ২: দুই পক্ষ থেকে 3x বিয়োগ: −2x &gt; 10।</div>
+      <div class="step">ধাপ ৩: −2 দিয়ে ভাগ করি। <b>ঋণাত্মক সংখ্যা দিয়ে ভাগ, তাই চিহ্ন উল্টাবে</b>: x &lt; −5।</div>
+      <div class="step">ধাপ ৪: সংখ্যারেখায় −5 এ খালি বৃত্ত (○), বামে তীর। সমাধান সেট S = {x ∈ R : x &lt; −5}।</div>
+      <div class="step">ধাপ ৫: যাচাই: x = −6 বসালে বামে −6 − 9 = −15, ডানে 3(−6) + 1 = −17। −15 &gt; −17 ✔। আর x = 0 বসালে −9 &gt; 1 ✘, তাই 0 সমাধান নয়।</div>
+      <button class="btn" data-ex="E1">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E1">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E2"><b>২) রমা ও কুমকুমের নম্বর</b> (বই উদাহরণ ৬): রমা পেয়েছে 5x ও 6x নম্বর, কুমকুম 4x ও 84। কেউ 40 এর নিচে পায়নি। বাংলায় কুমকুম প্রথম, রমা দ্বিতীয়।
+      <div class="step">ধাপ ১: রমার মোট 5x + 6x = 11x এবং কুমকুমের মোট 4x + 84।</div>
+      <div class="step">ধাপ ২: কুমকুম প্রথম ⇒ রমার মোট কম: 11x &lt; 4x + 84 ⇒ 7x &lt; 84 ⇒ x &lt; 12।</div>
+      <div class="step">ধাপ ৩: কেউ 40 এর নিচে পায়নি। কুমকুমের একটি নম্বর 4x ⇒ 4x ≥ 40 ⇒ x ≥ 10।</div>
+      <div class="step">ধাপ ৪: দুটি শর্ত একসাথে: <b>10 ≤ x &lt; 12</b>। (x পূর্ণসংখ্যা হলে 10 বা 11)</div>
+      <button class="btn" data-ex="E2">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E2">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E3"><b>৩) পেন্সিল ও খাতা</b> (বই উদাহরণ ৭): 5 টাকা দরে x টি পেন্সিল ও 8 টাকা দরে (x + 4) টি খাতা, মোট মূল্য অনূর্ধ্ব 97 টাকা।
+      <div class="step">ধাপ ১: পেন্সিলের দাম 5x, খাতার দাম 8(x + 4)।</div>
+      <div class="step">ধাপ ২: "অনূর্ধ্ব 97" মানে ≤ 97। তাই 5x + 8(x + 4) ≤ 97।</div>
+      <div class="step">ধাপ ৩: 5x + 8x + 32 ≤ 97 ⇒ 13x ≤ 65 ⇒ x ≤ 5।</div>
+      <div class="step">ধাপ ৪: পেন্সিল গুনতি সংখ্যা, তাই সর্বাধিক <b>৫টি</b>। যাচাই: 5·5 + 8·9 = 25 + 72 = 97 ✔।</div>
+      <button class="btn" data-ex="E3">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E3">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E4"><b>৪) x + y − 3 &gt; 0 এর ছায়াচিত্র</b> (বই উদাহরণ ৯)
+      <div class="step">ধাপ ১: প্রথমে রেখা x + y − 3 = 0 আঁকি। বিন্দু (0, 3), (3, 0), (1, 2)।</div>
+      <div class="step">ধাপ ২: &gt; চিহ্ন (≥ নয়), তাই রেখা অন্তর্ভুক্ত নয়, ডটেড করে আঁকি।</div>
+      <div class="step">ধাপ ৩: মূলবিন্দু (0, 0) বসিয়ে 0 + 0 − 3 = −3। −3 &gt; 0 <b>মিথ্যা</b>।</div>
+      <div class="step">ধাপ ৪: মূলবিন্দু যে পাশে, সেই পাশ সমাধান নয়। তাই রেখার <b>বিপরীত পাশ (উপরের-ডান পাশ)</b> ছায়া দিই।</div>
+      <div class="step">ধাপ ৫: যাচাই: (3, 3) এ 3 + 3 − 3 = 3 &gt; 0 ✔ ছায়াংশে আছে।</div>
+      <button class="btn" data-ex="E4">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E4">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E5"><b>৫) y ≤ 2x</b> (বই উদাহরণ ১২): মূলবিন্দু রেখার উপরেই!
+      <div class="step">ধাপ ১: y − 2x ≤ 0 লিখি। রেখা y = 2x, বিন্দু (0,0), (2,4), (−2,−4)।</div>
+      <div class="step">ধাপ ২: ≤ আছে, তাই রেখা অন্তর্ভুক্ত (পূর্ণ রেখা)।</div>
+      <div class="step">ধাপ ৩: মূলবিন্দু রেখার উপর, তাই (0,0) পরীক্ষা বিন্দু হতে পারে না। অন্য বিন্দু (1, 0) নিই।</div>
+      <div class="step">ধাপ ৪: (1, 0) এ y − 2x = 0 − 2 = −2 ≤ 0 সত্য ✔। তাই (1, 0) যে পাশে, অর্থাৎ রেখার <b>নিচের-ডান পাশ</b> ছায়া দিই।</div>
+      <button class="btn" data-ex="E5">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E5">আবার শুরু</button>
+    </div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>📏 ল্যাব ১: এক চলকের অসমতা + সংখ্যারেখা</h2>
+    <div class="say">👉 অসমতা: ax + b ▢ cx + d। চিহ্ন বেছে নাও, স্লাইডার নাড়াও। সমাধান ধাপে ধাপে, চিহ্ন কখন উল্টায় আর সংখ্যারেখা দেখবে। নিচের "পরীক্ষা x" স্লাইডারে যেকোনো মান বসিয়ে দেখো সত্য কিনা।</div>
+    <div class="chips" id="i1m"></div>
+    <div class="ctl"><label>a = <span id="i1av"></span></label><input type="range" id="i1a" min="-6" max="6" step="1" value="1">
+    <label>b = <span id="i1bv"></span></label><input type="range" id="i1b" min="-12" max="12" step="1" value="-9">
+    <label>c = <span id="i1cv"></span></label><input type="range" id="i1c" min="-6" max="6" step="1" value="3">
+    <label>d = <span id="i1dv"></span></label><input type="range" id="i1d" min="-12" max="12" step="1" value="1">
+    <label>পরীক্ষা x = <span id="i1tv"></span></label><input type="range" id="i1t" min="-10" max="10" step="0.5" value="0"></div>
+    <div class="eqb" id="i1e"></div>
+    <canvas id="i1canvas" width="600" height="130"></canvas>
+    <div class="res m" id="i1r"></div>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🗺️ ল্যাব ২: দুই চলকের অসমতার লেখচিত্র</h2>
+    <div class="say">👉 ax + by + c ▢ ০ এর ছায়াচিত্র দেখো। ছবির উপর <b>সবুজ/লাল বিন্দুটি টেনে</b> যেকোনো জায়গায় নাও। ল্যাব বলবে ওই বিন্দুতে মান কত ও অসমতা সত্য কিনা। ডিফল্ট: x + y − 3 &gt; 0 (বই উদাহরণ ৯)।</div>
+    <div class="chips" id="i2m"></div>
+    <div class="ctl"><label>a = <span id="i2av"></span></label><input type="range" id="i2a" min="-5" max="5" step="1" value="1">
+    <label>b = <span id="i2bv"></span></label><input type="range" id="i2b" min="-5" max="5" step="1" value="1">
+    <label>c = <span id="i2cv"></span></label><input type="range" id="i2c" min="-10" max="10" step="1" value="-3"></div>
+    <div class="eqb" id="i2e"></div>
+    <canvas id="i2cv2" width="600" height="420"></canvas>
+    <div class="res m" id="i2r"></div>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🛒 ল্যাব ৩: বাজেট থেকে অসমতা (বই উদাহরণ ৭)</h2>
+    <div class="say">👉 একজন ছাত্র a টাকা দরে x টি পেন্সিল ও b টাকা দরে (x + k) টি খাতা কেনে। মোট মূল্য অনূর্ধ্ব M টাকা। সর্বাধিক কয়টি পেন্সিল কিনতে পারবে? ডিফল্ট মানে বইয়ের উদাহরণ (a = ৫, b = ৮, k = ৪, M = ৯৭)।</div>
+    <div class="ctl"><label>পেন্সিলের দাম a = <span id="i3av"></span></label><input type="range" id="i3a" min="2" max="10" step="1" value="5">
+    <label>খাতার দাম b = <span id="i3bv"></span></label><input type="range" id="i3b" min="3" max="20" step="1" value="8">
+    <label>বেশি খাতা k = <span id="i3kv"></span></label><input type="range" id="i3k" min="0" max="8" step="1" value="4">
+    <label>বাজেট M = <span id="i3mv"></span></label><input type="range" id="i3m" min="40" max="200" step="1" value="97"></div>
+    <canvas id="i3cv" width="600" height="150"></canvas>
+    <div class="res m" id="i3r"></div>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🎯 ল্যাব ৪: দুটি অসমতার সাধারণ অংশ</h2>
+    <div class="say">👉 দুটি অসমতার ছায়াচিত্র একসাথে। নীল = প্রথমটির সমাধান, কমলা = দ্বিতীয়টির, <b>সবুজ = দুটিরই সমাধান (সাধারণ অংশ)</b>। বিন্দু টেনে পরীক্ষা করো। ডিফল্ট: x + y − 3 &gt; 0 এবং 2x − 3y + 6 ≥ 0 (বইয়ের উদাহরণ ৯ ও ১০)।</div>
+    <div class="chips" id="i4m1"></div><div class="chips" id="i4m2"></div>
+    <div class="ctl"><label>১ম: a = <span id="i4av"></span></label><input type="range" id="i4a" min="-5" max="5" step="1" value="1">
+    <label>b = <span id="i4bv"></span></label><input type="range" id="i4b" min="-5" max="5" step="1" value="1">
+    <label>c = <span id="i4cv"></span></label><input type="range" id="i4c" min="-10" max="10" step="1" value="-3"></div>
+    <div class="ctl"><label>২য়: a = <span id="i4dv"></span></label><input type="range" id="i4d" min="-5" max="5" step="1" value="2">
+    <label>b = <span id="i4ev"></span></label><input type="range" id="i4e" min="-5" max="5" step="1" value="-3">
+    <label>c = <span id="i4fv"></span></label><input type="range" id="i4f" min="-10" max="10" step="1" value="6"></div>
+    <canvas id="i4cv2" width="600" height="420"></canvas>
+    <div class="res m" id="i4r"></div>
+  </section>
+
+  <section class="panel" id="prac">
+    <h2>✍️ প্র্যাকটিস (বইয়ের ধাঁচে)</h2>
+    <div class="say">👉 সীমান্তের (boundary) মান লেখো। যেমন x &gt; ৩ হলে ৩ লেখো।</div>
+    <div id="pracbox"></div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="fb" id="qscore"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>📖 বই থেকে প্রশ্নোত্তর</h2>
+    <div id="qabox"></div>
+  </section>
+</div>
+
+<footer class="site">&copy; ShikboLab · অসমতা (উচ্চতর গণিত অধ্যায় ৬)</footer>
+<script>
+var BNS='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BNS[d];});}
+function en(s){return String(s).replace(/[০-৯]/g,function(d){return BNS.indexOf(d);});}
+function $(id){return document.getElementById(id);}
+function R2(c){var d=Math.min(2,window.devicePixelRatio||1),w=c.width,h=c.height;c.width=w*d;c.height=h*d;var x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return x;}
+function fm(v,d){d=(d===undefined)?2:d;var k=Math.pow(10,d),r=Math.round(v*k)/k;if(Math.abs(r)<1e-9)r=0;return bn(String(r).replace('-','−'));}
+function sg(v){return v<0?'−'+bn(-v):bn(v);}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t;}return a;}
+function frac(n,d){if(d<0){n=-n;d=-d;}var g=gcd(n,d)||1;n/=g;d/=g;return d===1?sg(n):sg(n)+'/'+bn(d);}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ex){var box=$(b.dataset.ex),s=box.querySelectorAll('.step:not(.show)');if(s.length){s[0].classList.add('show');}if(s.length<=1)b.disabled=true;}
+  if(b.dataset.rs){var bx=$(b.dataset.rs);bx.querySelectorAll('.step').forEach(function(x){x.classList.remove('show');});bx.querySelector('[data-ex]').disabled=false;}
+});
+var OPS=['<','≤','>','≥'],OPN=['&lt;','≤','&gt;','≥'];
+function holds(l,r,op){var e=1e-9;return op===0?l<r-e:op===1?l<=r+e:op===2?l>r+e:l>=r-e;}
+function flip(op){return [2,3,0,1][op];}
+function opChips(id,get,set,cb){var el=$(id);function r(){el.innerHTML=OPS.map(function(o,i){return '<button data-i="'+i+'" class="'+(i===get()?'on':'')+'">'+o+'</button>';}).join('');}
+  el.onclick=function(e){var b=e.target.closest('button');if(!b)return;set(+b.dataset.i);r();cb();};r();}
+function term(co,v){if(co===0)return '';var a=Math.abs(co);return (a===1?'':bn(a))+v;}
+function lin(a,b){var s='';if(a!==0)s=(a<0?'−':'')+term(a,'x');if(b!==0)s+=(s?(b<0?' − ':' + '):(b<0?'−':''))+bn(Math.abs(b));return s||'০';}
+function lin2(a,b,c){var s='';if(a!==0)s=(a<0?'−':'')+term(a,'x');if(b!==0)s+=(s?(b<0?' − ':' + '):(b<0?'−':''))+term(b,'y');if(c!==0)s+=(s?(c<0?' − ':' + '):(c<0?'−':''))+bn(Math.abs(c));return s||'০';}
+/* ===== ল্যাব ১ ===== */
+var O1=2,X1=Math.PI;var c1=$('i1canvas'),x1=R2(c1);
+function lab1(){
+  var a=+$('i1a').value,b=+$('i1b').value,c=+$('i1c').value,d=+$('i1d').value,t=+$('i1t').value;
+  [['a',a],['b',b],['c',c],['d',d]].forEach(function(p){$('i1'+p[0]+'v').textContent=sg(p[1]);});$('i1tv').textContent=sg(t);
+  $('i1e').innerHTML=lin(a,b)+' '+OPN[O1]+' '+lin(c,d);
+  var A=a-c,B=d-b,h='ধাপ ১: x এর পদ বামে, ধ্রুবক ডানে আনি: ('+sg(a)+' − ('+sg(c)+'))x '+OPN[O1]+' '+sg(d)+' − ('+sg(b)+') ⇒ <b>'+sg(A)+'x '+OPN[O1]+' '+sg(B)+'</b><br>';
+  var sol=null;// {all:true}|{none:true}|{x0,dir,closed}
+  if(A===0){var tr=holds(0,B,O1);sol=tr?{all:true}:{none:true};h+='x এর সহগ ০, তাই '+sg(0)+' '+OPN[O1]+' '+sg(B)+'। এটি '+(tr?'<b>সত্য</b> ⇒ x এর <b>যেকোনো মানের জন্য সত্য</b> (সমাধান সেট = সব বাস্তব সংখ্যা)।':'<b>মিথ্যা</b> ⇒ <b>কোনো সমাধান নেই</b> (সমাধান সেট = ∅)।');}
+  else{var op2=A<0?flip(O1):O1;
+    h+='ধাপ ২: '+sg(A)+' দিয়ে ভাগ করি। '+(A<0?'<b>ঋণাত্মক সংখ্যা দিয়ে ভাগ, তাই অসমতার চিহ্ন উল্টে গেল</b> ('+OPN[O1]+' থেকে '+OPN[op2]+')।':'ধনাত্মক সংখ্যা দিয়ে ভাগ, চিহ্ন একই থাকে।')+'<br><b>x '+OPN[op2]+' '+frac(B,A)+'</b>'+(Number.isInteger(B/A)?'':' (≈ '+fm(B/A,3)+')');
+    sol={x0:B/A,dir:(op2<=1?-1:1),closed:(op2===1||op2===3),op2:op2};}
+  var tv=holds(a*t+b,c*t+d,O1);
+  h+='<br><br>পরীক্ষা: x = '+sg(t)+' ⇒ বামে '+fm(a*t+b,2)+', ডানে '+fm(c*t+d,2)+' ⇒ অসমতা '+(tv?'<b>সত্য ✔</b>':'<b>মিথ্যা ✘</b>');
+  var cnt=0,agree=0;for(var k=-10;k<=10;k++){var orig=holds(a*k+b,c*k+d,O1),mine=sol.all?true:(sol.none?false:holds(k,sol.x0,sol.op2));if(orig)cnt++;if(orig===mine)agree++;}
+  h+='<br>যাচাই: −১০ থেকে ১০ এর ২১টি পূর্ণসংখ্যার মধ্যে '+bn(cnt)+'টি আসল অসমতা সিদ্ধ করে; সমাধান সেটের সাথে মিল '+bn(agree)+'/২১ ✔';
+  $('i1r').innerHTML=h;
+  var x=x1,W=600,Hh=130;x.clearRect(0,0,W,Hh);x.fillStyle='#fff';x.fillRect(0,0,W,Hh);
+  function X(v){return 30+(v+10)/20*540;}var y0=62;
+  x.strokeStyle='#46586a';x.lineWidth=2;x.beginPath();x.moveTo(14,y0);x.lineTo(586,y0);x.stroke();
+  x.fillStyle='#46586a';x.font='12px system-ui';x.textAlign='center';
+  for(var k2=-10;k2<=10;k2++){x.beginPath();x.moveTo(X(k2),y0-5);x.lineTo(X(k2),y0+5);x.stroke();if(k2%2===0)x.fillText(fm(k2,0),X(k2),y0+22);}
+  x.strokeStyle='#1b9a6f';x.fillStyle='#1b9a6f';x.lineWidth=6;x.lineCap='round';
+  if(sol.all){x.beginPath();x.moveTo(14,y0);x.lineTo(586,y0);x.stroke();}
+  else if(!sol.none){var px=Math.max(14,Math.min(586,X(sol.x0)));x.beginPath();x.moveTo(px,y0);x.lineTo(sol.dir>0?586:14,y0);x.stroke();
+    x.beginPath();var ax=sol.dir>0?586:14;x.moveTo(ax,y0);x.lineTo(ax-sol.dir*12,y0-8);x.lineTo(ax-sol.dir*12,y0+8);x.closePath();x.fill();
+    if(sol.x0>=-10&&sol.x0<=10){x.beginPath();x.arc(px,y0,8,0,6.2832);x.fillStyle=sol.closed?'#1b9a6f':'#fff';x.fill();x.lineWidth=3;x.strokeStyle='#1b9a6f';x.stroke();x.fillStyle='#1f3a5f';x.font='700 13px system-ui';x.fillText(fm(sol.x0,2),px,y0-16);}
+    else{x.fillStyle='#b4472d';x.font='700 12px system-ui';x.fillText('সীমানা '+fm(sol.x0,2)+' পরিসরের বাইরে',300,y0-20);}}
+  else{x.fillStyle='#b4472d';x.font='700 14px system-ui';x.fillText('সংখ্যারেখায় কোনো অংশ নেই (সমাধান সেট ফাঁকা)',300,y0-20);}
+  x.fillStyle=tv?'#1b9a6f':'#e76f51';x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.moveTo(X(t),y0+8);x.lineTo(X(t)-8,y0+24);x.lineTo(X(t)+8,y0+24);x.closePath();x.fill();x.stroke();
+  x.fillStyle='#46586a';x.font='12px system-ui';x.fillText('পরীক্ষা x '+(tv?'✔':'✘'),X(t),y0+42);
+}
+opChips('i1m',function(){return O1;},function(i){O1=i;},lab1);
+['i1a','i1b','i1c','i1d','i1t'].forEach(function(i){$(i).oninput=lab1;});lab1();
+/* ===== অঞ্চল ইঞ্জিন ===== */
+function Region(id,getI,onUpdate,Pinit){
+  var cv=$(id),x=R2(cv),W=600,H=420,sc=30,ox=300,oy=210,P=Pinit||[3,3];
+  function px(v){return ox+v*sc;} function py(v){return oy-v*sc;}
+  function draw(){
+    x.clearRect(0,0,W,H);x.fillStyle='#fff';x.fillRect(0,0,W,H);var I=getI(),S=6;
+    for(var gx=0;gx<W;gx+=S)for(var gy=0;gy<H;gy+=S){var X=(gx+S/2-ox)/sc,Y=(oy-(gy+S/2))/sc,s=I.map(function(q){return (q.a===0&&q.b===0)?false:holds(q.a*X+q.b*Y+q.c,0,q.op);});
+      var col=null;if(I.length===1){if(s[0])col='rgba(42,157,143,.35)';}else{if(s[0]&&s[1])col='rgba(27,154,111,.55)';else if(s[0])col='rgba(42,111,219,.28)';else if(s[1])col='rgba(231,111,81,.28)';}
+      if(col){x.fillStyle=col;x.fillRect(gx,gy,S,S);}}
+    x.strokeStyle='#e6edf2';x.lineWidth=1;x.fillStyle='#6b7f95';x.font='11px system-ui';x.textAlign='center';
+    for(var k=-10;k<=10;k++){x.beginPath();x.moveTo(px(k),0);x.lineTo(px(k),H);x.stroke();if(k&&k%2===0)x.fillText(fm(k,0),px(k),oy+14);}
+    x.textAlign='right';for(var m=-7;m<=7;m++){x.beginPath();x.moveTo(0,py(m));x.lineTo(W,py(m));x.stroke();if(m&&m%2===0)x.fillText(fm(m,0),ox-4,py(m)+4);}
+    x.strokeStyle='#46586a';x.lineWidth=1.8;x.beginPath();x.moveTo(0,oy);x.lineTo(W,oy);x.moveTo(ox,0);x.lineTo(ox,H);x.stroke();
+    var cols=['#2a6fdb','#e76f51'];
+    I.forEach(function(q,i){if(q.a===0&&q.b===0)return;x.strokeStyle=I.length===1?'#1f3a5f':cols[i];x.lineWidth=3;x.setLineDash((q.op===0||q.op===2)?[9,6]:[]);x.beginPath();
+      if(q.b!==0){x.moveTo(px(-10),py((-q.c+q.a*10)/q.b));x.lineTo(px(10),py((-q.c-q.a*10)/q.b));}else{var xv=-q.c/q.a;x.moveTo(px(xv),0);x.lineTo(px(xv),H);}x.stroke();x.setLineDash([]);});
+    var ok=I.every(function(q){return (q.a!==0||q.b!==0)&&holds(q.a*P[0]+q.b*P[1]+q.c,0,q.op);});
+    x.fillStyle=ok?'#1b9a6f':'#e53935';x.strokeStyle='#fff';x.lineWidth=3;x.beginPath();x.arc(px(P[0]),py(P[1]),9,0,6.2832);x.fill();x.stroke();
+    x.fillStyle='#1f3a5f';x.font='700 13px system-ui';x.textAlign='left';x.fillText('P('+fm(P[0],1)+', '+fm(P[1],1)+')',px(P[0])+12,py(P[1])-10);
+    onUpdate(P,I);
+  }
+  var drag=false;function setP(e){var r=cv.getBoundingClientRect(),cx=(e.clientX-r.left)*W/r.width,cy=(e.clientY-r.top)*H/r.height;P=[Math.max(-10,Math.min(10,Math.round((cx-ox)/sc*2)/2)),Math.max(-7,Math.min(7,Math.round((oy-cy)/sc*2)/2))];draw();}
+  cv.addEventListener('pointerdown',function(e){drag=true;try{cv.setPointerCapture(e.pointerId);}catch(er){}setP(e);});
+  cv.addEventListener('pointermove',function(e){if(drag)setP(e);});
+  cv.addEventListener('pointerup',function(){drag=false;});
+  return {draw:draw,setP:function(p){P=p;draw();}};
+}
+/* ===== ল্যাব ২ ===== */
+var O2=2;
+var R2g=Region('i2cv2',function(){return [{a:+$('i2a').value,b:+$('i2b').value,c:+$('i2c').value,op:O2}];},function(P,I){
+  var q=I[0];['a','b','c'].forEach(function(k){$('i2'+k+'v').textContent=sg(q[k]);});
+  $('i2e').innerHTML=lin2(q.a,q.b,q.c)+' '+OPN[q.op]+' ০';
+  if(q.a===0&&q.b===0){$('i2r').innerHTML='⚠️ a ও b দুটিই ০ হলে এটি সরলরেখা নয়। অন্তত একটি ≠ ০ রাখো।';return;}
+  var v=q.a*P[0]+q.b*P[1]+q.c,ok=holds(v,0,q.op),h='';
+  h+='<b>পরীক্ষা বিন্দু:</b> ';
+  if(q.c===0)h+='মূলবিন্দু (০, ০) এ মান ০, অর্থাৎ <b>মূলবিন্দু রেখার উপরেই</b>। তাই অন্য বিন্দু (যেমন (১, ০) বা (০, ১)) দিয়ে পরীক্ষা করতে হবে।<br>';
+  else{var ot=holds(q.c,0,q.op);h+='মূলবিন্দু (০, ০) বসালে '+sg(q.c)+' '+OPN[q.op]+' ০ ⇒ <b>'+(ot?'সত্য':'মিথ্যা')+'</b>। তাই ছায়া <b>'+(ot?'মূলবিন্দু যে পাশে সেই পাশে':'মূলবিন্দুর বিপরীত পাশে')+'</b>।<br>';}
+  h+='রেখা: '+((q.op===0||q.op===2)?'ডটেড (রেখার বিন্দু সমাধান নয়)':'পূর্ণ রেখা (রেখার বিন্দুও সমাধান)')+'।<br>';
+  h+='বিন্দু P('+fm(P[0],1)+', '+fm(P[1],1)+') এ '+lin2(q.a,q.b,q.c)+' = <b>'+fm(v,2)+'</b> ⇒ '+fm(v,2)+' '+OPN[q.op]+' ০ '+(ok?'<b>সত্য ✔</b> (P ছায়াংশে বা সমাধানে আছে)':'<b>মিথ্যা ✘</b> (P সমাধান নয়)')+'। '+(Math.abs(v)<1e-9?'P ঠিক রেখার উপর।':(v>0?'P রেখার ধনাত্মক পাশে।':'P রেখার ঋণাত্মক পাশে।'));
+  $('i2r').innerHTML=h;});
+opChips('i2m',function(){return O2;},function(i){O2=i;},function(){R2g.draw();});
+['i2a','i2b','i2c'].forEach(function(i){$(i).oninput=function(){R2g.draw();};});R2g.draw();
+/* ===== ল্যাব ৩ ===== */
+var c3=$('i3cv'),x3=R2(c3);
+function lab3(){
+  var a=+$('i3a').value,b=+$('i3b').value,k=+$('i3k').value,M=+$('i3m').value;[['a',a],['b',b],['k',k],['m',M]].forEach(function(p){$('i3'+p[0]+'v').textContent=bn(p[1]);});
+  var num=M-b*k,den=a+b,h='প্রশ্নমতে: '+bn(a)+'x + '+bn(b)+'(x + '+bn(k)+') ≤ '+bn(M)+'<br>⇒ '+bn(a)+'x + '+bn(b)+'x + '+bn(b*k)+' ≤ '+bn(M)+' ⇒ '+bn(den)+'x ≤ '+sg(num)+'<br>';
+  var xmax=-1;
+  if(num<0){h+='<b>M − bk &lt; ০</b>, তাই x ≥ ০ হলে অসমতা কখনো সত্য হয় না। এই বাজেটে '+bn(k)+'টি বেশি খাতার দামই কুলায় না, কিছুই কেনা সম্ভব নয়।';}
+  else{xmax=Math.floor(num/den+1e-9);h+='⇒ x ≤ '+sg(num)+'/'+bn(den)+(num%den===0?' = '+bn(num/den):' ≈ '+fm(num/den,3))+'<br>পেন্সিল গুনতি সংখ্যা, তাই সর্বাধিক <b>'+bn(xmax)+'টি</b>।<br>যাচাই: x = '+bn(xmax)+' হলে মোট = '+bn(a*xmax)+' + '+bn(b*(xmax+k))+' = <b>'+bn(a*xmax+b*(xmax+k))+'</b> ≤ '+bn(M)+' ✔; x = '+bn(xmax+1)+' হলে মোট = '+bn(a*(xmax+1)+b*(xmax+1+k))+' &gt; '+bn(M)+' ✘ (বাজেট পার)';}
+  $('i3r').innerHTML=h;
+  var x=x3,W=600,Hh=150,top=Math.max(12,Math.ceil(num/den)+3);top=Math.min(top,42);x.clearRect(0,0,W,Hh);x.fillStyle='#fff';x.fillRect(0,0,W,Hh);
+  function X(v){return 24+v/top*550;}var y0=70;x.strokeStyle='#46586a';x.lineWidth=2;x.beginPath();x.moveTo(14,y0);x.lineTo(590,y0);x.stroke();
+  x.font='11px system-ui';x.textAlign='center';
+  for(var i=0;i<=top;i++){var okk=i<=xmax;x.fillStyle=okk?'#1b9a6f':'#e8b4a8';x.beginPath();x.arc(X(i),y0,top>25?4.5:7,0,6.2832);x.fill();x.fillStyle='#46586a';if(top<=25||i%5===0)x.fillText(fm(i,0),X(i),y0+24);}
+  if(num>=0){var bx=X(Math.min(num/den,top));x.strokeStyle='#e76f51';x.lineWidth=2;x.setLineDash([5,4]);x.beginPath();x.moveTo(bx,y0-30);x.lineTo(bx,y0+10);x.stroke();x.setLineDash([]);x.fillStyle='#e76f51';x.font='700 12px system-ui';x.fillText('সীমা '+fm(num/den,2),bx,y0-36);}
+  x.fillStyle='#1b9a6f';x.font='700 13px system-ui';x.fillText('সবুজ বিন্দু = কেনা সম্ভব (x এর গ্রহণযোগ্য মান)',300,128);
+}
+['i3a','i3b','i3k','i3m'].forEach(function(i){$(i).oninput=lab3;});lab3();
+/* ===== ল্যাব ৪ ===== */
+var Oa=2,Ob=3;
+var R4=Region('i4cv2',function(){return [{a:+$('i4a').value,b:+$('i4b').value,c:+$('i4c').value,op:Oa},{a:+$('i4d').value,b:+$('i4e').value,c:+$('i4f').value,op:Ob}];},function(P,I){
+  ['a','b','c'].forEach(function(k,i){$('i4'+k+'v').textContent=sg(I[0][k]);$('i4'+['d','e','f'][i]+'v').textContent=sg(I[1][k]);});
+  var h='১ম অসমতা: <b style="color:#2a6fdb">'+lin2(I[0].a,I[0].b,I[0].c)+' '+OPN[Oa]+' ০</b><br>২য় অসমতা: <b style="color:#e76f51">'+lin2(I[1].a,I[1].b,I[1].c)+' '+OPN[Ob]+' ০</b><br>';
+  var bad=I.some(function(q){return q.a===0&&q.b===0;});
+  if(bad){h+='⚠️ কোনো অসমতার a ও b দুটিই ০ হলে রেখা হয় না।';}
+  else{var v1=I[0].a*P[0]+I[0].b*P[1]+I[0].c,v2=I[1].a*P[0]+I[1].b*P[1]+I[1].c,s1=holds(v1,0,Oa),s2=holds(v2,0,Ob);
+    h+='P('+fm(P[0],1)+', '+fm(P[1],1)+'): ১ম এ মান '+fm(v1,2)+' ⇒ '+(s1?'সত্য ✔':'মিথ্যা ✘')+'; ২য় এ মান '+fm(v2,2)+' ⇒ '+(s2?'সত্য ✔':'মিথ্যা ✘')+'<br><b>'+(s1&&s2?'P দুই অসমতারই সমাধান (সবুজ সাধারণ অংশে) ✔':(s1?'শুধু ১ম অসমতার সমাধান (নীল অংশ)':(s2?'শুধু ২য় অসমতার সমাধান (কমলা অংশ)':'কোনোটির সমাধান নয়')))+'</b>';
+    var d=I[0].a*I[1].b-I[1].a*I[0].b;if(d===0)h+='<br>রেখা দুটি সমান্তরাল (ছেদ করে না)।';else{var ix=(I[0].b*I[1].c-I[1].b*I[0].c)/d,iy=(I[1].a*I[0].c-I[0].a*I[1].c)/d;h+='<br>রেখা দুটির ছেদবিন্দু ≈ ('+fm(ix,2)+', '+fm(iy,2)+')'+(Math.abs(I[0].a*ix+I[0].b*iy+I[0].c)<1e-9&&Math.abs(I[1].a*ix+I[1].b*iy+I[1].c)<1e-9?' ✔ (দুই রেখার সমীকরণ সিদ্ধ)':'');}}
+  $('i4r').innerHTML=h;},[0,4]);
+opChips('i4m1',function(){return Oa;},function(i){Oa=i;},function(){R4.draw();});
+opChips('i4m2',function(){return Ob;},function(i){Ob=i;},function(){R4.draw();});
+['i4a','i4b','i4c','i4d','i4e','i4f'].forEach(function(i){$(i).oninput=function(){R4.draw();};});R4.draw();
+/* ===== প্র্যাকটিস ===== */
+var PR=[
+ ['4x + 4 > 16 হলে x > কত? (সীমান্তের মান)',[3],'4x > 12 ⇒ x > 3।'],
+ ['x − 9 > 3x + 1 হলে x < কত?',[-5],'−2x > 10 ⇒ x < −5 (ঋণাত্মক দিয়ে ভাগ, চিহ্ন উল্টায়)।'],
+ ['3(x − 2) < 6 হলে x < কত?',[4],'3x − 6 < 6 ⇒ 3x < 12 ⇒ x < 4।'],
+ ['3x − 2 > 2x − 1 হলে x > কত?',[1],'x > 1।'],
+ ['8 ≥ 2 − 2x হলে x ≥ কত?',[-3],'6 ≥ −2x ⇒ −3 ≤ x ⇒ x ≥ −3।'],
+ ['x/3 + x/4 + x/5 > 47/60 হলে x > কত?',[1],'(20x + 15x + 12x)/60 = 47x/60 > 47/60 ⇒ x > 1।'],
+ ['5(3 − 2t) ≤ 3(4 − 3t) হলে t ≥ কত?',[3],'15 − 10t ≤ 12 − 9t ⇒ 3 ≤ t ⇒ t ≥ 3।'],
+ ['z ≤ z/2 + 3 হলে z ≤ কত?',[6],'z/2 ≤ 3 ⇒ z ≤ 6।'],
+ ['5x + 8(x + 4) ≤ 97 হলে সর্বাধিক কয়টি পেন্সিল (x এর সর্বোচ্চ পূর্ণমান)?',[5],'13x ≤ 65 ⇒ x ≤ 5।'],
+ ['সোহরাব x কেজি আম 70 টাকা কেজি দরে কিনে 500 টাকার নোট দিলেন, বিক্রেতা 20 টাকার x খানা নোটসহ বাকি ফেরত দিলেন। x এর সর্বোচ্চ পূর্ণমান কত? (500 − 70x ≥ 20x)',[5],'90x ≤ 500 ⇒ x ≤ 5.55…, তাই সর্বোচ্চ পূর্ণমান 5।'],
+ ['তিনটি পূর্ণসংখ্যার গুণফল 720 হলে সবচেয়ে ছোট সংখ্যাটি সর্বোচ্চ কত বড় হতে পারে? (ধনাত্মক পূর্ণসংখ্যা)',[8],'ছোট a হলে a³ ≤ 720 ⇒ a ≤ 8 (8³ = 512, 9³ = 729)। 8 × 9 × 10 = 720 ✔।'],
+ ['x + y − 3 এ (x, y) = (4, 1) বসালে মান কত?',[2],'4 + 1 − 3 = 2 (ধনাত্মক, তাই (4,1) রেখার ধনাত্মক পাশে)।']
+];
+(function(){var h='';PR.forEach(function(p,i){h+='<div class="q"><b>'+bn(i+1)+'.</b> '+p[0]+'<div class="ans"> <input type="text" id="pi'+i+'" size="10"> <button class="btn" data-pc="'+i+'">যাচাই</button> <button class="btn alt" data-ph="'+i+'">সমাধান</button></div><div class="fb" id="pf'+i+'"></div></div>';});$('pracbox').innerHTML=h;})();
+function numOf(s){s=en(s).replace(/[−–]/g,'-').replace(/\s+/g,'');var m=s.match(/^(-?\d+)\/(\d+)$/);if(m)return +m[1]/+m[2];if(/^-?\d*\.?\d+$/.test(s))return parseFloat(s);return NaN;}
+$('pracbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.pc!==undefined){var i=+b.dataset.pc,raw=$('pi'+i).value,v=numOf(raw),ok=!isNaN(v)&&PR[i][1].some(function(a){return Math.abs(a-v)<=0.0151;});
+    $('pf'+i).innerHTML=raw.trim()===''?'আগে উত্তর লেখো।':(ok?'✅ ঠিক! সাবাশ।':'❌ আবার চেষ্টা করো, বা "সমাধান" দেখো।');}
+  if(b.dataset.ph!==undefined){var j=+b.dataset.ph;$('pf'+j).innerHTML='💡 '+PR[j][2]+' <b>উত্তর: '+sg(PR[j][1][0])+'</b>';}
+});
+/* ===== কুইজ ===== */
+var QZ=[];function M(q,c,w,e){QZ.push({q:q,o:[c].concat(w),e:e});}
+M('a > b হলে (a − b) হবে—','ধনাত্মক',['ঋণাত্মক','শূন্য','ভগ্নাংশ'],'a > b ⇔ a − b > 0।');
+M('a > b এবং c > 0 হলে—','ac > bc',['ac < bc','ac = bc','a + c < b + c'],'ধনাত্মক দিয়ে গুণে দিক একই।');
+M('a > b এবং c < 0 হলে—','ac < bc',['ac > bc','ac = bc','a − c < b − c'],'ঋণাত্মক দিয়ে গুণে দিক উল্টায়।');
+M('−3x > −6 হলে—','x < ২',['x > ২','x < −২','x > −২'],'−3 দিয়ে ভাগ, চিহ্ন উল্টে x < 2।');
+M('a ≥ b এর অর্থ—','a > b অথবা a = b',['a > b এবং a = b','a < b','a ≠ b'],'"অথবা"।');
+M('৩ ≥ ১ সত্য, কারণ—','৩ > ১',['৩ = ১','৩ < ১','৩ + ১ = ৪'],'≥ এর একটি শর্ত সত্য হলেই চলে।');
+M('4x + 4 > 16 এর সমাধান—','x > ৩',['x < ৩','x > ৫','x < ৫'],'4x > 12 ⇒ x > 3।');
+M('x − 9 > 3x + 1 এর সমাধান—','x < −৫',['x > −৫','x > ৫','x < ৫'],'−2x > 10 ⇒ x < −5।');
+M('সংখ্যারেখায় খালি বৃত্ত (○) বোঝায়—','বিন্দুটি সমাধানের অন্তর্ভুক্ত নয়',['বিন্দুটি সমাধানের অন্তর্ভুক্ত','কোনো সমাধান নেই','x = ০'],'< বা > এর ক্ষেত্রে।');
+M('সংখ্যারেখায় ভরাট বৃত্ত (●) বোঝায়—','বিন্দুটি সমাধানের অন্তর্ভুক্ত',['বিন্দুটি বাদ','ঋণাত্মক সংখ্যা','অসীম'],'≤ বা ≥ এর ক্ষেত্রে।');
+M('a(x + b) < c এ a < 0 হলে সমাধান—','x > c/a − b',['x < c/a − b','x > c/a + b','x < c/a + b'],'ঋণাত্মক a দিয়ে ভাগ, চিহ্ন উল্টায়।');
+M('x > ৩ এর সমাধান সেট—','{x ∈ R : x > ৩}',['{x ∈ R : x < ৩}','{৩}','{x ∈ R : x ≥ ৩}'],'S = {x ∈ R : x > 3}।');
+M('অসমতার সমাধান সেট সাধারণত বাস্তব সংখ্যার—','অসীম উপসেট',['একটি মাত্র মান','ফাঁকা সেট','দুটি মান'],'সমীকরণের মতো কয়েকটি মান নয়।');
+M('0·(x + b) < c, যেখানে c ধনাত্মক, এর সমাধান—','x এর যেকোনো মান',['কোনো সমাধান নেই','x = ০','x < c'],'০ < c সত্য, x এর ওপর নির্ভর নেই।');
+M('0·(x + b) < c, যেখানে c ঋণাত্মক, এর সমাধান—','কোনো সমাধান নেই',['x এর যেকোনো মান','x = c','x > c'],'০ < ঋণাত্মক সংখ্যা মিথ্যা।');
+M('"অনূর্ধ্ব ৯৭ টাকা" এর অসমতা—','≤ ৯৭',['≥ ৯৭','< ৯৭','> ৯৭'],'অনূর্ধ্ব = সর্বোচ্চ।');
+M('"প্রাপ্ত সর্বনিম্ন নম্বর ৪০" এর অসমতা—','≥ ৪০',['≤ ৪০','< ৪০','= ৪০'],'৪০ বা তার বেশি।');
+M('5x + 8(x + 4) ≤ 97 হলে সর্বাধিক কয়টি পেন্সিল (x)?','৫',['৬','৪','৭'],'13x ≤ 65 ⇒ x ≤ 5।');
+M('রমা ও কুমকুমের উদাহরণে (৬) x এর মান—','১০ ≤ x < ১২',['x < ১০','x > ১২','১২ ≤ x ≤ ১৪'],'11x < 4x + 84 এবং 4x ≥ 40।');
+M('ax + by + c = 0 সমতলকে ভাগ করে—','তিনটি অংশে (দুই পাশ ও রেখা)',['দুটি অংশে শুধু','চারটি অংশে','একটি অংশে'],'রেখার উপরের বিন্দু আলাদা অংশ ধরলে তিনটি।');
+M('x + y − 3 > 0 এ মূলবিন্দু বসালে—','−৩ > ০ মিথ্যা, তাই ছায়া মূলবিন্দুর বিপরীত পাশে',['−৩ > ০ সত্য','৩ > ০ সত্য','০ > ০ সত্য'],'মূলবিন্দুতে মান −3।');
+M('x + y − 3 < 0 এর ছায়া পড়ে—','মূলবিন্দু যে পাশে সেই পাশে',['বিপরীত পাশে','কোনো পাশে না','দুই পাশেই'],'−3 < 0 সত্য।');
+M('2x − 3y + 6 ≥ 0 এ মূলবিন্দুতে মান—','৬ (ধনাত্মক, সত্য)',['−৬','০','৩'],'মূলবিন্দু বসালে c = 6।');
+M('−2x < 5 এর সমাধান—','x > −৫/২',['x < −৫/২','x > ৫/২','x < ৫/২'],'−2 দিয়ে ভাগ, চিহ্ন উল্টায়।');
+M('y ≤ 2x এর ছায়া নির্ণয়ে মূলবিন্দু পরীক্ষা বিন্দু হতে পারে না, কারণ—','মূলবিন্দু রেখার উপরেই',['মূলবিন্দুতে মান ১','মূলবিন্দু বৃত্তে নেই','y ঋণাত্মক'],'y = 2x রেখা (0,0) দিয়ে যায়।');
+M('y ≤ 2x এর ছায়াচিত্রে রেখাটি—','অন্তর্ভুক্ত (পূর্ণ রেখা)',['ডটেড','বাদ','ছায়াহীন'],'≤ এ সমতা আছে।');
+M('5x + 5 > 25 এর সমাধান সেট—','{x ∈ R : x > ৪}',['{x ∈ R : x < ৪}','{x ∈ R : x ≥ ৪}','{x ∈ R : x ≤ ৪}'],'5x > 20 ⇒ x > 4।');
+M('x + y = −2 এ y = 0 হলে x =','−২',['২','০','−১'],'x + 0 = −2।');
+M('x ≤ x/4 + 3 এর সমাধান—','x ≤ ৪',['x ≥ ৪','x < ৪','x > ৪'],'3x/4 ≤ 3 ⇒ x ≤ 4।');
+M('ঢাকা–সিঙ্গাপুর দূরত্ব ২৯০০ কিমি। বায়ুর বিপরীতে সর্বোচ্চ কার্যকর গতি ৮০০ কিমি/ঘণ্টা। প্রয়োজনীয় সময় t এর অসমতা—','t ≥ ২৯০০/৮০০ = ৩.৬২৫ ঘণ্টা',['t ≤ ৩.৬২৫','t ≥ ৩২','t ≤ ৩২'],'গতি বেশি হতে পারে না, তাই সময় t ≥ দূরত্ব ÷ সর্বোচ্চ গতি।');
+(function(){
+  var done=0,sc=0;
+  QZ.forEach(function(q){var ord=q.o.map(function(t,i){return {t:t,c:i===0};});
+    for(var i=ord.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),k=ord[i];ord[i]=ord[j];ord[j]=k;}q.ord=ord;});
+  var h='';QZ.forEach(function(q,qi){h+='<div class="q" id="qq'+qi+'"><b>'+bn(qi+1)+'.</b> '+q.q+q.ord.map(function(o,oi){return '<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+o.t+'</button>';}).join('')+'<div class="fb" id="qe'+qi+'"></div></div>';});
+  $('quizbox').innerHTML=h;
+  $('quizbox').addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b||b.parentNode.dataset.done)return;
+    var qi=+b.dataset.q,q=QZ[qi],o=q.ord[+b.dataset.o];b.parentNode.dataset.done=1;done++;
+    var btns=b.parentNode.querySelectorAll('.opt');btns.forEach(function(x,i){if(q.ord[i].c)x.classList.add('good');});
+    if(o.c){sc++;$('qe'+qi).textContent='✅ ঠিক! '+q.e;}else{b.classList.add('bad');$('qe'+qi).textContent='❌ ভুল। '+q.e;}
+    $('qscore').textContent='স্কোর: '+bn(sc)+' / '+bn(done)+' (মোট '+bn(QZ.length)+'টি)';
+    try{if(done===QZ.length){localStorage.setItem('sl_done_math-inequality','1');var xp=+(localStorage.getItem('sl_xp')||0);localStorage.setItem('sl_xp',xp+sc);}}catch(er){}
+  });
+})();
+/* ===== প্রশ্নোত্তর ===== */
+var QA=[
+ {h:'অনুশীলনী ৬.১ (সমাধান ও সংখ্যারেখা)',items:[
+  ['১. y − 3 < 5','y < 8। সংখ্যারেখায় ৮ এ খালি বৃত্ত, বামে তীর।'],
+  ['২. 3(x − 2) < 6','3x − 6 < 6 ⇒ 3x < 12 ⇒ x < 4।'],
+  ['৩. 3x − 2 > 2x − 1','x > 1।'],
+  ['৪. z ≤ z/2 + 3','z/2 ≤ 3 ⇒ z ≤ 6 (৬ এ ভরাট বৃত্ত, বামে তীর)।'],
+  ['৫. 8 ≥ 2 − 2x','6 ≥ −2x ⇒ −3 ≤ x ⇒ x ≥ −3।'],
+  ['৭. 5(3 − 2t) ≤ 3(4 − 3t)','15 − 10t ≤ 12 − 9t ⇒ 3 ≤ t ⇒ t ≥ 3।'],
+  ['৮. x/3 + x/4 + x/5 > 47/60','47x/60 > 47/60 ⇒ x > 1।']]},
+ {h:'অনুশীলনী ৬.২ (বাস্তব সমস্যা)',items:[
+  ['১. বালক ঘণ্টায় x কিমি বেগে ৩ ঘণ্টা হাঁটল, (x + ২) কিমি বেগে ½ ঘণ্টা দৌড়াল। অতিক্রান্ত পথ ২৯ কিমি এর কম।','3x + (x + 2)/2 < 29 ⇒ 6x + x + 2 < 58 ⇒ 7x < 56 ⇒ x < 8।'],
+  ['২. রোজ 4x কেজি চাল ও (x − 3) কেজি ডাল, মোট ৪০ কেজির বেশি নয়।','4x + x − 3 ≤ 40 ⇒ 5x ≤ 43 ⇒ x ≤ 8.6।'],
+  ['৩. সোহরাব ৭০ টাকা কেজি দরে x কেজি আম কিনে ৫০০ টাকার নোট দিলেন, ফেরত ২০ টাকার x খানা নোটসহ।','500 − 70x ≥ 20x ⇒ 90x ≤ 500 ⇒ x ≤ 50/9 ≈ 5.56। (x পূর্ণসংখ্যা হলে সর্বোচ্চ ৫)'],
+  ['৫. ৪০ বর্গ সেমি কাগজ থেকে x সেমি দীর্ঘ ও ৫ সেমি প্রস্থের আয়তাকার কাগজ কাটা।','5x ≤ 40 ⇒ x ≤ 8।'],
+  ['৮. জেট প্লেনের সর্বোচ্চ গতি ৩০০ মি/সে। ১৫ কিমি যেতে প্রয়োজনীয় সময়?','১৫ কিমি = ১৫০০০ মি। t ≥ 15000/300 = 50 সেকেন্ড।'],
+  ['৯. ঢাকা–সিঙ্গাপুর ২৯০০ কিমি, সর্বোচ্চ গতি ৯০০ কিমি/ঘণ্টা, বায়ু ১০০ কিমি/ঘণ্টা প্রতিকূলে।','কার্যকর গতি ≤ 800। 800t ≥ 2900 ⇒ t ≥ 3.625 ঘণ্টা।']]},
+ {h:'অনুশীলনী ৬.৩ ও নমুনা প্রশ্ন',items:[
+  ['৬.৩ প্রশ্ন ১: 5x + 5 > 25 এর সমাধান সেট?','x > 4, অর্থাৎ ক. S = {x ∈ R : x > 4}।'],
+  ['৬.৩ প্রশ্ন ২: x + y = −2 এ x এর কোন মানের জন্য y = 0?','x = −2 (ঘ)।'],
+  ['নমুনা MCQ ১: 2xy + y = 3 এর সঠিক স্থানাঙ্ক কোনগুলো?','খ. (1, 1), (−1, −3)। (1,1): 2 + 1 = 3 ✔; (−1,−3): 6 − 3 = 3 ✔।'],
+  ['নমুনা MCQ ২: a > b, c ≠ 0 হলে i. ac > bc যখন c > 0 ii. ac < bc যখন c < 0 iii. a/c > b/c যখন c > 0 — কোনটি সঠিক?','ঘ. i, ii ও iii। তিনটিই অসমতার বিধি।'],
+  ['নমুনা MCQ ৩: x ≤ x/4 + 3 এর সমাধান সেট?','3x/4 ≤ 3 ⇒ x ≤ 4। গ. S = {x ∈ R : x ≤ 4}।'],
+  ['নমুনা MCQ ৪: x ≤ 4 এর সংখ্যারেখা কোনটি?','গ. ৪ এ ভরাট বৃত্ত এবং বামে তীর।'],
+  ['সৃজনশীল ৯(ক): 10(3 − 2x) ≥ 6(4 − 3x) সমাধান করো।','30 − 20x ≥ 24 − 18x ⇒ 6 ≥ 2x ⇒ x ≤ 3।'],
+  ['সৃজনশীল ৯(খ): ঢাকা–সিঙ্গাপুর ২৯০০ কিমি, সর্বোচ্চ গতি ৫০০ কিমি/ঘণ্টা, বায়ু ৬০ কিমি/ঘণ্টা প্রতিকূলে। প্রয়োজনীয় সময়?','কার্যকর গতি ≤ 500 − 60 = 440। t ≥ 2900/440 ≈ 6.59 ঘণ্টা।'],
+  ['সংক্ষিপ্ত ৬(খ): রিতা, মিতা, বীথির বয়স x, 2x, 3x বছর; সমষ্টি অনূর্ধ্ব ৫৪। মিতার বয়স সর্বোচ্চ?','6x ≤ 54 ⇒ x ≤ 9। মিতার বয়স 2x ≤ 18, সর্বোচ্চ ১৮ বছর।'],
+  ['সংক্ষিপ্ত ৬(গ): ৪৮ বর্গসেমি কাগজ থেকে x সেমি দৈর্ঘ্য ও ৬ সেমি প্রস্থের আয়তাকার কাগজ কাটা।','6x ≤ 48 ⇒ x ≤ 8।']]}
+];
+(function(){var h='';QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){h+='<details class="ex"><summary><b>'+it[0]+'</b></summary><p>'+it[1]+'</p></details>';});});$('qabox').innerHTML=h;})();
+
+</script>
+</body>
+</html>

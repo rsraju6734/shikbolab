@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>জ্যামিতিক অঙ্কন (উচ্চতর গণিত অধ্যায় ৪) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+canvas{width:100%;height:auto;max-width:700px;display:block;margin:8px auto;border-radius:12px;background:#fff;border:1px solid var(--line);touch-action:none}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.ctl input[type=range]{width:200px;max-width:100%}
+.ctl select,.ctl input[type=text],.ans input{font-family:inherit;font-size:16px;padding:6px 8px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;max-width:100%;width:auto}
+.eqb{background:#eaf7f5;border-radius:10px;padding:10px;text-align:center;font-weight:700;color:var(--navy);margin:8px 0;font-size:18px;overflow-x:auto}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.fb{font-weight:700;margin-top:6px}
+.res{background:#eef6ff;border-radius:10px;padding:10px 12px;margin:8px 0;line-height:1.9}
+.res b{color:#0b5ed7}
+.chips button{margin:3px;padding:6px 12px;border-radius:999px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.chips button.on{background:#0b5ed7;color:#fff;border-color:#0b5ed7}
+.step{background:#fff;border:1px solid var(--line);border-left:5px solid #2a9d8f;border-radius:8px;padding:8px 12px;margin:6px 0;display:none}
+.step.show{display:block}
+.ex{border:2px dashed #b8c7d6;border-radius:12px;padding:10px 14px;margin:14px 0;background:#fcfdff}
+.q{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:#fff}
+.q .opt{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 10px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:16px;cursor:pointer}
+.q .opt.good{background:#d8f3e3;border-color:#2a9d8f}
+.q .opt.bad{background:#fddcdc;border-color:#e76f51}
+.m{font-family:system-ui,'Segoe UI',Arial,sans-serif}
+table.t{border-collapse:collapse;margin:8px 0}
+table.t td,table.t th{border:1px solid #cfd9e1;padding:5px 12px;text-align:center}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">📐 গণিত &rsaquo; উচ্চতর গণিত &rsaquo; অধ্যায় ৪ (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">✏️ জ্যামিতিক অঙ্কন</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#ex">🪜 প্রমাণ</a><a href="#lab1">🔺 ত্রিভুজ অঙ্কন</a><a href="#lab2">⭕ বৃত্ত অঙ্কন</a><a href="#lab3">🎯 পরিবৃত্ত-অন্তর্বৃত্ত</a><a href="#prac">✍️ প্র্যাকটিস</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্নোত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায়ে শিখবে:</b> শুধু <b>কম্পাস ও রুলার (স্কেল)</b> দিয়ে নির্দিষ্ট শর্তে ত্রিভুজ ও বৃত্ত আঁকা এবং আঁকা যে ঠিক হয়েছে তার যুক্তি দেওয়া। এই অধ্যায়ে ল্যাবে প্রতিটি অঙ্কন <b>ধাপে ধাপে</b> নিজে চালিয়ে দেখবে, তারপর খাতায় আঁকবে।</div>
+
+    <h3>১. জ্যামিতিক অঙ্কন কী? ⭐⭐</h3>
+    <ul>
+      <li>কম্পাস ও রুলার ব্যবহার করে নির্দিষ্ট শর্ত মেনে যে চিত্র আঁকা হয়, তাই <b>জ্যামিতিক অঙ্কন</b>।</li>
+      <li>উপপাদ্য প্রমাণের জন্য আঁকা চিত্র হুবহু মাপে হওয়া জরুরি নয়। কিন্তু সম্পাদ্যে (অঙ্কন) চিত্র <b>যথাযথ</b> হওয়া দরকার।</li>
+      <li>প্রতিটি সম্পাদ্যের কাঠামো: <b>বিশ্লেষণ</b> (কী আছে, কী আঁকব) → <b>অঙ্কন</b> (ধাপ ১, ২, ৩ …) → <b>প্রমাণ</b> (কেন ঠিক হলো)।</li>
+    </ul>
+
+    <h3>২. তিনটি মূল হাতিয়ার ⭐⭐⭐</h3>
+    <ul>
+      <li><b>লম্বদ্বিখণ্ডক:</b> রেখাংশের মধ্যবিন্দু দিয়ে যাওয়া লম্ব। এর যেকোনো বিন্দু রেখাংশের দুই প্রান্ত থেকে <b>সমদূরবর্তী</b>। (সমদ্বিবাহু ত্রিভুজ বানাতে কাজে লাগে)</li>
+      <li><b>কোণ-সমদ্বিখণ্ডক:</b> এর যেকোনো বিন্দু কোণের দুই বাহু থেকে সমদূরবর্তী।</li>
+      <li><b>স্পর্শক ও ব্যাসার্ধ:</b> স্পর্শবিন্দুতে স্পর্শক ব্যাসার্ধের উপর <b>লম্ব</b>।</li>
+    </ul>
+
+    <h3>৩. ত্রিভুজ আঁকার সম্পাদ্য ⭐⭐⭐</h3>
+    <ul>
+      <li><b>সম্পাদ্য ১ (ভূমি, ভূমিসংলগ্ন কোণ, উচ্চতা):</b> ভূমির এক প্রান্তে লম্ব তুলে উচ্চতা কেটে নাও। সেখান থেকে ভূমির সমান্তরাল রেখা টানো। কোণ আঁকলে যেখানে ছেদ করে সেটিই শীর্ষ।</li>
+      <li><b>সম্পাদ্য ২ (ভূমি, শিরঃকোণ, অপর দুই বাহুর সমষ্টি):</b> সমষ্টির সমান DB কাটো, D তে ∠x এর <b>অর্ধেক</b> আঁকো, B কেন্দ্রে ভূমির সমান ব্যাসার্ধে চাপ কেটে C পাও, তারপর ∠DCA = ∠BDF করে A পাও। (AD = AC হয়, তাই AB + AC = DB)</li>
+      <li><b>সম্পাদ্য ৩ (ভূমি, শিরঃকোণ, অপর দুই বাহুর অন্তর):</b> BP = অন্তর কাটো, P তে ∠x এর সম্পূরকের <b>অর্ধেক</b> আঁকো, B কেন্দ্রে ভূমির সমান চাপ কেটে C পাও, ∠DPC = ∠PCA করে A পাও।</li>
+      <li><b>সম্পাদ্য ৪ (উচ্চতা, ভূমির উপর মধ্যমা, ভূমিসংলগ্ন কোণ):</b> কোণ ও উচ্চতা দিয়ে A পাও, A কেন্দ্রে মধ্যমার সমান ব্যাসার্ধে চাপ কেটে D পাও, তারপর DC = BD কাটো। মধ্যমা উচ্চতার চেয়ে ছোট হলে আঁকা যায় না।</li>
+      <li><b>বই উদাহরণ ১ ও ২ (ভূমি, ভূমিসংলগ্ন কোণ, বাহুর সমষ্টি বা অন্তর):</b> কোণের বাহুতে সমষ্টি বা অন্তরের সমান BD কেটে CD যোগ করো, CD-এর লম্বদ্বিখণ্ডক BD কে যেখানে কাটে সেটিই A।</li>
+    </ul>
+
+    <h3>৪. বৃত্ত আঁকার সম্পাদ্য ⭐⭐⭐</h3>
+    <ul>
+      <li><b>সম্পাদ্য ৫:</b> দুটি বিন্দু A, B দিয়ে যায় এবং কেন্দ্র একটি নির্দিষ্ট রেখা PQ-এর উপর। ⇒ AB এর <b>লম্বদ্বিখণ্ডক</b> PQ কে যেখানে কাটে সেটিই কেন্দ্র O।</li>
+      <li><b>সম্পাদ্য ৬:</b> দুটি বিন্দু দিয়ে যায় এবং ব্যাসার্ধ r নির্দিষ্ট। ⇒ A, B কেন্দ্রে r ব্যাসার্ধে দুই পাশে চাপ আঁকলে P ও Q কেন্দ্র পাওয়া যায় (r ≥ AB/২ হতে হবে)। দুটি বৃত্ত পাওয়া যায়।</li>
+      <li><b>সম্পাদ্য ৭:</b> নির্দিষ্ট বৃত্তকে নির্দিষ্ট বিন্দু P তে স্পর্শ করে এবং বহিঃস্থ বিন্দু Q দিয়ে যায়। ⇒ CP রেখা ও PQ-এর লম্বদ্বিখণ্ডকের ছেদবিন্দু কেন্দ্র O।</li>
+      <li><b>সম্পাদ্য ৮:</b> নির্দিষ্ট সরলরেখাকে নির্দিষ্ট বিন্দু A তে স্পর্শ করে এবং রেখার বহিঃস্থ P দিয়ে যায়। ⇒ A তে রেখার লম্ব এবং AP এর লম্বদ্বিখণ্ডকের ছেদবিন্দু কেন্দ্র।</li>
+      <li><b>বহিঃস্থ বিন্দু থেকে স্পর্শক:</b> OP এর মধ্যবিন্দু M, M কেন্দ্রে MO ব্যাসার্ধে বৃত্ত আঁকলে বৃত্তকে Q, R তে কাটে। PQ ও PR স্পর্শক। দৈর্ঘ্য PQ = PR = √(OP² − r²)।</li>
+    </ul>
+
+    <h3>৫. পরিবৃত্ত, অন্তর্বৃত্ত ও বহির্বৃত্ত ⭐⭐</h3>
+    <ul>
+      <li><b>পরিবৃত্ত:</b> দুই বাহুর লম্বদ্বিখণ্ডকের ছেদবিন্দু = পরিকেন্দ্র S। ব্যাসার্ধ R = abc/(৪Δ)।</li>
+      <li><b>অন্তর্বৃত্ত:</b> দুই কোণের সমদ্বিখণ্ডকের ছেদবিন্দু = অন্তঃকেন্দ্র I। ব্যাসার্ধ r = Δ/s, যেখানে s = অর্ধপরিসীমা (a+b+c)/২ এবং Δ = ক্ষেত্রফল।</li>
+      <li><b>বহির্বৃত্ত:</b> একটি কোণের অন্তঃসমদ্বিখণ্ডক ও অপর দুই কোণের বহিঃসমদ্বিখণ্ডকের ছেদবিন্দু। ব্যাসার্ধ rₐ = Δ/(s − a)।</li>
+      <li>৫, ১২, ১৩ বাহুর ত্রিভুজ সমকোণী: অতিভুজের মধ্যবিন্দু পরিকেন্দ্র, তাই R = ১৩/২ = ৬.৫। আর r = (৫ + ১২ − ১৩)/২ = ২।</li>
+    </ul>
+
+    <h3>৬. কাজের টিপস ⭐</h3>
+    <ul>
+      <li>পেন্সিল ধারালো রাখো। কম্পাসের মাপ একবার ঠিক করলে আর নড়াবে না।</li>
+      <li>চাপ কাটার সময় দুই চাপ ভালোভাবে ছেদ করতে হবে। চাপ খুব ছোট করলে ছেদবিন্দু অস্পষ্ট হয়।</li>
+      <li>আঁকা শেষে মাপ নিয়ে যাচাই করো (যেমন AB + AC = ৭ সেমি হলো কিনা)।</li>
+      <li>"ধাপ ৫: ABC-ই নির্ণেয় ত্রিভুজ" লিখে বর্ণনা শেষ করো।</li>
+    </ul>
+    <div class="warn">⚠️ <b>সাধারণ ভুল:</b> ① সমষ্টি আর অন্তরের অঙ্কন গুলিয়ে ফেলা (সমষ্টিতে ∠x/২, অন্তরে সম্পূরকের অর্ধেক)। ② ত্রিভুজ আঁকা সম্ভব কিনা না দেখা, যেমন মধ্যমা &lt; উচ্চতা হলে হয় না। ③ প্রমাণ না লিখে শুধু ধাপ লেখা।</div>
+  </section>
+
+  <section class="panel" id="ex">
+    <h2>🪜 কেন ঠিক? (প্রমাণ ধাপে ধাপে)</h2>
+    <div class="say">👉 "পরের ধাপ" চাপো। অঙ্কন ঠিক কেন হলো, সেই যুক্তি দেখো।</div>
+
+    <div class="ex" id="E1"><b>প্রমাণ ১ (সম্পাদ্য ২):</b> ভূমি a, শিরঃকোণ x, অপর দুই বাহুর সমষ্টি s হলে অঙ্কিত ABC-ই নির্ণেয় ত্রিভুজ।
+      <div class="step">ধাপ ১: অঙ্কনে ∠ACD = ∠ADC = ½∠x (D তে ½∠x আঁকা, আবার C তে ∠DCA = ∠BDF)। ∠ACD = ∠ADC বলে AC = AD (সমদ্বিবাহু)।</div>
+      <div class="step">ধাপ ২: △ACD এর বহিঃস্থ কোণ ∠BAC = ∠ADC + ∠ACD = ½x + ½x = <b>x</b>। তাই ABC তে ∠BAC = x (শিরঃকোণ ঠিক)।</div>
+      <div class="step">ধাপ ৩: BC = a (B কেন্দ্রে a ব্যাসার্ধে চাপ কেটে C পাওয়া)। ভূমি ঠিক।</div>
+      <div class="step">ধাপ ৪: AC + AB = AD + AB = DB = s। অপর দুই বাহুর সমষ্টিও ঠিক। তাই △ABC-ই উদ্দিষ্ট ত্রিভুজ ✔</div>
+      <button class="btn" data-ex="E1">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E1">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E2"><b>প্রমাণ ২ (বই উদাহরণ ১):</b> ভূমি BC = ৫ সেমি, ∠B = ৬০°, AB + AC = ৭ সেমি হলে কেন ঠিক?
+      <div class="step">ধাপ ১: BY রেখা থেকে BD = ৭ সেমি কেটে নিয়েছি, C, D যোগ করেছি।</div>
+      <div class="step">ধাপ ২: CD এর লম্বদ্বিখণ্ডক BD কে A তে ছেদ করেছে। লম্বদ্বিখণ্ডকের যেকোনো বিন্দু C ও D থেকে সমদূরবর্তী, তাই <b>AD = AC</b>।</div>
+      <div class="step">ধাপ ৩: BD = BA + AD = BA + AC। তাই <b>AB + AC = BD = ৭ সেমি</b> ✔। আর BC = ৫, ∠B = ৬০° তো অঙ্কনেই আছে।</div>
+      <div class="step">ধাপ ৪ (হিসাব): AB = (s² − a²)/(২(s − a cos ∠B)) = (৪৯ − ২৫)/(২(৭ − ২.৫)) = ২৪/৯ ≈ ২.৬৭ সেমি, AC ≈ ৪.৩৩ সেমি। যোগফল ৭ ✔</div>
+      <button class="btn" data-ex="E2">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E2">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E3"><b>প্রমাণ ৩ (সম্পাদ্য ৫):</b> দুটি নির্দিষ্ট বিন্দু A, B দিয়ে যায় এবং কেন্দ্র রেখা PQ এর উপর থাকবে, এমন বৃত্ত।
+      <div class="step">ধাপ ১: AB এর লম্বদ্বিখণ্ডক CD আঁকি। CD এর যেকোনো বিন্দু A ও B থেকে সমদূরবর্তী।</div>
+      <div class="step">ধাপ ২: CD রেখা PQ কে O তে ছেদ করেছে। O বিন্দু CD ও PQ দুটির উপরই আছে।</div>
+      <div class="step">ধাপ ৩: O, CD এর উপর, তাই OA = OB। O কে কেন্দ্র করে OA ব্যাসার্ধে বৃত্ত আঁকলে তা B দিয়েও যাবে।</div>
+      <div class="step">ধাপ ৪: কেন্দ্র O, PQ এর উপর। অতএব এটিই নির্ণেয় বৃত্ত ✔</div>
+      <button class="btn" data-ex="E3">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E3">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E4"><b>প্রমাণ ৪ (সম্পাদ্য ৭):</b> বৃত্ত (কেন্দ্র C) কে P তে স্পর্শ করে এবং Q দিয়ে যায়।
+      <div class="step">ধাপ ১: PQ এর লম্বদ্বিখণ্ডক AB আঁকি। বর্ধিত CP রেখা AB কে O তে ছেদ করেছে।</div>
+      <div class="step">ধাপ ২: O, AB এর উপর বলে OP = OQ। তাই O কেন্দ্র, OP ব্যাসার্ধ নিয়ে বৃত্ত Q দিয়েও যায়।</div>
+      <div class="step">ধাপ ৩: P বিন্দুটি দুই কেন্দ্র C ও O এর সংযোজক রেখার উপর এবং P দুই বৃত্তেরই উপর। তাই বৃত্ত দুটি P তে স্পর্শ করে ✔</div>
+      <button class="btn" data-ex="E4">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E4">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E5"><b>উদাহরণ (বই উ. ৩):</b> ২ সেমি ব্যাসার্ধের বৃত্তের কেন্দ্র O থেকে ৫ সেমি দূরের বিন্দু P থেকে স্পর্শকের দৈর্ঘ্য কত?
+      <div class="step">ধাপ ১: P থেকে স্পর্শক PQ। স্পর্শবিন্দু Q তে ব্যাসার্ধ OQ স্পর্শকের উপর লম্ব, তাই ∠OQP = ৯০°।</div>
+      <div class="step">ধাপ ২: সমকোণী △OQP: OP² = OQ² + PQ² ⇒ ২৫ = ৪ + PQ²।</div>
+      <div class="step">ধাপ ৩: PQ² = ২১ ⇒ <b>PQ = √২১ ≈ ৪.৫৮ সেমি</b>। বইয়ে মেপে প্রায় ৪.৬ সেমি পাওয়া যায়। দুই স্পর্শকের দৈর্ঘ্য সমান, তাই PR = PQ।</div>
+      <button class="btn" data-ex="E5">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E5">আবার শুরু</button>
+    </div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🔺 ল্যাব ১: ত্রিভুজ অঙ্কন স্টুডিও</h2>
+    <div class="say">👉 একটি সম্পাদ্য বেছে নাও। স্লাইডারে মান বদলাও। তারপর "পরের ধাপ" চাপতে থাকো: প্রতি ধাপে কম্পাস-রুলার দিয়ে যা আঁকতে হবে, ছবিতে লাল রঙে দেখাবে। শেষে মাপ মিলিয়ে দেখা যাবে।</div>
+    <div class="chips" id="s1m"></div>
+    <div class="ctl" id="s1c"></div>
+    <canvas id="s1cv" width="600" height="400"></canvas>
+    <div class="ctl"><button class="btn alt" id="s1p">◀ আগের ধাপ</button><button class="btn" id="s1n">পরের ধাপ ▶</button><button class="btn alt" id="s1a">সব ধাপ একসাথে</button></div>
+    <div class="res m" id="s1t"></div>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>⭕ ল্যাব ২: বৃত্ত অঙ্কন স্টুডিও</h2>
+    <div class="say">👉 সম্পাদ্য বেছে নাও, স্লাইডার নাড়াও, ধাপে ধাপে বৃত্ত আঁকা দেখো। শেষ ধাপে স্পর্শ/দূরত্ব যাচাই করা হবে।</div>
+    <div class="chips" id="s2m"></div>
+    <div class="ctl" id="s2c"></div>
+    <canvas id="s2cv" width="600" height="400"></canvas>
+    <div class="ctl"><button class="btn alt" id="s2p">◀ আগের ধাপ</button><button class="btn" id="s2n">পরের ধাপ ▶</button><button class="btn alt" id="s2a">সব ধাপ একসাথে</button></div>
+    <div class="res m" id="s2t"></div>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🎯 ল্যাব ৩: পরিবৃত্ত, অন্তর্বৃত্ত ও বহির্বৃত্ত</h2>
+    <div class="say">👉 তিন বাহুর মাপ দাও (ডিফল্ট ৫, ১২, ১৩)। কোন বৃত্ত আঁকবে তা বেছে ধাপে ধাপে দেখো। সূত্র দিয়ে মিলিয়ে নাও: R = abc/৪Δ, r = Δ/s।</div>
+    <div class="chips" id="s3m"></div>
+    <div class="ctl"><label>a (BC) = <span id="s3av"></span></label><input type="range" id="s3a" min="2" max="14" step="0.5" value="13"><label>b (CA) = <span id="s3bv"></span></label><input type="range" id="s3b" min="2" max="14" step="0.5" value="12"><label>c (AB) = <span id="s3cv"></span></label><input type="range" id="s3c" min="2" max="14" step="0.5" value="5"></div>
+    <canvas id="s3cv2" width="600" height="400"></canvas>
+    <div class="ctl"><button class="btn alt" id="s3p">◀ আগের ধাপ</button><button class="btn" id="s3n">পরের ধাপ ▶</button><button class="btn alt" id="s3a2">সব ধাপ একসাথে</button></div>
+    <div class="res m" id="s3t"></div>
+  </section>
+
+  <section class="panel" id="prac">
+    <h2>✍️ প্র্যাকটিস (বইয়ের ধাঁচে)</h2>
+    <div class="say">👉 নিজে হিসাব করে উত্তর লেখো। দশমিক হলে ২ ঘর পর্যন্ত লিখলেই হবে।</div>
+    <div id="pracbox"></div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="fb" id="qscore"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>📖 সৃজনশীল ও সংক্ষিপ্ত প্রশ্নোত্তর</h2>
+    <div id="qabox"></div>
+  </section>
+</div>
+
+<footer class="site">&copy; ShikboLab · জ্যামিতিক অঙ্কন (উচ্চতর গণিত অধ্যায় ৪)</footer>
+<script>
+var BNS='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BNS[d];});}
+function en(s){return String(s).replace(/[০-৯]/g,function(d){return BNS.indexOf(d);});}
+function $(id){return document.getElementById(id);}
+function R2(c){var d=Math.min(2,window.devicePixelRatio||1),w=c.width,h=c.height;c.width=w*d;c.height=h*d;var x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return x;}
+function fm(v,d){d=(d===undefined)?2:d;var k=Math.pow(10,d),r=Math.round(v*k)/k;if(Math.abs(r)<1e-9)r=0;return bn(String(r).replace('-','−'));}
+var DEG=Math.PI/180;
+function dst(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1]);}
+function mp(a,b){return [(a[0]+b[0])/2,(a[1]+b[1])/2];}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ex){var box=$(b.dataset.ex),s=box.querySelectorAll('.step:not(.show)');if(s.length){s[0].classList.add('show');}if(s.length<=1)b.disabled=true;}
+  if(b.dataset.rs){var bx=$(b.dataset.rs);bx.querySelectorAll('.step').forEach(function(x){x.classList.remove('show');});bx.querySelector('[data-ex]').disabled=false;}
+});
+
+/* ---------- অঙ্কন ইঞ্জিন ---------- */
+function Ln(a,b,c){return {k:'L',a:a,b:b,c:c};}
+function Xl(a,b,c){return {k:'X',a:a,b:b,c:c};}
+function Ar(c,r,s,e,col){return {k:'A',c:c,r:r,s:s,e:e,col:col};}
+function Pt(p,l,dx,dy,c){return {k:'P',p:p,l:l,dx:dx||0,dy:dy===undefined?-10:dy,c:c};}
+function Ra(p,u,v){return {k:'R',p:p,u:u,v:v};}
+function Pg(pts,c){return {k:'G',pts:pts,c:c};}
+function arcAt(c,r,pt,sp){var a=Math.atan2(pt[1]-c[1],pt[0]-c[0]);return Ar(c,r,a-sp,a+sp);}
+function bisectOps(P,Q){ /* PQ এর লম্বদ্বিখণ্ডক, কম্পাসের চাপসহ */
+  var d=dst(P,Q),rho=0.75*d,h=Math.sqrt(rho*rho-d*d/4),M=mp(P,Q),ux=(Q[0]-P[0])/d,uy=(Q[1]-P[1])/d,nx=-uy,ny=ux;
+  var T=[M[0]+nx*h,M[1]+ny*h],B=[M[0]-nx*h,M[1]-ny*h];
+  return {ops:[arcAt(P,rho,T,.28),arcAt(Q,rho,T,.28),arcAt(P,rho,B,.28),arcAt(Q,rho,B,.28),Xl(T,B)],M:M,dir:[nx,ny]};}
+function Studio(o){
+  var cv=$(o.cv),x=R2(cv),W=+cv.getAttribute('width'),H=+cv.getAttribute('height'),S={mode:0,k:0,p:{},res:null};
+  function bld(){var m=o.modes[S.mode];S.res=m.build(S.p);if(S.res.steps){S.k=Math.max(0,Math.min(S.k,S.res.steps.length));}draw();}
+  function ctls(){var m=o.modes[S.mode],h='';S.p={};m.ctl.forEach(function(c){S.p[c.id]=c.v;h+='<label>'+c.l+' = <span id="'+o.cv+c.id+'v">'+bn(c.v)+'</span></label><input type="range" id="'+o.cv+c.id+'" min="'+c.min+'" max="'+c.max+'" step="'+c.st+'" value="'+c.v+'">';});
+    $(o.ctl).innerHTML=h;m.ctl.forEach(function(c){$(o.cv+c.id).oninput=function(){S.p[c.id]=+this.value;$(o.cv+c.id+'v').textContent=bn(+this.value);bld();};});}
+  function chips(){$(o.chips).innerHTML=o.modes.map(function(m,i){return '<button data-i="'+i+'" class="'+(i===S.mode?'on':'')+'">'+m.name+'</button>';}).join('');}
+  $(o.chips).onclick=function(e){var b=e.target.closest('button');if(!b)return;S.mode=+b.dataset.i;S.k=0;chips();ctls();bld();};
+  $(o.nx).onclick=function(){if(S.res.steps&&S.k<S.res.steps.length){S.k++;draw();}};
+  $(o.pv).onclick=function(){if(S.k>0){S.k--;draw();}};
+  $(o.al).onclick=function(){if(S.res.steps){S.k=S.res.steps.length;draw();}};
+  function fit(steps){var xs=[],ys=[];function add(p){xs.push(p[0]);ys.push(p[1]);}
+    steps.forEach(function(s){s.ops.forEach(function(q){
+      if(q.k==='L'){add(q.a);add(q.b);}else if(q.k==='X'){add(q.a);add(q.b);}else if(q.k==='P'){add(q.p);}else if(q.k==='G'){q.pts.forEach(add);}
+      else if(q.k==='A'){if(q.s===undefined){add([q.c[0]-q.r,q.c[1]-q.r]);add([q.c[0]+q.r,q.c[1]+q.r]);}else{add([q.c[0]+q.r*Math.cos(q.s),q.c[1]+q.r*Math.sin(q.s)]);add([q.c[0]+q.r*Math.cos(q.e),q.c[1]+q.r*Math.sin(q.e)]);}}});});
+    var x0=Math.min.apply(null,xs),x1=Math.max.apply(null,xs),y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys),bw=Math.max(x1-x0,1),bh=Math.max(y1-y0,1);
+    var sc=Math.min((W-90)/bw,(H-80)/bh,60);return {sc:sc,cx:(x0+x1)/2,cy:(y0+y1)/2};}
+  function draw(){
+    x.clearRect(0,0,W,H);x.fillStyle='#fff';x.fillRect(0,0,W,H);var r=S.res;
+    if(r.err){x.fillStyle='#b4472d';x.font='700 16px "Hind Siliguri",system-ui';x.textAlign='center';x.fillText('এই মানে অঙ্কন সম্ভব নয়',W/2,H/2);$(o.txt).innerHTML='⚠️ '+r.err;return;}
+    var st=r.steps,f=fit(st);
+    function X(p){return W/2+(p[0]-f.cx)*f.sc;} function Y(p){return H/2-(p[1]-f.cy)*f.sc;}
+    function col(q,cur){return q.c==='g'?'#2a6fdb':(q.c==='f'?'#1b9a6f':(q.c||(cur?'#e76f51':'#6b7f95')));}
+    for(var i=0;i<Math.min(S.k,st.length);i++){var cur=(i===S.k-1),ops=st[i].ops;
+      ops.forEach(function(q){
+        var c=col(q,cur);x.lineWidth=(q.c==='f'?4:(cur?3:2));x.strokeStyle=c;x.fillStyle=c;x.setLineDash([]);
+        if(q.k==='G'){x.fillStyle=q.c||'rgba(42,157,143,.15)';x.beginPath();q.pts.forEach(function(p,j){if(j)x.lineTo(X(p),Y(p));else x.moveTo(X(p),Y(p));});x.closePath();x.fill();}
+        else if(q.k==='L'){x.beginPath();x.moveTo(X(q.a),Y(q.a));x.lineTo(X(q.b),Y(q.b));x.stroke();}
+        else if(q.k==='X'){var ax=X(q.a),ay=Y(q.a),dx=X(q.b)-ax,dy=Y(q.b)-ay,L=Math.hypot(dx,dy)||1;dx/=L;dy/=L;x.lineWidth=(cur?2.5:1.5);x.setLineDash(q.c?[]:[8,5]);x.beginPath();x.moveTo(ax-dx*1500,ay-dy*1500);x.lineTo(ax+dx*1500,ay+dy*1500);x.stroke();x.setLineDash([]);}
+        else if(q.k==='A'){x.beginPath();if(q.s===undefined)x.arc(X(q.c),Y(q.c),q.r*f.sc,0,6.2832);else x.arc(X(q.c),Y(q.c),q.r*f.sc,-q.e,-q.s);x.lineWidth=(q.col==='f'?4:(cur?2.8:1.8));x.strokeStyle=q.col==='f'?'#1b9a6f':(q.col==='g'?'#2a6fdb':(cur?'#e76f51':'#6b7f95'));x.stroke();}
+        else if(q.k==='R'){var s=12,px=X(q.p),py=Y(q.p),ux=q.u[0],uy=-q.u[1],vx=q.v[0],vy=-q.v[1];x.lineWidth=1.8;x.strokeStyle='#6b7f95';x.beginPath();x.moveTo(px+ux*s,py+uy*s);x.lineTo(px+(ux+vx)*s,py+(uy+vy)*s);x.lineTo(px+vx*s,py+vy*s);x.stroke();}
+        else if(q.k==='P'){var px2=X(q.p),py2=Y(q.p);x.fillStyle=q.c==='g'?'#2a6fdb':(q.c==='f'?'#1b9a6f':'#1f3a5f');x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.arc(px2,py2,5,0,6.2832);x.fill();x.stroke();if(q.l){x.font='700 15px system-ui';x.textAlign='center';x.fillText(q.l,px2+q.dx,py2+q.dy);}}
+      });}
+    var list='';st.forEach(function(s,i){list+='<div style="padding:4px 8px;border-radius:8px;margin:3px 0;'+(i===S.k-1?'background:#fff4dc;font-weight:700;':(i<S.k?'color:#46586a;':'color:#9aa8b5;'))+'">'+(i<S.k?'✔ ':'◻ ')+'ধাপ '+bn(i+1)+': '+s.t+'</div>';});
+    $(o.txt).innerHTML=list+(S.k>=st.length?'<div style="margin-top:8px">'+r.info+'</div>':(S.k===0?'<div style="margin-top:6px">▶ "পরের ধাপ" চাপো।</div>':''));
+  }
+  chips();ctls();bld();return S;
+}
+/* ===================== ল্যাব ১: ত্রিভুজ ===================== */
+function triInfo(A,B,C,extra){var a=dst(B,C),b=dst(C,A),c=dst(A,B);
+  var angB=Math.acos(((A[0]-B[0])*(C[0]-B[0])+(A[1]-B[1])*(C[1]-B[1]))/(c*a))/DEG,angA=Math.acos(((B[0]-A[0])*(C[0]-A[0])+(B[1]-A[1])*(C[1]-A[1]))/(c*b))/DEG;
+  return {a:a,b:b,c:c,B:angB,A:angA};}
+var TM=[
+ {name:'সম্পাদ্য ১: ভূমি, কোণ, উচ্চতা',ctl:[{id:'a',l:'ভূমি a',min:3,max:8,st:.5,v:5},{id:'h',l:'উচ্চতা h',min:2,max:6,st:.5,v:4},{id:'x',l:'∠B',min:30,max:120,st:5,v:60}],build:function(p){
+  var a=p.a,h=p.h,xr=p.x*DEG,B=[0,0],C=[a,0],M=[0,h],A=[h/Math.tan(xr),h],ex=Math.max(a,Math.abs(A[0]))+1.5;
+  var steps=[
+   {t:'যেকোনো রেখা BD থেকে BC = a কেটে নিই।',ops:[Xl([0,0],[1,0],'#d5dde5'),Ln(B,C,'g'),Pt(B,'B',-12,18,'g'),Pt(C,'C',10,18,'g')]},
+   {t:'B বিন্দুতে BC এর উপর লম্ব BP আঁকি।',ops:[Xl(B,[0,1]),Ra(B,[1,0],[0,1])]},
+   {t:'BP থেকে BM = h কেটে নিই।',ops:[Ar(B,h,80*DEG,100*DEG),Pt(M,'M',-14,-4)]},
+   {t:'M বিন্দুতে MN ∥ BC আঁকি।',ops:[Xl(M,[1,h])]},
+   {t:'B বিন্দুতে ∠x এর সমান ∠CBE আঁকি। BE রেখা MN কে A বিন্দুতে ছেদ করে।',ops:[Ar(B,0.9,0,xr),Xl(B,A),Pt(A,'A',0,-12)]},
+   {t:'A, C যোগ করি। △ABC-ই উদ্দিষ্ট ত্রিভুজ।',ops:[Pg([A,B,C]),Ln(A,B,'f'),Ln(B,C,'f'),Ln(A,C,'f'),Pt(A,'A',0,-12,'f'),Pt(B,'B',-12,18,'f'),Pt(C,'C',10,18,'f')]}];
+  var T=triInfo(A,B,C);return {steps:steps,info:'যাচাই: BC = <b>'+fm(T.a)+'</b>, ∠B = <b>'+fm(T.B,1)+'°</b>, A থেকে ভূমির উপর উচ্চতা = <b>'+fm(A[1])+'</b> ✔ সবকিছু শর্ত মিলেছে।<br>আরও: AB = '+fm(T.c)+', AC = '+fm(T.b)+'। (∠x এর উপর নির্ভর করে অনেক ক্ষেত্রে দুটি ত্রিভুজ পাওয়া যেতে পারে।)'};}},
+ {name:'সম্পাদ্য ২: ভূমি, শিরঃকোণ, বাহুর সমষ্টি',ctl:[{id:'a',l:'ভূমি a',min:3,max:8,st:.5,v:5},{id:'s',l:'সমষ্টি s',min:6,max:10,st:.5,v:8},{id:'x',l:'শিরঃকোণ x',min:30,max:120,st:5,v:60}],build:function(p){
+  var a=p.a,s=p.s,th=p.x/2*DEG,D=[0,0],B=[s,0],disc=a*a-s*s*Math.sin(th)*Math.sin(th);
+  if(disc<0)return {err:'ভূমি a খুব ছোট (a ≥ s·sin(x/২) হতে হবে)। a বাড়াও বা s কমাও।'};
+  var sq=Math.sqrt(disc),ts=[s*Math.cos(th)+sq,s*Math.cos(th)-sq].filter(function(t){return t>1e-6;});
+  if(!ts.length)return {err:'এই মানে C পাওয়া যায় না। ভূমি a বদলাও।'};
+  var Cs=ts.map(function(t){return [t*Math.cos(th),t*Math.sin(th)];}),As=ts.map(function(t){return [t/(2*Math.cos(th)),0];}),C=Cs[0],A=As[0];
+  var ang=Math.atan2(C[1]-B[1],C[0]-B[0]);
+  var steps=[
+   {t:'যেকোনো রেখা DE থেকে DB = s (অপর দুই বাহুর সমষ্টি) কেটে নিই।',ops:[Xl(D,B,'#d5dde5'),Ln(D,B,'g'),Pt(D,'D',-12,18,'g'),Pt(B,'B',10,18,'g')]},
+   {t:'D বিন্দুতে ∠BDF = ½∠x আঁকি।',ops:[Ar(D,1.2,0,th),Xl(D,C),Pt(C,'',0,0)]},
+   {t:'B কেন্দ্রে a ব্যাসার্ধ নিয়ে বৃত্তচাপ আঁকি। তা DF কে C বিন্দুতে ছেদ করে।'+(Cs.length>1?' (আরেকটি C′ বিন্দুতেও কাটে, তাই দুটি ত্রিভুজ সম্ভব।)':''),ops:[Ar(B,a,ang-.35,ang+.35)].concat(Cs.map(function(c,i){return Pt(c,i?'C′':'C',10,-8);}))},
+   {t:'C বিন্দুতে ∠DCA = ∠BDF আঁকি। CA রেখা DB কে A বিন্দুতে ছেদ করে।'+(Cs.length>1?' C′ তেও একইভাবে A′।':''),ops:[Ln(C,A[0]===undefined?B:A),Pt(A,'A',0,18)].concat(Cs.length>1?[Ln(Cs[1],As[1]),Pt(As[1],'A′',0,18)]:[])},
+   {t:'B, C যোগ করি। △ABC (এবং △A′BC′)-ই উদ্দিষ্ট ত্রিভুজ।',ops:[Pg([A,B,C]),Ln(A,B,'f'),Ln(B,C,'f'),Ln(A,C,'f'),Pt(A,'A',0,18,'f'),Pt(C,'C',10,-8,'f')].concat(Cs.length>1?[Ln(As[1],B,'#9bd8c1'),Ln(B,Cs[1],'#9bd8c1'),Ln(As[1],Cs[1],'#9bd8c1')]:[])}];
+  var T=triInfo(A,B,C);return {steps:steps,info:'যাচাই (△ABC): BC = <b>'+fm(T.a)+'</b>, শিরঃকোণ ∠A = <b>'+fm(T.A,1)+'°</b>, AB + AC = '+fm(T.c)+' + '+fm(T.b)+' = <b>'+fm(T.c+T.b)+'</b> ✔ (s = '+fm(s)+')<br>কারণ AC = AD (সমদ্বিবাহু), তাই AB + AC = AB + AD = DB।'};}},
+ {name:'সম্পাদ্য ৩: ভূমি, শিরঃকোণ, বাহুর অন্তর',ctl:[{id:'a',l:'ভূমি a',min:4,max:8,st:.5,v:7.5},{id:'d',l:'অন্তর d',min:1,max:4,st:.5,v:2.5},{id:'x',l:'শিরঃকোণ x',min:30,max:120,st:5,v:45}],build:function(p){
+  var a=p.a,d=p.d,ph=(180-p.x)/2*DEG,B=[0,0],P=[d,0],disc=a*a-d*d*Math.sin(ph)*Math.sin(ph);
+  if(disc<0)return {err:'a খুব ছোট বা d খুব বড়। মান বদলাও।'};
+  var t=-d*Math.cos(ph)+Math.sqrt(disc);if(t<=1e-6)return {err:'এই মানে C পাওয়া যায় না।'};
+  var C=[d+t*Math.cos(ph),t*Math.sin(ph)],A=[d+t/(2*Math.cos(ph)),0];if(Math.cos(ph)<=1e-6)return {err:'x এর মান ছোট করো।'};
+  var ang=Math.atan2(C[1],C[0]);
+  var steps=[
+   {t:'যেকোনো রেখা BD থেকে BP = d (অপর দুই বাহুর অন্তর) কেটে নিই।',ops:[Xl(B,P,'#d5dde5'),Ln(B,P,'g'),Pt(B,'B',-12,18,'g'),Pt(P,'P',0,18,'g')]},
+   {t:'P বিন্দুতে ∠x এর সম্পূরক কোণের অর্ধেকের সমান ∠DPM আঁকি।',ops:[Ar(P,1.1,0,ph),Xl(P,C),Pt(C,'',0,0)]},
+   {t:'B কেন্দ্রে a ব্যাসার্ধ নিয়ে বৃত্তচাপ আঁকি। তা PM কে C বিন্দুতে ছেদ করে।',ops:[Ar(B,a,ang-.35,ang+.35),Pt(C,'C',-10,-8)]},
+   {t:'C বিন্দুতে ∠DPC = ∠PCA আঁকি। CA রেখা BD কে A বিন্দুতে ছেদ করে।',ops:[Ln(C,A),Pt(A,'A',0,18),Ar(C,0.9,-Math.PI/2-.2+ (Math.PI/2-ph) -.5,-Math.PI/2+.1+(Math.PI/2-ph)-.5)]},
+   {t:'B, C যোগ করি। △ABC-ই উদ্দিষ্ট ত্রিভুজ।',ops:[Pg([A,B,C]),Ln(A,B,'f'),Ln(B,C,'f'),Ln(A,C,'f'),Pt(A,'A',0,18,'f'),Pt(C,'C',-10,-8,'f')]}];
+  var T=triInfo(A,B,C);return {steps:steps,info:'যাচাই: BC = <b>'+fm(T.a)+'</b>, ∠A = <b>'+fm(T.A,1)+'°</b>, AB − AC = '+fm(T.c)+' − '+fm(T.b)+' = <b>'+fm(T.c-T.b)+'</b> ✔ (d = '+fm(d)+')<br>কারণ AP = AC (সমদ্বিবাহু), তাই AB − AC = AB − AP = BP।'};}},
+ {name:'উদাহরণ ১: ভূমি, ∠B, বাহুর সমষ্টি',ctl:[{id:'a',l:'ভূমি BC',min:3,max:7,st:.5,v:5},{id:'s',l:'সমষ্টি AB+AC',min:5,max:10,st:.5,v:7},{id:'x',l:'∠B',min:30,max:120,st:5,v:60}],build:function(p){
+  var a=p.a,s=p.s,xr=p.x*DEG;if(s<=a)return {err:'অপর দুই বাহুর সমষ্টি ভূমির চেয়ে বড় হতে হবে (s > a)।'};
+  var u=[Math.cos(xr),Math.sin(xr)],B=[0,0],C=[a,0],D=[s*u[0],s*u[1]],t=(s*s-a*a)/(2*(s-a*Math.cos(xr))),A=[t*u[0],t*u[1]],M=mp(C,D);
+  var bs=bisectOps(C,D);
+  var steps=[
+   {t:'যেকোনো রেখা BX থেকে BC = a কেটে নিই।',ops:[Xl(B,C,'#d5dde5'),Ln(B,C,'g'),Pt(B,'B',-12,18,'g'),Pt(C,'C',0,18,'g')]},
+   {t:'∠XBY = ∠B আঁকি।',ops:[Ar(B,1,0,xr),Xl(B,D)]},
+   {t:'BY রেখা থেকে BD = s (অপর দুই বাহুর সমষ্টি) কেটে নিই।',ops:[Ar(B,s,xr-.15,xr+.15),Pt(D,'D',-10,-8)]},
+   {t:'C, D যোগ করি।',ops:[Ln(C,D,'#9aa8b5')]},
+   {t:'CD রেখার লম্বদ্বিখণ্ডক আঁকি, যা BD কে A বিন্দুতে ছেদ করে।',ops:bs.ops.concat([Pt(A,'A',-12,-8)])},
+   {t:'A, C যোগ করি। △ABC-ই নির্ণেয় ত্রিভুজ।',ops:[Pg([A,B,C]),Ln(A,B,'f'),Ln(B,C,'f'),Ln(A,C,'f'),Pt(A,'A',-12,-8,'f'),Pt(D,'D',-10,-8)]}];
+  var T=triInfo(A,B,C);return {steps:steps,info:'যাচাই: BC = <b>'+fm(T.a)+'</b>, ∠B = <b>'+fm(T.B,1)+'°</b>, AB + AC = '+fm(T.c)+' + '+fm(T.b)+' = <b>'+fm(T.c+T.b)+'</b> ✔<br>কারণ A লম্বদ্বিখণ্ডকের উপর, তাই AD = AC এবং BD = BA + AD = BA + AC।'};}},
+ {name:'উদাহরণ ২: ভূমি, ∠B, বাহুর অন্তর',ctl:[{id:'a',l:'ভূমি BC',min:4,max:9,st:.5,v:7.5},{id:'d',l:'অন্তর AB−AC',min:1,max:4,st:.5,v:2.5},{id:'x',l:'∠B',min:20,max:80,st:5,v:45}],build:function(p){
+  var a=p.a,d=p.d,xr=p.x*DEG;if(d>=a)return {err:'অন্তর d ভূমি a এর চেয়ে ছোট হতে হবে।'};
+  if(d>=a*Math.cos(xr))return {err:'এই মানে ত্রিভুজ হয় না: d < a·cos(∠B) হতে হবে।'};
+  var u=[Math.cos(xr),Math.sin(xr)],B=[0,0],C=[a,0],D=[d*u[0],d*u[1]],t=(d*d-a*a)/(2*(d-a*Math.cos(xr))),A=[t*u[0],t*u[1]];
+  var bs=bisectOps(C,D);
+  var steps=[
+   {t:'যেকোনো রেখা BX থেকে BC = a কেটে নিই।',ops:[Xl(B,C,'#d5dde5'),Ln(B,C,'g'),Pt(B,'B',-12,18,'g'),Pt(C,'C',0,18,'g')]},
+   {t:'∠XBY = ∠B আঁকি।',ops:[Ar(B,1,0,xr),Xl(B,A)]},
+   {t:'BY রেখা থেকে BD = d (অপর দুই বাহুর অন্তর) কেটে নিই।',ops:[Ar(B,d,xr-.2,xr+.2),Pt(D,'D',-12,-6)]},
+   {t:'C, D যোগ করি।',ops:[Ln(C,D,'#9aa8b5')]},
+   {t:'CD রেখার লম্বদ্বিখণ্ডক আঁকি, যা BY কে A বিন্দুতে ছেদ করে।',ops:bs.ops.concat([Pt(A,'A',-12,-8)])},
+   {t:'A, C যোগ করি। △ABC-ই নির্ণেয় ত্রিভুজ।',ops:[Pg([A,B,C]),Ln(A,B,'f'),Ln(B,C,'f'),Ln(A,C,'f'),Pt(A,'A',-12,-8,'f')]}];
+  var T=triInfo(A,B,C);return {steps:steps,info:'যাচাই: BC = <b>'+fm(T.a)+'</b>, ∠B = <b>'+fm(T.B,1)+'°</b>, AB − AC = '+fm(T.c)+' − '+fm(T.b)+' = <b>'+fm(T.c-T.b)+'</b> ✔<br>কারণ AD = AC (লম্বদ্বিখণ্ডক) এবং AB = BD + AD, তাই AB − AC = BD = d।'};}},
+ {name:'সম্পাদ্য ৪: উচ্চতা, মধ্যমা, কোণ',ctl:[{id:'h',l:'উচ্চতা h',min:2,max:5,st:.5,v:3},{id:'d',l:'মধ্যমা d',min:2,max:7,st:.5,v:5},{id:'x',l:'∠B',min:30,max:120,st:5,v:60}],build:function(p){
+  var h=p.h,d=p.d,xr=p.x*DEG;if(d<h)return {err:'মধ্যমা d উচ্চতা h এর চেয়ে ছোট হলে ত্রিভুজ আঁকা যায় না (d ≥ h)।'};
+  var B=[0,0],A=[h/Math.tan(xr),h],M=[0,h],Dx=A[0]+Math.sqrt(d*d-h*h),D=[Dx,0],C=[2*Dx,0],ext=Math.max(Dx*2,Math.abs(A[0]))+1;
+  if(Dx<=1e-6)return {err:'এই মানে D পাওয়া যায় না।'};
+  var steps=[
+   {t:'যেকোনো রেখা BE এর B বিন্দুতে ∠EBP = ∠x আঁকি।',ops:[Xl(B,[1,0],'#d5dde5'),Ar(B,1,0,xr),Xl(B,A),Pt(B,'B',-12,18,'g')]},
+   {t:'B বিন্দুতে BE এর উপর BQ লম্ব আঁকি।',ops:[Xl(B,[0,1]),Ra(B,[1,0],[0,1])]},
+   {t:'BQ থেকে উচ্চতা h এর সমান BM কেটে নিই।',ops:[Ar(B,h,80*DEG,100*DEG),Pt(M,'M',-14,-4)]},
+   {t:'M বিন্দুতে MN ∥ BE আঁকি। তা BP কে A বিন্দুতে ছেদ করে।',ops:[Xl(M,[1,h]),Pt(A,'A',0,-12)]},
+   {t:'A কেন্দ্রে মধ্যমা d এর সমান ব্যাসার্ধ নিয়ে বৃত্তচাপ আঁকি। তা BE কে D বিন্দুতে ছেদ করে।',ops:[Ar(A,d,-Math.PI/2-.5,-Math.PI/2+.5),Pt(D,'D',0,18)]},
+   {t:'BE থেকে DC = BD কেটে নিই এবং A, C যোগ করি। △ABC-ই উদ্দিষ্ট ত্রিভুজ।',ops:[Pg([A,B,C]),Ln(A,B,'f'),Ln(B,C,'f'),Ln(A,C,'f'),Ln(A,D,'#e76f51'),Pt(C,'C',10,18,'f'),Pt(D,'D',0,18)]}];
+  var T=triInfo(A,B,C);return {steps:steps,info:'যাচাই: ∠B = <b>'+fm(T.B,1)+'°</b>, উচ্চতা = <b>'+fm(A[1])+'</b>, মধ্যমা AD = <b>'+fm(dst(A,D))+'</b>, D, BC এর মধ্যবিন্দু ('+fm(dst(B,D))+' = '+fm(dst(D,C))+') ✔<br>মনে রাখো: মধ্যমা d ≥ উচ্চতা h না হলে ত্রিভুজ হয় না।'};}}
+];
+var st1=Studio({cv:'s1cv',chips:'s1m',ctl:'s1c',txt:'s1t',nx:'s1n',pv:'s1p',al:'s1a',modes:TM});
+
+/* ===================== ল্যাব ২: বৃত্ত ===================== */
+var CM=[
+ {name:'সম্পাদ্য ৫: ২ বিন্দু দিয়ে, কেন্দ্র রেখায়',ctl:[{id:'w',l:'AB',min:2,max:6,st:.5,v:4},{id:'th',l:'রেখা PQ এর কোণ',min:15,max:75,st:5,v:30}],build:function(p){
+  var w=p.w,th=p.th*DEG,A=[0,0],B=[w,0],L0=[w/2-1.5,2],L1=[L0[0]+Math.cos(th),L0[1]+Math.sin(th)],O=[w/2,2+1.5*Math.tan(th)],bs=bisectOps(A,B),R=dst(O,A);
+  var steps=[
+   {t:'দুটি নির্দিষ্ট বিন্দু A, B এবং নির্দিষ্ট রেখা PQ।',ops:[Pt(A,'A',-12,16,'g'),Pt(B,'B',12,16,'g'),Xl(L0,L1,'#2a6fdb'),Pt(L0,'',0,0)]},
+   {t:'A, B যোগ করি।',ops:[Ln(A,B,'#9aa8b5')]},
+   {t:'AB রেখাংশের লম্বদ্বিখণ্ডক CD আঁকি (A ও B কেন্দ্রে সমান ব্যাসার্ধে দুই পাশে চাপ কেটে)।',ops:bs.ops},
+   {t:'CD রেখা PQ কে O বিন্দুতে ছেদ করে।',ops:[Pt(O,'O',12,-8)]},
+   {t:'O কে কেন্দ্র করে OA ব্যাসার্ধ নিয়ে বৃত্ত আঁকি। এটিই নির্ণেয় বৃত্ত।',ops:[Ar(O,R,undefined,undefined,'f'),Pt(O,'O',12,-8,'f')]}];
+  return {steps:steps,info:'যাচাই: OA = <b>'+fm(dst(O,A))+'</b>, OB = <b>'+fm(dst(O,B))+'</b> ✔ সমান, তাই বৃত্ত B দিয়েও যায়। আবার O, রেখা PQ এর উপর (কারণ O = CD ∩ PQ)। ব্যাসার্ধ = '+fm(R)+'।'};}},
+ {name:'সম্পাদ্য ৬: ২ বিন্দু দিয়ে, ব্যাসার্ধ r',ctl:[{id:'w',l:'AB',min:2,max:6,st:.5,v:4},{id:'r',l:'ব্যাসার্ধ r',min:2,max:5,st:.5,v:3}],build:function(p){
+  var w=p.w,r=p.r;if(r<w/2-1e-9)return {err:'ব্যাসার্ধ r অবশ্যই AB/২ এর চেয়ে বড় বা সমান হতে হবে। r বাড়াও।'};
+  var A=[0,0],B=[w,0],k=Math.sqrt(r*r-w*w/4),P=[w/2,k],Q=[w/2,-k];
+  var steps=[
+   {t:'দুটি নির্দিষ্ট বিন্দু A, B এবং রেখাংশ r (ব্যাসার্ধ) দেওয়া আছে।',ops:[Pt(A,'A',-12,16,'g'),Pt(B,'B',12,16,'g'),Ln([w+1,0.0],[w+1+r,0.0],'g')]},
+   {t:'A, B যোগ করি।',ops:[Ln(A,B,'#9aa8b5')]},
+   {t:'A ও B কে কেন্দ্র করে r ব্যাসার্ধ নিয়ে AB এর উভয় পাশে চাপ আঁকি। এক পাশের চাপ দুটি P এ, অপর পাশের চাপ দুটি Q তে ছেদ করে।',ops:[arcAt(A,r,P,.3),arcAt(B,r,P,.3),arcAt(A,r,Q,.3),arcAt(B,r,Q,.3),Pt(P,'P',0,-10),Pt(Q,'Q',0,18)]},
+   {t:'P কে কেন্দ্র করে PA ব্যাসার্ধ নিয়ে ABC বৃত্ত আঁকি।',ops:[Ar(P,r,undefined,undefined,'f')]},
+   {t:'Q কে কেন্দ্র করে QA ব্যাসার্ধ নিয়ে ABD বৃত্ত আঁকি। বৃত্ত দুটির প্রতিটিই নির্ণেয় বৃত্ত।',ops:[Ar(Q,r,undefined,undefined,'f')]}];
+  return {steps:steps,info:'যাচাই: PA = <b>'+fm(dst(P,A))+'</b>, PB = <b>'+fm(dst(P,B))+'</b>, QA = <b>'+fm(dst(Q,A))+'</b>, QB = <b>'+fm(dst(Q,B))+'</b> সবই r = '+fm(r)+' ✔। তাই দুটি বৃত্ত পাওয়া যায়।'+(Math.abs(r-w/2)<1e-9?'<br>(r = AB/২ হলে দুটি বৃত্ত এক হয়ে AB ব্যাসবিশিষ্ট বৃত্ত হয়।)':'')};}},
+ {name:'সম্পাদ্য ৭: বৃত্তকে P তে স্পর্শ, Q দিয়ে',ctl:[{id:'al',l:'P এর কোণ',min:20,max:160,st:10,v:90},{id:'q',l:'CQ দূরত্ব',min:4,max:7,st:.5,v:5.5}],build:function(p){
+  var R=3,al=p.al*DEG,q=p.q,C=[0,0],u=[Math.cos(al),Math.sin(al)],P=[R*u[0],R*u[1]],be=-35*DEG,Q=[q*Math.cos(be),q*Math.sin(be)],uq=u[0]*Q[0]+u[1]*Q[1];
+  var den=2*(uq-R);if(Math.abs(den)<0.15)return {err:'এই অবস্থানে CP ও লম্বদ্বিখণ্ডক প্রায় সমান্তরাল। P এর কোণ বদলাও।'};
+  var t=(q*q-R*R)/den,O=[t*u[0],t*u[1]],ro=dst(O,P),bs=bisectOps(P,Q);
+  var steps=[
+   {t:'নির্দিষ্ট বৃত্ত (কেন্দ্র C), বৃত্তের উপর P এবং বৃত্তের বাইরে Q বিন্দু।',ops:[Ar(C,R,undefined,undefined,'g'),Pt(C,'C',-12,16,'g'),Pt(P,'P',0,-10,'g'),Pt(Q,'Q',0,18,'g')]},
+   {t:'P, Q যোগ করি।',ops:[Ln(P,Q,'#9aa8b5')]},
+   {t:'PQ এর লম্বদ্বিখণ্ডক AB আঁকি।',ops:bs.ops},
+   {t:'C, P যোগ করে বর্ধিত করি। বর্ধিত CP রেখা AB কে O বিন্দুতে ছেদ করে।',ops:[Xl(C,P),Pt(O,'O',12,-8)]},
+   {t:'O কে কেন্দ্র করে OP ব্যাসার্ধ নিয়ে বৃত্ত আঁকি। এটিই উদ্দিষ্ট বৃত্ত।',ops:[Ar(O,ro,undefined,undefined,'f'),Pt(O,'O',12,-8,'f')]}];
+  var oc=dst(O,C),ty=Math.abs(oc-(R+ro))<1e-6?'OC = R + OP (বহিঃস্পর্শ)':(Math.abs(Math.abs(oc-ro)-R)<1e-6?'|OC − OP| = R (অন্তঃস্পর্শ)':'');
+  return {steps:steps,info:'যাচাই: OP = <b>'+fm(ro)+'</b>, OQ = <b>'+fm(dst(O,Q))+'</b> ✔ সমান, তাই বৃত্ত Q দিয়ে যায়। O, P, C একই রেখায়, আর কেন্দ্রদ্বয়ের দূরত্ব OC = '+fm(oc)+', R = '+fm(R)+', OP = '+fm(ro)+' ⇒ '+ty+'। তাই বৃত্ত দুটি P তে স্পর্শ করে।'};}},
+ {name:'সম্পাদ্য ৮: রেখাকে A তে স্পর্শ, P দিয়ে',ctl:[{id:'px',l:'P এর x',min:-4,max:4,st:.5,v:3},{id:'py',l:'P এর উচ্চতা',min:1,max:4,st:.5,v:2}],build:function(p){
+  var px=p.px,py=p.py,A=[0,0],P=[px,py],t=(px*px+py*py)/(2*py),O=[0,t],bs=bisectOps(A,P);
+  var steps=[
+   {t:'নির্দিষ্ট রেখা AB, তার উপর নির্দিষ্ট বিন্দু A এবং রেখার বাইরে বিন্দু P।',ops:[Xl(A,[1,0],'#2a6fdb'),Pt(A,'A',0,18,'g'),Pt(P,'P',0,-10,'g')]},
+   {t:'A বিন্দুতে AB এর উপর AC লম্ব আঁকি।',ops:[Xl(A,[0,1]),Ra(A,[1,0],[0,1])]},
+   {t:'A, P যোগ করে AP এর লম্বদ্বিখণ্ডক QR আঁকি।',ops:[Ln(A,P,'#9aa8b5')].concat(bs.ops)},
+   {t:'QR ও AC রেখা O বিন্দুতে ছেদ করে।',ops:[Pt(O,'O',12,-8)]},
+   {t:'O কে কেন্দ্র করে OA ব্যাসার্ধ নিয়ে বৃত্ত আঁকি। এটিই উদ্দিষ্ট বৃত্ত (APS)।',ops:[Ar(O,t,undefined,undefined,'f'),Pt(O,'O',12,-8,'f')]}];
+  return {steps:steps,info:'যাচাই: OA = <b>'+fm(t)+'</b>, OP = <b>'+fm(dst(O,P))+'</b> ✔ সমান, তাই বৃত্ত P দিয়ে যায়। আবার OA রেখা AB এর উপর লম্ব, তাই AB বৃত্তকে A বিন্দুতে স্পর্শ করে। (সূত্র: ব্যাসার্ধ = (x² + y²)/(২y) = '+fm(t)+')'};}},
+ {name:'বহিঃস্থ বিন্দু থেকে স্পর্শক',ctl:[{id:'r',l:'ব্যাসার্ধ r',min:1,max:3,st:.5,v:2},{id:'d',l:'OP দূরত্ব',min:4,max:7,st:.5,v:5}],build:function(p){
+  var r=p.r,d=p.d,O=[0,0],P=[d,0],M=[d/2,0],qx=r*r/d,qy=r*Math.sqrt(d*d-r*r)/d,Q=[qx,qy],R=[qx,-qy],L=Math.sqrt(d*d-r*r);
+  var steps=[
+   {t:'নির্দিষ্ট বৃত্ত (কেন্দ্র O, ব্যাসার্ধ r) এবং বৃত্তের বাইরে বিন্দু P।',ops:[Ar(O,r,undefined,undefined,'g'),Pt(O,'O',-12,16,'g'),Pt(P,'P',10,16,'g')]},
+   {t:'O, P যোগ করি এবং OP কে সমদ্বিখণ্ডিত করি। দ্বিখণ্ডক বিন্দু M।',ops:[Ln(O,P,'#9aa8b5'),Pt(M,'M',0,18)]},
+   {t:'M কে কেন্দ্র করে MO ব্যাসার্ধ নিয়ে বৃত্ত আঁকি। এটি নির্দিষ্ট বৃত্তকে Q ও R বিন্দুতে ছেদ করে।',ops:[Ar(M,d/2),Pt(Q,'Q',0,-10),Pt(R,'R',0,18)]},
+   {t:'P, Q এবং P, R যোগ করি। PQ ও PR-ই নির্ণেয় স্পর্শক।',ops:[Ln(P,Q,'f'),Ln(P,R,'f'),Ln(O,Q,'#9aa8b5'),Ln(O,R,'#9aa8b5'),Ra(Q,[(O[0]-Q[0])/r,(O[1]-Q[1])/r],[(P[0]-Q[0])/L,(P[1]-Q[1])/L])]}];
+  var dot=(Q[0]-O[0])*(Q[0]-P[0])+(Q[1]-O[1])*(Q[1]-P[1]);
+  return {steps:steps,info:'যাচাই: ∠OQP = ৯০° (OQ·QP = '+fm(dot)+'), কারণ OP ব্যাস-বিশিষ্ট অর্ধবৃত্তস্থ কোণ সমকোণ।<br>স্পর্শকের দৈর্ঘ্য PQ = PR = √(OP² − r²) = √('+fm(d*d)+' − '+fm(r*r)+') = <b>'+fm(L)+'</b>; দুই স্পর্শকের দৈর্ঘ্যের সমষ্টি = '+fm(2*L)+'।'+(r===2&&d===5?'<br>(বইয়ের উদাহরণ ৩: দৈর্ঘ্য মেপে প্রায় ৪.৬ সেমি।)':'')};}}
+];
+var st2=Studio({cv:'s2cv',chips:'s2m',ctl:'s2c',txt:'s2t',nx:'s2n',pv:'s2p',al:'s2a',modes:CM});
+
+/* ===================== ল্যাব ৩: পরিবৃত্ত, অন্তর্বৃত্ত ===================== */
+var cv3=$('s3cv2'),x3=R2(cv3),M3=0,K3=0;
+function s3sides(){var a=+$('s3a').value,b=+$('s3b').value,c=+$('s3c').value;$('s3av').textContent=bn(a);$('s3bv').textContent=bn(b);$('s3cv').textContent=bn(c);return {a:a,b:b,c:c};}
+$('s3m').innerHTML=['পরিবৃত্ত','অন্তর্বৃত্ত','বহির্বৃত্ত (A এর বিপরীতে)'].map(function(n,i){return '<button data-i="'+i+'" class="'+(i===0?'on':'')+'">'+n+'</button>';}).join('');
+$('s3m').onclick=function(e){var b=e.target.closest('button');if(!b)return;M3=+b.dataset.i;K3=0;[].forEach.call($('s3m').children,function(z){z.classList.toggle('on',z===b);});s3build();};
+var S3={res:null};
+function s3build(){
+  var s=s3sides(),a=s.a,b=s.b,c=s.c;
+  if(a+b<=c||b+c<=a||a+c<=b){S3.res={err:'এই তিন মাপ দিয়ে ত্রিভুজ হয় না (যেকোনো দুই বাহুর সমষ্টি তৃতীয়টির চেয়ে বড় হতে হবে)।'};s3draw();return;}
+  var B=[0,0],C=[a,0],Ax=(a*a+c*c-b*b)/(2*a),A=[Ax,Math.sqrt(Math.max(c*c-Ax*Ax,0))],ss=(a+b+c)/2,Dl=Math.sqrt(ss*(ss-a)*(ss-b)*(ss-c)),R=a*b*c/(4*Dl),r=Dl/ss,ra=Dl/(ss-a);
+  var tri=[Ln(A,B,'g'),Ln(B,C,'g'),Ln(C,A,'g'),Pt(A,'A',0,-12,'g'),Pt(B,'B',-12,16,'g'),Pt(C,'C',12,16,'g')];
+  var steps,info;
+  if(M3===0){var S=circumcenter(A,B,C),b1=bisectOps(B,C),b2=bisectOps(C,A);
+    steps=[{t:'△ABC আঁকি (a, b, c মাপে)।',ops:tri},{t:'BC এর লম্বদ্বিখণ্ডক আঁকি।',ops:b1.ops},{t:'CA এর লম্বদ্বিখণ্ডক আঁকি।',ops:b2.ops},{t:'দুই লম্বদ্বিখণ্ডক S বিন্দুতে ছেদ করে। এটি পরিকেন্দ্র।',ops:[Pt(S,'S',12,-8)]},{t:'S কেন্দ্র, SA ব্যাসার্ধ নিয়ে বৃত্ত আঁকি। এটিই পরিবৃত্ত।',ops:[Ar(S,dst(S,A),undefined,undefined,'f'),Pt(S,'S',12,-8,'f')]}];
+    info='যাচাই: SA = <b>'+fm(dst(S,A))+'</b>, SB = <b>'+fm(dst(S,B))+'</b>, SC = <b>'+fm(dst(S,C))+'</b> ✔ সমান।<br>সূত্র: R = abc/(৪Δ) = '+fm(a*b*c)+'/(৪ × '+fm(Dl)+') = <b>'+fm(R)+'</b> ✔'+(Math.abs(a*a-b*b-c*c)<1e-9?'<br>সমকোণী ত্রিভুজ (∠A = ৯০°): পরিকেন্দ্র অতিভুজের মধ্যবিন্দু, তাই R = a/২ = '+fm(a/2)+'।':'');}
+  else if(M3===1){var I=[(a*A[0]+b*B[0]+c*C[0])/(a+b+c),(a*A[1]+b*B[1]+c*C[1])/(a+b+c)],F=[I[0],0];
+    steps=[{t:'△ABC আঁকি।',ops:tri},{t:'∠B এর সমদ্বিখণ্ডক আঁকি।',ops:[Ln(B,I,'#e76f51'),Ar(B,Math.min(c,a)*0.25,0,Math.atan2(A[1],A[0]))]},{t:'∠C এর সমদ্বিখণ্ডক আঁকি।',ops:[Ln(C,I,'#e76f51')]},{t:'দুই সমদ্বিখণ্ডক I বিন্দুতে ছেদ করে। এটি অন্তঃকেন্দ্র।',ops:[Pt(I,'I',10,-8)]},{t:'I থেকে BC এর উপর লম্ব IF আঁকি।',ops:[Ln(I,F,'#e76f51'),Pt(F,'F',0,18),Ra(F,[0,1],[1,0])]},{t:'I কেন্দ্র, IF ব্যাসার্ধ নিয়ে বৃত্ত আঁকি। এটিই অন্তর্বৃত্ত।',ops:[Ar(I,I[1],undefined,undefined,'f'),Pt(I,'I',10,-8,'f')]}];
+    var d2=function(P,Q,Rr){var dx=Rr[0]-Q[0],dy=Rr[1]-Q[1];return Math.abs(dy*(P[0]-Q[0])-dx*(P[1]-Q[1]))/Math.hypot(dx,dy);};
+    info='যাচাই: I থেকে তিন বাহুর দূরত্ব: BC = <b>'+fm(d2(I,B,C))+'</b>, CA = <b>'+fm(d2(I,C,A))+'</b>, AB = <b>'+fm(d2(I,A,B))+'</b> ✔ সমান।<br>সূত্র: r = Δ/s = '+fm(Dl)+'/'+fm(ss)+' = <b>'+fm(r)+'</b> ✔ (Δ = ক্ষেত্রফল, s = অর্ধপরিসীমা)'+(Math.abs(a*a-b*b-c*c)<1e-9?'<br>সমকোণী: r = (b + c − a)/২ = '+fm((b+c-a)/2)+'।':'');}
+  else{var den=-a+b+c,Ia=[(-a*A[0]+b*B[0]+c*C[0])/den,(-a*A[1]+b*B[1]+c*C[1])/den],Fa=[Ia[0],0];
+    steps=[{t:'△ABC আঁকি এবং AB, AC কে B ও C এর দিকে বাড়াই।',ops:tri.concat([Xl(A,B,'#d5dde5'),Xl(A,C,'#d5dde5')])},{t:'B তে বহিঃকোণের সমদ্বিখণ্ডক আঁকি।',ops:[Xl(B,Ia,'#e76f51')]},{t:'C তে বহিঃকোণের সমদ্বিখণ্ডক আঁকি।',ops:[Xl(C,Ia,'#e76f51')]},{t:'দুই সমদ্বিখণ্ডক Iₐ বিন্দুতে ছেদ করে। এটি বহির্কেন্দ্র।',ops:[Pt(Ia,'Iₐ',12,-8)]},{t:'Iₐ থেকে BC এর উপর লম্ব আঁকি।',ops:[Ln(Ia,Fa,'#e76f51'),Pt(Fa,'F',0,-8)]},{t:'Iₐ কেন্দ্র, লম্বের দৈর্ঘ্য ব্যাসার্ধ নিয়ে বৃত্ত আঁকি। এটিই বহির্বৃত্ত।',ops:[Ar(Ia,Math.abs(Ia[1]),undefined,undefined,'f'),Pt(Ia,'Iₐ',12,-8,'f')]}];
+    info='যাচাই: বহির্বৃত্ত BC কে স্পর্শ করে ও AB, AC এর বর্ধিতাংশকেও স্পর্শ করে। সূত্র: rₐ = Δ/(s − a) = '+fm(Dl)+'/'+fm(ss-a)+' = <b>'+fm(ra)+'</b>; পরিমাপে Iₐ থেকে BC এর দূরত্ব = <b>'+fm(Math.abs(Ia[1]))+'</b> ✔';}
+  S3.res={steps:steps,info:info};s3draw();}
+function circumcenter(A,B,C){var d=2*(A[0]*(B[1]-C[1])+B[0]*(C[1]-A[1])+C[0]*(A[1]-B[1]));var a2=A[0]*A[0]+A[1]*A[1],b2=B[0]*B[0]+B[1]*B[1],c2=C[0]*C[0]+C[1]*C[1];return [(a2*(B[1]-C[1])+b2*(C[1]-A[1])+c2*(A[1]-B[1]))/d,(a2*(C[0]-B[0])+b2*(A[0]-C[0])+c2*(B[0]-A[0]))/d];}
+/* ল্যাব ৩ এর জন্য আলাদা ছোট ইঞ্জিন (Studio এর মতো, স্লাইডার বাইরে) */
+function s3draw(){
+  var W=600,H=400,x=x3,r=S3.res;x.clearRect(0,0,W,H);x.fillStyle='#fff';x.fillRect(0,0,W,H);
+  if(r.err){x.fillStyle='#b4472d';x.font='700 16px "Hind Siliguri",system-ui';x.textAlign='center';x.fillText('ত্রিভুজ আঁকা সম্ভব নয়',W/2,H/2);$('s3t').innerHTML='⚠️ '+r.err;return;}
+  var st=r.steps,xs=[],ys=[];function add(p){xs.push(p[0]);ys.push(p[1]);}
+  st.forEach(function(s){s.ops.forEach(function(q){if(q.k==='L'||q.k==='X'){add(q.a);if(q.k==='L')add(q.b);}else if(q.k==='P'){add(q.p);}else if(q.k==='A'&&q.s===undefined){add([q.c[0]-q.r,q.c[1]-q.r]);add([q.c[0]+q.r,q.c[1]+q.r]);}});});
+  var x0=Math.min.apply(null,xs),x1=Math.max.apply(null,xs),y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys),sc=Math.min((W-90)/Math.max(x1-x0,1),(H-80)/Math.max(y1-y0,1),60),cx=(x0+x1)/2,cy=(y0+y1)/2;
+  function X(p){return W/2+(p[0]-cx)*sc;} function Y(p){return H/2-(p[1]-cy)*sc;}
+  function colr(q,cur){return q.c==='g'?'#2a6fdb':(q.c==='f'?'#1b9a6f':(q.c||(cur?'#e76f51':'#6b7f95')));}
+  for(var i=0;i<Math.min(K3,st.length);i++){var cur=(i===K3-1);
+    st[i].ops.forEach(function(q){var c=colr(q,cur);x.lineWidth=(q.c==='f'?4:(cur?3:2));x.strokeStyle=c;x.fillStyle=c;x.setLineDash([]);
+      if(q.k==='L'){x.beginPath();x.moveTo(X(q.a),Y(q.a));x.lineTo(X(q.b),Y(q.b));x.stroke();}
+      else if(q.k==='X'){var ax=X(q.a),ay=Y(q.a),dx=X(q.b)-ax,dy=Y(q.b)-ay,L=Math.hypot(dx,dy)||1;dx/=L;dy/=L;x.lineWidth=cur?2.5:1.5;x.setLineDash(q.c?[]:[8,5]);x.beginPath();x.moveTo(ax-dx*1500,ay-dy*1500);x.lineTo(ax+dx*1500,ay+dy*1500);x.stroke();x.setLineDash([]);}
+      else if(q.k==='A'){x.beginPath();if(q.s===undefined)x.arc(X(q.c),Y(q.c),q.r*sc,0,6.2832);else x.arc(X(q.c),Y(q.c),q.r*sc,-q.e,-q.s);x.lineWidth=(q.col==='f'?4:(cur?2.8:1.8));x.strokeStyle=q.col==='f'?'#1b9a6f':(cur?'#e76f51':'#6b7f95');x.stroke();}
+      else if(q.k==='R'){var s=12,px=X(q.p),py=Y(q.p),ux=q.u[0],uy=-q.u[1],vx=q.v[0],vy=-q.v[1];x.lineWidth=1.8;x.strokeStyle='#6b7f95';x.beginPath();x.moveTo(px+ux*s,py+uy*s);x.lineTo(px+(ux+vx)*s,py+(uy+vy)*s);x.lineTo(px+vx*s,py+vy*s);x.stroke();}
+      else if(q.k==='P'){var px2=X(q.p),py2=Y(q.p);x.fillStyle=q.c==='g'?'#2a6fdb':(q.c==='f'?'#1b9a6f':'#1f3a5f');x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.arc(px2,py2,5,0,6.2832);x.fill();x.stroke();if(q.l){x.font='700 15px system-ui';x.textAlign='center';x.fillText(q.l,px2+q.dx,py2+q.dy);}}
+    });}
+  var list='';st.forEach(function(s,i){list+='<div style="padding:4px 8px;border-radius:8px;margin:3px 0;'+(i===K3-1?'background:#fff4dc;font-weight:700;':(i<K3?'color:#46586a;':'color:#9aa8b5;'))+'">'+(i<K3?'✔ ':'◻ ')+'ধাপ '+bn(i+1)+': '+s.t+'</div>';});
+  $('s3t').innerHTML=list+(K3>=st.length?'<div style="margin-top:8px">'+r.info+'</div>':(K3===0?'<div style="margin-top:6px">▶ "পরের ধাপ" চাপো।</div>':''));
+}
+['s3a','s3b','s3c'].forEach(function(i){$(i).oninput=s3build;});
+$('s3n').onclick=function(){if(S3.res.steps&&K3<S3.res.steps.length){K3++;s3draw();}};
+$('s3p').onclick=function(){if(K3>0){K3--;s3draw();}};
+$('s3a2').onclick=function(){if(S3.res.steps){K3=S3.res.steps.length;s3draw();}};
+s3build();
+
+/* ===================== প্র্যাকটিস ===================== */
+var PR=[
+ ['২ সেমি ব্যাসার্ধের বৃত্তের কেন্দ্র থেকে ৫ সেমি দূরের বিন্দু থেকে স্পর্শকের দৈর্ঘ্য কত? (দশমিকে ২ ঘর)',[4.58,4.6],'√(২৫ − ৪) = √২১ ≈ ৪.৫৮।'],
+ ['৩.৫, ৪.৫ ও ৫.৫ সেমি ব্যাসার্ধের তিনটি বৃত্ত পরস্পরকে বহিঃস্পর্শ করলে কেন্দ্রত্রয়ের ত্রিভুজের পরিসীমা কত?',[27],'বাহু = ৩.৫+৪.৫ = ৮, ৪.৫+৫.৫ = ১০, ৩.৫+৫.৫ = ৯। পরিসীমা = ২৭।'],
+ ['৩ সেমি ব্যাসার্ধের বৃত্তের কেন্দ্র থেকে ৫ সেমি দূরের বিন্দু থেকে দুই স্পর্শকের দৈর্ঘ্যের সমষ্টি কত?',[8],'প্রতিটি √(২৫ − ৯) = ৪। সমষ্টি ৮।'],
+ ['সমদ্বিবাহু ত্রিভুজের ভূমি ৬ সেমি, সমান বাহু ৫ সেমি হলে উচ্চতা কত?',[4],'√(২৫ − ৯) = ৪ (ভূমির মধ্যবিন্দুতে লম্ব)।'],
+ ['৫, ১২, ১৩ বাহুর ত্রিভুজের অন্তর্বৃত্তের ব্যাসার্ধ কত?',[2],'সমকোণী: r = (৫ + ১২ − ১৩)/২ = ২। (বা Δ/s = ৩০/১৫ = ২)'],
+ ['৫, ১২, ১৩ বাহুর ত্রিভুজের পরিবৃত্তের ব্যাসার্ধ কত?',[6.5],'সমকোণী, তাই R = অতিভুজ/২ = ১৩/২ = ৬.৫।'],
+ ['৪, ৫, ৬ সেমি বাহুর ত্রিভুজের পরিবৃত্তের ব্যাসার্ধ কত? (দশমিকে ২ ঘর) (R = abc/৪Δ, Δ = √{s(s−a)(s−b)(s−c)})',[3.02],'s = ৭.৫, Δ = √(৭.৫ × ৩.৫ × ২.৫ × ১.৫) ≈ ৯.৯২। R = ১২০/(৪ × ৯.৯২) ≈ ৩.০২।'],
+ ['ভূমি BC = ৫, ∠B = ৬০°, AB + AC = ৭ হলে AB কত? (দশমিকে ২ ঘর)',[2.67],'AB = (s² − a²)/(২(s − a cos B)) = (৪৯ − ২৫)/(২(৭ − ২.৫)) = ২৪/৯ ≈ ২.৬৭।'],
+ ['ভূমি BC = ৭.৫, ∠B = ৪৫°, AB − AC = ২.৫ হলে AB কত? (দশমিকে ২ ঘর)',[8.92],'AB = (d² − a²)/(২(d − a cos B)) = (৬.২৫ − ৫৬.২৫)/(২(২.৫ − ৫.৩০৩)) ≈ ৮.৯২।'],
+ ['A, B এর দূরত্ব ৬ সেমি। ব্যাসার্ধ ৫ সেমি হলে বৃত্তের কেন্দ্র থেকে AB এর দূরত্ব কত?',[4],'√(২৫ − ৯) = ৪।'],
+ ['রেখাকে A তে স্পর্শ করে এবং A থেকে ৪ সেমি পাশে ও ৩ সেমি উপরে P বিন্দু দিয়ে যায়, এমন বৃত্তের ব্যাসার্ধ কত? (দশমিকে ২ ঘর) (সূত্র: (x² + y²)/(২y))',[4.17],'(১৬ + ৯)/(২ × ৩) = ২৫/৬ ≈ ৪.১৭।'],
+ ['সম্পাদ্য ৪: উচ্চতা ৩, মধ্যমা ৫ হলে D থেকে A এর লম্বের পাদবিন্দুর দূরত্ব কত? (অর্থাৎ √(d² − h²))',[4],'√(২৫ − ৯) = ৪।'],
+ ['৬, ৮, ১০ বাহুর ত্রিভুজের বহির্বৃত্তের ব্যাসার্ধ rₐ (a = ১০, অর্থাৎ অতিভুজের বিপরীতে) কত? (rₐ = Δ/(s − a), Δ = ২৪, s = ১২)',[12],'rₐ = ২৪/(১২ − ১০) = ১২।']
+];
+(function(){var h='';PR.forEach(function(p,i){h+='<div class="q"><b>'+bn(i+1)+'.</b> '+p[0]+'<div class="ans"> <input type="text" id="pi'+i+'" size="10"> <button class="btn" data-pc="'+i+'">যাচাই</button> <button class="btn alt" data-ph="'+i+'">সমাধান</button></div><div class="fb" id="pf'+i+'"></div></div>';});$('pracbox').innerHTML=h;})();
+function numOf(s){s=en(s).replace(/[−–]/g,'-').replace(/\s+/g,'').toLowerCase();var m=s.match(/^(-?\d*\.?\d*)√(\d+(\.\d+)?)$/);if(m){var k=(m[1]===''||m[1]==='+')?1:(m[1]==='-'?-1:parseFloat(m[1]));return k*Math.sqrt(parseFloat(m[2]));}if(/^-?\d+(\.\d+)?$/.test(s))return parseFloat(s);var f=s.match(/^(-?\d+)\/(\d+)$/);if(f)return +f[1]/+f[2];return NaN;}
+$('pracbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.pc!==undefined){var i=+b.dataset.pc,raw=$('pi'+i).value,v=numOf(raw),ok=!isNaN(v)&&PR[i][1].some(function(a){return Math.abs(a-v)<=0.0151;});
+    $('pf'+i).innerHTML=raw.trim()===''?'আগে উত্তর লেখো।':(ok?'✅ ঠিক! সাবাশ।':'❌ আবার চেষ্টা করো, বা "সমাধান" দেখো।');}
+  if(b.dataset.ph!==undefined){var j=+b.dataset.ph;$('pf'+j).innerHTML='💡 '+PR[j][2]+' <b>উত্তর: '+bn(PR[j][1][0])+'</b>';}
+});
+
+/* ===================== কুইজ ===================== */
+var QZ=[];function M(q,c,w,e){QZ.push({q:q,o:[c].concat(w),e:e});}
+M('জ্যামিতিক অঙ্কনে সাধারণত কোন দুটি যন্ত্র ব্যবহার করা হয়?','কম্পাস ও রুলার',['চাঁদা ও ত্রিকোণী','ডিভাইডার ও চাঁদা','রুলার ও ত্রিকোণী'],'কম্পাস ও রুলার (অচিহ্নিত স্কেল)।');
+M('দুই বিন্দু দিয়ে যায় এবং কেন্দ্র নির্দিষ্ট রেখার উপর, এমন বৃত্ত আঁকতে কী লাগে?','দুই বিন্দুর যোজক রেখার লম্বদ্বিখণ্ডক',['কোণের সমদ্বিখণ্ডক','মধ্যমা','উচ্চতা'],'লম্বদ্বিখণ্ডক ও রেখার ছেদবিন্দুই কেন্দ্র।');
+M('রেখাংশের লম্বদ্বিখণ্ডকের যেকোনো বিন্দু রেখাংশের দুই প্রান্ত থেকে—','সমদূরবর্তী',['দ্বিগুণ দূরে','অসমদূরবর্তী','সমান্তরাল'],'লম্বদ্বিখণ্ডকের ধর্ম।');
+M('কোণের সমদ্বিখণ্ডকের যেকোনো বিন্দু কোণের দুই বাহু থেকে—','সমদূরবর্তী',['অসমদূরবর্তী','দ্বিগুণ দূরে','লম্ব'],'কোণ-সমদ্বিখণ্ডকের ধর্ম।');
+M('স্পর্শবিন্দুতে স্পর্শক ও ব্যাসার্ধের মধ্যবর্তী কোণ—','৯০°',['৪৫°','৬০°','১৮০°'],'স্পর্শক ব্যাসার্ধের উপর লম্ব।');
+M('বৃত্তের বহিঃস্থ কোনো বিন্দু থেকে বৃত্তে কয়টি স্পর্শক আঁকা যায়?','২টি',['১টি','৩টি','অসংখ্য'],'দুটি, যাদের দৈর্ঘ্য সমান।');
+M('বৃত্তের বহিঃস্থ বিন্দু থেকে আঁকা দুটি স্পর্শকের দৈর্ঘ্য—','সমান',['অসমান','দ্বিগুণ','অর্ধেক'],'PQ = PR।');
+M('২ সেমি ব্যাসার্ধের বৃত্তের কেন্দ্র থেকে ৫ সেমি দূরের বিন্দু থেকে স্পর্শকের দৈর্ঘ্য প্রায়—','৪.৬ সেমি',['৩ সেমি','৫.৫ সেমি','২.৫ সেমি'],'√(২৫ − ৪) = √২১ ≈ ৪.৫৮ ≈ ৪.৬।');
+M('৩.৫, ৪.৫ ও ৫.৫ সেমি ব্যাসার্ধের তিন বৃত্ত পরস্পরকে বহিঃস্পর্শ করলে কেন্দ্রত্রয়ের ত্রিভুজের পরিসীমা—','২৭ সেমি',['৫৪ সেমি','৪০.৫ সেমি','১৩.৫ সেমি'],'২(৩.৫ + ৪.৫ + ৫.৫) = ২৭।');
+M('ত্রিভুজের পরিকেন্দ্র আঁকতে কোন রেখা আঁকতে হয়?','দুই বাহুর লম্বদ্বিখণ্ডক',['দুই কোণের সমদ্বিখণ্ডক','দুই মধ্যমা','দুই উচ্চতা'],'লম্বদ্বিখণ্ডকদ্বয়ের ছেদবিন্দু = পরিকেন্দ্র।');
+M('ত্রিভুজের অন্তঃকেন্দ্র আঁকতে কী আঁকতে হয়?','দুই কোণের সমদ্বিখণ্ডক',['দুই বাহুর লম্বদ্বিখণ্ডক','দুই মধ্যমা','দুই উচ্চতা'],'কোণ-সমদ্বিখণ্ডকদ্বয়ের ছেদবিন্দু = অন্তঃকেন্দ্র।');
+M('ভূমি a, শিরঃকোণ x ও অপর দুই বাহুর সমষ্টি s দিয়ে ত্রিভুজ আঁকতে D বিন্দুতে কোন কোণ আঁকা হয়?','½∠x',['∠x','২∠x','৯০° − ∠x'],'∠BDF = ½∠x।');
+M('ভূমি, শিরঃকোণ ও অপর দুই বাহুর অন্তর দিয়ে ত্রিভুজ আঁকতে P বিন্দুতে আঁকা কোণ—','∠x এর সম্পূরক কোণের অর্ধেক',['∠x এর অর্ধেক','∠x এর সমান','৯০°'],'½(১৮০° − x)।');
+M('সম্পাদ্য ২ এ AC = AD হয়, কারণ—','∠ACD = ∠ADC',['AB = AC','∠B = ৯০°','BC = BD'],'সমান কোণের বিপরীত বাহু সমান।');
+M('উচ্চতা, ভূমির উপর মধ্যমা ও ভূমিসংলগ্ন কোণ দিয়ে ত্রিভুজ আঁকা যাবে কেবল যদি—','মধ্যমা ≥ উচ্চতা',['মধ্যমা < উচ্চতা','মধ্যমা = ২ × উচ্চতা','উচ্চতা = ০'],'A থেকে ভূমি পর্যন্ত দূরত্ব h এর চেয়ে তির্যক রেখা d ছোট হতে পারে না।');
+M('ভূমি ৫ সেমি, ∠B = ৬০°, AB + AC = ৭ সেমি দিয়ে ত্রিভুজ আঁকতে BD =','৭ সেমি (BY রেখায়)',['৫ সেমি','২ সেমি','১২ সেমি'],'BD = অপর দুই বাহুর সমষ্টি।');
+M('ঐ অঙ্কনে A বিন্দু পাওয়া যায়—','CD এর লম্বদ্বিখণ্ডক ও BD এর ছেদবিন্দুতে',['BC এর মধ্যবিন্দুতে','∠B এর সমদ্বিখণ্ডকে','C থেকে লম্ব টেনে'],'AD = AC করার জন্য।');
+M('দুই বিন্দু A, B দিয়ে যায় এবং ব্যাসার্ধ r (r > AB/২), এমন বৃত্ত—','দুটি পাওয়া যায়',['একটিও নয়','একটি','চারটি'],'AB এর দুই পাশে দুটি কেন্দ্র।');
+M('সম্পাদ্য ৬ এ বৃত্ত আঁকা সম্ভব হতে r এর শর্ত—','r ≥ AB/২',['r < AB/২','r = AB','r ≤ ০'],'ব্যাসার্ধ ≥ জ্যা এর অর্ধেক।');
+M('বৃত্তকে P তে স্পর্শ করে এমন বৃত্তের কেন্দ্র থাকে—','CP রেখার উপর (C নির্দিষ্ট বৃত্তের কেন্দ্র)',['P এর লম্বে','বৃত্তের বাইরে যেকোনো স্থানে','CP এর সমান্তরালে'],'কেন্দ্রদ্বয় ও স্পর্শবিন্দু একই রেখায়।');
+M('রেখাকে A তে স্পর্শ করে এমন বৃত্তের কেন্দ্র থাকে—','A তে রেখার উপর লম্বের উপর',['রেখার উপর','A থেকে সমান্তরাল রেখায়','AP এর মধ্যবিন্দুতে'],'ব্যাসার্ধ OA ⊥ রেখা।');
+M('বহিঃস্থ P থেকে স্পর্শক আঁকতে OP এর মধ্যবিন্দু M কেন্দ্রে MO ব্যাসার্ধের বৃত্ত নেওয়া হয়, কারণ—','অর্ধবৃত্তস্থ কোণ সমকোণ',['MO = OP','M বৃত্তের উপর','OP = r'],'∠OQP = ৯০°।');
+M('৫, ১২, ১৩ বাহুর ত্রিভুজের পরিবৃত্তের ব্যাসার্ধ—','৬.৫',['৬','১৩','২.৫'],'সমকোণী, R = অতিভুজ/২।');
+M('৫, ১২, ১৩ বাহুর ত্রিভুজের অন্তর্বৃত্তের ব্যাসার্ধ—','২',['৩','৪','২.৫'],'r = Δ/s = ৩০/১৫।');
+M('সমদ্বিবাহু ত্রিভুজের ভূমি ৬ সেমি, সমান বাহু ৫ সেমি হলে উচ্চতা—','৪ সেমি',['৩ সেমি','৫.৫ সেমি','৩.৫ সেমি'],'√(২৫ − ৯) = ৪।');
+M('△ABC এ ∠B = ৯০°, ∠A = ৬০° এবং BD ⊥ AC হলে i. ∠CBD = ৬০° ii. AD : AB = ১ : ২ iii. △ABD ও △BCD সদৃশ—','i, ii ও iii সবই সঠিক',['শুধু i ও ii','শুধু i ও iii','শুধু ii ও iii'],'∠C = ৩০°, ∠ABD = ৩০°, ∠CBD = ৬০°; AD = AB cos ৬০° = AB/২; ত্রিভুজ দুটির কোণ ৩০°-৬০°-৯০°।');
+M('সম্পাদ্যের লিখিত বর্ণনায় শেষ ধাপে লেখা হয়—','ABC-ই নির্ণেয় ত্রিভুজ',['ABC = ৯০°','সমাপ্ত','A = B'],'নির্ণেয় চিত্র কোনটি তা স্পষ্ট করা।');
+M('অঙ্কনের সঠিকতা যাচাই করা হয়—','যুক্তি/প্রমাণ দিয়ে',['আন্দাজে','শুধু চোখে দেখে','নতুন করে আঁকলেই'],'সম্পাদ্যে প্রমাণ বা যুক্তি দিতে হয়।');
+M('ক্ষেত্রফল Δ এবং অর্ধপরিসীমা s হলে অন্তর্বৃত্তের ব্যাসার্ধ r =','Δ/s',['Δ × s','abc/৪Δ','Δ/(s − a)'],'r = Δ/s।');
+M('বহির্বৃত্তের ব্যাসার্ধ (a বাহুর বিপরীতে) rₐ =','Δ/(s − a)',['Δ/s','abc/৪Δ','s/Δ'],'rₐ = Δ/(s − a)।');
+(function(){
+  var done=0,sc=0;
+  QZ.forEach(function(q){var ord=q.o.map(function(t,i){return {t:t,c:i===0};});
+    for(var i=ord.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),k=ord[i];ord[i]=ord[j];ord[j]=k;}q.ord=ord;});
+  var h='';QZ.forEach(function(q,qi){h+='<div class="q" id="qq'+qi+'"><b>'+bn(qi+1)+'.</b> '+q.q+q.ord.map(function(o,oi){return '<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+o.t+'</button>';}).join('')+'<div class="fb" id="qe'+qi+'"></div></div>';});
+  $('quizbox').innerHTML=h;
+  $('quizbox').addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b||b.parentNode.dataset.done)return;
+    var qi=+b.dataset.q,q=QZ[qi],o=q.ord[+b.dataset.o];b.parentNode.dataset.done=1;done++;
+    var btns=b.parentNode.querySelectorAll('.opt');btns.forEach(function(x,i){if(q.ord[i].c)x.classList.add('good');});
+    if(o.c){sc++;$('qe'+qi).textContent='✅ ঠিক! '+q.e;}else{b.classList.add('bad');$('qe'+qi).textContent='❌ ভুল। '+q.e;}
+    $('qscore').textContent='স্কোর: '+bn(sc)+' / '+bn(done)+' (মোট '+bn(QZ.length)+'টি)';
+    try{if(done===QZ.length){localStorage.setItem('sl_done_math-geo-drawing','1');var xp=+(localStorage.getItem('sl_xp')||0);localStorage.setItem('sl_xp',xp+sc);}}catch(er){}
+  });
+})();
+
+/* ===================== প্রশ্নোত্তর ===================== */
+var QA=[
+ {h:'বহুনির্বাচনি (বইয়ের নমুনা ধাঁচে)',items:[
+  ['১. ৩.৫, ৪.৫ ও ৫.৫ সেমি ব্যাসার্ধের তিনটি বৃত্ত পরস্পরকে বহিঃস্পর্শ করলে কেন্দ্রত্রয় দ্বারা উৎপন্ন ত্রিভুজের পরিসীমা কত? (ক. ৫৪ খ. ৪০.৫ গ. ২৭ ঘ. ১৩.৫)','গ. ২৭ সেমি। বাহু ৮, ১০, ৯।'],
+  ['২. △ABC এ ∠B = ৯০°, ∠A = ৬০° এবং BD ⊥ AC হলে i. ∠CBD = ৬০° ii. AD : AB = ১ : ২ iii. △ABD ও △BCD পরস্পর সদৃশ — কোনটি সঠিক?','ঘ. i, ii ও iii। (∠C = ৩০°, তাই ∠CBD = ৯০° − ৩০° = ৬০°; AD = AB·cos৬০° = AB/২; দুই ত্রিভুজের কোণ ৩০°-৬০°-৯০°।)'],
+  ['৩. (চিত্রে CA = AE = ৬, CE = ৬√২ এবং AC = AD) ∠ADC এর মান কত? (ক. ৩০° খ. ৪৫° গ. ৬০° ঘ. ৭৫°)','খ. ৪৫°। ৩৬ + ৩৬ = ৭২ = (৬√২)², তাই ∠CAE = ৯০°। ∠CAD = ৯০° এবং AC = AD, তাই △ACD সমকোণী সমদ্বিবাহু, ∠ADC = ৪৫°।'],
+  ['৪. △ADC ও △AEC এর ক্ষেত্রফলদ্বয়ের অনুপাত কত? (ক. ২ : ১ খ. ১ : ১ গ. ১ : ২ ঘ. ১ : √২)','খ. ১ : ১। C থেকে DE এর উপর একই উচ্চতা এবং AD = AC = AE = ৬, তাই ভূমি সমান।']]},
+ {h:'সৃজনশীল প্রশ্ন (নমুনা)',items:[
+  ['৫. কোনো সমদ্বিবাহু ত্রিভুজের ভূমি ৬ সেমি এবং সমান সমান বাহুর দৈর্ঘ্য ৫ সেমি। ক) ত্রিভুজটির উচ্চতা নির্ণয় করো। খ) অন্তর্বৃত্ত অঙ্কন করো (অঙ্কনের চিহ্ন ও বিবরণ আবশ্যক)। গ) এমন একটি বৃত্ত অঙ্কন করো যা উদ্দীপকের ভূমির সমান ব্যাসবিশিষ্ট কোনো বৃত্তকে কোনো বিন্দুতে স্পর্শ করে এবং বহিঃস্থ কোনো নির্দিষ্ট বিন্দু দিয়ে যায়।',
+   'ক) ভূমির মধ্যবিন্দুতে লম্ব: উচ্চতা = √(২৫ − ৯) = ৪ সেমি। খ) ত্রিভুজ আঁকার পর যেকোনো দুই কোণের সমদ্বিখণ্ডক আঁকি; ছেদবিন্দু I (অন্তঃকেন্দ্র)। I থেকে ভূমির উপর লম্ব টেনে ব্যাসার্ধ পাই। r = Δ/s = ১২/৮ = ১.৫ সেমি (Δ = ½ × ৬ × ৪ = ১২, s = ৮)। I কেন্দ্র, ১.৫ ব্যাসার্ধে বৃত্ত আঁকলে তা অন্তর্বৃত্ত। গ) সম্পাদ্য ৭: ৬ সেমি ব্যাসের বৃত্ত আঁকি (কেন্দ্র C, ব্যাসার্ধ ৩), বৃত্তের উপর P ও বাইরে Q নিই। PQ এর লম্বদ্বিখণ্ডক আঁকি। বর্ধিত CP ও লম্বদ্বিখণ্ডকের ছেদবিন্দু O। O কেন্দ্র, OP ব্যাসার্ধে বৃত্তই নির্ণেয় বৃত্ত।']]},
+ {h:'সংক্ষিপ্ত উত্তর প্রশ্ন (বই থেকে)',items:[
+  ['৬ক. ৪ সেমি, ৫ সেমি ও ৬ সেমি বাহুবিশিষ্ট ত্রিভুজের পরিবৃত্ত অঙ্কন করো।','ধাপ ১: BC = ৬ সেমি আঁকি। ধাপ ২: B কেন্দ্রে ৪ সেমি (AB), C কেন্দ্রে ৫ সেমি (AC) ব্যাসার্ধে দুটি চাপ কেটে A পাই। ধাপ ৩: AB ও BC এর লম্বদ্বিখণ্ডক আঁকি। ধাপ ৪: ছেদবিন্দু S। ধাপ ৫: S কেন্দ্র, SA ব্যাসার্ধে বৃত্ত আঁকি। এটিই পরিবৃত্ত (R ≈ ৩.০২ সেমি)।'],
+  ['৬খ. ভূমি ৫ সেমি, উচ্চতা ৪ সেমি, ভূমিসংলগ্ন কোণ ৬০° হলে ত্রিভুজটি অঙ্কন করো।','সম্পাদ্য ১: BC = ৫ সেমি; B তে লম্ব BP; BM = ৪ সেমি; M তে MN ∥ BC; B তে ∠CBE = ৬০° আঁকি, BE রেখা MN কে A তে ছেদ করে; A, C যোগ। ABC-ই নির্ণেয়। (ল্যাব ১ এ a = ৫, h = ৪, ∠B = ৬০° দিয়ে ধাপে ধাপে দেখো।)'],
+  ['৬গ. ৬ সেমি ব্যাসবিশিষ্ট বৃত্তের বহিঃস্থ কোনো বিন্দু থেকে বৃত্তে দুটি স্পর্শক আঁকো।','বৃত্তের কেন্দ্র O, ব্যাসার্ধ ৩। বহিঃস্থ বিন্দু P। OP যোগ করে মধ্যবিন্দু M। M কেন্দ্র, MO ব্যাসার্ধে বৃত্ত আঁকলে নির্দিষ্ট বৃত্তকে Q, R তে ছেদ করে। PQ, PR-ই স্পর্শক। (ল্যাব ২ এ "বহিঃস্থ বিন্দু থেকে স্পর্শক" দেখো।)'],
+  ['কাজ ক. ৫, ১২, ১৩ সেমি বাহুবিশিষ্ট ত্রিভুজের অন্তর্বৃত্ত এঁকে ব্যাসার্ধ নির্ণয় করো।','ল্যাব ৩ এ a = ১৩, b = ১২, c = ৫ রেখে "অন্তর্বৃত্ত" ধাপে ধাপে দেখো। ব্যাসার্ধ r = ২ সেমি।'],
+  ['কাজ খ. ৬.৫, ৭, ৭.৫ সেমি বাহুবিশিষ্ট ত্রিভুজের বহির্বৃত্ত এঁকে ব্যাসার্ধ নির্ণয় করো।','ল্যাব ৩ এ বহির্বৃত্ত বেছে মাপ বসাও। s = ১০.৭৫, Δ = √(১০.৭৫ × ৪.২৫ × ৩.৭৫ × ৩.২৫) ≈ ২৩.৬; বহির্বৃত্তের ব্যাসার্ধ rₐ = Δ/(s − a) যেখানে a = কাঙ্ক্ষিত বাহু। কোন বাহুর বিপরীতে আঁকবে তা বুঝে নাও।']]}
+];
+(function(){var h='';QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){h+='<details class="ex"><summary><b>'+it[0]+'</b></summary><p>'+it[1]+'</p></details>';});});$('qabox').innerHTML=h;})();
+
+</script>
+
+</body>
+</html>

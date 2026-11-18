@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>সূচকীয় ও লগারিদমীয় ফাংশন (উচ্চতর গণিত অধ্যায় ৯) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+canvas{width:100%;height:auto;max-width:700px;display:block;margin:8px auto;border-radius:12px;background:#fff;border:1px solid var(--line);touch-action:none}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.ctl input[type=range]{width:200px;max-width:100%}
+.ctl select,.ctl input[type=text],.ans input{font-family:inherit;font-size:16px;padding:6px 8px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;max-width:100%;width:auto}
+.eqb{background:#eaf7f5;border-radius:10px;padding:10px;text-align:center;font-weight:700;color:var(--navy);margin:8px 0;font-size:18px;overflow-x:auto}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.fb{font-weight:700;margin-top:6px}
+.res{background:#eef6ff;border-radius:10px;padding:10px 12px;margin:8px 0;line-height:1.9}
+.res b{color:#0b5ed7}
+.chips button{margin:3px;padding:6px 12px;border-radius:999px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.chips button.on{background:#0b5ed7;color:#fff;border-color:#0b5ed7}
+.step{background:#fff;border:1px solid var(--line);border-left:5px solid #2a9d8f;border-radius:8px;padding:8px 12px;margin:6px 0;display:none}
+.step.show{display:block}
+.ex{border:2px dashed #b8c7d6;border-radius:12px;padding:10px 14px;margin:14px 0;background:#fcfdff}
+.q{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:#fff}
+.q .opt{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 10px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:16px;cursor:pointer}
+.q .opt.good{background:#d8f3e3;border-color:#2a9d8f}
+.q .opt.bad{background:#fddcdc;border-color:#e76f51}
+.m{font-family:system-ui,'Segoe UI',Arial,sans-serif}
+table.t{border-collapse:collapse;margin:8px 0}
+table.t td,table.t th{border:1px solid #cfd9e1;padding:5px 12px;text-align:center}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">📐 গণিত &rsaquo; উচ্চতর গণিত &rsaquo; অধ্যায় ৯ (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">📈 সূচকীয় ও লগারিদমীয় ফাংশন</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#ex">🪜 ধাপে ধাপে</a><a href="#lab1">🧮 সূচক সূত্র</a><a href="#lab2">√ মূল</a><a href="#lab3">📈 লেখচিত্র</a><a href="#lab4">🔢 লগারিদম সূত্র</a><a href="#lab5">🧭 ডোমেন-রেঞ্জ</a><a href="#prac">✍️ প্র্যাকটিস</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্নোত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায়ে শিখবে:</b> সূচকের সূত্র (পূর্ণসংখ্যা ও ভগ্নাংশ সূচক), মূল, লগারিদম ও তার সূত্র, ভিত্তি পরিবর্তন, সূচকীয়-লগারিদমীয়-পরমমান ফাংশনের ডোমেন, রেঞ্জ ও লেখচিত্র।</div>
+
+    <h3>১. সূচক ও মৌলিক সূত্র ⭐⭐⭐</h3>
+    <ul>
+      <li>aⁿ = a · a · a … (n বার)। a কে <b>ভিত্তি</b> এবং n কে <b>সূচক</b> বলে। a¹ = a।</li>
+      <li>aᵐ · aⁿ = a<sup>m+n</sup>, (aᵐ)ⁿ = a<sup>mn</sup>, (ab)ⁿ = aⁿbⁿ, (a/b)ⁿ = aⁿ/bⁿ।</li>
+      <li>aᵐ/aⁿ = a<sup>m−n</sup> (m &gt; n হলে) এবং = 1/a<sup>n−m</sup> (m &lt; n হলে)।</li>
+      <li><b>শূন্য ও ঋণাত্মক সূচক:</b> a⁰ = 1 এবং a<sup>−n</sup> = 1/aⁿ (a ≠ 0)। কারণ মৌলিক সূত্র aᵐ·aⁿ = a<sup>m+n</sup> সব সূচকে খাটাতে হলে এটাই হতে হয়।</li>
+      <li>এগুলো গাণিতিক আরোহ পদ্ধতিতে প্রমাণ করা যায়।</li>
+    </ul>
+
+    <h3>২. মূল ⭐⭐</h3>
+    <ul>
+      <li>xⁿ = a হলে x কে a এর একটি <b>n তম মূল</b> বলে। n = 2 হলে বর্গমূল, n = 3 হলে ঘনমূল।</li>
+      <li>a &gt; 0 হলে একটি অনন্য ধনাত্মক n তম মূল আছে, তাকে ⁿ√a লেখে (মুখ্য মূল)। n জোড় হলে −ⁿ√a ও আরেকটি মূল (যেমন 16 এর 4 তম মূল 2 ও −2)।</li>
+      <li>a &lt; 0 এবং n <b>বিজোড়</b> হলে একটি মাত্র মূল আছে: ⁿ√a = −ⁿ√|a| (যেমন ∛(−27) = −3)।</li>
+      <li>a &lt; 0 এবং n <b>জোড়</b> হলে বাস্তব মূল নেই (যেমন −9 এর বর্গমূল নেই)।</li>
+      <li>√(a²) = |a|।</li>
+      <li>সূত্র (a &gt; 0): (ⁿ√a)ᵐ = ⁿ√(aᵐ) এবং ⁿ√a = ⁿᵏ√(aᵏ)। অর্থাৎ m/n = p/q হলে ⁿ√(aᵐ) = <sup>q</sup>√(aᵖ)।</li>
+    </ul>
+
+    <h3>৩. ভগ্নাংশ সূচক ⭐⭐⭐</h3>
+    <ul>
+      <li>a<sup>1/n</sup> = ⁿ√a (a &gt; 0, অথবা a &lt; 0 ও n বিজোড়)।</li>
+      <li>a<sup>m/n</sup> = (a<sup>1/n</sup>)ᵐ = ⁿ√(aᵐ) (a &gt; 0)।</li>
+      <li>ভগ্নাংশ (মূলদ) সূচকেও সব সূত্র খাটে: aʳ·aˢ = a<sup>r+s</sup>, aʳ/aˢ = a<sup>r−s</sup>, (aʳ)ˢ = a<sup>rs</sup>, (ab)ʳ = aʳbʳ।</li>
+      <li><b>কাজে লাগার তথ্য:</b> (i) aˣ = 1 (a &gt; 0, a ≠ 1) হলে x = 0। (ii) aˣ = aʸ (a &gt; 0, a ≠ 1) হলে x = y। (iii) aˣ = bˣ (x ≠ 0, a/b &gt; 0) হলে a = b।</li>
+      <li>সমীকরণ সমাধানের কৌশল: দুই পক্ষকে একই ভিত্তিতে এনে সূচক সমান করো। জটিল হলে 2ˣ = y ধরে দ্বিঘাত বানাও।</li>
+    </ul>
+
+    <h3>৪. লগারিদম ⭐⭐⭐</h3>
+    <ul>
+      <li>a &gt; 0, a ≠ 1, b &gt; 0 হলে: <b>aˣ = b ⇔ x = logₐ b</b>। (x কে b এর a ভিত্তিক লগারিদম বলে।)</li>
+      <li>বিপরীতক্রমে b কে a ভিত্তিক x এর প্রতিলগ (antilog) বলে।</li>
+      <li>উদাহরণ: 2⁶ = 64 ⇒ log₂64 = 6। 5⁻² = 1/25 ⇒ log₅(1/25) = −2।</li>
+      <li>শূন্য ও ঋণাত্মক সংখ্যার লগারিদম নির্ণয় করা যায় না (b &gt; 0 লাগবে)।</li>
+      <li>দুটি সরাসরি ফল: logₐ(aˣ) = x এবং <b>a^(logₐ b) = b</b>।</li>
+      <li><b>সূত্রাবলি:</b> (১) logₐa = 1, logₐ1 = 0 (২) logₐ(MN) = logₐM + logₐN (৩) logₐ(M/N) = logₐM − logₐN (৪) logₐ(Mᴺ) = N·logₐM (৫) <b>ভিত্তি পরিবর্তন:</b> logₐM = log_b M × logₐ b।</li>
+      <li>লক্ষ করো: a &gt; 1, x &gt; 1 হলে logₐx &gt; 0। a &gt; 1, 0 &lt; x &lt; 1 হলে logₐx &lt; 0। (0 &lt; a &lt; 1 হলে উল্টো।)</li>
+    </ul>
+
+    <h3>৫. সূচকীয় ফাংশন f(x) = aˣ ⭐⭐⭐</h3>
+    <ul>
+      <li>a &gt; 0, a ≠ 1। ডোমেন = (−∞, ∞), রেঞ্জ = (0, ∞)। মান সবসময় ধনাত্মক।</li>
+      <li>লেখচিত্র সবসময় (0, 1) বিন্দু দিয়ে যায় (a⁰ = 1)।</li>
+      <li><b>a &gt; 1:</b> x বাড়লে y বাড়ে (ঊর্ধ্বগামী)। x → −∞ হলে y → 0।</li>
+      <li><b>0 &lt; a &lt; 1:</b> x বাড়লে y কমে (নিম্নগামী)। x → ∞ হলে y → 0।</li>
+      <li>উদাহরণ: y = 2ˣ, y = (1/2)ˣ, y = eˣ (2 &lt; e &lt; 3)।</li>
+    </ul>
+
+    <h3>৬. লগারিদমীয় ফাংশন f(x) = logₐx ⭐⭐⭐</h3>
+    <ul>
+      <li>সূচকীয় ফাংশন এক-এক ও সার্বিক, তাই বিপরীত ফাংশন আছে: f⁻¹(y) = logₐy। লগারিদমীয় ফাংশন সূচকীয় ফাংশনের <b>বিপরীত</b>।</li>
+      <li>ডোমেন = (0, ∞), রেঞ্জ = (−∞, ∞)। লেখচিত্র (1, 0) দিয়ে যায় (logₐ1 = 0)।</li>
+      <li>a &gt; 1 হলে ঊর্ধ্বগামী, 0 &lt; a &lt; 1 হলে নিম্নগামী। x → 0 হলে y → −∞ (a &gt; 1)।</li>
+      <li>aˣ ও logₐx এর লেখচিত্র <b>y = x রেখার সাপেক্ষে প্রতিসম</b> (বিপরীত ফাংশনের ধর্ম)।</li>
+      <li>ভিত্তি e (≈ 2.718) হলে লেখা হয় ln x। ভিত্তি 10 হলে log₁₀x।</li>
+    </ul>
+
+    <h3>৭. পরমমান ফাংশন ⭐⭐</h3>
+    <ul>
+      <li>|x| = x (x ≥ 0 হলে), = −x (x &lt; 0 হলে)। যেমন |−3| = 3।</li>
+      <li>y = |x| এর ডোমেন R, রেঞ্জ [0, ∞)। লেখচিত্র "V" আকৃতির, মূলবিন্দুতে কোণ।</li>
+      <li>f(x) = x/|x| এর ডোমেন R − {0}, রেঞ্জ {−1, 1}।</li>
+    </ul>
+
+    <h3>৮. ডোমেন ও রেঞ্জ বের করার কৌশল ⭐⭐</h3>
+    <ul>
+      <li>লগের ভেতরের রাশি অবশ্যই ধনাত্মক। ln((a+x)/(a−x)) এর জন্য (a+x) ও (a−x) একই চিহ্নের হতে হবে। দেখা যায় ডোমেন = (−a, a)।</li>
+      <li>হর শূন্য হতে পারবে না। যেমন y = (4−x)/(4+x) এর ডোমেন R − {−4}।</li>
+      <li>রেঞ্জ বের করতে x কে y এর মাধ্যমে প্রকাশ করো (বিপরীত বের করো), তারপর y এর কোন মানে x বাস্তব হয় দেখো।</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="ex">
+    <h2>🪜 ধাপে ধাপে</h2>
+    <div class="say">👉 "পরের ধাপ" চাপতে থাকো। প্রতিটি ধাপ নিজে খাতায় করে মেলাও।</div>
+
+    <div class="ex" id="E1"><b>১) সূচকীয় সমীকরণ: 4ˣ − 3·2<sup>x+2</sup> + 2⁵ = 0</b> (বই উদাহরণ ১৭)
+      <div class="step">ধাপ ১: সব ভিত্তি 2 বানাই: (2²)ˣ − 3·2ˣ·2² + 32 = 0 ⇒ (2ˣ)² − 12·2ˣ + 32 = 0।</div>
+      <div class="step">ধাপ ২: 2ˣ = y ধরি: y² − 12y + 32 = 0।</div>
+      <div class="step">ধাপ ৩: উৎপাদকে ভাঙি: y² − 4y − 8y + 32 = 0 ⇒ y(y − 4) − 8(y − 4) = 0 ⇒ (y − 4)(y − 8) = 0।</div>
+      <div class="step">ধাপ ৪: y = 4 বা 8 ⇒ 2ˣ = 2² বা 2³ ⇒ <b>x = 2, 3</b>।</div>
+      <div class="step">ধাপ ৫: যাচাই: x = 2: 16 − 3·16 + 32 = 0 ✔; x = 3: 64 − 3·32 + 32 = 0 ✔।</div>
+      <button class="btn" data-ex="E1">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E1">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E2"><b>২) x<sup>x√x</sup> = (x√x)ˣ হলে x = ?</b> (বই উদাহরণ ১১)
+      <div class="step">ধাপ ১: x√x = x · x<sup>1/2</sup> = x<sup>3/2</sup>। তাই ডানপক্ষ = (x<sup>3/2</sup>)ˣ = (xˣ)<sup>3/2</sup>।</div>
+      <div class="step">ধাপ ২: বামপক্ষ x<sup>x√x</sup> = (xˣ)<sup>√x</sup>।</div>
+      <div class="step">ধাপ ৩: (xˣ)<sup>√x</sup> = (xˣ)<sup>3/2</sup>। ভিত্তি সমান, তাই সূচক সমান: √x = 3/2।</div>
+      <div class="step">ধাপ ৪: বর্গ করে x = 9/4 = <b>2.25</b>।</div>
+      <button class="btn" data-ex="E2">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E2">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E3"><b>৩) aˣ = b, bʸ = c, cᶻ = a হলে xyz = 1</b> (বই উদাহরণ ৯)
+      <div class="step">ধাপ ১: b = aˣ, c = bʸ, a = cᶻ।</div>
+      <div class="step">ধাপ ২: b = aˣ = (cᶻ)ˣ = c<sup>zx</sup> = (bʸ)<sup>zx</sup> = b<sup>xyz</sup>।</div>
+      <div class="step">ধাপ ৩: b¹ = b<sup>xyz</sup>। ভিত্তি সমান (b ≠ 1) ⇒ <b>xyz = 1</b>।</div>
+      <button class="btn" data-ex="E3">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E3">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E4"><b>৪) a = 2 + 2<sup>2/3</sup> + 2<sup>1/3</sup> হলে a³ − 6a² + 6a − 2 = 0</b> (বই উদাহরণ ১৬)
+      <div class="step">ধাপ ১: a − 2 = 2<sup>2/3</sup> + 2<sup>1/3</sup>। দুই পক্ষের ঘন: (a − 2)³ = (2<sup>2/3</sup> + 2<sup>1/3</sup>)³।</div>
+      <div class="step">ধাপ ২: (p + q)³ = p³ + q³ + 3pq(p + q)। এখানে p³ = 4, q³ = 2, pq = 2। তাই ডানপক্ষ = 4 + 2 + 3·2·(a − 2) = 6 + 6(a − 2)।</div>
+      <div class="step">ধাপ ৩: বামপক্ষ: a³ − 6a² + 12a − 8। সমান করি: a³ − 6a² + 12a − 8 = 6a − 6।</div>
+      <div class="step">ধাপ ৪: সরল করে <b>a³ − 6a² + 6a − 2 = 0</b> ✔।</div>
+      <button class="btn" data-ex="E4">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E4">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E5"><b>৫) লগারিদমীয় সমীকরণ</b> (বই উদাহরণ ২৩)
+      <div class="step">ধাপ ১ (ক): log<sub>√8</sub>x = 3⅓ = 10/3। সংজ্ঞা: x = (√8)<sup>10/3</sup>।</div>
+      <div class="step">ধাপ ২: √8 = 2<sup>3/2</sup>। x = 2<sup>(3/2)(10/3)</sup> = 2⁵ = <b>32</b>।</div>
+      <div class="step">ধাপ ৩ (খ): log₁₀[98 + √(x² − 12x + 36)] = 2 ⇒ 98 + √(x² − 12x + 36) = 10² = 100।</div>
+      <div class="step">ধাপ ৪: √(x² − 12x + 36) = 2 ⇒ x² − 12x + 36 = 4 ⇒ x² − 12x + 32 = 0 ⇒ (x − 4)(x − 8) = 0।</div>
+      <div class="step">ধাপ ৫: <b>x = 4 বা 8</b>। যাচাই: x = 4: √(16 − 48 + 36) = √4 = 2 ✔; x = 8: √(64 − 96 + 36) = 2 ✔।</div>
+      <button class="btn" data-ex="E5">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E5">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E6"><b>৬) প্রমাণ: 1/log<sub>a</sub>(abc) + 1/log<sub>b</sub>(abc) + 1/log<sub>c</sub>(abc) = 1</b> (বই উদাহরণ ২৭)
+      <div class="step">ধাপ ১: log<sub>a</sub>(abc) = x, log<sub>b</sub>(abc) = y, log<sub>c</sub>(abc) = z ধরি। সংজ্ঞা অনুযায়ী aˣ = abc, bʸ = abc, cᶻ = abc।</div>
+      <div class="step">ধাপ ২: তাই a = (abc)<sup>1/x</sup>, b = (abc)<sup>1/y</sup>, c = (abc)<sup>1/z</sup>।</div>
+      <div class="step">ধাপ ৩: গুণ করি: abc = (abc)<sup>1/x + 1/y + 1/z</sup>। বামপক্ষ (abc)¹।</div>
+      <div class="step">ধাপ ৪: সূচক সমান: 1/x + 1/y + 1/z = 1, অর্থাৎ <b>প্রমাণিত</b> ✔।</div>
+      <button class="btn" data-ex="E6">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E6">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E7"><b>৭) ডোমেন, রেঞ্জ ও বিপরীত: y = (4 − x)/(4 + x)</b> (বই উদাহরণ ৩৬)
+      <div class="step">ধাপ ১ (ডোমেন): হর 4 + x = 0 হলে অসংজ্ঞায়িত। তাই ডোমেন = R − {−4}।</div>
+      <div class="step">ধাপ ২ (বিপরীত): y(4 + x) = 4 − x ⇒ 4y + xy = 4 − x ⇒ x(y + 1) = 4 − 4y।</div>
+      <div class="step">ধাপ ৩: x = 4(1 − y)/(1 + y)। চলক বদলে <b>f⁻¹(x) = 4(1 − x)/(1 + x)</b>।</div>
+      <div class="step">ধাপ ৪: ln এর জন্য: g(x) = ln((4 − x)/(4 + x)) এ (4 − x)/(4 + x) &gt; 0 লাগবে। ফল: −4 &lt; x &lt; 4, ডোমেন = (−4, 4)। (ল্যাব ৫ এ a = 4 দিয়ে দেখো।)</div>
+      <button class="btn" data-ex="E7">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E7">আবার শুরু</button>
+    </div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🧮 ল্যাব ১: সূচকের সূত্র যাচাই (ঠিক মান)</h2>
+    <div class="say">👉 ভিত্তি a এবং সূচক m, n বদলাও। ধনাত্মক, ঋণাত্মক ও শূন্য সূচকে সূত্রগুলো মেলে কিনা ঠিক মানে (ভগ্নাংশসহ) দেখো।</div>
+    <div class="ctl"><label>a = <span id="a1av"></span></label><input type="range" id="a1a" min="-9" max="9" step="1" value="2">
+    <label>m = <span id="a1mv"></span></label><input type="range" id="a1m" min="-6" max="6" step="1" value="5">
+    <label>n = <span id="a1nv"></span></label><input type="range" id="a1n" min="-6" max="6" step="1" value="-3"></div>
+    <div class="res m" id="a1res"></div>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>√ ল্যাব ২: মূল ও ভগ্নাংশ সূচক</h2>
+    <div class="say">👉 a, n ও m বদলাও। ল্যাব দেখাবে a এর n তম মূল আছে কিনা (ঋণাত্মক a ও জোড় n এ নেই) এবং a<sup>m/n</sup> এর মান।</div>
+    <div class="ctl"><label>a = <span id="b1av"></span></label><input type="range" id="b1a" min="-125" max="125" step="1" value="-27">
+    <label>n = <span id="b1nv"></span></label><input type="range" id="b1n" min="2" max="6" step="1" value="3">
+    <label>m = <span id="b1mv"></span></label><input type="range" id="b1m" min="-3" max="4" step="1" value="2"></div>
+    <div class="chips" id="b1p"></div>
+    <div class="res m" id="b1res"></div>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>📈 ল্যাব ৩: y = aˣ ও y = logₐx এর লেখচিত্র</h2>
+    <div class="say">👉 ভিত্তি a বদলাও (a ≠ 1)। a &gt; 1 ও a &lt; 1 হলে বক্ররেখার আকার কেমন বদলায় দেখো। "দুটোই" নিলে ধূসর y = x রেখার সাপেক্ষে প্রতিসমতা দেখা যাবে।</div>
+    <div class="chips" id="c1m"></div>
+    <div class="ctl"><label>ভিত্তি a = <span id="c1av"></span></label><input type="range" id="c1a" min="0.2" max="5" step="0.1" value="2">
+    <label>x = <span id="c1xv"></span></label><input type="range" id="c1x" min="-4" max="4" step="0.1" value="1"></div>
+    <canvas id="c1cv" width="600" height="340"></canvas>
+    <div class="res m" id="c1res"></div>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🔢 ল্যাব ৪: লগারিদমের সূত্র</h2>
+    <div class="say">👉 ভিত্তি a, দুটি সংখ্যা M, N এবং ঘাত k বেছে নাও। যোগ, ভাগ, ঘাত ও ভিত্তি পরিবর্তনের সূত্র সংখ্যা দিয়ে মিলিয়ে দেখো।</div>
+    <div class="chips" id="d1a"></div>
+    <div class="chips" id="d1b"></div>
+    <div class="ctl"><label>M = <span id="d1mv"></span></label><input type="range" id="d1m" min="1" max="100" step="1" value="8">
+    <label>N = <span id="d1nv"></span></label><input type="range" id="d1n" min="1" max="100" step="1" value="4">
+    <label>k = <span id="d1kv"></span></label><input type="range" id="d1k" min="-3" max="5" step="1" value="3"></div>
+    <div class="res m" id="d1res"></div>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🧭 ল্যাব ৫: ln ফাংশনের ডোমেন ও রেঞ্জ (উদাহরণ ৩১, ৩৬)</h2>
+    <div class="say">👉 f(x) = ln((a+x)/(a−x)) বা ln((a−x)/(a+x)) বেছে a ও x বদলাও। লাল ড্যাশ রেখা x = ±a। ডোমেনের বাইরে ফাংশন নেই। রেঞ্জ সব বাস্তব সংখ্যা।</div>
+    <div class="chips" id="e1f"></div>
+    <div class="ctl"><label>a = <span id="e1av"></span></label><input type="range" id="e1a" min="1" max="8" step="1" value="4">
+    <label>x = <span id="e1xv"></span></label><input type="range" id="e1x" min="-10" max="10" step="0.1" value="1"></div>
+    <canvas id="e1cv" width="600" height="340"></canvas>
+    <div class="res m" id="e1res"></div>
+  </section>
+
+  <section class="panel" id="prac">
+    <h2>✍️ প্র্যাকটিস (বইয়ের ধাঁচে)</h2>
+    <div class="say">👉 উত্তর ভগ্নাংশ (যেমন 1/3) বা দশমিক (২ ঘর) লিখতে পারো। ঋণাত্মক হলে মাইনাস দাও।</div>
+    <div id="pracbox"></div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="fb" id="qscore"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>📖 বই থেকে প্রশ্নোত্তর</h2>
+    <div id="qabox"></div>
+  </section>
+</div>
+
+<footer class="site">&copy; ShikboLab · সূচকীয় ও লগারিদমীয় ফাংশন (উচ্চতর গণিত অধ্যায় ৯)</footer>
+<script>
+var BNS='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BNS[d];});}
+function en(s){return String(s).replace(/[০-৯]/g,function(d){return BNS.indexOf(d);});}
+function $(id){return document.getElementById(id);}
+function R2(c){var d=Math.min(2,window.devicePixelRatio||1),w=c.width,h=c.height;c.width=w*d;c.height=h*d;var x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return x;}
+function fm(v,d){d=(d===undefined)?2:d;var k=Math.pow(10,d),r=Math.round(v*k)/k;if(Math.abs(r)<1e-9)r=0;return bn(String(r).replace('-','−'));}
+function sg(v){return v<0?'−'+bn(-v):bn(v);}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t;}return a;}
+function frac(n,d){if(d<0){n=-n;d=-d;}var g=gcd(n,d)||1;n/=g;d/=g;return d===1?sg(n):sg(n)+'/'+bn(d);}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ex){var box=$(b.dataset.ex),s=box.querySelectorAll('.step:not(.show)');if(s.length){s[0].classList.add('show');}if(s.length<=1)b.disabled=true;}
+  if(b.dataset.rs){var bx=$(b.dataset.rs);bx.querySelectorAll('.step').forEach(function(x){x.classList.remove('show');});bx.querySelector('[data-ex]').disabled=false;}
+});
+/* ---- গ্রাফ হেল্পার ---- */
+function Plot(id){var cv=$(id),W=+cv.getAttribute('width'),H=+cv.getAttribute('height'),x=R2(cv);return {x:x,W:W,H:H};}
+function nice(r){var p=Math.pow(10,Math.floor(Math.log10(r))),m=r/p;return (m<1.5?1:m<3.5?2:m<7.5?5:10)*p;}
+function drawPlot(P,xr,yr,fns,pts,opt){
+  opt=opt||{};var x=P.x,W=P.W,H=P.H,L=34,Rr=12,T=12,B=26;x.clearRect(0,0,W,H);x.fillStyle='#fff';x.fillRect(0,0,W,H);
+  function X(v){return L+(v-xr[0])/(xr[1]-xr[0])*(W-L-Rr);} function Y(v){return H-B-(v-yr[0])/(yr[1]-yr[0])*(H-T-B);}
+  var sx=nice((xr[1]-xr[0])/10),sy=nice((yr[1]-yr[0])/8);
+  x.lineWidth=1;x.strokeStyle='#e6edf2';x.fillStyle='#6b7f95';x.font='11px system-ui';x.textAlign='center';
+  for(var gx=Math.ceil(xr[0]/sx)*sx;gx<=xr[1]+1e-9;gx+=sx){x.beginPath();x.moveTo(X(gx),T);x.lineTo(X(gx),H-B);x.stroke();if(Math.abs(gx)>1e-9)x.fillText(fm(gx,2),X(gx),Math.min(Math.max(Y(0)+14,T+10),H-8));}
+  x.textAlign='right';
+  for(var gy=Math.ceil(yr[0]/sy)*sy;gy<=yr[1]+1e-9;gy+=sy){x.beginPath();x.moveTo(L,Y(gy));x.lineTo(W-Rr,Y(gy));x.stroke();if(Math.abs(gy)>1e-9)x.fillText(fm(gy,2),Math.min(Math.max(X(0)-4,L+22),W-Rr),Y(gy)+4);}
+  x.strokeStyle='#46586a';x.lineWidth=1.6;
+  if(xr[0]<0&&xr[1]>0){x.beginPath();x.moveTo(X(0),T);x.lineTo(X(0),H-B);x.stroke();}
+  if(yr[0]<0&&yr[1]>0){x.beginPath();x.moveTo(L,Y(0));x.lineTo(W-Rr,Y(0));x.stroke();}
+  x.save();x.beginPath();x.rect(L,T,W-L-Rr,H-T-B);x.clip();
+  (opt.hl||[]).forEach(function(h){x.strokeStyle=h.c;x.lineWidth=1.5;x.setLineDash([6,4]);x.beginPath();x.moveTo(L,Y(h.y));x.lineTo(W-Rr,Y(h.y));x.stroke();x.setLineDash([]);});
+  fns.forEach(function(f){x.strokeStyle=f.c;x.lineWidth=3;x.beginPath();var pen=false,N=500;for(var i=0;i<=N;i++){var v=xr[0]+(xr[1]-xr[0])*i/N,y=f.f(v);if(!isFinite(y)||isNaN(y)||y>yr[1]*3||y<yr[0]*3-50){pen=false;continue;}if(!pen){x.moveTo(X(v),Y(y));pen=true;}else x.lineTo(X(v),Y(y));}x.stroke();});
+  (opt.curves||[]).forEach(function(cu){x.strokeStyle=cu.c;x.lineWidth=2.5;cu.paths.forEach(function(pth){x.beginPath();pth.forEach(function(p,i){if(i)x.lineTo(X(p[0]),Y(p[1]));else x.moveTo(X(p[0]),Y(p[1]));});x.stroke();});});
+  x.restore();
+  pts.forEach(function(p){x.fillStyle=p.c||'#1b9a6f';x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.arc(X(p[0]),Y(p[1]),6,0,6.2832);x.fill();x.stroke();if(p[2]){x.fillStyle='#1f3a5f';x.font='700 12px system-ui';x.textAlign='center';x.fillText(p[2],Math.min(Math.max(X(p[0]),40),W-40),Y(p[1])-10);}});
+}
+function bigStr(n){var s=n.toString(),neg=s[0]==='-';if(neg)s=s.slice(1);var o=s;return (neg?'−':'')+bn(o);}
+function pwR(a,k){var A=BigInt(a),K=Math.abs(k),p=A**BigInt(K);return k>=0?{n:p,d:1n}:(p<0n?{n:-1n,d:-p}:{n:1n,d:p});}
+function mulR(x,y){return {n:x.n*y.n,d:x.d*y.d};}
+function divR(x,y){var n=x.n*y.d,d=x.d*y.n;if(d<0n){n=-n;d=-d;}return {n:n,d:d};}
+function eqR(x,y){return x.n*y.d===y.n*x.d;}
+function gB(a,b){a=a<0n?-a:a;b=b<0n?-b:b;while(b){var t=a%b;a=b;b=t;}return a;}
+function rS(x){var g=gB(x.n,x.d)||1n,n=x.n/g,d=x.d/g;return d===1n?bigStr(n):bigStr(n)+'/'+bigStr(d);}
+function sup(k){return '<sup>'+(k<0?'−'+bn(-k):bn(k))+'</sup>';}
+/* ===== ল্যাব ১ ===== */
+function lab1(){
+  var a=+$('a1a').value,m=+$('a1m').value,n=+$('a1n').value;$('a1av').textContent=sg(a);$('a1mv').textContent=sg(m);$('a1nv').textContent=sg(n);
+  var A='('+sg(a)+')';if(a===0){$('a1res').innerHTML='a = ০ হলে ঋণাত্মক ও শূন্য সূচক সংজ্ঞায়িত নয় (০ দিয়ে ভাগ)। a ≠ ০ নাও।';return;}
+  var am=pwR(a,m),an=pwR(a,n),h='',ok=true;
+  h+='a'+sup(m)+' = '+A+sup(m)+' = <b>'+rS(am)+'</b> &nbsp;|&nbsp; a'+sup(n)+' = '+A+sup(n)+' = <b>'+rS(an)+'</b><br>';
+  var pr=mulR(am,an),pe=pwR(a,m+n),c1=eqR(pr,pe);
+  h+='<b>১) aᵐ·aⁿ = a<sup>m+n</sup>:</b> '+rS(am)+' × '+rS(an)+' = '+rS(pr)+'; a'+sup(m+n)+' = '+rS(pe)+' '+(c1?'✔':'✘')+'<br>';
+  var q=divR(am,an),qe=pwR(a,m-n),c2=eqR(q,qe);
+  h+='<b>২) aᵐ/aⁿ = a<sup>m−n</sup>:</b> '+rS(am)+' ÷ '+rS(an)+' = '+rS(q)+'; a'+sup(m-n)+' = '+rS(qe)+' '+(c2?'✔':'✘')+'<br>';
+  var pp=pwR(a,m*n),pq=(function(){var b=am,r={n:1n,d:1n},K=Math.abs(n),i;for(i=0;i<K;i++)r=mulR(r,b);if(n<0){r=divR({n:1n,d:1n},r);}return r;})(),c3=eqR(pp,pq);
+  h+='<b>৩) (aᵐ)ⁿ = a<sup>mn</sup>:</b> ('+rS(am)+')'+sup(n)+' = '+rS(pq)+'; a'+sup(m*n)+' = '+rS(pp)+' '+(c3?'✔':'✘')+'<br>';
+  var z=pwR(a,0);h+='<b>৪) a⁰ = </b>'+rS(z)+(a!==0?' ✔ (সবসময় ১)':'')+'; <b>a<sup>−n</sup> = 1/aⁿ:</b> a'+sup(-n)+' = '+rS(pwR(a,-n))+' ও ১/a'+sup(n)+' = '+rS(divR({n:1n,d:1n},an))+' '+(eqR(pwR(a,-n),divR({n:1n,d:1n},an))?'✔':'✘');
+  $('a1res').innerHTML=h;
+}
+['a1a','a1m','a1n'].forEach(function(i){$(i).oninput=lab1;});lab1();
+/* ===== ল্যাব ২ ===== */
+function nroot(a,n){if(a>=0)return Math.pow(a,1/n);if(n%2===1)return -Math.pow(-a,1/n);return NaN;}
+function perfect(a,n){var r=Math.round(nroot(Math.abs(a),n));return Math.pow(r,n)===Math.abs(a)?r:null;}
+function lab2(){
+  var a=+$('b1a').value,n=+$('b1n').value,m=+$('b1m').value;$('b1av').textContent=sg(a);$('b1nv').textContent=bn(n);$('b1mv').textContent=sg(m);
+  var r=nroot(a,n),h='',root=(n===2?'বর্গমূল':n===3?'ঘনমূল':bn(n)+' তম মূল');
+  if(isNaN(r)){h='a = '+sg(a)+' ঋণাত্মক এবং n = '+bn(n)+' জোড় ⇒ <b>a এর '+root+' বাস্তব সংখ্যায় নেই</b> (যেমন −৯ এর বর্গমূল নেই)।<br>তাই a<sup>'+bn(m)+'/'+bn(n)+'</sup> সংজ্ঞায়িত নয়। a ধনাত্মক বা n বিজোড় করো।';}
+  else{var p=perfect(a,n),nm=sg(a);
+    h+='a = '+nm+', '+root+': ';
+    if(a===0)h+='০ এর যেকোনো n তম মূল ০।<br>';
+    else if(a>0)h+='<b>ⁿ√a = '+(p!==null?bn(p):fm(r,4)+' (প্রায়)')+'</b>'+(n%2===0?' (আরেকটি মূল '+(p!==null?'−'+bn(p):'−'+fm(r,4))+')':'')+'<br>';
+    else h+='a ঋণাত্মক, n বিজোড় ⇒ <b>ⁿ√a = −ⁿ√|a| = '+(p!==null?'−'+bn(p):'−'+fm(-r,4)+' (প্রায়)')+'</b><br>';
+    if(a===0&&m<0)h+='০ এর ঋণাত্মক সূচক সংজ্ঞায়িত নয়।';
+    else{var v=Math.pow(r,m),v2=(a<0&&n%2===1)?-Math.pow(-a,m/n):Math.pow(a,m/n);
+      if(a<0&&n%2===1){var alt=nroot(Math.pow(a,m),n);h+='a<sup>m/n</sup> = (ⁿ√a)<sup>'+sg(m)+'</sup> = ('+fm(r,4)+')<sup>'+sg(m)+'</sup> = <b>'+fm(v,4)+'</b><br>ⁿ√(a<sup>'+sg(m)+'</sup>) = ⁿ√('+fm(Math.pow(a,m),6)+') = '+fm(alt,4)+' '+(Math.abs(alt-v)<1e-9*Math.max(1,Math.abs(v))?'✔ দুটোই সমান':'✘');}
+      else{var alt2=nroot(Math.pow(a,m),n);h+='a<sup>m/n</sup> = (ⁿ√a)<sup>'+sg(m)+'</sup> = <b>'+fm(v,4)+'</b><br>ⁿ√(a<sup>'+sg(m)+'</sup>) = '+fm(alt2,4)+' '+(Math.abs(alt2-v)<1e-9*Math.max(1,Math.abs(v))?'✔ দুটোই সমান':'✘');
+        var g=gcd(Math.abs(m),n)||1;if(a>0&&g>1&&m!==0)h+='<br>m/n = '+sg(m/g)+'/'+bn(n/g)+' (লঘিষ্ঠ আকারে) ⇒ a<sup>'+sg(m/g)+'/'+bn(n/g)+'</sup> = '+fm(Math.pow(a,m/n),4)+' ✔ একই মান';}}}
+  $('b1res').innerHTML=h;
+}
+var PR2=[[-27,3,1],[16,4,1],[8,3,2],[27,3,-1],[-9,2,1],[64,6,1],[81,4,3],[0,5,2]];
+$('b1p').innerHTML=PR2.map(function(p,i){return '<button data-i="'+i+'">'+sg(p[0])+' এর '+(p[1]===2?'বর্গ':p[1]===3?'ঘন':bn(p[1])+' তম')+'মূল (m='+sg(p[2])+')</button>';}).join('');
+$('b1p').onclick=function(e){var b=e.target.closest('button');if(!b)return;var p=PR2[+b.dataset.i];$('b1a').value=p[0];$('b1n').value=p[1];$('b1m').value=p[2];lab2();};
+['b1a','b1n','b1m'].forEach(function(i){$(i).oninput=lab2;});lab2();
+/* ===== ল্যাব ৩ ===== */
+var P3=Plot('c1cv'),C1M='both';
+function lab3(){
+  var a=Math.round(+$('c1a').value*10)/10,xv=Math.round(+$('c1x').value*10)/10;$('c1av').textContent=fm(a,1);$('c1xv').textContent=fm(xv,1);
+  if(Math.abs(a-1)<1e-9){P3.x.clearRect(0,0,600,340);P3.x.fillStyle='#fff';P3.x.fillRect(0,0,600,340);P3.x.fillStyle='#c0392b';P3.x.font='700 14px system-ui';P3.x.textAlign='center';P3.x.fillText('a = ১ হলে ফাংশন সংজ্ঞায়িত নয় (a ≠ ১ লাগবে)',300,170);$('c1res').innerHTML='a ≠ ১ হতে হবে। a = ১ হলে aˣ = ১ (সরলরেখা) আর log₁x অসংজ্ঞায়িত।';return;}
+  var L=Math.log(a),fns=[],pts=[],ex=function(v){return Math.exp(v*L);},lg=function(v){return v>0?Math.log(v)/L:NaN;};
+  if(C1M==='both')fns.push({f:function(v){return v;},c:'#9aa8b5'});
+  if(C1M!=='log'){fns.push({f:ex,c:'#2a6fdb'});pts.push([0,1,'(০, ১)','#e8590c']);}
+  if(C1M!=='exp'){fns.push({f:lg,c:'#e53935'});pts.push([1,0,'(১, ০)','#e8590c']);}
+  var y=ex(xv);
+  if(C1M!=='log'){pts.push([xv,y,'','#1b9a6f']);}
+  if(C1M==='both'){pts.push([y,xv,'','#1b9a6f']);}
+  if(C1M==='log'&&xv>0)pts.push([xv,lg(xv),'','#1b9a6f']);
+  drawPlot(P3,[-5,5],[-5,5],fns,pts,{});
+  var up=a>1,h='ভিত্তি a = '+fm(a,1)+' ('+(up?'a > ১':'০ < a < ১')+')<br>';
+  if(C1M!=='log')h+='<b>y = aˣ:</b> ডোমেন (−∞, ∞), রেঞ্জ (০, ∞); (০, ১) দিয়ে যায়; '+(up?'<b>ঊর্ধ্বগামী</b> (x বাড়লে y বাড়ে), x → −∞ এ y → ০':'<b>নিম্নগামী</b> (x বাড়লে y কমে), x → ∞ এ y → ০')+'। x = '+fm(xv,1)+' এ y = '+fm(y,4)+'<br>';
+  if(C1M!=='exp')h+='<b>y = logₐx:</b> ডোমেন (০, ∞), রেঞ্জ (−∞, ∞); (১, ০) দিয়ে যায়; '+(up?'<b>ঊর্ধ্বগামী</b>, x → ০ এ y → −∞':'<b>নিম্নগামী</b>, x → ০ এ y → +∞')+(xv>0?'। x = '+fm(xv,1)+' এ logₐx = '+fm(lg(xv),4):'')+'<br>';
+  if(C1M==='both')h+='প্রতিসমতা: P('+fm(xv,1)+', '+fm(y,3)+') এর প্রতিবিম্ব Q('+fm(y,3)+', '+fm(xv,1)+')। Q বিন্দুতে logₐ('+fm(y,3)+') = '+fm(lg(y),3)+' = x ✔ (বিপরীত ফাংশন)।';
+  $('c1res').innerHTML=h;
+}
+$('c1m').innerHTML=[['exp','y = aˣ'],['log','y = logₐx'],['both','দুটোই + y = x']].map(function(p){return '<button data-m="'+p[0]+'" class="'+(p[0]==='both'?'on':'')+'">'+p[1]+'</button>';}).join('');
+$('c1m').onclick=function(e){var b=e.target.closest('button');if(!b)return;C1M=b.dataset.m;[].forEach.call($('c1m').children,function(z){z.classList.toggle('on',z===b);});lab3();};
+$('c1a').oninput=lab3;$('c1x').oninput=lab3;lab3();
+/* ===== ল্যাব ৪ ===== */
+var D1A=2,D1B=10;
+function lg(base,v){return Math.log(v)/Math.log(base);}
+function lab4(){
+  var M=+$('d1m').value,N=+$('d1n').value,k=+$('d1k').value;$('d1mv').textContent=bn(M);$('d1nv').textContent=bn(N);$('d1kv').textContent=sg(k);
+  var a=D1A,b=D1B,lM=lg(a,M),lN=lg(a,N),h='ভিত্তি a = '+bn(a)+' &nbsp; (log<sub>a</sub>M = '+fm(lM,4)+', log<sub>a</sub>N = '+fm(lN,4)+')<br>';
+  function ck(x,y){return Math.abs(x-y)<1e-9?'✔':'✘';}
+  h+='<b>১) logₐ(M×N)</b> = logₐ('+bn(M*N)+') = '+fm(lg(a,M*N),4)+'; logₐM + logₐN = '+fm(lM+lN,4)+' '+ck(lg(a,M*N),lM+lN)+'<br>';
+  h+='<b>২) logₐ(M/N)</b> = logₐ('+fm(M/N,4)+') = '+fm(lg(a,M/N),4)+'; logₐM − logₐN = '+fm(lM-lN,4)+' '+ck(lg(a,M/N),lM-lN)+'<br>';
+  h+='<b>৩) logₐ(M<sup>k</sup>)</b> = '+fm(lg(a,Math.pow(M,k)),4)+'; k × logₐM = '+sg(k)+' × '+fm(lM,4)+' = '+fm(k*lM,4)+' '+ck(lg(a,Math.pow(M,k)),k*lM)+'<br>';
+  var lbM=lg(b,M),lab=lg(a,b);
+  h+='<b>৪) ভিত্তি পরিবর্তন:</b> logₐM = log<sub>b</sub>M × logₐb। এখানে b = '+bn(b)+': log<sub>b</sub>M = '+fm(lbM,4)+', logₐb = '+fm(lab,4)+', গুণফল = '+fm(lbM*lab,4)+' এবং logₐM = '+fm(lM,4)+' '+ck(lM,lbM*lab)+'<br>';
+  h+='<b>৫)</b> logₐa = '+fm(lg(a,a),0)+', logₐ1 = '+fm(lg(a,1),0)+', a<sup>logₐM</sup> = '+bn(Math.round(Math.pow(a,lM)*1e6)/1e6)+' = M ✔';
+  $('d1res').innerHTML=h;
+}
+function d4chips(id,arr,cur,key){$(id).innerHTML=arr.map(function(v){return '<button data-v="'+v+'" class="'+(v===cur?'on':'')+'">'+key+' = '+bn(v)+'</button>';}).join('');}
+d4chips('d1a',[2,3,5,10],2,'a');d4chips('d1b',[2,3,5,10],10,'b');
+$('d1a').onclick=function(e){var x=e.target.closest('button');if(!x)return;D1A=+x.dataset.v;d4chips('d1a',[2,3,5,10],D1A,'a');lab4();};
+$('d1b').onclick=function(e){var x=e.target.closest('button');if(!x)return;D1B=+x.dataset.v;d4chips('d1b',[2,3,5,10],D1B,'b');lab4();};
+['d1m','d1n','d1k'].forEach(function(i){$(i).oninput=lab4;});lab4();
+/* ===== ল্যাব ৫ ===== */
+var P5=Plot('e1cv'),E1S=1;
+function lab5(){
+  var a=+$('e1a').value,xv=Math.round(+$('e1x').value*10)/10;$('e1av').textContent=bn(a);$('e1xv').textContent=sg(xv);
+  var s=E1S,F=function(v){var q=(a+v)/(a-v);return q>0?s*Math.log(q):NaN;};
+  drawPlot(P5,[-10,10],[-6,6],[{f:function(v){if(Math.abs(Math.abs(v)-a)<0.02)return NaN;return F(v);},c:'#2a6fdb'}],[],{});
+  var x=P5.x,W=600,H=340;function X(v){return 34+(v+10)/20*(W-34-12);}
+  x.save();x.strokeStyle='#e53935';x.lineWidth=1.5;x.setLineDash([6,4]);[-a,a].forEach(function(v){x.beginPath();x.moveTo(X(v),12);x.lineTo(X(v),H-26);x.stroke();});x.restore();
+  x.fillStyle='#e53935';x.font='700 12px system-ui';x.textAlign='center';x.fillText('x = −'+bn(a),X(-a),22);x.fillText('x = '+bn(a),X(a),22);
+  var q=(a+xv)/(a-xv),inD=q>0&&Math.abs(xv)!==a,fx=F(xv);
+  if(inD){var Y=function(v){return H-26-(v+6)/12*(H-12-26);};x.fillStyle='#1b9a6f';x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.arc(X(xv),Y(Math.max(-6,Math.min(6,fx))),6,0,6.2832);x.fill();x.stroke();}
+  var h='ফাংশন: f(x) = '+(s===1?'ln((a+x)/(a−x))':'ln((a−x)/(a+x))')+', a = '+bn(a)+'<br>';
+  h+='<b>ডোমেন:</b> (a+x)/(a−x) &gt; ০ ⇒ −a &lt; x &lt; a, অর্থাৎ <b>('+sg(-a)+', '+bn(a)+')</b><br><b>রেঞ্জ:</b> সব বাস্তব সংখ্যা (−∞, ∞)<br>';
+  h+='x = '+fm(xv,1)+': (a+x)/(a−x) = '+(Math.abs(xv)===a?'অসংজ্ঞায়িত':fm(q,4))+' ⇒ '+(inD?'ধনাত্মক ✔ ডোমেনের ভেতরে। f(x) = <b>'+fm(fx,4)+'</b>':'<span style="color:#c0392b"><b>ডোমেনের বাইরে</b></span>, ln সংজ্ঞায়িত নয়');
+  if(inD){var y=fx,inv=s===1?a*(Math.exp(y)-1)/(Math.exp(y)+1):a*(1-Math.exp(y))/(1+Math.exp(y));h+='<br>বিপরীত: x = '+(s===1?'a(eʸ − ১)/(eʸ + ১)':'a(১ − eʸ)/(১ + eʸ)')+' = '+fm(inv,4)+' '+(Math.abs(inv-xv)<1e-9?'✔ মূল x ফিরে এলো':'✘');}
+  $('e1res').innerHTML=h;
+}
+$('e1f').innerHTML=[[1,'ln((a+x)/(a−x))'],[-1,'ln((a−x)/(a+x))']].map(function(p){return '<button data-s="'+p[0]+'" class="'+(p[0]===1?'on':'')+'">'+p[1]+'</button>';}).join('');
+$('e1f').onclick=function(e){var b=e.target.closest('button');if(!b)return;E1S=+b.dataset.s;[].forEach.call($('e1f').children,function(z){z.classList.toggle('on',z===b);});lab5();};
+$('e1a').oninput=lab5;$('e1x').oninput=lab5;lab5();
+/* ===== প্র্যাকটিস ===== */
+var PR=[
+ ['2⁵ × 2⁶ ÷ 2⁹ এর মান কত?',[4],'2^(5+6−9) = 2² = 4।'],
+ ['মান নির্ণয় করো: (5^(n+2) + 35 × 5^(n−1)) / (4 × 5ⁿ)',[8],'5ⁿ কমন নিই: 5ⁿ(25 + 35/5)/(4·5ⁿ) = (25 + 7)/4 = 8।'],
+ ['8^(2/3) এর মান কত?',[4],'8^(1/3) = 2, তাই 8^(2/3) = 2² = 4।'],
+ ['27^(−1/3) এর মান কত? (ভগ্নাংশ বা দশমিক)',[0.3333],'27^(1/3) = 3। ঋণাত্মক সূচক: 1/3।'],
+ ['∛(−27) এর মান কত?',[-3],'(−3)³ = −27 এবং ঋণাত্মক সংখ্যার ঘনমূল ঋণাত্মক হয়। ∛(−27) = −3।'],
+ ['2^(x+3) + 2^(x+1) = 320 হলে x = ?',[5],'2ˣ(8 + 2) = 320 ⇒ 2ˣ = 32 ⇒ x = 5।'],
+ ['9^(2x) = 3^(x+1) হলে x = ? (ভগ্নাংশ বা দশমিক)',[0.3333],'3^(4x) = 3^(x+1) ⇒ 4x = x + 1 ⇒ x = 1/3।'],
+ ['log₂ 64 এর মান কত?',[6],'2⁶ = 64 ⇒ log₂64 = 6।'],
+ ['log₄(1/16) এর মান কত?',[-2],'4⁻² = 1/16 ⇒ log₄(1/16) = −2।'],
+ ['log₁₀4 + log₁₀25 এর মান কত?',[2],'log₁₀(4 × 25) = log₁₀100 = 2।'],
+ ['7^(log₇ 9) এর মান কত?',[9],'a^(logₐb) = b সূত্রে 9।'],
+ ['log_(√8) x = 3⅓ হলে x = ?',[32],'x = (√8)^(10/3) = (2^(3/2))^(10/3) = 2⁵ = 32।']
+];
+(function(){var h='';PR.forEach(function(p,i){h+='<div class="q"><b>'+bn(i+1)+'.</b> '+p[0]+'<div class="ans"> <input type="text" id="pi'+i+'" size="10"> <button class="btn" data-pc="'+i+'">যাচাই</button> <button class="btn alt" data-ph="'+i+'">সমাধান</button></div><div class="fb" id="pf'+i+'"></div></div>';});$('pracbox').innerHTML=h;})();
+function numOf(s){s=en(s).replace(/[−–]/g,'-').replace(/\s+/g,'');var m=s.match(/^(-?\d+)\/(\d+)$/);if(m)return +m[1]/+m[2];if(/^-?\d*\.?\d+$/.test(s))return parseFloat(s);return NaN;}
+$('pracbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.pc!==undefined){var i=+b.dataset.pc,raw=$('pi'+i).value,v=numOf(raw),ok=!isNaN(v)&&PR[i][1].some(function(a){return Math.abs(a-v)<=0.0151;});
+    $('pf'+i).innerHTML=raw.trim()===''?'আগে উত্তর লেখো।':(ok?'✅ ঠিক! সাবাশ।':'❌ আবার চেষ্টা করো, বা "সমাধান" দেখো।');}
+  if(b.dataset.ph!==undefined){var j=+b.dataset.ph;$('pf'+j).innerHTML='💡 '+PR[j][2];}
+});
+/* ===== কুইজ ===== */
+var QZ=[];function M(q,c,w,e){QZ.push({q:q,o:[c].concat(w),e:e});}
+M('aᵐ · aⁿ =','a^(m+n)',['a^(mn)','a^(m−n)','(2a)^(m+n)'],'ভিত্তি সমান হলে সূচক যোগ হয়।');
+M('m > n হলে aᵐ / aⁿ =','a^(m−n)',['a^(m+n)','a^(n−m)','a^(mn)'],'ভাগে সূচক বিয়োগ।');
+M('(aᵐ)ⁿ =','a^(mn)',['a^(m+n)','aᵐ + aⁿ','a^(m/n)'],'ঘাতের ঘাতে সূচক গুণ হয়।');
+M('a ≠ 0 হলে a⁰ =','১',['০','a','অসংজ্ঞায়িত'],'মৌলিক সূত্র সব সূচকে বজায় রাখতে a⁰ = 1।');
+M('a⁻ⁿ =','১/aⁿ',['−aⁿ','aⁿ','n/a'],'ঋণাত্মক সূচক মানে ভাগফল।');
+M('2⁵ · 2⁶ =','2¹¹',['2³⁰','4¹¹','2¹'],'5 + 6 = 11।');
+M('3⁵ / 3³ =','৯',['৩⁸','২৭','৩'],'3^(5−3) = 3² = 9।');
+M('7⁻² =','১/৪৯',['−৪৯','১৪','−১৪'],'1/7² = 1/49।');
+M('16 এর চতুর্থ মূল—','২ ও −২',['কেবল ৪','কেবল ২','কেবল −২'],'2⁴ = 16 এবং (−2)⁴ = 16।');
+M('−27 এর ঘনমূল—','−৩',['৩','±৩','নেই'],'(−3)³ = −27।');
+M('−9 এর বর্গমূল—','বাস্তব সংখ্যায় নেই',['৩','−৩','±৩'],'কোনো বাস্তব সংখ্যার বর্গ ঋণাত্মক নয়।');
+M('√(a²) =','|a|',['a','−a','a²'],'বর্গমূল সবসময় অঋণাত্মক।');
+M('a^(1/n) =','ⁿ√a',['a/n','n√a (n দিয়ে গুণ)','aⁿ'],'ভগ্নাংশ সূচকের সংজ্ঞা।');
+M('a^(m/n) (a > 0) =','(ⁿ√a)ᵐ',['(ᵐ√a)ⁿ','ⁿ√a + m','m·ⁿ√a'],'মূল আগে, ঘাত পরে।');
+M('aˣ = aʸ (a > 0, a ≠ 1) হলে—','x = y',['x = a','x + y = 0','x = −y'],'ভিত্তি সমান হলে সূচক সমান।');
+M('aˣ = 1 (a > 0, a ≠ 1) হলে—','x = ০',['x = ১','x = a','x = −১'],'a⁰ = 1 এবং সূচকীয় ফাংশন এক-এক।');
+M('aˣ = b হলে x =','logₐ b',['log_b a','b·logₐ','a/b'],'সূচক ও লগারিদমের সংজ্ঞা।');
+M('log₂ 64 =','৬',['৫','৮','৩২'],'2⁶ = 64।');
+M('logₐ a =','১',['০','a','অসংজ্ঞায়িত'],'a¹ = a।');
+M('logₐ 1 =','০',['১','a','অসংজ্ঞায়িত'],'a⁰ = 1।');
+M('logₐ(M × N) =','logₐM + logₐN',['logₐM × logₐN','logₐM − logₐN','logₐ(M + N)'],'গুণফলের লগ = লগের যোগ।');
+M('logₐ(M / N) =','logₐM − logₐN',['logₐM + logₐN','logₐM / logₐN','logₐ(M − N)'],'ভাগফলের লগ = লগের বিয়োগ।');
+M('logₐ(Mᴺ) =','N · logₐM',['M · logₐN','logₐM + N','(logₐM)ᴺ'],'ঘাত লগের গুণক হয়ে নামে।');
+M('ভিত্তি পরিবর্তনের সূত্র—','logₐM = log_b M × logₐ b',['logₐM = log_b M + logₐ b','logₐM = log_b M / logₐ b','logₐM = logₐ b × M'],'বইয়ের সূত্র ৫।');
+M('7^(log₇ 9) =','৯',['৭','১৬','৬৩'],'a^(logₐb) = b।');
+M('log₂(2¹⁸) =','১৮',['২','৩৬','৯'],'logₐ(aˣ) = x।');
+M('ঋণাত্মক সংখ্যার লগারিদম—','নির্ণয় করা যায় না',['সবসময় ঋণাত্মক','সবসময় শূন্য','১'],'b > 0 হতে হবে।');
+M('y = aˣ এর ডোমেন ও রেঞ্জ—','ডোমেন R, রেঞ্জ (০, ∞)',['ডোমেন (০, ∞), রেঞ্জ R','দুটোই R','দুটোই (০, ∞)'],'aˣ সবসময় ধনাত্মক।');
+M('y = logₐx এর ডোমেন ও রেঞ্জ—','ডোমেন (০, ∞), রেঞ্জ R',['ডোমেন R, রেঞ্জ (০, ∞)','দুটোই R','ডোমেন [০, ∞)'],'logₐx শুধু x > 0 এ সংজ্ঞায়িত।');
+M('y = aˣ ও y = logₐx এর লেখচিত্র কোন রেখার সাপেক্ষে প্রতিসম?','y = x',['y = −x','x-অক্ষ','y-অক্ষ'],'বিপরীত ফাংশনের লেখচিত্র y = x এর সাপেক্ষে প্রতিসম।');
+(function(){
+  var done=0,sc=0;
+  QZ.forEach(function(q){var ord=q.o.map(function(t,i){return {t:t,c:i===0};});
+    for(var i=ord.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),k=ord[i];ord[i]=ord[j];ord[j]=k;}q.ord=ord;});
+  var h='';QZ.forEach(function(q,qi){h+='<div class="q" id="qq'+qi+'"><b>'+bn(qi+1)+'.</b> '+q.q+q.ord.map(function(o,oi){return '<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+o.t+'</button>';}).join('')+'<div class="fb" id="qe'+qi+'"></div></div>';});
+  $('quizbox').innerHTML=h;
+  $('quizbox').addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b||b.parentNode.dataset.done)return;
+    var qi=+b.dataset.q,q=QZ[qi],o=q.ord[+b.dataset.o];b.parentNode.dataset.done=1;done++;
+    var btns=b.parentNode.querySelectorAll('.opt');btns.forEach(function(x,i){if(q.ord[i].c)x.classList.add('good');});
+    if(o.c){sc++;$('qe'+qi).textContent='✅ ঠিক! '+q.e;}else{b.classList.add('bad');$('qe'+qi).textContent='❌ ভুল। '+q.e;}
+    $('qscore').textContent='স্কোর: '+bn(sc)+' / '+bn(done)+' (মোট '+bn(QZ.length)+'টি)';
+    try{if(done===QZ.length){localStorage.setItem('sl_done_math-exp-log','1');var xp=+(localStorage.getItem('sl_xp')||0);localStorage.setItem('sl_xp',xp+sc);}}catch(er){}
+  });
+})();
+/* ===== প্রশ্নোত্তর ===== */
+var QA=[
+ {h:'কাজ ও অনুশীলনী ৯.১',items:[
+  ['কাজ ক (১). (5^(n+2) + 35 × 5^(n−1)) / (4 × 5ⁿ)','5ⁿ·(25 + 35/5)/(4·5ⁿ) = (25 + 7)/4 = 8।'],
+  ['কাজ ক (২). (3⁴ · 3⁸) / 3¹⁴','3^(4+8−14) = 3⁻² = 1/9।'],
+  ['কাজ ঘ (২). 9^(2x) = 3^(x+1)','3^(4x) = 3^(x+1) ⇒ 4x = x + 1 ⇒ x = 1/3।'],
+  ['কাজ ঘ (৩). 2^(x+3) + 2^(x+1) = 320','2ˣ(8 + 2) = 320 ⇒ 2ˣ = 32 ⇒ x = 5।'],
+  ['কাজ ঘ (১). 4ˣ − 3^(x−½) = 3^(x+½) − 2^(2x−1)','4ˣ + 2^(2x−1) = 3^(x+½) + 3^(x−½) ⇒ (3/2)·4ˣ = 3ˣ(√3 + 1/√3) = 3ˣ·(4/√3) ⇒ (4/3)ˣ = 8/(3√3) = (4/3)^(3/2) ⇒ x = 3/2।'],
+  ['কাজ ঙ (২). [1 − 1{1 − (1 − x³)⁻¹}⁻¹]⁻¹ সরল করো','(1 − x³)⁻¹ = 1/(1 − x³)। 1 − ওটা = −x³/(1 − x³)। তার বিপরীত = −(1 − x³)/x³। 1 − (ওটা) = 1 + (1 − x³)/x³ = 1/x³। তার বিপরীত = x³।'],
+  ['৯ খ. 5ˣ + 3ʸ = 8 এবং 5^(x−1) + 3^(y−1) = 2','u = 5ˣ, v = 3ʸ ধরি: u + v = 8 এবং u/5 + v/3 = 2 ⇒ 3u + 5v = 30। v = 8 − u বসিয়ে 3u + 40 − 5u = 30 ⇒ u = 5, v = 3। তাই x = 1, y = 1।'],
+  ['৯ গ. 4^(3y−2) = 16^(x+y) এবং 3^(x+2y) = 9^(2x+1)','প্রথমে 2(3y − 2) = 4(x + y) ⇒ y = 2x + 2। দ্বিতীয়ে x + 2y = 2(2x + 1) ⇒ 2y = 3x + 2। বসিয়ে 4x + 4 = 3x + 2 ⇒ x = −2, y = −2।'],
+  ['উদা ১২ (সম্পর্কিত). aˣ = bʸ = cᶻ এবং b² = ac হলে 1/x + 1/z = 2/y','aˣ = bʸ = cᶻ = k ধরলে a = k^(1/x), b = k^(1/y), c = k^(1/z)। b² = ac ⇒ k^(2/y) = k^(1/x + 1/z) ⇒ 2/y = 1/x + 1/z।']]},
+ {h:'অনুশীলনী ৯.২ (বাছাই করা)',items:[
+  ['১ খ. log_(√a)b × log_(√b)c × log_(√c)a = 8','log_(√a)b = 2·logₐb। তাই গুণফল = 8·(logₐb · log_bc · log_ca) = 8 × 1 = 8।'],
+  ['২ গ. log_k(1 + x)/log_k x = 2 হলে x = (1 + √5)/2','log_k(1 + x) = 2log_k x = log_k x² ⇒ 1 + x = x² ⇒ x² − x − 1 = 0 ⇒ x = (1 + √5)/2 (ধনাত্মক মূল, কারণ x > 0)।'],
+  ['৪. বিপরীত ফাংশন: (ক) y = 1 − 2ˣ (খ) y = log₁₀x (গ) y = x², x > 0','(ক) 2ˣ = 1 − y ⇒ x = log₂(1 − y), তাই f⁻¹(x) = log₂(1 − x)। (খ) f⁻¹(x) = 10ˣ। (গ) f⁻¹(x) = √x।'],
+  ['৪. (ক) এর ডোমেন ও রেঞ্জ','y = 1 − 2ˣ এর ডোমেন R। 2ˣ > 0 ⇒ y < 1, তাই রেঞ্জ (−∞, 1)। (খ) ডোমেন (0, ∞), রেঞ্জ R। (গ) ডোমেন (0, ∞), রেঞ্জ (0, ∞)।'],
+  ['৫. f(x) = ln((1 − x)/(1 + x)) এর ডোমেন ও রেঞ্জ','(1 − x)/(1 + x) > 0 ⇒ −1 < x < 1। ডোমেন (−1, 1)। y = ln((1 − x)/(1 + x)) ⇒ x = (1 − eʸ)/(1 + eʸ), y এর সব বাস্তব মানে বাস্তব। রেঞ্জ R।'],
+  ['৬ ক. f(x) = |x|, −5 ≤ x ≤ 5','ডোমেন [−5, 5]। রেঞ্জ [0, 5]। লেখচিত্র "V" আকৃতির।'],
+  ['৬ খ. f(x) = x + |x|, −2 ≤ x ≤ 2','x < 0 হলে f = 0, x ≥ 0 হলে f = 2x। ডোমেন [−2, 2], রেঞ্জ [0, 4]।'],
+  ['৬ গ. f(x) = |x|/x (x ≠ 0), f(0) = 0','x > 0 ⇒ 1, x < 0 ⇒ −1, x = 0 ⇒ 0। ডোমেন R, রেঞ্জ {−1, 0, 1}।'],
+  ['৮. y = 2ˣ: (ক) ডোমেন ও রেঞ্জ (গ) বিপরীত','(ক) ডোমেন R, রেঞ্জ (0, ∞)। (গ) এক-এক ও সার্বিক, তাই বিপরীত আছে: f⁻¹(x) = log₂x, ডোমেন (0, ∞), রেঞ্জ R।']]},
+ {h:'উদাহরণ ও নমুনা প্রশ্ন',items:[
+  ['উদা ২৪. a^(log_kb − log_kc) × b^(log_kc − log_ka) × c^(log_ka − log_kb) = 1','p ধরে log_k p = (log_kb − log_kc)log_ka + (log_kc − log_ka)log_kb + (log_ka − log_kb)log_kc = 0 (সব কেটে যায়)। তাই p = k⁰ = 1।'],
+  ['উদা ২৬. log_ap × log_pq × log_qr × log_rb = log_ab','ভিত্তি পরিবর্তনের সূত্রে জোড়ায় জোড়ায় গুণ: log_ap·log_pq = log_aq; তারপর log_aq·log_qr = log_ar; তারপর log_ar·log_rb = log_ab।'],
+  ['সৃজনশীল ৫ (ক). f(x) = 3^(2x+2) এর ডোমেন','3^(2x+2) যেকোনো বাস্তব x এর জন্য সংজ্ঞায়িত। ডোমেন R।'],
+  ['সৃজনশীল ৫ (খ). f(x) + g(x) = 36 (g(x) = 27^(x+1))','u = 3ˣ ধরি: 9u² + 27u³ = 36 ⇒ 3u³ + u² − 4 = 0 ⇒ (u − 1)(3u² + 4u + 4) = 0। দ্বিতীয় উৎপাদক সবসময় ধনাত্মক। u = 1 ⇒ 3ˣ = 1 ⇒ x = 0।'],
+  ['সৃজনশীল ৫ (গ). q(x) = g(x)/f(x) এর ডোমেন ও রেঞ্জ','q = 27·3^(3x)/(9·3^(2x)) = 3^(x+1)। ডোমেন R, রেঞ্জ (0, ∞)।'],
+  ['সংক্ষিপ্ত ৬ (খ). a = 2^(1/3) + 2^(−1/3) হলে 2a³ − 6a = 5','a³ = 2 + 1/2 + 3a ⇒ a³ − 3a = 5/2 ⇒ 2a³ − 6a = 5।'],
+  ['সংক্ষিপ্ত ৬ (গ). f(x) = ln(x − 2)','x − 2 > 0 ⇒ ডোমেন (2, ∞)। রেঞ্জ R।']]}
+];
+(function(){var h='';QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){h+='<details class="ex"><summary><b>'+it[0]+'</b></summary><p>'+it[1]+'</p></details>';});});$('qabox').innerHTML=h;})();
+
+</script>
+</body>
+</html>

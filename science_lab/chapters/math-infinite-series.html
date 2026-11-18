@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>অসীম ধারা (উচ্চতর গণিত অধ্যায় ৭) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+canvas{width:100%;height:auto;max-width:700px;display:block;margin:8px auto;border-radius:12px;background:#fff;border:1px solid var(--line);touch-action:none}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.ctl input[type=range]{width:200px;max-width:100%}
+.ctl select,.ctl input[type=text],.ans input{font-family:inherit;font-size:16px;padding:6px 8px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;max-width:100%;width:auto}
+.eqb{background:#eaf7f5;border-radius:10px;padding:10px;text-align:center;font-weight:700;color:var(--navy);margin:8px 0;font-size:18px;overflow-x:auto}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.fb{font-weight:700;margin-top:6px}
+.res{background:#eef6ff;border-radius:10px;padding:10px 12px;margin:8px 0;line-height:1.9}
+.res b{color:#0b5ed7}
+.chips button{margin:3px;padding:6px 12px;border-radius:999px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.chips button.on{background:#0b5ed7;color:#fff;border-color:#0b5ed7}
+.step{background:#fff;border:1px solid var(--line);border-left:5px solid #2a9d8f;border-radius:8px;padding:8px 12px;margin:6px 0;display:none}
+.step.show{display:block}
+.ex{border:2px dashed #b8c7d6;border-radius:12px;padding:10px 14px;margin:14px 0;background:#fcfdff}
+.q{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:#fff}
+.q .opt{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 10px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:16px;cursor:pointer}
+.q .opt.good{background:#d8f3e3;border-color:#2a9d8f}
+.q .opt.bad{background:#fddcdc;border-color:#e76f51}
+.m{font-family:system-ui,'Segoe UI',Arial,sans-serif}
+table.t{border-collapse:collapse;margin:8px 0}
+table.t td,table.t th{border:1px solid #cfd9e1;padding:5px 12px;text-align:center}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">📐 গণিত &rsaquo; উচ্চতর গণিত &rsaquo; অধ্যায় ৭ (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">♾️ অসীম ধারা</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#ex">🪜 ধাপে ধাপে</a><a href="#lab1">🔢 অনুক্রম</a><a href="#lab2">📊 আংশিক সমষ্টি</a><a href="#lab3">🔁 আবৃত্ত দশমিক</a><a href="#lab4">🎚️ কখন সমষ্টি আছে</a><a href="#prac">✍️ প্র্যাকটিস</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্নোত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায়ে শিখবে:</b> অনুক্রম ও অসীম ধারা কী, আংশিক সমষ্টি, অসীম গুণোত্তর ধারার সমষ্টি কখন থাকে ও কত, এবং আবৃত্ত দশমিককে সাধারণ ভগ্নাংশে রূপান্তর।</div>
+
+    <h3>১. অনুক্রম ⭐⭐</h3>
+    <ul>
+      <li>রাশিগুলো একটি নিয়মে সাজানো থাকলে তাকে <b>অনুক্রম (Sequence)</b> বলে। যেমন 1, 4, 9, 16, … যেখানে n তম পদ = n²।</li>
+      <li>অনুক্রম আসলে একটি ফাংশন: f(n) = n²। n তম পদকে u<sub>n</sub> লেখা হয়। সাধারণ পদ জানলে যেকোনো পদ বের করা যায়।</li>
+      <li>উদাহরণ: 1/2, 1/2², 1/2³, … এর সাধারণ পদ 1/2ⁿ। 3, 1, −1, −3, … এর সাধারণ পদ 5 − 2n। 1, 2/3, 3/5, 4/7, … এর সাধারণ পদ n/(2n − 1)।</li>
+      <li>n যত বড় হয়, কিছু অনুক্রমের পদ একটি মানের দিকে এগোয় (যেমন 1/n → 0), আর কিছু অনুক্রম এগোয় না (যেমন n²)।</li>
+    </ul>
+
+    <h3>২. ধারা ও আংশিক সমষ্টি ⭐⭐⭐</h3>
+    <ul>
+      <li>অনুক্রমের পদগুলো + চিহ্নে যুক্ত করলে <b>ধারা (Series)</b> হয়: u₁ + u₂ + u₃ + … + uₙ + …</li>
+      <li>পদসংখ্যা সসীম হলে <b>সসীম ধারা</b>, অসীম হলে <b>অসীম ধারা</b>।</li>
+      <li><b>n তম আংশিক সমষ্টি</b> Sₙ = u₁ + u₂ + … + uₙ (প্রথম n টি পদের সমষ্টি)। S₁ = u₁, S₂ = u₁ + u₂ ইত্যাদি।</li>
+      <li>n বাড়ালে Sₙ যদি একটি নির্দিষ্ট সংখ্যার দিকে এগোয়, তাহলে ধারার <b>সমষ্টি আছে</b>। না এগোলে <b>সমষ্টি নেই</b>।</li>
+      <li>উদাহরণ ১: 1 + 2 + 3 + … এ Sₙ = n(n+1)/2, n বাড়লে Sₙ অসীম বড় হয় ⇒ সমষ্টি নেই। আর 1 − 1 + 1 − 1 + … এ Sₙ একবার 1, একবার 0 ⇒ সমষ্টি নেই।</li>
+    </ul>
+
+    <h3>৩. অসীম গুণোত্তর ধারা ⭐⭐⭐</h3>
+    <div class="eqb">a + ar + ar² + ar³ + … (প্রথম পদ a, সাধারণ অনুপাত r)</div>
+    <ul>
+      <li>n তম পদ = <b>arⁿ⁻¹</b>। প্রথম n পদের সমষ্টি: r &lt; 1 হলে Sₙ = a(1 − rⁿ)/(1 − r), r &gt; 1 হলে Sₙ = a(rⁿ − 1)/(r − 1)।</li>
+      <li><b>|r| &lt; 1 হলে</b> (−1 &lt; r &lt; 1): n বাড়লে rⁿ → 0, তাই Sₙ → a/(1 − r)। <b>অসীমতক সমষ্টি S∞ = a / (1 − r)</b>।</li>
+      <li><b>|r| &gt; 1 হলে:</b> |rⁿ| অসীম বড় হয়, তাই সমষ্টি <b>নেই</b>।</li>
+      <li><b>r = −1:</b> ধারা a − a + a − a …, Sₙ একবার a একবার 0 ⇒ সমষ্টি নেই।</li>
+      <li><b>r = 1:</b> ধারা a + a + a + …, Sₙ = na অসীম বড় হয় ⇒ সমষ্টি নেই।</li>
+      <li>সারকথা: সমষ্টি আছে কেবল <b>−1 &lt; r &lt; 1</b> হলে এবং তখন S = a/(1 − r)।</li>
+    </ul>
+    <div class="warn">⚠️ <b>সাধারণ ভুল:</b> ① r = 1 বা |r| ≥ 1 হলেও a/(1−r) বসিয়ে দেওয়া। ② সাধারণ অনুপাত r বের করতে দ্বিতীয় পদ ÷ প্রথম পদ না করে উল্টো করা। ③ n তম পদ arⁿ⁻¹, arⁿ নয়।</div>
+
+    <h3>৪. আবৃত্ত (পৌনঃপুনিক) দশমিককে ভগ্নাংশে ⭐⭐⭐</h3>
+    <ul>
+      <li>আবৃত্ত অংশকে অসীম গুণোত্তর ধারা বানাও, তারপর S = a/(1 − r)।</li>
+      <li>0.5̇ = 0.5 + 0.05 + 0.005 + … এখানে a = 0.5, r = 0.1 ⇒ S = 0.5/0.9 = <b>5/9</b>।</li>
+      <li>0.1̇2̇ = 0.12 + 0.0012 + … এখানে a = 0.12, r = 0.01 ⇒ S = 0.12/0.99 = <b>4/33</b>।</li>
+      <li>1.231̇ (231 আবৃত্ত) = 1 + (0.231 + 0.000231 + …) এখানে a = 0.231, r = 0.001 ⇒ 1 + 0.231/0.999 = 1 + 231/999 = <b>410/333</b>।</li>
+      <li>সূত্র: আবৃত্ত অংশে m টি অঙ্ক হলে r = 1/10ᵐ।</li>
+    </ul>
+
+    <h3>৫. x এর উপর শর্ত (উদাহরণ ৮) ⭐⭐</h3>
+    <ul>
+      <li>ধারা 1/(2x+1) + 1/(2x+1)² + 1/(2x+1)³ + …: প্রথম পদ a = 1/(2x+1) এবং r = 1/(2x+1)।</li>
+      <li>সমষ্টি থাকতে |1/(2x+1)| &lt; 1 ⇒ |2x + 1| &gt; 1 ⇒ <b>x &gt; 0 অথবা x &lt; −1</b>।</li>
+      <li>তখন S∞ = a/(1 − r) = <b>1/(2x)</b>।</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="ex">
+    <h2>🪜 ধাপে ধাপে</h2>
+    <div class="say">👉 "পরের ধাপ" চাপতে থাকো।</div>
+
+    <div class="ex" id="E1"><b>১) S∞ = a/(1 − r) কেন?</b>
+      <div class="step">ধাপ ১: Sₙ = a + ar + … + arⁿ⁻¹। দুই পক্ষকে r দিয়ে গুণ করলে r·Sₙ = ar + ar² + … + arⁿ।</div>
+      <div class="step">ধাপ ২: বিয়োগ করলে Sₙ − r·Sₙ = a − arⁿ, অর্থাৎ Sₙ(1 − r) = a(1 − rⁿ)। তাই <b>Sₙ = a(1 − rⁿ)/(1 − r)</b> (r ≠ 1)।</div>
+      <div class="step">ধাপ ৩: যদি |r| &lt; 1 হয়, n অনেক বড় করলে rⁿ প্রায় 0 হয় (যেমন (0.5)²⁰ ≈ 0.000001)।</div>
+      <div class="step">ধাপ ৪: তখন Sₙ প্রায় a(1 − 0)/(1 − r) = <b>a/(1 − r)</b> ✔। এটাই অসীমতক সমষ্টি S∞।</div>
+      <button class="btn" data-ex="E1">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E1">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E2"><b>২) 1/3 + 1/3² + 1/3³ + …</b> (বই উদাহরণ ২ক)
+      <div class="step">ধাপ ১: প্রথম পদ a = 1/3। দ্বিতীয় পদ 1/9।</div>
+      <div class="step">ধাপ ২: r = (1/9) ÷ (1/3) = 1/3। |r| = 1/3 &lt; 1 ⇒ সমষ্টি আছে।</div>
+      <div class="step">ধাপ ৩: S∞ = a/(1 − r) = (1/3)/(1 − 1/3) = (1/3)/(2/3) = <b>1/2</b>।</div>
+      <div class="step">ধাপ ৪: যাচাই: 1/3 + 1/9 + 1/27 + 1/81 = 0.333 + 0.111 + 0.037 + 0.0123 ≈ 0.494। 0.5 এর খুব কাছে ✔।</div>
+      <button class="btn" data-ex="E2">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E2">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E3"><b>৩) 1.231̇ (আবৃত্ত 231) কে ভগ্নাংশে</b> (বই উদাহরণ ৩গ)
+      <div class="step">ধাপ ১: 1.231231231… = 1 + (0.231 + 0.000231 + 0.000000231 + …)।</div>
+      <div class="step">ধাপ ২: বন্ধনীর ভেতরে অসীম গুণোত্তর ধারা: a = 0.231, r = 0.000231/0.231 = 0.001।</div>
+      <div class="step">ধাপ ৩: S = 0.231/(1 − 0.001) = 0.231/0.999 = 231/999 (উপরে-নিচে 1000 গুণ)।</div>
+      <div class="step">ধাপ ৪: 231/999 কে সংক্ষেপ করি (উভয়কে 3 দিয়ে ভাগ): 77/333।</div>
+      <div class="step">ধাপ ৫: মোট = 1 + 77/333 = <b>410/333</b> ✔। যাচাই: 410 ÷ 333 = 1.231231… ✔।</div>
+      <button class="btn" data-ex="E3">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E3">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E4"><b>৪) 1/(2x+1) + 1/(2x+1)² + …</b> (বই উদাহরণ ৮): x = 3/2 হলে পঞ্চম পদ ও প্রথম ১০ পদের সমষ্টি
+      <div class="step">ধাপ ১: x = 3/2 হলে 2x + 1 = 4। ধারা 1/4 + 1/4² + 1/4³ + …। a = 1/4, r = 1/4।</div>
+      <div class="step">ধাপ ২: পঞ্চম পদ = ar⁴ = (1/4)·(1/4)⁴ = <b>1/4⁵ = 1/1024</b>।</div>
+      <div class="step">ধাপ ৩: S₁₀ = a(1 − r¹⁰)/(1 − r) = (1/4)(1 − 1/4¹⁰)/(3/4) = (1/3)(1 − 1/4¹⁰)।</div>
+      <div class="step">ধাপ ৪: 4¹⁰ = 1048576। S₁₀ = (1/3)(1 − 0.00000095) ≈ <b>0.33333</b>। অসীমতক সমষ্টি 1/3 এর খুব কাছে ✔।</div>
+      <button class="btn" data-ex="E4">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E4">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E5"><b>৫) তিন পদের সমষ্টি 24⅘ ও গুণফল 64</b> (অনুশীলনী ৭ এর ১০): সাধারণ অনুপাত 1/5 হলে অসীমতক সমষ্টি
+      <div class="step">ধাপ ১: তিন ক্রমিক পদ a/r, a, ar। গুণফল = a³ = 64 ⇒ a = 4 (মাঝের পদ)।</div>
+      <div class="step">ধাপ ২: সমষ্টি 4/r + 4 + 4r = 124/5 ⇒ 4(r + 1/r) = 124/5 − 4 = 104/5 ⇒ r + 1/r = 26/5।</div>
+      <div class="step">ধাপ ৩: 5r² − 26r + 5 = 0 ⇒ (5r − 1)(r − 5) = 0 ⇒ r = 1/5 বা r = 5।</div>
+      <div class="step">ধাপ ৪: r = 1/5 হলে তিন পদ 20, 4, 4/5 (যোগফল 24.8 ✔, গুণফল 20 × 4 × 0.8 = 64 ✔)। প্রথম পদ 20।</div>
+      <div class="step">ধাপ ৫: S∞ = 20/(1 − 1/5) = 20/(4/5) = <b>25</b> ✔।</div>
+      <button class="btn" data-ex="E5">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E5">আবার শুরু</button>
+    </div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🔢 ল্যাব ১: অনুক্রম ও সীমা</h2>
+    <div class="say">👉 অনুক্রম বেছে নাও। n যত বাড়ে পদগুলো কোথায় যায় দেখো। ε স্লাইডার দিয়ে দেখো, কত তম পদের পর সব পদ সীমার ε এর মধ্যে থাকে (বই অনুশীলনী ৭ এর ৫ নং প্রশ্নের মতো)।</div>
+    <div class="chips" id="s1m"></div>
+    <div class="ctl"><label>পদ দেখাও n = <span id="s1nv"></span></label><input type="range" id="s1n" min="5" max="40" step="1" value="20">
+    <label>ε = <span id="s1ev"></span></label><input type="range" id="s1e" min="1" max="8" step="1" value="3"></div>
+    <canvas id="s1cv" width="600" height="320"></canvas>
+    <div class="res m" id="s1r"></div>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>📊 ল্যাব ২: গুণোত্তর ধারার আংশিক সমষ্টি</h2>
+    <div class="say">👉 a ও r বদলাও। প্রতিটি বিন্দু একটি আংশিক সমষ্টি Sₙ। |r| &lt; 1 হলে বিন্দুগুলো একটি সবুজ রেখার (S∞) দিকে এগোবে। |r| ≥ 1 হলে এগোবে না, বাড়তে বা লাফাতে থাকবে।</div>
+    <div class="ctl"><label>a = <span id="s2av"></span></label><input type="range" id="s2a" min="-6" max="6" step="1" value="4">
+    <label>r = <span id="s2rv"></span></label><input type="range" id="s2r" min="-1.6" max="1.6" step="0.05" value="0.5">
+    <label>n = <span id="s2nv"></span></label><input type="range" id="s2n" min="2" max="40" step="1" value="20"></div>
+    <canvas id="s2cv" width="600" height="340"></canvas>
+    <div class="res m" id="s2r2"></div>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🔁 ল্যাব ৩: আবৃত্ত দশমিক থেকে ভগ্নাংশ</h2>
+    <div class="say">👉 পূর্ণ অংশ, আবৃত্ত-না-হওয়া অংশ ও আবৃত্ত অংশ (বইয়ের মতো বন্ধনীর ভেতরের অঙ্ক) লেখো। ল্যাব অসীম গুণোত্তর ধারা বানিয়ে ভগ্নাংশ বের করবে এবং ভাগ করে মিলিয়ে দেখাবে। বইয়ের তিনটি উদাহরণ নিচের বাটনে আছে।</div>
+    <div class="chips" id="s3m"></div>
+    <div class="ctl"><label>পূর্ণ অংশ <input type="text" id="s3i" maxlength="3" size="4" value="1"></label>
+    <label>আবৃত্ত নয় (দশমিকের পর) <input type="text" id="s3p" maxlength="4" size="6" value=""></label>
+    <label>আবৃত্ত অংশ <input type="text" id="s3q" maxlength="6" size="8" value="231"></label></div>
+    <div class="eqb" id="s3e"></div>
+    <div class="res m" id="s3r"></div>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🎚️ ল্যাব ৪: x এর কোন মানে সমষ্টি আছে? (উদাহরণ ৮)</h2>
+    <div class="say">👉 ধারা: 1/(2x+1) + 1/(2x+1)² + 1/(2x+1)³ + …। x টেনে দেখো। সবুজ অংশে (x &gt; 0 বা x &lt; −1) সমষ্টি আছে এবং সমান 1/(2x)। লাল অংশে নেই।</div>
+    <div class="ctl"><label>x = <span id="s4xv"></span></label><input type="range" id="s4x" min="-4" max="4" step="0.05" value="1.5" style="width:320px"></div>
+    <canvas id="s4cv" width="600" height="150"></canvas>
+    <div class="res m" id="s4r"></div>
+  </section>
+
+  <section class="panel" id="prac">
+    <h2>✍️ প্র্যাকটিস (বইয়ের ধাঁচে)</h2>
+    <div class="say">👉 ভগ্নাংশ লিখতে পারো (যেমন 1/12) অথবা দশমিকে ২ ঘর।</div>
+    <div id="pracbox"></div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="fb" id="qscore"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>📖 বই থেকে প্রশ্নোত্তর</h2>
+    <div id="qabox"></div>
+  </section>
+</div>
+
+<footer class="site">&copy; ShikboLab · অসীম ধারা (উচ্চতর গণিত অধ্যায় ৭)</footer>
+<script>
+var BNS='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BNS[d];});}
+function en(s){return String(s).replace(/[০-৯]/g,function(d){return BNS.indexOf(d);});}
+function $(id){return document.getElementById(id);}
+function R2(c){var d=Math.min(2,window.devicePixelRatio||1),w=c.width,h=c.height;c.width=w*d;c.height=h*d;var x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return x;}
+function fm(v,d){d=(d===undefined)?2:d;var k=Math.pow(10,d),r=Math.round(v*k)/k;if(Math.abs(r)<1e-9)r=0;return bn(String(r).replace('-','−'));}
+function sg(v){return v<0?'−'+bn(-v):bn(v);}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t;}return a;}
+function frac(n,d){if(d<0){n=-n;d=-d;}var g=gcd(n,d)||1;n/=g;d/=g;return d===1?sg(n):sg(n)+'/'+bn(d);}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ex){var box=$(b.dataset.ex),s=box.querySelectorAll('.step:not(.show)');if(s.length){s[0].classList.add('show');}if(s.length<=1)b.disabled=true;}
+  if(b.dataset.rs){var bx=$(b.dataset.rs);bx.querySelectorAll('.step').forEach(function(x){x.classList.remove('show');});bx.querySelector('[data-ex]').disabled=false;}
+});
+/* ---- গ্রাফ হেল্পার ---- */
+function Plot(id){var cv=$(id),W=+cv.getAttribute('width'),H=+cv.getAttribute('height'),x=R2(cv);return {x:x,W:W,H:H};}
+function nice(r){var p=Math.pow(10,Math.floor(Math.log10(r))),m=r/p;return (m<1.5?1:m<3.5?2:m<7.5?5:10)*p;}
+function drawPlot(P,xr,yr,fns,pts,opt){
+  opt=opt||{};var x=P.x,W=P.W,H=P.H,L=34,Rr=12,T=12,B=26;x.clearRect(0,0,W,H);x.fillStyle='#fff';x.fillRect(0,0,W,H);
+  function X(v){return L+(v-xr[0])/(xr[1]-xr[0])*(W-L-Rr);} function Y(v){return H-B-(v-yr[0])/(yr[1]-yr[0])*(H-T-B);}
+  var sx=nice((xr[1]-xr[0])/10),sy=nice((yr[1]-yr[0])/8);
+  x.lineWidth=1;x.strokeStyle='#e6edf2';x.fillStyle='#6b7f95';x.font='11px system-ui';x.textAlign='center';
+  for(var gx=Math.ceil(xr[0]/sx)*sx;gx<=xr[1]+1e-9;gx+=sx){x.beginPath();x.moveTo(X(gx),T);x.lineTo(X(gx),H-B);x.stroke();if(Math.abs(gx)>1e-9)x.fillText(fm(gx,2),X(gx),Math.min(Math.max(Y(0)+14,T+10),H-8));}
+  x.textAlign='right';
+  for(var gy=Math.ceil(yr[0]/sy)*sy;gy<=yr[1]+1e-9;gy+=sy){x.beginPath();x.moveTo(L,Y(gy));x.lineTo(W-Rr,Y(gy));x.stroke();if(Math.abs(gy)>1e-9)x.fillText(fm(gy,2),Math.min(Math.max(X(0)-4,L+22),W-Rr),Y(gy)+4);}
+  x.strokeStyle='#46586a';x.lineWidth=1.6;
+  if(xr[0]<0&&xr[1]>0){x.beginPath();x.moveTo(X(0),T);x.lineTo(X(0),H-B);x.stroke();}
+  if(yr[0]<0&&yr[1]>0){x.beginPath();x.moveTo(L,Y(0));x.lineTo(W-Rr,Y(0));x.stroke();}
+  x.save();x.beginPath();x.rect(L,T,W-L-Rr,H-T-B);x.clip();
+  (opt.hl||[]).forEach(function(h){x.strokeStyle=h.c;x.lineWidth=1.5;x.setLineDash([6,4]);x.beginPath();x.moveTo(L,Y(h.y));x.lineTo(W-Rr,Y(h.y));x.stroke();x.setLineDash([]);});
+  fns.forEach(function(f){x.strokeStyle=f.c;x.lineWidth=3;x.beginPath();var pen=false,N=500;for(var i=0;i<=N;i++){var v=xr[0]+(xr[1]-xr[0])*i/N,y=f.f(v);if(!isFinite(y)||isNaN(y)||y>yr[1]*3||y<yr[0]*3-50){pen=false;continue;}if(!pen){x.moveTo(X(v),Y(y));pen=true;}else x.lineTo(X(v),Y(y));}x.stroke();});
+  (opt.curves||[]).forEach(function(cu){x.strokeStyle=cu.c;x.lineWidth=2.5;cu.paths.forEach(function(pth){x.beginPath();pth.forEach(function(p,i){if(i)x.lineTo(X(p[0]),Y(p[1]));else x.moveTo(X(p[0]),Y(p[1]));});x.stroke();});});
+  x.restore();
+  pts.forEach(function(p){x.fillStyle=p.c||'#1b9a6f';x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.arc(X(p[0]),Y(p[1]),6,0,6.2832);x.fill();x.stroke();if(p[2]){x.fillStyle='#1f3a5f';x.font='700 12px system-ui';x.textAlign='center';x.fillText(p[2],Math.min(Math.max(X(p[0]),40),W-40),Y(p[1])-10);}});
+}
+/* ===== ল্যাব ১ ===== */
+var SQ=[
+ {n:'১/২ⁿ',f:function(n){return Math.pow(2,-n);},lim:0},
+ {n:'৫ − ২n',f:function(n){return 5-2*n;},lim:null,note:'n বাড়লে পদ ঋণাত্মক দিকে অসীম বড় হয়, কোনো সীমা নেই।'},
+ {n:'n/(২n − ১)',f:function(n){return n/(2*n-1);},lim:0.5},
+ {n:'১/(n² + ১)',f:function(n){return 1/(n*n+1);},lim:0},
+ {n:'১/n',f:function(n){return 1/n;},lim:0},
+ {n:'(১ − (−১)ⁿ)/২',f:function(n){return (1-Math.pow(-1,n))/2;},lim:null,note:'পদগুলো একবার ১, একবার ০ হয়, কোনো একটি মানের দিকে এগোয় না।'},
+ {n:'n²',f:function(n){return n*n;},lim:null,note:'n বাড়লে পদ অসীম বড় হয়, কোনো সীমা নেই।'}];
+var S1i=0,P1=Plot('s1cv');
+function lab1(){
+  var N=+$('s1n').value,e=+$('s1e').value,q=SQ[S1i],eps=Math.pow(10,-e);$('s1nv').textContent=bn(N);$('s1ev').textContent='১০^−'+bn(e);
+  var pts=[],ys=[],i;for(i=1;i<=N;i++){var v=q.f(i);pts.push([i,v,'']);ys.push(v);}
+  if(q.lim!==null)ys.push(q.lim);ys.push(0);
+  var y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys),pad=(y1-y0)*.12+.1;
+  var hl=q.lim!==null?[{y:q.lim,c:'#1b9a6f'}]:[];
+  drawPlot(P1,[0,N+1],[y0-pad,y1+pad],[],pts.map(function(p){return [p[0],p[1],'','#2a6fdb'];}),{hl:hl});
+  var h='সাধারণ পদ uₙ = <b>'+q.n+'</b><br>প্রথম কয়েকটি পদ: '+[1,2,3,4,5,6].map(function(k){return fm(q.f(k),4);}).join(', ')+', …<br>u'+bn(N)+' = <b>'+fm(q.f(N),6)+'</b><br>';
+  if(q.lim!==null){var last=0,lim=2000000;for(i=1;i<=lim;i++){if(Math.abs(q.f(i)-q.lim)>=eps)last=i;}
+    h+='<b>সীমা (limit) = '+fm(q.lim,3)+'</b> (সবুজ রেখা)। n যত বাড়ে, uₙ এই মানের কাছে যায়।<br>ε = ১০^−'+bn(e)+' ধরলে: '+(last>=lim?'সীমার ε এর মধ্যে আসতে n > ২০,০০,০০০ লাগে।':'<b>n ≥ '+bn(last+1)+'</b> হলে সব পদ সীমা থেকে ε এর কম দূরে (|uₙ − '+fm(q.lim,3)+'| &lt; ε)।');
+    h+='<br>যাচাই: u'+bn(last+1)+' = '+fm(q.f(last+1),10)+', সীমা থেকে দূরত্ব = '+fm(Math.abs(q.f(last+1)-q.lim),10)+(last>=lim?'':' &lt; ε ✔');}
+  else h+='<b>এই অনুক্রমের কোনো সীমা নেই।</b> '+q.note;
+  $('s1r').innerHTML=h;
+}
+$('s1m').innerHTML=SQ.map(function(q,i){return '<button data-i="'+i+'" class="'+(i===0?'on':'')+'">'+q.n+'</button>';}).join('');
+$('s1m').onclick=function(e){var b=e.target.closest('button');if(!b)return;S1i=+b.dataset.i;[].forEach.call($('s1m').children,function(z){z.classList.toggle('on',z===b);});lab1();};
+$('s1n').oninput=lab1;$('s1e').oninput=lab1;lab1();
+/* ===== ল্যাব ২ ===== */
+var P2=Plot('s2cv');
+function lab2(){
+  var a=+$('s2a').value,r=Math.round(+$('s2r').value*100)/100,n=+$('s2n').value;$('s2av').textContent=sg(a);$('s2rv').textContent=r<0?'−'+bn(String(-r)):bn(String(r));$('s2nv').textContent=bn(n);
+  var S=[],s=0,i;for(i=0;i<n;i++){s+=a*Math.pow(r,i);S.push(s);}
+  var conv=Math.abs(r)<1,Sinf=conv?a/(1-r):null,ys=S.slice();ys.push(0);if(conv)ys.push(Sinf);
+  var y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys),pad=(y1-y0)*.12+.5;
+  drawPlot(P2,[0,n+1],[y0-pad,y1+pad],[],S.map(function(v,k){return [k+1,v,'','#2a6fdb'];}),{hl:conv?[{y:Sinf,c:'#1b9a6f'}]:[]});
+  var h='ধারা: '+fm(a,0)+' + ('+fm(a*r,3)+') + ('+fm(a*r*r,3)+') + … (a = '+sg(a)+', r = '+fm(r,2)+')<br>n তম পদ = arⁿ⁻¹ = '+fm(a*Math.pow(r,n-1),4)+'<br>';
+  if(a===0)h+='a = ০ হলে সব পদ ০।';
+  else{h+='S'+bn(n)+' (সরাসরি যোগ করে) = <b>'+fm(S[n-1],4)+'</b>';
+    if(Math.abs(r-1)>1e-9){var fo=a*(1-Math.pow(r,n))/(1-r);h+=' এবং সূত্রে a(১ − rⁿ)/(১ − r) = <b>'+fm(fo,4)+'</b> '+(Math.abs(fo-S[n-1])<1e-6*Math.max(1,Math.abs(fo))?'✔ মিলেছে':'✘')+'<br>';}else h+=' এবং r = ১ হলে Sₙ = na = '+fm(n*a,0)+'<br>';
+    if(conv)h+='|r| &lt; ১ ⇒ <b>সমষ্টি আছে</b>: S∞ = a/(১ − r) = '+sg(a)+'/'+fm(1-r,2)+' = <b>'+fm(Sinf,4)+'</b>। S'+bn(n)+' থেকে S∞ এর পার্থক্য = '+fm(Math.abs(Sinf-S[n-1]),6)+' (n বাড়ালে আরও কমবে)।';
+    else if(Math.abs(r+1)<1e-9)h+='r = −১ ⇒ Sₙ একবার a, একবার ০ হয়। <b>সমষ্টি নেই</b> (লাফাতে থাকে)।';
+    else if(Math.abs(r-1)<1e-9)h+='r = ১ ⇒ Sₙ = na অসীম বড় হয়। <b>সমষ্টি নেই</b>।';
+    else h+='|r| &gt; ১ ⇒ |rⁿ| অসীম বড় হয়, Sₙ কোনো নির্দিষ্ট মানের কাছে যায় না। <b>সমষ্টি নেই</b>।';}
+  $('s2r2').innerHTML=h;
+}
+['s2a','s2r','s2n'].forEach(function(i){$(i).oninput=lab2;});lab2();
+/* ===== ল্যাব ৩ ===== */
+function big(s){return s===''?0n:BigInt(s);}
+function gcdB(a,b){while(b){var t=a%b;a=b;b=t;}return a<0n?-a:a;}
+var PRE=[['০.৫̇',['0','','5']],['০.১̇২̇',['0','','12']],['১.২৩১̇',['1','','231']],['০.০৮৩̇',['0','08','3']],['০.৯̇',['0','','9']]];
+function lab3(){
+  var I=$('s3i').value.replace(/[^0-9০-৯]/g,''),Pp=$('s3p').value.replace(/[^0-9০-৯]/g,''),Q=$('s3q').value.replace(/[^0-9০-৯]/g,'');I=en(I);Pp=en(Pp);Q=en(Q);
+  var k=Pp.length,m=Q.length;
+  $('s3e').innerHTML=bn(I||'0')+'.'+bn(Pp)+(m?'<span style="text-decoration:overline">'+bn(Q)+'</span>':'')+' = '+bn(I||'0')+'.'+bn(Pp)+bn(Q)+bn(Q)+bn(Q)+'…';
+  var h='';
+  if(!m||/^0+$/.test(Q)){var den0=10n**BigInt(k),num0=big(I)*den0+big(Pp),g0=gcdB(num0,den0)||1n;h='আবৃত্ত অংশ নেই (বা শুধু ০), এটি সসীম দশমিক: '+bn((num0/g0).toString())+'/'+bn((den0/g0).toString());$('s3r').innerHTML=h;return;}
+  var pw=10n**BigInt(m),den=10n**BigInt(k)*(pw-1n),numF=big(Pp)*(pw-1n)+big(Q),tot=big(I)*den+numF,g=gcdB(tot,den),nn=tot/g,dd=den/g;
+  var rec=Q.replace(/^0+/,'')||'0';
+  h+='ধাপ ১: আবৃত্ত অংশ আলাদা করে ধারা বানাই: '+bn(I||'0')+'.'+bn(Pp)+' + (০.'+'০'.repeat(k)+bn(Q)+' + ০.'+'০'.repeat(k+m)+bn(Q)+' + …)<br>';
+  h+='ধাপ ২: অসীম গুণোত্তর ধারার প্রথম পদ <b>a = ০.'+'০'.repeat(k)+bn(Q)+'</b> এবং সাধারণ অনুপাত <b>r = ১/১০<sup>'+bn(m)+'</sup> = ১/'+bn((10n**BigInt(m)).toString())+'</b> (আবৃত্ত অংশে '+bn(m)+'টি অঙ্ক)<br>';
+  h+='ধাপ ৩: S = a/(১ − r) = '+bn(Q)+'/(১০<sup>'+bn(k)+'</sup> × '+bn((pw-1n).toString())+') = '+bn(Q.replace(/^0+(?=.)/,''))+'/'+bn(((10n**BigInt(k))*(pw-1n)).toString())+'<br>';
+  h+='ধাপ ৪: সব যোগ করে: '+bn(I||'0')+' + '+bn(Pp||'০')+'/'+bn((10n**BigInt(k)).toString())+' + ওই S = <b>'+bn(tot.toString())+'/'+bn(den.toString())+'</b><br>ধাপ ৫: লঘিষ্ঠ আকারে ('+bn(g.toString())+' দিয়ে ভাগ): <b>'+bn(nn.toString())+'/'+bn(dd.toString())+'</b><br>';
+  var digs='',rem=nn%dd;for(var i=0;i<18;i++){rem*=10n;digs+=(rem/dd).toString();rem%=dd;}
+  var want=(Pp+Q.repeat(20)).slice(0,18);
+  if(/^9+$/.test(Q)){h+='যাচাই: '+bn(nn.toString())+'/'+bn(dd.toString())+' = '+bn((nn/dd).toString())+'। আবৃত্ত অংশ শুধু ৯ হলে মান ঠিক পরের সংখ্যার সমান হয় (০.৯̇ = ১), এটি গণিতের একটি মজার সত্য ✔';$('s3r').innerHTML=h;return;}
+  h+='যাচাই: '+bn(nn.toString())+' ÷ '+bn(dd.toString())+' = '+bn((nn/dd).toString())+'.'+bn(digs)+'… '+(digs===want&&(nn/dd).toString()===String(BigInt(I||'0'))?'✔ মূল দশমিকের সাথে হুবহু মিলেছে':'✘');
+  $('s3r').innerHTML=h;
+}
+$('s3m').innerHTML=PRE.map(function(p,i){return '<button data-i="'+i+'">'+p[0]+'</button>';}).join('');
+$('s3m').onclick=function(e){var b=e.target.closest('button');if(!b)return;var p=PRE[+b.dataset.i][1];$('s3i').value=p[0];$('s3p').value=p[1];$('s3q').value=p[2];lab3();};
+['s3i','s3p','s3q'].forEach(function(i){$(i).oninput=lab3;});lab3();
+/* ===== ল্যাব ৪ ===== */
+var c4=$('s4cv'),x4=R2(c4);
+function lab4(){
+  var xv=Math.round(+$('s4x').value*100)/100;$('s4xv').textContent=xv<0?'−'+bn(String(-xv)):bn(String(xv));
+  var W=600,x=x4;x.clearRect(0,0,W,150);x.fillStyle='#fff';x.fillRect(0,0,W,150);
+  function X(v){return 30+(v+4)/8*540;}var y0=70;
+  x.fillStyle='rgba(27,154,111,.3)';x.fillRect(X(-4),y0-26,X(-1)-X(-4),52);x.fillRect(X(0),y0-26,X(4)-X(0),52);x.fillStyle='rgba(229,57,53,.25)';x.fillRect(X(-1),y0-26,X(0)-X(-1),52);
+  x.strokeStyle='#46586a';x.lineWidth=2;x.beginPath();x.moveTo(20,y0);x.lineTo(580,y0);x.stroke();x.fillStyle='#46586a';x.font='12px system-ui';x.textAlign='center';
+  for(var k=-4;k<=4;k++){x.beginPath();x.moveTo(X(k),y0-5);x.lineTo(X(k),y0+5);x.stroke();x.fillText(fm(k,0),X(k),y0+40);}
+  x.fillStyle='#0b7a55';x.font='700 12px system-ui';x.fillText('সমষ্টি আছে',X(-2.5),y0-32);x.fillText('সমষ্টি আছে',X(2),y0-32);x.fillStyle='#b4472d';x.fillText('সমষ্টি নেই',X(-.5),y0-32);
+  var d=2*xv+1,h='x = '+fm(xv,2)+' ⇒ 2x + ১ = '+fm(d,2)+'<br>';
+  var ok=false;
+  if(Math.abs(d)<1e-9){h+='2x + ১ = ০ হলে ধারার পদ অসংজ্ঞায়িত (০ দিয়ে ভাগ)। <b>ধারাটিই সংজ্ঞায়িত নয়</b>।';}
+  else{var r=1/d,a=r;ok=Math.abs(r)<1-1e-12;h+='প্রথম পদ a = ১/(২x+১) = '+fm(a,4)+', সাধারণ অনুপাত r = ১/(২x+১) = <b>'+fm(r,4)+'</b><br>|r| = '+fm(Math.abs(r),4)+(ok?' &lt; ১ ⇒ <b>সমষ্টি আছে</b>':' ≥ ১ ⇒ <b>সমষ্টি নেই</b>')+'<br>';
+    if(ok){var s=0,t=a;for(var i=0;i<300;i++){s+=t;t*=r;}h+='S∞ = a/(১ − r) = <b>'+fm(a/(1-r),5)+'</b> এবং সূত্র ১/(২x) = <b>'+fm(1/(2*xv),5)+'</b> ✔<br>প্রথম ৩০০ পদ যোগ করলে '+fm(s,5)+' ('+(Math.abs(s-1/(2*xv))<1e-6?'প্রায় সমান ✔':'এখনো পুরো মেলেনি, কারণ r এর মান ১ এর কাছে')+')';}
+    else h+='শর্ত: x &gt; ০ অথবা x &lt; −১ হলেই সমষ্টি থাকে।';}
+  x.fillStyle=ok?'#1b9a6f':'#e53935';x.strokeStyle='#fff';x.lineWidth=3;x.beginPath();x.arc(X(xv),y0,9,0,6.2832);x.fill();x.stroke();
+  $('s4r').innerHTML=h;
+}
+$('s4x').oninput=lab4;lab4();
+/* ===== প্র্যাকটিস ===== */
+var PR=[
+ ['১, ৩, ৫, ৭, … অনুক্রমটির ১২তম পদ কত?',[23],'সাধারণ পদ 2n − 1। n = 12 ⇒ 23।'],
+ ['n তম পদ 1/(n(n+1)) হলে তৃতীয় পদ কত? (ভগ্নাংশ বা দশমিক)',[0.0833],'1/(3 × 4) = 1/12 ≈ 0.08।'],
+ ['uₙ = 1 − (−1)ⁿ হলে প্রথম 12 পদের সমষ্টি কত?',[12],'বিজোড় n এ পদ 2, জোড় n এ 0। 6 টি বিজোড় পদ ⇒ 6 × 2 = 12।'],
+ ['১/৩ + ১/৩² + ১/৩³ + … অসীম ধারার সমষ্টি কত? (ভগ্নাংশ বা দশমিক)',[0.5],'a = 1/3, r = 1/3 ⇒ S = (1/3)/(2/3) = 1/2।'],
+ ['১ + ১/√২ + ১/২ + ১/(২√২) + … এর সমষ্টি কত? (দশমিকে ২ ঘর)',[3.41],'a = 1, r = 1/√2 ⇒ S = 1/(1 − 1/√2) = √2/(√2 − 1) = 2 + √2 ≈ 3.41।'],
+ ['০.১̇২̇ কে লঘিষ্ঠ ভগ্নাংশে লিখলে হর কত?',[33],'a = 0.12, r = 0.01 ⇒ 0.12/0.99 = 12/99 = 4/33।'],
+ ['১.২৩১̇ (231 আবৃত্ত) কে লঘিষ্ঠ ভগ্নাংশে লিখলে লব কত?',[410],'1 + 231/999 = 1 + 77/333 = 410/333।'],
+ ['৭ + ৭৭ + ৭৭৭ ধারার প্রথম ৩ পদের সমষ্টি (সূত্র: (৭/৮১)(১০ⁿ⁺¹ − ১০ − ৯n)) কত?',[861],'7 + 77 + 777 = 861। সূত্রে n = 3: (7/81)(10000 − 10 − 27) = (7/81)(9963) = 861।'],
+ ['৮ + ২ + ১/২ + ১/৮ + ১/৩২ + … এর সমষ্টি কত? (দশমিকে ২ ঘর)',[10.67],'a = 8, r = 1/4 ⇒ 8/(3/4) = 32/3 ≈ 10.67।'],
+ ['১/২ + (−১/৪) + ১/৮ + (−১/১৬) + … ধারার সাধারণ অনুপাত r কত? (দশমিক)',[-0.5],'r = (−1/4) ÷ (1/2) = −1/2।'],
+ ['গুণোত্তর ধারার তিন ক্রমিক পদের সমষ্টি 24⅘ ও গুণফল 64; সাধারণ অনুপাত 1/5 হলে অসীমতক সমষ্টি কত?',[25],'তিন পদ 20, 4, 4/5। S = 20/(1 − 1/5) = 25।'],
+ ['১/(২x+১) + ১/(২x+১)² + … ধারায় x = ২ হলে অসীমতক সমষ্টি কত? (দশমিক)',[0.25],'S∞ = 1/(2x) = 1/4 = 0.25। (r = 1/5, a = 1/5 ⇒ (1/5)/(4/5) = 1/4 ✔)']
+];
+(function(){var h='';PR.forEach(function(p,i){h+='<div class="q"><b>'+bn(i+1)+'.</b> '+p[0]+'<div class="ans"> <input type="text" id="pi'+i+'" size="10"> <button class="btn" data-pc="'+i+'">যাচাই</button> <button class="btn alt" data-ph="'+i+'">সমাধান</button></div><div class="fb" id="pf'+i+'"></div></div>';});$('pracbox').innerHTML=h;})();
+function numOf(s){s=en(s).replace(/[−–]/g,'-').replace(/\s+/g,'');var m=s.match(/^(-?\d+)\/(\d+)$/);if(m)return +m[1]/+m[2];if(/^-?\d*\.?\d+$/.test(s))return parseFloat(s);return NaN;}
+$('pracbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.pc!==undefined){var i=+b.dataset.pc,raw=$('pi'+i).value,v=numOf(raw),ok=!isNaN(v)&&PR[i][1].some(function(a){return Math.abs(a-v)<=0.0151;});
+    $('pf'+i).innerHTML=raw.trim()===''?'আগে উত্তর লেখো।':(ok?'✅ ঠিক! সাবাশ।':'❌ আবার চেষ্টা করো, বা "সমাধান" দেখো।');}
+  if(b.dataset.ph!==undefined){var j=+b.dataset.ph;$('pf'+j).innerHTML='💡 '+PR[j][2];}
+});
+/* ===== কুইজ ===== */
+var QZ=[];function M(q,c,w,e){QZ.push({q:q,o:[c].concat(w),e:e});}
+M('অনুক্রম কী?','নির্দিষ্ট নিয়মে সাজানো রাশির সেট',['শুধু যোগফল','একটি সমীকরণ','দুটি সংখ্যার গুণফল'],'প্রতিটি পদ পূর্ববর্তী ও পরবর্তী পদের সাথে নিয়মে সম্পর্কিত।');
+M('১, ৩, ৫, ৭, … অনুক্রমের ১২তম পদ—','২৩',['২৫','১৩','১২'],'2n − 1 = 23।');
+M('n তম পদ 1/(n(n+1)) হলে তৃতীয় পদ—','১/১২',['১/৬','১/২০','১/৩'],'1/(3·4)।');
+M('অনুক্রমের পদগুলো + চিহ্নে যুক্ত করলে পাওয়া যায়—','ধারা',['ফাংশন','সমীকরণ','অসমতা'],'Series।');
+M('প্রথম n টি পদের সমষ্টিকে বলে—','n তম আংশিক সমষ্টি',['সাধারণ পদ','সাধারণ অনুপাত','সাধারণ অন্তর'],'Sₙ।');
+M('১ + ২ + ৩ + … অসীম ধারার সমষ্টি—','নেই (n বাড়লে Sₙ অসীম বড় হয়)',['০','১','৫০০৫০০'],'Sₙ = n(n+1)/2।');
+M('১ − ১ + ১ − ১ + … এর সমষ্টি—','নেই (Sₙ একবার ১, একবার ০)',['০','১','১/২'],'Sₙ কোনো নির্দিষ্ট মানে যায় না।');
+M('অসীম গুণোত্তর ধারার সমষ্টি থাকার শর্ত—','|r| < ১',['|r| > ১','r = ১','r = −১'],'−1 < r < 1।');
+M('|r| < ১ হলে অসীমতক সমষ্টি S∞ =','a/(১ − r)',['a/(১ + r)','a(১ − r)','a·r'],'Sₙ এর সীমা।');
+M('গুণোত্তর ধারার n তম পদ—','arⁿ⁻¹',['arⁿ','aⁿr','a + (n−1)r'],'প্রথম পদ a, দ্বিতীয় ar, তৃতীয় ar²।');
+M('r < ১ হলে প্রথম n পদের সমষ্টি Sₙ =','a(১ − rⁿ)/(১ − r)',['a(১ − r)/(১ − rⁿ)','a·rⁿ','n·a'],'বিয়োগ করে পাওয়া সূত্র।');
+M('r = ১ হলে ধারা a + a + a + … এর সমষ্টি—','নেই',['a','০','১'],'Sₙ = na অসীম বড় হয়।');
+M('r = −১ হলে ধারা a − a + a − … এর সমষ্টি—','নেই',['a','০','a/২'],'Sₙ একবার a, একবার ০।');
+M('|r| < ১ হলে n বাড়ালে rⁿ এর মান—','০ এর কাছে যায়',['১ এর কাছে যায়','অসীম বড় হয়','−১ হয়'],'যেমন (১/২)ⁿ → ০।');
+M('১/৩ + ১/৩² + ১/৩³ + … এর সমষ্টি—','১/২',['১/৩','১','২/৩'],'a = 1/3, r = 1/3।');
+M('১ + ০.১ + ০.০১ + ০.০০১ + … এর সমষ্টি—','১০/৯',['১১/১০','১','১.২'],'a = 1, r = 1/10 ⇒ 1/(9/10)।');
+M('০.৫̇ (৫ আবৃত্ত) এর ভগ্নাংশ রূপ—','৫/৯',['৫/১০','৫/৯৯','১/২'],'0.5/(1 − 0.1) = 5/9।');
+M('০.১̇২̇ এর ভগ্নাংশ রূপ—','৪/৩৩',['১২/১০০','১/৮','৪/৯'],'0.12/0.99 = 12/99 = 4/33।');
+M('১.২৩১̇ (২৩১ আবৃত্ত) এর ভগ্নাংশ রূপ—','৪১০/৩৩৩',['১২৩১/১০০০','২৩১/৯৯৯','১২৩০/৯৯৯'],'1 + 231/999 = 1 + 77/333।');
+M('আবৃত্ত অংশে m টি অঙ্ক থাকলে গুণোত্তর ধারার সাধারণ অনুপাত—','১/১০ᵐ',['১/m','১০ᵐ','m/১০'],'০.১̇২̇ এ m = ২, r = ০.০১।');
+M('৪ + ৪/৩ + ৪/৯ + … এর সমষ্টি—','৬',['৪','১২','৫'],'4/(1 − 1/3) = 6।');
+M('৪ + ৪/৩ + ৪/৯ + … এর ১০ম পদ—','৪/৩⁹',['৪/৩¹⁰','৪/৩⁸','৪/৩¹¹'],'ar⁹ = 4·(1/3)⁹।');
+M('a + ab + ab² + … এ a = ১, b = ১/২ হলে সমষ্টি—','২',['১','১/২','৩/২'],'1/(1 − 1/2)।');
+M('uₙ = (১ − (−১)ⁿ)/২ হলে u₂₀ =','০',['১','−১','২'],'n জোড় হলে (−1)ⁿ = 1।');
+M('uₙ = 1/n < 10⁻⁴ হলে n এর মান—','n > ১০⁴',['n < ১০⁴','n < ১০³','n = ১০⁴'],'1/n < 1/10⁴ ⇒ n > 10⁴।');
+M('৮ + ২ + ১/২ + ১/৮ + … এর সমষ্টি—','৩২/৩',['১০','৩২','১২'],'a = 8, r = 1/4 ⇒ 8/(3/4)।');
+M('১/২ − ১/৪ + ১/৮ − ১/১৬ + … এর সমষ্টি—','১/৩',['১/২','১/৪','২/৩'],'a = 1/2, r = −1/2 ⇒ (1/2)/(3/2)।');
+M('১/(২x+১) + ১/(২x+১)² + … ধারার সমষ্টি থাকার শর্ত—','x > ০ অথবা x < −১',['−১ < x < ০','x > −১','x = ০'],'|2x + 1| > 1।');
+M('ঐ ধারায় সমষ্টি থাকলে S∞ =','১/(২x)',['২x','১/(২x+১)','x/২'],'a = r = 1/(2x+1) ⇒ a/(1 − r) = 1/(2x)।');
+M('তিন ক্রমিক গুণোত্তর পদের গুণফল ৬৪ হলে মাঝের পদ—','৪',['৮','১৬','২'],'a³ = 64।');
+(function(){
+  var done=0,sc=0;
+  QZ.forEach(function(q){var ord=q.o.map(function(t,i){return {t:t,c:i===0};});
+    for(var i=ord.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),k=ord[i];ord[i]=ord[j];ord[j]=k;}q.ord=ord;});
+  var h='';QZ.forEach(function(q,qi){h+='<div class="q" id="qq'+qi+'"><b>'+bn(qi+1)+'.</b> '+q.q+q.ord.map(function(o,oi){return '<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+o.t+'</button>';}).join('')+'<div class="fb" id="qe'+qi+'"></div></div>';});
+  $('quizbox').innerHTML=h;
+  $('quizbox').addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b||b.parentNode.dataset.done)return;
+    var qi=+b.dataset.q,q=QZ[qi],o=q.ord[+b.dataset.o];b.parentNode.dataset.done=1;done++;
+    var btns=b.parentNode.querySelectorAll('.opt');btns.forEach(function(x,i){if(q.ord[i].c)x.classList.add('good');});
+    if(o.c){sc++;$('qe'+qi).textContent='✅ ঠিক! '+q.e;}else{b.classList.add('bad');$('qe'+qi).textContent='❌ ভুল। '+q.e;}
+    $('qscore').textContent='স্কোর: '+bn(sc)+' / '+bn(done)+' (মোট '+bn(QZ.length)+'টি)';
+    try{if(done===QZ.length){localStorage.setItem('sl_done_math-infinite-series','1');var xp=+(localStorage.getItem('sl_xp')||0);localStorage.setItem('sl_xp',xp+sc);}}catch(er){}
+  });
+})();
+/* ===== প্রশ্নোত্তর ===== */
+var QA=[
+ {h:'অনুশীলনী ৭ (বই থেকে)',items:[
+  ['১. ১, ৩, ৫, ৭, … অনুক্রমের ১২তম পদ?','গ. ২৩।'],
+  ['২. n তম পদ 1/(n(n+1)) হলে তৃতীয় পদ?','1/12 (গ)।'],
+  ['৩. uₙ = 1 − (−1)ⁿ হলে (i) ১০ম পদ ০ (ii) ১৫তম পদ ২ (iii) প্রথম ১২ পদের সমষ্টি ১২ — কোনটি সঠিক?','ঘ. i, ii ও iii। জোড় n এ 0, বিজোড় n এ 2; ৬টি বিজোড় পদ ⇒ ১২।'],
+  ['৫. uₙ = 1/n। (ক) uₙ < 10⁻⁵ হলে n? (খ) uₙ > 10⁻⁵ হলে n? (গ) n যথেষ্ট বড় হলে uₙ সম্পর্কে কী বলা যায়?','(ক) 1/n < 10⁻⁵ ⇒ n > 10⁵। (খ) n < 10⁵। (গ) n যত বাড়ে uₙ ততই ০ এর কাছে যায় (প্রান্তীয় মান ০)। ল্যাব ১ এ "১/n" বেছে দেখো।'],
+  ['৬ (ক). ১ + ১/২ + ১/৪ + ১/৮ + … এর সমষ্টি','a = 1, r = 1/2 ⇒ 1/(1 − 1/2) = 2।'],
+  ['৬ (খ). ৮ + ২ + ১/২ + ১/৮ + ১/৩২ + …','a = 8, r = 1/4 ⇒ 8/(3/4) = 32/3।'],
+  ['৬ (গ). ১ + ২ + ৪ + ৮ + ১৬ + …','r = 2 > 1, তাই সমষ্টি নেই।'],
+  ['৬ (ঘ). ১/২ + (−১/৪) + ১/৮ + (−১/১৬) + …','a = 1/2, r = −1/2 ⇒ (1/2)/(3/2) = 1/3।'],
+  ['৭ (ক). ৭ + ৭৭ + ৭৭৭ + … প্রথম n পদের যোগফল','7(1 + 11 + 111 + …) = (7/9)(9 + 99 + 999 + …) = (7/9)[(10 − 1) + (10² − 1) + … + (10ⁿ − 1)] = (7/9)[(10ⁿ⁺¹ − 10)/9 − n] = (7/81)(10ⁿ⁺¹ − 10 − 9n)।'],
+  ['৭ (খ). ৫ + ৫৫ + ৫৫৫ + …','একই ভাবে (5/81)(10ⁿ⁺¹ − 10 − 9n)।'],
+  ['৮. x এর কোন শর্তে 1/(x+1) + 1/(x+1)² + … এর অসীমতক সমষ্টি থাকবে এবং সমষ্টি কত?','r = 1/(x+1), |r| < 1 ⇒ |x + 1| > 1 ⇒ x > 0 অথবা x < −2। তখন S∞ = (1/(x+1))/(1 − 1/(x+1)) = 1/x। (বইয়ের উদাহরণ ৮ এ 2x+1 ছিল; এখানে x+1।)'],
+  ['১০. তিন ক্রমিক পদের সমষ্টি 24⅘, গুণফল 64। (গ) সাধারণ অনুপাত 1/5 হলে অসীমতক সমষ্টি','ধাপে ধাপে অংশের ৫ নং দেখো: S∞ = 25।']]},
+ {h:'নমুনা প্রশ্ন',items:[
+  ['MCQ ১: uₙ = (1 − (−1)ⁿ)/2 হলে ২০তম পদ?','ক. 0।'],
+  ['MCQ ২: uₙ = 1/n এবং uₙ < 10⁻⁴ হলে n এর মান i. n < 10³ ii. n < 10⁴ iii. n > 10⁴','ক. শুধু iii।'],
+  ['MCQ ৩: ধারা 4 + 4/3 + 4/9 + … এর ১০ম পদ?','খ. 4/3⁹। (ar⁹ = 4·(1/3)⁹)'],
+  ['MCQ ৪: ঐ ধারার অসীমতক সমষ্টি?','গ. 6। (4/(1 − 1/3))'],
+  ['সৃজনশীল ৫(ক): a + ab + ab² + … এর সপ্তম পদ','ar⁶ এর মতো: a·b⁶ (প্রথম পদ a, অনুপাত b)।'],
+  ['সৃজনশীল ৫(খ): a = 1, b = 1/2 হলে অসীমতক সমষ্টি','1/(1 − 1/2) = 2।'],
+  ['সৃজনশীল ৫(গ): a এর স্থলে 3, ab এর স্থলে 33, ab² এর স্থলে 333 বসালে ধারাটির প্রথম n পদের সমষ্টি','3 + 33 + 333 + … = 3(1 + 11 + 111 + …) = (10ⁿ⁺¹ − 10 − 9n)/27 (৭ক এর মতো করে)। n = 3 এ 369 ✔ (3 + 33 + 333 = 369; সূত্র: (10000 − 10 − 27)/27 = 9963/27 = 369)।'],
+  ['সংক্ষিপ্ত ৬(ক): ১/২, ১, ৩/২, ২, ৫/২, … ধারার ১৫তম পদ','n তম পদ n/2। ১৫তম পদ = 15/2 = 7.5।'],
+  ['সংক্ষিপ্ত ৬(খ): ১/৫ − ২/৫² + ৪/৫³ − ৮/৫⁴ + … এর অসীমতক সমষ্টি','a = 1/5, r = −2/5 ⇒ (1/5)/(1 + 2/5) = (1/5)/(7/5) = 1/7।'],
+  ['সংক্ষিপ্ত ৬(ঘ): প্রথম পদ 1/2 এবং অসীমতক সমষ্টি 1/3 হলে সাধারণ অনুপাত','(1/2)/(1 − r) = 1/3 ⇒ 1 − r = 3/2 ⇒ r = −1/2।']]}
+];
+(function(){var h='';QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){h+='<details class="ex"><summary><b>'+it[0]+'</b></summary><p>'+it[1]+'</p></details>';});});$('qabox').innerHTML=h;})();
+
+</script>
+</body>
+</html>

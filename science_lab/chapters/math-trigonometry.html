@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ত্রিকোণমিতি (উচ্চতর গণিত অধ্যায় ৮) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+canvas{width:100%;height:auto;max-width:700px;display:block;margin:8px auto;border-radius:12px;background:#fff;border:1px solid var(--line);touch-action:none}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.ctl input[type=range]{width:200px;max-width:100%}
+.ctl select,.ctl input[type=text],.ans input{font-family:inherit;font-size:16px;padding:6px 8px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;max-width:100%;width:auto}
+.eqb{background:#eaf7f5;border-radius:10px;padding:10px;text-align:center;font-weight:700;color:var(--navy);margin:8px 0;font-size:18px;overflow-x:auto}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.fb{font-weight:700;margin-top:6px}
+.res{background:#eef6ff;border-radius:10px;padding:10px 12px;margin:8px 0;line-height:1.9}
+.res b{color:#0b5ed7}
+.chips button{margin:3px;padding:6px 12px;border-radius:999px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.chips button.on{background:#0b5ed7;color:#fff;border-color:#0b5ed7}
+.step{background:#fff;border:1px solid var(--line);border-left:5px solid #2a9d8f;border-radius:8px;padding:8px 12px;margin:6px 0;display:none}
+.step.show{display:block}
+.ex{border:2px dashed #b8c7d6;border-radius:12px;padding:10px 14px;margin:14px 0;background:#fcfdff}
+.q{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:#fff}
+.q .opt{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 10px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:16px;cursor:pointer}
+.q .opt.good{background:#d8f3e3;border-color:#2a9d8f}
+.q .opt.bad{background:#fddcdc;border-color:#e76f51}
+.m{font-family:system-ui,'Segoe UI',Arial,sans-serif}
+table.t{border-collapse:collapse;margin:8px 0}
+table.t td,table.t th{border:1px solid #cfd9e1;padding:5px 12px;text-align:center}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">📐 গণিত &rsaquo; উচ্চতর গণিত &rsaquo; অধ্যায় ৮ (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">📐 ত্রিকোণমিতি</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#ex">🪜 ধাপে ধাপে</a><a href="#lab1">🧭 কোণ ও রেডিয়ান</a><a href="#lab2">⭕ ইউনিট বৃত্ত</a><a href="#lab3">🔄 নানা কোণের অনুপাত</a><a href="#lab4">🟰 সমীকরণ</a><a href="#lab5">🔺 অনুপাত থেকে অনুপাত</a><a href="#prac">✍️ প্র্যাকটিস</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্নোত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায়ে শিখবে:</b> ত্রিকোণমিতিক কোণ (ধনাত্মক, ঋণাত্মক, চতুর্ভাগ), ডিগ্রি ও রেডিয়ান, s = rθ, যেকোনো কোণের ছয়টি অনুপাত ও অভেদ, নানা কোণের (nπ/2 ± θ) অনুপাত এবং সহজ ত্রিকোণমিতিক সমীকরণ।</div>
+
+    <h3>১. ত্রিকোণমিতিক কোণ ও চতুর্ভাগ ⭐⭐</h3>
+    <ul>
+      <li>একটি স্থির রশ্মি OX থেকে ঘূর্ণায়মান রশ্মি OA ঘুরলে কোণ তৈরি হয়। <b>ঘড়ির কাঁটার উল্টো দিকে</b> ঘুরলে কোণ <b>ধনাত্মক</b>, <b>ঘড়ির কাঁটার দিকে</b> ঘুরলে কোণ <b>ঋণাত্মক</b>।</li>
+      <li>OX ও OY অক্ষ সমতলকে চারটি <b>চতুর্ভাগ</b>ে ভাগ করে। উল্টো দিকে ঘুরলে ১ম, ২য়, ৩য়, ৪র্থ চতুর্ভাগ।</li>
+      <li>ধনাত্মক কোণ: 0°–90° ⇒ ১ম, 90°–180° ⇒ ২য়, 180°–270° ⇒ ৩য়, 270°–360° ⇒ ৪র্থ। 360° এর বেশি হলে পুরো পাক বাদ দিয়ে বাকিটা দেখো। যেমন 430° = 360° + 70° ⇒ ১ম চতুর্ভাগ।</li>
+      <li>ঋণাত্মক কোণ: 0° থেকে −90° ⇒ ৪র্থ, −90° থেকে −180° ⇒ ৩য়, −180° থেকে −270° ⇒ ২য়, −270° থেকে −360° ⇒ ১ম। যেমন −520° = −360° − 160° ⇒ −160° তৃতীয় চতুর্ভাগে।</li>
+      <li>90° এর গুণিতক (0°, 90°, 180°, 270°, 360°…) কোণ অক্ষের উপর থাকে, কোনো চতুর্ভাগে পড়ে না।</li>
+    </ul>
+
+    <h3>২. কোণ পরিমাপের একক ⭐⭐⭐</h3>
+    <ul>
+      <li><b>ষাটমূলক পদ্ধতি:</b> 1 সমকোণ = 90°, 1° = 60′ (মিনিট), 1′ = 60″ (সেকেন্ড)।</li>
+      <li><b>বৃত্তীয় পদ্ধতি:</b> একক = <b>রেডিয়ান</b>। কোনো বৃত্তের ব্যাসার্ধের সমান চাপ কেন্দ্রে যে কোণ তৈরি করে তার পরিমাণ <b>১ রেডিয়ান</b> (1<sup>c</sup>)। এই কোণ সব বৃত্তে সমান, তাই এটি ধ্রুব কোণ।</li>
+      <li>বৃত্তের পরিধি ÷ ব্যাস = π (ধ্রুবক), তাই পরিধি = 2πr। এখান থেকে <b>π রেডিয়ান = 180°</b> এবং 2π রেডিয়ান = 360°।</li>
+      <li>1° = (π/180) রেডিয়ান ≈ 0.01745<sup>c</sup>। 1 রেডিয়ান = (180/π)° ≈ 57.29578° ≈ 57°17′44.81″।</li>
+      <li>ডিগ্রি D° ও রেডিয়ান R হলে <b>D/180 = R/π</b>।</li>
+      <li>মনে রাখার তালিকা: 30° = π/6, 45° = π/4, 60° = π/3, 90° = π/2, 180° = π, 360° = 2π।</li>
+      <li>রেডিয়ান প্রতীক (c) সাধারণত লেখা হয় না। π এর মান বইয়ে ৪ দশমিক স্থান পর্যন্ত 3.1416 ধরা হয় এবং উত্তরে "প্রায়" লেখা হয়।</li>
+    </ul>
+
+    <h3>৩. চাপ ও কেন্দ্রীয় কোণ: s = rθ ⭐⭐⭐</h3>
+    <ul>
+      <li>r ব্যাসার্ধের বৃত্তে s দৈর্ঘ্যের চাপ কেন্দ্রে θ <b>রেডিয়ান</b> কোণ তৈরি করলে <b>s = rθ</b>।</li>
+      <li>এখান থেকে θ = s/r এবং r = s/θ। θ ডিগ্রিতে থাকলে আগে রেডিয়ানে বদলাতে হবে।</li>
+      <li>বাস্তব প্রয়োগ: চাকার গতিবেগ (প্রতি পাকে পরিধি 2πr দূরত্ব), পৃথিবীর কেন্দ্রে দুই শহরের কোণ থেকে দূরত্ব, দূরের পাহাড়ের উচ্চতা (ছোট কোণে চাপ ≈ উচ্চতা)।</li>
+    </ul>
+
+    <h3>৪. ছয়টি ত্রিকোণমিতিক অনুপাত ⭐⭐⭐</h3>
+    <ul>
+      <li>θ কোণকে প্রমিত অবস্থানে (শীর্ষ মূলবিন্দুতে, আদি বাহু ধনাত্মক x-অক্ষ) রেখে প্রান্তিক বাহুতে P(x, y) নাও। r = OP = √(x² + y²) &gt; 0।</li>
+      <li>sinθ = y/r, cosθ = x/r, tanθ = y/x (x ≠ 0), cotθ = x/y (y ≠ 0), secθ = r/x (x ≠ 0), cosecθ = r/y (y ≠ 0)।</li>
+      <li>অনুপাতের মান P বিন্দু কোথায় নিলে তা বদলায় না, শুধু θ এর উপর নির্ভর করে (সদৃশ ত্রিভুজ)।</li>
+      <li>সূক্ষ্মকোণে: sinθ = লম্ব/অতিভুজ, cosθ = ভূমি/অতিভুজ, tanθ = লম্ব/ভূমি।</li>
+      <li>x-অক্ষের উপর (y = 0) cosec ও cot সংজ্ঞায়িত নয়। y-অক্ষের উপর (x = 0) sec ও tan সংজ্ঞায়িত নয়। sin ও cos সবসময় সংজ্ঞায়িত।</li>
+      <li>পারস্পরিক সম্পর্ক: sinθ·cosecθ = 1, cosθ·secθ = 1, tanθ·cotθ = 1; tanθ = sinθ/cosθ, cotθ = cosθ/sinθ।</li>
+    </ul>
+
+    <h3>৫. চতুর্ভাগে চিহ্ন (ASTC) ⭐⭐⭐</h3>
+    <div style="overflow-x:auto"><table class="t">
+      <tr><th>চতুর্ভাগ</th><th>x, y এর চিহ্ন</th><th>ধনাত্মক অনুপাত</th></tr>
+      <tr><td>১ম</td><td>x +, y +</td><td>সবগুলো</td></tr>
+      <tr><td>২য়</td><td>x −, y +</td><td>sin ও cosec</td></tr>
+      <tr><td>৩য়</td><td>x −, y −</td><td>tan ও cot</td></tr>
+      <tr><td>৪র্থ</td><td>x +, y −</td><td>cos ও sec</td></tr>
+    </table></div>
+    <p>বাকিগুলো ঋণাত্মক। মনে রাখার কৌশল: ১ম চতুর্ভাগে সব, ২য়তে sin, ৩য়তে tan, ৪র্থতে cos।</p>
+
+    <h3>৬. অভেদ ও বিশেষ কোণের মান ⭐⭐⭐</h3>
+    <ul>
+      <li><b>sin²θ + cos²θ = 1</b> (কারণ x² + y² = r²)। তাই sin²θ = 1 − cos²θ এবং cos²θ = 1 − sin²θ।</li>
+      <li><b>1 + tan²θ = sec²θ</b> (অর্থাৎ sec²θ − tan²θ = 1) এবং <b>1 + cot²θ = cosec²θ</b> (অর্থাৎ cosec²θ − cot²θ = 1)।</li>
+      <li>সীমা: |sinθ| ≤ 1 এবং |cosθ| ≤ 1।</li>
+    </ul>
+    <div style="overflow-x:auto"><table class="t">
+      <tr><th>θ</th><th>0°</th><th>30° (π/6)</th><th>45° (π/4)</th><th>60° (π/3)</th><th>90° (π/2)</th></tr>
+      <tr><td>sinθ</td><td>0</td><td>1/2</td><td>1/√2</td><td>√3/2</td><td>1</td></tr>
+      <tr><td>cosθ</td><td>1</td><td>√3/2</td><td>1/√2</td><td>1/2</td><td>0</td></tr>
+      <tr><td>tanθ</td><td>0</td><td>1/√3</td><td>1</td><td>√3</td><td>অসংজ্ঞায়িত</td></tr>
+    </table></div>
+
+    <h3>৭. −θ এর অনুপাত ⭐⭐</h3>
+    <ul>
+      <li>sin(−θ) = −sinθ, tan(−θ) = −tanθ, cosec(−θ) = −cosecθ, cot(−θ) = −cotθ।</li>
+      <li>cos(−θ) = cosθ, sec(−θ) = secθ।</li>
+    </ul>
+
+    <h3>৮. π/2 ± θ, π ± θ, 3π/2 ± θ, 2π ± θ ⭐⭐⭐</h3>
+    <div style="overflow-x:auto"><table class="t">
+      <tr><th>কোণ</th><th>sin</th><th>cos</th><th>tan</th></tr>
+      <tr><td>π/2 − θ</td><td>cosθ</td><td>sinθ</td><td>cotθ</td></tr>
+      <tr><td>π/2 + θ</td><td>cosθ</td><td>−sinθ</td><td>−cotθ</td></tr>
+      <tr><td>π − θ</td><td>sinθ</td><td>−cosθ</td><td>−tanθ</td></tr>
+      <tr><td>π + θ</td><td>−sinθ</td><td>−cosθ</td><td>tanθ</td></tr>
+      <tr><td>3π/2 − θ</td><td>−cosθ</td><td>−sinθ</td><td>cotθ</td></tr>
+      <tr><td>3π/2 + θ</td><td>−cosθ</td><td>sinθ</td><td>−cotθ</td></tr>
+      <tr><td>2π − θ</td><td>−sinθ</td><td>cosθ</td><td>−tanθ</td></tr>
+      <tr><td>2π + θ</td><td>sinθ</td><td>cosθ</td><td>tanθ</td></tr>
+    </table></div>
+    <p>(এগুলো 0 &lt; θ &lt; π/2 ধরে প্রমাণ করা, কিন্তু বই বলেছে যেকোনো θ এর জন্য প্রযোজ্য।) cosec, sec, cot এর মান sin, cos, tan এর উল্টো করে পাওয়া যায়।</p>
+
+    <h3>৯. যেকোনো কোণের জন্য ৩ ধাপের নিয়ম: (n × π/2 ± θ) ⭐⭐⭐</h3>
+    <ol>
+      <li><b>ধাপ ১:</b> কোণটিকে (n × π/2 ± θ) আকারে লেখো (θ সূক্ষ্মকোণ ধরো)।</li>
+      <li><b>ধাপ ২:</b> n <b>জোড়</b> হলে অনুপাতের নাম একই থাকে (sin → sin)। n <b>বিজোড়</b> হলে বদলে যায় (sin ↔ cos, tan ↔ cot, sec ↔ cosec)।</li>
+      <li><b>ধাপ ৩:</b> (n × π/2 ± θ) কোণ কোন চতুর্ভাগে পড়ে দেখো। সেই চতুর্ভাগে <b>মূল অনুপাতের</b> যে চিহ্ন, ফলাফলের আগে সেই চিহ্ন বসাও।</li>
+    </ol>
+    <p>উদাহরণ: cos(19π/3) = cos(12 × π/2 + π/3)। n = 12 জোড় ⇒ cos থাকে। 19π/3 = 6π + π/3 প্রথম চতুর্ভাগে ⇒ চিহ্ন +। তাই cos(19π/3) = cos(π/3) = 1/2।</p>
+    <p>সতর্কতা: কোণটি যদি অক্ষের উপর পড়ে (যেমন sec(−17π/2)), তাহলে অনুপাত অসংজ্ঞায়িত হতে পারে।</p>
+
+    <h3>১০. ত্রিকোণমিতিক সমীকরণ ⭐⭐</h3>
+    <ul>
+      <li>প্রথমে অভেদ দিয়ে সমীকরণকে একই অনুপাতের (যেমন cosθ) সমীকরণ বানাও। তারপর উৎপাদকে ভাঙো বা দ্বিঘাত সমীকরণের মতো সমাধান করো।</li>
+      <li>cosθ = 1/2 হলে θ এর মান দেওয়া সীমার মধ্যে (যেমন 0 &lt; θ &lt; 2π) প্রথম ও চতুর্থ চতুর্ভাগে আসে: π/3 ও 5π/3।</li>
+      <li>বর্গ করার পর পাওয়া মান <b>মূল সমীকরণে বসিয়ে যাচাই</b> করতে হয় (বর্গ করলে ভুয়া মান আসতে পারে)।</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="ex">
+    <h2>🪜 ধাপে ধাপে</h2>
+    <div class="say">👉 "পরের ধাপ" চাপতে থাকো। প্রতিটি ধাপ নিজে খাতায় করে মেলাও।</div>
+
+    <div class="ex" id="E1"><b>১) ডিগ্রি ⇄ রেডিয়ান</b> (বই উদাহরণ ৩)
+      <div class="step">ধাপ ১ (ক): 30°12′36″ কে রেডিয়ানে লিখতে হবে। আগে সেকেন্ডকে মিনিটে: 36″ = 36/60′ = 3/5′। তাই 12′36″ = 12 3/5′ = 63/5′।</div>
+      <div class="step">ধাপ ২: মিনিটকে ডিগ্রিতে: 63/5′ = 63/(5 × 60)° = 21/100°। তাই কোণটি 30 21/100° = 3021/100°।</div>
+      <div class="step">ধাপ ৩: ডিগ্রি থেকে রেডিয়ানে ×(π/180): 3021/100 × π/180 = 3021π/18000 ≈ <b>0.5273 রেডিয়ান</b> (প্রায়)।</div>
+      <div class="step">ধাপ ৪ (খ): 3π/13 রেডিয়ানকে ডিগ্রিতে: ×(180/π): 3π/13 × 180/π = 540/13° = 41.538…°।</div>
+      <div class="step">ধাপ ৫: 0.538…° × 60 = 32.307…′ ⇒ 32′। 0.307…′ × 60 = 18.46″। উত্তর: <b>41°32′18.46″</b>।</div>
+      <button class="btn" data-ex="E1">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E1">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E2"><b>২) চাপের দৈর্ঘ্য s = rθ</b> (বই উদাহরণ ৬)
+      <div class="step">ধাপ ১: পৃথিবীর ব্যাসার্ধ r = 6440 কি.মি.। ঢাকা ও জামালপুর কেন্দ্রে 2° কোণ উৎপন্ন করে। দূরত্ব = চাপ s।</div>
+      <div class="step">ধাপ ২: সূত্র s = rθ তে θ অবশ্যই রেডিয়ানে হবে। θ = 2° = 2 × π/180 = π/90 রেডিয়ান।</div>
+      <div class="step">ধাপ ৩: s = 6440 × π/90 = 6440 × 3.1416/90 ≈ <b>224.8 কি.মি.</b> (প্রায়)।</div>
+      <div class="step">ধাপ ৪: যাচাই: 2° এ সম্পূর্ণ পরিধির 2/360 অংশ। পরিধি = 2π × 6440 ≈ 40,464 কি.মি.। 40,464 × 2/360 ≈ 224.8 ✔।</div>
+      <button class="btn" data-ex="E2">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E2">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E3"><b>৩) ত্রিভুজের তিন কোণের অনুপাত ৩ : ৪ : ৫</b> (বই উদাহরণ ৪)
+      <div class="step">ধাপ ১: কোণ তিনটি 3x, 4x, 5x (রেডিয়ানে ধরি)।</div>
+      <div class="step">ধাপ ২: ত্রিভুজের তিন কোণের সমষ্টি 2 সমকোণ = π রেডিয়ান। তাই 3x + 4x + 5x = π ⇒ 12x = π ⇒ x = π/12।</div>
+      <div class="step">ধাপ ৩: 3x = 3π/12 = π/4, 4x = 4π/12 = π/3, 5x = 5π/12।</div>
+      <div class="step">ধাপ ৪: যাচাই (ডিগ্রিতে): 45° + 60° + 75° = 180° ✔।</div>
+      <button class="btn" data-ex="E3">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E3">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E4"><b>৪) একটি অনুপাত থেকে বাকি অনুপাত: tanθ = 3</b> (বই উদাহরণ ১০)
+      <div class="step">ধাপ ১: tanθ = লম্ব/ভূমি = 3/1। সমকোণী ত্রিভুজ আঁকো যার লম্ব = 3, ভূমি = 1।</div>
+      <div class="step">ধাপ ২: পিথাগোরাস: অতিভুজ = √(3² + 1²) = √10।</div>
+      <div class="step">ধাপ ৩: sinθ = লম্ব/অতিভুজ = 3/√10, cosθ = ভূমি/অতিভুজ = 1/√10।</div>
+      <div class="step">ধাপ ৪: cosecθ = √10/3, secθ = √10, cotθ = 1/3। (এই ল্যাব ৫ এ যেকোনো মান দিয়ে নিজে করে দেখো।)</div>
+      <div class="step">ধাপ ৫: যাচাই: sin²θ + cos²θ = 9/10 + 1/10 = 1 ✔।</div>
+      <button class="btn" data-ex="E4">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E4">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E5"><b>৫) −520° ও −750° কোন চতুর্ভাগে?</b> (বই উদাহরণ ২)
+      <div class="step">ধাপ ১ (−520°): ঋণাত্মক কোণ, ঘড়ির কাঁটার দিকে ঘুরছে। 520 = 360 + 160। এক পূর্ণ পাক ঘুরে আরও 160° ঘোরা।</div>
+      <div class="step">ধাপ ২: ঘড়ির কাঁটার দিকে 90° পর্যন্ত ৪র্থ, 180° পর্যন্ত ৩য়, 270° পর্যন্ত ২য়। 160° ঘুরলে ৩য় চতুর্ভাগে। তাই −520° <b>তৃতীয় চতুর্ভাগে</b>।</div>
+      <div class="step">ধাপ ৩ (−750°): 750 = 720 + 30। দুই পূর্ণ পাক বাদ দিয়ে বাকি −30°। −30° (0° থেকে −90°) ⇒ <b>চতুর্থ চতুর্ভাগ</b>।</div>
+      <div class="step">ধাপ ৪: যাচাই (ল্যাব ১): স্লাইডারে −520 ও −750 বসিয়ে দেখো।</div>
+      <button class="btn" data-ex="E5">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E5">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E6"><b>৬) (n × π/2 ± θ) নিয়ম</b> (বই উদাহরণ ২২, ২৩)
+      <div class="step">ধাপ ১: sin(9π/2 + θ) এ n = 9 (বিজোড়)। তাই sin বদলে cos হবে।</div>
+      <div class="step">ধাপ ২: 9π/2 + θ = 4π + (π/2 + θ)। এটি 2য় চতুর্ভাগে পড়ে (π/2 + θ)। ২য় চতুর্ভাগে sin ধনাত্মক। তাই <b>sin(9π/2 + θ) = + cosθ</b>।</div>
+      <div class="step">ধাপ ৩: tan(11π/6) = tan(4 × π/2 − π/6)। n = 4 জোড় ⇒ tan থাকে। 11π/6 চতুর্থ চতুর্ভাগে, যেখানে tan ঋণাত্মক। তাই = −tan(π/6) = <b>−1/√3</b>।</div>
+      <div class="step">ধাপ ৪: cos(19π/3) = cos(12 × π/2 + π/3), n জোড় ⇒ cos, 19π/3 = 6π + π/3 ১ম চতুর্ভাগে ⇒ +। উত্তর cos(π/3) = <b>1/2</b>।</div>
+      <div class="step">ধাপ ৫: যাচাই: ল্যাব ৩ এ n, চিহ্ন ও θ বসিয়ে ক্যালকুলেটরের মানের সাথে মেলাও।</div>
+      <button class="btn" data-ex="E6">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E6">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E7"><b>৭) সমীকরণ: sin²θ − cos²θ = cosθ, (0 &lt; θ &lt; 2π)</b> (বই উদাহরণ ২৮)
+      <div class="step">ধাপ ১: sin²θ = 1 − cos²θ বসাই: 1 − cos²θ − cos²θ = cosθ ⇒ 1 − 2cos²θ − cosθ = 0 ⇒ 2cos²θ + cosθ − 1 = 0।</div>
+      <div class="step">ধাপ ২: উৎপাদকে ভাঙি: (2cosθ − 1)(cosθ + 1) = 0।</div>
+      <div class="step">ধাপ ৩: cosθ = 1/2 অথবা cosθ = −1।</div>
+      <div class="step">ধাপ ৪: cosθ = 1/2 ⇒ θ = π/3 ও 5π/3 (১ম ও ৪র্থ চতুর্ভাগ)। cosθ = −1 ⇒ θ = π।</div>
+      <div class="step">ধাপ ৫: <b>θ = π/3, π, 5π/3</b>। (ল্যাব ৪ এ cosθ = 1/2 ও −1 বেছে দেখো।)</div>
+      <button class="btn" data-ex="E7">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E7">আবার শুরু</button>
+    </div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🧭 ল্যাব ১: কোণ, রেডিয়ান ও চতুর্ভাগ</h2>
+    <div class="say">👉 θ বদলাও (−১৪৪০° থেকে ১৪৪০°)। ঘূর্ণায়মান রশ্মি OA ঘুরবে, ঘড়ির কাঁটার উল্টো দিকে ধনাত্মক। রেডিয়ান, চতুর্ভাগ ও চাপ s = rθ নিচে দেখো।</div>
+    <div class="ctl"><label>θ = <span id="a1dv"></span>°</label><input type="range" id="a1d" min="-1440" max="1440" step="1" value="430">
+    <label>ব্যাসার্ধ r = <span id="a1rv"></span></label><input type="range" id="a1r" min="1" max="10" step="1" value="7"></div>
+    <div class="chips" id="a1m"></div>
+    <canvas id="a1cv" width="600" height="340"></canvas>
+    <div class="res m" id="a1res"></div>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>⭕ ল্যাব ২: ইউনিট বৃত্তে ছয়টি অনুপাত</h2>
+    <div class="say">👉 θ বদলাও। P(x, y) বৃত্তে ঘোরে (r = 1)। sin = y, cos = x। কোথায় অনুপাত ধনাত্মক/ঋণাত্মক আর কোথায় অসংজ্ঞায়িত তা দেখো।</div>
+    <div class="ctl"><label>θ = <span id="b1dv"></span>°</label><input type="range" id="b1d" min="0" max="360" step="1" value="30"></div>
+    <div class="chips" id="b1m"></div>
+    <canvas id="b1cv" width="600" height="340"></canvas>
+    <div class="res m" id="b1res"></div>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🔄 ল্যাব ৩: (n × π/2 ± θ) এর ৩ ধাপ</h2>
+    <div class="say">👉 অনুপাত, n ও চিহ্ন বেছে θ (সূক্ষ্মকোণ) দাও। ল্যাব ৩ ধাপে ফলাফল বের করে ক্যালকুলেটরের মানের সাথে মিলিয়ে দেখাবে।</div>
+    <div class="chips" id="c1f"></div>
+    <div class="ctl"><label>n = <span id="c1nv"></span></label><input type="range" id="c1n" min="1" max="24" step="1" value="9">
+    <label>চিহ্ন: <span id="c1sv"></span></label><input type="range" id="c1s" min="0" max="1" step="1" value="1">
+    <label>θ = <span id="c1tv"></span>°</label><input type="range" id="c1t" min="5" max="85" step="5" value="30"></div>
+    <div class="res m" id="c1res"></div>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🟰 ল্যাব ৪: সমীকরণের সমাধান (0 ≤ θ ≤ 2π)</h2>
+    <div class="say">👉 sin, cos বা tan এর সমান কোন মান বেছে নাও। লেখচিত্রে অনুভূমিক রেখা বক্ররেখাকে যেখানে কাটে সেখানে সমাধান।</div>
+    <div class="chips" id="d1f"></div>
+    <div class="chips" id="d1v"></div>
+    <canvas id="d1cv" width="600" height="320"></canvas>
+    <div class="res m" id="d1res"></div>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🔺 ল্যাব ৫: একটি অনুপাত থেকে বাকি পাঁচটি (বইয়ের উদাহরণ ১০, ১১, ২৫ এর মতো)</h2>
+    <div class="say">👉 কোন অনুপাত জানা, তার মান (দুটি পূর্ণসংখ্যার ভাগ) আর কোন চতুর্ভাগে θ আছে বেছে নাও। পিথাগোরাস দিয়ে বাকি অনুপাত বের হবে।</div>
+    <div class="chips" id="e1f"></div>
+    <div class="chips" id="e1q"></div>
+    <div class="ctl"><label>লব = <span id="e1mv"></span></label><input type="range" id="e1m" min="1" max="12" step="1" value="3">
+    <label>হর = <span id="e1nv"></span></label><input type="range" id="e1n" min="1" max="13" step="1" value="1"></div>
+    <canvas id="e1cv" width="600" height="320"></canvas>
+    <div class="res m" id="e1res"></div>
+  </section>
+
+  <section class="panel" id="prac">
+    <h2>✍️ প্র্যাকটিস (বইয়ের ধাঁচে)</h2>
+    <div class="say">👉 উত্তর ভগ্নাংশ (যেমন 3/4) বা দশমিক (২ ঘর) লিখতে পারো। ঋণাত্মক হলে মাইনাস দাও।</div>
+    <div id="pracbox"></div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="fb" id="qscore"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>📖 বই থেকে প্রশ্নোত্তর</h2>
+    <div id="qabox"></div>
+  </section>
+</div>
+
+<footer class="site">&copy; ShikboLab · ত্রিকোণমিতি (উচ্চতর গণিত অধ্যায় ৮)</footer>
+<script>
+var BNS='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BNS[d];});}
+function en(s){return String(s).replace(/[০-৯]/g,function(d){return BNS.indexOf(d);});}
+function $(id){return document.getElementById(id);}
+function R2(c){var d=Math.min(2,window.devicePixelRatio||1),w=c.width,h=c.height;c.width=w*d;c.height=h*d;var x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return x;}
+function fm(v,d){d=(d===undefined)?2:d;var k=Math.pow(10,d),r=Math.round(v*k)/k;if(Math.abs(r)<1e-9)r=0;return bn(String(r).replace('-','−'));}
+function sg(v){return v<0?'−'+bn(-v):bn(v);}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t;}return a;}
+function frac(n,d){if(d<0){n=-n;d=-d;}var g=gcd(n,d)||1;n/=g;d/=g;return d===1?sg(n):sg(n)+'/'+bn(d);}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ex){var box=$(b.dataset.ex),s=box.querySelectorAll('.step:not(.show)');if(s.length){s[0].classList.add('show');}if(s.length<=1)b.disabled=true;}
+  if(b.dataset.rs){var bx=$(b.dataset.rs);bx.querySelectorAll('.step').forEach(function(x){x.classList.remove('show');});bx.querySelector('[data-ex]').disabled=false;}
+});
+/* ---- গ্রাফ হেল্পার ---- */
+function Plot(id){var cv=$(id),W=+cv.getAttribute('width'),H=+cv.getAttribute('height'),x=R2(cv);return {x:x,W:W,H:H};}
+function nice(r){var p=Math.pow(10,Math.floor(Math.log10(r))),m=r/p;return (m<1.5?1:m<3.5?2:m<7.5?5:10)*p;}
+function drawPlot(P,xr,yr,fns,pts,opt){
+  opt=opt||{};var x=P.x,W=P.W,H=P.H,L=34,Rr=12,T=12,B=26;x.clearRect(0,0,W,H);x.fillStyle='#fff';x.fillRect(0,0,W,H);
+  function X(v){return L+(v-xr[0])/(xr[1]-xr[0])*(W-L-Rr);} function Y(v){return H-B-(v-yr[0])/(yr[1]-yr[0])*(H-T-B);}
+  var sx=nice((xr[1]-xr[0])/10),sy=nice((yr[1]-yr[0])/8);
+  x.lineWidth=1;x.strokeStyle='#e6edf2';x.fillStyle='#6b7f95';x.font='11px system-ui';x.textAlign='center';
+  for(var gx=Math.ceil(xr[0]/sx)*sx;gx<=xr[1]+1e-9;gx+=sx){x.beginPath();x.moveTo(X(gx),T);x.lineTo(X(gx),H-B);x.stroke();if(Math.abs(gx)>1e-9)x.fillText(fm(gx,2),X(gx),Math.min(Math.max(Y(0)+14,T+10),H-8));}
+  x.textAlign='right';
+  for(var gy=Math.ceil(yr[0]/sy)*sy;gy<=yr[1]+1e-9;gy+=sy){x.beginPath();x.moveTo(L,Y(gy));x.lineTo(W-Rr,Y(gy));x.stroke();if(Math.abs(gy)>1e-9)x.fillText(fm(gy,2),Math.min(Math.max(X(0)-4,L+22),W-Rr),Y(gy)+4);}
+  x.strokeStyle='#46586a';x.lineWidth=1.6;
+  if(xr[0]<0&&xr[1]>0){x.beginPath();x.moveTo(X(0),T);x.lineTo(X(0),H-B);x.stroke();}
+  if(yr[0]<0&&yr[1]>0){x.beginPath();x.moveTo(L,Y(0));x.lineTo(W-Rr,Y(0));x.stroke();}
+  x.save();x.beginPath();x.rect(L,T,W-L-Rr,H-T-B);x.clip();
+  (opt.hl||[]).forEach(function(h){x.strokeStyle=h.c;x.lineWidth=1.5;x.setLineDash([6,4]);x.beginPath();x.moveTo(L,Y(h.y));x.lineTo(W-Rr,Y(h.y));x.stroke();x.setLineDash([]);});
+  fns.forEach(function(f){x.strokeStyle=f.c;x.lineWidth=3;x.beginPath();var pen=false,N=500;for(var i=0;i<=N;i++){var v=xr[0]+(xr[1]-xr[0])*i/N,y=f.f(v);if(!isFinite(y)||isNaN(y)||y>yr[1]*3||y<yr[0]*3-50){pen=false;continue;}if(!pen){x.moveTo(X(v),Y(y));pen=true;}else x.lineTo(X(v),Y(y));}x.stroke();});
+  (opt.curves||[]).forEach(function(cu){x.strokeStyle=cu.c;x.lineWidth=2.5;cu.paths.forEach(function(pth){x.beginPath();pth.forEach(function(p,i){if(i)x.lineTo(X(p[0]),Y(p[1]));else x.moveTo(X(p[0]),Y(p[1]));});x.stroke();});});
+  x.restore();
+  pts.forEach(function(p){x.fillStyle=p.c||'#1b9a6f';x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.arc(X(p[0]),Y(p[1]),6,0,6.2832);x.fill();x.stroke();if(p[2]){x.fillStyle='#1f3a5f';x.font='700 12px system-ui';x.textAlign='center';x.fillText(p[2],Math.min(Math.max(X(p[0]),40),W-40),Y(p[1])-10);}});
+}
+var PI=3.1416,DG=Math.PI/180;
+function radStr(deg){if(deg===0)return '০';var g=gcd(deg,180),n=deg/g,d=180/g,s=n<0?'−':'';n=Math.abs(n);var a=(n===1?'':bn(n))+'π';return s+(d===1?a:a+'/'+bn(d));}
+function quadOf(deg){var m=((deg%360)+360)%360;if(m%90===0)return {a:true,t:{0:'ধনাত্মক x-অক্ষের উপর',90:'ধনাত্মক y-অক্ষের উপর',180:'ঋণাত্মক x-অক্ষের উপর',270:'ঋণাত্মক y-অক্ষের উপর'}[m]+' (কোনো চতুর্ভাগে নয়)',q:0,m:m};var q=Math.floor(m/90)+1;return {a:false,t:['১ম','২য়','৩য়','৪র্থ'][q-1]+' চতুর্ভাগে',q:q,m:m};}
+function pt(cx,cy,R,deg){return [cx+R*Math.cos(deg*DG),cy-R*Math.sin(deg*DG)];}
+function axes(x,cx,cy,Rx,Ry){x.strokeStyle='#46586a';x.lineWidth=1.6;x.beginPath();x.moveTo(cx-Rx,cy);x.lineTo(cx+Rx,cy);x.moveTo(cx,cy-Ry);x.lineTo(cx,cy+Ry);x.stroke();x.fillStyle='#6b7f95';x.font='12px system-ui';x.textAlign='left';x.fillText('X',cx+Rx-10,cy+16);x.fillText('Y',cx+6,cy-Ry+12);x.fillText('O',cx-14,cy+14);}
+/* ===== ল্যাব ১ ===== */
+var c1=$('a1cv'),x1=R2(c1);
+function lab1(){
+  var d=+$('a1d').value,r=+$('a1r').value;$('a1dv').textContent=d<0?'−'+bn(-d):bn(d);$('a1rv').textContent=bn(r);
+  var x=x1,cx=300,cy=170,R=120;x.clearRect(0,0,600,340);x.fillStyle='#fff';x.fillRect(0,0,600,340);
+  var q=quadOf(d);
+  var qc=['','rgba(27,154,111,.10)','rgba(42,111,219,.10)','rgba(229,57,53,.10)','rgba(255,170,0,.14)'];
+  if(!q.a){x.fillStyle=qc[q.q];var a0=(q.q-1)*90;x.beginPath();x.moveTo(cx,cy);for(var a=a0;a<=a0+90;a+=3){var p=pt(cx,cy,R+30,a);x.lineTo(p[0],p[1]);}x.closePath();x.fill();}
+  axes(x,cx,cy,R+60,R+45);
+  x.fillStyle='#8aa0b4';x.font='700 13px system-ui';x.textAlign='center';x.fillText('১ম',cx+R*.8,cy-R*.7);x.fillText('২য়',cx-R*.8,cy-R*.7);x.fillText('৩য়',cx-R*.8,cy+R*.8);x.fillText('৪র্থ',cx+R*.8,cy+R*.8);
+  x.strokeStyle='#cfd9e1';x.lineWidth=1.5;x.beginPath();x.arc(cx,cy,R,0,6.2832);x.stroke();
+  if(d!==0){var sgn=d>0?1:-1,tot=Math.abs(d);x.strokeStyle='#e8590c';x.lineWidth=2.5;x.beginPath();for(var t=0;t<=tot;t+=2){var rr=30+60*Math.min(t,1440)/1440,p2=pt(cx,cy,rr,sgn*t);if(t===0)x.moveTo(p2[0],p2[1]);else x.lineTo(p2[0],p2[1]);}x.stroke();
+    var pe=pt(cx,cy,30+60*Math.min(tot,1440)/1440,d),pe2=pt(cx,cy,30+60*Math.min(tot-8,1440)/1440,sgn*(tot-8)>=0?d-sgn*8:d);x.fillStyle='#e8590c';var ang=Math.atan2(pe[1]-pe2[1],pe[0]-pe2[0]);x.beginPath();x.moveTo(pe[0],pe[1]);x.lineTo(pe[0]-9*Math.cos(ang-.45),pe[1]-9*Math.sin(ang-.45));x.lineTo(pe[0]-9*Math.cos(ang+.45),pe[1]-9*Math.sin(ang+.45));x.closePath();x.fill();}
+  x.strokeStyle='#2a6fdb';x.lineWidth=3;var pa=pt(cx,cy,R+25,d);x.beginPath();x.moveTo(cx,cy);x.lineTo(pa[0],pa[1]);x.stroke();
+  x.fillStyle='#2a6fdb';x.beginPath();x.arc(pa[0],pa[1],5,0,6.2832);x.fill();x.font='700 13px system-ui';x.textAlign='center';var pl=pt(cx,cy,R+44,d);x.fillText('A',pl[0],pl[1]+4);
+  x.fillStyle='#1f3a5f';x.textAlign='left';x.font='700 14px system-ui';x.fillText('θ = '+(d<0?'−'+bn(-d):bn(d))+'°',12,24);
+  var rad=d*PI/180,turns=Math.trunc(d/360),m=q.m,h='θ = '+sg(d)+'° = <b>'+radStr(d)+' রেডিয়ান</b> (π = ৩.১৪১৬ ধরে ≈ '+fm(rad,4)+')<br>';
+  h+='দিক: '+(d>0?'ঘড়ির কাঁটার উল্টো দিকে ⇒ <b>ধনাত্মক কোণ</b>':d<0?'ঘড়ির কাঁটার দিকে ⇒ <b>ঋণাত্মক কোণ</b>':'ঘোরেনি')+'<br>';
+  h+='পূর্ণ পাক: '+bn(Math.abs(turns))+'টি, '+(d%360===0?'বাকি কোণ ০°':'বাকি কোণ = '+sg(d-turns*360)+'°')+'। ধনাত্মক মানে এটি '+bn(m)+'° এর সমান অবস্থান।<br>';
+  h+='অবস্থান: <b>'+q.t+'</b><br>';
+  h+='ব্যাসার্ধ r = '+bn(r)+' হলে চাপ s = rθ = '+bn(r)+' × '+fm(rad,4)+' = <b>'+fm(r*rad,3)+'</b> (প্রায়, দিকসহ)।';
+  $('a1res').innerHTML=h;
+}
+[-520,-750,-300,430,545,-100,330,1320].forEach(function(v){});
+$('a1m').innerHTML=[-750,-520,-300,-100,30,330,430,545].map(function(v){return '<button data-v="'+v+'">'+sg(v)+'°</button>';}).join('');
+$('a1m').onclick=function(e){var b=e.target.closest('button');if(!b)return;$('a1d').value=b.dataset.v;lab1();};
+$('a1d').oninput=lab1;$('a1r').oninput=lab1;lab1();
+/* ===== ল্যাব ২ ===== */
+var c2=$('b1cv'),x2=R2(c2);
+var SINM=['0','1/2','1/√2','√3/2','1'],COSM=['1','√3/2','1/√2','1/2','0'],TANM=['0','1/√3','1','√3',null],COTM=[null,'√3','1','1/√3','0'],SECM=['1','2/√3','√2','2',null],CSCM=[null,'2','√2','2/√3','1'];
+function refIdx(m){var a=m<=90?m:m<=180?180-m:m<=270?m-180:360-m;var k=[0,30,45,60,90].indexOf(a);return k;}
+function exStr(tab,m,val){var k=refIdx(m);if(k<0)return null;var s=tab[k];if(s===null)return null;var neg=val<-1e-9;return (neg?'−':'')+bn(s);}
+function lab2(){
+  var d=+$('b1d').value;$('b1dv').textContent=bn(d);var x=x2,cx=250,cy=170,R=125;x.clearRect(0,0,600,340);x.fillStyle='#fff';x.fillRect(0,0,600,340);
+  axes(x,cx,cy,R+45,R+35);x.strokeStyle='#cfd9e1';x.lineWidth=1.5;x.beginPath();x.arc(cx,cy,R,0,6.2832);x.stroke();
+  var p=pt(cx,cy,R,d);x.fillStyle='rgba(42,111,219,.10)';x.beginPath();x.moveTo(cx,cy);x.lineTo(p[0],cy);x.lineTo(p[0],p[1]);x.closePath();x.fill();
+  x.strokeStyle='#1f3a5f';x.lineWidth=2;x.beginPath();x.moveTo(cx,cy);x.lineTo(p[0],p[1]);x.stroke();
+  x.strokeStyle='#e53935';x.lineWidth=3;x.beginPath();x.moveTo(p[0],cy);x.lineTo(p[0],p[1]);x.stroke();
+  x.strokeStyle='#2a6fdb';x.beginPath();x.moveTo(cx,cy);x.lineTo(p[0],cy);x.stroke();
+  x.strokeStyle='#e8590c';x.lineWidth=2;x.beginPath();for(var a=0;a<=d;a+=3){var q=pt(cx,cy,26,a);if(a===0)x.moveTo(q[0],q[1]);else x.lineTo(q[0],q[1]);}x.stroke();
+  x.fillStyle='#1b9a6f';x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.arc(p[0],p[1],7,0,6.2832);x.fill();x.stroke();
+  var S=Math.sin(d*DG),C=Math.cos(d*DG);x.font='700 12px system-ui';x.textAlign='left';x.fillStyle='#e53935';x.fillText('sin = y',470,40);x.fillStyle='#2a6fdb';x.fillText('cos = x',470,60);x.fillStyle='#1f3a5f';x.fillText('r = 1',470,80);
+  var m=d%360,tU=(d%180===90),cU=(d%180===0);
+  function val(v,u){return u?'অসংজ্ঞায়িত':fm(v,4);}
+  var tn=tU?0:S/C,ct=cU?0:C/S,sc=tU?0:1/C,cs=cU?0:1/S;
+  function row(nm,v,u,tab){var e=u?null:exStr(tab,m,v);return '<b>'+nm+'</b> = '+val(v,u)+(e?' (সঠিক মান: '+e+')':'')+(u?'':(v>1e-9?' <span style="color:#0b7a55">ধনাত্মক</span>':v<-1e-9?' <span style="color:#c0392b">ঋণাত্মক</span>':''));}
+  var q=quadOf(d),h='P(x, y) = ('+fm(C,4)+', '+fm(S,4)+')।  '+q.t+'<br>';
+  h+=row('sinθ',S,false,SINM)+'<br>'+row('cosθ',C,false,COSM)+'<br>'+row('tanθ',tn,tU,TANM)+'<br>'+row('cotθ',ct,cU,COTM)+'<br>'+row('secθ',sc,tU,SECM)+'<br>'+row('cosecθ',cs,cU,CSCM)+'<br>';
+  h+='যাচাই: sin²θ + cos²θ = '+fm(S*S+C*C,4)+' ✔'+(tU?'':'; ১ + tan²θ = '+fm(1+tn*tn,4)+', sec²θ = '+fm(sc*sc,4)+' ✔');
+  if(tU)h+='<br>θ = '+bn(d)+'° এ x = ০, তাই tan ও sec সংজ্ঞায়িত নয়।';if(cU)h+='<br>θ = '+bn(d)+'° এ y = ০, তাই cot ও cosec সংজ্ঞায়িত নয়।';
+  $('b1res').innerHTML=h;
+}
+$('b1m').innerHTML=[0,30,45,60,90,120,135,150,180,210,225,270,300,315,330,360].map(function(v){return '<button data-v="'+v+'">'+bn(v)+'°</button>';}).join('');
+$('b1m').onclick=function(e){var b=e.target.closest('button');if(!b)return;$('b1d').value=b.dataset.v;lab2();};
+$('b1d').oninput=lab2;lab2();
+/* ===== ল্যাব ৩ ===== */
+var FN={sin:Math.sin,cos:Math.cos,tan:Math.tan,cosec:function(a){return 1/Math.sin(a);},sec:function(a){return 1/Math.cos(a);},cot:function(a){return 1/Math.tan(a);}};
+var CO={sin:'cos',cos:'sin',tan:'cot',cot:'tan',sec:'cosec',cosec:'sec'};
+var POSQ={sin:[1,2],cosec:[1,2],cos:[1,4],sec:[1,4],tan:[1,3],cot:[1,3]};
+var C1F='sin';
+function lab3(){
+  var n=+$('c1n').value,s=+$('c1s').value,t=+$('c1t').value;$('c1nv').textContent=bn(n);$('c1sv').textContent=s?'+':'−';$('c1tv').textContent=bn(t);
+  var A=n*90+(s?t:-t),q=quadOf(A),f=C1F,g=(n%2===1)?CO[f]:f,pos=POSQ[f].indexOf(q.q)>=0,sign=pos?1:-1;
+  var exp=sign*FN[g](t*DG),act=FN[f](A*DG);
+  var h='<b>ধাপ ১:</b> কোণ = '+bn(n)+' × π/2 '+(s?'+':'−')+' θ = '+bn(n)+' × ৯০° '+(s?'+':'−')+' '+bn(t)+'° = <b>'+bn(A)+'°</b> (θ = '+bn(t)+'°)<br>';
+  h+='<b>ধাপ ২:</b> n = '+bn(n)+' '+(n%2===1?'<b>বিজোড়</b> ⇒ '+f+' বদলে <b>'+g+'</b> হবে':'<b>জোড়</b> ⇒ '+f+' থাকবে <b>'+f+'</b>')+'<br>';
+  h+='<b>ধাপ ৩:</b> '+bn(A)+'° কোণ '+q.t+' (পুরো পাক বাদ দিলে '+bn(q.m)+'°)। এই চতুর্ভাগে '+f+' '+(pos?'<span style="color:#0b7a55"><b>ধনাত্মক</b></span>':'<span style="color:#c0392b"><b>ঋণাত্মক</b></span>')+'।<br>';
+  h+='<b>ফল:</b> '+f+'('+bn(n)+'×π/2 '+(s?'+':'−')+' θ) = <b>'+(pos?'+':'−')+' '+g+'θ</b><br>';
+  h+='যাচাই (θ = '+bn(t)+'°): '+(pos?'+':'−')+g+'('+bn(t)+'°) = '+fm(exp,4)+'; সরাসরি '+f+'('+bn(A)+'°) = '+fm(act,4)+' '+(Math.abs(exp-act)<1e-6?'✔ মিলেছে':'✘');
+  $('c1res').innerHTML=h;
+}
+$('c1f').innerHTML=['sin','cos','tan','cosec','sec','cot'].map(function(f){return '<button data-f="'+f+'" class="'+(f==='sin'?'on':'')+'">'+f+'</button>';}).join('');
+$('c1f').onclick=function(e){var b=e.target.closest('button');if(!b)return;C1F=b.dataset.f;[].forEach.call($('c1f').children,function(z){z.classList.toggle('on',z===b);});lab3();};
+['c1n','c1s','c1t'].forEach(function(i){$(i).oninput=lab3;});lab3();
+/* ===== ল্যাব ৪ ===== */
+var P4=Plot('d1cv'),D1F='sin',D1I=1,s3=Math.sqrt(3);
+var VS={sin:[['−১',-1],['−√৩/২',-s3/2],['−১/√২',-Math.SQRT1_2],['−১/২',-.5],['০',0],['১/২',.5],['১/√২',Math.SQRT1_2],['√৩/২',s3/2],['১',1]],
+ tan:[['−√৩',-s3],['−১',-1],['−১/√৩',-1/s3],['০',0],['১/√৩',1/s3],['১',1],['√৩',s3]]};VS.cos=VS.sin;
+function lab4(){
+  var f=D1F,list=VS[f];if(D1I>=list.length)D1I=Math.floor(list.length/2);var k=list[D1I][1],F=FN[f],sols=[],a;
+  for(a=1;a<360;a++){if(f==='tan'&&a%180===90)continue;if(Math.abs(F(a*DG)-k)<1e-9)sols.push(a);}
+  var yr=f==='tan'?[-4,4]:[-1.6,1.6];
+  drawPlot(P4,[0,360],yr,[{f:function(v){var y=F(v*DG);return (f==='tan'&&Math.abs(y)>4.2)?NaN:y;},c:'#2a6fdb'}],sols.map(function(v){return [v,k,'',"#e53935"];}),{hl:[{y:k,c:'#1b9a6f'}]});
+  var h='সমীকরণ: <b>'+f+'θ = '+list[D1I][0]+'</b>, &nbsp;0 &lt; θ &lt; 2π<br>';
+  if(!sols.length)h+='এই সীমায় কোনো সমাধান নেই।';
+  else{h+='সমাধান ('+bn(sols.length)+'টি): <b>'+sols.map(function(v){return 'θ = '+radStr(v);}).join(', ')+'</b><br>ডিগ্রিতে: '+sols.map(function(v){return bn(v)+'°';}).join(', ')+'<br>যাচাই: '+sols.map(function(v){return f+'('+bn(v)+'°) = '+fm(F(v*DG),4);}).join('; ')+' ✔';
+    h+='<br>কেন এই চতুর্ভাগগুলো? '+(f==='tan'?'tan ধনাত্মক হয় ১ম ও ৩য়তে, ঋণাত্মক হয় ২য় ও ৪র্থতে।':(f==='sin'?'sin ধনাত্মক ১ম ও ২য়তে, ঋণাত্মক ৩য় ও ৪র্থতে।':'cos ধনাত্মক ১ম ও ৪র্থতে, ঋণাত্মক ২য় ও ৩য়তে।'));}
+  $('d1res').innerHTML=h;
+}
+function draw4chips(){$('d1v').innerHTML=VS[D1F].map(function(v,i){return '<button data-i="'+i+'" class="'+(i===D1I?'on':'')+'">'+v[0]+'</button>';}).join('');}
+$('d1f').innerHTML=['sin','cos','tan'].map(function(f){return '<button data-f="'+f+'" class="'+(f==='sin'?'on':'')+'">'+f+'θ = k</button>';}).join('');
+$('d1f').onclick=function(e){var b=e.target.closest('button');if(!b)return;D1F=b.dataset.f;D1I=Math.floor(VS[D1F].length/2)+(D1F==='tan'?1:1);[].forEach.call($('d1f').children,function(z){z.classList.toggle('on',z===b);});draw4chips();lab4();};
+$('d1v').onclick=function(e){var b=e.target.closest('button');if(!b)return;D1I=+b.dataset.i;draw4chips();lab4();};
+D1I=7;draw4chips();lab4();
+/* ===== ল্যাব ৫ ===== */
+var E1F='tan',E1Q=1,c5=$('e1cv'),x5=R2(c5);
+function sqS(n){var s=1,t=n;for(var k=Math.floor(Math.sqrt(n));k>1;k--){if(t%(k*k)===0){s*=k;t/=k*k;}}return [s,t];}
+function rat(A2,B2,neg){var st=sqS(A2*B2),s=st[0],t=st[1],g=gcd(s,B2),sn=s/g,dn=B2/g,str;
+  str=(t===1?bn(sn):(sn===1?'':bn(sn))+'√'+bn(t));if(dn!==1)str+='/'+bn(dn);return (neg?'−':'')+str;}
+function lab5(){
+  var m=+$('e1m').value,n=+$('e1n').value;$('e1mv').textContent=bn(m);$('e1nv').textContent=bn(n);var f=E1F,X2,Y2,R2_,ok=true,msg='';
+  if(f==='sin'){Y2=m*m;R2_=n*n;X2=R2_-Y2;if(m>=n){ok=false;msg='sin এর মান (লব/হর) ১ এর বেশি বা সমান হলে সমকোণী ত্রিভুজ হয় না। লব < হর রাখো।';}}
+  else if(f==='cos'){X2=m*m;R2_=n*n;Y2=R2_-X2;if(m>=n){ok=false;msg='cos এর মান ১ এর বেশি বা সমান হলে ত্রিভুজ হয় না (এখানে লব < হর রাখো)।';}}
+  else{Y2=m*m;X2=n*n;R2_=X2+Y2;}
+  var x=x5;x.clearRect(0,0,600,320);x.fillStyle='#fff';x.fillRect(0,0,600,320);
+  if(!ok){$('e1res').innerHTML=msg;x.fillStyle='#c0392b';x.font='700 14px system-ui';x.textAlign='center';x.fillText('এই মান সম্ভব নয়',300,160);return;}
+  var sx=(E1Q===1||E1Q===4)?1:-1,sy=(E1Q===1||E1Q===2)?1:-1,xv=Math.sqrt(X2),yv=Math.sqrt(Y2),rv=Math.sqrt(R2_),cx=300,cy=160,sc=105/Math.max(xv,yv,1e-9);
+  axes(x,cx,cy,250,140);var px=cx+sx*xv*sc,py=cy-sy*yv*sc;
+  x.fillStyle='rgba(42,111,219,.12)';x.beginPath();x.moveTo(cx,cy);x.lineTo(px,cy);x.lineTo(px,py);x.closePath();x.fill();
+  x.strokeStyle='#1f3a5f';x.lineWidth=2.5;x.beginPath();x.moveTo(cx,cy);x.lineTo(px,py);x.stroke();x.strokeStyle='#e53935';x.beginPath();x.moveTo(px,cy);x.lineTo(px,py);x.stroke();x.strokeStyle='#2a6fdb';x.beginPath();x.moveTo(cx,cy);x.lineTo(px,cy);x.stroke();
+  x.fillStyle='#1b9a6f';x.beginPath();x.arc(px,py,6,0,6.2832);x.fill();x.fillStyle='#1f3a5f';x.font='700 12px system-ui';x.textAlign='center';
+  x.fillText('r = '+(Number.isInteger(rv)?bn(rv):'√'+bn(R2_)),(cx+px)/2-sx*14,(cy+py)/2-sy*8);x.fillStyle='#e53935';x.fillText('y = '+(sy<0?'−':'')+(Number.isInteger(yv)?bn(yv):'√'+bn(Y2)),px+(sx>0?34:-34),(cy+py)/2);x.fillStyle='#2a6fdb';x.fillText('x = '+(sx<0?'−':'')+(Number.isInteger(xv)?bn(xv):'√'+bn(X2)),(cx+px)/2,cy+(sy>0?16:-8));
+  var rows=[['sinθ','y/r',Y2,R2_,sy<0,yv/rv],['cosθ','x/r',X2,R2_,sx<0,xv/rv],['tanθ','y/x',Y2,X2,sx*sy<0,yv/xv],['cotθ','x/y',X2,Y2,sx*sy<0,xv/yv],['secθ','r/x',R2_,X2,sx<0,rv/xv],['cosecθ','r/y',R2_,Y2,sy<0,rv/yv]];
+  var h='<b>'+['১ম','২য়','৩য়','৪র্থ'][E1Q-1]+' চতুর্ভাগ:</b> x '+(sx>0?'ধনাত্মক':'ঋণাত্মক')+', y '+(sy>0?'ধনাত্মক':'ঋণাত্মক')+'। r = √(x² + y²) = √('+bn(X2)+' + '+bn(Y2)+') = '+(Number.isInteger(rv)?bn(rv):'√'+bn(R2_))+'<br>';
+  rows.forEach(function(r){var v=(r[4]?-1:1)*r[5];h+='<b>'+r[0]+'</b> = '+r[1]+' = '+rat(r[2],r[3],r[4])+' ≈ '+fm(v,4)+'<br>';});
+  var S=(sy*yv/rv),C=(sx*xv/rv);h+='যাচাই: sin²θ + cos²θ = '+fm(S*S+C*C,4)+' ✔; ১ + tan²θ = '+fm(1+Y2/X2,4)+' = sec²θ = '+fm(R2_/X2,4)+' ✔';
+  $('e1res').innerHTML=h;
+}
+$('e1f').innerHTML=['sin','cos','tan'].map(function(f){return '<button data-f="'+f+'" class="'+(f==='tan'?'on':'')+'">জানা: '+f+'θ</button>';}).join('');
+$('e1q').innerHTML=['১ম','২য়','৩য়','৪র্থ'].map(function(q,i){return '<button data-q="'+(i+1)+'" class="'+(i===0?'on':'')+'">'+q+' চতুর্ভাগ</button>';}).join('');
+$('e1f').onclick=function(e){var b=e.target.closest('button');if(!b)return;E1F=b.dataset.f;[].forEach.call($('e1f').children,function(z){z.classList.toggle('on',z===b);});lab5();};
+$('e1q').onclick=function(e){var b=e.target.closest('button');if(!b)return;E1Q=+b.dataset.q;[].forEach.call($('e1q').children,function(z){z.classList.toggle('on',z===b);});lab5();};
+$('e1m').oninput=lab5;$('e1n').oninput=lab5;lab5();
+/* ===== প্র্যাকটিস ===== */
+var PR=[
+ ['45° = π/k রেডিয়ান হলে k এর মান কত?',[4],'45° = 45 × π/180 = π/4। তাই k = 4।'],
+ ['5π/6 রেডিয়ান কত ডিগ্রি?',[150],'5π/6 × 180/π = 150°।'],
+ ['সকাল ৯:৩০ টায় ঘড়ির ঘণ্টা ও মিনিটের কাঁটার মধ্যবর্তী কোণ কত ডিগ্রি?',[105],'এক ঘর = 6°। কাঁটা দুটির ব্যবধান 15½ ঘর বা 17½ ঘর। 17.5 × 6 = 105°।'],
+ ['বৃত্তের ব্যাসার্ধ 7 সেমি, চাপ 11 সেমি হলে কেন্দ্রীয় কোণ কত রেডিয়ান? (দশমিক ২ ঘর)',[1.57],'θ = s/r = 11/7 ≈ 1.57।'],
+ ['12 সেমি ব্যাসার্ধের বৃত্তে 30° কেন্দ্রীয় কোণের চাপ কত সেমি? (π = 3.1416, দশমিক ২ ঘর)',[6.28],'30° = π/6। s = 12 × π/6 = 2π ≈ 6.28।'],
+ ['−300° কোণ কত নম্বর চতুর্ভাগে অবস্থান করে? (সংখ্যা লেখো)',[1],'−300° = −360° + 60°, তাই −270° থেকে −360° এর মধ্যে ⇒ ১ম চতুর্ভাগ।'],
+ ['θ সূক্ষ্মকোণ এবং cosθ = 4/5 হলে tanθ = ? (ভগ্নাংশ বা দশমিক)',[0.75],'sinθ = 3/5। tanθ = (3/5)/(4/5) = 3/4।'],
+ ['cosθ = −4/5 এবং π < θ < 3π/2 হলে sinθ = ? (ভগ্নাংশ বা দশমিক)',[-0.6],'sin²θ = 1 − 16/25 = 9/25। ৩য় চতুর্ভাগে sin ঋণাত্মক ⇒ sinθ = −3/5।'],
+ ['মান নির্ণয় করো: sin²(π/6) + cos²(π/4) + tan²(π/3) + cot²(π/2)  (ভগ্নাংশ বা দশমিক)',[3.75],'1/4 + 1/2 + 3 + 0 = 3¾ = 3.75।'],
+ ['cos(19π/3) এর মান কত?',[0.5],'19π/3 = 12 × π/2 + π/3। n জোড় ⇒ cos, ১ম চতুর্ভাগ ⇒ +। cos(π/3) = 1/2।'],
+ ['tan(11π/6) এর মান কত? (দশমিক ২ ঘর)',[-0.5774],'11π/6 = 4 × π/2 − π/6। ৪র্থ চতুর্ভাগে tan ঋণাত্মক ⇒ −tan(π/6) = −1/√3 ≈ −0.58।'],
+ ['0 < θ < 2π এ 2cos²θ + cosθ − 1 = 0 সমীকরণের সমাধান কয়টি?',[3],'(2cosθ − 1)(cosθ + 1) = 0। cosθ = 1/2 ⇒ π/3, 5π/3; cosθ = −1 ⇒ π। মোট ৩টি।']
+];
+(function(){var h='';PR.forEach(function(p,i){h+='<div class="q"><b>'+bn(i+1)+'.</b> '+p[0]+'<div class="ans"> <input type="text" id="pi'+i+'" size="10"> <button class="btn" data-pc="'+i+'">যাচাই</button> <button class="btn alt" data-ph="'+i+'">সমাধান</button></div><div class="fb" id="pf'+i+'"></div></div>';});$('pracbox').innerHTML=h;})();
+function numOf(s){s=en(s).replace(/[−–]/g,'-').replace(/\s+/g,'');var m=s.match(/^(-?\d+)\/(\d+)$/);if(m)return +m[1]/+m[2];if(/^-?\d*\.?\d+$/.test(s))return parseFloat(s);return NaN;}
+$('pracbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.pc!==undefined){var i=+b.dataset.pc,raw=$('pi'+i).value,v=numOf(raw),ok=!isNaN(v)&&PR[i][1].some(function(a){return Math.abs(a-v)<=0.0151;});
+    $('pf'+i).innerHTML=raw.trim()===''?'আগে উত্তর লেখো।':(ok?'✅ ঠিক! সাবাশ।':'❌ আবার চেষ্টা করো, বা "সমাধান" দেখো।');}
+  if(b.dataset.ph!==undefined){var j=+b.dataset.ph;$('pf'+j).innerHTML='💡 '+PR[j][2];}
+});
+/* ===== কুইজ ===== */
+var QZ=[];function M(q,c,w,e){QZ.push({q:q,o:[c].concat(w),e:e});}
+M('"ত্রিকোণমিতি" শব্দের অর্থ মূলত—','ত্রিভুজের (ত্রিকোণের) পরিমাপ',['বৃত্তের ক্ষেত্রফল','কোণের রং','সমীকরণ সমাধান'],'Trigon = ত্রিভুজ, Metry = পরিমাপ।');
+M('1° এ কত মিনিট (′) থাকে?','৬০',['১০০','৩৬০','৯০'],'1° = 60′ এবং 1′ = 60″।');
+M('১ রেডিয়ান কোণ কাকে বলে?','ব্যাসার্ধের সমান চাপ কেন্দ্রে যে কোণ উৎপন্ন করে',['পরিধির সমান চাপ যে কোণ করে','ব্যাসের সমান চাপ যে কোণ করে','১ ডিগ্রির সমান কোণ'],'চাপ = ব্যাসার্ধ ⇒ কোণ = ১ রেডিয়ান।');
+M('π রেডিয়ান =','১৮০°',['৯০°','৩৬০°','৫৭.২৯৬°'],'পরিধি 2πr ⇒ 2π রেডিয়ান = 360°।');
+M('১ রেডিয়ান প্রায়—','৫৭.২৯৬°',['৩.১৪১৬°','১৮০°','০.০১৭৫°'],'(180/π)° ≈ 57.29578°।');
+M('চাপের দৈর্ঘ্য s = rθ সূত্রে θ কোন এককে থাকতে হবে?','রেডিয়ান',['ডিগ্রি','মিনিট','সেকেন্ড'],'s = rθ তখনই খাটে যখন θ রেডিয়ানে।');
+M('30° কে রেডিয়ানে লিখলে—','π/6',['π/3','π/4','π/12'],'30 × π/180 = π/6।');
+M('270° কে রেডিয়ানে লিখলে—','৩π/২',['π/২','২π','৫π/৪'],'270 × π/180 = 3π/2।');
+M('430° কোণ কোন চতুর্ভাগে?','১ম',['২য়','৩য়','৪র্থ'],'430° = 360° + 70°।');
+M('−520° কোণ কোন চতুর্ভাগে?','৩য়',['১ম','২য়','৪র্থ'],'−520° = −360° − 160° ⇒ −160° ৩য় চতুর্ভাগ।');
+M('−750° কোণ কোন চতুর্ভাগে?','৪র্থ',['১ম','২য়','৩য়'],'−750° = −720° − 30° ⇒ −30°।');
+M('sinθ এর সংজ্ঞা (x, y, r দিয়ে)—','y/r',['x/r','y/x','r/y'],'লম্ব/অতিভুজ।');
+M('tanθ =','sinθ/cosθ',['cosθ/sinθ','sinθ·cosθ','1/sinθ'],'(y/r)/(x/r) = y/x।');
+M('sin²θ + cos²θ =','১',['০','২','tan²θ'],'x² + y² = r²।');
+M('১ + tan²θ =','sec²θ',['cosec²θ','cot²θ','sin²θ'],'sin²+cos²=1 কে cos² দিয়ে ভাগ করে।');
+M('২য় চতুর্ভাগে কোন দুটি অনুপাত ধনাত্মক?','sin ও cosec',['cos ও sec','tan ও cot','সবগুলো'],'২য়তে x ঋণাত্মক, y ধনাত্মক।');
+M('৩য় চতুর্ভাগে কোন দুটি অনুপাত ধনাত্মক?','tan ও cot',['sin ও cosec','cos ও sec','কোনোটিই না'],'x ও y দুটোই ঋণাত্মক, তাই y/x ধনাত্মক।');
+M('৪র্থ চতুর্ভাগে ধনাত্মক—','cos ও sec',['sin ও cosec','tan ও cot','সবগুলো'],'x ধনাত্মক, y ঋণাত্মক।');
+M('sin(−θ) =','−sinθ',['sinθ','cosθ','−cosθ'],'sin বিজোড় ফাংশন।');
+M('cos(−θ) =','cosθ',['−cosθ','sinθ','−sinθ'],'cos জোড় ফাংশন।');
+M('sin(π/2 − θ) =','cosθ',['sinθ','−cosθ','−sinθ'],'পূরক কোণে sin ↔ cos।');
+M('cos(π/2 + θ) =','−sinθ',['sinθ','cosθ','−cosθ'],'n = 1 বিজোড় ⇒ sin; ২য় চতুর্ভাগে cos ঋণাত্মক।');
+M('tan(π − θ) =','−tanθ',['tanθ','cotθ','−cotθ'],'২য় চতুর্ভাগে tan ঋণাত্মক।');
+M('sin(3π/2 − θ) =','−cosθ',['cosθ','−sinθ','sinθ'],'n = 3 বিজোড় ⇒ cos; ৩য় চতুর্ভাগে sin ঋণাত্মক।');
+M('sin(9π/2 + θ) =','cosθ',['−cosθ','sinθ','−sinθ'],'n = 9 বিজোড় ⇒ cos; ২য় চতুর্ভাগে sin ধনাত্মক।');
+M('cos(19π/3) এর মান—','১/২',['−১/২','√৩/২','−√৩/২'],'cos(6π + π/3) = cos(π/3)।');
+M('tan(11π/6) এর মান—','−১/√৩',['১/√৩','√৩','−√৩'],'৪র্থ চতুর্ভাগে tan ঋণাত্মক।');
+M('sec(−17π/2) এর মান—','অসংজ্ঞায়িত',['০','১','−১'],'cos(17π/2) = cos(π/2) = 0 ⇒ sec = 1/0 অসংজ্ঞায়িত।');
+M('0 < θ < 2π এ cosθ = ১/২ হলে θ এর মান—','π/৩ ও ৫π/৩',['π/৬ ও ৫π/৬','২π/৩ ও ৪π/৩','π/৩ ও ২π/৩'],'cos ধনাত্মক ১ম ও ৪র্থ চতুর্ভাগে।');
+M('θ সূক্ষ্মকোণ ও tanθ = ৩ হলে sinθ =','৩/√১০',['১/√১০','৩/১০','√১০/৩'],'অতিভুজ = √(9 + 1) = √10।');
+(function(){
+  var done=0,sc=0;
+  QZ.forEach(function(q){var ord=q.o.map(function(t,i){return {t:t,c:i===0};});
+    for(var i=ord.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),k=ord[i];ord[i]=ord[j];ord[j]=k;}q.ord=ord;});
+  var h='';QZ.forEach(function(q,qi){h+='<div class="q" id="qq'+qi+'"><b>'+bn(qi+1)+'.</b> '+q.q+q.ord.map(function(o,oi){return '<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+o.t+'</button>';}).join('')+'<div class="fb" id="qe'+qi+'"></div></div>';});
+  $('quizbox').innerHTML=h;
+  $('quizbox').addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b||b.parentNode.dataset.done)return;
+    var qi=+b.dataset.q,q=QZ[qi],o=q.ord[+b.dataset.o];b.parentNode.dataset.done=1;done++;
+    var btns=b.parentNode.querySelectorAll('.opt');btns.forEach(function(x,i){if(q.ord[i].c)x.classList.add('good');});
+    if(o.c){sc++;$('qe'+qi).textContent='✅ ঠিক! '+q.e;}else{b.classList.add('bad');$('qe'+qi).textContent='❌ ভুল। '+q.e;}
+    $('qscore').textContent='স্কোর: '+bn(sc)+' / '+bn(done)+' (মোট '+bn(QZ.length)+'টি)';
+    try{if(done===QZ.length){localStorage.setItem('sl_done_math-trigonometry','1');var xp=+(localStorage.getItem('sl_xp')||0);localStorage.setItem('sl_xp',xp+sc);}}catch(er){}
+  });
+})();
+/* ===== প্রশ্নোত্তর ===== */
+var QA=[
+ {h:'অনুশীলনী ৮.১ (π = ৩.১৪১৬)',items:[
+  ['১ ক. রেডিয়ানে প্রকাশ: (i) 75°30′ (ii) 55°54′53″ (iii) 33°22′11″','(i) 75.5° × π/180 = 151π/360 ≈ 1.3177 (ii) ≈ 55.9147° ≈ 0.9759 (iii) ≈ 33.3697° ≈ 0.5824 রেডিয়ান (প্রায়)।'],
+  ['১ খ. ডিগ্রিতে: (i) 8π/13 (ii) 1.3177 (iii) 0.9759','(i) 8π/13 × 180/π = 1440/13° ≈ 110°46′9.2″ (ii) ≈ 75.5° ≈ 75°30′ (iii) ≈ 55.9° ≈ 55°54′53″ (প্রায়)।'],
+  ['২. D/180 = R/π প্রমাণ করো।','D° = R^c। 1° = (π/180)^c, তাই D° = (D × π/180)^c = R^c ⇒ R = Dπ/180 ⇒ D/180 = R/π।'],
+  ['৩. চাকার ব্যাসার্ধ 2 মিটার 3 সেমি। পরিধির আসন্ন মান?','r = 2.03 মি.। পরিধি = 2πr = 2 × 3.1416 × 2.03 ≈ 12.7549 মিটার।'],
+  ['৪. গাড়ির চাকার ব্যাস 0.84 মি., প্রতি সেকেন্ডে 6 পাক। গতিবেগ?','প্রতি পাকে π × 0.84 মি.। গতিবেগ = 6 × 3.1416 × 0.84 ≈ 15.83 মি./সে.।'],
+  ['৫. ত্রিভুজের কোণ অনুপাত 2 : 5 : 3। ক্ষুদ্রতম ও বৃহত্তম কোণের বৃত্তীয় মান?','মোট 10 ভাগ = π। ক্ষুদ্রতম = 2π/10 = π/5, বৃহত্তম = 5π/10 = π/2।'],
+  ['৬. কোণগুলো সমান্তর শ্রেণিভুক্ত, বৃহত্তম কোণ ক্ষুদ্রতম কোণের দ্বিগুণ। রেডিয়ান মান?','কোণ a − d, a, a + d। তিন কোণের সমষ্টি 3a = π ⇒ a = π/3। a + d = 2(a − d) ⇒ d = a/3 = π/9। কোণ: 2π/9, π/3, 4π/9।'],
+  ['৭. ঢাকা ও চট্টগ্রাম পৃথিবীর কেন্দ্রে 5° কোণ করে। দূরত্ব?','5° = 5π/180। s = 6440 × 5 × 3.1416/180 ≈ 562 কি.মি. (প্রায়)।'],
+  ['৮. টেকনাফ ও তেতুলিয়া কেন্দ্রে 10°6′3″ করে। দূরত্ব?','10°6′3″ ≈ 10.1008°। s = 6440 × 10.1008 × 3.1416/180 ≈ 1135.3 কি.মি. (প্রায়)।'],
+  ['৯. সাইকেলে 11 সেকেন্ডে চাপ কেন্দ্রে 30° কোণ উৎপন্ন করে, ব্যাস 201 মি.। গতিবেগ?','r = 100.5 মি.। s = 100.5 × π/6 ≈ 52.62 মি.। গতিবেগ = 52.62/11 ≈ 4.78 মি./সে.।'],
+  ['১০. পৃথিবীর উপর দুটি স্থান কেন্দ্রে 32″ কোণ করে। দূরত্ব?','32″ = 32/3600°। s = 6440 × (32/3600) × π/180 ≈ 0.9991 কি.মি. (প্রায় 1 কি.মি.)।'],
+  ['১১. সকাল ৯:৩০ টায় ঘণ্টা ও মিনিটের কাঁটার মধ্যবর্তী কোণ রেডিয়ানে?','17½ ঘর × 6° = 105° = 7π/12 ≈ 1.8326 রেডিয়ান।'],
+  ['১২. ঘণ্টায় 6 কি.মি. বেগে, 36 সেকেন্ডে চাপ কেন্দ্রে 60° কোণ। বৃত্তের ব্যাস?','দূরত্ব = 6000 মি./3600 × 36 = 60 মি.। 60° = π/3। r = s/θ = 60 × 3/π ≈ 57.3 মি.। ব্যাস ≈ 114.6 মি.।'],
+  ['১৩. 750 কি.মি. দূরের পাহাড় 8′ কোণ উৎপন্ন করে। উচ্চতা?','8′ = 8/60° = (8/60) × π/180 ≈ 0.0023271 রেডিয়ান। s = 750 × 0.0023271 ≈ 1.745 কি.মি. (প্রায়)।']]},
+ {h:'অনুশীলনী ৮.২',items:[
+  ['১ ক. cos(π/4) / (cos(π/6) + sin(π/3))','(1/√2) / (√3/2 + √3/2) = (1/√2)/√3 = 1/√6।'],
+  ['১ খ. tan(π/4) + tan(π/6)·tan(π/3)','1 + (1/√3)(√3) = 1 + 1 = 2।'],
+  ['২. cosθ = −4/5, π < θ < 3π/2। tanθ ও sinθ?','৩য় চতুর্ভাগ। sin²θ = 1 − 16/25 = 9/25 ⇒ sinθ = −3/5। tanθ = (−3/5)/(−4/5) = 3/4।'],
+  ['৩. sinA = 2/√5, π/2 < A < π। cosA ও tanA?','২য় চতুর্ভাগ। cos²A = 1 − 4/5 = 1/5 ⇒ cosA = −1/√5। tanA = (2/√5)/(−1/√5) = −2।'],
+  ['৪. cosA = 1/2, cosA ও sinA একই চিহ্নবিশিষ্ট। sinA ও tanA?','cosA ধনাত্মক ⇒ sinA ধনাত্মক। sin²A = 3/4 ⇒ sinA = √3/2। tanA = √3।'],
+  ['৫. tanA = −5/12, tanA ও cosA বিপরীত চিহ্নবিশিষ্ট। sinA ও cosA?','tan ঋণাত্মক ⇒ cos ধনাত্মক ⇒ sin ঋণাত্মক (৪র্থ চতুর্ভাগ)। x = 12, y = −5, r = 13। cosA = 12/13, sinA = −5/13।'],
+  ['৬ ক. tanA + cotA = secA·cosecA প্রমাণ।','বামপক্ষ = sinA/cosA + cosA/sinA = (sin²A + cos²A)/(sinA·cosA) = 1/(sinA cosA) = secA·cosecA।'],
+  ['৬ ঘ. sec⁴θ − sec²θ = tan⁴θ + tan²θ','sec²θ(sec²θ − 1) = (1 + tan²θ)·tan²θ = tan²θ + tan⁴θ।'],
+  ['৭. cosecA = a/b (a > b > 0) হলে tanA = ± b/√(a² − b²)','sinA = b/a। cos²A = 1 − b²/a² = (a² − b²)/a²। cosA = ±√(a² − b²)/a। tanA = sinA/cosA = ± b/√(a² − b²)।'],
+  ['৮. cosθ − sinθ = √2 sinθ হলে cosθ + sinθ = √2 cosθ','cosθ = (√2 + 1) sinθ। তাই cosθ + sinθ = (√2 + 2) sinθ = √2(√2 + 1) sinθ = √2 cosθ।'],
+  ['৯. tanθ = x/y হলে (x sinθ + y cosθ)/(x sinθ − y cosθ)','cosθ দিয়ে ভাগ: (x tanθ + y)/(x tanθ − y) = (x²/y + y)/(x²/y − y) = (x² + y²)/(x² − y²)।'],
+  ['১০. tanθ + secθ = x হলে sinθ = (x² − 1)/(x² + 1)','sec²θ − tan²θ = 1 ⇒ secθ − tanθ = 1/x। যোগ-বিয়োগে secθ = (x + 1/x)/2, tanθ = (x − 1/x)/2। sinθ = tanθ/secθ = (x² − 1)/(x² + 1)।'],
+  ['১১ ক. sin²(π/6) + cos²(π/4) + tan²(π/3) + cot²(π/6)','1/4 + 1/2 + 3 + 3 = 27/4 = 6¾।']]},
+ {h:'অনুশীলনী ৮.৩ (বাছাই করা)',items:[
+  ['১. sinA = 1/√2 হলে sin2A?','A = 45°। sin2A = sin90° = 1 (গ)।'],
+  ['২. sinθ + cosθ = 1 হলে θ = (i) 0° (ii) 30° (iii) 90°','0° এ 0 + 1 = 1 ✔, 90° এ 1 + 0 = 1 ✔, 30° এ 1/2 + √3/2 ≠ 1। সঠিক: i ও iii (ঘ)।'],
+  ['৩. মান নির্ণয়: (ক) sin7π (খ) cos(11π/2) (গ) cot11π','(ক) 0 (খ) cos(5π + π/2) = 0 (গ) cot11π = cosπ/sinπ ⇒ অসংজ্ঞায়িত।'],
+  ['৩. (ঘ) tan(−23π/6) (ঙ) cosec(19π/3) (চ) sec(25π/2)','(ঘ) −tan(23π/6) = −tan(3π + 5π/6) = −tan(5π/6) = 1/√3 (ঙ) 1/sin(6π + π/3) = 2/√3 (চ) cos(25π/2) = cos(π/2) = 0 ⇒ অসংজ্ঞায়িত।'],
+  ['৩. (ছ) sin(31π/3) (জ) cos(−25π/6)','(ছ) sin(10π + π/3) = √3/2 (জ) cos(25π/6) = cos(4π + π/6) = √3/2।'],
+  ['৪ ক. cos(17π/10) + cos(13π/10) + cos(9π/10) + cos(π/10) = 0','cos(9π/10) = −cos(π/10) ও cos(13π/10) = −cos(3π/10), cos(17π/10) = cos(3π/10)। জোড়ায় জোড়ায় কাটে ⇒ 0।'],
+  ['৫ খ. cot(π/20)cot(3π/20)cot(5π/20)cot(7π/20)cot(9π/20)','cot(9π/20) = tan(π/20) ⇒ গুণফল 1; cot(7π/20) = tan(3π/20) ⇒ 1; cot(π/4) = 1। উত্তর: 1।'],
+  ['৫ গ. sin²(π/4) + sin²(3π/4) + sin²(5π/4) + sin²(7π/4)','প্রতিটির মান 1/2। যোগফল 2।'],
+  ['৫ ঘ. cos²(π/8) + cos²(3π/8) + cos²(5π/8) + cos²(7π/8)','cos²(3π/8) = sin²(π/8) ⇒ প্রথম দুটির যোগ 1। একইভাবে শেষ দুটির যোগ 1। উত্তর 2।'],
+  ['৮ গ. 6sin²θ − 11sinθ + 4 = 0 (0 < θ < π/2)','(3sinθ − 4)(2sinθ − 1) = 0। sinθ = 4/3 অসম্ভব। sinθ = 1/2 ⇒ θ = π/6।'],
+  ['৮ ঙ. 2sin²θ + 3cosθ = 3 (0 < θ < π/2)','2 − 2cos²θ + 3cosθ = 3 ⇒ 2cos²θ − 3cosθ + 1 = 0 ⇒ (2cosθ − 1)(cosθ − 1) = 0। cosθ = 1/2 ⇒ θ = π/3 (cosθ = 1 হলে θ = 0, সীমার বাইরে)।'],
+  ['৮ ঘ. tanθ + cotθ = 4/√3 (0 < θ < π/2)','t + 1/t = 4/√3 ⇒ t = √3 অথবা 1/√3 ⇒ θ = π/3 অথবা π/6।'],
+  ['৯ ক. 2sin²θ + 3cosθ = 0 (0 < θ < 2π)','2 − 2cos²θ + 3cosθ = 0 ⇒ 2cos²θ − 3cosθ − 2 = 0 ⇒ (2cosθ + 1)(cosθ − 2) = 0 ⇒ cosθ = −1/2 ⇒ θ = 2π/3, 4π/3।'],
+  ['৯ খ. 4(cos²θ + sinθ) = 5','4 − 4sin²θ + 4sinθ = 5 ⇒ (2sinθ − 1)² = 0 ⇒ sinθ = 1/2 ⇒ θ = π/6, 5π/6।'],
+  ['৯ গ. cot²θ + cosec²θ = 3','cosec²θ − 1 + cosec²θ = 3 ⇒ cosec²θ = 2 ⇒ sin²θ = 1/2 ⇒ θ = π/4, 3π/4, 5π/4, 7π/4।'],
+  ['৯ ঘ. tan²θ + cot²θ = 2','(tan²θ − 1)² = 0 ⇒ tanθ = ±1 ⇒ θ = π/4, 3π/4, 5π/4, 7π/4।'],
+  ['১০. ঢাকা–পঞ্চগড় কেন্দ্রে 3.5° কোণ। (ক) রেডিয়ান (খ) দূরত্ব (গ) 0.84 মি. ব্যাসের চাকা কতবার ঘুরবে (আসা-যাওয়া)?','(ক) 3.5π/180 = 7π/360 ≈ 0.0611 রেডিয়ান (খ) 6440 × 0.0611 ≈ 393.4 কি.মি. (গ) আসা-যাওয়া ≈ 786.8 কি.মি. = 786,796 মি.। পরিধি π × 0.84 ≈ 2.639 মি.। ঘূর্ণন ≈ 2,98,148 বার (প্রায়)।'],
+  ['১১. সমকোণী ত্রিভুজের ছোটো বাহু 7 সেমি, ছোটো কোণ 15°। অতিভুজ?','ছোটো বাহু ছোটো কোণের বিপরীতে। sin15° = 7/অতিভুজ ⇒ অতিভুজ = 7/0.2588 ≈ 27.05 সেমি (প্রায়)।']]},
+ {h:'নমুনা প্রশ্ন',items:[
+  ['MCQ ১: −300° কোণটি কোন চতুর্ভাগে?','ক. প্রথম। (−300° = −360° + 60°)'],
+  ['MCQ ২: চিত্রে AB = 4, BC = 3, ∠B = ৯০°, θ = ∠C: (i) tanθ = 4/3 (ii) sinθ = 5/3 (iii) cos²θ = 9/25','খ. i ও iii। (অতিভুজ AC = 5; sinθ = 4/5 তাই ii ভুল)'],
+  ['MCQ ৩, ৪: সমকোণী ত্রিভুজ ABC (∠A = ৯০°, BC = a, AC = b)। sinB + cosC এবং tanB?','sinB = b/a, cosC = b/a ⇒ যোগফল 2b/a। AB = √(a² − b²) ⇒ tanB = b/√(a² − b²)।'],
+  ['সৃজনশীল ৫ (খ): acosθ − bsinθ = p হলে asinθ + bcosθ = ?','(acosθ − bsinθ)² + (asinθ + bcosθ)² = a² + b² ⇒ asinθ + bcosθ = ±√(a² + b² − p²)।'],
+  ['সৃজনশীল ৫ (গ): a = √3, b = 1, p = 2, 0 < θ < 2π','√3cosθ − sinθ = 2 ⇒ 2cos(θ + π/6) = 2 ⇒ θ + π/6 = 2π ⇒ θ = 11π/6। যাচাই: √3·(√3/2) − (−1/2) = 2 ✔।'],
+  ['সৃজনশীল ৬ (খ): p = tanθ, q = cotθ, p + q = 2 হলে pⁿ + qⁿ = 2','pq = 1 এবং p + q = 2 ⇒ p, q এর বর্গসমীকরণ t² − 2t + 1 = 0 ⇒ p = q = 1 ⇒ pⁿ + qⁿ = 2।'],
+  ['সংক্ষিপ্ত ৭ (ক): 0.9795 রেডিয়ানকে ষাটমূলক পদ্ধতিতে','0.9795 × 180/π ≈ 56.12° ≈ 56°7′16″ (প্রায়)।'],
+  ['সংক্ষিপ্ত ৭ (খ): sec(−21π/2)','cos(21π/2) = cos(10π + π/2) = 0 ⇒ sec অসংজ্ঞায়িত।'],
+  ['সংক্ষিপ্ত ৭ (গ): tan(π/12)·tan(5π/12)·tan(7π/12)·tan(11π/12)','tan(5π/12) = cot(π/12), tan(7π/12) = −cot(π/12), tan(11π/12) = −tan(π/12)। গুণফল = 1·1 = 1 (ঋণ দুটি কাটে)।'],
+  ['সংক্ষিপ্ত ৭ (ঘ): sinα = −1/2, π/2 < α < 3π/2','sin ঋণাত্মক ⇒ ৩য় চতুর্ভাগ। α = π + π/6 = 7π/6।']]}
+];
+(function(){var h='';QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){h+='<details class="ex"><summary><b>'+it[0]+'</b></summary><p>'+it[1]+'</p></details>';});});$('qabox').innerHTML=h;})();
+
+</script>
+</body>
+</html>

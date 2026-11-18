@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>সমীকরণ (উচ্চতর গণিত অধ্যায় ৫) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+canvas{width:100%;height:auto;max-width:700px;display:block;margin:8px auto;border-radius:12px;background:#fff;border:1px solid var(--line);touch-action:none}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.ctl input[type=range]{width:200px;max-width:100%}
+.ctl select,.ctl input[type=text],.ans input{font-family:inherit;font-size:16px;padding:6px 8px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;max-width:100%;width:auto}
+.eqb{background:#eaf7f5;border-radius:10px;padding:10px;text-align:center;font-weight:700;color:var(--navy);margin:8px 0;font-size:18px;overflow-x:auto}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.fb{font-weight:700;margin-top:6px}
+.res{background:#eef6ff;border-radius:10px;padding:10px 12px;margin:8px 0;line-height:1.9}
+.res b{color:#0b5ed7}
+.chips button{margin:3px;padding:6px 12px;border-radius:999px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.chips button.on{background:#0b5ed7;color:#fff;border-color:#0b5ed7}
+.step{background:#fff;border:1px solid var(--line);border-left:5px solid #2a9d8f;border-radius:8px;padding:8px 12px;margin:6px 0;display:none}
+.step.show{display:block}
+.ex{border:2px dashed #b8c7d6;border-radius:12px;padding:10px 14px;margin:14px 0;background:#fcfdff}
+.q{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:#fff}
+.q .opt{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 10px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:16px;cursor:pointer}
+.q .opt.good{background:#d8f3e3;border-color:#2a9d8f}
+.q .opt.bad{background:#fddcdc;border-color:#e76f51}
+.m{font-family:system-ui,'Segoe UI',Arial,sans-serif}
+table.t{border-collapse:collapse;margin:8px 0}
+table.t td,table.t th{border:1px solid #cfd9e1;padding:5px 12px;text-align:center}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">📐 গণিত &rsaquo; উচ্চতর গণিত &rsaquo; অধ্যায় ৫ (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">⚖️ সমীকরণ</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#ex">🪜 ধাপে ধাপে</a><a href="#lab1">📈 দ্বিঘাত</a><a href="#lab2">√ বর্গমূল</a><a href="#lab3">🔢 সূচক</a><a href="#lab4">🧩 জোট</a><a href="#lab5">🕐 ঘড়ি</a><a href="#prac">✍️ প্র্যাকটিস</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্নোত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায়ে শিখবে:</b> দ্বিঘাত সমীকরণের সূত্র ও নিশ্চায়ক, বর্গমূলচিহ্নযুক্ত সমীকরণ (অবান্তর মূল চেনা), সূচক সমীকরণ, দুই চলকের দ্বিঘাত সহসমীকরণ, বাস্তব সমস্যা থেকে সমীকরণ গঠন এবং লেখচিত্রে সমাধান।</div>
+
+    <h3>১. দ্বিঘাত সমীকরণ ও সূত্র ⭐⭐⭐</h3>
+    <div class="eqb">ax² + bx + c = 0 (a ≠ 0) ⇒ x = (−b ± √(b² − 4ac)) / 2a</div>
+    <ul>
+      <li>বর্গ পূর্ণ করে এই সূত্র পাওয়া যায় (নিচের "ধাপে ধাপে" অংশে দেখো)।</li>
+      <li>দুটি মূল: x₁ = (−b + √(b²−4ac))/2a এবং x₂ = (−b − √(b²−4ac))/2a।</li>
+      <li><b>নিশ্চায়ক (Discriminant) D = b² − 4ac</b>: এটি মূলের ধরন ঠিক করে।</li>
+    </ul>
+    <table class="t"><tr><th>D এর অবস্থা</th><th>মূলদ্বয়ের প্রকৃতি</th></tr>
+    <tr><td>D &gt; 0 এবং পূর্ণবর্গ</td><td>বাস্তব, অসমান ও <b>মূলদ</b></td></tr>
+    <tr><td>D &gt; 0 কিন্তু পূর্ণবর্গ নয়</td><td>বাস্তব, অসমান ও <b>অমূলদ</b></td></tr>
+    <tr><td>D = 0</td><td>বাস্তব ও <b>পরস্পর সমান</b> (x = −b/2a)</td></tr>
+    <tr><td>D &lt; 0</td><td>বাস্তব মূল <b>নেই</b></td></tr></table>
+
+    <h3>২. বর্গমূলচিহ্নযুক্ত সমীকরণ ⭐⭐⭐</h3>
+    <ul>
+      <li>বর্গমূল আলাদা করে দুই পক্ষ <b>বর্গ করো</b>। দরকার হলে আবার বর্গ করো, যতক্ষণ বর্গমূল না থাকে।</li>
+      <li>বর্গ করলে কখনো কখনো এমন মূল আসে যা আসল সমীকরণকে সিদ্ধ করে না। এদের <b>অবান্তর মূল (Extraneous root)</b> বলে।</li>
+      <li>তাই <b>শুদ্ধি পরীক্ষা বাধ্যতামূলক</b>: প্রতিটি মূল আসল সমীকরণে বসিয়ে মিলিয়ে নাও।</li>
+      <li>উদাহরণ: √(x+6) = x থেকে x² − x − 6 = 0 ⇒ x = 3 বা −2। কিন্তু x = −2 হলে ডানপক্ষ −২, আর বর্গমূল কখনো ঋণাত্মক হয় না, তাই −2 অবান্তর। উত্তর x = 3।</li>
+    </ul>
+
+    <h3>৩. সূচক সমীকরণ ⭐⭐⭐</h3>
+    <ul>
+      <li><b>মূল নিয়ম:</b> a &gt; 0, a ≠ 1 হলে aˣ = aᵐ ⇔ x = m। তাই দুই পক্ষকে একই ভিত্তির ঘাত করো।</li>
+      <li>যেমন 2^(x+7) = 4^(x+2) = 2^(2x+4) ⇒ x + 7 = 2x + 4 ⇒ x = 3।</li>
+      <li>দুই ভিত্তি আলাদা হলে (যেমন 5^(3x−7) = 3^(3x−7)) ঘাত শূন্য করো: (a/b)^k = 1 = (a/b)⁰ ⇒ k = 0।</li>
+      <li>দ্বিঘাতের মতো সূচক সমীকরণে p = aˣ ধরো। মনে রাখো <b>aˣ &gt; 0</b>, তাই ঋণাত্মক p বাদ। যেমন 3^(2x−2) − 5·3^(x−2) − 66 = 0 ⇒ p² − 5p − 594 = 0 ⇒ (p − 27)(p + 22) = 0 ⇒ p = 27 ⇒ x = 3।</li>
+    </ul>
+
+    <h3>৪. দুই চলকের সহসমীকরণ জোট ⭐⭐⭐</h3>
+    <ul>
+      <li>একটি একঘাত ও একটি দ্বিঘাত হলে একঘাত থেকে y বের করে দ্বিঘাতে বসাও (প্রতিস্থাপন)।</li>
+      <li><b>x² + y² ও xy দেওয়া থাকলে:</b> (x+y)² = x² + y² + 2xy এবং (x−y)² = x² + y² − 2xy। তারপর x ± y এর মান বের করে যোগ-বিয়োগ করো।</li>
+      <li>সমঘাত সমীকরণ (যেমন x² − 2xy + 8y² = 8, 3xy − 2y² = 4): ভাগ করে x² − 8xy + 12y² = 0 পেয়ে উৎপাদকে ভাঙো ⇒ x = 6y বা x = 2y।</li>
+      <li>সূচক জোটে প্রথমে দুই সমীকরণের ভিত্তি এক করে ঘাত সমান করো, তারপর একঘাত জোট হিসেবে সমাধান করো।</li>
+      <li>জোটের সমাধান (x, y) = (a, b) জোড়া। দুই সমীকরণই সিদ্ধ হলে তবেই গ্রহণযোগ্য।</li>
+    </ul>
+
+    <h3>৫. বাস্তব সমস্যা থেকে সমীকরণ ⭐⭐</h3>
+    <ul>
+      <li>অজানা রাশি x, y ধরে প্রশ্নের শর্ত থেকে সমীকরণ লেখো, তারপর সমাধান করো।</li>
+      <li><b>উত্তর বাস্তবসম্মত কিনা দেখো:</b> দৈর্ঘ্য ঋণাত্মক হয় না, অঙ্ক ভগ্নাংশ বা ঋণাত্মক হয় না। এমন মূল বাদ দাও।</li>
+      <li>দুই অঙ্কের সংখ্যা: দশকের অঙ্ক x, এককের অঙ্ক y হলে সংখ্যা = 10x + y, স্থান বিনিময় করলে 10y + x।</li>
+    </ul>
+
+    <h3>৬. লেখচিত্রে দ্বিঘাত সমীকরণ ⭐⭐</h3>
+    <ul>
+      <li>y = ax² + bx + c ধরলে লেখচিত্র একটি <b>প্যারাবোলা</b>। যেসব x এর জন্য y = 0, প্যারাবোলা সেখানে <b>x-অক্ষকে ছেদ করে</b>, ওগুলোই সমীকরণের মূল।</li>
+      <li>দুই বিন্দুতে ছেদ ⇒ দুটি ভিন্ন মূল (D &gt; 0)। একটি বিন্দুতে স্পর্শ ⇒ সমান মূল (D = 0)। ছেদ নেই ⇒ বাস্তব মূল নেই (D &lt; 0)।</li>
+    </ul>
+    <div class="warn">⚠️ <b>সাধারণ ভুল:</b> ① বর্গ করার পর শুদ্ধি পরীক্ষা না করা। ② ঘাতকে সূত্রে 2a-এর জায়গায় শুধু a দিয়ে ভাগ করা। ③ সূচকে ভিত্তি এক না করে সরাসরি ঘাত সমান করা। ④ বাস্তব সমস্যায় ঋণাত্মক দৈর্ঘ্য রেখে দেওয়া।</div>
+  </section>
+
+  <section class="panel" id="ex">
+    <h2>🪜 ধাপে ধাপে (সূত্র ও অবান্তর মূল)</h2>
+    <div class="say">👉 "পরের ধাপ" চাপতে থাকো, যুক্তি একটার পর একটা খুলবে।</div>
+
+    <div class="ex" id="E1"><b>১) সূত্রটা কীভাবে এলো?</b> ax² + bx + c = 0 থেকে x এর সূত্র।
+      <div class="step">ধাপ ১: দুই পক্ষকে a দিয়ে গুণ করি: a²x² + abx + ac = 0।</div>
+      <div class="step">ধাপ ২: (ax)² + 2·(ax)·(b/2) + (b/2)² − (b/2)² + ac = 0। অর্থাৎ বর্গ পূর্ণ করার জন্য (b/2)² যোগ-বিয়োগ করলাম।</div>
+      <div class="step">ধাপ ৩: (ax + b/2)² = b²/4 − ac = (b² − 4ac)/4।</div>
+      <div class="step">ধাপ ৪: বর্গমূল করে ax + b/2 = ± √(b² − 4ac)/2।</div>
+      <div class="step">ধাপ ৫: ax = −b/2 ± √(b² − 4ac)/2। দুই পক্ষকে a দিয়ে ভাগ করলে <b>x = (−b ± √(b² − 4ac)) / 2a</b> ✔</div>
+      <button class="btn" data-ex="E1">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E1">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E2"><b>২) x² − 2x − 2 = 0</b> (বই উদাহরণ ৩)
+      <div class="step">ধাপ ১: a = 1, b = −2, c = −2। D = (−2)² − 4·1·(−2) = 4 + 8 = 12।</div>
+      <div class="step">ধাপ ২: x = (2 ± √12)/2। √12 = 2√3।</div>
+      <div class="step">ধাপ ৩: x = (2 ± 2√3)/2 = 1 ± √3। অর্থাৎ x₁ = 1 + √3 ≈ 2.73, x₂ = 1 − √3 ≈ −0.73।</div>
+      <div class="step">ধাপ ৪: D = 12 পূর্ণবর্গ নয়, তাই মূল দুটি বাস্তব, অসমান ও <b>অমূলদ</b>। 😊 উৎপাদক বিশ্লেষণ না পারলেও সূত্র দিয়ে সমাধান হলো।</div>
+      <button class="btn" data-ex="E2">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E2">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E3"><b>৩) √(2x+9) − √(x−4) = √(x+1)</b> (বই উদাহরণ ৭)
+      <div class="step">ধাপ ১: বর্গ করি: (2x+9) + (x−4) − 2√((2x+9)(x−4)) = x + 1 ⇒ 2x + 4 − 2√((2x+9)(x−4)) = 0।</div>
+      <div class="step">ধাপ ২: √((2x+9)(x−4)) = x + 2।</div>
+      <div class="step">ধাপ ৩: আবার বর্গ: (2x+9)(x−4) = (x+2)² ⇒ 2x² + x − 36 = x² + 4x + 4 ⇒ x² − 3x − 40 = 0।</div>
+      <div class="step">ধাপ ৪: (x − 8)(x + 5) = 0 ⇒ x = 8 বা x = −5।</div>
+      <div class="step">ধাপ ৫ (শুদ্ধি): x = 8: বামপক্ষ = √25 − √4 = 5 − 2 = 3, ডানপক্ষ = √9 = 3 ✔। x = −5: √(−1) বাস্তব নয় ✘।</div>
+      <div class="step">ধাপ ৬: নির্ণেয় সমাধান <b>x = 8</b>। (x = −5 অবান্তর মূল)</div>
+      <button class="btn" data-ex="E3">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E3">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E4"><b>৪) 3^(2x−2) − 5·3^(x−2) − 66 = 0</b> (বই উদাহরণ ১৭)
+      <div class="step">ধাপ ১: 3^(2x−2) = 3^(2x)/9 এবং 3^(x−2) = 3^x/9। দুই পক্ষকে 9 দিয়ে গুণ: 3^(2x) − 5·3^x − 594 = 0।</div>
+      <div class="step">ধাপ ২: p = 3ˣ ধরি। p² − 5p − 594 = 0।</div>
+      <div class="step">ধাপ ৩: p² − 27p + 22p − 594 = 0 ⇒ (p − 27)(p + 22) = 0।</div>
+      <div class="step">ধাপ ৪: p = 3ˣ &gt; 0, তাই p = −22 হতে পারে না। অতএব p = 27 = 3³ ⇒ <b>x = 3</b> ✔</div>
+      <div class="step">ধাপ ৫: যাচাই: 3⁴ − 5·3 − 66 = 81 − 15 − 66 = 0 ✔।</div>
+      <button class="btn" data-ex="E4">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E4">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E5"><b>৫) x² + y² = 61, xy = −30</b> (বই উদাহরণ ২১)
+      <div class="step">ধাপ ১: (x − y)² = x² + y² − 2xy = 61 + 60 = 121 ⇒ x − y = ±11।</div>
+      <div class="step">ধাপ ২: (x + y)² = 61 − 60 = 1 ⇒ x + y = ±1।</div>
+      <div class="step">ধাপ ৩: চার জোড়া একঘাত জোট: (x+y, x−y) = (1, 11), (1, −11), (−1, 11), (−1, −11)।</div>
+      <div class="step">ধাপ ৪: সমাধান: (6, −5), (−5, 6), (5, −6), (−6, 5)।</div>
+      <div class="step">ধাপ ৫: যাচাই (6, −5): 36 + 25 = 61 ✔, 6 × (−5) = −30 ✔।</div>
+      <button class="btn" data-ex="E5">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E5">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E6"><b>৬) দুই অঙ্কের সংখ্যা</b> (বই উদাহরণ ২৬): সংখ্যাকে অঙ্কদ্বয়ের গুণফল দিয়ে ভাগ করলে ভাগফল 3; সংখ্যার সাথে 18 যোগ করলে অঙ্কদ্বয় স্থান বিনিময় করে।
+      <div class="step">ধাপ ১: দশকের অঙ্ক x, এককের অঙ্ক y। সংখ্যা = 10x + y।</div>
+      <div class="step">ধাপ ২: (10x + y)/(xy) = 3 ⇒ 10x + y = 3xy ... (১)</div>
+      <div class="step">ধাপ ৩: 10x + y + 18 = 10y + x ⇒ 9x − 9y + 18 = 0 ⇒ y = x + 2 ... (২)</div>
+      <div class="step">ধাপ ৪: (২) কে (১) এ বসিয়ে 11x + 2 = 3x(x + 2) ⇒ 3x² − 5x − 2 = 0 ⇒ (x − 2)(3x + 1) = 0।</div>
+      <div class="step">ধাপ ৫: x = 2 বা −1/3। অঙ্ক ঋণাত্মক বা ভগ্নাংশ হয় না, তাই x = 2, y = 4। সংখ্যা <b>24</b> ✔ (24 ÷ 8 = 3, 24 + 18 = 42 ✔)</div>
+      <button class="btn" data-ex="E6">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E6">আবার শুরু</button>
+    </div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>📈 ল্যাব ১: দ্বিঘাত সমীকরণ ও প্যারাবোলা</h2>
+    <div class="say">👉 a, b, c স্লাইডারে বদলাও। নিশ্চায়ক D, মূল ও প্যারাবোলা একসাথে দেখো। প্যারাবোলা x-অক্ষকে যেখানে কাটে সেটিই মূল।</div>
+    <div class="ctl"><label>a = <span id="q1av"></span></label><input type="range" id="q1a" min="-4" max="4" step="1" value="1">
+    <label>b = <span id="q1bv"></span></label><input type="range" id="q1b" min="-10" max="10" step="1" value="-5">
+    <label>c = <span id="q1cv"></span></label><input type="range" id="q1c" min="-10" max="10" step="1" value="6"></div>
+    <div class="eqb" id="q1e"></div>
+    <canvas id="q1cv2" width="600" height="360"></canvas>
+    <div class="res m" id="q1t"></div>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>√ ল্যাব ২: বর্গমূলযুক্ত সমীকরণ ও অবান্তর মূল</h2>
+    <div class="say">👉 সমীকরণ √(px + q) = rx + s। স্লাইডার বদলাও। বর্গ করলে যে মূলগুলো আসে, সেগুলো আসলে ঠিক কিনা ল্যাব যাচাই করবে। নীল রেখা = বামপক্ষ, কমলা রেখা = ডানপক্ষ। ছেদবিন্দুই আসল মূল।</div>
+    <div class="ctl"><label>p = <span id="q2pv"></span></label><input type="range" id="q2p" min="1" max="6" step="1" value="1">
+    <label>q = <span id="q2qv"></span></label><input type="range" id="q2q" min="-10" max="20" step="1" value="6">
+    <label>r = <span id="q2rv"></span></label><input type="range" id="q2r" min="-3" max="3" step="1" value="1">
+    <label>s = <span id="q2sv"></span></label><input type="range" id="q2s" min="-8" max="8" step="1" value="0"></div>
+    <div class="eqb" id="q2e"></div>
+    <canvas id="q2cv2" width="600" height="360"></canvas>
+    <div class="res m" id="q2t"></div>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🔢 ল্যাব ৩: সূচক সমীকরণ</h2>
+    <div class="say">👉 মোড বেছে নাও। মোড ১: দুই পক্ষের ভিত্তি একই ভিত্তির ঘাত। মোড ২: p = aˣ ধরে দ্বিঘাত বানানো, আর গ্রাফে y = aˣ রেখা কোথায় y = p কে কাটে দেখো।</div>
+    <div class="chips" id="q3m"></div>
+    <div class="ctl" id="q3c"></div>
+    <div class="eqb" id="q3e"></div>
+    <canvas id="q3cv2" width="600" height="320"></canvas>
+    <div class="res m" id="q3t"></div>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🧩 ল্যাব ৪: x² + y² = S, xy = P জোট</h2>
+    <div class="say">👉 S ও P বদলাও। (x+y)² = S + 2P এবং (x−y)² = S − 2P থেকে চার জোড়া সমাধান বের হবে। গ্রাফে বৃত্ত ও হাইপারবোলার ছেদবিন্দুই সমাধান। ডিফল্ট: বইয়ের উদাহরণ ২১ (S = 61, P = −30)।</div>
+    <div class="ctl"><label>S = <span id="q4sv"></span></label><input type="range" id="q4s" min="2" max="100" step="1" value="61">
+    <label>P = <span id="q4pv"></span></label><input type="range" id="q4p" min="-50" max="50" step="1" value="-30"></div>
+    <canvas id="q4cv2" width="600" height="400"></canvas>
+    <div class="res m" id="q4t"></div>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🕐 ল্যাব ৫: ঘড়ির কাঁটা (অনুশীলনী ৫.৭ এর ১১ ও ১২)</h2>
+    <div class="say">👉 ঘণ্টার কাঁটা মিনিটে ০.৫° এবং মিনিটের কাঁটা মিনিটে ৬° ঘোরে। তাই মিনিটে ৫.৫° ব্যবধান বাড়ে। ১২ ঘণ্টায় কাঁটা দুটি কতবার বিপরীত (১৮০°) বা লম্ব (৯০°) হয়, তালিকা থেকে সময় চাপো।</div>
+    <div class="chips" id="q5m"></div>
+    <div class="ctl"><label>১২:০০ থেকে মিনিট = <span id="q5tv"></span></label><input type="range" id="q5t" min="0" max="720" step="0.01" value="0" style="width:300px"></div>
+    <canvas id="q5cv" width="360" height="360" style="max-width:360px"></canvas>
+    <div class="res m" id="q5i"></div>
+    <div class="res" id="q5l"></div>
+  </section>
+
+  <section class="panel" id="prac">
+    <h2>✍️ প্র্যাকটিস (বইয়ের ধাঁচে)</h2>
+    <div class="say">👉 নিজে হিসাব করে উত্তর লেখো। ভগ্নাংশ লিখতে পারো (যেমন 7/3) অথবা দশমিকে ২ ঘর।</div>
+    <div id="pracbox"></div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="fb" id="qscore"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>📖 বই থেকে প্রশ্নোত্তর</h2>
+    <div id="qabox"></div>
+  </section>
+</div>
+
+<footer class="site">&copy; ShikboLab · সমীকরণ (উচ্চতর গণিত অধ্যায় ৫)</footer>
+<script>
+var BNS='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BNS[d];});}
+function en(s){return String(s).replace(/[০-৯]/g,function(d){return BNS.indexOf(d);});}
+function $(id){return document.getElementById(id);}
+function R2(c){var d=Math.min(2,window.devicePixelRatio||1),w=c.width,h=c.height;c.width=w*d;c.height=h*d;var x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return x;}
+function fm(v,d){d=(d===undefined)?2:d;var k=Math.pow(10,d),r=Math.round(v*k)/k;if(Math.abs(r)<1e-9)r=0;return bn(String(r).replace('-','−'));}
+function sg(v){return v<0?'−'+bn(-v):bn(v);}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t;}return a;}
+function frac(n,d){if(d<0){n=-n;d=-d;}var g=gcd(n,d)||1;n/=g;d/=g;return d===1?sg(n):sg(n)+'/'+bn(d);}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ex){var box=$(b.dataset.ex),s=box.querySelectorAll('.step:not(.show)');if(s.length){s[0].classList.add('show');}if(s.length<=1)b.disabled=true;}
+  if(b.dataset.rs){var bx=$(b.dataset.rs);bx.querySelectorAll('.step').forEach(function(x){x.classList.remove('show');});bx.querySelector('[data-ex]').disabled=false;}
+});
+/* ---- গ্রাফ হেল্পার ---- */
+function Plot(id){var cv=$(id),W=+cv.getAttribute('width'),H=+cv.getAttribute('height'),x=R2(cv);return {x:x,W:W,H:H};}
+function nice(r){var p=Math.pow(10,Math.floor(Math.log10(r))),m=r/p;return (m<1.5?1:m<3.5?2:m<7.5?5:10)*p;}
+function drawPlot(P,xr,yr,fns,pts,opt){
+  opt=opt||{};var x=P.x,W=P.W,H=P.H,L=34,Rr=12,T=12,B=26;x.clearRect(0,0,W,H);x.fillStyle='#fff';x.fillRect(0,0,W,H);
+  function X(v){return L+(v-xr[0])/(xr[1]-xr[0])*(W-L-Rr);} function Y(v){return H-B-(v-yr[0])/(yr[1]-yr[0])*(H-T-B);}
+  var sx=nice((xr[1]-xr[0])/10),sy=nice((yr[1]-yr[0])/8);
+  x.lineWidth=1;x.strokeStyle='#e6edf2';x.fillStyle='#6b7f95';x.font='11px system-ui';x.textAlign='center';
+  for(var gx=Math.ceil(xr[0]/sx)*sx;gx<=xr[1]+1e-9;gx+=sx){x.beginPath();x.moveTo(X(gx),T);x.lineTo(X(gx),H-B);x.stroke();if(Math.abs(gx)>1e-9)x.fillText(fm(gx,2),X(gx),Math.min(Math.max(Y(0)+14,T+10),H-8));}
+  x.textAlign='right';
+  for(var gy=Math.ceil(yr[0]/sy)*sy;gy<=yr[1]+1e-9;gy+=sy){x.beginPath();x.moveTo(L,Y(gy));x.lineTo(W-Rr,Y(gy));x.stroke();if(Math.abs(gy)>1e-9)x.fillText(fm(gy,2),Math.min(Math.max(X(0)-4,L+22),W-Rr),Y(gy)+4);}
+  x.strokeStyle='#46586a';x.lineWidth=1.6;
+  if(xr[0]<0&&xr[1]>0){x.beginPath();x.moveTo(X(0),T);x.lineTo(X(0),H-B);x.stroke();}
+  if(yr[0]<0&&yr[1]>0){x.beginPath();x.moveTo(L,Y(0));x.lineTo(W-Rr,Y(0));x.stroke();}
+  x.save();x.beginPath();x.rect(L,T,W-L-Rr,H-T-B);x.clip();
+  (opt.hl||[]).forEach(function(h){x.strokeStyle=h.c;x.lineWidth=1.5;x.setLineDash([6,4]);x.beginPath();x.moveTo(L,Y(h.y));x.lineTo(W-Rr,Y(h.y));x.stroke();x.setLineDash([]);});
+  fns.forEach(function(f){x.strokeStyle=f.c;x.lineWidth=3;x.beginPath();var pen=false,N=500;for(var i=0;i<=N;i++){var v=xr[0]+(xr[1]-xr[0])*i/N,y=f.f(v);if(!isFinite(y)||isNaN(y)||y>yr[1]*3||y<yr[0]*3-50){pen=false;continue;}if(!pen){x.moveTo(X(v),Y(y));pen=true;}else x.lineTo(X(v),Y(y));}x.stroke();});
+  (opt.curves||[]).forEach(function(cu){x.strokeStyle=cu.c;x.lineWidth=2.5;cu.paths.forEach(function(pth){x.beginPath();pth.forEach(function(p,i){if(i)x.lineTo(X(p[0]),Y(p[1]));else x.moveTo(X(p[0]),Y(p[1]));});x.stroke();});});
+  x.restore();
+  pts.forEach(function(p){x.fillStyle=p.c||'#1b9a6f';x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.arc(X(p[0]),Y(p[1]),6,0,6.2832);x.fill();x.stroke();if(p[2]){x.fillStyle='#1f3a5f';x.font='700 12px system-ui';x.textAlign='center';x.fillText(p[2],Math.min(Math.max(X(p[0]),40),W-40),Y(p[1])-10);}});
+}
+/* ===== ল্যাব ১ ===== */
+var P1=Plot('q1cv2');
+function lab1(){
+  var a=+$('q1a').value,b=+$('q1b').value,c=+$('q1c').value;['a','b','c'].forEach(function(k,i){$('q1'+k+'v').textContent=bn([a,b,c][i]);});
+  function tm(co,v,first){if(co===0)return '';var s=co<0?'−':(first?'':'+');var ab=Math.abs(co);var cs=(ab===1&&v)?'':bn(ab);return (first?s:' '+s+' ')+cs+v;}
+  var eq=(tm(a,'x²',true)||'')+tm(b,'x',!a)+tm(c,'',!a&&!b);if(!a&&!b&&!c)eq='০';
+  $('q1e').textContent=eq+' = ০';
+  if(a===0){drawPlot(P1,[-6,6],[-6,6],[],[]);$('q1t').innerHTML='⚠️ a = ০ হলে এটি দ্বিঘাত সমীকরণ নয় (একঘাত)। a ≠ ০ রাখো।';return;}
+  var D=b*b-4*a*c,vx=-b/(2*a),vy=a*vx*vx+b*vx+c,sq=D>=0?Math.sqrt(D):0,h='';
+  h+='a = <b>'+sg(a)+'</b>, b = <b>'+sg(b)+'</b>, c = <b>'+sg(c)+'</b><br>নিশ্চায়ক D = b² − 4ac = ('+sg(b)+')² − 4·('+sg(a)+')·('+sg(c)+') = <b>'+sg(D)+'</b><br>';
+  var pts=[],isSq=D>=0&&Math.abs(Math.round(sq)-sq)<1e-9;
+  if(D>0){var x1=(-b+sq)/(2*a),x2=(-b-sq)/(2*a);
+    h+=(isSq?'D পূর্ণবর্গ ⇒ মূলদ্বয় <b>বাস্তব, অসমান ও মূলদ</b>।':'D পূর্ণবর্গ নয় ⇒ মূলদ্বয় <b>বাস্তব, অসমান ও অমূলদ</b>।')+'<br>x = (−('+sg(b)+') ± √'+bn(D)+') / '+sg(2*a)+'<br>x₁ = <b>'+fm(x1,3)+'</b>, x₂ = <b>'+fm(x2,3)+'</b>'+(isSq?' (x₁ = '+frac(-b+Math.round(sq),2*a)+', x₂ = '+frac(-b-Math.round(sq),2*a)+')':'');
+    h+='<br>যাচাই: a·x₁² + b·x₁ + c = '+fm(a*x1*x1+b*x1+c,6)+', a·x₂² + b·x₂ + c = '+fm(a*x2*x2+b*x2+c,6)+' ✔<br>গ্রাফ x-অক্ষকে <b>দুই বিন্দুতে</b> ছেদ করেছে।';
+    pts=[[x1,0,'x₁='+fm(x1,2)],[x2,0,'x₂='+fm(x2,2)]];}
+  else if(D===0){h+='D = ০ ⇒ মূলদ্বয় <b>বাস্তব ও সমান</b>: x = −b/২a = <b>'+fm(vx,3)+'</b>, <b>'+fm(vx,3)+'</b>।<br>গ্রাফ x-অক্ষকে <b>একটি বিন্দুতে স্পর্শ</b> করেছে।';pts=[[vx,0,'x='+fm(vx,2)]];}
+  else{h+='D &lt; ০ ⇒ <b>বাস্তব মূল নেই</b>। গ্রাফ x-অক্ষকে ছেদ করে না।';}
+  h+='<br>শীর্ষবিন্দু (−b/২a, ...) = ('+fm(vx,2)+', '+fm(vy,2)+')'+(a>0?' (a &gt; ০ ⇒ প্যারাবোলা উপরের দিকে খোলা)':' (a &lt; ০ ⇒ নিচের দিকে খোলা)');
+  var span=Math.max(3,D>0?Math.abs(sq/a)/2+2:3),xr=[vx-span,vx+span],ys=[vy,0],f=function(t){return a*t*t+b*t+c;};ys.push(f(xr[0]),f(xr[1]));
+  var y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys),pad=(y1-y0)*.12+1;
+  drawPlot(P1,xr,[y0-pad,y1+pad],[{f:f,c:'#2a6fdb'}],pts.concat([[vx,vy,'',"#e76f51"]]));
+  $('q1t').innerHTML=h;
+}
+['q1a','q1b','q1c'].forEach(function(i){$(i).oninput=lab1;});lab1();
+/* ===== ল্যাব ২ ===== */
+var P2=Plot('q2cv2');
+function lab2(){
+  var p=+$('q2p').value,q=+$('q2q').value,r=+$('q2r').value,s=+$('q2s').value;['p','q','r','s'].forEach(function(k,i){$('q2'+k+'v').textContent=bn([p,q,r,s][i]);});
+  function lin(c,k,first){return (c<0?'−':(first?'':'+'))+(Math.abs(c)===1?'':bn(Math.abs(c)))+k;}
+  var L='√('+(p===1?'':bn(p))+'x'+(q>0?' + '+bn(q):(q<0?' − '+bn(-q):''))+')';
+  var Rhs=(r===0?'':(r<0?'−':'')+(Math.abs(r)===1?'':bn(Math.abs(r)))+'x')+(s>0?(r===0?'':' + ')+bn(s):(s<0?(r===0?'−':' − ')+bn(-s):(r===0?'০':'')));
+  $('q2e').textContent=L+' = '+Rhs;
+  var cand=[],h='';
+  if(r===0){cand=[(s*s-q)/p];h+='ডানপক্ষ ধ্রুবক ('+sg(s)+')। বর্গ করে: '+bn(p)+'x + ('+sg(q)+') = '+bn(s*s)+'<br>⇒ x = '+frac(s*s-q,p)+'<br>';}
+  else{var A=r*r,B=2*r*s-p,C=s*s-q,Dd=B*B-4*A*C;
+    h+='দুই পক্ষ বর্গ করে: '+bn(p)+'x + ('+sg(q)+') = ('+sg(r)+'x + ('+sg(s)+'))²<br>⇒ '+sg(A)+'x² + ('+sg(B)+')x + ('+sg(C)+') = ০, D = '+sg(Dd)+'<br>';
+    if(Dd<0)h+='D &lt; ০ ⇒ বর্গ করা সমীকরণেরই বাস্তব মূল নেই। তাই আসল সমীকরণেরও <b>কোনো সমাধান নেই</b>।<br>';
+    else{var sd=Math.sqrt(Dd);cand=Dd===0?[-B/(2*A)]:[(-B+sd)/(2*A),(-B-sd)/(2*A)];}}
+  var good=[],pts=[];
+  cand.forEach(function(x){var u=p*x+q,rh=r*x+s,ok=u>=-1e-9&&Math.abs(Math.sqrt(Math.max(u,0))-rh)<1e-9;
+    h+='<br>প্রার্থী মূল x = <b>'+fm(x,3)+'</b>: ';
+    if(u<-1e-9)h+='বর্গমূলের ভেতরে '+fm(u)+' (ঋণাত্মক) ⇒ ✘ <b>অবান্তর মূল</b>';
+    else h+='বামপক্ষ = √'+fm(u,3)+' = '+fm(Math.sqrt(u),3)+', ডানপক্ষ = '+fm(rh,3)+(ok?' ⇒ সমান ✔ <b>গ্রহণযোগ্য</b>':' ⇒ সমান নয় ✘ <b>অবান্তর মূল</b> (বর্গমূল ঋণাত্মক হয় না)');
+    if(ok){good.push(x);pts.push([x,rh,'x='+fm(x,2)]);}});
+  if(cand.length)h+='<br><br>'+(good.length?'নির্ণেয় সমাধান: <b>x = '+good.map(function(g){return fm(g,3);}).join(', ')+'</b>':'<b>কোনো প্রার্থী মূল আসল সমীকরণ সিদ্ধ করে না, তাই সমাধান নেই।</b>');
+  var all=cand.concat(good),mn=Math.min.apply(null,[-4].concat(all.map(function(v){return v-2;}))),mx=Math.max.apply(null,[8].concat(all.map(function(v){return v+2;})));mn=Math.max(mn,-40);mx=Math.min(mx,40);
+  var ys=[0];for(var i=0;i<=40;i++){var v=mn+(mx-mn)*i/40;if(p*v+q>=0)ys.push(Math.sqrt(p*v+q));ys.push(r*v+s);}
+  all.forEach(function(v){ys.push(r*v+s);});
+  var y0=Math.max(Math.min.apply(null,ys),-25),y1=Math.min(Math.max.apply(null,ys),25);if(y1-y0<4){y1=y0+4;}
+  var pad=(y1-y0)*.1;
+  drawPlot(P2,[mn,mx],[y0-pad,y1+pad],[{f:function(v){return p*v+q>=0?Math.sqrt(p*v+q):NaN;},c:'#2a6fdb'},{f:function(v){return r*v+s;},c:'#e76f51'}],pts);
+  $('q2t').innerHTML=h;
+}
+['q2p','q2q','q2r','q2s'].forEach(function(i){$(i).oninput=lab2;});lab2();
+/* ===== ল্যাব ৩ ===== */
+var P3=Plot('q3cv2'),M3=0;
+var M3D=[
+ {name:'মোড ১: A^(x+m) = B^(x+n)',ctl:[{id:'c',l:'মূল ভিত্তি c',min:2,max:5,st:1,v:2},{id:'i',l:'A = c^i, i',min:1,max:3,st:1,v:1},{id:'j',l:'B = c^j, j',min:1,max:3,st:1,v:2},{id:'m',l:'m',min:-5,max:5,st:1,v:7},{id:'n',l:'n',min:-5,max:5,st:1,v:2}]},
+ {name:'মোড ২: p = aˣ ধরে দ্বিঘাত',ctl:[{id:'a',l:'ভিত্তি a',min:2,max:3,st:1,v:3},{id:'i',l:'প্রথম মূল aˣ = a^i, i',min:0,max:4,st:1,v:1},{id:'j',l:'দ্বিতীয় মূল aˣ = a^j, j',min:0,max:4,st:1,v:3}]}];
+var V3={};
+function q3chips(){$('q3m').innerHTML=M3D.map(function(m,i){return '<button data-i="'+i+'" class="'+(i===M3?'on':'')+'">'+m.name+'</button>';}).join('');}
+function q3ctl(){var h='';V3={};M3D[M3].ctl.forEach(function(c){V3[c.id]=c.v;h+='<label>'+c.l+' = <span id="q3'+c.id+'v">'+bn(c.v)+'</span></label><input type="range" id="q3'+c.id+'" min="'+c.min+'" max="'+c.max+'" step="'+c.st+'" value="'+c.v+'">';});$('q3c').innerHTML=h;
+  M3D[M3].ctl.forEach(function(c){$('q3'+c.id).oninput=function(){V3[c.id]=+this.value;$('q3'+c.id+'v').textContent=bn(+this.value);lab3();};});}
+$('q3m').onclick=function(e){var b=e.target.closest('button');if(!b)return;M3=+b.dataset.i;q3chips();q3ctl();lab3();};
+function ex(b,e){return bn(b)+'<sup>'+e+'</sup>';}
+function lab3(){
+  var h='';
+  if(M3===0){var c=V3.c,i=V3.i,j=V3.j,m=V3.m,n=V3.n,A=Math.pow(c,i),Bv=Math.pow(c,j);
+    var em=(m===0?'x':'x '+(m>0?'+ ':'− ')+bn(Math.abs(m))),en_=(n===0?'x':'x '+(n>0?'+ ':'− ')+bn(Math.abs(n)));
+    $('q3e').innerHTML=bn(A)+'<sup>('+em+')</sup> = '+bn(Bv)+'<sup>('+en_+')</sup>';
+    h+='ধাপ ১: '+bn(A)+' = '+bn(c)+'<sup>'+bn(i)+'</sup>, '+bn(Bv)+' = '+bn(c)+'<sup>'+bn(j)+'</sup>। তাই '+bn(c)+'<sup>'+bn(i)+'('+em+')</sup> = '+bn(c)+'<sup>'+bn(j)+'('+en_+')</sup><br>ধাপ ২: ভিত্তি সমান, তাই ঘাত সমান: '+bn(i)+'('+em+') = '+bn(j)+'('+en_+')<br>';
+    if(i===j){h+=(m===n?'দুই পক্ষ হুবহু এক ⇒ x এর যেকোনো মানে সিদ্ধ (অসংখ্য সমাধান)।':'ধাপ ৩: x বাদ গেলে '+sg(i*m)+' = '+sg(j*n)+' যা অসত্য ⇒ <b>কোনো সমাধান নেই</b>।');}
+    else{var nu=j*n-i*m,de=i-j,xv=nu/de;
+      h+='ধাপ ৩: '+bn(i)+'x + '+sg(i*m)+' = '+bn(j)+'x + '+sg(j*n)+' ⇒ ('+sg(i-j)+')x = '+sg(j*n-i*m)+'<br>ধাপ ৪: <b>x = '+frac(nu,de)+'</b>'+(Number.isInteger(xv)?'':' ≈ '+fm(xv,3));
+      var lg=(xv+m)*i*Math.log(c),rg=(xv+n)*j*Math.log(c);
+      h+='<br>যাচাই: বামে ঘাত ('+fm(xv,3)+' + '+sg(m)+')×'+bn(i)+' = '+fm((xv+m)*i,3)+', ডানে ঘাত ('+fm(xv,3)+' + '+sg(n)+')×'+bn(j)+' = '+fm((xv+n)*j,3)+(Math.abs(lg-rg)<1e-9?' ✔ সমান':' ✘');}
+    drawPlot(P3,[0,1],[0,1],[],[]);P3.x.fillStyle='#fff';P3.x.fillRect(0,0,P3.W,P3.H);
+    if(i!==j){var xv2=(j*n-i*m)/(i-j),lo=xv2-4,hi=xv2+4,ry=Math.pow(A,xv2+m),cap=Math.min(Math.max(ry*2,8),400);
+      drawPlot(P3,[lo,hi],[-cap*.05,cap],[{f:function(t){return Math.pow(A,t+m);},c:'#2a6fdb'},{f:function(t){return Math.pow(Bv,t+n);},c:'#e76f51'}],isFinite(ry)&&ry<cap*1.5?[[xv2,ry,'x='+fm(xv2,2)]]:[]);}
+  } else {var a=V3.a,i=V3.i,j=V3.j,u1=Math.pow(a,i),u2=Math.pow(a,j);
+    var s1=u1+u2,pr=u1*u2;
+    $('q3e').innerHTML=bn(a)+'<sup>২x</sup> − '+bn(s1)+'·'+bn(a)+'<sup>x</sup> + '+bn(pr)+' = ০';
+    h+='ধাপ ১: p = '+bn(a)+'<sup>x</sup> ধরি (p &gt; ০)। p² − '+bn(s1)+'p + '+bn(pr)+' = ০<br>ধাপ ২: (p − '+bn(u1)+')(p − '+bn(u2)+') = ০ ⇒ p = '+bn(u1)+' বা p = '+bn(u2)+' (দুটিই ধনাত্মক, তাই গ্রহণযোগ্য)<br>ধাপ ৩: '+bn(a)+'<sup>x</sup> = '+bn(a)+'<sup>'+bn(i)+'</sup> ⇒ <b>x = '+bn(i)+'</b>';
+    if(i!==j)h+=' এবং '+bn(a)+'<sup>x</sup> = '+bn(a)+'<sup>'+bn(j)+'</sup> ⇒ <b>x = '+bn(j)+'</b>';else h+=' (দুটি মূল সমান)';
+    h+='<br>যাচাই: x = '+bn(i)+' বসিয়ে '+bn(a)+'<sup>'+bn(2*i)+'</sup> − '+bn(s1)+'·'+bn(u1)+' + '+bn(pr)+' = '+bn(u1*u1)+' − '+bn(s1*u1)+' + '+bn(pr)+' = <b>'+fm(u1*u1-s1*u1+pr,0)+'</b> ✔';
+    var xm=Math.max(i,j)+1;drawPlot(P3,[-1,xm],[-u2*.05-.3,Math.max(u1,u2)*1.25+1],[{f:function(t){return Math.pow(a,t);},c:'#2a6fdb'}],[[i,u1,'x='+bn(i)],[j,u2,'x='+bn(j)]],{hl:[{y:u1,c:'#e76f51'},{y:u2,c:'#e76f51'}]});}
+  $('q3t').innerHTML=h;
+}
+q3chips();q3ctl();lab3();
+/* ===== ল্যাব ৪ ===== */
+var P4=Plot('q4cv2');
+function lab4(){
+  var S=+$('q4s').value,Pp=+$('q4p').value;$('q4sv').textContent=bn(S);$('q4pv').textContent=sg(Pp);
+  var s1=S+2*Pp,d1=S-2*Pp,h='x² + y² = '+bn(S)+', xy = '+sg(Pp)+'<br>(x + y)² = '+bn(S)+' + 2·('+sg(Pp)+') = <b>'+sg(s1)+'</b>, (x − y)² = '+bn(S)+' − 2·('+sg(Pp)+') = <b>'+sg(d1)+'</b><br>';
+  var sols=[];
+  if(s1<0||d1<0){h+='একটি বর্গ ঋণাত্মক হতে পারে না ⇒ <b>বাস্তব সমাধান নেই</b> (বৃত্ত ও হাইপারবোলা ছেদ করে না)।';}
+  else{var u=Math.sqrt(s1),v=Math.sqrt(d1);h+='x + y = ± '+fm(u,3)+', x − y = ± '+fm(v,3)+'<br>';
+    [[1,1],[1,-1],[-1,1],[-1,-1]].forEach(function(k){var X=(k[0]*u+k[1]*v)/2,Y=(k[0]*u-k[1]*v)/2;if(!sols.some(function(z){return Math.abs(z[0]-X)<1e-9&&Math.abs(z[1]-Y)<1e-9;}))sols.push([X,Y]);});
+    h+='সমাধান (x, y): '+sols.map(function(z){return '(<b>'+fm(z[0],3)+', '+fm(z[1],3)+'</b>)';}).join(', ')+'<br>যাচাই: '+sols.map(function(z){return fm(z[0]*z[0]+z[1]*z[1],4)+' / '+fm(z[0]*z[1],4);}).join(' · ')+' (প্রতিটি জোড়ায় x²+y² / xy) ✔';
+    h+='<br>সমাধানসংখ্যা: <b>'+bn(sols.length)+'</b>';}
+  var rr=Math.sqrt(S),lim=rr*1.35,curves=[],pts=sols.map(function(z){return [z[0],z[1],'('+fm(z[0],1)+','+fm(z[1],1)+')'];});
+  var circ=[];for(var i=0;i<=120;i++){var t=i/120*6.2832;circ.push([rr*Math.cos(t),rr*Math.sin(t)]);}
+  curves.push({c:'#2a6fdb',paths:[circ]});
+  if(Pp!==0){var A1=[],A2=[];for(var k=1;k<=300;k++){var xv=lim*k/300*1.0;if(Math.abs(xv)<1e-6)continue;
+      var cl=function(a){return Math.max(-lim*3,Math.min(lim*3,a));};
+      A1.push([xv,Pp/xv]);A2.push([-xv,-Pp/xv]);}
+    curves.push({c:'#e76f51',paths:[A1,A2]});}
+  else{curves.push({c:'#e76f51',paths:[[[-lim,0],[lim,0]],[[0,-lim],[0,lim]]]});}
+  drawPlot(P4,[-lim,lim],[-lim*(P4.H-38)/(P4.W-46),lim*(P4.H-38)/(P4.W-46)],[],pts,{curves:curves});
+  $('q4t').innerHTML=h;
+}
+['q4s','q4p'].forEach(function(i){$(i).oninput=lab4;});lab4();
+/* ===== ল্যাব ৫: ঘড়ি ===== */
+var cv5=$('q5cv'),x5=R2(cv5),M5=0;
+function timeStr(t){var tot=Math.round(t*60),h=Math.floor(tot/3600)%12,m=Math.floor(tot/60)%60,s=tot%60;return bn(h===0?12:h)+':'+bn(('0'+m).slice(-2))+':'+bn(('0'+s).slice(-2));}
+function clockTimes(ang){var out=[],step=360;for(var k=0;;k++){var t=(ang+360*k)/5.5;if(t>=720-1e-9)break;out.push(t);}return out;}
+function lab5(){
+  var t=+$('q5t').value;$('q5tv').textContent=fm(t,2);
+  var W=360,x=x5,cx=180,cy=180,r=150;x.clearRect(0,0,W,W);x.fillStyle='#fff';x.fillRect(0,0,W,W);
+  x.strokeStyle='#1f3a5f';x.lineWidth=4;x.beginPath();x.arc(cx,cy,r,0,6.2832);x.stroke();
+  x.fillStyle='#1f3a5f';x.font='700 18px system-ui';x.textAlign='center';x.textBaseline='middle';
+  for(var k=1;k<=12;k++){var a=k*30*Math.PI/180;x.fillText(bn(k),cx+Math.sin(a)*(r-22),cy-Math.cos(a)*(r-22));
+    x.lineWidth=2;x.beginPath();x.moveTo(cx+Math.sin(a)*(r-6),cy-Math.cos(a)*(r-6));x.lineTo(cx+Math.sin(a)*r,cy-Math.cos(a)*r);x.stroke();}
+  var ha=(t*0.5)*Math.PI/180,ma=(t*6)*Math.PI/180;
+  x.lineCap='round';x.strokeStyle='#1f3a5f';x.lineWidth=7;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.sin(ha)*r*.5,cy-Math.cos(ha)*r*.5);x.stroke();
+  x.strokeStyle='#e76f51';x.lineWidth=4;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.sin(ma)*r*.78,cy-Math.cos(ma)*r*.78);x.stroke();
+  x.fillStyle='#1f3a5f';x.beginPath();x.arc(cx,cy,6,0,6.2832);x.fill();
+  var d=(5.5*t)%360;if(d>180)d=360-d;
+  $('q5i').innerHTML='সময় ≈ <b>'+timeStr(t)+'</b> (১২:০০:০০ এর পর), কাঁটা দুটির মধ্যবর্তী কোণ = <b>'+fm(d,2)+'°</b><br>ঘণ্টার কাঁটা '+fm(t*0.5,2)+'° এবং মিনিটের কাঁটা '+fm((t*6)%360,2)+'° ঘুরেছে।';
+  var tg=M5===0?180:90,list=M5===0?clockTimes(180):clockTimes(90).filter(function(_,i){return true;});
+  if(M5===1){list=[];for(var kk=0;;kk++){var tt=(90+180*kk)/5.5;if(tt>=720-1e-9)break;list.push(tt);}}
+  $('q5l').innerHTML='<b>১২ ঘণ্টায় '+(M5===0?'ঠিক বিপরীতে (১৮০°)':'লম্ব (৯০°)')+' হয় '+bn(list.length)+' বার</b> (সমীকরণ: ৫.৫ t = '+bn(M5===0?'১৮০ + ৩৬০k':'৯০ + ১৮০k').replace(/k/g,'k')+')<br>'+list.map(function(v){return '<button class="btn alt" style="margin:2px;padding:2px 8px" data-t="'+v+'">'+timeStr(v)+'</button>';}).join('');
+}
+$('q5m').innerHTML=['বিপরীত দিকে (১৮০°)','লম্ব (৯০°)'].map(function(n,i){return '<button data-i="'+i+'" class="'+(i===0?'on':'')+'">'+n+'</button>';}).join('');
+$('q5m').onclick=function(e){var b=e.target.closest('button');if(!b)return;M5=+b.dataset.i;[].forEach.call($('q5m').children,function(z){z.classList.toggle('on',z===b);});lab5();};
+$('q5l').onclick=function(e){var b=e.target.closest('button');if(!b||!b.dataset.t)return;$('q5t').value=b.dataset.t;lab5();};
+$('q5t').oninput=lab5;lab5();
+/* ===== প্র্যাকটিস ===== */
+var PR=[
+ ['x² − 5x + 6 = 0 এর বড় মূলটি কত?',[3],'a = 1, b = −5, c = 6। D = 25 − 24 = 1। x = (5 ± 1)/2 = 3 বা 2। বড় মূল 3।'],
+ ['3x² + 7x + 1 = 0 এর নিশ্চায়ক D কত?',[37],'D = 7² − 4·3·1 = 49 − 12 = 37 (পূর্ণবর্গ নয় ⇒ মূল অমূলদ)।'],
+ ['2x² + 9x + 9 = 0 এর ছোট মূলটি কত?',[-3],'D = 81 − 72 = 9। x = (−9 ± 3)/4 = −3/2 বা −3। ছোট মূল −3।'],
+ ['x² − 2x − 2 = 0 এর বড় মূলটি কত? (১ + √৩, দশমিকে ২ ঘর)',[2.73],'x = 1 ± √3। 1 + 1.732 = 2.73।'],
+ ['√(8x + 9) − √(2x + 15) = √(2x − 6) এর সমাধান x = ?',[5],'বর্গ করে x = 5। শুদ্ধি: √49 − √25 = 2 = √4 ✔।'],
+ ['√(x − 4) + 2 = √(x + 12) এর সমাধান x = ?',[13],'বর্গ করে 4√(x−4) = 12 ⇒ √(x−4) = 3 ⇒ x = 13। শুদ্ধি: 3 + 2 = 5 = √25 ✔।'],
+ ['3^(x+2) = 81 হলে x = ?',[2],'81 = 3⁴ ⇒ x + 2 = 4 ⇒ x = 2।'],
+ ['5^(3x−7) = 3^(3x−7) হলে x = ? (ভগ্নাংশ বা দশমিক)',[2.33],'ভিত্তি আলাদা, তাই ঘাত শূন্য: 3x − 7 = 0 ⇒ x = 7/3 ≈ 2.33।'],
+ ['3^(2x−2) − 5·3^(x−2) − 66 = 0 হলে x = ?',[3],'p = 3ˣ ⇒ p² − 5p − 594 = 0 ⇒ p = 27 ⇒ x = 3।'],
+ ['x + y = 1, x − y = 11 হলে x = ? (x² + y² = 61, xy = −30 জোটের একটি সমাধান)',[6],'যোগ করে 2x = 12 ⇒ x = 6, y = −5।'],
+ ['দুটি বর্গক্ষেত্রের ক্ষেত্রফলের সমষ্টি 650 এবং তাদের বাহু দ্বারা গঠিত আয়তক্ষেত্রের ক্ষেত্রফল 323 হলে বড় বাহুর দৈর্ঘ্য কত?',[19],'(x+y)² = 650 + 646 = 1296 ⇒ x + y = 36; (x−y)² = 4 ⇒ x − y = 2। x = 19, y = 17।'],
+ ['১২ ঘণ্টায় ঘড়ির ঘণ্টা ও মিনিটের কাঁটা কতবার ঠিক বিপরীত দিকে (১৮০°) থাকে?',[11],'৫.৫ t = ১৮০ + ৩৬০ k, t &lt; ৭২০ ⇒ k = ০ থেকে ১০, মোট ১১ বার।']
+];
+(function(){var h='';PR.forEach(function(p,i){h+='<div class="q"><b>'+bn(i+1)+'.</b> '+p[0]+'<div class="ans"> <input type="text" id="pi'+i+'" size="10"> <button class="btn" data-pc="'+i+'">যাচাই</button> <button class="btn alt" data-ph="'+i+'">সমাধান</button></div><div class="fb" id="pf'+i+'"></div></div>';});$('pracbox').innerHTML=h;})();
+function numOf(s){s=en(s).replace(/[−–]/g,'-').replace(/\s+/g,'');var m=s.match(/^(-?\d+)\/(\d+)$/);if(m)return +m[1]/+m[2];if(/^-?\d*\.?\d+$/.test(s))return parseFloat(s);return NaN;}
+$('pracbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.pc!==undefined){var i=+b.dataset.pc,raw=$('pi'+i).value,v=numOf(raw),ok=!isNaN(v)&&PR[i][1].some(function(a){return Math.abs(a-v)<=0.0151;});
+    $('pf'+i).innerHTML=raw.trim()===''?'আগে উত্তর লেখো।':(ok?'✅ ঠিক! সাবাশ।':'❌ আবার চেষ্টা করো, বা "সমাধান" দেখো।');}
+  if(b.dataset.ph!==undefined){var j=+b.dataset.ph;$('pf'+j).innerHTML='💡 '+PR[j][2]+' <b>উত্তর: '+bn(PR[j][1][0])+'</b>';}
+});
+/* ===== কুইজ ===== */
+var QZ=[];function M(q,c,w,e){QZ.push({q:q,o:[c].concat(w),e:e});}
+M('ax² + bx + c = 0 সমীকরণের সমাধানের সূত্র কোনটি?','x = (−b ± √(b² − 4ac)) / 2a',['x = (b ± √(b² − 4ac)) / 2a','x = (−b ± √(b² + 4ac)) / 2a','x = (−b ± √(b² − 4ac)) / a'],'বর্গ পূর্ণ করে এই সূত্র পাওয়া যায়।');
+M('b² − 4ac কে দ্বিঘাত সমীকরণের কী বলে?','নিশ্চায়ক',['সহগ','মূল','ধ্রুবক'],'Discriminant বা নিশ্চায়ক।');
+M('b² − 4ac > 0 এবং পূর্ণবর্গ হলে মূলদ্বয় হবে—','বাস্তব, অসমান ও মূলদ',['বাস্তব, অসমান ও অমূলদ','বাস্তব ও সমান','অবাস্তব'],'পূর্ণবর্গের বর্গমূল মূলদ, তাই মূল মূলদ।');
+M('b² − 4ac > 0 কিন্তু পূর্ণবর্গ নয় হলে মূলদ্বয় হবে—','বাস্তব, অসমান ও অমূলদ',['বাস্তব, অসমান ও মূলদ','বাস্তব ও সমান','বাস্তব নয়'],'অপূর্ণবর্গের বর্গমূল অমূলদ।');
+M('b² − 4ac = 0 হলে মূলদ্বয়—','বাস্তব ও পরস্পর সমান',['অসমান','অমূলদ','বাস্তব নয়'],'x = −b/2a দুবার।');
+M('b² − 4ac < 0 হলে—','বাস্তব মূল নেই',['দুটি বাস্তব মূল','একটি বাস্তব মূল','মূল শূন্য'],'ঋণাত্মক সংখ্যার বাস্তব বর্গমূল নেই।');
+M('x² − 5x + 6 = 0 এর মূলদ্বয়—','২ ও ৩',['১ ও ৬','−২ ও −৩','৫ ও ১'],'(x − 2)(x − 3) = 0।');
+M('x² − 2x − 2 = 0 এর মূলদ্বয়—','১ + √৩, ১ − √৩',['১ ± √২','২ ± √৩','−১ ± √৩'],'D = 12, x = (2 ± 2√3)/2।');
+M('x² − x − 13 = 0 এর নিশ্চায়ক—','৫৩',['৫১','−৫৩','১২'],'১ + ৫২ = ৫৩।');
+M('x² − x − 13 = 0 এর একটি মূল—','(১ + √৫৩)/২',['(−১ + √৫১)/২','(১ + √−৫১)/২','(১ + √৫৩)/৪'],'x = (1 ± √53)/2।');
+M('x² − x − 12 = 0 কে ax² + bx + c = 0 এর সাথে তুলনা করলে b = ?','−১',['০','১','৩'],'x এর সহগ −১।');
+M('বর্গমূলযুক্ত সমীকরণে বর্গ করার পর পাওয়া যে মূল আসল সমীকরণ সিদ্ধ করে না, তাকে বলে—','অবান্তর মূল',['মূলদ মূল','নিশ্চায়ক','সমান মূল'],'Extraneous root।');
+M('বর্গমূলযুক্ত সমীকরণ সমাধান করে মূল পেলে কী করা আবশ্যক?','শুদ্ধি পরীক্ষা',['কিছুই না','লেখচিত্র আঁকা','নিশ্চায়ক বের করা'],'অবান্তর মূল বাদ দিতে।');
+M('√(x + 6) = x এর সমাধান—','x = ৩',['x = −২','x = ৩ ও −২','কোনো সমাধান নেই'],'x = −2 হলে ডানপক্ষ −২, কিন্তু বর্গমূল ঋণাত্মক হয় না।');
+M('√(x − 4) + 2 = √(x + 12) এর সমাধান—','x = ১৩',['x = ৮','x = ৫','x = ১২'],'বর্গ করে √(x−4) = 3।');
+M('a > 0, a ≠ 1 হলে aˣ = aᵐ এর ক্ষেত্রে—','x = m',['x = a','x = −m','x = m/a'],'সূচকের একমানিতা।');
+M('3^(x+2) = 81 এর সমাধান—','x = ২',['x = ৪','x = ৩','x = ১'],'81 = 3⁴।');
+M('2^(x+7) = 4^(x+2) এর সমাধান—','x = ৩',['x = ২','x = ৫','x = −৩'],'x + 7 = 2x + 4।');
+M('3·27ˣ = 9^(x+4) এর সমাধান—','x = ৭',['x = ৮','x = ৬','x = ৪'],'3^(3x+1) = 3^(2x+8)।');
+M('5^(3x−7) = 3^(3x−7) এর সমাধান—','x = ৭/৩',['x = ০','x = ৩','x = ১'],'ভিত্তি আলাদা, তাই ঘাত শূন্য।');
+M('3^(2x−2) − 5·3^(x−2) − 66 = 0 এ p = 3ˣ ধরলে p = −22 গ্রহণযোগ্য নয়, কারণ—','3ˣ সবসময় ধনাত্মক',['3ˣ সবসময় ঋণাত্মক','p পূর্ণসংখ্যা নয়','D ঋণাত্মক'],'aˣ > 0।');
+M('y^x = 9, y² = 3ˣ জোটের একটি সমাধান—','(−২, ১/৩)',['(২, ১/৩)','(−৩, −৩)','(−২, ৩)'],'x = −2, y = 1/3: (1/3)^(−2) = 9 ✔, (1/3)² = 3^(−2) ✔।');
+M('x² + y² = 25, xy = 12 জোটের বাস্তব সমাধান কয়টি (x, y জোড়া)?','৪টি',['২টি','১টি','৮টি'],'(4,3), (3,4), (−3,−4), (−4,−3)।');
+M('x² + y² = 61, xy = −30 হলে (x − y)² =','১২১',['১','৩১','৯১'],'61 − 2(−30) = 121।');
+M('x + y = 1, x − y = 11 হলে x =','৬',['৫','−৬','১২'],'2x = 12।');
+M('দুটি বর্গক্ষেত্রের ক্ষেত্রফলের সমষ্টি 650, আয়তক্ষেত্রের ক্ষেত্রফল 323 হলে বর্গক্ষেত্র দুটির বাহু—','১৯ ও ১৭',['২৫ ও ২৫','১৮ ও ১৮','২০ ও ১৬'],'x + y = 36, x − y = 2।');
+M('একটি সংখ্যা ও তার গুণান্তর বিপরীত সংখ্যার সমষ্টি ৬। সম্ভাব্য সমীকরণ: i. x + 1/x = 6 ii. x² + 1 = 6x iii. x² − 6x − 1 = 0—','i ও ii',['i ও iii','ii ও iii','i, ii ও iii'],'x² + 1 = 6x ⇒ x² − 6x + 1 = 0। iii এ ধ্রুবক পদ −১ ভুল।');
+M('2^(px−1) = 2^(2px−2) এর সমাধান—','১/p',['p/২','p','−p/২'],'px − 1 = 2px − 2 ⇒ px = 1।');
+M('y = ax² + bx + c এর লেখচিত্র x-অক্ষকে যেখানে কাটে সেই x এর মান—','সমীকরণ ax² + bx + c = 0 এর মূল',['শীর্ষবিন্দু','c এর মান','b এর মান'],'ওই বিন্দুতে y = 0।');
+M('১২ ঘণ্টায় ঘড়ির কাঁটা দুটি কতবার ঠিক লম্ব (৯০°) থাকে?','২২ বার',['১১ বার','২৪ বার','১২ বার'],'৫.৫ t = ৯০ + ১৮০ k, k = ০ থেকে ২১।');
+(function(){
+  var done=0,sc=0;
+  QZ.forEach(function(q){var ord=q.o.map(function(t,i){return {t:t,c:i===0};});
+    for(var i=ord.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),k=ord[i];ord[i]=ord[j];ord[j]=k;}q.ord=ord;});
+  var h='';QZ.forEach(function(q,qi){h+='<div class="q" id="qq'+qi+'"><b>'+bn(qi+1)+'.</b> '+q.q+q.ord.map(function(o,oi){return '<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+o.t+'</button>';}).join('')+'<div class="fb" id="qe'+qi+'"></div></div>';});
+  $('quizbox').innerHTML=h;
+  $('quizbox').addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b||b.parentNode.dataset.done)return;
+    var qi=+b.dataset.q,q=QZ[qi],o=q.ord[+b.dataset.o];b.parentNode.dataset.done=1;done++;
+    var btns=b.parentNode.querySelectorAll('.opt');btns.forEach(function(x,i){if(q.ord[i].c)x.classList.add('good');});
+    if(o.c){sc++;$('qe'+qi).textContent='✅ ঠিক! '+q.e;}else{b.classList.add('bad');$('qe'+qi).textContent='❌ ভুল। '+q.e;}
+    $('qscore').textContent='স্কোর: '+bn(sc)+' / '+bn(done)+' (মোট '+bn(QZ.length)+'টি)';
+    try{if(done===QZ.length){localStorage.setItem('sl_done_math-equations','1');var xp=+(localStorage.getItem('sl_xp')||0);localStorage.setItem('sl_xp',xp+sc);}}catch(er){}
+  });
+})();
+/* ===== প্রশ্নোত্তর ===== */
+var QA=[
+ {h:'অনুশীলনী ৫.১ (সূত্রে সমাধান)',items:[
+  ['১. 2x² + 9x + 9 = 0','D = 81 − 72 = 9। x = (−9 ± 3)/4 ⇒ x = −3/2, −3।'],
+  ['২. 3 − 4x − 2x² = 0 অর্থাৎ 2x² + 4x − 3 = 0','D = 16 + 24 = 40। x = (−4 ± 2√10)/4 = (−2 ± √10)/2।'],
+  ['৩. 4x − 1 − x² = 0 অর্থাৎ x² − 4x + 1 = 0','D = 16 − 4 = 12। x = (4 ± 2√3)/2 = 2 ± √3।'],
+  ['৪. 2x² − 5x − 1 = 0','D = 25 + 8 = 33। x = (5 ± √33)/4।'],
+  ['৫. 3x² + 7x + 1 = 0','D = 49 − 12 = 37। x = (−7 ± √37)/6।'],
+  ['৭. x² − 8x + 16 = 0','D = 64 − 64 = 0। x = 4, 4 (সমান মূল)।']]},
+ {h:'অনুশীলনী ৫.২ (বর্গমূল)',items:[
+  ['১. √(x − 4) + 2 = √(x + 12)','বর্গ করে 4√(x−4) = 12 ⇒ x = 13। শুদ্ধি: 3 + 2 = 5 = √25 ✔।'],
+  ['৩. √(2x+7) + √(3x−18) = √(7x+1)','বর্গ করে 2√((2x+7)(3x−18)) = 2x + 12 ⇒ √((2x+7)(3x−18)) = x + 6। আবার বর্গ: 6x² − 15x − 126 = x² + 12x + 36 ⇒ 5x² − 27x − 162 = 0 ⇒ (x − 9)(5x + 18) = 0। x = 9 বা −3.6। শুদ্ধি: x = 9 হলে √25 + √9 = 8 = √64 ✔; x = −3.6 হলে √(3x−18) ঋণাত্মক রাশির বর্গমূল ✘। উত্তর x = 9।']]},
+ {h:'অনুশীলনী ৫.৩ (সূচক)',items:[
+  ['১. 3^(x+2) = 81','81 = 3⁴ ⇒ x + 2 = 4 ⇒ x = 2।'],
+  ['২. 5^(3x−7) = 3^(3x−7)','ভিত্তি আলাদা ⇒ 3x − 7 = 0 ⇒ x = 7/3।'],
+  ['৩. 2^(x−4) = 4a^(x−6) (a > 0, a ≠ 2)','2^(x−4) = 2²·a^(x−6) ⇒ (2/a)^(x−6) ⇒ 2^(x−4−2) = a^(x−6) ⇒ 2^(x−6) = a^(x−6) ⇒ (2/a)^(x−6) = 1 ⇒ x = 6।'],
+  ['১২. 2^(2x) − 3·2^(x+2) = −32','p = 2ˣ ⇒ p² − 12p + 32 = 0 ⇒ (p − 4)(p − 8) = 0 ⇒ 2ˣ = 4 বা 8 ⇒ x = 2, 3।']]},
+ {h:'অনুশীলনী ৫.৫ ও ৫.৭ (বাস্তব সমস্যা)',items:[
+  ['৫.৫ প্রশ্ন ১: দুটি বর্গক্ষেত্রের ক্ষেত্রফলের সমষ্টি 481, ঐ দুই বাহু দ্বারা গঠিত আয়তক্ষেত্রের ক্ষেত্রফল 240। বাহু কত?','(x+y)² = 481 + 480 = 961 ⇒ x + y = 31; (x−y)² = 481 − 480 = 1 ⇒ x − y = 1। বাহু 16 মি. ও 15 মি.।'],
+  ['৫.৫ প্রশ্ন ২: দুই ধনাত্মক সংখ্যার বর্গের সমষ্টি 250, গুণফল 117। সংখ্যা দুটি?','(x+y)² = 250 + 234 = 484 ⇒ 22; (x−y)² = 16 ⇒ 4। সংখ্যা 13 ও 9।'],
+  ['৫.৭ প্রশ্ন ৫ (MCQ): 2^(px−1) = 2^(2px−2) এর সমাধান কোনটি?','ঘ. 1/p। px − 1 = 2px − 2 ⇒ px = 1।'],
+  ['৫.৭ প্রশ্ন ৮ (ক ও খ): আয়তাকার জমির ক্ষেত্রফল 0.12 হেক্টর (= 1200 বর্গমি.), অর্ধপরিসীমা কর্ণ অপেক্ষা 20 মি. বেশি।','দৈর্ঘ্য x, প্রস্থ y: xy = 1200, x + y = d + 20, d² = x² + y²। (x + y − 20)² = (x + y)² − 2400 ⇒ −40(x + y) + 400 = −2400 ⇒ x + y = 70। x² − 70x + 1200 = 0 ⇒ (x − 30)(x − 40) = 0। দৈর্ঘ্য 40 মি., প্রস্থ 30 মি. (কর্ণ 50 মি.)।'],
+  ['৫.৭ প্রশ্ন ১০: আয়তক্ষেত্রের দৈর্ঘ্য ও প্রস্থের ব্যবধান 1 সেমি। ক্ষেত্রফলের শেষ অঙ্ক 6 হলে দৈর্ঘ্য পূর্ণসংখ্যা হতে পারে কি?','হ্যাঁ। প্রস্থ n হলে ক্ষেত্রফল n(n+1)। n = 2 ⇒ 6 (2 × 3)। n = 7 ⇒ 56 (7 × 8)। এভাবে প্রস্থ 2 বা 7 দিয়ে শেষ হলে শেষ অঙ্ক 6 হয়।'],
+  ['৫.৭ প্রশ্ন ১১ ও ১২: ঘড়ির কাঁটা ১২ ঘণ্টায় কতবার বিপরীত ও কতবার লম্ব?','৫.৫ t = 180 + 360k (t &lt; 720) ⇒ k = 0…10 ⇒ ১১ বার বিপরীত। ৫.৫ t = 90 + 180k ⇒ k = 0…21 ⇒ ২২ বার লম্ব। সময়গুলো ল্যাব ৫ এ আছে।']]}
+];
+(function(){var h='';QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){h+='<details class="ex"><summary><b>'+it[0]+'</b></summary><p>'+it[1]+'</p></details>';});});$('qabox').innerHTML=h;})();
+
+</script>
+</body>
+</html>
