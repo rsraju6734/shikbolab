@@ -109,7 +109,7 @@ small{color:#567}
 <script src="../js/theme.js" defer></script>
 <script src="../js/prices.js"></script>
 <script src="../js/demo-saas.js?v=4"></script>
-<script src="../js/lab-boost.js?v=1"></script>
+<script src="../js/lab-boost.js?v=2"></script>
 </head>
 <body>
 <header class="site">
@@ -311,7 +311,8 @@ function rnd(a,b){return a+Math.random()*(b-a);}
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 function gcd(a,b){return b?gcd(b,a%b):a;}
 var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
-function ctxOf(id){return $(id).getContext('2d');}
+var SKIP={};function ctxOf(id){var c=$(id);if(c.__off)throw SKIP;return c.getContext('2d');}
+(function(){if(!window.IntersectionObserver)return;var io=new IntersectionObserver(function(es){es.forEach(function(e){e.target.__off=!e.isIntersecting;});},{rootMargin:'150px'});document.querySelectorAll('canvas').forEach(function(c){io.observe(c);});})();
 function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
 function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
 
@@ -373,7 +374,7 @@ function fmtN(v){if(Math.abs(v)>=1000)return bn(Math.round(v).toString().replace
 function tagd(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=4;x.fillStyle=col||'#fff';x.fillText(s,px,py);x.restore();}
 
 /* ===== ফিউচারিস্টিক জীববিজ্ঞান ল্যাব লাইব্রেরি (ডার্ক হলোগ্রাম, নিয়ন গ্লো, 3D-ধাঁচের গোলক) ===== */
-document.documentElement.classList.add('fut');
+document.documentElement.classList.add('fut');(function(){var st=document.createElement('style');st.textContent=".th-bg i,.th-hero i.o,.th-hero .ico{animation:none!important}.th-bg i{filter:none!important;opacity:.18!important}header.site,.tabs{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(255,255,255,.96)!important}.lbh i,.th-live::before{animation:none!important}";document.head.appendChild(st);})();(function(){var d=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,'shadowBlur');if(d&&d.set&&!CanvasRenderingContext2D.prototype.__sb){CanvasRenderingContext2D.prototype.__sb=1;Object.defineProperty(CanvasRenderingContext2D.prototype,'shadowBlur',{get:function(){return d.get.call(this);},set:function(v){d.set.call(this,v*.4);},configurable:true});}})();
 function hx(c){if(c.length===4)c='#'+c[1]+c[1]+c[2]+c[2]+c[3]+c[3];return [parseInt(c.substr(1,2),16)||0,parseInt(c.substr(3,2),16)||0,parseInt(c.substr(5,2),16)||0];}
 var DT=.02,TKL=performance.now();
 DRAWS.push(function(){var n=performance.now();DT=Math.min(.05,(n-TKL)/1000);TKL=n;});
@@ -382,17 +383,17 @@ function lt(c,t){return mixc(c,'#ffffff',t);} function dk(c,t){return mixc(c,'#0
 function ln(x,x1,y1,x2,y2,col,lw,dash){x.strokeStyle=col;x.lineWidth=lw||2;if(dash)x.setLineDash(dash);x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();if(dash)x.setLineDash([]);}
 /* ডার্ক হলোগ্রাম পটভূমি */
 function bgF(x,w,h){var g=x.createRadialGradient(w*.5,h*.35,10,w*.5,h*.5,Math.max(w,h)*.85);g.addColorStop(0,'#0f2c52');g.addColorStop(.6,'#081833');g.addColorStop(1,'#030814');x.fillStyle=g;x.fillRect(0,0,w,h);
-  x.strokeStyle='rgba(56,189,248,.09)';x.lineWidth=1;var i;for(i=0;i<w;i+=26){x.beginPath();x.moveTo(i+.5,0);x.lineTo(i+.5,h);x.stroke();}for(i=0;i<h;i+=26){x.beginPath();x.moveTo(0,i+.5);x.lineTo(w,i+.5);x.stroke();}
+  x.strokeStyle='rgba(56,189,248,.09)';x.lineWidth=1;var i;x.beginPath();for(i=0;i<w;i+=26){x.moveTo(i+.5,0);x.lineTo(i+.5,h);}for(i=0;i<h;i+=26){x.moveTo(0,i+.5);x.lineTo(w,i+.5);}x.stroke();
   var sy=(FR*1.1)%(h+60)-30,sg=x.createLinearGradient(0,sy-24,0,sy+24);sg.addColorStop(0,'rgba(34,211,238,0)');sg.addColorStop(.5,'rgba(34,211,238,.13)');sg.addColorStop(1,'rgba(34,211,238,0)');x.fillStyle=sg;x.fillRect(0,sy-24,w,48);
-  x.strokeStyle='rgba(34,211,238,.7)';x.lineWidth=2;var L=14;[[6,6,1,1],[w-6,6,-1,1],[6,h-6,1,-1],[w-6,h-6,-1,-1]].forEach(function(c){x.beginPath();x.moveTo(c[0],c[1]+c[3]*L);x.lineTo(c[0],c[1]);x.lineTo(c[0]+c[2]*L,c[1]);x.stroke();});
-  for(i=0;i<14;i++){var px=(rp(i,0,w)+Math.sin(FR/80+i)*8+w)%w,py=(rp(i+30,0,h)-FR*(.15+i%4*.06)+h*3)%h;x.fillStyle='rgba(125,211,252,'+(.15+i%3*.1)+')';x.beginPath();x.arc(px,py,1.3+i%3*.6,0,7);x.fill();}}
+  x.strokeStyle='rgba(34,211,238,.7)';x.lineWidth=2;var L=14;x.beginPath();[[6,6,1,1],[w-6,6,-1,1],[6,h-6,1,-1],[w-6,h-6,-1,-1]].forEach(function(c){x.moveTo(c[0],c[1]+c[3]*L);x.lineTo(c[0],c[1]);x.lineTo(c[0]+c[2]*L,c[1]);});x.stroke();
+  x.fillStyle='rgba(125,211,252,.22)';x.beginPath();for(i=0;i<8;i++){var px=(rp(i,0,w)+Math.sin(FR/80+i)*8+w)%w,py=(rp(i+30,0,h)-FR*(.15+i%4*.06)+h*3)%h;x.moveTo(px+1.6,py);x.arc(px,py,1.6,0,7);}x.fill();}
 /* 3D-ধাঁচের গ্লোবুল */
 function orb(x,px,py,r,col,glow){x.save();if(glow!==0){x.shadowColor=col;x.shadowBlur=glow||16;}
   var g=x.createRadialGradient(px-r*.38,py-r*.42,r*.06,px,py,r);g.addColorStop(0,lt(col,.85));g.addColorStop(.35,col);g.addColorStop(1,dk(col,.62));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();x.restore();
   x.strokeStyle='rgba(255,255,255,.28)';x.lineWidth=1;x.beginPath();x.arc(px,py,r-.5,Math.PI*1.05,Math.PI*1.75);x.stroke();}
 function ring(x,px,py,r,col,lw,dash){x.save();x.shadowColor=col;x.shadowBlur=10;x.strokeStyle=col;x.lineWidth=lw||2;if(dash)x.setLineDash(dash);x.beginPath();x.arc(px,py,r,0,7);x.stroke();x.restore();}
 function neon(x,x1,y1,x2,y2,col,lw,dash){x.save();x.shadowColor=col;x.shadowBlur=9;ln(x,x1,y1,x2,y2,col,lw||2,dash);x.restore();}
-function ft(x,s,px,py,size,col,al){x.font='700 '+(size||13)+'px "Hind Siliguri",sans-serif';x.textAlign=al||'center';x.textBaseline='middle';x.save();x.shadowColor='rgba(0,0,0,.85)';x.shadowBlur=5;x.fillStyle=col||WH;x.fillText(s,px,py);x.restore();}
+function ft(x,s,px,py,size,col,al){x.font='700 '+(size||13)+'px "Hind Siliguri",sans-serif';x.textAlign=al||'center';x.textBaseline='middle';x.fillStyle=col||WH;x.fillText(s,px,py);}
 function hbox(x,px,py,w,h,col,a){col=col||CY;x.save();x.shadowColor=col;x.shadowBlur=10;rr(x,px,py,w,h,9);x.fillStyle='rgba(10,30,60,'+(a===undefined?.72:a)+')';x.fill();x.strokeStyle=col;x.lineWidth=1.6;x.stroke();x.restore();}
 function bar3d(x,px,py,w,h,col,d){d=d||8;var g=x.createLinearGradient(px,py,px,py+h);g.addColorStop(0,lt(col,.35));g.addColorStop(1,dk(col,.35));x.save();x.shadowColor=col;x.shadowBlur=9;x.fillStyle=g;x.fillRect(px,py,w,h);x.restore();
   x.fillStyle=lt(col,.55);x.beginPath();x.moveTo(px,py);x.lineTo(px+d,py-d*.7);x.lineTo(px+w+d,py-d*.7);x.lineTo(px+w,py);x.closePath();x.fill();
@@ -467,6 +468,24 @@ function RING(id,items,getSel,pal){
     hbox(x,cx-92,H-34,184,24,CY,.7);ft(x,'ঘুরছে: '+bn(s+1)+' / '+bn(n),cx,H-22,11.5,'#c7ecff');});
 }
 var PAL=[CY,GR,PK,YL,PU,OR,BL,'#2dd4bf','#f87171','#a3e635'];
+
+/* ===== হালকা ও মসৃণ চালানোর ব্যবস্থা (ল্যাগ কমানো) ===== */
+(function(){
+  var P=CanvasRenderingContext2D.prototype,d=Object.getOwnPropertyDescriptor(P,'shadowBlur');
+  var phone=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)||innerWidth<760;
+  window.LITE=false;
+  Object.defineProperty(P,'shadowBlur',{configurable:true,set:function(v){d.set.call(this,window.LITE?0:Math.min(v,phone?3:6));},get:function(){return d.get.call(this);}});
+  /* একসময়ে শুধু পর্দার মাঝের ল্যাবটাই চলবে */
+  var CUR=null;
+  function pick(){var best=null,bd=1e9,h=innerHeight,cs=document.querySelectorAll('canvas:not(.lbo)');for(var i=0;i<cs.length;i++){var c=cs[i];if(c.__off)continue;var r=c.getBoundingClientRect();if(r.bottom<0||r.top>h)continue;var dd=Math.abs((r.top+r.bottom)/2-h/2);if(dd<bd){bd=dd;best=c;}}CUR=best;}
+  setInterval(pick,200);setTimeout(pick,300);
+  var oc=ctxOf;
+  ctxOf=function(id){var c=$(id);if(c.__off)throw SKIP;if(CUR&&c!==CUR)throw SKIP;return oc(id);};
+  /* খুব ধীর হলে নিজে থেকে আরও হালকা মোডে যাবে */
+  var last=performance.now(),sum=0,n=0;
+  DRAWS.push(function(){var t=performance.now(),dt=t-last;last=t;if(window.LITE||dt>400)return;sum+=dt;n++;if(n===90){if(sum/n>52){window.LITE=true;var s=document.createElement('style');s.textContent='*{animation:none!important;backdrop-filter:none!important;filter:none!important}.lbs,.lbs *{box-shadow:none!important}';document.head.appendChild(s);}sum=0;n=0;}});
+})();
+
 /* ===== ল্যাব ১: জীব না জড় ===== */
 SORT({id:'a1',colL:'#22c55e',colR:'#f59e0b',names:['জীব','জড়'],hint:'কোন দল?',
   intro:'<b>জীব</b> = যার জীবন আছে। <b>জড়</b> = যার জীবন নেই (বই ১.১)।<br><small>মজার তথ্য: জড় উপাদান দিয়েই জীব গঠিত, কিন্তু জীবে নতুন বৈশিষ্ট্য দেখা দেয়, যা জড় উপাদানে ছিল না।</small>',
@@ -753,7 +772,7 @@ var QA=[
   $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
 })();
 
-function frame(){FR++;for(var i=0;i<DRAWS.length;i++)DRAWS[i]();requestAnimationFrame(frame);}
+function frame(){FR++;if(document.hidden||(FR&1)){requestAnimationFrame(frame);return;}for(var i=0;i<DRAWS.length;i++){try{DRAWS[i]();}catch(e){if(e!==SKIP)throw e;}}requestAnimationFrame(frame);}
 frame();
 </script>
 </body>

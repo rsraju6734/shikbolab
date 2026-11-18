@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>জীবের বংশগতি ও জৈব অভিব্যক্তি (জীববিজ্ঞান অধ্যায় ১২) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+small{color:#567}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/lab-boost.js?v=2"></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#physics">&larr; সব অধ্যায়</a>
+</header><div class="wrap">
+  <div class="crumb">🧬 জীববিজ্ঞান &rsaquo; দ্বাদশ অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🧬 বংশগতি ও জৈব অভিব্যক্তি</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🧬 ল্যাব ১</a><a href="#lab2">🔗 ল্যাব ২</a><a href="#lab3">⚖️ ল্যাব ৩</a><a href="#lab4">🌱 ল্যাব ৪</a><a href="#lab5">🔲 ল্যাব ৫</a><a href="#lab6">🔁 ল্যাব ৬</a><a href="#lab7">🔍 ল্যাব ৭</a><a href="#lab8">🚹 ল্যাব ৮</a><a href="#lab9">👁️ ল্যাব ৯</a><a href="#lab10">🩸 ল্যাব ১০</a><a href="#lab11">🐢 ল্যাব ১১</a><a href="#lab12">🪲 ল্যাব ১২</a><a href="#lab13">🦴 ল্যাব ১৩</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+<section class="panel" id="note">
+<h3>🧬 ১২.১ জীবের বংশগতি</h3>
+<ul>
+<li>বংশগতি: পিতামাতার বৈশিষ্ট্য বংশানুক্রমে সন্তানদেহে সঞ্চারিত হওয়া। বংশগতিবিদ্যা (Genetics)।</li>
+<li>বংশগতিবস্তু: ক্রোমোজোম (বংশগতির ভৌতভিত্তি), DNA (রাসায়নিক ভিত্তি), RNA, জিন।</li>
+<li><b>DNA</b>: দুই সূত্র, ডাবল হেলিক্স; A=T (২ H-বন্ধন), G≡C (৩ H-বন্ধন); ডিঅক্সিরাইবোজ; ওয়াটসন ও ক্রিক ১৯৫৩। <b>RNA</b>: একসূত্র, রাইবোজ, ইউরাসিল।</li>
+<li>মেন্ডেল (১৮৬৬) মটরশুঁটি: P (TT × tt) ➜ F₁ সব Tt লম্বা ➜ F₂ ৩ লম্বা : ১ খাটো। T প্রকট, t প্রচ্ছন্ন; অ্যালিল।</li>
+<li><b>DNA অনুলিপন</b>: অর্ধ-রক্ষণশীল; ওয়াটসন-ক্রিক ১৯৫৬।</li>
+<li><b>DNA টেস্ট</b> (ফিঙ্গারপ্রিন্টিং): নমুনা ➜ DNA ➜ সীমাবদ্ধ এনজাইমে টুকরা ➜ ইলেকট্রোফোরেসিস ➜ ব্যান্ড মেলানো। PCR।</li>
+</ul>
+<h3>🚹 ১২.২ লিঙ্গ নির্ধারণ</h3>
+<ul>
+<li>মানুষে ৪৬ ক্রোমোজোম: ২২ জোড়া অটোজোম + ১ জোড়া সেক্স ক্রোমোজোম। নারী XX, পুরুষ XY। শুক্রাণু X বা Y ➜ লিঙ্গ নির্ধারণ; ডিম্বাণু সবসময় X, তাই মায়ের ভূমিকা নেই।</li>
+</ul>
+<h3>🩸 ১২.৩ জেনেটিক ডিসঅর্ডার</h3>
+<ul>
+<li>সেক্স-লিংকড অসুখ (X ক্রোমোজোমে মিউটেশন): ছেলেদের একটিই X তাই বেশি আক্রান্ত; মেয়েরা বাহক। কালার ব্লাইন্ডনেস (বর্ণান্ধতা): লাল-সবুজ।</li>
+<li>থ্যালাসেমিয়া: বংশগত রক্তরোগ, লোহিত কণিকা নষ্ট; আলফা ও বিটা; মেজর ও মাইনর; বাহক × বাহক হলে ঝুঁকি; নিয়মিত রক্ত প্রদান, লৌহ নয়।</li>
+</ul>
+<h3>🐢 ১২.৪ জৈব অভিব্যক্তি</h3>
+<ul>
+<li>অভিব্যক্তি (ইভোলিউশন): ধীর, চলমান পরিবর্তন। জেনোফেন (ফসিল), অ্যারিস্টটল, হার্বার্ট স্পেনসার, ডারউইন, ওয়ালেস।</li>
+<li>জীবনের আবির্ভাব: রাসায়নিক অভিব্যক্তি ➜ নিউক্লিওপ্রোটিন ➜ ভাইরাস ➜ ব্যাকটেরিয়া ➜ প্রোটোজোয়া ➜ ক্লোরোফিল ➜ বহুকোষী।</li>
+<li><b>ডারউইনবাদ</b>: অত্যধিক বংশবৃদ্ধি; সীমিত খাদ্য-বাসস্থান; অস্তিত্বের সংগ্রাম (আন্তঃ, অন্তঃ, পরিবেশ); প্রকরণ; প্রাকৃতিক নির্বাচন; নতুন প্রজাতির উৎপত্তি।</li>
+<li>আধুনিক ধারণা: ম্যাক্রো ও মাইক্রো ইভোলিউশন; শর্ত: বৈচিত্র্য, নির্বাচন, বংশগতি; অ-ডারউইনীয় অভিব্যক্তি (মিউটেশন, মাইগ্রেশন)।</li>
+<li>প্রমাণ: সমসংস্থ অঙ্গ, লুপ্তপ্রায় অঙ্গ, মিসিং লিংক, ফসিল, জীবন্ত ফসিল, ভ্রূণের মিল, জিনের মিল।</li>
+<li>প্রয়োগ: নতুন জাত উদ্ভাবন; মশা দমনে জেনেটিক ইঞ্জিনিয়ারিং। প্রজাতির টিকে থাকা: অভিযোজন।</li>
+</ul>
+<p><small>বইয়ের তথ্য ভিত্তি। আমার বিশ্লেষণ আলাদা চিহ্নিত।</small></p>
+</section>
+
+  <section class="panel" id="lab1">
+    <h2>🧬 ল্যাব 1: ক্রোমোজোম, DNA, RNA, জিন</h2>
+    <div class="say">👉 বেছে নাও: কোনটি কী, কোথায় থাকে দেখো।</div>
+<div class="pills" id="a1p"><button data-k="0" class="on">ক্রোমোজোম</button><button data-k="1">DNA</button><button data-k="2">RNA</button><button data-k="3">জিন</button></div>
+    <div class="row"><div><canvas id="a1c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="a1t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="a1q"></div><div class="cls" id="a1o"></div><div class="fb" id="a1fb"></div><small id="a1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🔗 ল্যাব 2: A=T এবং G≡C</h2>
+    <div class="say">👉 বেস বেছে নাও: কার সাথে কয়টি হাইড্রোজেন বন্ধন দেখো।</div>
+<div class="pills" id="b2p"><button data-k="0" class="on">A (এডিনিন)</button><button data-k="1">T (থায়মিন)</button><button data-k="2">G (গুয়ানিন)</button><button data-k="3">C (সাইটোসিন)</button></div>
+    <div class="row"><div><canvas id="b2c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="b2t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="b2q"></div><div class="cls" id="b2o"></div><div class="fb" id="b2fb"></div><small id="b2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>⚖️ ল্যাব 3: কার বৈশিষ্ট্য?</h2>
+    <div class="say">👉 বৈশিষ্ট্যটি কার? সঠিক বাক্সে পাঠাও।</div>
+    <div class="btnrow"><button class="btn" id="c3j">🧬 DNA</button><button class="btn alt" id="c3d">🧵 RNA</button></div>
+    <div class="row"><div><canvas id="c3c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="c3t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="c3q"></div><div class="cls" id="c3o"></div><div class="fb" id="c3fb"></div><small id="c3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🌱 ল্যাব 4: P, F₁, F₂ বংশ</h2>
+    <div class="say">👉 বংশ বেছে নাও: লম্বা ও খাটো গাছ কত অনুপাতে দেখো।</div>
+<div class="pills" id="d4p"><button data-k="0" class="on">P: TT × tt</button><button data-k="1">F₁: সবাই Tt</button><button data-k="2">F₂: Tt × Tt</button></div>
+    <div class="row"><div><canvas id="d4c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="d4t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="d4q"></div><div class="cls" id="d4o"></div><div class="fb" id="d4fb"></div><small id="d4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🔲 ল্যাব 5: T প্রকট, t প্রচ্ছন্ন</h2>
+    <div class="say">👉 স্লাইডারে পানেট স্কয়ারের ঘর একে একে ভরো।</div>
+    <div class="ctl"><label>ঘর ভরা: <span id="e5kv"></span> %</label><input type="range" id="e5k" min="0" max="100" step="1" value="0"></div>
+    <div class="row"><div><canvas id="e5c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="e5t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="e5q"></div><div class="cls" id="e5o"></div><div class="fb" id="e5fb"></div><small id="e5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🔁 ল্যাব 6: অর্ধ-রক্ষণশীল পদ্ধতি</h2>
+    <div class="say">👉 স্লাইডারে DNA খোলো ও নতুন সূত্র জোড়া লাগাও।</div>
+    <div class="ctl"><label>অনুলিপন: <span id="f6kv"></span> %</label><input type="range" id="f6k" min="0" max="100" step="1" value="0"></div>
+    <div class="row"><div><canvas id="f6c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="f6t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="f6q"></div><div class="cls" id="f6o"></div><div class="fb" id="f6fb"></div><small id="f6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>🔍 ল্যাব 7: ফিঙ্গার প্রিন্টিং</h2>
+    <div class="say">👉 ধাপ বেছে নাও: নমুনা থেকে ব্যান্ড মেলানো পর্যন্ত।</div>
+<div class="pills" id="g7p"><button data-k="0" class="on">১. নমুনা ও DNA আলাদা</button><button data-k="1">২. এনজাইমে টুকরা</button><button data-k="2">৩. ইলেকট্রোফোরেসিস</button><button data-k="3">৪. ব্যান্ড মেলানো</button></div>
+    <div class="row"><div><canvas id="g7c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="g7t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="g7q"></div><div class="cls" id="g7o"></div><div class="fb" id="g7fb"></div><small id="g7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>🚹 ল্যাব 8: X ও Y ক্রোমোজোম</h2>
+    <div class="say">👉 শুক্রাণু বেছে নাও: সন্তান ছেলে না মেয়ে হবে দেখো।</div>
+<div class="pills" id="h8p"><button data-k="0" class="on">X বহনকারী শুক্রাণু</button><button data-k="1">Y বহনকারী শুক্রাণু</button></div>
+    <div class="row"><div><canvas id="h8c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="h8t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="h8q"></div><div class="cls" id="h8o"></div><div class="fb" id="h8fb"></div><small id="h8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>👁️ ল্যাব 9: কালার ব্লাইন্ডনেস</h2>
+    <div class="say">👉 ধরন বেছে নাও: কার কী হয় দেখো।</div>
+<div class="pills" id="i9p"><button data-k="0" class="on">কেন ছেলেরা বেশি আক্রান্ত</button><button data-k="1">বাহক ও সন্তান</button></div>
+    <div class="row"><div><canvas id="i9c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="i9t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="i9q"></div><div class="cls" id="i9o"></div><div class="fb" id="i9fb"></div><small id="i9sc"></small>
+  </section>
+
+  <section class="panel" id="lab10">
+    <h2>🩸 ল্যাব 10: বাহক মা-বাবার সন্তান</h2>
+    <div class="say">👉 বেছে নাও: বাবা-মা কেমন হলে সন্তান কেমন হতে পারে।</div>
+<div class="pills" id="j10p"><button data-k="0" class="on">রোগ কী</button><button data-k="1">বাহক × বাহক</button><button data-k="2">মেজর ও মাইনর</button></div>
+    <div class="row"><div><canvas id="j10c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="j10t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="j10q"></div><div class="cls" id="j10o"></div><div class="fb" id="j10fb"></div><small id="j10sc"></small>
+  </section>
+
+  <section class="panel" id="lab11">
+    <h2>🐢 ল্যাব 11: পাঁচটি ধারণা</h2>
+    <div class="say">👉 বেছে নাও: ডারউইনের কোন সত্য কী বলে।</div>
+<div class="pills" id="k11p"><button data-k="0" class="on">অত্যধিক বংশবৃদ্ধি</button><button data-k="1">সীমিত খাদ্য-বাসস্থান</button><button data-k="2">অস্তিত্বের সংগ্রাম</button><button data-k="3">প্রকরণ</button><button data-k="4">প্রাকৃতিক নির্বাচন</button></div>
+    <div class="row"><div><canvas id="k11c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="k11t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="k11q"></div><div class="cls" id="k11o"></div><div class="fb" id="k11fb"></div><small id="k11sc"></small>
+  </section>
+
+  <section class="panel" id="lab12">
+    <h2>🪲 ল্যাব 12: সবুজ বনাম বাদামি</h2>
+    <div class="say">👉 স্লাইডারে সময় এগিয়ে দেখো কোন বিটল টিকে যায়।</div>
+    <div class="ctl"><label>সময় (প্রজন্ম): <span id="l12kv"></span> %</label><input type="range" id="l12k" min="0" max="100" step="1" value="0"></div>
+    <div class="row"><div><canvas id="l12c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="l12t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="l12q"></div><div class="cls" id="l12o"></div><div class="fb" id="l12fb"></div><small id="l12sc"></small>
+  </section>
+
+  <section class="panel" id="lab13">
+    <h2>🦴 ল্যাব 13: সমসংস্থ ও লুপ্তপ্রায় অঙ্গ</h2>
+    <div class="say">👉 উদাহরণটি কোন ধরনের? সঠিক বাক্সে পাঠাও।</div>
+    <div class="btnrow"><button class="btn" id="m13j">🦇 সমসংস্থ অঙ্গ</button><button class="btn alt" id="m13d">🦴 লুপ্তপ্রায় অঙ্গ</button></div>
+    <div class="row"><div><canvas id="m13c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="m13t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="m13q"></div><div class="cls" id="m13o"></div><div class="fb" id="m13fb"></div><small id="m13sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। বইয়ের নমুনা প্রশ্নের উত্তরমালা নেই, তাই উত্তরগুলো আমার হিসাব করা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; জীবের বংশগতি ও জৈব অভিব্যক্তি (জীববিজ্ঞান অধ্যায় ১২)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+var SKIP={};function ctxOf(id){var c=$(id);if(c.__off)throw SKIP;return c.getContext('2d');}
+(function(){if(!window.IntersectionObserver)return;var io=new IntersectionObserver(function(es){es.forEach(function(e){e.target.__off=!e.isIntersecting;});},{rootMargin:'150px'});document.querySelectorAll('canvas').forEach(function(c){io.observe(c);});})();
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+function opts(correct,wrongs){var seen={},a=[{t:correct,ok:1}];seen[correct]=1;wrongs.forEach(function(w){if(!seen[w]){seen[w]=1;a.push({t:w,ok:0});}});return shuffle(a);}
+function arrow(x,x1,y1,x2,y2,col,lw){var a=Math.atan2(y2-y1,x2-x1);x.strokeStyle=col;x.fillStyle=col;x.lineWidth=lw||3;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-11*Math.cos(a-.4),y2-11*Math.sin(a-.4));x.lineTo(x2-11*Math.cos(a+.4),y2-11*Math.sin(a+.4));x.closePath();x.fill();}
+function person(x,px,py,col){circ(x,0,px,py-22,6,col,null);x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(px,py-16);x.lineTo(px,py-4);x.moveTo(px-6,py-11);x.lineTo(px+6,py-11);x.moveTo(px,py-4);x.lineTo(px-5,py+6);x.moveTo(px,py-4);x.lineTo(px+5,py+6);x.stroke();}
+/* ---------- সাধারণ সহায়ক ---------- */
+function pills(id,fn){$(id).onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var all=$(id).querySelectorAll('button'),i;for(i=0;i<all.length;i++)all[i].classList.toggle('on',all[i]===b);fn(+b.getAttribute('data-k'));};}
+function sci(x){if(!(x>0))return bn(0);var e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);if(+m.toFixed(2)>=10){m/=10;e++;}return bn(parseFloat(m.toFixed(2)))+' × ১০'+(e<0?'⁻':'')+sup(Math.abs(e));}
+function brow(label,val,max,col,txtv){return '<div class="bar"><div class="bl">'+label+'</div><div class="bt"><div class="bf" style="width:'+clamp(val/max*100,1,100)+'%;background:'+col+'"></div></div><b style="min-width:80px;font-size:14px;color:#1f3a5f">'+(txtv||'')+'</b></div>';}
+function on(ids,fn){ids.forEach(function(i){$(i).oninput=fn;$(i).onchange=fn;});}
+var G=9.8;
+function box(x,px,py,w,h,fill,stroke){x.fillStyle=fill;x.fillRect(px,py,w,h);if(stroke){x.strokeStyle=stroke;x.lineWidth=2;x.strokeRect(px,py,w,h);}}
+function wheel(x,px,py,r){circ(x,0,px,py,r,'#333',null);circ(x,0,px,py,r*.4,'#bbb',null);}
+
+
+/* ---------- সুন্দর আঁকার সহায়ক (নতুন) ---------- */
+function shade(c,a){var h=hx(c),o='#';for(var i=0;i<3;i++){var v=clamp(Math.round(h[i]+a),0,255).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function grad(x,px,py,w,h,c1,c2){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1);g.addColorStop(1,c2);x.fillStyle=g;x.fillRect(px,py,w,h);}
+function ball(x,px,py,r,col){var g=x.createRadialGradient(px-r*.35,py-r*.35,r*.08,px,py,r);g.addColorStop(0,'#ffffff');g.addColorStop(.3,col);g.addColorStop(1,shade(col,-55));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();}
+function rr(x,px,py,w,h,r){r=Math.min(r,w/2,h/2);x.beginPath();x.moveTo(px+r,py);x.lineTo(px+w-r,py);x.quadraticCurveTo(px+w,py,px+w,py+r);x.lineTo(px+w,py+h-r);x.quadraticCurveTo(px+w,py+h,px+w-r,py+h);x.lineTo(px+r,py+h);x.quadraticCurveTo(px,py+h,px,py+h-r);x.lineTo(px,py+r);x.quadraticCurveTo(px,py,px+r,py);x.closePath();}
+function tag(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.lineJoin='round';x.lineWidth=4;x.strokeStyle='rgba(255,255,255,.92)';x.strokeText(s,px,py);x.fillStyle=col||NAVY;x.fillText(s,px,py);}
+function wave(x,px,py,w,h,t,c1,c2,amp){amp=amp===undefined?2.5:amp;var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1||'rgba(86,176,240,.88)');g.addColorStop(1,c2||'rgba(22,84,172,.96)');x.fillStyle=g;x.beginPath();x.moveTo(px,py+h);x.lineTo(px,py);var i;for(i=0;i<=w;i+=4)x.lineTo(px+i,py+Math.sin(i/13+t*.05)*amp);x.lineTo(px+w,py+h);x.closePath();x.fill();x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=1.6;x.beginPath();for(i=0;i<=w;i+=4){var yy=py+Math.sin(i/13+t*.05)*amp;if(i===0)x.moveTo(px,yy);else x.lineTo(px+i,yy);}x.stroke();}
+function bubs(x,px,py,w,h,n,t){for(var i=0;i<n;i++){var u=((t*.004*(0.6+rp(i,0,.8))+rp(i+50,0,1))%1),bx=px+rp(i,6,w-6)+Math.sin(t*.04+i)*3,by=py+h-u*h,r=1.5+rp(i+9,0,2.2);if(by<py+4)continue;x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=1.2;x.beginPath();x.arc(bx,by,r,0,7);x.stroke();}}
+function glassBox(x,px,py,w,h){x.strokeStyle='#5b7389';x.lineWidth=3;x.beginPath();x.moveTo(px,py);x.lineTo(px,py+h);x.lineTo(px+w,py+h);x.lineTo(px+w,py);x.stroke();x.fillStyle='rgba(255,255,255,.18)';x.fillRect(px+4,py+4,5,h-8);}
+function sun(x,px,py,r,t){x.save();x.translate(px,py);x.rotate(t*.004);x.strokeStyle='rgba(255,196,60,.7)';x.lineWidth=3;for(var i=0;i<12;i++){x.rotate(Math.PI/6);x.beginPath();x.moveTo(r+4,0);x.lineTo(r+11,0);x.stroke();}x.restore();ball(x,px,py,r,'#ffc83d');}
+function cloud(x,px,py,s,col){x.fillStyle=col||'rgba(255,255,255,.95)';[[0,0,14],[16,-6,17],[34,0,14],[17,6,15]].forEach(function(c){x.beginPath();x.arc(px+c[0]*s,py+c[1]*s,c[2]*s,0,7);x.fill();});}
+function dial(x,cx,cy,r,frac,txtv,col){x.strokeStyle='#dfe7ee';x.lineWidth=9;x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*2.2);x.stroke();x.strokeStyle=col||'#2a9d8f';x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*(.8+1.4*clamp(frac,0,1)));x.stroke();var a=Math.PI*(.8+1.4*clamp(frac,0,1));x.strokeStyle=NAVY;x.lineWidth=3;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a)*(r-6),cy+Math.sin(a)*(r-6));x.stroke();circ(x,0,cx,cy,4,NAVY,null);if(txtv)tag(x,txtv,cx,cy+r*.62,NAVY,12);}
+function sand(x,px,py,w,h){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,'#eccb8a');g.addColorStop(1,'#c99a55');x.fillStyle=g;x.fillRect(px,py,w,h);}
+function atom(x,px,py,r,col,t){ball(x,px,py,r,col);}
+function fmtN(v){if(Math.abs(v)>=1000)return bn(Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g,','));return bn(parseFloat(v.toFixed(2)));}
+
+function tagd(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=4;x.fillStyle=col||'#fff';x.fillText(s,px,py);x.restore();}
+
+/* ===== ফিউচারিস্টিক জীববিজ্ঞান ল্যাব লাইব্রেরি (ডার্ক হলোগ্রাম, নিয়ন গ্লো, 3D-ধাঁচের গোলক) ===== */
+document.documentElement.classList.add('fut');(function(){var st=document.createElement('style');st.textContent=".th-bg i,.th-hero i.o,.th-hero .ico{animation:none!important}.th-bg i{filter:none!important;opacity:.18!important}header.site,.tabs{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(255,255,255,.96)!important}.lbh i,.th-live::before{animation:none!important}";document.head.appendChild(st);})();(function(){var d=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,'shadowBlur');if(d&&d.set&&!CanvasRenderingContext2D.prototype.__sb){CanvasRenderingContext2D.prototype.__sb=1;Object.defineProperty(CanvasRenderingContext2D.prototype,'shadowBlur',{get:function(){return d.get.call(this);},set:function(v){d.set.call(this,v*.4);},configurable:true});}})();
+function hx(c){if(c.length===4)c='#'+c[1]+c[1]+c[2]+c[2]+c[3]+c[3];return [parseInt(c.substr(1,2),16)||0,parseInt(c.substr(3,2),16)||0,parseInt(c.substr(5,2),16)||0];}
+var DT=.02,TKL=performance.now();
+DRAWS.push(function(){var n=performance.now();DT=Math.min(.05,(n-TKL)/1000);TKL=n;});
+var CY='#22d3ee',GR='#4ade80',PK='#f472b6',YL='#fbbf24',PU='#a78bfa',OR='#fb923c',RD='#f87171',BL='#60a5fa',WH='#e6f1ff';
+function lt(c,t){return mixc(c,'#ffffff',t);} function dk(c,t){return mixc(c,'#000000',t);}
+function ln(x,x1,y1,x2,y2,col,lw,dash){x.strokeStyle=col;x.lineWidth=lw||2;if(dash)x.setLineDash(dash);x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();if(dash)x.setLineDash([]);}
+/* ডার্ক হলোগ্রাম পটভূমি */
+function bgF(x,w,h){var g=x.createRadialGradient(w*.5,h*.35,10,w*.5,h*.5,Math.max(w,h)*.85);g.addColorStop(0,'#0f2c52');g.addColorStop(.6,'#081833');g.addColorStop(1,'#030814');x.fillStyle=g;x.fillRect(0,0,w,h);
+  x.strokeStyle='rgba(56,189,248,.09)';x.lineWidth=1;var i;x.beginPath();for(i=0;i<w;i+=26){x.moveTo(i+.5,0);x.lineTo(i+.5,h);}for(i=0;i<h;i+=26){x.moveTo(0,i+.5);x.lineTo(w,i+.5);}x.stroke();
+  var sy=(FR*1.1)%(h+60)-30,sg=x.createLinearGradient(0,sy-24,0,sy+24);sg.addColorStop(0,'rgba(34,211,238,0)');sg.addColorStop(.5,'rgba(34,211,238,.13)');sg.addColorStop(1,'rgba(34,211,238,0)');x.fillStyle=sg;x.fillRect(0,sy-24,w,48);
+  x.strokeStyle='rgba(34,211,238,.7)';x.lineWidth=2;var L=14;x.beginPath();[[6,6,1,1],[w-6,6,-1,1],[6,h-6,1,-1],[w-6,h-6,-1,-1]].forEach(function(c){x.moveTo(c[0],c[1]+c[3]*L);x.lineTo(c[0],c[1]);x.lineTo(c[0]+c[2]*L,c[1]);});x.stroke();
+  x.fillStyle='rgba(125,211,252,.22)';x.beginPath();for(i=0;i<8;i++){var px=(rp(i,0,w)+Math.sin(FR/80+i)*8+w)%w,py=(rp(i+30,0,h)-FR*(.15+i%4*.06)+h*3)%h;x.moveTo(px+1.6,py);x.arc(px,py,1.6,0,7);}x.fill();}
+/* 3D-ধাঁচের গ্লোবুল */
+function orb(x,px,py,r,col,glow){x.save();if(glow!==0){x.shadowColor=col;x.shadowBlur=glow||16;}
+  var g=x.createRadialGradient(px-r*.38,py-r*.42,r*.06,px,py,r);g.addColorStop(0,lt(col,.85));g.addColorStop(.35,col);g.addColorStop(1,dk(col,.62));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();x.restore();
+  x.strokeStyle='rgba(255,255,255,.28)';x.lineWidth=1;x.beginPath();x.arc(px,py,r-.5,Math.PI*1.05,Math.PI*1.75);x.stroke();}
+function ring(x,px,py,r,col,lw,dash){x.save();x.shadowColor=col;x.shadowBlur=10;x.strokeStyle=col;x.lineWidth=lw||2;if(dash)x.setLineDash(dash);x.beginPath();x.arc(px,py,r,0,7);x.stroke();x.restore();}
+function neon(x,x1,y1,x2,y2,col,lw,dash){x.save();x.shadowColor=col;x.shadowBlur=9;ln(x,x1,y1,x2,y2,col,lw||2,dash);x.restore();}
+function ft(x,s,px,py,size,col,al){x.font='700 '+(size||13)+'px "Hind Siliguri",sans-serif';x.textAlign=al||'center';x.textBaseline='middle';x.fillStyle=col||WH;x.fillText(s,px,py);}
+function hbox(x,px,py,w,h,col,a){col=col||CY;x.save();x.shadowColor=col;x.shadowBlur=10;rr(x,px,py,w,h,9);x.fillStyle='rgba(10,30,60,'+(a===undefined?.72:a)+')';x.fill();x.strokeStyle=col;x.lineWidth=1.6;x.stroke();x.restore();}
+function bar3d(x,px,py,w,h,col,d){d=d||8;var g=x.createLinearGradient(px,py,px,py+h);g.addColorStop(0,lt(col,.35));g.addColorStop(1,dk(col,.35));x.save();x.shadowColor=col;x.shadowBlur=9;x.fillStyle=g;x.fillRect(px,py,w,h);x.restore();
+  x.fillStyle=lt(col,.55);x.beginPath();x.moveTo(px,py);x.lineTo(px+d,py-d*.7);x.lineTo(px+w+d,py-d*.7);x.lineTo(px+w,py);x.closePath();x.fill();
+  x.fillStyle=dk(col,.45);x.beginPath();x.moveTo(px+w,py);x.lineTo(px+w+d,py-d*.7);x.lineTo(px+w+d,py+h-d*.7);x.lineTo(px+w,py+h);x.closePath();x.fill();}
+function disc(x,px,py,rx,ry,col){var g=x.createRadialGradient(px,py-ry*.3,2,px,py,rx);g.addColorStop(0,col);g.addColorStop(1,dk(col,.7));x.save();x.shadowColor=col;x.shadowBlur=12;x.fillStyle=g;x.beginPath();x.ellipse(px,py,rx,ry,0,0,7);x.fill();x.restore();}
+function pedestal(x,px,py,r,col){var g=x.createRadialGradient(px,py,2,px,py,r);g.addColorStop(0,'rgba(34,211,238,.35)');g.addColorStop(1,'rgba(34,211,238,0)');x.fillStyle=g;x.beginPath();x.ellipse(px,py,r,r*.32,0,0,7);x.fill();x.strokeStyle=col||'rgba(34,211,238,.8)';x.lineWidth=1.5;x.beginPath();x.ellipse(px,py,r*.8,r*.26,0,0,7);x.stroke();}
+/* ব্যাকটেরিয়া (দণ্ডাকার) */
+function bact(x,px,py,len,r,ang,col,t){x.save();x.translate(px,py);x.rotate(ang);
+  for(var k=0;k<2;k++){x.strokeStyle='rgba(125,255,200,.8)';x.lineWidth=1.6;x.beginPath();x.moveTo(-len/2,k*4-2);for(var s=1;s<=14;s++){x.lineTo(-len/2-s*3.2,(k*4-2)+Math.sin(s*.7-t*5+k)*3.2*s/6);}x.stroke();}
+  x.shadowColor=col;x.shadowBlur=14;var g=x.createLinearGradient(0,-r,0,r);g.addColorStop(0,lt(col,.6));g.addColorStop(.5,col);g.addColorStop(1,dk(col,.55));x.fillStyle=g;rr(x,-len/2,-r,len,2*r,r);x.fill();x.restore();
+  x.save();x.translate(px,py);x.rotate(ang);x.fillStyle='rgba(255,255,255,.55)';rr(x,-len/2+r*.6,-r*.65,len-r*1.2,r*.45,r*.2);x.fill();for(var i=0;i<6;i++){x.fillStyle='rgba(255,255,255,.35)';x.beginPath();x.arc(-len/2+r+(len-2*r)*i/5,((i*7)%3-1)*r*.3,1.6,0,7);x.fill();}x.restore();}
+/* অ্যামিবা */
+function blob(x,px,py,r,t,col){x.save();x.shadowColor=col;x.shadowBlur=18;var g=x.createRadialGradient(px-r*.3,py-r*.35,r*.1,px,py,r*1.15);g.addColorStop(0,lt(col,.7));g.addColorStop(.6,col);g.addColorStop(1,dk(col,.5));x.fillStyle=g;x.beginPath();
+  for(var i=0;i<=40;i++){var a=i/40*Math.PI*2,rad=r*(1+.16*Math.sin(a*3+t*1.6)+.1*Math.sin(a*5-t*1.1));var X=px+Math.cos(a)*rad,Y=py+Math.sin(a)*rad*.88;if(i===0)x.moveTo(X,Y);else x.lineTo(X,Y);}x.closePath();x.fill();x.restore();
+  orb(x,px+r*.12,py-r*.05,r*.26,'#6366f1',8);for(var k=0;k<5;k++)circ(x,0,px+Math.cos(k*1.9+t*.4)*r*.5,py+Math.sin(k*2.3+t*.3)*r*.4,2.4,'rgba(255,255,255,.55)',null);}
+/* ডায়াটম (লেন্স আকার) */
+function diatom(x,px,py,len,w,ang,col,t){x.save();x.translate(px,py);x.rotate(ang);x.shadowColor=col;x.shadowBlur=14;var g=x.createLinearGradient(0,-w,0,w);g.addColorStop(0,lt(col,.55));g.addColorStop(.5,col);g.addColorStop(1,dk(col,.55));x.fillStyle=g;x.beginPath();x.moveTo(-len,0);x.quadraticCurveTo(0,-w*2,len,0);x.quadraticCurveTo(0,w*2,-len,0);x.fill();x.shadowBlur=0;
+  x.strokeStyle='rgba(255,255,255,.7)';x.lineWidth=1.4;x.beginPath();x.moveTo(-len*.9,0);x.lineTo(len*.9,0);x.stroke();for(var i=-4;i<=4;i++){var X=i*len/5,H=w*1.4*(1-Math.abs(i)/5.5);x.beginPath();x.moveTo(X,-H);x.lineTo(X,H);x.stroke();}x.restore();}
+/* মাশরুম */
+function mush(x,px,py,s,col){var g=x.createRadialGradient(px-s*.25,py-s*.7,2,px,py-s*.4,s);g.addColorStop(0,lt(col,.7));g.addColorStop(1,dk(col,.45));x.save();x.shadowColor=col;x.shadowBlur=12;
+  x.fillStyle='#e8dcc8';rr(x,px-s*.18,py-s*.45,s*.36,s*.62,s*.12);x.fill();x.fillStyle=g;x.beginPath();x.ellipse(px,py-s*.5,s*.8,s*.52,0,Math.PI,0);x.lineTo(px+s*.8,py-s*.46);x.quadraticCurveTo(px,py-s*.2,px-s*.8,py-s*.46);x.fill();x.restore();for(var i=0;i<4;i++)circ(x,0,px+(i-1.5)*s*.3,py-s*.74+(i%2)*s*.1,s*.07,'rgba(255,255,255,.7)',null);}
+/* গাছ */
+function tree(x,px,py,s,t){x.save();x.fillStyle='#8b5a2b';var g=x.createLinearGradient(px-s*.12,0,px+s*.12,0);g.addColorStop(0,'#a0703a');g.addColorStop(1,'#5a3a18');x.fillStyle=g;x.fillRect(px-s*.11,py-s*.6,s*.22,s*.7);x.restore();
+  var C=[[0,-1.0,.5],[-.34,-.78,.4],[.34,-.78,.4],[-.18,-.62,.36],[.2,-.6,.34]];C.forEach(function(c,i){orb(x,px+c[0]*s+Math.sin(t*1.2+i)*1.4,py+c[1]*s,c[2]*s,i%2?'#22c55e':'#4ade80',10);});}
+/* প্রাণী: ইমোজি ভিত্তিক */
+function emo(x,e,px,py,s){x.font=s+'px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(e,px,py);}
+/* সরল ক্রোমোজোম/অণু বিন্দুর ঝাঁক */
+function swarm(x,cx,cy,rad,n,col,t){for(var i=0;i<n;i++){var a=i*2.399+t*.3,rr_=rad*Math.sqrt((i+.5)/n);circ(x,0,cx+Math.cos(a)*rr_,cy+Math.sin(a)*rr_*.8,2.2,col,null);}}
+/* কার্ড/লেবেল */
+function chip(x,s,px,py,col,size){x.font='700 '+(size||12)+'px "Hind Siliguri",sans-serif';var w=x.measureText(s).width+16;hbox(x,px-w/2,py-11,w,22,col,.8);ft(x,s,px,py,size||12,'#fff');}
+function nbtn(x,s,px,py,w,h,col,on){x.save();x.shadowColor=col;x.shadowBlur=on?16:5;rr(x,px,py,w,h,10);x.fillStyle=on?dk(col,.2):'rgba(8,24,52,.85)';x.fill();x.strokeStyle=col;x.lineWidth=on?2.4:1.4;x.stroke();x.restore();ft(x,s,px+w/2,py+h/2+1,12,on?'#fff':lt(col,.4));}
+/* পাঠ্য মোড়ানো */
+function wrapT(x,s,px,py,mw,lh,size,col,al){x.font='700 '+size+'px "Hind Siliguri",sans-serif';var w=s.split(' '),l='',y=py,i;for(i=0;i<w.length;i++){var tt=l?l+' '+w[i]:w[i];if(x.measureText(tt).width>mw&&l){ft(x,l,px,y,size,col,al);y+=lh;l=w[i];}else l=tt;}if(l)ft(x,l,px,y,size,col,al);return y;}
+/* একটি ক্যানভাসে ক্লিক-স্থানাঙ্ক (লজিক্যাল) */
+function cpos(cv,ev){var r=cv.getBoundingClientRect(),w=cv.__lw||cv.width,h=cv.__lh||cv.height;return [(ev.clientX-r.left)/r.width*w,(ev.clientY-r.top)/r.height*h];}
+
+function rq(i,a,b){var v=Math.sin(i*12.9898+78.233)*43758.5453;v=v-Math.floor(v);return a+v*(b-a);}
+
+/* ===== সাধারণ: বাছাই (sort) ও ঘূর্ণি-রিং ===== */
+function SORT(P){
+  var S={q:shuffle(P.items),i:0,ok:0,n:0,res:0,t:0,side:0,cnt:[0,0]},id=P.id;
+  function cur(){return S.q[S.i];}
+  function intro(){$(id+'t').innerHTML=P.intro;}
+  function ans(side){if(S.res)return;var it=cur();S.n++;S.side=side;S.res=(it.t===side)?1:2;if(S.res===1){S.ok++;S.cnt[side]++;}S.t=0;
+    $(id+'t').innerHTML=(S.res===1?'✅ ঠিক! ':'❌ ভুল! ')+'<b>'+it.n+'</b> ➜ <b>'+P.names[it.t]+'</b>।<br>'+it.d;
+    setTimeout(function(){S.i++;if(S.i>=S.q.length){S.q=shuffle(S.q);S.i=0;}S.res=0;S.t=0;intro();},2300);}
+  $(id+'j').onclick=function(){ans(0);};$(id+'d').onclick=function(){ans(1);};intro();
+  DRAWS.push(function(){var x=ctxOf(id+'c'),it=cur(),W=460,H=330,u,px=230,py=165+Math.sin(FR/22)*5,sc=1,al=1;bgF(x,W,H);
+    var bins=[[10,P.colL],[W-120,P.colR]];
+    bins.forEach(function(b,k){hbox(x,b[0],176,110,128,b[1],.55);ft(x,P.names[k],b[0]+55,194,13,lt(b[1],.4));ft(x,bn(S.cnt[k]),b[0]+55,252,30,'#fff');ft(x,'সাজানো হয়েছে',b[0]+55,282,10.5,'#9bc4de');});
+    pedestal(x,230,248,70);
+    if(S.res){S.t+=DT;if(S.res===1){u=ease(S.t/.9);var tx=S.side?W-65:65;px=lerp(230,tx,u);py=lerp(165,225,u);sc=1-.45*u;al=1-.35*u;if(S.t<.9&&FR%2===0)for(var k=0;k<1;k++)circ(x,0,px+rnd(-8,8),py+rnd(-8,8),2.5,lt(P.colL,.4),null);}
+      else{px=230+Math.sin(S.t*38)*9*Math.max(0,1-S.t/.8);ring(x,230,py,52,RD,3);}}
+    x.save();x.globalAlpha=al;if(it.e){x.translate(px,py);x.scale(sc,sc);emo(x,it.e,0,0,66);x.restore();x.save();x.globalAlpha=al;hbox(x,px-70*sc,py+44*sc,140*sc,26*sc,CY,.7);ft(x,it.n,px,py+57*sc,14*sc,'#fff');}
+    else{x.translate(px,py);x.scale(sc,sc);hbox(x,-100,-34,200,68,CY,.85);ft(x,it.n,0,-8,22,'#fff');ft(x,it.en,0,20,13,'#8fd3ff');}
+    x.restore();
+    ft(x,'স্কোর: '+bn(S.ok)+' / '+bn(S.n),64,24,13,YL);ft(x,'নম্বর '+bn(S.i+1)+' / '+bn(S.q.length),W-64,24,12,'#9bc4de');
+    ft(x,P.hint,230,24,12.5,'#7dd3fc');});
+}
+function RING(id,items,getSel,pal){
+  var rot=0,last=-1;
+  DRAWS.push(function(){var x=ctxOf(id+'c'),W=460,H=330,n=items.length,s=getSel(),cx=230,cy=178,RX=172,RY=74,i,tg=Math.PI/2-s*2*Math.PI/n;bgF(x,W,H);
+    var d=((tg-rot+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;rot+=d*Math.min(1,DT*5);
+    var it=items[s];
+    if(s!==last){last=s;$(id+'t').innerHTML='<b>'+it.n+'</b> ('+it.en+')<br>'+it.d;}
+    ring(x,cx,cy+22,RX+6,'rgba(34,211,238,.35)',1.2);x.save();x.strokeStyle='rgba(34,211,238,.45)';x.lineWidth=1.4;x.beginPath();x.ellipse(cx,cy+22,RX,RY,0,0,7);x.stroke();x.restore();
+    var nodes=items.map(function(m,k){var a=rot+k*2*Math.PI/n,dp=(Math.sin(a)+1)/2;return {k:k,x:cx+Math.cos(a)*RX,y:cy+22+Math.sin(a)*RY,dp:dp,r:10+9*dp};}).sort(function(a,b){return a.dp-b.dp;});
+    nodes.forEach(function(o){var col=pal[o.k%pal.length],sel=o.k===s;if(sel)neon(x,cx,cy-20,o.x,o.y,CY,2,[5,5]);
+      x.save();x.globalAlpha=.45+.55*o.dp;orb(x,o.x,o.y,o.r+(sel?4:0),sel?'#22d3ee':col,sel?22:8);emo(x,items[o.k].e,o.x,o.y+1,(o.r+(sel?4:0))*1.15);x.restore();if(sel)ring(x,o.x,o.y,o.r+9+Math.sin(FR/9)*2,CY,2);});
+    pedestal(x,cx,cy+8,52);x.save();x.translate(0,Math.sin(FR/24)*4);emo(x,it.e,cx,cy-24,58);x.restore();
+    ft(x,it.n,cx,34,22,'#fff');ft(x,it.en,cx,58,12.5,'#7dd3fc');
+    hbox(x,cx-92,H-34,184,24,CY,.7);ft(x,'ঘুরছে: '+bn(s+1)+' / '+bn(n),cx,H-22,11.5,'#c7ecff');});
+}
+var PAL=[CY,GR,PK,YL,PU,OR,BL,'#2dd4bf','#f87171','#a3e635'];
+
+/* ===== হালকা ও মসৃণ চালানোর ব্যবস্থা (ল্যাগ কমানো) ===== */
+(function(){
+  var P=CanvasRenderingContext2D.prototype,d=Object.getOwnPropertyDescriptor(P,'shadowBlur');
+  var phone=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)||innerWidth<760;
+  window.LITE=false;
+  Object.defineProperty(P,'shadowBlur',{configurable:true,set:function(v){d.set.call(this,window.LITE?0:Math.min(v,phone?3:6));},get:function(){return d.get.call(this);}});
+  /* একসময়ে শুধু পর্দার মাঝের ল্যাবটাই চলবে */
+  var CUR=null;
+  function pick(){var best=null,bd=1e9,h=innerHeight,cs=document.querySelectorAll('canvas:not(.lbo)');for(var i=0;i<cs.length;i++){var c=cs[i];if(c.__off)continue;var r=c.getBoundingClientRect();if(r.bottom<0||r.top>h)continue;var dd=Math.abs((r.top+r.bottom)/2-h/2);if(dd<bd){bd=dd;best=c;}}CUR=best;}
+  setInterval(pick,200);setTimeout(pick,300);
+  var oc=ctxOf;
+  ctxOf=function(id){var c=$(id);if(c.__off)throw SKIP;if(CUR&&c!==CUR)throw SKIP;return oc(id);};
+  /* খুব ধীর হলে নিজে থেকে আরও হালকা মোডে যাবে */
+  var last=performance.now(),sum=0,n=0;
+  DRAWS.push(function(){var t=performance.now(),dt=t-last;last=t;if(window.LITE||dt>400)return;sum+=dt;n++;if(n===90){if(sum/n>52){window.LITE=true;var s=document.createElement('style');s.textContent='*{animation:none!important;backdrop-filter:none!important;filter:none!important}.lbs,.lbs *{box-shadow:none!important}';document.head.appendChild(s);}sum=0;n=0;}});
+})();
+
+function HELIX(x,x0,x1,cy,t,amp,hl){for(var i=0;i<=40;i++){var px=x0+(x1-x0)*i/40,ph=i*.45+t;var y1=cy+Math.sin(ph)*amp,y2=cy-Math.sin(ph)*amp;if(i%2===0)neon(x,px,y1,px,y2,'rgba(148,163,184,.55)',1.5);circ(x,0,px,y1,3.5,hl||CY,null);circ(x,0,px,y2,3.5,hl||PK,null);}}
+/* ল্যাব ১ */
+var A1={m:0};pills('a1p',function(k){A1.m=k;});
+var A1D=[['ক্রোমোজোম','নিউক্লিয়াসের নিউক্লিওপ্লাজমে বিস্তৃত সূত্রাকার ক্রোমাটিন দিয়ে গঠিত। মাতাপিতা থেকে জিন সন্তানে বহন করে; তাই বংশগতির ভৌতভিত্তি।'],['DNA','ক্রোমোজোমের প্রধান উপাদান। দুটি সূত্রবিশিষ্ট পলিনিউক্লিওটাইডের সর্পিলাকার গঠন। বংশগতির রাসায়নিক ভিত্তি।'],['RNA','রাইবোনিউক্লিক এসিড; সাধারণত একটি সূত্র। পাঁচ কার্বনযুক্ত রাইবোজ শর্করা, অজৈব ফসফেট ও নাইট্রোজেন বেস (A, G, C, ইউরাসিল)।'],['জিন','জীবের দৃশ্য ও অদৃশ্য বৈশিষ্ট্য নিয়ন্ত্রণকারী এককের নাম জিন। ক্রোমোজোমের নির্দিষ্ট স্থান (লোকাস) এ থাকে।']];
+DRAWS.push(function(){var x=ctxOf('a1c'),W=460,H=330,t=FR/30,m=A1.m,D=A1D[m];bgF(x,W,H);
+ x.save();x.strokeStyle='#94a3b8';x.lineWidth=3;x.fillStyle='rgba(148,163,184,.12)';x.beginPath();x.arc(120,90,60,0,7);x.fill();x.stroke();x.restore();ft(x,'নিউক্লিয়াস',120,165,10,'#9bc4de');
+ if(m===0){x.save();x.strokeStyle=YL;x.lineWidth=7;x.lineCap='round';x.beginPath();x.moveTo(95,70);x.lineTo(130,115);x.moveTo(135,65);x.lineTo(100,115);x.stroke();x.restore();}
+ HELIX(x,40,200,230,m===1?t:0,m===1?18:10,m===1?YL:null);
+ if(m===2){x.save();x.strokeStyle=YL;x.lineWidth=4;x.beginPath();for(var i=0;i<40;i++)x.lineTo(40+i*4,290+Math.sin(i*.6+t)*8);x.stroke();x.restore();}
+ if(m===3){circ(x,0,120,230,7,YL,'#facc15');ft(x,'এই অংশই জিন',120,270,10,'#fde047');}
+ chip(x,D[0],340,40,YL,13);wrapT(x,D[1],340,70,200,16,10,'#e0f2fe');
+ $('a1t').innerHTML='<b>'+D[0]+'</b> (বই ১২.১.১): '+D[1]+' বংশগতিবস্তু চারটি: ক্রোমোজোম, জিন, DNA ও RNA।<br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('a1q','a1o','a1fb','a1sc',[['বংশগতির ভৌতভিত্তি—','ক্রোমোজোম',['RNA','রক্ত','প্রোটিন'],'বই।'],['জিন ক্রোমোজোমের কোন স্থানে থাকে তাকে বলে—','লোকাস',['টেলোমিয়ার','সেন্ট্রোমিয়ার','অ্যালিল'],'বই।'],['বংশগতির রাসায়নিক ভিত্তি—','DNA',['RNA','লিপিড','জল'],'বই।']]);
+/* ল্যাব ২ */
+var B2={m:0};pills('b2p',function(k){B2.m=k;});
+var B2D=[['A (এডিনিন)','পিউরিন বেস। T এর সাথে দুটি হাইড্রোজেন বন্ধনে যুক্ত (A=T)।','T',2,'#facc15'],['T (থায়মিন)','পাইরিমিডিন বেস। A এর সাথে দুটি হাইড্রোজেন বন্ধনে (T=A)।','A',2,'#4ade80'],['G (গুয়ানিন)','পিউরিন বেস। C এর সাথে তিনটি হাইড্রোজেন বন্ধনে (G≡C)।','C',3,'#f87171'],['C (সাইটোসিন)','পাইরিমিডিন বেস। G এর সাথে তিনটি হাইড্রোজেন বন্ধনে (C≡G)।','G',3,'#60a5fa']];
+DRAWS.push(function(){var x=ctxOf('b2c'),W=460,H=330,t=FR/30,D=B2D[B2.m],i;bgF(x,W,H);
+ var L1=D[0].charAt(0);rr(x,60,110,90,60,12);x.fillStyle=D[4];x.fill();ft(x,L1,105,148,28,'#0f172a');
+ var cols={A:'#facc15',T:'#4ade80',G:'#f87171',C:'#60a5fa'};rr(x,310,110,90,60,12);x.fillStyle=cols[D[2]];x.fill();ft(x,D[2],355,148,28,'#0f172a');
+ for(i=0;i<D[3];i++){var y=125+i*18;x.save();x.setLineDash([4,3]);x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.moveTo(150,y);x.lineTo(310,y);x.stroke();x.restore();circ(x,0,230+Math.sin(t+i)*6,y,3,'#fff',null);}
+ chip(x,D[3]===2?'২টি H-বন্ধন':'৩টি H-বন্ধন',230,40,YL,12.5);wrapT(x,D[1],230,230,400,16,10.5,'#e0f2fe');
+ $('b2t').innerHTML='<b>'+D[0]+'</b> (বই ১২.১.১): '+D[1]+' বন্ধন সবসময় একটি পিউরিন ও একটি পাইরিমিডিনের মধ্যে।<br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('b2q','b2o','b2fb','b2sc',[['A এর সাথে জোড় বাঁধে—','T',['G','C','A'],'বই।'],['G ও C এর মধ্যে হাইড্রোজেন বন্ধন—','৩টি',['২টি','১টি','৪টি'],'বই।'],['পিউরিন বেস—','এডিনিন ও গুয়ানিন',['থায়মিন ও সাইটোসিন','এডিনিন ও থায়মিন','সাইটোসিন ও গুয়ানিন'],'বই।']]);
+/* ল্যাব ৩ */
+SORT({id:'c3',colL:'#38bdf8',colR:'#f472b6',names:['DNA','RNA'],hint:'কার বৈশিষ্ট্য?',intro:'বৈশিষ্ট্যটি DNA এর না RNA এর?',
+ items:[{e:'🧬',n:'দুটি সূত্র, ডাবল হেলিক্স',t:0,d:'বই।'},{e:'🍬',n:'ডিঅক্সিরাইবোজ শর্করা',t:0,d:'বই।'},{e:'🅣',n:'থায়মিন (T) বেস আছে',t:0,d:'DNA তে T।'},{e:'🔬',n:'ওয়াটসন ও ক্রিক মডেল দেন (১৯৫৩)',t:0,d:'বই।'},{e:'🧵',n:'সাধারণত একটি সূত্র',t:1,d:'বই।'},{e:'🍭',n:'রাইবোজ শর্করা',t:1,d:'বই।'},{e:'🅤',n:'ইউরাসিল বেস আছে',t:1,d:'থায়মিনের পরিবর্তে।'},{e:'🦠',n:'TMV ভাইরাসে বংশগতিবস্তু',t:1,d:'বই: TMV তে DNA নেই, RNA আছে।'}]});
+qgame('c3q','c3o','c3fb','c3sc',[['RNA তে থায়মিনের বদলে থাকে—','ইউরাসিল',['এডিনিন','সাইটোসিন','গুয়ানিন'],'বই।'],['আরএনএতে— i. রাইবোজ শর্করা ii. অজৈব ফসফেট iii. নাইট্রোজেনঘটিত বেস','i, ii ও iii',['i ও ii','i ও iii','ii ও iii'],'বইয়ের নমুনা MCQ ২। আমার বিশ্লেষণ: বই অনুযায়ী তিনটিই RNA তে আছে (ঘ)।'],['DNA এর আবিষ্কারে নোবেল পান—','ওয়াটসন ও ক্রিক',['মেন্ডেল ও ডারউইন','লিনিয়াস ও হার্ভে','ওয়ালেস ও স্পেন্সার'],'বই (সাথে ফ্র্যাঙ্কলিনের ছবি ব্যবহার)।']]);
+/* ল্যাব ৪ */
+var D4={m:0};pills('d4p',function(k){D4.m=k;});
+DRAWS.push(function(){var x=ctxOf('d4c'),W=460,H=330,m=D4.m,i;bgF(x,W,H);
+ function P(cx,cy,tall,lab){x.save();x.strokeStyle=tall?'#22c55e':'#86efac';x.lineWidth=5;x.lineCap='round';var h=tall?70:35;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx,cy-h);x.stroke();circ(x,0,cx+8,cy-h,6,'#fb7185',null);x.restore();ft(x,lab,cx,cy+18,11,'#e0f2fe');}
+ if(m===0){P(120,200,1,'TT লম্বা');P(340,200,0,'tt খাটো');ft(x,'×',230,170,28,'#fff');ft(x,'গ্যামেট: T ও t',230,260,11,'#cbd5e1');}
+ else if(m===1){for(i=0;i<4;i++)P(80+i*90,200,1,'Tt');ft(x,'সকলেই লম্বা (T প্রকট)',230,260,11.5,GR);}
+ else{P(80,200,1,'TT');P(190,200,1,'Tt');P(300,200,1,'Tt');P(410,200,0,'tt');ft(x,'৩ ভাগ লম্বা : ১ ভাগ খাটো',230,265,12,YL);}
+ chip(x,['P (জনক)','F₁ বংশ','F₂ বংশ'][m],230,30,YL,12.5);
+ var tx=['বিশুদ্ধ লম্বা (TT) ও বিশুদ্ধ খাটো (tt) গাছের মধ্যে কৃত্রিম পরাগায়ন।','সব F₁ গাছ লম্বা, কারণ T প্রকট ও t প্রচ্ছন্ন; Tt তে লম্বা বৈশিষ্ট্যই প্রকাশ পায়।','F₁ স্বপরাগায়নে F₂: তিন ভাগ লম্বা, একভাগ খাটো (tt তে প্রচ্ছন্ন বৈশিষ্ট্য প্রকাশ)।'][m];
+ $('d4t').innerHTML=tx+' (বই ১২.১.১, মেন্ডেল ১৮৬৬; বংশগতিবিদ্যার জনক)।<br><small>ছবি সরল, আমার আঁকা। অনুপাত বইয়ের।</small>';});
+qgame('d4q','d4o','d4fb','d4sc',[['F₁ বংশের সবাই—','লম্বা',['খাটো','অর্ধেক খাটো','মিশ্র'],'বই।'],['F₂ এ লম্বা : খাটো—','৩ : ১',['১ : ১','২ : ১','৪ : ১'],'বই।'],['বংশগতিবিদ্যার জনক—','গ্রেগর জোহান মেন্ডেল',['ডারউইন','ওয়াটসন','ক্রিক'],'বই।']]);
+/* ল্যাব ৫ */
+DRAWS.push(function(){var x=ctxOf('e5c'),W=460,H=330,s=+$('e5k').value/100;$('e5kv').textContent=bn(Math.round(s*100));bgF(x,W,H);
+ var cells=[['Tt',150,110],['Tt',290,110],['Tt',150,200],['Tt',290,200]];var n=Math.floor(s*4.01);
+ ft(x,'t',150,60,18,'#fecaca');ft(x,'t',290,60,18,'#fecaca');ft(x,'T',90,115,18,'#bbf7d0');ft(x,'T',90,205,18,'#bbf7d0');ft(x,'♂ গ্যামেট (tt)',220,35,10.5,'#9bc4de');ft(x,'♀ (TT)',45,160,10.5,'#9bc4de');
+ for(var i=0;i<4;i++){x.strokeStyle='#94a3b8';x.strokeRect(cells[i][1]-50,cells[i][2]-30,100,70);if(i<n)ft(x,'Tt',cells[i][1],cells[i][2]+10,20,'#fde047');}
+ chip(x,n===4?'সব সন্তান Tt: লম্বা':'ঘরগুলো ভরছে',230,300,n===4?GR:YL,12);
+ $('e5t').innerHTML='বই ১২.১.১: মা TT ও বাবা tt হলে গ্যামেট T ও t। পানেট স্কয়ারে চারটি ঘরেই Tt, তাই সব F₁ সন্তান লম্বা। T প্রকট (dominant), t প্রচ্ছন্ন (recessive); শুধু tt হলে খাটো বৈশিষ্ট্য প্রকাশ। একই জিনের ভিন্ন সংস্করণকে অ্যালিল বলে।<br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('e5q','e5o','e5fb','e5sc',[['প্রকট ও প্রচ্ছন্ন বৈশিষ্ট্য—','Tt তে প্রকটটি প্রকাশ পায়',['Tt তে খাটো','tt তে লম্বা','কোনোটি নয়'],'বই।'],['একই জিনের ভিন্ন সংস্করণ—','অ্যালিল',['লোকাস','ক্রোমাটিন','নিউক্লিওটাইড'],'বই।'],['খাটো মটরশুঁটির জিনোটাইপ—','tt',['TT','Tt','Tt বা TT'],'বই।']]);
+/* ল্যাব ৬ */
+DRAWS.push(function(){var x=ctxOf('f6c'),W=460,H=330,t=FR/30,s=+$('f6k').value/100,i;$('f6kv').textContent=bn(Math.round(s*100));bgF(x,W,H);
+ var open=s*90;
+ for(i=0;i<=20;i++){var px=40+i*19,ph=i*.5;var sp=(px>40+380*(1-s)-0)?open:0;if(i/20>1-s)sp=open;
+  var y1=165-Math.abs(sp)*.5,y2=165+Math.abs(sp)*.5;
+  circ(x,0,px,y1,5,CY,null);circ(x,0,px,y2,5,PK,null);
+  if(i/20>1-s){circ(x,0,px,y1-35,4,'#a7f3d0',null);circ(x,0,px,y2+35,4,'#fde68a',null);}
+  else neon(x,px,y1,px,y2,'rgba(255,255,255,.5)',1.5);}
+ ft(x,'পুরাতন সূত্র (নীল ও গোলাপি)',230,40,11,'#bae6fd');ft(x,'নতুন পরিপূরক সূত্র (সবুজ ও হলুদ)',230,300,11,'#bbf7d0');
+ chip(x,s<.1?'একটি DNA অণু':s<.95?'হাইড্রোজেন বন্ধন ভাঙছে, নতুন সূত্র জুড়ছে':'দুটি DNA অণু (অর্ধেক পুরাতন, অর্ধেক নতুন)',230,70,YL,11);
+ $('f6t').innerHTML='বই ১২.১.১: অনুলিপনে হাইড্রোজেন বন্ধন ভেঙে DNA এর সূত্র দুটি আলাদা হয়। কোষের নিউক্লিওটাইড A-T, C-G নিয়মে জুড়ে পরিপূরক নতুন সূত্র তৈরি করে। প্রতিটি নতুন DNA তে অর্ধেক পুরাতন, অর্ধেক নতুন সূত্র, তাই এটি অর্ধ-রক্ষণশীল পদ্ধতি। ১৯৫৬ সালে ওয়াটসন ও ক্রিক প্রস্তাব করেন।<br><small>অ্যানিমেশন সরল, আমার আঁকা।</small>';});
+qgame('f6q','f6o','f6fb','f6sc',[['DNA অনুলিপন—','অর্ধ-রক্ষণশীল',['সম্পূর্ণ রক্ষণশীল','এলোমেলো','অনুলিপি নয়'],'বই।'],['অনুলিপনে প্রতিটি নতুন DNA তে—','অর্ধেক পুরাতন, অর্ধেক নতুন সূত্র',['সব পুরাতন','সব নতুন','সূত্র নেই'],'বই।'],['সূত্র আলাদা হতে ভাঙে—','হাইড্রোজেন বন্ধন',['পেপটাইড বন্ধন','আয়নিক বন্ধন','ধাতব বন্ধন'],'বই।']]);
+/* ল্যাব ৭ */
+var G7={m:0};pills('g7p',function(k){G7.m=k;});
+var G7D=[['নমুনা ও DNA আলাদা','রক্ত, চুল, লালা, বীর্য ইত্যাদি জৈব নমুনা থেকে রাসায়নিক প্রক্রিয়ায় DNA আলাদা করা হয়।'],['এনজাইমে টুকরা','এক বা একাধিক সীমাবদ্ধ এনজাইম দিয়ে DNA কেটে ছোট ছোট টুকরা করা হয়।'],['ইলেকট্রোফোরেসিস','জেলে দৈর্ঘ্য অনুসারে ভিন্ন ব্যান্ড আকারে টুকরাগুলো আলাদা হয়।'],['ব্যান্ড মেলানো','অপরাধস্থলের নমুনার ব্যান্ড সন্দেহভাজনের ব্যান্ডের সাথে তুলনা: মিললে একই ব্যক্তি। এটি DNA ফিঙ্গারপ্রিন্টিং।']];
+DRAWS.push(function(){var x=ctxOf('g7c'),W=460,H=330,t=FR/30,m=G7.m,D=G7D[m],i;bgF(x,W,H);
+ if(m===0){emo(x,'🩸',100,120,40);emo(x,'💇',200,120,40);emo(x,'🧬',320,120,40);}
+ if(m===1){HELIX(x,60,400,120,0,12);for(i=0;i<5;i++){ft(x,'✂️',80+i*70,95+Math.sin(t+i)*3,18,'#fff');}}
+ if(m===2){x.fillStyle='rgba(125,211,252,.2)';rr(x,100,60,260,150,10);x.fill();for(i=0;i<5;i++){var by=90+((i*41+t*3)%1)*0+Math.min(130,40+i*20+Math.sin(t*.5)*3);x.fillStyle='#fde047';x.fillRect(120+i*50,by,30,6);x.fillRect(120+i*50,by+34,30,6);}}
+ if(m===3){var rows=[['অপরাধস্থল',90],['সন্দেহভাজন ১',140],['সন্দেহভাজন ২',190]];rows.forEach(function(r,j){ft(x,r[0],70,r[1]+10,10,'#cbd5e1');for(i=0;i<7;i++){var yy=r[1]+((i*13+(j===1?0:j*7+i*3))%20);x.fillStyle=(j===1||j===0)?'#fff':'#94a3b8';x.fillRect(130+i*40,yy,24,5);}});chip(x,'অপরাধস্থল = সন্দেহভাজন ১ ✅',300,260,GR,11);}
+ chip(x,D[0],230,26,YL,12);wrapT(x,D[1],230,250,420,16,10.5,'#e0f2fe');
+ $('g7t').innerHTML='<b>'+D[0]+'</b> (বই ১২.১.২): '+D[1]+' এখন PCR পদ্ধতিতে খুব অল্প নমুনাও কাজে লাগে।<br><small>ছবি সরল, আমার আঁকা। ব্যান্ডের অবস্থান নকশা, বইয়ের ১২.০৭ চিত্র দেখো।</small>';});
+qgame('g7q','g7o','g7fb','g7sc',[['DNA টেস্টের অপর নাম—','DNA ফিঙ্গারপ্রিন্টিং',['RNA টেস্ট','রক্ত গ্রুপ','প্রোটিন টেস্ট'],'বই।'],['DNA টুকরা কাটা হয়—','সীমাবদ্ধ এনজাইম দিয়ে',['পানি দিয়ে','তাপ দিয়ে','অ্যাসিড দিয়ে'],'বই।'],['ব্যান্ড আলাদা করে—','ইলেকট্রোফোরেসিস',['পরাগায়ন','নিষেক','অভিস্রবণ'],'বই।']]);
+
+/* ল্যাব ৮ */
+var H8={m:0};pills('h8p',function(k){H8.m=k;});
+DRAWS.push(function(){var x=ctxOf('h8c'),W=460,H=330,t=FR/30,m=H8.m,i;bgF(x,W,H);
+ emo(x,'👩',100,70,36);emo(x,'👨',360,70,36);
+ circ(x,0,70,150,18,'#f472b6',null);ft(x,'X',70,155,14,'#fff');circ(x,0,130,150,18,'#f472b6',null);ft(x,'X',130,155,14,'#fff');ft(x,'মায়ের ডিম্বাণু: সবসময় X',100,190,10,'#fbcfe8');
+ var y=m===1;circ(x,0,360,150,18,y?'#38bdf8':'#f472b6',null);ft(x,y?'Y':'X',360,155,14,'#fff');ft(x,'এই শুক্রাণু নিষেক ঘটাল',360,190,10,'#bae6fd');
+ var u=(t*.4)%1;circ(x,0,lerp(360,130,u),150+Math.sin(u*6)*10,8,y?'#38bdf8':'#f472b6',null);
+ emo(x,y?'👦':'👧',230,250,48);chip(x,y?'XY ➜ পুত্র':'XX ➜ কন্যা',230,300,y?BL:PK,13);
+ $('h8t').innerHTML='বই ১২.২: নারীর ডিম্বাণুতে সব সময় X। শুক্রাণু X বা Y; যেটি নিষেক ঘটায় তার উপর নির্ভর করে সন্তানের লিঙ্গ: X হলে XX (কন্যা), Y হলে XY (পুত্র)। তাই সন্তানের লিঙ্গ নির্ধারণে মায়ের কোনো ভূমিকা নেই; পিতার শুক্রাণুই নির্ধারণ করে। মানুষের ৪৬টি ক্রোমোজোমে ২২ জোড়া অটোজোম ও ১ জোড়া সেক্স-ক্রোমোজোম।<br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('h8q','h8o','h8fb','h8sc',[['সন্তানের লিঙ্গ নির্ধারণ করে—','পিতার শুক্রাণু',['মায়ের ডিম্বাণু','মায়ের রক্ত','কোনোটিই নয়'],'বই।'],['XX জাইগোট থেকে হয়—','কন্যা',['পুত্র','জমজ','কিছু না'],'বই।'],['মানুষের দেহকোষে অটোজোম—','২২ জোড়া (৪৪টি)',['২৩ জোড়া','১ জোড়া','১০ জোড়া'],'বই।']]);
+/* ল্যাব ৯ */
+var I9={m:0};pills('i9p',function(k){I9.m=k;});
+DRAWS.push(function(){var x=ctxOf('i9c'),W=460,H=330,t=FR/30,m=I9.m;bgF(x,W,H);
+ if(m===0){emo(x,'👩',100,60,34);emo(x,'👨',360,60,34);
+  circ(x,0,80,130,16,'#f472b6',null);ft(x,'X',80,135,13,'#fff');circ(x,0,125,130,16,'#f87171',null);ft(x,"X'",125,135,12,'#fff');ft(x,'দুটি X: একটি ত্রুটি থাকলেও অন্যটি ঠিক',100,170,9.5,'#fbcfe8');
+  circ(x,0,345,130,16,'#f87171',null);ft(x,"X'",345,135,12,'#fff');circ(x,0,390,130,16,'#38bdf8',null);ft(x,'Y',390,135,13,'#fff');ft(x,"একটিই X, ত্রুটি থাকলে রোগ প্রকাশ",365,170,9.5,'#bae6fd');
+  chip(x,'ছেলেরা বেশি আক্রান্ত',230,230,YL,12);}
+ else{emo(x,'👩',110,50,30);emo(x,'👨',350,50,30);ft(x,'মা বাহক (XX\')',110,100,10,'#fbcfe8');ft(x,'বাবা সুস্থ (XY)',350,100,10,'#bae6fd');
+  var c=[["X'X",'সন্তান কন্যা, বাহক','#fbbf24'],['XX','কন্যা, সুস্থ','#4ade80'],["X'Y",'পুত্র, অসুস্থ','#f87171'],['XY','পুত্র, সুস্থ','#4ade80']];
+  c.forEach(function(q,i){var cx=80+(i%2)*190,cy=140+Math.floor(i/2)*75;x.fillStyle=q[2]+'44';rr(x,cx,cy,170,60,10);x.fill();ft(x,q[0],cx+40,cy+36,18,'#fff');ft(x,q[1],cx+115,cy+34,10,'#fff');});
+  ft(x,'অনুপাত ১:১:১:১ শুধু সম্ভাব্যতা, নিশ্চয়তা নয়',230,310,10,'#fde68a');}
+ var tx=m===0?'বই ১২.৩: সেক্স-লিংকড অসুখের জিন X ক্রোমোজোমে। মেয়েদের দুটি X তাই একটিতে মিউটেশন থাকলেও অন্যটি স্বাভাবিক থাকে (বাহক); ছেলেদের একটিই X, তাই মিউটেশন থাকলেই লক্ষণ প্রকাশ পায়। বর্ণান্ধতায় লাল-সবুজ পার্থক্য বোঝা যায় না।':'বই ১২.৩ (চিত্র ১২.১১): বাহক মা (XX\') ও সুস্থ বাবা (XY) হলে সম্ভাব্য সন্তান: বাহক কন্যা, সুস্থ কন্যা, অসুস্থ পুত্র, সুস্থ পুত্র — ১:১:১:১। এটি কেবল সম্ভাব্যতা, প্রতিবারই ২৫% সম্ভাবনা।';
+ $('i9t').innerHTML=tx+'<br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('i9q','i9o','i9fb','i9sc',[['ছেলেদের কালার ব্লাইন্ড বেশি হয়, কারণ—','ছেলেদের একটিই X ক্রোমোজোম',['ছেলেদের দুটি X','রং ধরা পড়ে না','Y বড়'],'বইয়ের সৃজনশীল ১ (খ)।'],['সেক্স-লিংকড রোগের বাহক—','রোগ প্রকাশ হয় না কিন্তু জিন বহন করে',['সবসময় অসুস্থ','জিনহীন','রোগী'],'বই।'],['কালার ব্লাইন্ডে সাধারণত বোঝা যায় না—','লাল ও সবুজ',['নীল ও কালো','সাদা ও কালো','সবুজ ও নীল'],'বই।']]);
+/* ল্যাব ১০ */
+var J10={m:0};pills('j10p',function(k){J10.m=k;});
+DRAWS.push(function(){var x=ctxOf('j10c'),W=460,H=330,t=FR/30,m=J10.m,i;bgF(x,W,H);
+ if(m===0){for(i=0;i<14;i++){var u=((t*.01+i/14)%1);circ(x,0,60+(i%7)*55,110+Math.floor(i/7)*60,17,i%3===0?'#7f1d1d':'#ef4444',null);}ft(x,'লোহিত রক্তকণিকা (কিছু নষ্ট)',230,45,11,'#fecaca');chip(x,'রক্তশূন্যতা',230,240,RD,12.5);}
+ else if(m===1){emo(x,'🧑',130,50,28);emo(x,'🧑',330,50,28);ft(x,'বাহক (Rr)',130,95,10,'#fde68a');ft(x,'বাহক (Rr)',330,95,10,'#fde68a');
+  var c=[['RR','সুস্থ','#4ade80'],['Rr','বাহক','#fbbf24'],['Rr','বাহক','#fbbf24'],['rr','থ্যালাসেমিয়া রোগী','#f87171']];
+  c.forEach(function(q,i){var cx=100+(i%2)*140,cy=120+Math.floor(i/2)*70;x.fillStyle=q[2]+'44';rr(x,cx,cy,130,56,8);x.fill();ft(x,q[0],cx+30,cy+34,17,'#fff');ft(x,q[1],cx+88,cy+32,9.5,'#fff');});
+  ft(x,'চারজনের মধ্যে একজনের রোগ হওয়ার সম্ভাবনা',230,300,10.5,'#fde68a');}
+ else{ft(x,'মেজর: মা ও বাবা দুজনের কাছ থেকেই জিন পায়',230,100,11.5,'#fecaca');ft(x,'মাইনর: একজনের কাছ থেকে; কোনো উপসর্গ নেই, বাহক',230,170,11.5,'#fde68a');chip(x,'মাইনর = বাহক',230,240,YL,12);}
+ var tx=['থ্যালাসেমিয়া লোহিত রক্তকণিকার অস্বাভাবিক অবস্থাজনিত রোগ। কণিকা নষ্ট হয়, রোগী রক্তশূন্যতায় ভোগে। এটি বংশগত রক্তরোগ, অটোসোমাল রিসেসিভ। আলফা ও বিটা ধরনের; মেজর ও মাইনর।','বাবা-মা দুজনই বাহক হলে সন্তানদের সুস্থ, বাহক বা থ্যালাসেমিয়া রোগী হওয়ার সম্ভাবনা থাকে; চিত্র ১২.১২ অনুযায়ী চারভাগের একভাগ রোগী হতে পারে। নিকট আত্মীয়ে বিয়ে হলে ঝুঁকি বাড়ে।','মেজর ও মাইনর: মেজরে শিশু বাবা ও মা দুজনের কাছ থেকেই জিন পায়; মাইনরে একজনের কাছ থেকে, উপসর্গ নেই, বাহক হিসেবে কাজ করে। চিকিৎসা: নির্দিষ্ট সময় পর পর রক্ত প্রদান, লৌহসমৃদ্ধ খাবার-ওষুধ খাওয়া যাবে না।'][m];
+ $('j10t').innerHTML=tx+' (বই ১২.৩)<br><small>ছবি সরল, আমার আঁকা। বইয়ের ১২.১২ চিত্র দেখো।</small>';});
+qgame('j10q','j10o','j10fb','j10sc',[['থ্যালাসেমিয়া রোগ—','বংশগত',['সংক্রামক','বায়ুবাহিত','পানিবাহিত'],'বই।'],['দুজন বাহকের সন্তানের রোগী হওয়ার সম্ভাবনা—','চারভাগের একভাগ',['সবাই','কেউ না','অর্ধেক'],'বই চিত্র ১২.১২।'],['থ্যালাসেমিয়া রোগীদের খাওয়া উচিত নয়—','লৌহসমৃদ্ধ ফল বা ওষুধ',['দুধ','পানি','ভাত'],'বই।']]);
+/* ল্যাব ১১ */
+var K11={m:0};pills('k11p',function(k){K11.m=k;});
+var K11D=[['অত্যধিক হারে বংশবৃদ্ধি','জীবের সহজাত বৈশিষ্ট্য। জ্যামিতিক ও গাণিতিক হারে সংখ্যা বৃদ্ধি। যেমন: একটি স্ত্রী স্যামন মাছ প্রজনন ঋতুতে প্রায় ৩ কোটি ডিম পাড়ে।','🐟'],['সীমিত খাদ্য ও বাসস্থান','ভূপৃষ্ঠের আয়তন সীমাবদ্ধ, তাই জীবের বাসস্থান ও খাদ্য সীমিত।','🌍'],['অস্তিত্বের জন্য সংগ্রাম','তিন ধরনের: আন্তঃপ্রজাতিক (ব্যাঙ-কীটপতঙ্গ-সাপ), অন্তঃপ্রজাতিক (একই প্রজাতির মধ্যে), পরিবেশের সাথে (বন্যা, খরা, ঝড়)।','⚔️'],['প্রকরণ','দুটি জীব কখনো অবিকল এক নয়; পার্থক্যকে প্রকরণ বা পরিবৃত্তি বলে। অনুকূল প্রকরণ অস্তিত্বের সংগ্রামে সাহায্য করে।','🧬'],['প্রাকৃতিক নির্বাচন','অনুকূল প্রকরণযুক্ত জীব বেশি সুযোগ-সুবিধা পায়, টিকে থাকে ও বংশবিস্তার করে; প্রতিকূলরা ধীরে ধীরে অবলুপ্ত হয়। ডারউইনের তত্ত্বের সবচেয়ে গুরুত্বপূর্ণ প্রতিপাদ্য।','🌿']];
+DRAWS.push(function(){var x=ctxOf('k11c'),W=460,H=330,t=FR/30,m=K11.m,D=K11D[m],i;bgF(x,W,H);
+ emo(x,D[2],90,100,56);
+ for(i=0;i<10;i++){var u=((t*.01*(i+1)+i/10)%1);circ(x,0,60+(i%5)*32,190+Math.floor(i/5)*30,6,m===4&&i>5?'#475569':'#4ade80',null);}
+ chip(x,D[0],310,45,YL,12);wrapT(x,D[1],310,75,220,16,10,'#e0f2fe');
+ $('k11t').innerHTML='<b>'+D[0]+'</b> (বই ১২.৪.২, চার্লস ডারউইন ১৮০৯-১৮৮২; Origin of Species ১৮৫৯): '+D[1]+' আলফ্রেড রাসেল ওয়ালেসও একই সময়ে স্বাধীনভাবে অনুরূপ তত্ত্ব দিয়েছিলেন।<br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('k11q','k11o','k11fb','k11sc',[['ডারউইনের দৃষ্টিতে জীবের সহজাত বৈশিষ্ট্য—','অত্যধিক হারে বংশবৃদ্ধি',['অস্তিত্বের সংগ্রাম','জীবদেহে পরিবর্তন','নতুন প্রজাতির উৎপত্তি'],'বইয়ের নমুনা MCQ ১ (বইয়ে (a) অত্যধিক হারে বংশবৃদ্ধিকে জীবের সহজাত বৈশিষ্ট্য বলা হয়েছে)।'],['বিখ্যাত বইয়ের নাম—','প্রাকৃতিক নির্বাচনের দ্বারা প্রজাতির উদ্ভব',['জীবের প্রতিরূপ','বংশগতির গোপনীয়তা','জিনের জাদু'],'বই।'],['ডারউইন গ্যালাপ্যাগোস দ্বীপপুঞ্জে—','বিস্ময়কর বৈশিষ্ট্য দেখে আকৃষ্ট হন',['কিছুই দেখেননি','শুধু সাগর','ফসিল পাননি'],'বই।']]);
+/* ল্যাব ১২ */
+DRAWS.push(function(){var x=ctxOf('l12c'),W=460,H=330,t=FR/30,s=+$('l12k').value/100,i;$('l12kv').textContent=bn(Math.round(s*100));bgF(x,W,H);
+ x.fillStyle='#a16207';x.fillRect(40,120,380,150);
+ var g=Math.round(12*(1-s*.85)),b=Math.round(12*(1+s*.5));
+ for(i=0;i<g;i++)circ(x,0,60+((i*53)%330),140+((i*37)%110),8,'#22c55e','#22c55e');
+ for(i=0;i<b;i++)circ(x,0,70+((i*47)%330),150+((i*29)%100),8,'#78350f','#451a03');
+ if(s>.05&&s<.9)emo(x,'🐦',60+((t*60)%340),80,28);
+ ft(x,'🟢 সবুজ বিটল: '+bn(g)+'টি',130,295,11,'#bbf7d0');ft(x,'🟤 বাদামি বিটল: '+bn(b)+'টি',330,295,11,'#fde68a');
+ chip(x,s<.2?'শুরুতে সমান':s<.8?'পাখি সবুজ বিটল বেশি খায়':'বাদামি বিটলই বেশি টিকে থাকে',230,30,s<.8?YL:GR,11.5);
+ $('l12t').innerHTML='বই ১২.৪.২ (চিত্র ১২.১৪): সবুজ বিটল পরিবেশের সাথে খাপ খাওয়াতে পারেনি বলে সহজে পাখিদের চোখে পড়ে এবং তারা খাদ্য হিসেবে নিঃশেষ হয়, বাদামি বিটল টিকে যায়। যে জীব পরিবেশের সাথে খাপ খাইয়ে নিতে পারে, সে টিকে থাকে।<br><small>গণনার সংখ্যা শুধু দেখানোর জন্য আমার আঁকা, বইয়ের নয়।</small>';});
+qgame('l12q','l12o','l12fb','l12sc',[['প্রাকৃতিক নির্বাচনে টিকে থাকে—','পরিবেশের সাথে খাপ খাওয়াতে পারা জীব',['শুধু বড় জীব','শুধু সবুজ জীব','সবাই'],'বই।'],['পরিবেশের সাথে খাপ খাওয়ানোকে বলে—','অভিযোজন',['প্রজনন','নিষেক','পরাগায়ন'],'বই।'],['চিত্রে সবুজ বিটল কমে যায়, কারণ—','সহজে চোখে পড়ে ও খাদ্য হয়',['পানি নেই','বাদামি ওদের মারে','ঠান্ডা'],'বই।']]);
+/* ল্যাব ১৩ */
+SORT({id:'m13',colL:'#38bdf8',colR:'#f472b6',names:['সমসংস্থ অঙ্গ','লুপ্তপ্রায় অঙ্গ'],hint:'কোন ধরন?',intro:'উদাহরণটি সমসংস্থ না লুপ্তপ্রায় অঙ্গের?',
+ items:[{e:'🐦',n:'পাখির ডানা',t:0,d:'বই: সমসংস্থ অঙ্গ।'},{e:'🦇',n:'বাদুড়ের ডানা',t:0,d:'বই।'},{e:'🐬',n:'তিমির ফ্লিপার',t:0,d:'বই।'},{e:'🐴',n:'ঘোড়ার অগ্রপদ',t:0,d:'বই।'},{e:'🖐️',n:'মানুষের হাত',t:0,d:'বই।'},{e:'🦴',n:'মানুষের লেজের অস্থি',t:1,d:'বই: লুপ্তপ্রায় অঙ্গের উদাহরণ।'},{e:'👁️',n:'মানুষের তৃতীয় অক্ষিপাত্র (চোখের কোণের ভাঁজ)',t:1,d:'বই: তৃতীয় অক্ষিপুট, লুপ্তপ্রায় অঙ্গ।'},{e:'🦷',n:'সমাপতিত দেহগঠনের মৌলিক অস্থিবিন্যাস একই ধরনের',t:0,d:'সমসংস্থ অঙ্গের বৈশিষ্ট্য।'}]});
+qgame('m13q','m13o','m13fb','m13sc',[['সিলের অগ্রপদ—','সমসংস্থ অঙ্গ',['লুপ্তপ্রায় অঙ্গ','জীবন্ত ফসিল','মিসিং লিংক'],'বইয়ের সংক্ষিপ্ত প্রশ্ন ৪।'],['জীবন্ত ফসিলের উদাহরণ—','লিমুলাস',['পাখির ডানা','বাদুড়','ঘোড়া'],'বই।'],['প্লাটিপাস, মাডস্কিপারকে বলা হতো—','মিসিং লিংক (সংযোগকারী জীব)',['জীবন্ত ফসিল','ফসিল','লুপ্ত প্রাণী'],'বই।']]);
+
+var QUIZ=[];function M(q,c,w,e,fix){var o=[c].concat(w);QUIZ.push({q:q,o:o,a:0,e:e,fix:!!fix});}
+M('বংশগতিবিদ্যার ইংরেজি নাম—','Genetics',['Ecology', 'Embryology', 'Evolution'],'বই অধ্যায় ১২।');
+M('বংশগতির ভৌতভিত্তি—','ক্রোমোজোম',['DNA', 'RNA', 'প্রোটিন'],'বই অধ্যায় ১২।');
+M('বংশগতির রাসায়নিক ভিত্তি—','DNA',['ক্রোমোজোম', 'RNA', 'এনজাইম'],'বই অধ্যায় ১২।');
+M('ক্রোমোজোম প্রথম আবিষ্কার করেন—','স্ট্রাসবার্জার',['মেন্ডেল', 'ডারউইন', 'ক্রিক'],'বই অধ্যায় ১২।');
+M('DNA এর ডাবল হেলিক্স মডেল দেন—','ওয়াটসন ও ক্রিক',['মেন্ডেল ও ওয়ালেস', 'স্পেনসার', 'ফ্র্যাঙ্কলিন একা'],'বই অধ্যায় ১২।');
+M('A এর সাথে জোড় বাঁধে—','T',['C', 'G', 'U'],'বই অধ্যায় ১২।');
+M('G ও C এর মধ্যে H-বন্ধন—','৩টি',['২টি', '১টি', '৪টি'],'বই অধ্যায় ১২।');
+M('RNA তে থাকে—','ইউরাসিল',['থায়মিন', 'ডিঅক্সিরাইবোজ', 'দুটি সূত্র'],'বই অধ্যায় ১২।');
+M('সাধারণত একসূত্রক—','RNA',['DNA', 'ক্রোমোজোম', 'জিন'],'বই অধ্যায় ১২।');
+M('ভাইরাস TMV তে বংশগতিবস্তু—','RNA',['DNA', 'প্রোটিন', 'লিপিড'],'বই অধ্যায় ১২।');
+M('জিন যে স্থানে থাকে তাকে বলে—','লোকাস',['অ্যালিল', 'প্রকরণ', 'অটোজোম'],'বই অধ্যায় ১২।');
+M('বংশগতিবিদ্যার জনক—','মেন্ডেল',['ডারউইন', 'ওয়ালেস', 'হার্ভে'],'বই অধ্যায় ১২।');
+M('মেন্ডেল গবেষণা করেন—','মটরশুঁটি নিয়ে',['ধান নিয়ে', 'আম নিয়ে', 'ইঁদুর নিয়ে'],'বই অধ্যায় ১২।');
+M('T ও t এর মধ্যে প্রকট—','T',['t', 'দুটিই', 'কোনোটিই নয়'],'বই অধ্যায় ১২।');
+M('Tt জীব হয়—','লম্বা',['খাটো', 'অর্ধেক', 'মিশ্র'],'বই অধ্যায় ১২।');
+M('F₂ বংশে লম্বা : খাটো—','৩ : ১',['১ : ১', '১ : ৩', '২ : ১'],'বই অধ্যায় ১২।');
+M('DNA অনুলিপন পদ্ধতি—','অর্ধ-রক্ষণশীল',['রক্ষণশীল', 'অরক্ষণশীল', 'এলোমেলো'],'বই অধ্যায় ১২।');
+M('DNA ফিঙ্গারপ্রিন্টিংয়ে ব্যান্ড আলাদা করা হয়—','ইলেকট্রোফোরেসিসে',['অভিস্রবণে', 'ব্যাপনে', 'প্রস্বেদনে'],'বই অধ্যায় ১২।');
+M('মানুষের মোট ক্রোমোজোম—','৪৬টি',['২৩টি', '৪৮টি', '২২টি'],'বই অধ্যায় ১২।');
+M('অটোজোম—','২২ জোড়া',['২৩ জোড়া', '১ জোড়া', '১১ জোড়া'],'বই অধ্যায় ১২।');
+M('নারীর সেক্স ক্রোমোজোম—','XX',['XY', 'YY', 'X'],'বই অধ্যায় ১২।');
+M('পুরুষের সেক্স ক্রোমোজোম—','XY',['XX', 'YY', 'X'],'বই অধ্যায় ১২।');
+M('সন্তানের লিঙ্গ নির্ধারণ করে—','পিতার শুক্রাণু',['মায়ের ডিম্বাণু', 'মা', 'কোনোটি নয়'],'বই অধ্যায় ১২।');
+M('ছেলেদের কালার ব্লাইন্ড বেশি—','একটিই X থাকায়',['Y বড় বলে', 'দুটি X বলে', 'অটোজোমের কারণে'],'বই অধ্যায় ১২।');
+M('কালার ব্লাইন্ডে সাধারণত বোঝা যায় না—','লাল ও সবুজ',['নীল ও সাদা', 'কালো ও সাদা', 'হলুদ ও কালো'],'বই অধ্যায় ১২।');
+M('থ্যালাসেমিয়া—','বংশগত রক্তরোগ',['সংক্রামক', 'ছোঁয়াচে', 'পানিবাহিত'],'বই অধ্যায় ১২।');
+M('ডারউইনের বিখ্যাত বই প্রকাশিত—','১৮৫৯ সালে',['১৮০৯ সালে', '১৯০০ সালে', '১৭০০ সালে'],'বই অধ্যায় ১২।');
+M('ডারউইনের সাথে একই সময়ে অনুরূপ তত্ত্ব দেন—','আলফ্রেড ওয়ালেস',['মেন্ডেল', 'স্পেনসার', 'অ্যারিস্টটল'],'বই অধ্যায় ১২।');
+M('পরিবেশের সাথে খাপ খাওয়ানো—','অভিযোজন',['প্রজনন', 'নিষেক', 'প্রস্বেদন'],'বই অধ্যায় ১২।');
+M('সিলের অগ্রপদ এবং মানুষের হাত—','সমসংস্থ অঙ্গ',['সমবৃত্তি', 'লুপ্তপ্রায়', 'নতুন অঙ্গ'],'বই অধ্যায় ১২।');
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+var QA=[
+{h:'বহুনির্বাচনি (বইয়ের নমুনা, উত্তর আমার বিশ্লেষণ)',items:[
+['১. ডারউইনের দৃষ্টিতে জীবের সহজাত বৈশিষ্ট্য কোনটি? (ক. অত্যধিক হারে বংশবৃদ্ধি খ. অস্তিত্বের জন্য সংগ্রাম গ. জীবদেহে পরিবর্তন ঘ. নতুন প্রজাতির উৎপত্তি)','ক. অত্যধিক হারে বংশবৃদ্ধি।'],
+['২. আরএনএতে থাকে— i. রাইবোজ শর্করা ii. অজৈব ফসফেট iii. নাইট্রোজেনঘটিত বেস','ঘ. i, ii ও iii।'],
+['৩. চিত্রের X এ ক্রোমোজোমের সংখ্যা কয়টি? (ক. ৪৬ খ. ৪০ গ. ২৩ ঘ. ২২)','গ. ২৩ (আমার অনুমান: X শুক্রাণু, যাতে ২৩টি ক্রোমোজোম। চিত্র দেখে মিলিয়ে নিও।)'],
+['৪. চিত্রের A ও B তে যথাক্রমে কোন লিঙ্গ নির্ধারক ক্রোমোজোম আছে? (ক. XY ও X খ. XX ও X গ. XX ও Y ঘ. XY ও Y)','ক. XY ও X? এটি আমি নিশ্চিত নই; চিত্রে A শুক্রাণুর পাশে (X বা Y) এবং B ডিম্বাণুর পাশে (X)। চিত্র দেখে শিক্ষকের সাথে মিলিয়ে নিও। (আমার অনুমান: B তে X, A তে Y বা X)']]},
+{h:'সৃজনশীল প্রশ্ন (বইয়ের প্রশ্ন, উত্তর আমার লেখা, শিক্ষকের সাথে মিলিয়ে নিও)',items:[
+['১. সিফাত-মুনিরা দম্পতির দুই কন্যা: বড়টি বাবার মতো, ছোটটির চুল-গায়ের রং বাবার মতো কিন্তু দেখতে মায়ের মতো। আরেকটি কন্যা হওয়ায় সিফাত স্ত্রীকে দোষারোপ করেন। (ক) বংশগতিবিদ্যা কী? (খ) মেয়েদের তুলনায় ছেলেদের বর্ণান্ধ বেশি হয় কেন? (গ) সন্তানদের দৈহিক গঠনগত ভিন্নতার কারণ (ঘ) স্ত্রীকে দোষারোপ অযৌক্তিক কেন?','(ক) বংশগতি সম্বন্ধে আলোচনা ও গবেষণার জীববিজ্ঞানের শাখা। (খ) ছেলেদের একটিমাত্র X; তাতে মিউটেশন থাকলেই রোগ প্রকাশ পায়; মেয়েদের দুটি X, একটি ঠিক থাকলে প্রকাশ পায় না। (গ) আমার বিশ্লেষণ: প্রতিটি সন্তান মা-বাবা দুজনের কাছ থেকে জিন পায়; ভিন্ন সংমিশ্রণে ভিন্ন বৈশিষ্ট্য ও প্রকরণ। (ঘ) আমার বিশ্লেষণ: ডিম্বাণুতে সবসময় X; শুক্রাণু X বা Y হতে পারে; Y নিষেক ঘটালে পুত্র, X হলে কন্যা। তাই সন্তানের লিঙ্গ নির্ধারণে মায়ের ভূমিকা নেই, দায়ী বাবার শুক্রাণু।'],
+['২. ঘটনা-১: একটি বিশুদ্ধ লম্বা (TT) ও বিশুদ্ধ খাটো (tt) মটর গাছের সংকরায়ন। ঘটনা-২: সমর ও গৌরি দুজনই রক্তস্বল্পতায় ভোগেন; রোগটি বংশবাহিত রক্তরোগ, দুজনই বাহক। (ক) জিন কী? (খ) অনুলিপন বলতে কী বোঝায়? (গ) ঘটনা-১ এর প্রথম বংশে কোন ধরনের উদ্ভিদ হবে? পানেট স্কয়ারে দেখাও (ঘ) সমর ও গৌরির সন্তানদের উক্ত রোগে সংক্রমিত হওয়ার সম্ভাবনা','(ক) বৈশিষ্ট্য নিয়ন্ত্রণকারী এককের নাম জিন। (খ) এক DNA অণু থেকে অবিকল আরেকটি DNA অণু তৈরি। (গ) আমার বিশ্লেষণ: সব F₁ উদ্ভিদ লম্বা (Tt); পানেট স্কয়ারে চারটি ঘরই Tt। (ঘ) আমার বিশ্লেষণ: রোগ থ্যালাসেমিয়া; দুজনই বাহক হলে সন্তানের চারভাগের একভাগ রোগী, দুভাগ বাহক, একভাগ সুস্থ হওয়ার সম্ভাবনা (বই চিত্র ১২.১২)।']]},
+{h:'সংক্ষিপ্ত প্রশ্ন (উত্তর আমার লেখা)',items:[
+['১. ক্রোমোজোমকে বংশগতির ভৌতভিত্তি বলা হয় কেন?','ক্রোমোজোম মাতাপিতা থেকে জিন সন্তানে বহন করে বংশগতির ধারা অক্ষুণ্ণ রাখে।'],
+['২. মশা থেকে মুক্তির উপায় হিসেবে বিজ্ঞানীদের উদ্ভাবিত নতুন পদ্ধতিটি ব্যাখ্যা করো।','জেনেটিক ইঞ্জিনিয়ারিংয়ে এমন পুরুষ মশা তৈরি করা হয়েছে যাদের সাথে স্ত্রী মশা মিলনে আগ্রহী হলেও তাদের সন্তান বাঁচে না। যথেষ্ট ছাড়লে কয়েক প্রজন্মে মশার জনসংখ্যা কমে যায়, রাসায়নিক ছাড়াই।'],
+['৩. নতুন প্রজাতির উৎপত্তি কীভাবে হয়?','সুবিধাজনক প্রকরণযুক্ত জীবকে প্রকৃতি নির্বাচন করে; যুগ-যুগান্তরে এভাবে নতুন প্রজাতি সৃষ্টি হয়। বইয়ে তিনটি উপায়: মূল পপুলেশন থেকে পৃথক হওয়া, সংকরায়ন, পলিপ্লয়ডি।'],
+['৪. সিলের অগ্রপদ এক ধরনের সমসংস্থ অঙ্গ—ব্যাখ্যা করো।','সিলের অগ্রপদ, মানুষের হাত, পাখি-বাদুড়ের ডানা দেখতে আলাদা হলেও অস্থিবিন্যাসের মৌলিক গঠন একই; তাই সমসংস্থ অঙ্গ, যা অভিব্যক্তির প্রমাণ।'],
+['৫. ডাইনোসরের বিলুপ্তির কারণ ব্যাখ্যা করো।','আমার বিশ্লেষণ: বইয়ে ডাইনোসর নিয়ে আলাদা বর্ণনা নেই। বইয়ের নীতি অনুযায়ী পরিবেশের পরিবর্তনের সাথে খাপ খাওয়াতে না পারলে প্রজাতি বিলুপ্ত হয় (অস্তিত্বের সংগ্রামে পরিবেশের সাথে সংগ্রাম)। শিক্ষকের নির্দেশনা মিলিয়ে নিও।']]}
+];
+
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+function frame(){FR++;if(document.hidden||(FR&1)){requestAnimationFrame(frame);return;}for(var i=0;i<DRAWS.length;i++){try{DRAWS[i]();}catch(e){if(e!==SKIP)throw e;}}requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>

@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>জীবের পরিবেশ (জীববিজ্ঞান অধ্যায় ১৩) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+small{color:#567}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/lab-boost.js?v=2"></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#physics">&larr; সব অধ্যায়</a>
+</header><div class="wrap">
+  <div class="crumb">🌍 জীববিজ্ঞান &rsaquo; ত্রয়োদশ অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🌍 জীবের পরিবেশ</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🌍 ল্যাব ১</a><a href="#lab2">🌿 ল্যাব ২</a><a href="#lab3">🐟 ল্যাব ৩</a><a href="#lab4">🔗 ল্যাব ৪</a><a href="#lab5">🕸️ ল্যাব ৫</a><a href="#lab6">♻️ ল্যাব ৬</a><a href="#lab7">🔺 ল্যাব ৭</a><a href="#lab8">📉 ল্যাব ৮</a><a href="#lab9">🦋 ল্যাব ৯</a><a href="#lab10">🦅 ল্যাব ১০</a><a href="#lab11">🤝 ল্যাব ১১</a><a href="#lab12">⚔️ ল্যাব ১২</a><a href="#lab13">⚖️ ল্যাব ১৩</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+<section class="panel" id="note">
+<h3>🌍 ১৩.১ বাস্তুতন্ত্র</h3>
+<ul>
+<li>জীব ও জড় উপাদানের মিথস্ক্রিয়া ও আন্তঃসম্পর্কযুক্ত অঞ্চল = বাস্তুতন্ত্র (Ecosystem)।</li>
+<li>উপাদান: <b>জড়</b> (অজৈব: পানি, বায়ু, খনিজ; জৈব: হিউমাস), <b>ভৌত</b> (আলো, তাপ, আর্দ্রতা, বায়ুর চাপ, গভীরতা, উচ্চতা), <b>জীবজ</b> (উৎপাদক, খাদক, বিয়োজক)।</li>
+<li>খাদক: তৃণভোজী (১ম স্তর), মাংসাশী (২য়), ৩য় স্তর, সর্বোচ্চ; মানুষ সর্বভুক; কাক-শকুন আবর্জনাভুক।</li>
+</ul>
+<h3>🐟 ১৩.২ পুকুরের বাস্তুতন্ত্র</h3>
+<ul><li>উৎপাদক: শৈবাল, ফাইটোপ্ল্যাংকটন, ম্যাক্রোফাইট। ১ম খাদক: জুপ্ল্যাংকটন, রুই, কাতলা। ২য়: ছোট মাছ, ব্যাঙ। ৩য়: শোল, বোয়াল, বক। বিয়োজক: ছত্রাক, ব্যাকটেরিয়া।</li></ul>
+<h3>🔗 ১৩.৩-৪ খাদ্যশিকল ও খাদ্যজাল</h3>
+<ul><li>ঘাস → ফড়িং → ব্যাঙ → সাপ → গুইসাপ (শিকারজীবী)। পরজীবী: মানুষ → মশা → ডেঙ্গু ভাইরাস। মৃতজীবী: মৃতদেহ → ছত্রাক → কেঁচো।</li>
+<li>পরজীবী ও মৃতজীবী শিকল অসম্পূর্ণ। কয়েকটি শিকল মিলে খাদ্যজাল।</li></ul>
+<h3>⚡ শক্তি ও পুষ্টির প্রবাহ</h3>
+<ul>
+<li>পুষ্টিপ্রবাহ চক্রাকার; শক্তিপ্রবাহ একমুখী; মূল উৎস সূর্য (বড়জোর ২% সালোকসংশ্লেষণে)।</li>
+<li>১০% নিয়ম: প্রতিস্তরে ~১০% শক্তি পরের স্তরে যায়, ~৯০% তাপ হয়ে হারায়; তাই শিকল ৪-৫ ধাপে সীমিত। শক্তি পিরামিডের ভিত উৎপাদক।</li>
+</ul>
+<h3>🦋 ১৩.৫ জীববৈচিত্র্য</h3>
+<ul><li>প্রকার: প্রজাতিগত, বংশগতীয়, বাস্তুতান্ত্রিক। ঝিনুক, পেঁচা, শকুন: কেউ অপ্রয়োজনীয় নয়।</li>
+<li>মিথস্ক্রিয়া: <b>ধনাত্মক</b> (মিউচুয়ালিজম, কমেনসালিজম); <b>ঋণাত্মক</b> (শোষণ, প্রতিযোগিতা, অ্যান্টিবায়োসিস)। সহাবস্থান (Symbiosis)। ওডাম।</li></ul>
+<h3>🌳 ১৩.৬ পরিবেশ সংরক্ষণ</h3>
+<ul><li>গ্রিনহাউস গ্যাস (CO₂, CH₄, N₂O, CO) ➜ গ্রিনহাউস ইফেক্ট ➜ সমুদ্রের উচ্চতা বৃদ্ধি, উপকূল তলিয়ে যাওয়া। উপায়: বৃক্ষরোপণ (একটি কাটলে দুটি লাগানো), সৌরশক্তি, জৈবসার, রাসায়নিক সার কম, জনসংখ্যা সীমিত, জীববৈচিত্র্য সংরক্ষণ, আইন: সংবিধান ১৮(ক), জীববৈচিত্র্য আইন ২০১৭, পরিবেশ সংরক্ষণ আইন ১৯৯৫।</li></ul>
+<p><small>বইয়ের তথ্য ভিত্তি। আমার বিশ্লেষণ আলাদা চিহ্নিত।</small></p>
+</section>
+
+  <section class="panel" id="lab1">
+    <h2>🌍 ল্যাব 1: জড়, ভৌত, জীবজ</h2>
+    <div class="say">👉 উপাদান বেছে নাও: কোনটি কী কাজ করে দেখো।</div>
+<div class="pills" id="a1p"><button data-k="0" class="on">জড় উপাদান</button><button data-k="1">ভৌত উপাদান</button><button data-k="2">জীবজ উপাদান</button></div>
+    <div class="row"><div><canvas id="a1c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="a1t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="a1q"></div><div class="cls" id="a1o"></div><div class="fb" id="a1fb"></div><small id="a1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🌿 ল্যাব 2: কে কোন দলে?</h2>
+    <div class="say">👉 জীবটি কোন দলের? সঠিক বাক্সে পাঠাও।</div>
+    <div class="btnrow"><button class="btn" id="b2j">🌱 উৎপাদক</button><button class="btn alt" id="b2d">🐄 খাদক</button></div>
+    <div class="row"><div><canvas id="b2c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="b2t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="b2q"></div><div class="cls" id="b2o"></div><div class="fb" id="b2fb"></div><small id="b2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🐟 ল্যাব 3: স্তরে স্তরে খাদক</h2>
+    <div class="say">👉 স্তর বেছে নাও: পুকুরে কে কী করে দেখো।</div>
+<div class="pills" id="c3p"><button data-k="0" class="on">উৎপাদক</button><button data-k="1">১ম স্তরের খাদক</button><button data-k="2">২য় স্তরের খাদক</button><button data-k="3">৩য় স্তরের খাদক</button><button data-k="4">বিয়োজক</button></div>
+    <div class="row"><div><canvas id="c3c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="c3t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="c3q"></div><div class="cls" id="c3o"></div><div class="fb" id="c3fb"></div><small id="c3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🔗 ল্যাব 4: তিন ধরনের শিকল</h2>
+    <div class="say">👉 ধরন বেছে নাও: শিকলটি কীভাবে চলে দেখো।</div>
+<div class="pills" id="d4p"><button data-k="0" class="on">শিকারজীবী</button><button data-k="1">পরজীবী</button><button data-k="2">মৃতজীবী</button></div>
+    <div class="row"><div><canvas id="d4c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="d4t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="d4q"></div><div class="cls" id="d4o"></div><div class="fb" id="d4fb"></div><small id="d4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🕸️ ল্যাব 5: পাঁচটি খাদ্যশিকল</h2>
+    <div class="say">👉 শিকল বেছে নাও: জালের কোন পথ জ্বলে ওঠে দেখো।</div>
+<div class="pills" id="e5p"><button data-k="0" class="on">(ক)</button><button data-k="1">(খ)</button><button data-k="2">(গ)</button><button data-k="3">(ঘ)</button><button data-k="4">(ঙ)</button></div>
+    <div class="row"><div><canvas id="e5c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="e5t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="e5q"></div><div class="cls" id="e5o"></div><div class="fb" id="e5fb"></div><small id="e5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>♻️ ল্যাব 6: চক্র বনাম একমুখী</h2>
+    <div class="say">👉 বেছে নাও: পুষ্টিদ্রব্য ফেরে, শক্তি ফেরে না।</div>
+<div class="pills" id="f6p"><button data-k="0" class="on">পুষ্টিপ্রবাহ</button><button data-k="1">শক্তিপ্রবাহ</button></div>
+    <div class="row"><div><canvas id="f6c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="f6t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="f6q"></div><div class="cls" id="f6o"></div><div class="fb" id="f6fb"></div><small id="f6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>🔺 ল্যাব 7: ট্রফিক লেভেল</h2>
+    <div class="say">👉 লেভেল বেছে নাও: শক্তির পরিমাণ কত হয় দেখো।</div>
+<div class="pills" id="g7p"><button data-k="0" class="on">১ম: উৎপাদক</button><button data-k="1">২য়: তৃণভোজী</button><button data-k="2">৩য়: মাংসাশী</button><button data-k="3">৪র্থ: সর্বোচ্চ</button></div>
+    <div class="row"><div><canvas id="g7c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="g7t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="g7q"></div><div class="cls" id="g7o"></div><div class="fb" id="g7fb"></div><small id="g7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>📉 ল্যাব 8: শিকল ছোট কেন</h2>
+    <div class="say">👉 স্লাইডারে শিকলের ধাপ বাড়াও: শক্তি কত কমে দেখো।</div>
+    <div class="ctl"><label>ধাপ: <span id="h8kv"></span> ধাপ</label><input type="range" id="h8k" min="1" max="5" step="1" value="1"></div>
+    <div class="row"><div><canvas id="h8c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="h8t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="h8q"></div><div class="cls" id="h8o"></div><div class="fb" id="h8fb"></div><small id="h8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>🦋 ল্যাব 9: তিন প্রকার</h2>
+    <div class="say">👉 প্রকার বেছে নাও: উদাহরণ দেখো।</div>
+<div class="pills" id="i9p"><button data-k="0" class="on">প্রজাতিগত</button><button data-k="1">বংশগতীয়</button><button data-k="2">বাস্তুতান্ত্রিক</button></div>
+    <div class="row"><div><canvas id="i9c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="i9t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="i9q"></div><div class="cls" id="i9o"></div><div class="fb" id="i9fb"></div><small id="i9sc"></small>
+  </section>
+
+  <section class="panel" id="lab10">
+    <h2>🦅 ল্যাব 10: ঝিনুক, পেঁচা, শকুন</h2>
+    <div class="say">👉 জীব বেছে নাও: পরিবেশে তার কাজ দেখো।</div>
+<div class="pills" id="j10p"><button data-k="0" class="on">ঝিনুক</button><button data-k="1">পেঁচা</button><button data-k="2">শকুন-চিল-কাক</button></div>
+    <div class="row"><div><canvas id="j10c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="j10t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="j10q"></div><div class="cls" id="j10o"></div><div class="fb" id="j10fb"></div><small id="j10sc"></small>
+  </section>
+
+  <section class="panel" id="lab11">
+    <h2>🤝 ল্যাব 11: মিউচুয়ালিজম ও কমেনসালিজম</h2>
+    <div class="say">👉 ধরন বেছে নাও: কার লাভ হয় দেখো।</div>
+<div class="pills" id="k11p"><button data-k="0" class="on">মিউচুয়ালিজম</button><button data-k="1">কমেনসালিজম</button></div>
+    <div class="row"><div><canvas id="k11c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="k11t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="k11q"></div><div class="cls" id="k11o"></div><div class="fb" id="k11fb"></div><small id="k11sc"></small>
+  </section>
+
+  <section class="panel" id="lab12">
+    <h2>⚔️ ল্যাব 12: শোষণ, প্রতিযোগিতা, অ্যান্টিবায়োসিস</h2>
+    <div class="say">👉 ধরন বেছে নাও: কার ক্ষতি হয় দেখো।</div>
+<div class="pills" id="l12p"><button data-k="0" class="on">শোষণ</button><button data-k="1">প্রতিযোগিতা</button><button data-k="2">অ্যান্টিবায়োসিস</button></div>
+    <div class="row"><div><canvas id="l12c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="l12t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="l12q"></div><div class="cls" id="l12o"></div><div class="fb" id="l12fb"></div><small id="l12sc"></small>
+  </section>
+
+  <section class="panel" id="lab13">
+    <h2>⚖️ ল্যাব 13: আন্তঃক্রিয়ার ধরন</h2>
+    <div class="say">👉 উদাহরণটি কোন ধরনের? সঠিক বাক্সে পাঠাও।</div>
+    <div class="btnrow"><button class="btn" id="m13j">😊 ধনাত্মক</button><button class="btn alt" id="m13d">😣 ঋণাত্মক</button></div>
+    <div class="row"><div><canvas id="m13c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="m13t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="m13q"></div><div class="cls" id="m13o"></div><div class="fb" id="m13fb"></div><small id="m13sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। বইয়ের নমুনা প্রশ্নের উত্তরমালা নেই, তাই উত্তরগুলো আমার হিসাব করা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; জীবের পরিবেশ (জীববিজ্ঞান অধ্যায় ১৩)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+var SKIP={};function ctxOf(id){var c=$(id);if(c.__off)throw SKIP;return c.getContext('2d');}
+(function(){if(!window.IntersectionObserver)return;var io=new IntersectionObserver(function(es){es.forEach(function(e){e.target.__off=!e.isIntersecting;});},{rootMargin:'150px'});document.querySelectorAll('canvas').forEach(function(c){io.observe(c);});})();
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+function opts(correct,wrongs){var seen={},a=[{t:correct,ok:1}];seen[correct]=1;wrongs.forEach(function(w){if(!seen[w]){seen[w]=1;a.push({t:w,ok:0});}});return shuffle(a);}
+function arrow(x,x1,y1,x2,y2,col,lw){var a=Math.atan2(y2-y1,x2-x1);x.strokeStyle=col;x.fillStyle=col;x.lineWidth=lw||3;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-11*Math.cos(a-.4),y2-11*Math.sin(a-.4));x.lineTo(x2-11*Math.cos(a+.4),y2-11*Math.sin(a+.4));x.closePath();x.fill();}
+function person(x,px,py,col){circ(x,0,px,py-22,6,col,null);x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(px,py-16);x.lineTo(px,py-4);x.moveTo(px-6,py-11);x.lineTo(px+6,py-11);x.moveTo(px,py-4);x.lineTo(px-5,py+6);x.moveTo(px,py-4);x.lineTo(px+5,py+6);x.stroke();}
+/* ---------- সাধারণ সহায়ক ---------- */
+function pills(id,fn){$(id).onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var all=$(id).querySelectorAll('button'),i;for(i=0;i<all.length;i++)all[i].classList.toggle('on',all[i]===b);fn(+b.getAttribute('data-k'));};}
+function sci(x){if(!(x>0))return bn(0);var e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);if(+m.toFixed(2)>=10){m/=10;e++;}return bn(parseFloat(m.toFixed(2)))+' × ১০'+(e<0?'⁻':'')+sup(Math.abs(e));}
+function brow(label,val,max,col,txtv){return '<div class="bar"><div class="bl">'+label+'</div><div class="bt"><div class="bf" style="width:'+clamp(val/max*100,1,100)+'%;background:'+col+'"></div></div><b style="min-width:80px;font-size:14px;color:#1f3a5f">'+(txtv||'')+'</b></div>';}
+function on(ids,fn){ids.forEach(function(i){$(i).oninput=fn;$(i).onchange=fn;});}
+var G=9.8;
+function box(x,px,py,w,h,fill,stroke){x.fillStyle=fill;x.fillRect(px,py,w,h);if(stroke){x.strokeStyle=stroke;x.lineWidth=2;x.strokeRect(px,py,w,h);}}
+function wheel(x,px,py,r){circ(x,0,px,py,r,'#333',null);circ(x,0,px,py,r*.4,'#bbb',null);}
+
+
+/* ---------- সুন্দর আঁকার সহায়ক (নতুন) ---------- */
+function shade(c,a){var h=hx(c),o='#';for(var i=0;i<3;i++){var v=clamp(Math.round(h[i]+a),0,255).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function grad(x,px,py,w,h,c1,c2){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1);g.addColorStop(1,c2);x.fillStyle=g;x.fillRect(px,py,w,h);}
+function ball(x,px,py,r,col){var g=x.createRadialGradient(px-r*.35,py-r*.35,r*.08,px,py,r);g.addColorStop(0,'#ffffff');g.addColorStop(.3,col);g.addColorStop(1,shade(col,-55));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();}
+function rr(x,px,py,w,h,r){r=Math.min(r,w/2,h/2);x.beginPath();x.moveTo(px+r,py);x.lineTo(px+w-r,py);x.quadraticCurveTo(px+w,py,px+w,py+r);x.lineTo(px+w,py+h-r);x.quadraticCurveTo(px+w,py+h,px+w-r,py+h);x.lineTo(px+r,py+h);x.quadraticCurveTo(px,py+h,px,py+h-r);x.lineTo(px,py+r);x.quadraticCurveTo(px,py,px+r,py);x.closePath();}
+function tag(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.lineJoin='round';x.lineWidth=4;x.strokeStyle='rgba(255,255,255,.92)';x.strokeText(s,px,py);x.fillStyle=col||NAVY;x.fillText(s,px,py);}
+function wave(x,px,py,w,h,t,c1,c2,amp){amp=amp===undefined?2.5:amp;var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1||'rgba(86,176,240,.88)');g.addColorStop(1,c2||'rgba(22,84,172,.96)');x.fillStyle=g;x.beginPath();x.moveTo(px,py+h);x.lineTo(px,py);var i;for(i=0;i<=w;i+=4)x.lineTo(px+i,py+Math.sin(i/13+t*.05)*amp);x.lineTo(px+w,py+h);x.closePath();x.fill();x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=1.6;x.beginPath();for(i=0;i<=w;i+=4){var yy=py+Math.sin(i/13+t*.05)*amp;if(i===0)x.moveTo(px,yy);else x.lineTo(px+i,yy);}x.stroke();}
+function bubs(x,px,py,w,h,n,t){for(var i=0;i<n;i++){var u=((t*.004*(0.6+rp(i,0,.8))+rp(i+50,0,1))%1),bx=px+rp(i,6,w-6)+Math.sin(t*.04+i)*3,by=py+h-u*h,r=1.5+rp(i+9,0,2.2);if(by<py+4)continue;x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=1.2;x.beginPath();x.arc(bx,by,r,0,7);x.stroke();}}
+function glassBox(x,px,py,w,h){x.strokeStyle='#5b7389';x.lineWidth=3;x.beginPath();x.moveTo(px,py);x.lineTo(px,py+h);x.lineTo(px+w,py+h);x.lineTo(px+w,py);x.stroke();x.fillStyle='rgba(255,255,255,.18)';x.fillRect(px+4,py+4,5,h-8);}
+function sun(x,px,py,r,t){x.save();x.translate(px,py);x.rotate(t*.004);x.strokeStyle='rgba(255,196,60,.7)';x.lineWidth=3;for(var i=0;i<12;i++){x.rotate(Math.PI/6);x.beginPath();x.moveTo(r+4,0);x.lineTo(r+11,0);x.stroke();}x.restore();ball(x,px,py,r,'#ffc83d');}
+function cloud(x,px,py,s,col){x.fillStyle=col||'rgba(255,255,255,.95)';[[0,0,14],[16,-6,17],[34,0,14],[17,6,15]].forEach(function(c){x.beginPath();x.arc(px+c[0]*s,py+c[1]*s,c[2]*s,0,7);x.fill();});}
+function dial(x,cx,cy,r,frac,txtv,col){x.strokeStyle='#dfe7ee';x.lineWidth=9;x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*2.2);x.stroke();x.strokeStyle=col||'#2a9d8f';x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*(.8+1.4*clamp(frac,0,1)));x.stroke();var a=Math.PI*(.8+1.4*clamp(frac,0,1));x.strokeStyle=NAVY;x.lineWidth=3;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a)*(r-6),cy+Math.sin(a)*(r-6));x.stroke();circ(x,0,cx,cy,4,NAVY,null);if(txtv)tag(x,txtv,cx,cy+r*.62,NAVY,12);}
+function sand(x,px,py,w,h){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,'#eccb8a');g.addColorStop(1,'#c99a55');x.fillStyle=g;x.fillRect(px,py,w,h);}
+function atom(x,px,py,r,col,t){ball(x,px,py,r,col);}
+function fmtN(v){if(Math.abs(v)>=1000)return bn(Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g,','));return bn(parseFloat(v.toFixed(2)));}
+
+function tagd(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=4;x.fillStyle=col||'#fff';x.fillText(s,px,py);x.restore();}
+
+/* ===== ফিউচারিস্টিক জীববিজ্ঞান ল্যাব লাইব্রেরি (ডার্ক হলোগ্রাম, নিয়ন গ্লো, 3D-ধাঁচের গোলক) ===== */
+document.documentElement.classList.add('fut');(function(){var st=document.createElement('style');st.textContent=".th-bg i,.th-hero i.o,.th-hero .ico{animation:none!important}.th-bg i{filter:none!important;opacity:.18!important}header.site,.tabs{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(255,255,255,.96)!important}.lbh i,.th-live::before{animation:none!important}";document.head.appendChild(st);})();(function(){var d=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,'shadowBlur');if(d&&d.set&&!CanvasRenderingContext2D.prototype.__sb){CanvasRenderingContext2D.prototype.__sb=1;Object.defineProperty(CanvasRenderingContext2D.prototype,'shadowBlur',{get:function(){return d.get.call(this);},set:function(v){d.set.call(this,v*.4);},configurable:true});}})();
+function hx(c){if(c.length===4)c='#'+c[1]+c[1]+c[2]+c[2]+c[3]+c[3];return [parseInt(c.substr(1,2),16)||0,parseInt(c.substr(3,2),16)||0,parseInt(c.substr(5,2),16)||0];}
+var DT=.02,TKL=performance.now();
+DRAWS.push(function(){var n=performance.now();DT=Math.min(.05,(n-TKL)/1000);TKL=n;});
+var CY='#22d3ee',GR='#4ade80',PK='#f472b6',YL='#fbbf24',PU='#a78bfa',OR='#fb923c',RD='#f87171',BL='#60a5fa',WH='#e6f1ff';
+function lt(c,t){return mixc(c,'#ffffff',t);} function dk(c,t){return mixc(c,'#000000',t);}
+function ln(x,x1,y1,x2,y2,col,lw,dash){x.strokeStyle=col;x.lineWidth=lw||2;if(dash)x.setLineDash(dash);x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();if(dash)x.setLineDash([]);}
+/* ডার্ক হলোগ্রাম পটভূমি */
+function bgF(x,w,h){var g=x.createRadialGradient(w*.5,h*.35,10,w*.5,h*.5,Math.max(w,h)*.85);g.addColorStop(0,'#0f2c52');g.addColorStop(.6,'#081833');g.addColorStop(1,'#030814');x.fillStyle=g;x.fillRect(0,0,w,h);
+  x.strokeStyle='rgba(56,189,248,.09)';x.lineWidth=1;var i;x.beginPath();for(i=0;i<w;i+=26){x.moveTo(i+.5,0);x.lineTo(i+.5,h);}for(i=0;i<h;i+=26){x.moveTo(0,i+.5);x.lineTo(w,i+.5);}x.stroke();
+  var sy=(FR*1.1)%(h+60)-30,sg=x.createLinearGradient(0,sy-24,0,sy+24);sg.addColorStop(0,'rgba(34,211,238,0)');sg.addColorStop(.5,'rgba(34,211,238,.13)');sg.addColorStop(1,'rgba(34,211,238,0)');x.fillStyle=sg;x.fillRect(0,sy-24,w,48);
+  x.strokeStyle='rgba(34,211,238,.7)';x.lineWidth=2;var L=14;x.beginPath();[[6,6,1,1],[w-6,6,-1,1],[6,h-6,1,-1],[w-6,h-6,-1,-1]].forEach(function(c){x.moveTo(c[0],c[1]+c[3]*L);x.lineTo(c[0],c[1]);x.lineTo(c[0]+c[2]*L,c[1]);});x.stroke();
+  x.fillStyle='rgba(125,211,252,.22)';x.beginPath();for(i=0;i<8;i++){var px=(rp(i,0,w)+Math.sin(FR/80+i)*8+w)%w,py=(rp(i+30,0,h)-FR*(.15+i%4*.06)+h*3)%h;x.moveTo(px+1.6,py);x.arc(px,py,1.6,0,7);}x.fill();}
+/* 3D-ধাঁচের গ্লোবুল */
+function orb(x,px,py,r,col,glow){x.save();if(glow!==0){x.shadowColor=col;x.shadowBlur=glow||16;}
+  var g=x.createRadialGradient(px-r*.38,py-r*.42,r*.06,px,py,r);g.addColorStop(0,lt(col,.85));g.addColorStop(.35,col);g.addColorStop(1,dk(col,.62));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();x.restore();
+  x.strokeStyle='rgba(255,255,255,.28)';x.lineWidth=1;x.beginPath();x.arc(px,py,r-.5,Math.PI*1.05,Math.PI*1.75);x.stroke();}
+function ring(x,px,py,r,col,lw,dash){x.save();x.shadowColor=col;x.shadowBlur=10;x.strokeStyle=col;x.lineWidth=lw||2;if(dash)x.setLineDash(dash);x.beginPath();x.arc(px,py,r,0,7);x.stroke();x.restore();}
+function neon(x,x1,y1,x2,y2,col,lw,dash){x.save();x.shadowColor=col;x.shadowBlur=9;ln(x,x1,y1,x2,y2,col,lw||2,dash);x.restore();}
+function ft(x,s,px,py,size,col,al){x.font='700 '+(size||13)+'px "Hind Siliguri",sans-serif';x.textAlign=al||'center';x.textBaseline='middle';x.fillStyle=col||WH;x.fillText(s,px,py);}
+function hbox(x,px,py,w,h,col,a){col=col||CY;x.save();x.shadowColor=col;x.shadowBlur=10;rr(x,px,py,w,h,9);x.fillStyle='rgba(10,30,60,'+(a===undefined?.72:a)+')';x.fill();x.strokeStyle=col;x.lineWidth=1.6;x.stroke();x.restore();}
+function bar3d(x,px,py,w,h,col,d){d=d||8;var g=x.createLinearGradient(px,py,px,py+h);g.addColorStop(0,lt(col,.35));g.addColorStop(1,dk(col,.35));x.save();x.shadowColor=col;x.shadowBlur=9;x.fillStyle=g;x.fillRect(px,py,w,h);x.restore();
+  x.fillStyle=lt(col,.55);x.beginPath();x.moveTo(px,py);x.lineTo(px+d,py-d*.7);x.lineTo(px+w+d,py-d*.7);x.lineTo(px+w,py);x.closePath();x.fill();
+  x.fillStyle=dk(col,.45);x.beginPath();x.moveTo(px+w,py);x.lineTo(px+w+d,py-d*.7);x.lineTo(px+w+d,py+h-d*.7);x.lineTo(px+w,py+h);x.closePath();x.fill();}
+function disc(x,px,py,rx,ry,col){var g=x.createRadialGradient(px,py-ry*.3,2,px,py,rx);g.addColorStop(0,col);g.addColorStop(1,dk(col,.7));x.save();x.shadowColor=col;x.shadowBlur=12;x.fillStyle=g;x.beginPath();x.ellipse(px,py,rx,ry,0,0,7);x.fill();x.restore();}
+function pedestal(x,px,py,r,col){var g=x.createRadialGradient(px,py,2,px,py,r);g.addColorStop(0,'rgba(34,211,238,.35)');g.addColorStop(1,'rgba(34,211,238,0)');x.fillStyle=g;x.beginPath();x.ellipse(px,py,r,r*.32,0,0,7);x.fill();x.strokeStyle=col||'rgba(34,211,238,.8)';x.lineWidth=1.5;x.beginPath();x.ellipse(px,py,r*.8,r*.26,0,0,7);x.stroke();}
+/* ব্যাকটেরিয়া (দণ্ডাকার) */
+function bact(x,px,py,len,r,ang,col,t){x.save();x.translate(px,py);x.rotate(ang);
+  for(var k=0;k<2;k++){x.strokeStyle='rgba(125,255,200,.8)';x.lineWidth=1.6;x.beginPath();x.moveTo(-len/2,k*4-2);for(var s=1;s<=14;s++){x.lineTo(-len/2-s*3.2,(k*4-2)+Math.sin(s*.7-t*5+k)*3.2*s/6);}x.stroke();}
+  x.shadowColor=col;x.shadowBlur=14;var g=x.createLinearGradient(0,-r,0,r);g.addColorStop(0,lt(col,.6));g.addColorStop(.5,col);g.addColorStop(1,dk(col,.55));x.fillStyle=g;rr(x,-len/2,-r,len,2*r,r);x.fill();x.restore();
+  x.save();x.translate(px,py);x.rotate(ang);x.fillStyle='rgba(255,255,255,.55)';rr(x,-len/2+r*.6,-r*.65,len-r*1.2,r*.45,r*.2);x.fill();for(var i=0;i<6;i++){x.fillStyle='rgba(255,255,255,.35)';x.beginPath();x.arc(-len/2+r+(len-2*r)*i/5,((i*7)%3-1)*r*.3,1.6,0,7);x.fill();}x.restore();}
+/* অ্যামিবা */
+function blob(x,px,py,r,t,col){x.save();x.shadowColor=col;x.shadowBlur=18;var g=x.createRadialGradient(px-r*.3,py-r*.35,r*.1,px,py,r*1.15);g.addColorStop(0,lt(col,.7));g.addColorStop(.6,col);g.addColorStop(1,dk(col,.5));x.fillStyle=g;x.beginPath();
+  for(var i=0;i<=40;i++){var a=i/40*Math.PI*2,rad=r*(1+.16*Math.sin(a*3+t*1.6)+.1*Math.sin(a*5-t*1.1));var X=px+Math.cos(a)*rad,Y=py+Math.sin(a)*rad*.88;if(i===0)x.moveTo(X,Y);else x.lineTo(X,Y);}x.closePath();x.fill();x.restore();
+  orb(x,px+r*.12,py-r*.05,r*.26,'#6366f1',8);for(var k=0;k<5;k++)circ(x,0,px+Math.cos(k*1.9+t*.4)*r*.5,py+Math.sin(k*2.3+t*.3)*r*.4,2.4,'rgba(255,255,255,.55)',null);}
+/* ডায়াটম (লেন্স আকার) */
+function diatom(x,px,py,len,w,ang,col,t){x.save();x.translate(px,py);x.rotate(ang);x.shadowColor=col;x.shadowBlur=14;var g=x.createLinearGradient(0,-w,0,w);g.addColorStop(0,lt(col,.55));g.addColorStop(.5,col);g.addColorStop(1,dk(col,.55));x.fillStyle=g;x.beginPath();x.moveTo(-len,0);x.quadraticCurveTo(0,-w*2,len,0);x.quadraticCurveTo(0,w*2,-len,0);x.fill();x.shadowBlur=0;
+  x.strokeStyle='rgba(255,255,255,.7)';x.lineWidth=1.4;x.beginPath();x.moveTo(-len*.9,0);x.lineTo(len*.9,0);x.stroke();for(var i=-4;i<=4;i++){var X=i*len/5,H=w*1.4*(1-Math.abs(i)/5.5);x.beginPath();x.moveTo(X,-H);x.lineTo(X,H);x.stroke();}x.restore();}
+/* মাশরুম */
+function mush(x,px,py,s,col){var g=x.createRadialGradient(px-s*.25,py-s*.7,2,px,py-s*.4,s);g.addColorStop(0,lt(col,.7));g.addColorStop(1,dk(col,.45));x.save();x.shadowColor=col;x.shadowBlur=12;
+  x.fillStyle='#e8dcc8';rr(x,px-s*.18,py-s*.45,s*.36,s*.62,s*.12);x.fill();x.fillStyle=g;x.beginPath();x.ellipse(px,py-s*.5,s*.8,s*.52,0,Math.PI,0);x.lineTo(px+s*.8,py-s*.46);x.quadraticCurveTo(px,py-s*.2,px-s*.8,py-s*.46);x.fill();x.restore();for(var i=0;i<4;i++)circ(x,0,px+(i-1.5)*s*.3,py-s*.74+(i%2)*s*.1,s*.07,'rgba(255,255,255,.7)',null);}
+/* গাছ */
+function tree(x,px,py,s,t){x.save();x.fillStyle='#8b5a2b';var g=x.createLinearGradient(px-s*.12,0,px+s*.12,0);g.addColorStop(0,'#a0703a');g.addColorStop(1,'#5a3a18');x.fillStyle=g;x.fillRect(px-s*.11,py-s*.6,s*.22,s*.7);x.restore();
+  var C=[[0,-1.0,.5],[-.34,-.78,.4],[.34,-.78,.4],[-.18,-.62,.36],[.2,-.6,.34]];C.forEach(function(c,i){orb(x,px+c[0]*s+Math.sin(t*1.2+i)*1.4,py+c[1]*s,c[2]*s,i%2?'#22c55e':'#4ade80',10);});}
+/* প্রাণী: ইমোজি ভিত্তিক */
+function emo(x,e,px,py,s){x.font=s+'px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(e,px,py);}
+/* সরল ক্রোমোজোম/অণু বিন্দুর ঝাঁক */
+function swarm(x,cx,cy,rad,n,col,t){for(var i=0;i<n;i++){var a=i*2.399+t*.3,rr_=rad*Math.sqrt((i+.5)/n);circ(x,0,cx+Math.cos(a)*rr_,cy+Math.sin(a)*rr_*.8,2.2,col,null);}}
+/* কার্ড/লেবেল */
+function chip(x,s,px,py,col,size){x.font='700 '+(size||12)+'px "Hind Siliguri",sans-serif';var w=x.measureText(s).width+16;hbox(x,px-w/2,py-11,w,22,col,.8);ft(x,s,px,py,size||12,'#fff');}
+function nbtn(x,s,px,py,w,h,col,on){x.save();x.shadowColor=col;x.shadowBlur=on?16:5;rr(x,px,py,w,h,10);x.fillStyle=on?dk(col,.2):'rgba(8,24,52,.85)';x.fill();x.strokeStyle=col;x.lineWidth=on?2.4:1.4;x.stroke();x.restore();ft(x,s,px+w/2,py+h/2+1,12,on?'#fff':lt(col,.4));}
+/* পাঠ্য মোড়ানো */
+function wrapT(x,s,px,py,mw,lh,size,col,al){x.font='700 '+size+'px "Hind Siliguri",sans-serif';var w=s.split(' '),l='',y=py,i;for(i=0;i<w.length;i++){var tt=l?l+' '+w[i]:w[i];if(x.measureText(tt).width>mw&&l){ft(x,l,px,y,size,col,al);y+=lh;l=w[i];}else l=tt;}if(l)ft(x,l,px,y,size,col,al);return y;}
+/* একটি ক্যানভাসে ক্লিক-স্থানাঙ্ক (লজিক্যাল) */
+function cpos(cv,ev){var r=cv.getBoundingClientRect(),w=cv.__lw||cv.width,h=cv.__lh||cv.height;return [(ev.clientX-r.left)/r.width*w,(ev.clientY-r.top)/r.height*h];}
+
+function rq(i,a,b){var v=Math.sin(i*12.9898+78.233)*43758.5453;v=v-Math.floor(v);return a+v*(b-a);}
+
+/* ===== সাধারণ: বাছাই (sort) ও ঘূর্ণি-রিং ===== */
+function SORT(P){
+  var S={q:shuffle(P.items),i:0,ok:0,n:0,res:0,t:0,side:0,cnt:[0,0]},id=P.id;
+  function cur(){return S.q[S.i];}
+  function intro(){$(id+'t').innerHTML=P.intro;}
+  function ans(side){if(S.res)return;var it=cur();S.n++;S.side=side;S.res=(it.t===side)?1:2;if(S.res===1){S.ok++;S.cnt[side]++;}S.t=0;
+    $(id+'t').innerHTML=(S.res===1?'✅ ঠিক! ':'❌ ভুল! ')+'<b>'+it.n+'</b> ➜ <b>'+P.names[it.t]+'</b>।<br>'+it.d;
+    setTimeout(function(){S.i++;if(S.i>=S.q.length){S.q=shuffle(S.q);S.i=0;}S.res=0;S.t=0;intro();},2300);}
+  $(id+'j').onclick=function(){ans(0);};$(id+'d').onclick=function(){ans(1);};intro();
+  DRAWS.push(function(){var x=ctxOf(id+'c'),it=cur(),W=460,H=330,u,px=230,py=165+Math.sin(FR/22)*5,sc=1,al=1;bgF(x,W,H);
+    var bins=[[10,P.colL],[W-120,P.colR]];
+    bins.forEach(function(b,k){hbox(x,b[0],176,110,128,b[1],.55);ft(x,P.names[k],b[0]+55,194,13,lt(b[1],.4));ft(x,bn(S.cnt[k]),b[0]+55,252,30,'#fff');ft(x,'সাজানো হয়েছে',b[0]+55,282,10.5,'#9bc4de');});
+    pedestal(x,230,248,70);
+    if(S.res){S.t+=DT;if(S.res===1){u=ease(S.t/.9);var tx=S.side?W-65:65;px=lerp(230,tx,u);py=lerp(165,225,u);sc=1-.45*u;al=1-.35*u;if(S.t<.9&&FR%2===0)for(var k=0;k<1;k++)circ(x,0,px+rnd(-8,8),py+rnd(-8,8),2.5,lt(P.colL,.4),null);}
+      else{px=230+Math.sin(S.t*38)*9*Math.max(0,1-S.t/.8);ring(x,230,py,52,RD,3);}}
+    x.save();x.globalAlpha=al;if(it.e){x.translate(px,py);x.scale(sc,sc);emo(x,it.e,0,0,66);x.restore();x.save();x.globalAlpha=al;hbox(x,px-70*sc,py+44*sc,140*sc,26*sc,CY,.7);ft(x,it.n,px,py+57*sc,14*sc,'#fff');}
+    else{x.translate(px,py);x.scale(sc,sc);hbox(x,-100,-34,200,68,CY,.85);ft(x,it.n,0,-8,22,'#fff');ft(x,it.en,0,20,13,'#8fd3ff');}
+    x.restore();
+    ft(x,'স্কোর: '+bn(S.ok)+' / '+bn(S.n),64,24,13,YL);ft(x,'নম্বর '+bn(S.i+1)+' / '+bn(S.q.length),W-64,24,12,'#9bc4de');
+    ft(x,P.hint,230,24,12.5,'#7dd3fc');});
+}
+function RING(id,items,getSel,pal){
+  var rot=0,last=-1;
+  DRAWS.push(function(){var x=ctxOf(id+'c'),W=460,H=330,n=items.length,s=getSel(),cx=230,cy=178,RX=172,RY=74,i,tg=Math.PI/2-s*2*Math.PI/n;bgF(x,W,H);
+    var d=((tg-rot+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;rot+=d*Math.min(1,DT*5);
+    var it=items[s];
+    if(s!==last){last=s;$(id+'t').innerHTML='<b>'+it.n+'</b> ('+it.en+')<br>'+it.d;}
+    ring(x,cx,cy+22,RX+6,'rgba(34,211,238,.35)',1.2);x.save();x.strokeStyle='rgba(34,211,238,.45)';x.lineWidth=1.4;x.beginPath();x.ellipse(cx,cy+22,RX,RY,0,0,7);x.stroke();x.restore();
+    var nodes=items.map(function(m,k){var a=rot+k*2*Math.PI/n,dp=(Math.sin(a)+1)/2;return {k:k,x:cx+Math.cos(a)*RX,y:cy+22+Math.sin(a)*RY,dp:dp,r:10+9*dp};}).sort(function(a,b){return a.dp-b.dp;});
+    nodes.forEach(function(o){var col=pal[o.k%pal.length],sel=o.k===s;if(sel)neon(x,cx,cy-20,o.x,o.y,CY,2,[5,5]);
+      x.save();x.globalAlpha=.45+.55*o.dp;orb(x,o.x,o.y,o.r+(sel?4:0),sel?'#22d3ee':col,sel?22:8);emo(x,items[o.k].e,o.x,o.y+1,(o.r+(sel?4:0))*1.15);x.restore();if(sel)ring(x,o.x,o.y,o.r+9+Math.sin(FR/9)*2,CY,2);});
+    pedestal(x,cx,cy+8,52);x.save();x.translate(0,Math.sin(FR/24)*4);emo(x,it.e,cx,cy-24,58);x.restore();
+    ft(x,it.n,cx,34,22,'#fff');ft(x,it.en,cx,58,12.5,'#7dd3fc');
+    hbox(x,cx-92,H-34,184,24,CY,.7);ft(x,'ঘুরছে: '+bn(s+1)+' / '+bn(n),cx,H-22,11.5,'#c7ecff');});
+}
+var PAL=[CY,GR,PK,YL,PU,OR,BL,'#2dd4bf','#f87171','#a3e635'];
+
+/* ===== হালকা ও মসৃণ চালানোর ব্যবস্থা (ল্যাগ কমানো) ===== */
+(function(){
+  var P=CanvasRenderingContext2D.prototype,d=Object.getOwnPropertyDescriptor(P,'shadowBlur');
+  var phone=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)||innerWidth<760;
+  window.LITE=false;
+  Object.defineProperty(P,'shadowBlur',{configurable:true,set:function(v){d.set.call(this,window.LITE?0:Math.min(v,phone?3:6));},get:function(){return d.get.call(this);}});
+  /* একসময়ে শুধু পর্দার মাঝের ল্যাবটাই চলবে */
+  var CUR=null;
+  function pick(){var best=null,bd=1e9,h=innerHeight,cs=document.querySelectorAll('canvas:not(.lbo)');for(var i=0;i<cs.length;i++){var c=cs[i];if(c.__off)continue;var r=c.getBoundingClientRect();if(r.bottom<0||r.top>h)continue;var dd=Math.abs((r.top+r.bottom)/2-h/2);if(dd<bd){bd=dd;best=c;}}CUR=best;}
+  setInterval(pick,200);setTimeout(pick,300);
+  var oc=ctxOf;
+  ctxOf=function(id){var c=$(id);if(c.__off)throw SKIP;if(CUR&&c!==CUR)throw SKIP;return oc(id);};
+  /* খুব ধীর হলে নিজে থেকে আরও হালকা মোডে যাবে */
+  var last=performance.now(),sum=0,n=0;
+  DRAWS.push(function(){var t=performance.now(),dt=t-last;last=t;if(window.LITE||dt>400)return;sum+=dt;n++;if(n===90){if(sum/n>52){window.LITE=true;var s=document.createElement('style');s.textContent='*{animation:none!important;backdrop-filter:none!important;filter:none!important}.lbs,.lbs *{box-shadow:none!important}';document.head.appendChild(s);}sum=0;n=0;}});
+})();
+
+function ARW(x,x1,y1,x2,y2,col){neon(x,x1,y1,x2,y2,col||'#e2e8f0',2);var a=Math.atan2(y2-y1,x2-x1);x.save();x.fillStyle=col||'#e2e8f0';x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-9*Math.cos(a-.4),y2-9*Math.sin(a-.4));x.lineTo(x2-9*Math.cos(a+.4),y2-9*Math.sin(a+.4));x.fill();x.restore();}
+function BX(x,t,cx,cy,w,col,on){rr(x,cx-w/2,cy-16,w,32,8);x.fillStyle=on?col:'rgba(30,41,59,.85)';x.fill();x.strokeStyle=col;x.lineWidth=on?3:1.5;x.stroke();ft(x,t,cx,cy+4,11,on?'#0f172a':'#e0f2fe');}
+/* ল্যাব ১ */
+var A1={m:0};pills('a1p',function(k){A1.m=k;});
+var A1D=[['জড় উপাদান','জীবের বাসস্থান, শ্বসনের অক্সিজেন ও পুষ্টি উপাদান জোগায়। দুই ভাগ: অজৈব বস্তু (পানি, বায়ু, খনিজ: ক্যালসিয়াম, পটাশিয়াম, লৌহ, নাইট্রোজেন, কার্বন ডাই-অক্সাইড) এবং জৈব বস্তু (মৃতদেহ ও বর্জ্য থেকে হিউমাস)।','🪨'],['ভৌত উপাদান','আলো, তাপমাত্রা, জলীয় বাষ্প, বায়ুর চাপ ও প্রবাহ, গভীরতা, উচ্চতা। এগুলো মিলে কোনো অঞ্চলের আবহাওয়া ও জলবায়ু গড়ে।','🌡️'],['জীবজ উপাদান','বাস্তুতন্ত্রের সক্রিয় উপাদান। তিন প্রকার: উৎপাদক, খাদক ও বিয়োজক।','🐾']];
+DRAWS.push(function(){var x=ctxOf('a1c'),W=460,H=330,t=FR/30,m=A1.m,D=A1D[m];bgF(x,W,H);
+ BX(x,'বাস্তুতন্ত্র',230,34,160,YL,1);
+ var xs=[80,230,380],nm=['জড়','ভৌত','জীবজ'],cl=['#fb923c','#f87171','#4ade80'];
+ for(var i=0;i<3;i++){ARW(x,230,52,xs[i],92,cl[i]);BX(x,nm[i]+' উপাদান',xs[i],108,120,cl[i],i===m);}
+ emo(x,D[2],90,190+Math.sin(t*2)*4,40);
+ wrapT(x,D[1],300,185,220,15,10,'#e0f2fe');
+ $('a1t').innerHTML='<b>'+D[0]+'</b> (বই ১৩.১.১): '+D[1]+'<br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('a1q','a1o','a1fb','a1sc',[['বাস্তুতন্ত্রের তিন প্রধান উপাদান—','জড়, ভৌত ও জীবজ',['শুধু জড়','শুধু উৎপাদক','আলো ও বাতাস'],'বই।'],['হিউমাস কোন উপাদান?','জৈব বস্তু',['অজৈব বস্তু','ভৌত উপাদান','খাদক'],'বই।'],['জীবজ উপাদান কয় প্রকার?','তিন',['দুই','চার','পাঁচ'],'বই: উৎপাদক, খাদক, বিয়োজক।']]);
+/* ল্যাব ২ */
+SORT({id:'b2',colL:'#4ade80',colR:'#f472b6',names:['উৎপাদক','খাদক'],hint:'কে কোন দলে?',intro:'জীবটি উৎপাদক না খাদক?',
+ items:[{e:'🌱',n:'সবুজ উদ্ভিদ',t:0,d:'বই: সালোকসংশ্লেষণে খাদ্য তৈরি করে।'},{e:'🌾',n:'শৈবাল (ফাইটোপ্ল্যাংকটন)',t:0,d:'বই: পুকুরের উৎপাদক।'},{e:'🌿',n:'ম্যাক্রোফাইট (পানির উদ্ভিদ)',t:0,d:'বই।'},{e:'🦗',n:'ঘাসফড়িং',t:1,d:'বই: প্রথম স্তরের খাদক (তৃণভোজী)।'},{e:'🐸',n:'ব্যাঙ',t:1,d:'বই: দ্বিতীয় স্তরের খাদক।'},{e:'🐍',n:'সাপ',t:1,d:'বই: তৃতীয় স্তরের খাদক।'},{e:'🐐',n:'ছাগল',t:1,d:'বই: তৃণভোজী, প্রথম স্তরের খাদক।'},{e:'🧑',n:'মানুষ',t:1,d:'বই: তৃণভোজী ও মাংসাশী দুই-ই (omnivorous)।'}]});
+qgame('b2q','b2o','b2fb','b2sc',[['উৎপাদককে বলে—','স্বভোজী',['পরভোজী','বিয়োজক','খাদক'],'বই।'],['তৃণভোজী প্রাণী—','প্রথম স্তরের খাদক',['উৎপাদক','তৃতীয় স্তরের খাদক','বিয়োজক'],'বই।'],['বিয়োজক—','ব্যাকটেরিয়া ও ছত্রাক',['ঘাস','হরিণ','বাঘ'],'বই।']]);
+/* ল্যাব ৩ */
+var C3={m:0};pills('c3p',function(k){C3.m=k;});
+var C3D=[['উৎপাদক','শৈবাল, ফাইটোপ্ল্যাংকটন ও ম্যাক্রোফাইট। সালোকসংশ্লেষণে খাদ্য তৈরি করে।','🌿'],['প্রথম স্তরের খাদক','ভাসমান ক্ষুদে পোকা, মশার শূককীট, জুপ্ল্যাংকটন, রুই, কাতলা। সরাসরি উৎপাদক খায়।','🦐'],['দ্বিতীয় স্তরের খাদক','ছোট মাছ, জলজ পতঙ্গ, ব্যাঙ। প্রথম স্তরের খাদক খায়।','🐟'],['তৃতীয় স্তরের খাদক','শোল, বোয়াল, ভেটকি, বক। ছোট মাছ ও চিংড়ি খায়; সর্বোচ্চ স্তর।','🐊'],['বিয়োজক','পানির কাদায় বাস করা ছত্রাক ও ব্যাকটেরিয়া। মৃতদেহ পচিয়ে জৈব-অজৈব পদার্থ ফিরিয়ে দেয়।','🍄']];
+DRAWS.push(function(){var x=ctxOf('c3c'),W=460,H=330,t=FR/30,m=C3.m,D=C3D[m];bgF(x,W,H);
+ x.fillStyle='rgba(56,189,248,.18)';rr(x,20,90,420,200,14);x.fill();
+ var ic=['🌿','🦐','🐟','🐊','🍄'];
+ for(var i=0;i<5;i++){var cx=60+i*85,cy=150+((i%2)*60);if(i===m){circ(x,0,cx,cy,30,'rgba(250,204,21,.25)',null);}emo(x,ic[i],cx,cy+Math.sin(t*2+i)*(i===m?5:1),i===m?42:30);}
+ for(i=0;i<4;i++)ARW(x,95+i*85,150+((i%2)*60),117+i*85-14,150+(((i+1)%2)*60),'rgba(250,204,21,.5)');
+ chip(x,D[0],230,30,YL,13);wrapT(x,D[1],230,300,400,14,10,'#e0f2fe');
+ $('c3t').innerHTML='<b>'+D[0]+'</b> (বই ১৩.২): '+D[1]+'<br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('c3q','c3o','c3fb','c3sc',[['পুকুরের সর্বোচ্চ স্তরের খাদক—','শোল, বোয়াল, বক',['জুপ্ল্যাংকটন','শৈবাল','ঘাসফড়িং'],'বই।'],['পুকুরের উৎপাদক—','শৈবাল ও ম্যাক্রোফাইট',['ছোট মাছ','ব্যাঙ','ছত্রাক'],'বই।'],['পুকুরের কাদায় থাকে—','বিয়োজক',['উৎপাদক','তৃতীয় খাদক','সূর্য'],'বই।']]);
+/* ল্যাব ৪ */
+var D4={m:0};pills('d4p',function(k){D4.m=k;});
+var D4D=[[['🌱 ঘাস','🦗 ফড়িং','🐸 ব্যাঙ','🐍 সাপ','🦎 গুইসাপ'],'ছোট থেকে বড় শিকারি; পরের স্তর আগেরটিকে শিকার করে। এটি সম্পূর্ণ শিকল (উৎপাদক দিয়ে শুরু)।'],[['🧑 মানুষ','🦟 মশা','🦠 ডেঙ্গু ভাইরাস'],'পরজীবী বড় পোষক থেকে খাদ্য নেয়; উৎপাদক ছাড়াই হতে পারে, তাই অসম্পূর্ণ শিকল।'],[['🦴 মৃতদেহ','🍄 ছত্রাক','🦐 কেঁচো'],'মৃতদেহ থেকে শুরু, উৎপাদক নেই; অসম্পূর্ণ শিকল।']];
+DRAWS.push(function(){var x=ctxOf('d4c'),W=460,H=330,t=FR/30,m=D4.m,D=D4D[m],n=D[0].length;bgF(x,W,H);
+ for(var i=0;i<n;i++){var cx=50+i*(360/(n-1||1)),cy=130+Math.sin(t*1.5+i)*4;if(n===3)cx=70+i*160;
+  var parts=D[0][i].split(' ');emo(x,parts[0],cx,cy,36);ft(x,parts[1],cx,cy+36,10,'#e0f2fe');
+  if(i<n-1){var nx=(n===3?70+(i+1)*160:50+(i+1)*(360/(n-1)));ARW(x,cx+26,130,nx-26,130,'rgba(250,204,21,.8)');}}
+ chip(x,['শিকারজীবী খাদ্যশিকল','পরজীবী খাদ্যশিকল','মৃতজীবী খাদ্যশিকল'][m],230,30,YL,12.5);
+ wrapT(x,D[1],230,240,400,15,10.5,'#e0f2fe');
+ $('d4t').innerHTML=D[1]+' (বই ১৩.৩)। খাদ্যশক্তি উৎপাদক থেকে শুরু হয়ে স্তরে স্তরে এগোয়।<br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('d4q','d4o','d4fb','d4sc',[['কোনটি মৃতজীবী খাদ্যশিকল?','মৃতজীব → বিয়োজক → অ্যামিবা',['ঘাস → হরিণ → বাঘ','জুপ্ল্যাংকটন → মাছ → বক','সবুজ উদ্ভিদ → পাখি → শিয়াল'],'বইয়ের নমুনা MCQ ১। আমার বিশ্লেষণ: বইয়ের সংজ্ঞা অনুযায়ী মৃতদেহ দিয়ে শুরু হওয়া শিকলই মৃতজীবী।'],['পরজীবী খাদ্যশিকল কেন অসম্পূর্ণ?','উৎপাদক নাও থাকতে পারে',['সবসময় উৎপাদক থাকে','বিয়োজক থাকে না','খুব ছোট'],'বই।'],['শিকারজীবী শিকলে প্রথম স্তরের খাদক—','আকারে সবচেয়ে ছোট',['সবচেয়ে বড়','বিয়োজক','নেই'],'বই।']]);
+/* ল্যাব ৫ */
+var E5={m:0};pills('e5p',function(k){E5.m=k;});
+var E5C=[[0,2,5],[0,1,3,5],[0,2,3,5],[0,1,2,3,5],[0,1,2,5]];
+DRAWS.push(function(){var x=ctxOf('e5c'),W=460,H=330,t=FR/30,m=E5.m,i;bgF(x,W,H);
+ var P=[[60,170],[170,70],[170,260],[280,170],[0,0],[390,170]],N=['শৈবাল','জুপ্ল্যাংকটন','ছোট মাছ','বড় মাছ','','বাজ পাখি'],EM=['🌿','🦐','🐟','🐠','','🦅'];
+ var allE=[[0,1],[0,2],[1,2],[1,3],[2,3],[2,5],[3,5]];
+ allE.forEach(function(e){var a=P[e[0]],b=P[e[1]];neon(x,a[0],a[1],b[0],b[1],'rgba(148,163,184,.35)',1.5);});
+ var ch=E5C[m];for(i=0;i<ch.length-1;i++){var a=P[ch[i]],b=P[ch[i+1]];ARW(x,a[0],a[1],b[0],b[1],YL);var u=((t*.5+i*.3)%1);circ(x,0,lerp(a[0],b[0],u),lerp(a[1],b[1],u),4,'#fff',null);}
+ [0,1,2,3,5].forEach(function(j){emo(x,EM[j],P[j][0],P[j][1],30);ft(x,N[j],P[j][0],P[j][1]+30,10,'#e0f2fe');});
+ var tx=['শৈবাল → ছোট মাছ → বাজ পাখি','শৈবাল → জুপ্ল্যাংকটন → বড় মাছ → বাজ পাখি','শৈবাল → ছোট মাছ → বড় মাছ → বাজ পাখি','শৈবাল → জুপ্ল্যাংকটন → ছোট মাছ → বড় মাছ → বাজ পাখি','শৈবাল → জুপ্ল্যাংকটন → ছোট মাছ → বাজ পাখি'][m];
+ chip(x,tx,230,305,YL,10.5);
+ $('e5t').innerHTML='বই ১৩.৪ (চিত্র ১৩.০৩): পাঁচটি খাদ্যশিকল গিঁট বেঁধে খাদ্যজাল তৈরি করে। আমার অনুমান: জালের কিছু তীর বইয়ের ছবির মতো আমি সরল করেছি; পাঁচটি শিকল বইয়ের লেখা থেকে। <b>'+tx+'</b><br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('e5q','e5o','e5fb','e5sc',[['কয়েকটি খাদ্যশিকল একত্র হলে হয়—','খাদ্যজাল',['খাদ্য পিরামিড','পুষ্টিচক্র','প্রজাতি'],'বই।'],['বইয়ের চিত্র ১৩.০৩-এ খাদ্যশিকল—','৫টি',['২টি','৩টি','৭টি'],'বই।'],['খাদ্যজালে একই খাদক—','বিভিন্ন স্তরে থাকতে পারে',['শুধু একটি স্তরে','কোথাও না','শুধু উৎপাদকে'],'বই।']]);
+/* ল্যাব ৬ */
+var F6={m:0};pills('f6p',function(k){F6.m=k;});
+DRAWS.push(function(){var x=ctxOf('f6c'),W=460,H=330,t=FR/30,m=F6.m,i;bgF(x,W,H);
+ var N=[['☀️',230,40],['🌿',70,170],['🐐',230,110],['🐅',390,170],['🍄',230,270]];
+ N.forEach(function(n,j){emo(x,n[0],n[1],n[2],34);});
+ ft(x,'উৎপাদক',70,205,10,'#bbf7d0');ft(x,'তৃণভোজী',230,145,10,'#e0f2fe');ft(x,'মাংসাশী',390,205,10,'#e0f2fe');ft(x,'বিয়োজক',230,305,10,'#fde68a');
+ if(m===0){var segs=[[1,2],[2,3],[3,4],[2,4],[1,4],[4,1]];segs.forEach(function(s,k){var a=N[s[0]],b=N[s[1]];neon(x,a[1],a[2],b[1],b[2],'rgba(74,222,128,.5)',2);var u=((t*.4+k*.17)%1);circ(x,0,lerp(a[1],b[1],u),lerp(a[2],b[2],u),4,'#4ade80',null);});chip(x,'পুষ্টিদ্রব্য ঘুরে ঘুরে ফেরে (চক্র)',230,320,GR,11);}
+ else{neon(x,230,60,70,150,'rgba(250,204,21,.7)',2.5);ARW(x,70,170,230,115,YL);ARW(x,230,115,390,160,YL);for(i=0;i<3;i++){var u=((t*.35+i*.33)%1);circ(x,0,lerp(230,70,u),lerp(60,160,u),5,'#fde047',null);}
+  [[70,170],[230,110],[390,170]].forEach(function(p){for(var k=0;k<3;k++)circ(x,0,p[0]+10+k*8,p[1]-30-((t*30+k*10)%40),2.5,'#f87171',null);});
+  ft(x,'তাপ হয়ে বেরিয়ে যায়',230,225,10,'#fecaca');chip(x,'শক্তি একমুখী: সূর্য → উৎপাদক → খাদক',230,320,YL,11);}
+ $('f6t').innerHTML=m===0?'বই ১৩.৪: উদ্ভিদ অজৈব বস্তু নিয়ে খাদ্য তৈরি করে; খাদক ও বিয়োজকের মধ্য দিয়ে সেই পুষ্টি আবার অজৈব রূপে পরিবেশে ফেরে। এই চক্রাকার প্রবাহই পুষ্টিপ্রবাহ।':'বই ১৩.৪: শক্তির মূল উৎস সূর্য; সূর্যের আলোর বড়জোর ২% সালোকসংশ্লেষণে ব্যবহার হয়। শক্তির প্রবাহ একমুখী, কখনো উল্টো দিকে যায় না। প্রতি স্তরে শক্তির কিছু তাপ হয়ে হারিয়ে যায়।<br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('f6q','f6o','f6fb','f6sc',[['বাস্তুতন্ত্রে শক্তির মূল উৎস—','সূর্য',['মাটি','পানি','বাতাস'],'বই।'],['শক্তির প্রবাহ—','একমুখী',['চক্রাকার','দ্বিমুখী','নেই'],'বই।'],['পুষ্টিদ্রব্য আবার অজৈব রূপে ফিরিয়ে দেয়—','বিয়োজক',['উৎপাদক','বাঘ','সূর্য'],'বই।']]);
+/* ল্যাব ৭ */
+var G7={m:0};pills('g7p',function(k){G7.m=k;});
+var G7D=[['১ম ট্রফিক লেভেল','উৎপাদক (শৈবাল, ফাইটোপ্ল্যাংকটন): সবচেয়ে বেশি শক্তি। বইয়ের পিরামিডে ১০০ একক।','🌿',100],['২য় ট্রফিক লেভেল','তৃণভোজী/জুপ্ল্যাংকটন: ১০ একক।','🦐',10],['৩য় ট্রফিক লেভেল','জুপ্ল্যাংকটনভোজী ছোট মাছ: ১ একক।','🐟',1],['৪র্থ ট্রফিক লেভেল','মাংসাশী প্রাণী: ০.১ একক। সবচেয়ে কম শক্তি।','🐠',0.1]];
+DRAWS.push(function(){var x=ctxOf('g7c'),W=460,H=330,m=G7.m,D=G7D[m],i;bgF(x,W,H);
+ var cols=['#4ade80','#a3e635','#fbbf24','#f87171'];
+ for(i=0;i<4;i++){var y=270-i*60,w=360-i*80;x.beginPath();x.moveTo(230-w/2,y);x.lineTo(230+w/2,y);x.lineTo(230+(w-80)/2,y-55);x.lineTo(230-(w-80)/2,y-55);x.closePath();x.fillStyle=i===m?cols[i]:cols[i]+'55';x.fill();x.strokeStyle='#fff';x.lineWidth=i===m?3:1;x.stroke();ft(x,bn(G7D[i][3]),230,y-22,13,i===m?'#0f172a':'#e0f2fe');}
+ emo(x,D[2],60,150,38);chip(x,D[0],340,30,YL,12);
+ wrapT(x,D[1],230,300,400,14,10,'#e0f2fe');
+ $('g7t').innerHTML='<b>'+D[0]+'</b> (বই ১৩.৪, চিত্র ১৩.০৬): '+D[1]+' পিরামিডের গোড়ায় উৎপাদক, উপরে চূড়ান্ত খাদক। ছবিতে ১০০, ১০, ১, ০.১ বইয়ের সংখ্যা।<br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('g7q','g7o','g7fb','g7sc',[['শক্তি পিরামিডের ভিত্তিতে থাকে—','উৎপাদক',['চূড়ান্ত খাদক','বিয়োজক','সূর্য'],'বই।'],['কোন লেভেলে শক্তি সবচেয়ে কম?','চূড়ান্ত খাদক',['উৎপাদক','তৃণভোজী','বিয়োজক'],'বই।'],['একটি ট্রফিক লেভেলের শক্তির প্রায় কত অংশ পরের লেভেলে যায়?','১০%',['৯০%','৫০%','১০০%'],'বই।']]);
+
+/* ল্যাব ৮ */
+DRAWS.push(function(){var x=ctxOf('h8c'),W=460,H=330,t=FR/30,n=+$('h8k').value,i;$('h8kv').textContent=bn(n);bgF(x,W,H);
+ var em=['🌿','🐛','🐸','🐍','🦅'],e=100;
+ for(i=0;i<5;i++){var cx=45+i*92,on=i<n;var v=100/Math.pow(10,i);var h=on?Math.max(4,Math.min(150,Math.log(v*100+1)/Math.log(10001)*150)):0;
+  x.fillStyle=on?'#4ade80':'rgba(100,116,139,.3)';x.fillRect(cx-22,260-h,44,h);emo(x,em[i],cx,285+Math.sin(t*2+i)*2,on?28:20);
+  if(on)ft(x,bn(+v.toFixed(2))+'%',cx,250-h,11,'#fde047');if(i>0&&on)ft(x,'১০%',cx-46,200,9,'#fecaca');}
+ chip(x,n+'' ==='5'?'পঞ্চম ধাপে প্রায় কিছুই বাকি নেই':'শক্তি প্রতি ধাপে প্রায় ১০% থাকে',230,30,YL,11.5);
+ $('h8t').innerHTML='বই ১৩.৪: প্রতি ধাপে প্রায় ৯০% শক্তি তাপ হিসেবে হারায়; তাই খাদ্যশিকল সাধারণত ৪-৫ ধাপের মধ্যে সীমাবদ্ধ। আমার হিসাব: ১০০% থেকে প্রতি ধাপে ১০% ধরলে ১০০, ১০, ১, ০.১, ০.০১% (পঞ্চমটি আমার গণনা, বইয়ে নেই)।<br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('h8q','h8o','h8fb','h8sc',[['প্রতি ধাপে শক্তির কত অংশ হারায়?','প্রায় ৯০%',['১০%','৫০%','০%'],'বই।'],['খাদ্যশিকল সাধারণত কয় ধাপে সীমাবদ্ধ?','৪-৫ ধাপ',['১০ ধাপ','২০ ধাপ','১ ধাপ'],'বই।'],['শিকল যত লম্বা হয় উপরের স্তরে শক্তি—','তত কম',['তত বেশি','সমান','দ্বিগুণ'],'বই।']]);
+/* ল্যাব ৯ */
+var I9={m:0};pills('i9p',function(k){I9.m=k;});
+var I9D=[['প্রজাতিগত বৈচিত্র্য','এক প্রজাতি থেকে অন্য প্রজাতি ভিন্ন; যেমন বাঘ ও হরিণের আকার, স্বভাব, হিংস্রতা ভিন্ন। বিশ্বে প্রায় ১৩ লক্ষ প্রাণী-প্রজাতি ও ৪ লক্ষ উদ্ভিদ-প্রজাতি শনাক্ত হয়েছে।','🐅🦌'],['বংশগতীয় বৈচিত্র্য','একই প্রজাতির সদস্যদের মধ্যেও পার্থক্য (গড়ন, আকার, রোগ-প্রতিরোধ ক্ষমতা), জিনের সামান্য ভিন্নতার কারণে। মানুষ একই প্রজাতি, তবু সবাই হুবহু এক নয়।','🧑‍🤝‍🧑'],['বাস্তুতান্ত্রিক বৈচিত্র্য','বন, তৃণভূমি, হ্রদ, নদী, জলাভূমি, পাহাড়, সাগর, মরুভূমি: প্রতিটি বাস্তুতন্ত্র নিজস্ব বৈশিষ্ট্যের জীব সম্প্রদায় গড়ে।','🌲🏜️']];
+DRAWS.push(function(){var x=ctxOf('i9c'),W=460,H=330,t=FR/30,m=I9.m,D=I9D[m],i;bgF(x,W,H);
+ if(m===0){var e=['🐅','🦌','🐘','🦜','🐍'];for(i=0;i<5;i++)emo(x,e[i],60+i*85,110+Math.sin(t*2+i)*5,38);}
+ if(m===1){for(i=0;i<6;i++){circ(x,0,60+i*65,110+Math.sin(t*2+i)*4,22,['#fcd34d','#fdba74','#fda4af','#fcd34d','#d6a56b','#fca5a5'][i],null);ft(x,'😀',60+i*65,118+Math.sin(t*2+i)*4,22,'#000');}ft(x,'একই প্রজাতি, ভিন্ন বৈশিষ্ট্য',230,175,11,'#fde68a');}
+ if(m===2){var e2=['🌲','🏞️','🌊','🏔️','🏜️'];for(i=0;i<5;i++)emo(x,e2[i],60+i*85,110+Math.sin(t*2+i)*5,38);}
+ chip(x,D[0],230,30,YL,13);wrapT(x,D[1],230,215,400,15,10.5,'#e0f2fe');
+ $('i9t').innerHTML='<b>'+D[0]+'</b> (বই ১৩.৫.১): '+D[1]+'<br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('i9q','i9o','i9fb','i9sc',[['বাঘ ও হরিণের পার্থক্য—','প্রজাতিগত বৈচিত্র্য',['বংশগতীয় বৈচিত্র্য','বাস্তুতান্ত্রিক বৈচিত্র্য','নেই'],'বই।'],['জিনের ভিন্নতার কারণে একই প্রজাতিতে পার্থক্য—','বংশগতীয় বৈচিত্র্য',['প্রজাতিগত','বাস্তুতান্ত্রিক','কোনোটিই নয়'],'বই।'],['বন, নদী, মরুভূমি—','বাস্তুতান্ত্রিক বৈচিত্র্য',['প্রজাতিগত','বংশগতীয়','জিনগত'],'বই।']]);
+/* ল্যাব ১০ */
+var J10={m:0};pills('j10p',function(k){J10.m=k;});
+var J10D=[['ঝিনুক','যুক্তরাষ্ট্রের চেসাপিক উপকূলে ছিল অসংখ্য ঝিনুক; মাত্র তিন দিনে গোটা এলাকার পানি পরিশুদ্ধ করত। এখন শতকরা ৯৯ ভাগ বিলুপ্ত, তাই পানি কর্দমাক্ত ও অক্সিজেন কম।','🦪',99],['পেঁচা','একজোড়া ইঁদুর বছরে বংশ বিস্তারে ৮৮০ টিতে পৌঁছাতে পারে; একটি পেঁচা দিনে কমপক্ষে ৩টি ইঁদুর খায়। ইঁদুর ফসলের ক্ষতি করে, পেঁচা সংখ্যা নিয়ন্ত্রণে রাখে।','🦉',3],['শকুন-চিল-কাক','মৃতদেহ খেয়ে প্রকৃতির জঞ্জাল পরিষ্কার করে; না হলে রোগজীবাণুতে পৃথিবী সয়লাব হয়ে যেত।','🦅',0]];
+DRAWS.push(function(){var x=ctxOf('j10c'),W=460,H=330,t=FR/30,m=J10.m,D=J10D[m],i;bgF(x,W,H);
+ emo(x,D[2],90,100+Math.sin(t*2)*4,52);
+ if(m===0){for(i=0;i<10;i++)emo(x,'🦪',230+(i%5)*40,80+Math.floor(i/5)*40,i===0?26:20);ft(x,'১০০ ঝিনুকের মধ্যে ৯৯টি শেষ',330,150,10,'#fecaca');}
+ if(m===1){for(i=0;i<8;i++)emo(x,'🐭',230+(i%4)*45,85+Math.floor(i/4)*40+Math.sin(t*3+i)*2,22);emo(x,'🦉',420,110,30);ft(x,'দিনে ৩টি ইঁদুর খায়',330,160,10,'#fde68a');}
+ if(m===2){emo(x,'🐄',250,110,30);emo(x,'🦅',340,80+Math.sin(t*2)*5,30);emo(x,'🐦‍⬛',410,110,26);ft(x,'জঞ্জাল পরিষ্কার',330,160,10,'#bbf7d0');}
+ chip(x,D[0],230,30,YL,13);wrapT(x,D[1],230,215,400,15,10.5,'#e0f2fe');
+ $('j10t').innerHTML='<b>'+D[0]+'</b> (বই ১৩.৫.১): '+D[1]+' তাই কোনো জীবকেই অপ্রয়োজনীয় বলা যায় না।<br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('j10q','j10o','j10fb','j10sc',[['ঝিনুক তিন দিনে করত—','এলাকার পানি পরিশুদ্ধ',['মাছ ধরা','বন কাটা','ফসল ফলানো'],'বই।'],['ইঁদুরের সংখ্যা নিয়ন্ত্রণে রাখে—','পেঁচা',['হরিণ','ঘাস','মাছ'],'বই।'],['শকুন প্রকৃতির জন্য—','জঞ্জাল পরিষ্কার করে',['ফসল খায়','পানি দূষিত করে','কিছুই না'],'বই।']]);
+/* ল্যাব ১১ */
+var K11={m:0};pills('k11p',function(k){K11.m=k;});
+DRAWS.push(function(){var x=ctxOf('k11c'),W=460,H=330,t=FR/30,m=K11.m,i;bgF(x,W,H);
+ if(m===0){emo(x,'🐝',90,100+Math.sin(t*3)*8,40);emo(x,'🌸',230,100,40);emo(x,'🌱',380,100,36);
+  ARW(x,120,100,200,100,'#4ade80');ARW(x,260,100,340,100,'#4ade80');
+  ft(x,'মৌমাছি: মধু পায়',90,150,10,'#fde68a');ft(x,'ফুল: পরাগায়ন',230,150,10,'#fbcfe8');ft(x,'রাইজোবিয়াম ➜ শিমের মূল: নাইট্রোজেন',390,150,9.5,'#bbf7d0');
+  chip(x,'দুজনেরই লাভ',230,215,GR,13);}
+ else{emo(x,'🌳',130,100,50);emo(x,'🌿',150,60,30);emo(x,'🌲',330,100,50);emo(x,'🌱',320,60,30);
+  ft(x,'পরাশ্রয়ী উদ্ভিদ: জায়গা পায়',130,160,10,'#bbf7d0');ft(x,'আশ্রয়দাতার ক্ষতি নেই',130,175,10,'#fde68a');ft(x,'রোহিণী: ওপরে উঠে আলো পায়',330,160,10,'#bbf7d0');
+  chip(x,'একজনের লাভ, অন্যের ক্ষতিও নেই',230,225,YL,12);}
+ chip(x,['মিউচুয়ালিজম','কমেনসালিজম'][m],230,30,YL,13);
+ var tx=['মিউচুয়ালিজম: সহযোগী দুজনেই উপকৃত। উদাহরণ: মৌমাছি ও ফুল; শিমজাতীয় উদ্ভিদ ও রাইজোবিয়াম ব্যাকটেরিয়া (গুটি/নডিউল); শৈবাল ও ছত্রাকের লাইকেন।','কমেনসালিজম: একজন উপকৃত, অন্যজন উপকৃতও হয় না ক্ষতিগ্রস্তও হয় না। উদাহরণ: পরাশ্রয়ী উদ্ভিদ (অ্যাপোফাইট) ও রোহিণী লতা।'][m];
+ $('k11t').innerHTML=tx+' (বই ১৩.৫.২)<br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('k11q','k11o','k11fb','k11sc',[['কমেনসেলিজমের মাধ্যমে— i. আশ্রয়দাতার কোনোরূপ ক্ষতি হয় না ii. আশ্রয়দাতা ও আশ্রয় গ্রহণকারী উভয়ই উপকৃত হয় iii. শুধু আশ্রয়গ্রহণকারী উপকৃত হয়','i ও iii',['i ও ii','ii ও iii','i, ii ও iii'],'বইয়ের নমুনা MCQ ২। আমার বিশ্লেষণ: বইয়ের সংজ্ঞা অনুযায়ী একজন উপকৃত, অন্যের ক্ষতি নেই।'],['ফুলে ফুলে মধু সংগ্রহ কোন আন্তঃক্রিয়া?','মিউচুয়ালিজম',['শোষণ','প্রতিযোগিতা','অ্যান্টিবায়োসিস'],'বইয়ের সংক্ষিপ্ত প্রশ্ন ৩।'],['শিমের মূলের নডিউলে থাকে—','রাইজোবিয়াম ব্যাকটেরিয়া',['শৈবাল','ছত্রাক','ভাইরাস'],'বই।']]);
+/* ল্যাব ১২ */
+var L12={m:0};pills('l12p',function(k){L12.m=k;});
+DRAWS.push(function(){var x=ctxOf('l12c'),W=460,H=330,t=FR/30,m=L12.m,i;bgF(x,W,H);
+ if(m===0){emo(x,'🌿',100,100,44);emo(x,'🧵',230,100+Math.sin(t*3)*3,36);emo(x,'🌳',360,100,44);ARW(x,320,100,260,100,'#f87171');ft(x,'স্বর্ণলতা আশ্রয়দাতা থেকে খাদ্য নেয়',230,165,10,'#fecaca');ft(x,'কোকিল কাকের বাসায় ডিম পাড়ে',230,185,10,'#fecaca');chip(x,'এক পক্ষের ক্ষতি',230,230,RD,12);}
+ if(m===1){emo(x,'🌱',100,100,34);emo(x,'🌱',160,100,34);emo(x,'🌱',220,100,34);emo(x,'☀️',350,70,36);ARW(x,260,100,320,85,'#fde047');ft(x,'আলো, বাতাস, পানি, খাদ্যের জন্য',230,165,10.5,'#fde68a');chip(x,'দুই পক্ষেরই ক্ষতি হতে পারে',230,230,RD,12);}
+ if(m===2){x.fillStyle='rgba(148,163,184,.2)';x.beginPath();x.arc(150,120,70,0,7);x.fill();x.strokeStyle='#94a3b8';x.stroke();for(i=0;i<16;i++)circ(x,0,100+((i*29)%100),80+((i*41)%80),4,'#4ade80',null);circ(x,0,200,120,22,'rgba(244,63,94,.35)',null);ft(x,'ছত্রাক পদার্থ',270,95,10,'#fecaca');ft(x,'বাধাগ্রস্ত অঞ্চল',270,150,10,'#fecaca');ft(x,'ফ্লেমিং: পেনিসিলিন',230,205,10.5,'#fde68a');chip(x,'অ্যান্টিবায়োসিস',230,245,RD,12);}
+ chip(x,['শোষণ','প্রতিযোগিতা','অ্যান্টিবায়োসিস'][m],230,30,YL,13);
+ var tx=['শোষণ (Exploitation): একজন অন্যকে প্রত্যক্ষ বা পরোক্ষভাবে বঞ্চিত করে নিজের অধিকার ভোগ করে; যেমন স্বর্ণলতা, কোকিল-কাক।','প্রতিযোগিতা: আলো, বাতাস, পানি ও খাদ্যের জন্য; সুবিধাজনক বৈশিষ্ট্যের জীব টিকে থাকে।','অ্যান্টিবায়োসিস: একটি জীবের রাসায়নিক পদার্থে অন্যের বৃদ্ধি বাধাগ্রস্ত বা মৃত্যু ঘটে; আলেকজান্ডার ফ্লেমিং পেনিসিলিয়াম ছত্রাকে পেনিসিলিন আবিষ্কার করেন।'][m];
+ $('l12t').innerHTML=tx+' (বই ১৩.৫.২)<br><small>ছবি সরল, আমার আঁকা।</small>';});
+qgame('l12q','l12o','l12fb','l12sc',[['স্বর্ণলতা কোন ধরনের আন্তঃক্রিয়া?','শোষণ',['মিউচুয়ালিজম','কমেনসালিজম','প্রতিযোগিতা'],'বই।'],['পেনিসিলিন আবিষ্কারে ফ্লেমিং দেখেন—','অ্যান্টিবায়োসিস',['শোষণ','মিউচুয়ালিজম','পরাগায়ন'],'বই।'],['ঋণাত্মক আন্তঃক্রিয়ায়—','একটি বা উভয় জীবের ক্ষতি',['দুজনেরই লাভ','কারও ক্ষতি নেই','একজনের লাভ, অন্যের ক্ষতি নেই'],'বই।']]);
+/* ল্যাব ১৩ */
+SORT({id:'m13',colL:'#4ade80',colR:'#f87171',names:['ধনাত্মক','ঋণাত্মক'],hint:'কোন ধরন?',intro:'আন্তঃক্রিয়াটি ধনাত্মক না ঋণাত্মক?',
+ items:[{e:'🐝',n:'মৌমাছি ও ফুল',t:0,d:'বই: মিউচুয়ালিজম।'},{e:'🌱',n:'শিম ও রাইজোবিয়াম',t:0,d:'বই: মিউচুয়ালিজম।'},{e:'🌿',n:'রোহিণী ও বড় গাছ',t:0,d:'বই: কমেনসালিজম, ধনাত্মক।'},{e:'🍄',n:'লাইকেন (শৈবাল ও ছত্রাক)',t:0,d:'বই: মিউচুয়ালিজম।'},{e:'🧵',n:'স্বর্ণলতা',t:1,d:'বই: শোষণ।'},{e:'🐦',n:'কোকিল ও কাকের বাসা',t:1,d:'বই: শোষণ।'},{e:'🌾',n:'আলো-পানির জন্য গাছের লড়াই',t:1,d:'বই: প্রতিযোগিতা।'},{e:'🧫',n:'পেনিসিলিয়াম ও ব্যাকটেরিয়া',t:1,d:'বই: অ্যান্টিবায়োসিস।'}]});
+qgame('m13q','m13o','m13fb','m13sc',[['ধনাত্মক আন্তঃক্রিয়ার দুটি ধরন—','মিউচুয়ালিজম ও কমেনসালিজম',['শোষণ ও প্রতিযোগিতা','অ্যান্টিবায়োসিস ও শোষণ','কোনোটিই নয়'],'বই।'],['ঋণাত্মক আন্তঃক্রিয়ার তিন ভাগ—','শোষণ, প্রতিযোগিতা, অ্যান্টিবায়োসিস',['মিউচুয়ালিজম ও কমেনসালিজম','দুটি','কোনোটিই নয়'],'বই।'],['আন্তঃক্রিয়ার ধারণা দেন—','ওডাম (পরিবেশবিজ্ঞানী)',['ডারউইন','মেন্ডেল','ফ্লেমিং'],'বই।']]);
+
+var QUIZ=[];function M(q,c,w,e,fix){var o=[c].concat(w);QUIZ.push({q:q,o:o,a:0,e:e,fix:!!fix});}
+M('বাস্তুতন্ত্রের জড় উপাদান—','অজৈব ও জৈব বস্তু',['শুধু আলো', 'শুধু উৎপাদক', 'বিয়োজক'],'বই অধ্যায় ১৩।');
+M('হিউমাস তৈরি হয়—','মৃতদেহ ও বর্জ্য থেকে',['পানি থেকে', 'আলো থেকে', 'বাতাস থেকে'],'বই অধ্যায় ১৩।');
+M('আবহাওয়া ও জলবায়ু গঠন করে—','ভৌত উপাদান',['জড় উপাদান', 'জীবজ উপাদান', 'বিয়োজক'],'বই অধ্যায় ১৩।');
+M('উৎপাদক—','সবুজ উদ্ভিদ',['ব্যাঙ', 'বাঘ', 'ছত্রাক'],'বই অধ্যায় ১৩।');
+M('উৎপাদককে বলা হয়—','স্বভোজী',['পরভোজী', 'মৃতজীবী', 'বিয়োজক'],'বই অধ্যায় ১৩।');
+M('প্রথম স্তরের খাদক—','তৃণভোজী',['মাংসাশী', 'বিয়োজক', 'উৎপাদক'],'বই অধ্যায় ১৩।');
+M('সর্বভুক খাদকের উদাহরণ—','মানুষ',['গরু', 'বাঘ', 'সাপ'],'বই অধ্যায় ১৩।');
+M('কাক, শকুন, শিয়াল—','আবর্জনাভুক',['উৎপাদক', 'তৃণভোজী', 'পরজীবী'],'বই অধ্যায় ১৩।');
+M('বিয়োজক—','ছত্রাক ও ব্যাকটেরিয়া',['শৈবাল', 'ঘাস', 'মাছ'],'বই অধ্যায় ১৩।');
+M('পুকুরের উৎপাদক—','শৈবাল ও ম্যাক্রোফাইট',['রুই', 'শোল', 'বক'],'বই অধ্যায় ১৩।');
+M('পুকুরের তৃতীয় স্তরের খাদক—','শোল, বোয়াল, বক',['জুপ্ল্যাংকটন', 'ব্যাঙ', 'রুই'],'বই অধ্যায় ১৩।');
+M('ঘাস → ফড়িং → ব্যাঙ → সাপ শিকলে ব্যাঙ—','দ্বিতীয় স্তরের খাদক',['উৎপাদক', 'প্রথম স্তরের খাদক', 'বিয়োজক'],'বই অধ্যায় ১৩।');
+M('পরজীবী খাদ্যশিকল—','মানুষ → মশা → ডেঙ্গু ভাইরাস',['ঘাস → ফড়িং', 'মৃতদেহ → ছত্রাক', 'শৈবাল → মাছ'],'বই অধ্যায় ১৩।');
+M('মৃতজীবী খাদ্যশিকল শুরু হয়—','মৃতদেহ থেকে',['সূর্য থেকে', 'উৎপাদক থেকে', 'জল থেকে'],'বই অধ্যায় ১৩।');
+M('কয়েকটি খাদ্যশিকল মিলে—','খাদ্যজাল',['পিরামিড', 'চক্র', 'প্রজাতি'],'বই অধ্যায় ১৩।');
+M('শক্তিপ্রবাহ—','একমুখী',['চক্রাকার', 'দ্বিমুখী', 'কোনোটিই নয়'],'বই অধ্যায় ১৩।');
+M('পুষ্টিপ্রবাহ—','চক্রাকার',['একমুখী', 'নেই', 'শুধু তাপ'],'বই অধ্যায় ১৩।');
+M('শক্তির মূল উৎস—','সূর্য',['মাটি', 'পানি', 'বাতাস'],'বই অধ্যায় ১৩।');
+M('পরের স্তরে শক্তির প্রায়—','১০% যায়',['৯০% যায়', 'সব যায়', '২০০%'],'বই অধ্যায় ১৩।');
+M('শক্তি পিরামিডে সর্বনিম্ন স্তরে—','উৎপাদক',['চূড়ান্ত খাদক', 'বিয়োজক', 'মাংসাশী'],'বই অধ্যায় ১৩।');
+M('খাদ্যশিকল ৪-৫ ধাপে সীমিত, কারণ—','শক্তি ক্রমশ কমে',['শক্তি বাড়ে', 'কারণ নেই', 'সূর্য নেই'],'বই অধ্যায় ১৩।');
+M('জীববৈচিত্র্যের প্রকার—','তিনটি',['একটি', 'দুটি', 'পাঁচটি'],'বই অধ্যায় ১৩।');
+M('মানুষের মধ্যে ভিন্নতা—','বংশগতীয় বৈচিত্র্য',['প্রজাতিগত', 'বাস্তুতান্ত্রিক', 'কোনোটিই নয়'],'বই অধ্যায় ১৩।');
+M('ঝিনুক পরিষ্কার করত—','পানি',['বাতাস', 'মাটি', 'আলো'],'বই অধ্যায় ১৩।');
+M('ইঁদুরের সংখ্যা নিয়ন্ত্রণ করে—','পেঁচা',['ঘাস', 'গরু', 'মাছ'],'বই অধ্যায় ১৩।');
+M('মিউচুয়ালিজম—','উভয় সহযোগী উপকৃত',['একজন ক্ষতিগ্রস্ত', 'কারও লাভ নেই', 'শুধু একজন উপকৃত'],'বই অধ্যায় ১৩।');
+M('কমেনসালিজমে—','একজন উপকৃত, অন্যজনের ক্ষতি নেই',['দুজনই উপকৃত', 'দুজনই ক্ষতিগ্রস্ত', 'একজন ক্ষতিগ্রস্ত'],'বই অধ্যায় ১৩।');
+M('অ্যান্টিবায়োসিস দেখান—','ফ্লেমিং (পেনিসিলিন)',['ডারউইন', 'মেন্ডেল', 'ওডাম'],'বই অধ্যায় ১৩।');
+M('গ্রিনহাউস গ্যাস—','CO₂ ও CH₄',['O₂ ও N₂', 'H₂ ও He', 'শুধু O₂'],'বই অধ্যায় ১৩।');
+M('গ্রিনহাউস ইফেক্টের ফল—','সমুদ্রের উচ্চতা বৃদ্ধি',['বরফ বাড়ে', 'তাপ কমে', 'কিছু না'],'বই অধ্যায় ১৩।');
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+var QA=[
+{h:'বহুনির্বাচনি (বইয়ের নমুনা, উত্তর আমার বিশ্লেষণ)',items:[
+['১. কোনটি মৃতজীবী খাদ্যশৃঙ্খল? (ক. ঘাস→হরিণ→বাঘ খ. জুপ্ল্যাংকটন→মাছ→বক গ. মৃতজীব→বিয়োজক→অ্যামিবা ঘ. সবুজ উদ্ভিদ→পাখি→শিয়াল)','গ. মৃতজীব→বিয়োজক→অ্যামিবা (মৃতদেহ দিয়ে শুরু)।'],
+['২. কমেনসেলিজমের মাধ্যমে— i. আশ্রয়দাতার কোনোরূপ ক্ষতি হয় না ii. উভয়ই উপকৃত iii. শুধু আশ্রয়গ্রহণকারী উপকৃত','ক. i ও iii।'],
+['৩. উদ্দীপকে চিত্রে কয়টি খাদ্যশৃঙ্খল রয়েছে? (ক. ১টি খ. ২টি গ. ৩টি ঘ. ৪টি)','আমার অনুমান: চিত্রে সবুজ উদ্ভিদ থেকে তিনটি পথ (ঘাসফড়িং → ছোট পাখি → সাপ → ঈগল; সবুজ উদ্ভিদ → ছোট পাখি → সাপ → ঈগল; সবুজ উদ্ভিদ → ছোট মাছ ইত্যাদি) আছে। চিত্র দেখে গুনে শিক্ষকের সাথে মিলিয়ে নিও।'],
+['৪. উদ্দীপকে দ্বিতীয় স্তরের খাদক কোনটি? (ক. ছোট মাছ খ. সাপ গ. খরগোশ ঘ. ঘাসফড়িং)','আমার অনুমান: ছবিতে ঘাসফড়িং প্রথম স্তরের খাদক হওয়ায় তার পরের স্তর ছোট পাখি; তাই বিকল্প অনুযায়ী উত্তর চিত্র দেখে মিলিয়ে নিও।']]},
+{h:'সৃজনশীল প্রশ্ন (উত্তর আমার লেখা, শিক্ষকের সাথে মিলিয়ে নিও)',items:[
+['১. উদ্দীপকে খাদ্যজাল: সবুজ উদ্ভিদ, সবুজ পোকা, মাংসাশী পতঙ্গ, ছোট পাখি, শামুক, খরগোশ, শেয়াল। (ক) বিয়োজক কী? (খ) জীববৈচিত্র্য সংরক্ষণ অত্যাবশ্যক কেন? (গ) কোন খাদ্যশৃঙ্খলে সবচেয়ে বেশি শক্তি ব্যয় হয়? (ঘ) ছোট পাখির বিলুপ্তি ঘটলে বাস্তুতন্ত্রের পরিণতি','(ক) ব্যাকটেরিয়া, ছত্রাকের মতো অণুজীব যারা মৃতদেহ পচিয়ে জড় পদার্থ পরিবেশে ফেরায়। (খ) আমার বিশ্লেষণ: বইয়ে বলা, একটি প্রজাতির বিলুপ্তি বাস্তুতন্ত্রের স্থিতিশীলতা নষ্ট করতে পারে (ঝিনুক, পেঁচার উদাহরণ)। (গ) আমার বিশ্লেষণ: যে শৃঙ্খল সবচেয়ে লম্বা (বেশি ধাপের), সেখানে শক্তি সবচেয়ে বেশি হারায়, কারণ প্রতি ধাপে ~৯০% তাপ হয়ে যায়। (ঘ) আমার বিশ্লেষণ: ছোট পাখি না থাকলে তার শিকার (পোকা, শামুক) বেড়ে উৎপাদকের ক্ষতি করবে ও শেয়ালের খাদ্য কমবে; বাস্তুতন্ত্রের ভারসাম্য ব্যাহত হবে।'],
+['২. প্রভা নদীর তীরে ভাসমান কচুরিপানা, কলমি, মাছরাঙা পাখি ছোট মাছ ধরে; বাগানে হলুদ লতানো উদ্ভিদ বড় গাছ ছেয়ে ফেলেছে। (ক) জীববৈচিত্র্য কী? (খ) গ্রিন হাউস ইফেক্ট কী? (গ) বাগানে কোন আন্তঃক্রিয়া? (ঘ) নদীর তীরের উদ্ভিদ-প্রাণীরা পরিবেশে কী ভূমিকা রাখছে?','(ক) পৃথিবীর জীবগুলোর প্রাচুর্য ও ভিন্নতা। (খ) CO₂, CH₄, N₂O ইত্যাদি বাড়ায় বায়ুর তাপমাত্রা বেড়ে যাওয়া। (গ) আমার বিশ্লেষণ: হলুদ লতানো উদ্ভিদ স্বর্ণলতার মতো; আশ্রয়দাতা থেকে খাদ্য নেয়, তাই শোষণ (ঋণাত্মক)। (ঘ) আমার বিশ্লেষণ: কচুরিপানা-কলমি উৎপাদক; মাছরাঙা খাদক; তারা খাদ্যশিকলে শক্তি ও পুষ্টি প্রবাহ বজায় রেখে ভারসাম্য রক্ষা করছে।']]},
+{h:'সংক্ষিপ্ত প্রশ্ন (উত্তর আমার লেখা)',items:[
+['১. শকুনকে প্রকৃতির ধাঙড় বলা হয় কেন?','শকুন মৃতদেহ খেয়ে জঞ্জাল পরিষ্কার করে, রোগ ছড়াতে দেয় না।'],
+['২. পরজীবী খাদ্যশিকলকে কেন অসম্পূর্ণ বলা হয়?','এতে উৎপাদক নাও থাকতে পারে, শিকল সবসময় সবুজ উদ্ভিদ দিয়ে শুরু হয় না।'],
+['৩. ‘মৌমাছির ফুলে ফুলে মধু সংগ্রহ’ কোন আন্তঃক্রিয়া?','মিউচুয়ালিজম: মৌমাছি মধু পায়, ফুলের পরাগায়ন হয়।'],
+['৪. একই প্রজাতির মধ্যেও বৈচিত্র্য কেন?','জিনের গঠনের সামান্য ভিন্নতার কারণে (বংশগতীয় বৈচিত্র্য)।']]}
+];
+
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+function frame(){FR++;if(document.hidden||(FR&1)){requestAnimationFrame(frame);return;}for(var i=0;i<DRAWS.length;i++){try{DRAWS[i]();}catch(e){if(e!==SKIP)throw e;}}requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>
