@@ -39,12 +39,13 @@
   c.bezierCurveTo=function(a,b,d,e,x,y){P(a,b);P(d,e);P(x,y);return bc0.apply(this,arguments);};
   c.fill=function(){
    var a=arguments;
-   if(a.length&&typeof a[0]==='object'){return f0.apply(this,a);}
+   if(FUT()||(a.length&&typeof a[0]==='object')){return f0.apply(this,a);}
    var good=ok(this),b=[bx0,by0,bx1,by1];
    this.save();if(FUT()&&typeof this.fillStyle==='string'){this.shadowColor=this.fillStyle;this.shadowBlur=11;this.shadowOffsetX=0;this.shadowOffsetY=0;}else{this.shadowColor='rgba(20,40,80,.28)';this.shadowBlur=9;this.shadowOffsetX=1.5;this.shadowOffsetY=3.5;}f0.apply(this,a);this.restore();
    if(good&&b[2]>b[0]){this.save();this.clip();gloss(this,b[0],b[1],b[2],b[3]);this.restore();}
   };
   c.fillRect=function(x,y,w,h){
+   if(FUT())return fr0.apply(this,arguments);
    var good=ok(this)&&w>10&&h>10&&w<420&&h<420;
    if(good){this.save();if(FUT()&&typeof this.fillStyle==='string'){this.shadowColor=this.fillStyle;this.shadowBlur=9;this.shadowOffsetX=0;this.shadowOffsetY=0;}else{this.shadowColor='rgba(20,40,80,.26)';this.shadowBlur=8;this.shadowOffsetX=1;this.shadowOffsetY=3;}fr0.apply(this,arguments);this.restore();
     this.save();this.beginPath();rc0.call(this,x,y,w,h);this.clip();gloss(this,x,y,x+w,y+h);this.restore();return;}

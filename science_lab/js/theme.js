@@ -91,7 +91,7 @@
   try{
    var base=(thisScript&&thisScript.src?thisScript.src.replace(/js\/theme\.js.*$/,''):'../');
    var lk=d.createElement('link');lk.rel='stylesheet';lk.href=base+'css/stage.css?v=3';d.head.appendChild(lk);
-   var ls=d.createElement('script');ls.src=base+'js/lab-stage.js?v=4';d.head.appendChild(ls);
+   var ls=d.createElement('script');ls.src=base+'js/lab-stage.js?v=5';d.head.appendChild(ls);
   }catch(e){}
   if(window.CHAPTERS)buildNav();
   else{var s=d.createElement('script');s.src='../js/chapters.js';s.onload=buildNav;d.head.appendChild(s);}
