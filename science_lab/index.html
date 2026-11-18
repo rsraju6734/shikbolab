@@ -165,15 +165,52 @@ footer b{color:var(--navy)}
 @keyframes pulse2{50%{transform:scale(1.25)}}
 .fl{animation:bob 3s ease-in-out infinite}
 html,body{overflow-x:clip}
+/* ===== v2: লাইভ খেলার জায়গা, ফিতা, কার্সর গ্লো ===== */
+.cg{position:fixed;left:0;top:0;width:380px;height:380px;border-radius:50%;pointer-events:none;z-index:0;background:radial-gradient(circle,rgba(63,111,209,.18),rgba(42,157,143,.08) 45%,transparent 68%);transform:translate(-50%,-50%);opacity:0;transition:opacity .4s}
+.sp{position:fixed;left:0;top:0;height:4px;width:100%;z-index:200;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,#2a9d8f,#e9a23b,#e76f51)}
+.tw{margin-top:10px;font-size:clamp(16px,1.7vw,20px);font-weight:600;color:var(--navy);min-height:1.7em}
+.tw b{color:#e76f51}.tw i{display:inline-block;width:2px;height:1.1em;background:#e76f51;margin-left:3px;vertical-align:-.15em;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.mq{position:relative;overflow:hidden;padding:14px 0;margin:6px 0 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.mqi{display:flex;gap:12px;width:max-content;animation:mq 70s linear infinite}
+.mq:hover .mqi{animation-play-state:paused}
+@keyframes mq{to{transform:translateX(-50%)}}
+.mqc{--c:#2a9d8f;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;padding:8px 16px;border-radius:999px;background:#fff;border:1.5px solid var(--line);font-weight:600;font-size:15px;color:var(--navy);transition:transform .3s var(--ease),border-color .3s,box-shadow .3s}
+.mqc::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c)}
+.mqc:hover{transform:translateY(-3px);border-color:var(--c);box-shadow:0 10px 20px rgba(31,58,95,.12)}
+.play{display:grid;grid-template-columns:minmax(0,440px) 1fr;gap:22px;align-items:start;padding:22px;border-radius:30px;background:rgba(255,255,255,.86);border:1px solid var(--line);box-shadow:0 20px 50px -20px rgba(31,58,95,.28);backdrop-filter:blur(8px)}
+.pstage{padding:10px 10px 8px;border-radius:24px;background:linear-gradient(150deg,#2b3d58,#121c2e 70%);box-shadow:0 22px 44px -14px rgba(12,26,52,.6)}
+.pstage .ph{display:flex;gap:6px;align-items:center;padding:2px 4px 8px;color:#9fb3d1;font-size:12.5px;font-weight:700;letter-spacing:.04em}
+.pstage .ph i{width:10px;height:10px;border-radius:50%;background:#e5484d;box-shadow:0 0 8px #e5484d}.pstage .ph i:nth-child(2){background:#f5b301;box-shadow:0 0 8px #f5b301}.pstage .ph i:nth-child(3){background:#22c55e;box-shadow:0 0 8px #22c55e}
+.pstage canvas{display:block;width:100%;height:auto;border-radius:14px;background:#fff}
+.ptabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.ptabs button{padding:9px 18px;border-radius:999px;background:#fff;border:2px solid var(--line);font-weight:700;font-size:15.5px;color:var(--navy);transition:all .25s}
+.ptabs button:hover{transform:translateY(-2px)}.ptabs button.on{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 8px 18px -6px rgba(31,58,95,.5)}
+.pctl label{display:block;font-weight:600;color:var(--navy);margin:12px 0 2px}.pctl label b{display:inline-block;min-width:38px;text-align:center;background:#eaf1fb;color:#2a4a9e;padding:0 10px;border-radius:99px;margin-left:6px}
+.pctl input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:10px;border-radius:99px;outline:none;background:linear-gradient(90deg,#3f6fd1 var(--p,50%),#dde5ee var(--p,50%))}
+.pctl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:#fff;border:5px solid #3f6fd1;box-shadow:0 4px 12px rgba(0,0,0,.28);cursor:grab}
+.pctl input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:5px solid #3f6fd1;cursor:grab}
+.pinfo{margin-top:16px;padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,#fff,#eef4ff);border-left:5px solid #3f6fd1;font-size:16.5px;color:var(--ink);line-height:1.6;min-height:84px}
+.pgo{margin-top:12px;padding:11px 24px;border-radius:999px;background:linear-gradient(135deg,#1f3a5f,#2f5d9e);color:#fff;font-weight:700;font-size:16px;box-shadow:0 10px 22px rgba(31,58,95,.28);transition:transform .3s var(--ease)}.pgo:hover{transform:translateY(-3px)}
+.sch{position:relative;overflow:hidden;display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:clamp(22px,3.4vw,38px);border-radius:30px;color:#fff;background:linear-gradient(135deg,#1f3a5f,#2f5d9e 60%,#2a9d8f)}
+.sch::before,.sch::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.1);animation:drift 12s ease-in-out infinite alternate}
+.sch::before{width:260px;height:260px;right:-60px;top:-100px}.sch::after{width:150px;height:150px;left:40%;bottom:-80px;animation-delay:-5s}
+.sch .em{font-size:64px;animation:bob 4s ease-in-out infinite;position:relative;z-index:1}
+.sch .tx{flex:1;min-width:220px;position:relative;z-index:1}.sch h3{font-size:clamp(24px,3vw,32px);line-height:1.25}.sch p{opacity:.92;margin-top:4px;font-size:17px}
+.sch .btn{position:relative;z-index:1;background:#fff;color:var(--navy)}
+.sec h2.rv::after{content:"";display:block;width:64px;height:5px;border-radius:5px;margin-top:8px;background:linear-gradient(90deg,#e76f51,#e9a23b,#2a9d8f);animation:shine 5s linear infinite;background-size:200% auto}
+.mqc .sl-lock{display:none!important}nav button{white-space:nowrap}@media(max-width:700px){nav button[data-go=play]{display:none}}
+@media(max-width:900px){.play{grid-template-columns:1fr;padding:14px}}
+
 </style>
 <script src="js/prices.js"></script>
-<script src="js/demo-saas.js"></script>
+<script src="js/demo-saas.js?v=4"></script>
 </head>
 <body>
 <div class="bg"><i></i><i></i><i></i></div>
 <header class="nav">
  <a class="brand" href="#" id="logo"><svg viewBox="0 0 40 40"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a9d8f"/><stop offset="1" stop-color="#3f6fd1"/></linearGradient></defs><rect width="40" height="40" rx="12" fill="url(#lg)"/><path d="M16 8h8M18 8v9l-6 12a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-6-12V8" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="26" r="1.6" fill="#fff"/><circle cx="23" cy="23" r="1.2" fill="#fff"/></svg><em style="font-style:normal">Shikbo<span>Lab</span></em></a>
- <nav><button data-go="subjects">বিষয়</button><button data-go="bonus">বোনাস ল্যাব</button><button data-go="steps">কীভাবে শিখবে</button><a class="plb" href="plans.html" style="padding:8px 16px;border-radius:999px;font-weight:700;color:#fff;background:linear-gradient(135deg,#e9a23b,#e76f51);margin-left:4px">💎 প্ল্যান</a></nav>
+ <nav><button data-go="subjects">বিষয়</button><button data-go="play">🔬 চেষ্টা করো</button><button data-go="bonus">বোনাস ল্যাব</button><button data-go="steps">কীভাবে শিখবে</button><a class="plb" href="plans.html" style="padding:8px 16px;border-radius:999px;font-weight:700;color:#fff;background:linear-gradient(135deg,#e9a23b,#e76f51);margin-left:4px">💎 প্ল্যান</a></nav>
 </header>
 <main id="app"></main>
 <footer>&copy; <b>ShikboLab</b> &mdash; বাংলায় ইন্টারঅ্যাকটিভ বিজ্ঞান ল্যাব, কিছু অধ্যায় ফ্রি, বাকিগুলো প্ল্যানে 💙</footer>
@@ -249,6 +286,65 @@ function bonusTile(c,i){
  var s=SUBJ[c.subject],p=parse(c);
  return '<a class="bt rv" href="'+c.file+'" style="--c:'+s.c+';--d:'+Math.min(i,8)*50+'ms"><span class="em">'+(p.emo||s.icon)+'</span><div><h4>'+esc(p.title)+'</h4><p>'+esc(c.desc)+'</p><span class="tag">'+s.icon+' '+s.name+'</span></div></a>';
 }
+
+/* typewriter */
+var twTimer=0;
+function typer(){
+ var el=document.getElementById('twt');if(!el)return;clearTimeout(twTimer);
+ var W=['পেন্ডুলাম দুলিয়ে ⏱','pH-এর রং বদলে 🧪','ডিএনএ-র সিঁড়ি বেয়ে 🧬','গ্রাফ এঁকে 📈','বর্তনী জুড়ে ⚡','আলোর প্রতিসরণ দেখে 🔦','তেজস্ক্রিয় ক্ষয় গুনে ☢️','অ্যাসিড-ক্ষারের লড়াইয়ে ⚗️'],i=0,j=0,del=false,rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(rm){el.textContent=W[0];return;}
+ (function tick(){if(!el.isConnected)return;var w=W[i];
+  if(!del){j++;el.textContent=w.slice(0,j);if(j>=w.length){del=true;twTimer=setTimeout(tick,1500);return;}}
+  else{j--;el.textContent=w.slice(0,j);if(j<=0){del=false;i=(i+1)%W.length;}}
+  twTimer=setTimeout(tick,del?28:70);})();
+}
+/* live playground */
+var pgRAF=0;
+function initPlay(){
+ var cv=document.getElementById('pgc');if(!cv)return;
+ var x=cv.getContext('2d'),W=440,H=320,dpr=Math.min(2,devicePixelRatio||1);cv.width=W*dpr;cv.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0);
+ var A=document.getElementById('pga'),B=document.getElementById('pgb'),la=document.getElementById('pla'),lb=document.getElementById('plb'),bw=document.getElementById('pbw'),go=document.getElementById('pgo'),info=document.getElementById('pgi'),tabs=document.getElementById('ptabs');
+ var CF=[{a:['কম্পাঙ্ক',1,8,1,3,''],b:['বিস্তার',10,80,1,40,'']},{a:['ছোড়ার কোণ',10,80,1,45,'°'],b:['বেগ',5,40,1,22,' m/s']},{a:['pH মান',0,14,.5,7,'']}];
+ var m=0,t=0,sim=0,tr=[];
+ var COL=['#d32f2f','#e64a19','#f57c00','#fbc02d','#cddc39','#8bc34a','#43a047','#2e9d6a','#26a69a','#1e88e5','#3949ab','#5e35b1','#6a1b9a','#7b1fa2','#8e24aa'];
+ function setM(k){m=k;t=0;sim=0;var c=CF[k];A.min=c.a[1];A.max=c.a[2];A.step=c.a[3];A.value=c.a[4];la.dataset.n=c.a[0];la.dataset.u=c.a[5];
+  if(c.b){bw.style.display='';B.min=c.b[1];B.max=c.b[2];B.step=c.b[3];B.value=c.b[4];lb.dataset.n=c.b[0];lb.dataset.u=c.b[5];}else bw.style.display='none';
+  go.style.display=k===1?'':'none';lab();if(k===1)fire();}
+ function lab(){var c=CF[m];la.innerHTML=c.a[0]+'<b>'+bn(A.value)+c.a[5]+'</b>';if(c.b)lb.innerHTML=c.b[0]+'<b>'+bn(B.value)+c.b[5]+'</b>';
+  [A,B].forEach(function(r){var mn=+r.min,mx=+r.max;r.style.setProperty('--p',((r.value-mn)/(mx-mn)*100)+'%');});}
+ function fire(){t=0;sim=1;}
+ A.oninput=B.oninput=function(){lab();if(m===1)fire();};
+ go.onclick=fire;
+ tabs.onclick=function(e){var b=e.target.closest('button');if(!b)return;[].forEach.call(tabs.children,function(x){x.classList.toggle('on',x===b);});setM(+b.dataset.m);};
+ function frame(){
+  if(!cv.isConnected)return;t+=1/60;
+  var g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#eef4fa');g.addColorStop(1,'#fbfdff');x.fillStyle=g;x.fillRect(0,0,W,H);
+  if(m===0)wave();else if(m===1)proj();else ph();
+  pgRAF=requestAnimationFrame(frame);}
+ function wave(){var f=+A.value,amp=+B.value,i;x.strokeStyle='#dde5ee';x.lineWidth=1;x.beginPath();x.moveTo(0,H/2);x.lineTo(W,H/2);x.stroke();
+  x.strokeStyle='#3f6fd1';x.lineWidth=4;x.lineCap='round';x.beginPath();for(i=0;i<=W;i+=3){var y=H/2+Math.sin(i/W*Math.PI*2*f-t*3)*amp;if(i===0)x.moveTo(i,y);else x.lineTo(i,y);}x.stroke();
+  for(var k=0;k<6;k++){var px=40+k*70,py=H/2+Math.sin(px/W*Math.PI*2*f-t*3)*amp;x.fillStyle='#e76f51';x.beginPath();x.arc(px,py,8,0,7);x.fill();x.fillStyle='#fff';x.beginPath();x.arc(px-2,py-2,2.5,0,7);x.fill();}
+  x.fillStyle='#1f3a5f';x.font='600 14px "Hind Siliguri",sans-serif';x.textAlign='left';x.fillText('ঢেউয়ের সংখ্যা: '+bn(f),14,24);
+  info.innerHTML='<b>কম্পাঙ্ক বাড়ালে</b> ঢেউ ঘন হয়, <b>বিস্তার বাড়ালে</b> ঢেউ উঁচু হয়। লাল বিন্দুগুলো নিজের জায়গায় ওঠানামা করে, ঢেউয়ের সাথে সরে যায় না।';}
+ function proj(){var th=+A.value*Math.PI/180,v=+B.value,g=9.8,R=v*v*Math.sin(2*th)/g,Hm=Math.pow(v*Math.sin(th),2)/(2*g),T=2*v*Math.sin(th)/g;
+  var sc=Math.min(360/Math.max(R,1),170/Math.max(Hm,1),14),gx=30,gy=H-40,i;
+  x.fillStyle='#d9e8cf';x.fillRect(0,gy,W,H-gy);x.fillStyle='#8bbf6a';x.fillRect(0,gy,W,5);
+  x.strokeStyle='rgba(63,111,209,.35)';x.lineWidth=2.5;x.setLineDash([6,6]);x.beginPath();for(i=0;i<=60;i++){var tt=T*i/60,px=gx+v*Math.cos(th)*tt*sc,py=gy-(v*Math.sin(th)*tt-.5*g*tt*tt)*sc;if(i===0)x.moveTo(px,py);else x.lineTo(px,py);}x.stroke();x.setLineDash([]);
+  var cur=sim?Math.min(1,t/2.4):1,tt2=T*cur,bx=gx+v*Math.cos(th)*tt2*sc,by=gy-(v*Math.sin(th)*tt2-.5*g*tt2*tt2)*sc;
+  x.strokeStyle='#37474f';x.lineWidth=5;x.lineCap='round';x.beginPath();x.moveTo(gx-14,gy-2);x.lineTo(gx+Math.cos(th)*24-10,gy-Math.sin(th)*24);x.stroke();
+  x.fillStyle='#e76f51';x.beginPath();x.arc(bx,by-8,9,0,7);x.fill();x.fillStyle='#fff';x.beginPath();x.arc(bx-3,by-11,3,0,7);x.fill();
+  info.innerHTML='পাল্লা (দূরত্ব) ≈ <b>'+bn(R.toFixed(1))+' m</b>, সর্বোচ্চ উচ্চতা ≈ <b>'+bn(Hm.toFixed(1))+' m</b>, সময় ≈ <b>'+bn(T.toFixed(1))+' s</b><br><small>(g = ৯.৮ m/s², বাতাসের বাধা ছাড়া হিসাব। ৪৫° কোণে পাল্লা সবচেয়ে বেশি হয়)</small>';}
+ function ph(){var v=+A.value,idx=Math.max(0,Math.min(14,Math.round(v))),col=COL[idx],i;
+  x.fillStyle='rgba(255,255,255,.7)';x.strokeStyle='#8aa0b8';x.lineWidth=4;
+  var L=140,R=300,T0=70,B0=270;x.fillStyle=col;x.globalAlpha=.88;x.beginPath();x.moveTo(L+3,150);x.lineTo(R-3,150);x.lineTo(R-18,B0-3);x.lineTo(L+18,B0-3);x.closePath();x.fill();x.globalAlpha=1;
+  for(i=0;i<9;i++){var ph0=(t*.6+i*.37)%1,bx=L+30+((i*41)%110)+Math.sin(t*2+i)*4,by=B0-12-ph0*105;x.fillStyle='rgba(255,255,255,.55)';x.beginPath();x.arc(bx,by,3+i%3,0,7);x.fill();}
+  x.strokeStyle='#8aa0b8';x.lineWidth=5;x.lineJoin='round';x.beginPath();x.moveTo(L-8,T0);x.lineTo(L+18,B0);x.lineTo(R-18,B0);x.lineTo(R+8,T0);x.stroke();
+  x.fillStyle='#1f3a5f';x.font='700 15px "Hind Siliguri",sans-serif';x.textAlign='center';x.fillText('ইউনিভার্সাল ইন্ডিকেটর (আনুমানিক রং)',W/2,30);
+  var kind=v<7?'অম্লীয়':(v>7?'ক্ষারীয়':'নিরপেক্ষ');
+  x.fillStyle=col;x.fillRect(40,292,360,12);for(i=0;i<15;i++){x.fillStyle=COL[i];x.fillRect(40+i*24,292,24,12);}x.fillStyle='#1f3a5f';x.beginPath();x.moveTo(40+v*24+12,286);x.lineTo(34+v*24+12,276);x.lineTo(46+v*24+12,276);x.fill();
+  info.innerHTML='pH <b>'+bn(v)+'</b> ➜ দ্রবণ <b>'+kind+'</b>। pH ৭-এর কম হলে অম্ল, ৭ হলে নিরপেক্ষ, ৭-এর বেশি হলে ক্ষার।<br><small>(রংগুলো ইউনিভার্সাল ইন্ডিকেটরের আনুমানিক রং, আমার আঁকা)</small>';}
+ setM(0);cancelAnimationFrame(pgRAF);frame();
+}
 function home(){
  var live=all.filter(function(c){return c.status==='live';});
  var reg=live.filter(function(c){return !c.extra;}),ext=live.filter(function(c){return c.extra;});
@@ -257,6 +353,7 @@ function home(){
   +'<span class="pill"><b></b>১০০% ফ্রি ও বাংলায়</span>'
   +'<h1><span class="w" style="--i:0"><span>বই</span></span> <span class="w" style="--i:1"><span>পড়ে</span></span> <span class="w" style="--i:2"><span>নয়,</span></span><br><span class="w" style="--i:3"><span><em>নিজে</em></span></span> <span class="w" style="--i:4"><span><em>করে</em></span></span> <span class="w" style="--i:5"><span>বিজ্ঞান</span></span> <span class="w" style="--i:6"><span>শেখো</span></span></h1>'
   +'<p class="lead">নবম-দশম শ্রেণির জন্য সহজ বাংলা নোট, নিজ হাতে নাড়াচাড়া করার অ্যানিমেটেড ল্যাব, মজার গেম আর কুইজ। সব এক জায়গায়।</p>'
+  +'<div class="tw">আজ শেখো: <b id="twt"></b><i></i></div>'
   +'<div class="cta"><button class="btn p" data-go="subjects">শেখা শুরু করো <span class="ar">→</span></button><button class="btn s" data-go="bonus">🎁 বোনাস ল্যাব দেখো</button></div>'
   +'<div class="stats"><div><b data-n="4">০</b><small>বিষয়</small></div><div><b data-n="'+reg.length+'">০</b><small>অধ্যায়</small></div><div><b data-n="'+ext.length+'">০</b><small>বোনাস ল্যাব</small></div></div>'
   +'</div>'
@@ -264,16 +361,24 @@ function home(){
   +'<div class="spin"><div class="sat" style="--a:0deg;--r:calc(min(100vw,420px)*.5 - 31px);--c:#2a9d8f"><i><span>🧪</span></i></div><div class="sat" style="--a:180deg;--r:calc(min(100vw,420px)*.5 - 31px);--c:#e9a23b"><i><span>🧬</span></i></div></div>'
   +'<div class="spin b"><div class="sat s2" style="--a:90deg;--r:calc(min(100vw,420px)*.36 - 25px);--c:#3f6fd1"><i><span>⚛️</span></i></div><div class="sat s2" style="--a:270deg;--r:calc(min(100vw,420px)*.36 - 25px);--c:#e76f51"><i><span>📐</span></i></div></div>'
   +'<div class="core">🔬</div></div></section>';
+ h+='<div class="mq" aria-label="সব অধ্যায়"><div class="mqi">'+(function(){var l=reg.map(function(c){var p=parse(c);return '<a class="mqc" href="'+c.file+'" style="--c:'+SUBJ[c.subject].c+'">'+esc(p.title)+'</a>';}).join('');return l+l;})()+'</div></div>';
  h+='<section class="sec" id="subjects"><h2 class="rv">📚 তোমার বিষয় বেছে নাও</h2><p class="sub rv" style="--d:60ms">যেকোনো একটিতে ঢুকে অধ্যায়ের ল্যাব খোলো</p><div class="sgrid">';
  var i=0;for(var k in SUBJ){var s=SUBJ[k],n=reg.filter(function(c){return c.subject===k;}).length,x=ext.filter(function(c){return c.subject===k;}).length;
   h+='<a href="#'+k+'" class="scard rv" style="--c:'+s.c+';--c1:'+s.c1+';--d:'+(i++*90)+'ms">'+art(k)+'<h3>'+s.name+'</h3><div class="tg">'+s.tag+'</div><div class="cnt"><span>'+bn(n)+'টি অধ্যায়'+(x?' + '+bn(x)+'টি বোনাস':'')+'</span><b class="go">→</b></div></a>';}
  h+='</div></section>';
- h+='<section class="sec" id="bonus"><h2 class="rv">🎁 বোনাস এক্সট্রা ল্যাব</h2><p class="sub rv" style="--d:60ms">বইয়ের বাইরের মজার ল্যাব। নিজে পরীক্ষা করে দেখো।</p><div class="pills rv" id="bpills"></div><div class="bgrid" id="bgrid"></div></section>';
+ h+='<section class="sec" id="play"><h2 class="rv">🔬 এখনই হাতে-কলমে চেষ্টা করো</h2><p class="sub rv" style="--d:60ms">কোনো লগইন ছাড়াই, তিনটা মিনি-ল্যাব। নাড়াচাড়া করে দেখো কেমন লাগে</p>'
+  +'<div class="play rv"><div class="pstage"><div class="ph"><i></i><i></i><i></i><span style="margin-left:6px">ভার্চুয়াল ল্যাব</span></div><canvas id="pgc" width="440" height="320"></canvas></div>'
+  +'<div><div class="ptabs" id="ptabs"><button class="on" data-m="0">🌊 তরঙ্গ</button><button data-m="1">🎯 প্রক্ষেপণ</button><button data-m="2">🧪 pH ও রং</button></div>'
+  +'<div class="pctl"><label id="pla"></label><input type="range" id="pga"><div id="pbw"><label id="plb"></label><input type="range" id="pgb"></div></div>'
+  +'<button class="pgo" id="pgo">🚀 ছুড়ে দাও</button><div class="pinfo" id="pgi"></div></div></div></section>';
+  h+='<section class="sec" id="bonus"><h2 class="rv">🎁 বোনাস এক্সট্রা ল্যাব</h2><p class="sub rv" style="--d:60ms">বইয়ের বাইরের মজার ল্যাব। নিজে পরীক্ষা করে দেখো।</p><div class="pills rv" id="bpills"></div><div class="bgrid" id="bgrid"></div></section>';
  h+='<section class="sec" id="steps"><h2 class="rv">🚀 কীভাবে শিখবে?</h2><p class="sub rv" style="--d:60ms">প্রতিটি অধ্যায়ে এই তিন ধাপ</p><div class="steps">'
   +[['📖','সহজ নোট পড়ো','বইয়ের কঠিন কথা সহজ বাংলায়, ছোট ছোট অংশে।'],['🕹️','ল্যাবে খেলো','স্লাইডার নেড়ে, বাটন চেপে নিজে পরীক্ষা করো। সাথে মিনি-গেম।'],['✅','কুইজ ও প্রশ্ন','MCQ আর সৃজনশীল প্রশ্ন, মডেল উত্তরসহ। নিজেকে যাচাই করো।']].map(function(a,j){return '<div class="step rv" style="--d:'+j*100+'ms"><span class="n">'+bn(j+1)+'</span><span class="ic" style="--d:'+(-j*.8)+'s">'+a[0]+'</span><h4>'+a[1]+'</h4><p>'+a[2]+'</p></div>';}).join('')
   +'</div></section>';
+ h+='<section class="sec"><div class="sch rv"><span class="em">🏫</span><div class="tx"><h3>স্কুল বা কোচিং সেন্টারের জন্য</h3><p>ক্লাসে প্রজেক্টরে বড় করে দেখাও, শিক্ষার্থীরা নিজে হাতে নেড়ে শিখুক। প্ল্যান আর দাম এক জায়গায় দেখো।</p></div><a class="btn" href="plans.html">💎 প্ল্যান দেখো <span class="ar">→</span></a></div></section>';
  app.innerHTML=h;
  net(document.getElementById('net'));
+ typer();initPlay();
  app.querySelectorAll('.stats b').forEach(function(b){countUp(b,+b.dataset.n);});
  app.querySelectorAll('.scard').forEach(tilt);
  /* bonus filter */
@@ -318,6 +423,12 @@ document.addEventListener('click',function(e){var b=e.target.closest('[data-go]'
 document.getElementById('logo').addEventListener('click',function(e){e.preventDefault();if(location.hash)location.hash='';else window.scrollTo({top:0,behavior:'smooth'});});
 addEventListener('hashchange',function(){render();window.scrollTo(0,0);});
 render();
+(function(){var cg=document.createElement('div');cg.className='cg';document.body.appendChild(cg);var sp=document.createElement('div');sp.className='sp';document.body.appendChild(sp);
+ var tx=0,ty=0,cx=0,cy=0,on=false,fine=matchMedia('(pointer:fine)').matches;
+ if(fine)addEventListener('pointermove',function(e){tx=e.clientX;ty=e.clientY;if(!on){on=true;cx=tx;cy=ty;cg.style.opacity=1;}});
+ (function lp(){cx+=(tx-cx)*.12;cy+=(ty-cy)*.12;cg.style.left=cx+'px';cg.style.top=cy+'px';requestAnimationFrame(lp);})();
+ function sc(){var m=Math.max(1,document.documentElement.scrollHeight-innerHeight);sp.style.transform='scaleX('+Math.min(1,scrollY/m)+')';}
+ addEventListener('scroll',sc,{passive:true});sc();})();
 })();
 </script>
 </body>
