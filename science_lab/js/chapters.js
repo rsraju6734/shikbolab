@@ -50,6 +50,9 @@ window.CHAPTERS = [
   { subject:'biology', title:'জীবের পরিবেশ (অধ্যায় ১৩)', desc:'বাস্তুতন্ত্র, খাদ্যশিকল, খাদ্যজাল, শক্তি পিরামিড ও জীববৈচিত্র্য — ১৩টি ল্যাব', file:'chapters/bio-environment.html', status:'live' },
   { subject:'biology', title:'জীবপ্রযুক্তি (অধ্যায় ১৪)', desc:'টিস্যু কালচার, রিকম্বিনেন্ট DNA, GMO ও জিন প্রকৌশলের ব্যবহার — ১৩টি ল্যাব', file:'chapters/bio-biotechnology.html', status:'live' },
   { subject:'physics',   title:'⚡ বৈদ্যুতিক সার্কিট (বিশেষ)', desc:'ওহমের সূত্র পরীক্ষা করো, শ্রেণি ও সমান্তরাল সংযোগে বাল্ব জ্বালাও।', file:'chapters/phy-electric-circuits.html', status:'live', extra:true },
+  { subject:'math', title:'🔢 সেট ও ফাংশন (উচ্চতর গণিত অধ্যায় ১)', desc:'ভেন ডায়াগ্রাম, পাওয়ার সেট, ফাংশন, এক-এক, বিপরীত ফাংশন ও লেখচিত্র: ধাপে ধাপে সমাধান, ৫টি টুল, প্র্যাকটিস ও ৩০টি কুইজ', file:'chapters/math-sets-functions.html', status:'live' },
+  { subject:'math', title:'🧮 বীজগাণিতিক রাশি (উচ্চতর গণিত অধ্যায় ২)', desc:'বহুপদী, ভাগশেষ ও উৎপাদক উপপাদ্য, প্রতিসম-চক্রক্রমিক রাশি, বিশেষ সূত্র ও আংশিক ভগ্নাংশ: ৬টি টুল, ৭টি ধাপে ধাপে উদাহরণ, ৩০টি কুইজ', file:'chapters/math-algebraic-expr.html', status:'live' },
+  { subject:'math', title:'📐 জ্যামিতি (উচ্চতর গণিত অধ্যায় ৩)', desc:'পিথাগোরাস, অ্যাপোলোনিয়াস, ভরকেন্দ্র-পরিকেন্দ্র-লম্ববিন্দু, সদৃশতা, ব্রহ্মগুপ্ত ও টলেমি: টেনে দেখার ৬টি ল্যাব, ৫টি প্রমাণ, ৩০টি কুইজ', file:'chapters/math-geometry.html', status:'live' },
   { subject:'math',      title:'📈 ফাংশন ও গ্রাফ (বিশেষ)', desc:'স্লাইডার নেড়ে সরলরেখা ও দ্বিঘাত ফাংশনের গ্রাফ বদলাতে দেখো, সমীকরণ সমাধান করো।', file:'chapters/math-functions-graphs.html', status:'live', extra:true },
   { subject:'biology',   title:'🧬 বংশগতি: মেন্ডেলের ল্যাব (বিশেষ)', desc:'পানেট বর্গ বানাও, ৩ : ১ ও ৯ : ৩ : ৩ : ১ অনুপাত নিজে বের করো, রক্তের গ্রুপ ও লিঙ্গ নির্ধারণ দেখো।', file:'chapters/bio-heredity-mendel.html', status:'live', extra:true }
 ];
