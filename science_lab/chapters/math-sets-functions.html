@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>সেট ও ফাংশন (উচ্চতর গণিত অধ্যায় ১) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+canvas{width:100%;height:auto;max-width:700px;display:block;margin:8px auto;border-radius:12px;background:#fff;border:1px solid var(--line);touch-action:none}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.ctl input[type=range]{width:200px;max-width:100%}
+.ctl select,.ctl input[type=text],.ans input{font-family:inherit;font-size:16px;padding:6px 8px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;max-width:100%;width:auto}
+.eqb{background:#eaf7f5;border-radius:10px;padding:10px;text-align:center;font-weight:700;color:var(--navy);margin:8px 0;font-size:18px;overflow-x:auto}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.fb{font-weight:700;margin-top:6px}
+.res{background:#eef6ff;border-radius:10px;padding:10px 12px;margin:8px 0;line-height:1.9}
+.res b{color:#0b5ed7}
+.chips button{margin:3px;padding:6px 12px;border-radius:999px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.chips button.on{background:#0b5ed7;color:#fff;border-color:#0b5ed7}
+.step{background:#fff;border:1px solid var(--line);border-left:5px solid #2a9d8f;border-radius:8px;padding:8px 12px;margin:6px 0;display:none}
+.step.show{display:block}
+.ex{border:2px dashed #b8c7d6;border-radius:12px;padding:10px 14px;margin:14px 0;background:#fcfdff}
+.q{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:#fff}
+.q .opt{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 10px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:16px;cursor:pointer}
+.q .opt.good{background:#d8f3e3;border-color:#2a9d8f}
+.q .opt.bad{background:#fddcdc;border-color:#e76f51}
+.m{font-family:system-ui,'Segoe UI',Arial,sans-serif}
+table.t{border-collapse:collapse;margin:8px 0}
+table.t td,table.t th{border:1px solid #cfd9e1;padding:5px 12px;text-align:center}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">📐 গণিত &rsaquo; উচ্চতর গণিত &rsaquo; অধ্যায় ১ (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🔢 সেট ও ফাংশন</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#ex">🪜 ধাপে ধাপে</a><a href="#lab1">🟢 ভেন</a><a href="#lab2">🧩 উপসেট</a><a href="#lab3">➡️ তীর</a><a href="#lab4">⚙️ ফাংশন মেশিন</a><a href="#lab5">📈 গ্রাফ</a><a href="#prac">✍️ প্র্যাকটিস</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্নোত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায়ে শিখবে:</b> সেট ও তার প্রক্রিয়া (সংযোগ, ছেদ, অন্তর, পূরক), পাওয়ার সেট, কার্তেসীয় গুণজ, সম্পর্ক, ফাংশন, ডোমেন-রেঞ্জ, এক-এক ফাংশন, বিপরীত ফাংশন ও লেখচিত্র।</div>
+
+    <h3>১. সেট কী? ⭐⭐⭐</h3>
+    <ul>
+      <li><b>সেট</b> হলো সুনির্দিষ্ট বস্তুর সংগ্রহ। বস্তুগুলোকে বলে <b>সদস্য</b>। যেমন A = {১, ২, ৩}। লেখা হয় ২ ∈ A (২ সদস্য), ৫ ∉ A।</li>
+      <li><b>বর্ণনা পদ্ধতি:</b> A = {x ∈ N : x &lt; ৪}। <b>তালিকা পদ্ধতি:</b> A = {১, ২, ৩}।</li>
+      <li><b>ফাঁকা সেট</b> ∅ বা { }: কোনো সদস্য নেই। এটি সব সেটের উপসেট।</li>
+      <li><b>উপসেট:</b> A-এর প্রতিটি সদস্য B-তেও থাকলে A ⊆ B।</li>
+      <li><b>সার্বিক সেট U:</b> আলোচনার সব সদস্য যার মধ্যে।</li>
+    </ul>
+
+    <h3>২. সেটের প্রক্রিয়া ⭐⭐⭐</h3>
+    <ul>
+      <li><b>সংযোগ A ∪ B:</b> A অথবা B-তে (বা দুটিতেই) যা আছে।</li>
+      <li><b>ছেদ A ∩ B:</b> A এবং B দুটিতেই যা আছে।</li>
+      <li><b>অন্তর A − B:</b> A-তে আছে কিন্তু B-তে নেই।</li>
+      <li><b>পূরক A′:</b> U-তে আছে কিন্তু A-তে নেই।</li>
+      <li><b>সদস্য গণনা সূত্র:</b> n(A ∪ B) = n(A) + n(B) − n(A ∩ B)। (ভেন ল্যাবে নিজে মিলিয়ে দেখো)</li>
+      <li><b>ডি মরগানের সূত্র:</b> (A ∪ B)′ = A′ ∩ B′ এবং (A ∩ B)′ = A′ ∪ B′।</li>
+    </ul>
+
+    <h3>৩. পাওয়ার সেট ও কার্তেসীয় গুণজ ⭐⭐</h3>
+    <ul>
+      <li><b>পাওয়ার সেট P(A):</b> A-এর সব উপসেটের সেট। n(A) = n হলে P(A)-এর সদস্য সংখ্যা <b>২ⁿ</b>।</li>
+      <li><b>কার্তেসীয় গুণজ A × B:</b> সব ক্রমজোড় (a, b) যেখানে a ∈ A, b ∈ B। n(A × B) = n(A) × n(B)। ক্রম বদলালে বদলায়: (১, ২) ≠ (২, ১)।</li>
+    </ul>
+
+    <h3>৪. সম্পর্ক ও ফাংশন ⭐⭐⭐</h3>
+    <ul>
+      <li><b>সম্পর্ক:</b> A × B-এর যেকোনো উপসেট। যেমন S = {(১, ৫), (২, ১০)}।</li>
+      <li><b>ফাংশন:</b> এমন সম্পর্ক যেখানে ডোমেনের <b>প্রতিটি</b> x-এর জন্য <b>ঠিক একটি</b> y থাকে। একই x-এর জন্য দুই রকম y থাকলে ফাংশন নয়।</li>
+      <li><b>ডোমেন:</b> প্রথম উপাদানগুলোর সেট (x-এর মান)। <b>রেঞ্জ:</b> দ্বিতীয় উপাদানগুলোর সেট (y-এর মান)।</li>
+      <li>উদাহরণ: F(x) = √(x − ১)। বর্গমূলের ভেতর ঋণাত্মক হতে পারে না, তাই x − ১ ≥ ০, অর্থাৎ <b>ডোমেন: x ≥ ১</b>।</li>
+    </ul>
+
+    <h3>৫. এক-এক ও বিপরীত ফাংশন ⭐⭐⭐</h3>
+    <ul>
+      <li><b>এক-এক (one-one):</b> ভিন্ন x-এর জন্য ভিন্ন y। প্রমাণ: f(x₁) = f(x₂) ধরে x₁ = x₂ দেখাও।</li>
+      <li><b>সার্বিক (onto):</b> রেঞ্জ = কোডোমেন, অর্থাৎ কোনো y বাদ পড়ে না।</li>
+      <li><b>বিপরীত অন্বয় S⁻¹:</b> প্রতিটি (a, b) উল্টে (b, a) করো। এটি ফাংশন হবে কেবল S এক-এক হলে।</li>
+      <li><b>বিপরীত ফাংশন বের করার নিয়ম:</b> y = f(x) লেখো → x-কে y-এর মাধ্যমে প্রকাশ করো → x ও y বদলাও।</li>
+      <li>f⁻¹ এর লেখচিত্র হলো f-এর লেখচিত্রের <b>y = x রেখা বরাবর প্রতিবিম্ব</b>।</li>
+      <li><b>উল্লম্ব রেখা পরীক্ষা:</b> যেকোনো খাড়া রেখা লেখচিত্রকে একবারের বেশি না কাটলে তা ফাংশনের লেখচিত্র।</li>
+    </ul>
+    <div class="warn">⚠️ <b>সাধারণ ভুল:</b> x² এক-এক নয় (যেমন (−২)² = ২² = ৪)। আবার বৃত্ত x² + y² = ২৫ ফাংশন নয়, কারণ একই x-এ দুটি y (+ ও −) থাকে। অর্ধবৃত্ত x ≥ ০ নিলেও একই সমস্যা থাকে, তাই সেটিও ফাংশন নয়।</div>
+  </section>
+
+  <section class="panel" id="ex">
+    <h2>🪜 ধাপে ধাপে উদাহরণ</h2>
+    <div class="say">👉 "পরের ধাপ" বোতাম চাপো। প্রতিবার এক ধাপ করে সমাধান খুলবে। আগে নিজে চেষ্টা করো, তারপর মিলিয়ে নাও।</div>
+    <div class="ex" id="E1"><b>উদাহরণ ১ (বই ১.২):</b> f(x) = (২x − ১)/(২x + ৩) হলে f(−১/৩) বের করো, f এক-এক দেখাও এবং f⁻¹(x) নির্ণয় করো। এরপর ২f⁻¹(x) = x সমাধান করো।
+      <div class="step">ধাপ ১: x = −১/৩ বসাই। ২x − ১ = −২/৩ − ১ = −৫/৩; ২x + ৩ = −২/৩ + ৩ = ৭/৩।</div>
+      <div class="step">ধাপ ২: f(−১/৩) = (−৫/৩) ÷ (৭/৩) = <b>−৫/৭</b>।</div>
+      <div class="step">ধাপ ৩ (এক-এক): f(a) = f(b) ধরি। (২a−১)(২b+৩) = (২b−১)(২a+৩)। দুই পাশ খুলে সরল করলে ৮a = ৮b, তাই a = b। অতএব f এক-এক।</div>
+      <div class="step">ধাপ ৪ (বিপরীত): y = (২x−১)/(২x+৩) ⇒ ২xy + ৩y = ২x − ১ ⇒ x(২y − ২) = −১ − ৩y ⇒ x = (১ + ৩y)/(২(১ − y))। তাই <b>f⁻¹(x) = (১ + ৩x)/(২(১ − x))</b>।</div>
+      <div class="step">ধাপ ৫: ২f⁻¹(x) = x ⇒ (১ + ৩x)/(১ − x) = x ⇒ ১ + ৩x = x − x² ⇒ x² + ২x + ১ = ০ ⇒ (x + ১)² = ০। অতএব <b>x = −১</b>।</div>
+      <button class="btn" data-ex="E1">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E1">আবার শুরু</button>
+    </div>
+    <div class="ex" id="E2"><b>উদাহরণ ২ (সেটের গল্প):</b> ৪০ জন ছাত্রের মধ্যে ২৫ জন ক্রিকেট ও ২০ জন ফুটবল খেলে, ৮ জন দুটোই খেলে। কতজন কোনোটাই খেলে না?
+      <div class="step">ধাপ ১: A = ক্রিকেট, B = ফুটবল। n(A) = ২৫, n(B) = ২০, n(A ∩ B) = ৮।</div>
+      <div class="step">ধাপ ২: n(A ∪ B) = ২৫ + ২০ − ৮ = ৩৭।</div>
+      <div class="step">ধাপ ৩: কোনোটাই খেলে না = ৪০ − ৩৭ = <b>৩ জন</b>।</div>
+      <button class="btn" data-ex="E2">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E2">আবার শুরু</button>
+    </div>
+    <div class="ex" id="E3"><b>উদাহরণ ৩:</b> S = {(−৩, ৮), (−২, ৩), (−১, ০), (০, −১), (১, ০), (২, ৩), (৩, ৮)}। ডোমেন, রেঞ্জ, S⁻¹ নির্ণয় করো এবং S ও S⁻¹ ফাংশন কিনা দেখো।
+      <div class="step">ধাপ ১: ডোমেন = {−৩, −২, −১, ০, ১, ২, ৩}। রেঞ্জ = {৮, ৩, ০, −১}।</div>
+      <div class="step">ধাপ ২: প্রতিটি x-এর জন্য একটিই y আছে, তাই S একটি ফাংশন। (নিয়মটি y = x² − ১)</div>
+      <div class="step">ধাপ ৩: S⁻¹ = {(৮, −৩), (৩, −২), (০, −১), (−১, ০), (০, ১), (৩, ২), (৮, ৩)}।</div>
+      <div class="step">ধাপ ৪: S⁻¹-এ ৮-এর জন্য −৩ ও ৩ দুটো মান, তাই S⁻¹ ফাংশন নয়। কারণ S এক-এক নয়: (−১, ০) ও (১, ০) আছে।</div>
+      <button class="btn" data-ex="E3">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E3">আবার শুরু</button>
+    </div>
+    <div class="ex" id="E4"><b>উদাহরণ ৪:</b> f : R → R, f(x) = ৫x − ৪ হলে y = f⁻¹(x) নির্ণয় করো।
+      <div class="step">ধাপ ১: y = ৫x − ৪ লিখি।</div>
+      <div class="step">ধাপ ২: x-কে আলাদা করি: ৫x = y + ৪, x = (y + ৪)/৫।</div>
+      <div class="step">ধাপ ৩: x ও y বদলাই: <b>f⁻¹(x) = (x + ৪)/৫</b>।</div>
+      <div class="step">ধাপ ৪ (যাচাই): f(f⁻¹(x)) = ৫·(x+৪)/৫ − ৪ = x ✔</div>
+      <button class="btn" data-ex="E4">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E4">আবার শুরু</button>
+    </div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🟢 ল্যাব ১: ভেন ডায়াগ্রাম</h2>
+    <div class="say">👉 নিচের সংখ্যাগুলোতে ক্লিক করো: প্রতিবার ক্লিকে সংখ্যাটি A → B → দুটোতেই → কোনোটিতে না ঘুরে যাবে। তারপর প্রক্রিয়া বেছে নাও।</div>
+    <div class="chips" id="vnums"></div>
+    <div class="chips" id="vops"></div>
+    <canvas id="vc" width="640" height="360"></canvas>
+    <div class="res m" id="vinfo"></div>
+    <small>সার্বিক সেট U = {১, ২, …, ১২}</small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🧩 ল্যাব ২: উপসেট, পাওয়ার সেট ও কার্তেসীয় গুণজ</h2>
+    <div class="say">👉 কমা দিয়ে আলাদা করে সদস্য লেখো (সর্বোচ্চ ৫টি A-তে, ৪টি B-তে)। যেমন: a, b, c</div>
+    <div class="ctl"><label>A = </label><input type="text" id="pa" value="১, ২, ৩" size="14"><label>B = </label><input type="text" id="pb" value="x, y" size="10"></div>
+    <div class="res m" id="pinfo"></div>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>➡️ ল্যাব ৩: তীর চিত্রে সম্পর্ক চেনো</h2>
+    <div class="say">👉 একটি সম্পর্ক বেছে নাও বা নিজে লেখো (যেমন 1-2, 2-4, 3-6)। তীর দেখে বলো ফাংশন কিনা, এক-এক কিনা। তারপর নিচের উত্তর মিলিয়ে নাও।</div>
+    <div class="ctl"><label>সম্পর্ক:</label><select id="rsel"></select><input type="text" id="rcus" size="26" placeholder="1-2, 2-4, 3-4"><button class="btn" id="rgo">দেখাও</button></div>
+    <canvas id="rc" width="640" height="360"></canvas>
+    <div class="res m" id="rinfo"></div>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>⚙️ ল্যাব ৪: ফাংশন মেশিন ও বিপরীত ফাংশন</h2>
+    <div class="say">👉 একটি ফাংশন বেছে নাও, x-এর মান দাও। মেশিন y বের করবে। তারপর উল্টো করে f⁻¹(y) দিয়ে ফিরে আসা দেখো।</div>
+    <div class="ctl"><label>f(x) =</label><select id="fsel"></select><label>x = <span id="fxv"></span></label><input type="range" id="fx" min="-6" max="8" step="0.5" value="3"></div>
+    <div class="eqb m" id="fmach"></div>
+    <div class="res m" id="finfo"></div>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>📈 ল্যাব ৫: লেখচিত্র ও উল্লম্ব রেখা পরীক্ষা</h2>
+    <div class="say">👉 একটি সম্পর্ক বেছে নাও। স্লাইডারে লাল খাড়া রেখা সরাও এবং দেখো কতবার কাটে। "বিপরীত দেখাও" চাপলে y = x রেখা বরাবর প্রতিবিম্ব আসবে।</div>
+    <div class="ctl"><select id="gsel"></select><label>খাড়া রেখা x = <span id="gav"></span></label><input type="range" id="ga" min="-8" max="8" step="0.5" value="1"><button class="btn alt" id="ginv">বিপরীত দেখাও</button></div>
+    <canvas id="gc" width="600" height="400"></canvas>
+    <div class="res m" id="ginfo"></div>
+  </section>
+
+  <section class="panel" id="prac">
+    <h2>✍️ প্র্যাকটিস (বইয়ের অনুশীলনীর ধাঁচে)</h2>
+    <div class="say">👉 নিজে হিসাব করে উত্তর লেখো। ভগ্নাংশ হলে যেমন −৫/৭ লিখবে। বাংলা বা ইংরেজি সংখ্যা দুটোই চলবে।</div>
+    <div id="pracbox"></div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="fb" id="qscore"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>📖 সৃজনশীল ও সংক্ষিপ্ত প্রশ্নোত্তর</h2>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab · সেট ও ফাংশন (উচ্চতর গণিত অধ্যায় ১)</footer>
+
+<script>
+var BNS='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BNS[d];});}
+function en(s){return String(s).replace(/[০-৯]/g,function(d){return BNS.indexOf(d);});}
+function $(id){return document.getElementById(id);}
+function N(x){x=Math.round(x*1000)/1000;if(Math.abs(x)<1e-9)x=0;return bn(String(x).replace('-','−'));}
+function R2(c){var d=Math.min(2,window.devicePixelRatio||1),w=c.width,h=c.height;c.width=w*d;c.height=h*d;var x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return x;}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function gcd(a,b){return b?gcd(b,a%b):Math.abs(a);}
+function frac(n,d){if(d<0){n=-n;d=-d;}var g=gcd(n,d)||1;n/=g;d/=g;return d===1?String(n):n+'/'+d;}
+
+/* ---------- ধাপে ধাপে ---------- */
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ex){var box=$(b.dataset.ex),s=box.querySelectorAll('.step:not(.show)');if(s.length){s[0].classList.add('show');}if(s.length<=1)b.disabled=true;}
+  if(b.dataset.rs){var bx=$(b.dataset.rs);bx.querySelectorAll('.step').forEach(function(x){x.classList.remove('show');});bx.querySelector('[data-ex]').disabled=false;}
+});
+
+/* ===================== ল্যাব ১: ভেন ===================== */
+var VS=[1,1,0,3,3,2,2,0,0,0,0,0]; /* 0 কোনোটিতে না, 1 A, 2 B, 3 উভয় */
+var VOPS=[['A ∪ B',function(a,b){return a||b;},'সংযোগ'],['A ∩ B',function(a,b){return a&&b;},'ছেদ'],['A − B',function(a,b){return a&&!b;},'অন্তর'],['B − A',function(a,b){return b&&!a;},'অন্তর'],['A′',function(a,b){return !a;},'পূরক'],['B′',function(a,b){return !b;},'পূরক'],['(A ∪ B)′',function(a,b){return !(a||b);},'সংযোগের পূরক'],['A′ ∩ B′',function(a,b){return !a&&!b;},'পূরকদের ছেদ'],['(A ∩ B)′',function(a,b){return !(a&&b);},'ছেদের পূরক'],['A′ ∪ B′',function(a,b){return !a||!b;},'পূরকদের সংযোগ'],['A △ B (প্রতিসম অন্তর)',function(a,b){return a!==b;},'যেকোনো একটিতে, দুটোতে নয়']];
+var vop=0,vx=R2($('vc'));
+function inA(s){return s===1||s===3;} function inB(s){return s===2||s===3;}
+function vbuild(){
+  var h='';for(var i=0;i<12;i++)h+='<button data-i="'+i+'">'+bn(i+1)+'</button>';$('vnums').innerHTML=h;
+  h='';for(i=0;i<VOPS.length;i++)h+='<button data-o="'+i+'" class="'+(i===vop?'on':'')+'">'+VOPS[i][0]+'</button>';$('vops').innerHTML=h;
+}
+$('vnums').onclick=function(e){var b=e.target.closest('button');if(!b)return;var i=+b.dataset.i;VS[i]=(VS[i]+1)%4;vdraw();};
+$('vops').onclick=function(e){var b=e.target.closest('button');if(!b)return;vop=+b.dataset.o;vbuild();vdraw();};
+function vdraw(){
+  var x=vx,W=640,H=360,ax=240,bx=400,cy=175,r=110,f=VOPS[vop][1];
+  x.clearRect(0,0,W,H);x.fillStyle='#fff';x.fillRect(0,0,W,H);
+  var d=Math.min(2,window.devicePixelRatio||1);
+  var img=x.createImageData(W*d,H*d),px,py,k=0;
+  for(py=0;py<H*d;py++)for(px=0;px<W*d;px++){
+    var X=px/d,Y=py/d,a=(X-ax)*(X-ax)+(Y-cy)*(Y-cy)<=r*r,b=(X-bx)*(X-bx)+(Y-cy)*(Y-cy)<=r*r;
+    var inside=X>=8&&X<=W-8&&Y>=8&&Y<=H-8;
+    if(inside&&f(a,b)){img.data[k]=42;img.data[k+1]=157;img.data[k+2]=143;img.data[k+3]=95;}
+    k+=4;
+  }
+  x.save();x.setTransform(1,0,0,1,0,0);x.putImageData(img,0,0);x.restore();
+  x.strokeStyle='#1f3a5f';x.lineWidth=2;x.strokeRect(8,8,W-16,H-16);
+  x.lineWidth=3;x.strokeStyle='#e76f51';x.beginPath();x.arc(ax,cy,r,0,6.283);x.stroke();
+  x.strokeStyle='#2a6fdb';x.beginPath();x.arc(bx,cy,r,0,6.283);x.stroke();
+  x.font='700 18px "Hind Siliguri",system-ui';x.fillStyle='#e76f51';x.fillText('A',ax-r+8,cy-r+18);x.fillStyle='#2a6fdb';x.fillText('B',bx+r-22,cy-r+18);x.fillStyle='#1f3a5f';x.fillText('U',18,30);
+  var regs=[[],[],[],[]],i;for(i=0;i<12;i++)regs[VS[i]].push(i+1);
+  x.font='700 16px system-ui';x.textAlign='center';x.fillStyle='#1f3a5f';
+  regs[1].forEach(function(n,j){x.fillText(bn(n),150+(j%2)*36,125+Math.floor(j/2)*28);});
+  regs[2].forEach(function(n,j){x.fillText(bn(n),452+(j%2)*36,125+Math.floor(j/2)*28);});
+  regs[3].forEach(function(n,j){x.fillText(bn(n),305+(j%2)*30,125+Math.floor(j/2)*24);});
+  regs[0].forEach(function(n,j){x.fillText(bn(n),40+j*44,328);});
+  x.textAlign='left';
+  var sel=[],nA=0,nB=0,nAB=0,nU=0;
+  for(i=0;i<12;i++){var a2=inA(VS[i]),b2=inB(VS[i]);if(f(a2,b2))sel.push(i+1);if(a2)nA++;if(b2)nB++;if(a2&&b2)nAB++;if(a2||b2)nU++;}
+  var setS=function(t){return '{'+t.map(bn).join(', ')+'}';};
+  var A=[],B=[];for(i=0;i<12;i++){if(inA(VS[i]))A.push(i+1);if(inB(VS[i]))B.push(i+1);}
+  $('vinfo').innerHTML='A = '+setS(A)+', B = '+setS(B)+'<br><b>'+VOPS[vop][0]+'</b> ('+VOPS[vop][2]+') = <b>'+(sel.length?setS(sel):'∅ (ফাঁকা)')+'</b>  [n = '+bn(sel.length)+']<br>'+
+   'n(A) = '+bn(nA)+', n(B) = '+bn(nB)+', n(A ∩ B) = '+bn(nAB)+'<br>সূত্র: n(A ∪ B) = '+bn(nA)+' + '+bn(nB)+' − '+bn(nAB)+' = <b>'+bn(nA+nB-nAB)+'</b> ✔ (গুনে পাই '+bn(nU)+')'+
+   (vop===6||vop===7?'<br>ডি মরগান: (A ∪ B)′ ও A′ ∩ B′ সবসময় একই! অন্য সংখ্যা সাজিয়েও দেখো।':'')+(vop===8||vop===9?'<br>ডি মরগান: (A ∩ B)′ ও A′ ∪ B′ সবসময় একই!':'');
+}
+vbuild();vdraw();
+
+/* ===================== ল্যাব ২: পাওয়ার সেট ===================== */
+function parseList(s,max){var a=s.split(/[,،]/).map(function(t){return t.trim();}).filter(function(t){return t;}),o=[];a.forEach(function(t){if(o.indexOf(t)<0)o.push(t);});return o.slice(0,max);}
+function pshow(){
+  var A=parseList($('pa').value,5),B=parseList($('pb').value,4),n=A.length,subs=[],m,i;
+  for(m=0;m<(1<<n);m++){var s=[];for(i=0;i<n;i++)if(m&(1<<i))s.push(A[i]);subs.push(s);}
+  subs.sort(function(a,b){return a.length-b.length;});
+  var ps=subs.map(function(s){return s.length?'{'+s.join(', ')+'}':'∅';});
+  var cart=[];A.forEach(function(a){B.forEach(function(b){cart.push('('+a+', '+b+')');});});
+  var cart2=[];B.forEach(function(b){A.forEach(function(a){cart2.push('('+b+', '+a+')');});});
+  $('pinfo').innerHTML='A = {'+A.map(esc).join(', ')+'}, n(A) = '+bn(n)+'<br>B = {'+B.map(esc).join(', ')+'}, n(B) = '+bn(B.length)+
+   '<br><b>P(A)</b> = {'+ps.map(esc).join(', ')+'}<br>সদস্য সংখ্যা = ২<sup>'+bn(n)+'</sup> = <b>'+bn(1<<n)+'</b> (প্রকৃত উপসেট বাদে '+bn((1<<n)-1)+'টি, ∅ সহ)'+
+   '<br><b>A × B</b> = {'+cart.map(esc).join(', ')+'}<br>n(A × B) = '+bn(n)+' × '+bn(B.length)+' = <b>'+bn(n*B.length)+'</b>'+
+   '<br><b>B × A</b> = {'+cart2.slice(0,12).map(esc).join(', ')+(cart2.length>12?', …':'')+'} → A × B ≠ B × A (সাধারণভাবে)';
+}
+$('pa').oninput=pshow;$('pb').oninput=pshow;pshow();
+
+/* ===================== ল্যাব ৩: তীর চিত্র ===================== */
+var RELS=[
+ ['ক) {(1,5),(2,10),(3,15),(4,20)}',[[1,5],[2,10],[3,15],[4,20]]],
+ ['খ) {(−3,8),(−2,3),(−1,0),(0,−1),(1,0),(2,3),(3,8)}',[[-3,8],[-2,3],[-1,0],[0,-1],[1,0],[2,3],[3,8]]],
+ ['ঘ) {(−3,−3),(−1,−1),(0,0),(1,1),(3,3)}',[[-3,-3],[-1,-1],[0,0],[1,1],[3,3]]],
+ ['ঙ) {(2,1),(2,2),(2,3)}',[[2,1],[2,2],[2,3]]],
+ ['বইয়ের নমুনা: {(1,4),(2,1),(3,0),(4,1),(5,4)}',[[1,4],[2,1],[3,0],[4,1],[5,4]]]
+];
+var rx=R2($('rc')),rcur=RELS[0][1];
+(function(){var h='';RELS.forEach(function(r,i){h+='<option value="'+i+'">'+r[0]+'</option>';});$('rsel').innerHTML=h;})();
+function uniq(a){var o=[];a.forEach(function(v){if(o.indexOf(v)<0)o.push(v);});return o.sort(function(p,q){return p-q;});}
+function pairStr(p){return '('+N(p[0])+', '+N(p[1])+')';}
+function setStr(a){return '{'+a.map(N).join(', ')+'}';}
+function isFun(P){var m={},ok=true;P.forEach(function(p){if(m[p[0]]!==undefined&&m[p[0]]!==p[1])ok=false;m[p[0]]=p[1];});return ok;}
+function isOne(P){var m={},ok=true;P.forEach(function(p){if(m[p[1]]!==undefined&&m[p[1]]!==p[0])ok=false;m[p[1]]=p[0];});return ok;}
+function rdraw(){
+  var P=rcur,x=rx,W=640,H=360;x.clearRect(0,0,W,H);x.fillStyle='#fff';x.fillRect(0,0,W,H);
+  var D=uniq(P.map(function(p){return p[0];})),Rg=uniq(P.map(function(p){return p[1];}));
+  var rows=Math.max(D.length,Rg.length),st=Math.min(48,300/rows);
+  function yy(arr,v){var i=arr.indexOf(v);return 180+(i-(arr.length-1)/2)*st;}
+  x.lineWidth=3;x.strokeStyle='#cfd9e1';x.fillStyle='#eaf7f5';
+  x.beginPath();x.ellipse(160,180,70,170,0,0,6.283);x.fill();x.stroke();
+  x.fillStyle='#fff4dc';x.beginPath();x.ellipse(480,180,70,170,0,0,6.283);x.fill();x.stroke();
+  x.font='700 15px "Hind Siliguri"';x.fillStyle='#1f3a5f';x.textAlign='center';x.fillText('ডোমেন',160,20);x.fillText('রেঞ্জ',480,20);
+  var cols=['#e76f51','#2a6fdb','#2a9d8f','#9b5de5','#f4a261','#118ab2','#ef476f'];
+  P.forEach(function(p,i){var y1=yy(D,p[0]),y2=yy(Rg,p[1]);x.strokeStyle=cols[i%cols.length];x.fillStyle=cols[i%cols.length];x.lineWidth=2.5;
+    x.beginPath();x.moveTo(190,y1);x.lineTo(450,y2);x.stroke();
+    var a=Math.atan2(y2-y1,260);x.beginPath();x.moveTo(450,y2);x.lineTo(450-10*Math.cos(a-.4),y2-10*Math.sin(a-.4));x.lineTo(450-10*Math.cos(a+.4),y2-10*Math.sin(a+.4));x.fill();});
+  x.font='700 18px system-ui';x.fillStyle='#1f3a5f';
+  D.forEach(function(v){x.beginPath();x.arc(172,yy(D,v),0,0,0);x.fillText(N(v),150,yy(D,v)+6);});
+  Rg.forEach(function(v){x.fillText(N(v),490,yy(Rg,v)+6);});
+  var f=isFun(P),o=isOne(P),inv=P.map(function(p){return [p[1],p[0]];});
+  var invs=inv.slice().sort(function(a,b){return a[0]-b[0]||a[1]-b[1];});
+  $('rinfo').innerHTML='S = {'+P.map(pairStr).join(', ')+'}<br>ডোমেন = '+setStr(D)+', রেঞ্জ = '+setStr(Rg)+
+   '<br>ফাংশন? <b>'+(f?'হ্যাঁ ✔':'না ✘ (একই x-এর একাধিক y)')+'</b>'+(f?'<br>এক-এক? <b>'+(o?'হ্যাঁ ✔':'না ✘ (দুটি x-এর y একই)')+'</b>':'')+
+   '<br>S⁻¹ = {'+invs.map(pairStr).join(', ')+'}<br>S⁻¹ ফাংশন? <b>'+(isFun(inv)?'হ্যাঁ ✔':'না ✘')+'</b>'+(f&&isFun(inv)?'':'')+
+   '<br><small>নিয়ম: S⁻¹ ফাংশন হবে কেবল যখন S এক-এক।</small>';
+}
+function rpick(){rcur=RELS[+$('rsel').value][1];rdraw();}
+$('rsel').onchange=rpick;
+$('rgo').onclick=function(){var t=$('rcus').value.trim();if(!t){rpick();return;}
+  var P=[];t.split(/[,،]\s*/).forEach(function(s){var m=en(s).match(/^\s*\(?\s*(-?\d+)\s*[-–>:]+\s*(-?\d+)\s*\)?\s*$/);if(m)P.push([+m[1],+m[2]]);});
+  if(!P.length){$('rinfo').innerHTML='এভাবে লেখো: 1-2, 2-4, 3-6 (প্রতিটি জোড়া x-y)';return;}rcur=P.slice(0,8);rdraw();};
+rdraw();
+
+/* ===================== ল্যাব ৪: ফাংশন মেশিন ===================== */
+var FNS=[
+ {t:'২x − ১',f:function(x){return 2*x-1;},inv:function(y){return (y+1)/2;},dom:'সব বাস্তব সংখ্যা',invt:'(x + ১)/২',ok:function(x){return true;},iok:function(y){return true;}},
+ {t:'x³ + ৫',f:function(x){return x*x*x+5;},inv:function(y){return Math.cbrt(y-5);},dom:'সব বাস্তব সংখ্যা',invt:'∛(x − ৫)',ok:function(x){return true;},iok:function(y){return true;}},
+ {t:'৫x − ৪',f:function(x){return 5*x-4;},inv:function(y){return (y+4)/5;},dom:'সব বাস্তব সংখ্যা',invt:'(x + ৪)/৫',ok:function(x){return true;},iok:function(y){return true;}},
+ {t:'√(x − ১)',f:function(x){return Math.sqrt(x-1);},inv:function(y){return y*y+1;},dom:'x ≥ ১',invt:'x² + ১ (শুধু x ≥ ০)',ok:function(x){return x>=1;},iok:function(y){return y>=0;}},
+ {t:'(২x − ১)/(২x + ৩)',f:function(x){return (2*x-1)/(2*x+3);},inv:function(y){return (1+3*y)/(2*(1-y));},dom:'x ≠ −৩/২',invt:'(১ + ৩x)/(২(১ − x))',ok:function(x){return x!==-1.5;},iok:function(y){return y!==1;}},
+ {t:'x²',f:function(x){return x*x;},inv:null,dom:'সব বাস্তব সংখ্যা',invt:'নেই (x² এক-এক নয়)',ok:function(x){return true;},iok:function(y){return false;}}
+];
+(function(){var h='';FNS.forEach(function(f,i){h+='<option value="'+i+'">'+f.t+'</option>';});$('fsel').innerHTML=h;$('fsel').value='0';})();
+function fshow(){
+  var F=FNS[+$('fsel').value],x=+$('fx').value;$('fxv').textContent=N(x);
+  var line;
+  if(!F.ok(x)){$('fmach').innerHTML='x = '+N(x)+' ডোমেনের বাইরে ❌ (ডোমেন: '+F.dom+')';
+    $('finfo').innerHTML='এই x দিলে মেশিন কাজ করে না। ডোমেন: <b>'+F.dom+'</b>';return;}
+  var y=F.f(x);
+  $('fmach').innerHTML='x = '+N(x)+' → [ f(x) = '+F.t+' ] → y = '+N(y);
+  var s='ডোমেন: <b>'+F.dom+'</b><br>f(<b>'+N(x)+'</b>) = <b>'+N(y)+'</b><br>বিপরীত ফাংশন f⁻¹(x) = <b>'+F.invt+'</b>';
+  if(F.inv&&F.iok(y)){var back=F.inv(y);s+='<br>f⁻¹('+N(y)+') = <b>'+N(back)+'</b> → ফিরে এলাম x = '+N(x)+' এ ✔';}
+  else if(!F.inv){s+='<br>দেখো: f(২) = ৪ এবং f(−২) = ৪। ৪ থেকে উল্টো ফিরলে ২ না −২ বোঝা যায় না, তাই বিপরীত ফাংশন হয় না।';}
+  $('finfo').innerHTML=s;
+}
+$('fsel').onchange=fshow;$('fx').oninput=fshow;fshow();
+
+/* ===================== ল্যাব ৫: লেখচিত্র ===================== */
+var GW=600,GH=400,GS=30,GOX=300,GOY=200;
+function T(t0,t1,fn){return {t0:t0,t1:t1,p:fn};}
+var GR=[
+ {n:'y = ২x − ১ (সরলরেখা)',br:[T(-8,8,function(t){return [t,2*t-1];})],ys:function(a){return [2*a-1];}},
+ {n:'y = x² − ৪ (পরাবৃত্ত)',br:[T(-6,6,function(t){return [t,t*t-4];})],ys:function(a){return [a*a-4];}},
+ {n:'x² + y² = ২৫ (বৃত্ত)',br:[T(0,6.2832,function(t){return [5*Math.cos(t),5*Math.sin(t)];})],ys:function(a){return Math.abs(a)>5?[]:(Math.abs(a)===5?[0]:[Math.sqrt(25-a*a),-Math.sqrt(25-a*a)]);}},
+ {n:'S = {(x,y): x² + y² = ২৫, x ≥ ০} (অর্ধবৃত্ত)',br:[T(-1.5708,1.5708,function(t){return [5*Math.cos(t),5*Math.sin(t)];})],ys:function(a){return (a<0||a>5)?[]:(a===5?[0]:[Math.sqrt(25-a*a),-Math.sqrt(25-a*a)]);}},
+ {n:'x = −২ (খাড়া রেখা)',br:[T(-8,8,function(t){return [-2,t];})],ys:function(a){return a===-2?'inf':[];}},
+ {n:'y = x³',br:[T(-3,3,function(t){return [t,t*t*t];})],ys:function(a){return [a*a*a];}},
+ {n:'F(x) = √(x − ১)',br:[T(1,12,function(t){return [t,Math.sqrt(t-1)];})],ys:function(a){return a<1?[]:[Math.sqrt(a-1)];}},
+ {n:'x = y² (পাশে শোয়া পরাবৃত্ত)',br:[T(-5,5,function(t){return [t*t,t];})],ys:function(a){return a<0?[]:(a===0?[0]:[Math.sqrt(a),-Math.sqrt(a)]);}}
+];
+(function(){var h='';GR.forEach(function(g,i){h+='<option value="'+i+'">'+g.n+'</option>';});$('gsel').innerHTML=h;
+  GR.forEach(function(g){var f=true,o=true,a,ys,seen;
+    for(a=-9;a<=9;a+=0.01){ys=g.ys(Math.round(a*100)/100);if(ys==='inf'){f=false;continue;}if(ys.length>1)f=false;}
+    /* এক-এক: একই y দুই ভিন্ন x এ হলে নয় — নমুনা নিয়ে */
+    var m={};for(a=-9;a<=9;a+=0.05){var A=Math.round(a*100)/100;ys=g.ys(A);if(ys==='inf')continue;ys.forEach(function(y){var k=Math.round(y*1e6)/1e6;if(m[k]!==undefined&&Math.abs(m[k]-A)>0.001)o=false;if(m[k]===undefined)m[k]=A;});}
+    g.fun=f;g.one=f&&o;});})();
+var gx=R2($('gc')),ginv=false;
+function gX(X){return GOX+X*GS;} function gY(Y){return GOY-Y*GS;}
+function gdraw(){
+  var g=GR[+$('gsel').value],a=+$('ga').value,x=gx,i,t;$('gav').textContent=N(a);
+  x.clearRect(0,0,GW,GH);x.fillStyle='#fff';x.fillRect(0,0,GW,GH);
+  for(i=-10;i<=10;i++){x.strokeStyle=i===0?'#1f3a5f':'#e3e9ee';x.lineWidth=i===0?2:1;x.beginPath();x.moveTo(gX(i),0);x.lineTo(gX(i),GH);x.stroke();}
+  for(i=-6;i<=6;i++){x.strokeStyle=i===0?'#1f3a5f':'#e3e9ee';x.lineWidth=i===0?2:1;x.beginPath();x.moveTo(0,gY(i));x.lineTo(GW,gY(i));x.stroke();}
+  x.fillStyle='#5b6770';x.font='11px system-ui';x.textAlign='center';for(i=-10;i<=10;i+=2)if(i)x.fillText(N(i),gX(i),GOY+14);x.textAlign='right';for(i=-6;i<=6;i+=2)if(i)x.fillText(N(i),GOX-5,gY(i)+4);
+  function plot(sw,col,dash){x.strokeStyle=col;x.lineWidth=3;x.setLineDash(dash||[]);
+    g.br.forEach(function(b){x.beginPath();var st=false,n=400;for(var k=0;k<=n;k++){var tt=b.t0+(b.t1-b.t0)*k/n,p=b.p(tt),X=sw?p[1]:p[0],Y=sw?p[0]:p[1];
+      if(Math.abs(Y)>20||Math.abs(X)>20){st=false;continue;}if(!st){x.moveTo(gX(X),gY(Y));st=true;}else x.lineTo(gX(X),gY(Y));}x.stroke();});x.setLineDash([]);}
+  if(ginv){x.strokeStyle='#999';x.lineWidth=1.5;x.setLineDash([5,5]);x.beginPath();x.moveTo(gX(-10),gY(-10));x.lineTo(gX(10),gY(10));x.stroke();x.setLineDash([]);
+    x.fillStyle='#777';x.font='12px system-ui';x.textAlign='left';x.fillText('y = x',gX(5.3),gY(5.6));plot(true,'#2a9d8f',[8,5]);}
+  plot(false,'#2a6fdb');
+  x.strokeStyle='#e76f51';x.lineWidth=2.5;x.beginPath();x.moveTo(gX(a),0);x.lineTo(gX(a),GH);x.stroke();
+  var ys=g.ys(a),cnt=ys==='inf'?'অসংখ্য':bn(ys.length);
+  if(ys!=='inf')ys.forEach(function(y){x.fillStyle='#e76f51';x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.arc(gX(a),gY(y),6,0,6.283);x.fill();x.stroke();});
+  var msg='লাল রেখা x = '+N(a)+' কাটে <b>'+cnt+'</b> বার'+(ys!=='inf'&&ys.length?' (y = '+ys.map(function(y){return N(y);}).join(', ')+')':'')+'।<br>উল্লম্ব রেখা পরীক্ষা: এই লেখচিত্র '+(g.fun?'<b>ফাংশনের ✔</b>':'<b>ফাংশনের নয় ✘</b>')+' (কোথাও কোথাও একাধিকবার কাটে)'+
+   (g.fun?'<br>অনুভূমিক রেখা পরীক্ষা: '+(g.one?'<b>এক-এক ✔</b> → বিপরীত ফাংশন আছে':'<b>এক-এক নয় ✘</b> → বিপরীত ফাংশন নেই'):'');
+  if(ginv)msg+='<br>সবুজ ড্যাশ রেখা = প্রতিবিম্ব (বিপরীত অন্বয়)'+(g.fun&&g.one?': এটিও ফাংশন ✔':': এটি ফাংশন নয় ✘');
+  $('ginfo').innerHTML=msg;
+}
+$('gsel').onchange=gdraw;$('ga').oninput=gdraw;$('ginv').onclick=function(){ginv=!ginv;this.textContent=ginv?'বিপরীত লুকাও':'বিপরীত দেখাও';gdraw();};gdraw();
+
+/* ===================== প্র্যাকটিস ===================== */
+var PR=[
+ ['F(x) = √(x − ১) হলে F(১০) = কত?',['3'],'x = ১০ বসাই: √(১০−১) = √৯ = ৩।'],
+ ['F(x) = √(x − ১) = ২ হলে x = কত?',['5'],'দুই পাশ বর্গ: x − ১ = ৪ ⇒ x = ৫।'],
+ ['F(x) = √(x − ১) হলে F(৫) কত?',['2'],'√(৫−১) = √৪ = ২।'],
+ ['F(x) = √(x − ১) = ৫ হলে x = কত?',['26'],'x − ১ = ২৫ ⇒ x = ২৬।'],
+ ['F(x) = ২x − ১ হলে F(১/২) = কত?',['0'],'২ × ১/২ − ১ = ১ − ১ = ০।'],
+ ['F(x) = ২x − ১ হলে F(x + ১) কে x এর মাধ্যমে লেখো। (যেমন: 2x+1)',['2x+1'],'২(x+১) − ১ = ২x + ১।'],
+ ['f(x) = ৫x − ৪ হলে f⁻¹(৬) = কত?',['2'],'f⁻¹(x) = (x+৪)/৫, তাই (৬+৪)/৫ = ২।'],
+ ['g(x) = (x − ৩)/৩ হলে g⁻¹(−৩) = কত?',['-6'],'g⁻¹(x) = ৩x + ৩। x = −৩ দিলে −৯ + ৩ = −৬।'],
+ ['f(x) = (২x − ১)/(২x + ৩) হলে f(−১/৩) = কত? (ভগ্নাংশে)',['-5/7'],'লব = −৫/৩, হর = ৭/৩ ⇒ −৫/৭।'],
+ ['A = {১,২,৩,৪} হলে P(A) এর সদস্য সংখ্যা কত?',['16'],'২⁴ = ১৬।'],
+ ['n(A) = ২৫, n(B) = ২০, n(A ∩ B) = ৮ হলে n(A ∪ B) কত?',['37'],'২৫ + ২০ − ৮ = ৩৭।'],
+ ['f(x) = x³ + ৫ হলে f⁻¹(১৩) কত?',['2'],'f⁻¹(x) = ∛(x−৫); ∛৮ = ২।']
+];
+(function(){var h='';PR.forEach(function(p,i){h+='<div class="q"><b>'+bn(i+1)+'.</b> '+p[0]+'<div class="ans"> <input type="text" id="pi'+i+'" size="10"> <button class="btn" data-pc="'+i+'">যাচাই</button> <button class="btn alt" data-ph="'+i+'">সমাধান</button></div><div class="fb" id="pf'+i+'"></div></div>';});$('pracbox').innerHTML=h;})();
+function norm(s){return en(s).replace(/[−–]/g,'-').replace(/\s+/g,'').replace(/×|\*/g,'').toLowerCase();}
+$('pracbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.pc!==undefined){var i=+b.dataset.pc,v=norm($('pi'+i).value),ok=PR[i][1].some(function(a){return norm(a)===v;});
+    if(!ok&&/^-?\d+\/\d+$/.test(v)){var p=v.split('/');ok=PR[i][1].some(function(a){return norm(a)===frac(+p[0],+p[1]);});}
+    $('pf'+i).innerHTML=v===''?'আগে উত্তর লেখো।':(ok?'✅ ঠিক! সাবাশ।':'❌ আবার চেষ্টা করো, বা "সমাধান" দেখো।');}
+  if(b.dataset.ph!==undefined){var j=+b.dataset.ph;$('pf'+j).innerHTML='💡 '+PR[j][2]+' <b>উত্তর: '+bn(PR[j][1][0]).replace('-','−')+'</b>';}
+});
+
+/* ===================== কুইজ ===================== */
+var QZ=[];function M(q,c,w,e){QZ.push({q:q,o:[c].concat(w),e:e});}
+M('A = {১, ২, ৩} হলে P(A) এর সদস্য সংখ্যা কত?','৮',['৬','৯','৩'],'২³ = ৮।');
+M('n(A) = ৪ হলে A এর উপসেট সংখ্যা কত?','১৬',['৮','৪','১২'],'২⁴ = ১৬।');
+M('n(A) = ১০, n(B) = ৮, n(A ∩ B) = ৩ হলে n(A ∪ B) কত?','১৫',['১৮','২১','১১'],'১০ + ৮ − ৩ = ১৫।');
+M('A = {১,২,৩}, B = {২,৩,৪} হলে A ∩ B কত?','{২, ৩}',['{১, ২, ৩, ৪}','{১}','{৪}'],'দুটিতেই আছে ২ ও ৩।');
+M('A = {১,২,৩}, B = {২,৩,৪} হলে A − B কত?','{১}',['{৪}','{২, ৩}','{১, ৪}'],'A-তে আছে কিন্তু B-তে নেই: ১।');
+M('n(A) = ৩, n(B) = ২ হলে n(A × B) কত?','৬',['৫','৯','৮'],'৩ × ২ = ৬।');
+M('ফাঁকা সেট সম্পর্কে কোনটি সঠিক?','এটি প্রতিটি সেটের উপসেট',['এটি কোনো সেটের উপসেট নয়','এর সদস্য সংখ্যা ১','এটি শুধু সসীম সেটের উপসেট'],'∅ ⊆ A সব A-এর জন্য।');
+M('(A ∪ B)′ এর সমান কোনটি?','A′ ∩ B′',['A′ ∪ B′','A ∩ B','A − B'],'ডি মরগানের সূত্র।');
+M('ফাংশনের সংজ্ঞায় ডোমেনের প্রতিটি x-এর জন্য y থাকে—','ঠিক একটি',['একাধিক','কোনোটি নয়','দুটি'],'ঠিক একটি y।');
+M('F(x) = √(x − ১) এর ডোমেন কোনটি?','x ≥ ১',['x ≤ ১','x > ১','x ≠ ১'],'x − ১ ≥ ০ ⇒ x ≥ ১।');
+M('F(x) = √(x − ১) হলে F(১০) = কত?','৩',['৯','−৩','√১০'],'√৯ = ৩।');
+M('F(x) = √(x − ১) = ২ হলে x = কত?','৫',['২৪','২৫','২৬'],'বর্গ করে x − ১ = ৪, x = ৫।');
+M('f(x) = ২x − ১ হলে f(৩) = কত?','৫',['৭','৩','৬'],'২ × ৩ − ১ = ৫।');
+M('f(x) = ২x − ১ হলে f⁻¹(x) কোনটি?','(x + ১)/২',['(x − ১)/২','২x + ১','১/(২x − ১)'],'x = (y + ১)/২।');
+M('f(x) = x³ এর বিপরীত ফাংশন কোনটি?','∛x',['x³','১/x³','√x'],'ঘনমূল বিপরীত প্রক্রিয়া।');
+M('f : R → R, f(x) = x² এক-এক কি?','না, কারণ f(−২) = f(২)',['হ্যাঁ','হ্যাঁ, কারণ বর্গ সবসময় বাড়ে','বলা যায় না'],'ভিন্ন x-এর একই y।');
+M('S = {(১,২),(২,২)} সম্পর্কটি—','ফাংশন কিন্তু এক-এক নয়',['ফাংশন ও এক-এক','ফাংশন নয়','এক-এক কিন্তু ফাংশন নয়'],'দুই x-এর y একই।');
+M('S = {(১,২),(১,৩)} সম্পর্কটি—','ফাংশন নয়',['ফাংশন','এক-এক ফাংশন','সার্বিক ফাংশন'],'একই x = ১-এর দুটি y।');
+M('উল্লম্ব রেখা পরীক্ষা কীসের জন্য?','লেখচিত্র ফাংশনের কিনা জানতে',['এক-এক জানতে','ডোমেন গোনতে','ঢাল বের করতে'],'একবারের বেশি কাটলে ফাংশন নয়।');
+M('f ও f⁻¹ এর লেখচিত্র কোন রেখা বরাবর প্রতিবিম্ব?','y = x',['x-অক্ষ','y-অক্ষ','y = −x'],'প্রতিবিম্ব y = x রেখায়।');
+M('x² + y² = ২৫ সম্পর্কটি—','ফাংশন নয়',['ফাংশন','এক-এক ফাংশন','সার্বিক ফাংশন'],'একই x-এ +y ও −y।');
+M('f(x) = x³ + ৫ হলে f⁻¹(x) কত?','∛(x − ৫)',['∛x + ৫','(x − ৫)³','∛(x + ৫)'],'y − ৫ = x³ ⇒ x = ∛(y − ৫)।');
+M('f(x) = ৫x − ৪ হলে f⁻¹(x) কত?','(x + ৪)/৫',['(x − ৪)/৫','৫x + ৪','x/৫ − ৪'],'x = (y + ৪)/৫।');
+M('f(x) = ax + b (a ≠ ০) ফাংশনটি—','এক-এক',['এক-এক নয়','কেবল ধ্রুব','ফাংশন নয়'],'f(x₁)=f(x₂) ⇒ ax₁=ax₂ ⇒ x₁=x₂।');
+M('S = {(২,১),(২,২),(২,৩)} একটি ফাংশন কি?','না',['হ্যাঁ','এক-এক ফাংশন','সার্বিক ফাংশন'],'একই x = ২-এর তিনটি y।');
+M('f(x) = (২x − ১)/(২x + ৩) হলে f(−১/৩) = কত?','−৫/৭',['৫/৭','−৭/৫','১'],'(−৫/৩)/(৭/৩)।');
+M('f(x) = ২x + ১ হলে f(f(১)) = কত?','৭',['৫','৩','৯'],'f(১) = ৩, f(৩) = ৭।');
+M('f : R → R, f(x) = x² এর রেঞ্জ কোনটি?','y ≥ ০',['সব বাস্তব সংখ্যা','y > ০','y ≤ ০'],'বর্গ ঋণাত্মক হয় না।');
+M('A ∪ A′ = ?','U',['∅','A','A′'],'সবকিছু মিলে সার্বিক সেট।');
+M('n(A) = ২০, n(B) = ১৫, n(A ∪ B) = ৩০ হলে n(A ∩ B) = কত?','৫',['১০','৩৫','১৫'],'২০ + ১৫ − ৩০ = ৫।');
+(function(){
+  var done=0,sc=0;
+  QZ.forEach(function(q,qi){var ord=q.o.map(function(t,i){return {t:t,c:i===0};});
+    for(var i=ord.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),k=ord[i];ord[i]=ord[j];ord[j]=k;}q.ord=ord;});
+  var h='';QZ.forEach(function(q,qi){h+='<div class="q" id="qq'+qi+'"><b>'+bn(qi+1)+'.</b> '+q.q+q.ord.map(function(o,oi){return '<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+o.t+'</button>';}).join('')+'<div class="fb" id="qe'+qi+'"></div></div>';});
+  $('quizbox').innerHTML=h;
+  $('quizbox').addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b||b.parentNode.dataset.done)return;
+    var qi=+b.dataset.q,q=QZ[qi],o=q.ord[+b.dataset.o];b.parentNode.dataset.done=1;done++;
+    var btns=b.parentNode.querySelectorAll('.opt');btns.forEach(function(x,i){if(q.ord[i].c)x.classList.add('good');});
+    if(o.c){sc++;$('qe'+qi).textContent='✅ ঠিক! '+q.e;}else{b.classList.add('bad');$('qe'+qi).textContent='❌ ভুল। '+q.e;}
+    $('qscore').textContent='স্কোর: '+bn(sc)+' / '+bn(done)+' (মোট '+bn(QZ.length)+'টি)';
+    try{if(done===QZ.length){localStorage.setItem('sl_done_math-sets-functions','1');var xp=+(localStorage.getItem('sl_xp')||0);localStorage.setItem('sl_xp',xp+sc);}}catch(er){}
+  });
+})();
+
+/* ===================== প্রশ্নোত্তর ===================== */
+var QA=[
+ {h:'বহুনির্বাচনি (বইয়ের ধাঁচে)',items:[
+  ['১. F(x) = √(x − ১) হলে F(১০) = কত? (ক. ৯ খ. ৩ গ. −৩ ঘ. √১০)','খ. ৩।'],
+  ['২. F(x) = √(x − ১) = ২ হলে x কত? (ক. ৫ খ. ২৪ গ. ২৫ ঘ. ২৬)','ক. ৫। (x − ১ = ৪)'],
+  ['৩. F(x) = −√(x − ৪) = −২ হলে x কত?','x − ৪ = ৪, তাই x = ৮।'],
+  ['৪. F(x) = −√(x − ৪) হলে F(a² + ৪) কত?','−√(a²) = −|a|।'],
+  ['৫. S = {(১,৪),(২,১),(৩,০),(৪,১),(৫,৪)} হলে i. রেঞ্জ {৪,১,০} ii. S⁻¹ = {(৪,১),(১,২),(০,৩),(১,৪),(৪,৫)} iii. S একটি ফাংশন — কোনটি সঠিক?','i, ii ও iii — সবই সঠিক।']]},
+ {h:'সৃজনশীল প্রশ্ন (নমুনা)',items:[
+  ['৬. f(x) = √(x − ৪) দেওয়া আছে। ক) ডোমেন নির্ণয় করো। খ) f এক-এক কিনা নির্ধারণ করো। গ) f⁻¹(x) ফাংশন কিনা লেখচিত্রের সাহায্যে নির্ণয় করো।','ক) x − ৪ ≥ ০ ⇒ ডোমেন {x ∈ R : x ≥ ৪}। খ) √(a−৪) = √(b−৪) ⇒ a − ৪ = b − ৪ ⇒ a = b, তাই এক-এক। গ) f এক-এক, তাই f⁻¹ ফাংশন। f⁻¹(x) = x² + ৪ (x ≥ ০), এর লেখচিত্র y = x রেখা বরাবর f-এর প্রতিবিম্ব এবং প্রতিটি উল্লম্ব রেখা একবারই কাটে।']]},
+ {h:'সংক্ষিপ্ত উত্তর প্রশ্ন',items:[
+  ['৭. S = {(−২,৭),(−১,২),(০,১),(১,২),(২,৭)} হলে S⁻¹ ফাংশন কিনা ব্যাখ্যা করো।','S⁻¹ = {(৭,−২),(২,−১),(১,০),(২,১),(৭,২)}। এখানে ২-এর জন্য −১ ও ১ দুটি মান, তাই S⁻¹ ফাংশন নয়। কারণ S এক-এক নয়।'],
+  ['৮. F : R → R, F(x) = x³ হলে F⁻¹(x) নির্ণয় করো।','y = x³ ⇒ x = ∛y। তাই F⁻¹(x) = ∛x।'],
+  ['৯. f : R → R, f(x) = ২x − ৩ হলে দেখাও f এক-এক।','f(a) = f(b) ⇒ ২a − ৩ = ২b − ৩ ⇒ a = b। তাই f এক-এক।'],
+  ['১০. S = {(x,y) : ২x − y + ৬ = ০} এর লেখচিত্র এঁকে ফাংশন কিনা বলো।','y = ২x + ৬ একটি সরলরেখা। প্রতিটি উল্লম্ব রেখা একবার কাটে, তাই ফাংশন।']]}
+];
+(function(){var h='';QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){h+='<details class="ex"><summary><b>'+it[0]+'</b></summary><p>'+it[1]+'</p></details>';});});$('qabox').innerHTML=h;})();
+</script>
+</body>
+</html>

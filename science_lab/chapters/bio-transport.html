@@ -474,6 +474,413 @@ var PAL=[CY,GR,PK,YL,PU,OR,BL,'#2dd4bf','#f87171','#a3e635'];
   DRAWS.push(function(){var t=performance.now(),dt=t-last;last=t;if(window.LITE||dt>400)return;sum+=dt;n++;if(n===90){if(sum/n>52){window.LITE=true;var s=document.createElement('style');s.textContent='*{animation:none!important;backdrop-filter:none!important;filter:none!important}.lbs,.lbs *{box-shadow:none!important}';document.head.appendChild(s);}sum=0;n=0;}});
 })();
 
+/* ===== বাস্তব শারীরস্থান ছবির লাইব্রেরি (ক্যাশ করা অফস্ক্রিন ছবি, লাগ-ফ্রি) ===== */
+var RC={};
+function RCV(key,w,h,fn){var c=RC[key];if(!c){c=document.createElement('canvas');c.width=w*2;c.height=h*2;var g=c.getContext('2d');g.scale(2,2);fn(g);RC[key]=c;}return c;}
+function srnd(seed){var a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+var BONE={hi:'#fff7e0',lt:'#f0e4c6',md:'#dcc99c',dk:'#a8926a',sh:'#6f5b3b'};
+function bGrad(g,x0,y0,x1,y1,hl){var gr=g.createLinearGradient(x0,y0,x1,y1);if(hl){gr.addColorStop(0,'#fff1a8');gr.addColorStop(.45,'#fbbf24');gr.addColorStop(1,'#a85a08');}else{gr.addColorStop(0,BONE.hi);gr.addColorStop(.3,BONE.lt);gr.addColorStop(.7,BONE.md);gr.addColorStop(1,BONE.dk);}return gr;}
+function bRad(g,cx,cy,r,hl){var gr=g.createRadialGradient(cx-r*.3,cy-r*.35,r*.1,cx,cy,r*1.1);if(hl){gr.addColorStop(0,'#fff1a8');gr.addColorStop(.5,'#fbbf24');gr.addColorStop(1,'#a85a08');}else{gr.addColorStop(0,BONE.hi);gr.addColorStop(.45,BONE.lt);gr.addColorStop(.8,BONE.md);gr.addColorStop(1,BONE.dk);}return gr;}
+function edge(g,w){g.strokeStyle='rgba(88,66,36,.55)';g.lineWidth=w||.9;g.stroke();}
+/* দীর্ঘ অস্থি: নলাকার শ্যাফট + দুই প্রান্তের গিঁট */
+function LB(g,x1,y1,x2,y2,ws,we,hl,e1,e2){var dx=x2-x1,dy=y2-y1,L=Math.sqrt(dx*dx+dy*dy),a=Math.atan2(dy,dx),f=L*.16;e1=e1||1;e2=e2||1;
+ g.save();g.translate(x1,y1);g.rotate(a);
+ g.beginPath();g.moveTo(0,-we*.8*e1);g.bezierCurveTo(f,-ws,L-f,-ws,L,-we*.8*e2);g.lineTo(L,we*.8*e2);g.bezierCurveTo(L-f,ws,f,ws,0,we*.8*e1);g.closePath();
+ g.fillStyle=bGrad(g,0,-we,0,we,hl);g.fill();edge(g,.7);
+ [[0,e1],[L,e2]].forEach(function(p){g.beginPath();g.ellipse(p[0],0,we*.78*p[1],we*p[1],0,0,7);g.fillStyle=bGrad(g,p[0]-we,-we,p[0]+we,we,hl);g.fill();edge(g,.7);g.strokeStyle='rgba(255,255,255,.4)';g.lineWidth=.8;g.beginPath();g.arc(p[0],0,we*.7*p[1],Math.PI*1.1,Math.PI*1.7);g.stroke();});
+ g.strokeStyle='rgba(255,255,255,.4)';g.lineWidth=1;g.beginPath();g.moveTo(f,-ws*.5);g.lineTo(L-f,-ws*.5);g.stroke();g.restore();}
+/* একটি কশেরুকা (পার্শ্বদৃশ্য), সামনে বাঁ দিক। typ 0 গ্রীবা 1 বক্ষ 2 কটি */
+function VERT(g,typ,vd,vh,hl){
+ /* কশেরুকার পিছনের অংশ */
+ g.save();
+ var sl=typ===0?vd*.5:typ===1?vd*.85:vd*.62,ty=typ===0?vh*.22:typ===1?vh*1.0:vh*.08;
+ g.beginPath();g.moveTo(vd*.45,-vh*.34);g.lineTo(vd*.78,-vh*.4);g.quadraticCurveTo(vd*.8+sl*.6,-vh*.3+ty*.2,vd*.8+sl,ty-vh*.13);g.lineTo(vd*.8+sl+vd*.04,ty+vh*.14);g.quadraticCurveTo(vd*.82+sl*.5,ty+vh*.34,vd*.78,vh*.36);g.lineTo(vd*.45,vh*.32);g.closePath();
+ g.fillStyle=bGrad(g,0,-vh,0,vh*1.5,hl);g.fill();edge(g,.6);
+ /* ট্রান্সভার্স প্রক্রিয়া ও ফ্যাসেট */
+ g.beginPath();g.ellipse(vd*.68,-vh*.05,vd*.1,vh*.18,0,0,7);g.fillStyle=BONE.dk;g.fill();
+ g.beginPath();g.ellipse(vd*.62,-vh*.46,vd*.11,vh*.14,-.3,0,7);g.fillStyle=bGrad(g,0,-vh,0,0,hl);g.fill();edge(g,.5);
+ /* মেরুনালী (কালো ছায়া) */
+ g.fillStyle='rgba(30,20,10,.55)';g.beginPath();g.ellipse(vd*.5,0,vd*.06,vh*.28,0,0,7);g.fill();
+ /* কশেরুকাদেহ */
+ g.beginPath();g.moveTo(-vd*.5+vh*.2,-vh/2);g.lineTo(vd*.46,-vh/2);g.quadraticCurveTo(vd*.52,0,vd*.46,vh/2);g.lineTo(-vd*.5+vh*.2,vh/2);
+ g.quadraticCurveTo(-vd*.5+vh*.05,vh*.18,-vd*.5+vh*.12,0);g.quadraticCurveTo(-vd*.5+vh*.05,-vh*.18,-vd*.5+vh*.2,-vh/2);g.closePath();
+ g.fillStyle=bGrad(g,-vd*.5,0,vd*.5,0,hl);g.fill();edge(g,.7);
+ g.strokeStyle='rgba(255,255,255,.45)';g.lineWidth=.8;g.beginPath();g.moveTo(-vd*.3,-vh*.32);g.lineTo(vd*.3,-vh*.32);g.stroke();g.restore();}
+function DISC(g,vd,vh,dh){g.beginPath();g.moveTo(-vd*.46,vh/2);g.quadraticCurveTo(-vd*.5,vh/2+dh/2,-vd*.46,vh/2+dh);g.lineTo(vd*.45,vh/2+dh);g.lineTo(vd*.45,vh/2);g.closePath();var gr=g.createLinearGradient(0,vh/2,0,vh/2+dh);gr.addColorStop(0,'#7fb4d8');gr.addColorStop(1,'#4e86ad');g.fillStyle=gr;g.fill();g.strokeStyle='rgba(20,60,90,.5)';g.lineWidth=.5;g.stroke();}
+/* মেরুদণ্ড (পার্শ্বদৃশ্য): ৭+১২+৫ কশেরুকা, ত্রিকাস্থি, অনুত্রিক। hl: -1 নেই, 0 গ্রীবা 1 বক্ষ 2 কটি 3 ত্রিকাস্থি 4 অনুত্রিক। রিটার্ন: অঞ্চলের কেন্দ্র [x,y] */
+function SPN(g,ox,oy,H,hl){var n=24,hs=[],tot=0,i,dh=2.8;
+ for(i=0;i<n;i++){var typ=i<7?0:i<19?1:2,vh,vd;if(typ===0){vh=5.5+i*.3;vd=11+i*1.1;}else if(typ===1){vh=8+(i-7)*.28;vd=16+(i-7)*.9;}else{vh=11.5+(i-19)*.5;vd=27+(i-19)*.8;}hs.push([typ,vd,vh]);tot+=vh+dh;}
+ var SAC=40,COC=13,total=tot+SAC+COC,sc=H/total;
+ function off(y){var f=y/total;return -15*Math.exp(-Math.pow((f-.14)/.1,2))+19*Math.exp(-Math.pow((f-.5)/.2,2))-20*Math.exp(-Math.pow((f-.86)/.09,2))+9*Math.exp(-Math.pow((f-1)/.08,2));}
+ var y=0,res=[[0,0],[0,0],[0,0],[0,0],[0,0]],cnt=[0,0,0];
+ for(i=0;i<n;i++){var h=hs[i],yc=y+h[2]/2,o=off(yc),o2=off(yc+4),o1=off(yc-4),ang=Math.atan2(o2-o1,8),rg=h[0];
+  g.save();g.translate(ox+o*sc,oy+yc*sc);g.rotate(ang);g.scale(sc,sc);
+  VERT(g,h[0],h[1],h[2],hl===rg);if(i<n-1)DISC(g,h[1],h[2],dh);g.restore();
+  res[rg][0]+=ox+o*sc;res[rg][1]+=oy+yc*sc;cnt[rg]++;y+=h[2]+dh;}
+ /* ত্রিকাস্থি */
+ var ys=y;g.save();g.translate(ox+off(ys)*sc,oy+ys*sc);g.scale(sc,sc);
+ g.beginPath();g.moveTo(-17,0);g.bezierCurveTo(-19,14,-13,30,-3,SAC);g.lineTo(7,SAC-3);g.bezierCurveTo(22,26,28,10,24,-1);g.lineTo(18,-3);g.closePath();
+ var sg=g.createLinearGradient(-18,0,26,0);sg.addColorStop(0,hl===3?'#fff1a8':BONE.hi);sg.addColorStop(.5,hl===3?'#fbbf24':BONE.md);sg.addColorStop(1,hl===3?'#a85a08':BONE.dk);g.fillStyle=sg;g.fill();edge(g,.9);
+ g.strokeStyle='rgba(100,80,50,.45)';g.lineWidth=.6;for(i=1;i<4;i++){g.beginPath();g.moveTo(-16+i*1.5,i*8.5);g.lineTo(21-i*3,i*8.5-2);g.stroke();}
+ g.fillStyle='rgba(40,28,12,.65)';[[-12,8],[-9,17],[-5,26]].forEach(function(p){g.beginPath();g.ellipse(p[0],p[1],1.6,2.2,0,0,7);g.fill();});
+ g.beginPath();g.moveTo(-3,SAC);g.lineTo(5,SAC-3);g.lineTo(8,SAC+7);g.lineTo(5,SAC+13);g.lineTo(0,SAC+11);g.closePath();g.fillStyle=bGrad(g,-3,0,8,0,hl===4);g.fill();edge(g,.7);g.restore();
+ res[3]=[ox+(off(ys+SAC*.5)+3)*sc,oy+(ys+SAC*.5)*sc];res[4]=[ox+(off(ys+SAC+7)+7)*sc,oy+(ys+SAC+7)*sc];
+ for(i=0;i<3;i++){res[i][0]/=cnt[i];res[i][1]/=cnt[i];}return res;}
+/* কশেরুকা (উপর থেকে দেখা) */
+function VTOP(g,cx,cy,s,hl){g.save();g.translate(cx,cy);g.scale(s,s);
+ g.beginPath();g.moveTo(-26,-26);g.bezierCurveTo(-62,-36,-72,-22,-66,-16);g.lineTo(-30,-8);g.closePath();g.fillStyle=bGrad(g,0,-40,0,0,hl);g.fill();edge(g);
+ g.beginPath();g.moveTo(26,-26);g.bezierCurveTo(62,-36,72,-22,66,-16);g.lineTo(30,-8);g.closePath();g.fillStyle=bGrad(g,0,-40,0,0,hl);g.fill();edge(g);
+ g.beginPath();g.moveTo(-9,-42);g.lineTo(-5,-86);g.quadraticCurveTo(0,-92,5,-86);g.lineTo(9,-42);g.closePath();g.fillStyle=bGrad(g,-9,0,9,0,hl);g.fill();edge(g);
+ g.beginPath();g.ellipse(0,-22,38,24,0,0,7);g.fillStyle=bGrad(g,0,-48,0,2,hl);g.fill();edge(g);
+ g.beginPath();g.moveTo(-26,6);g.bezierCurveTo(-40,10,-42,44,-14,52);g.bezierCurveTo(-4,54,4,54,14,52);g.bezierCurveTo(42,44,40,10,26,6);g.bezierCurveTo(12,2,-12,2,-26,6);g.closePath();g.fillStyle=bRad(g,0,26,38,hl);g.fill();edge(g,1.1);
+ g.fillStyle='rgba(60,42,20,.3)';for(var i=0;i<14;i++){g.beginPath();g.arc(-20+(i*13)%40,14+(i*7)%30,1.2,0,7);g.fill();}
+ g.beginPath();g.moveTo(-16,-10);g.quadraticCurveTo(0,-34,16,-10);g.quadraticCurveTo(0,-2,-16,-10);g.closePath();g.fillStyle='#2a1d0e';g.fill();g.strokeStyle='rgba(255,230,180,.5)';g.lineWidth=1;g.stroke();g.restore();}
+/* করোটি (সামনে থেকে): hl, mand=চোয়াল খোলা কোণ (পিক্সেল) */
+function SKULL(g,cx,cy,s,hl){g.save();g.translate(cx,cy);g.scale(s,s);
+ g.beginPath();g.moveTo(0,-52);g.bezierCurveTo(32,-52,42,-30,40,-8);g.bezierCurveTo(40,4,43,12,38,20);g.bezierCurveTo(34,28,30,36,24,40);g.lineTo(-24,40);g.bezierCurveTo(-30,36,-34,28,-38,20);g.bezierCurveTo(-43,12,-40,4,-40,-8);g.bezierCurveTo(-42,-30,-32,-52,0,-52);g.closePath();
+ var gr=g.createRadialGradient(-12,-30,4,0,-8,60);if(hl){gr.addColorStop(0,'#fff1a8');gr.addColorStop(.6,'#fbbf24');gr.addColorStop(1,'#a85a08');}else{gr.addColorStop(0,BONE.hi);gr.addColorStop(.5,BONE.lt);gr.addColorStop(.85,BONE.md);gr.addColorStop(1,BONE.dk);}
+ g.fillStyle=gr;g.fill();edge(g,1.1);
+ g.strokeStyle='rgba(110,88,56,.55)';g.lineWidth=.7;g.setLineDash([2,1.5]);g.beginPath();g.moveTo(-36,-24);g.bezierCurveTo(-18,-34,18,-34,36,-24);g.stroke();g.setLineDash([]);
+ [[-16,-2],[16,-2]].forEach(function(o){g.beginPath();g.ellipse(o[0],o[1],11,9.5,o[0]<0?.12:-.12,0,7);var og=g.createRadialGradient(o[0],o[1],1,o[0],o[1],11);og.addColorStop(0,'#1a1209');og.addColorStop(.75,'#3d2d18');og.addColorStop(1,'#7a6340');g.fillStyle=og;g.fill();g.strokeStyle=BONE.sh;g.lineWidth=1.3;g.stroke();});
+ g.beginPath();g.moveTo(0,5);g.bezierCurveTo(7,9,9,19,5,24);g.lineTo(-5,24);g.bezierCurveTo(-9,19,-7,9,0,5);g.closePath();g.fillStyle='#2a1d0e';g.fill();g.strokeStyle=BONE.sh;g.lineWidth=1;g.stroke();
+ g.strokeStyle='rgba(110,88,56,.5)';g.lineWidth=.8;g.beginPath();g.moveTo(-38,14);g.bezierCurveTo(-30,16,-24,22,-20,30);g.moveTo(38,14);g.bezierCurveTo(30,16,24,22,20,30);g.stroke();
+ for(var i=0;i<8;i++){g.beginPath();g.roundRect?g.roundRect(-16+i*4,29,3.6,6.4,1.3):g.rect(-16+i*4,29,3.6,6.4);g.fillStyle='#fffaf0';g.fill();g.strokeStyle='rgba(120,100,70,.7)';g.lineWidth=.5;g.stroke();}
+ g.beginPath();g.moveTo(-31,14);g.bezierCurveTo(-34,34,-22,48,0,52);g.bezierCurveTo(22,48,34,34,31,14);g.lineTo(25,16);g.bezierCurveTo(25,32,16,42,0,44);g.bezierCurveTo(-16,42,-25,32,-25,16);g.closePath();
+ g.fillStyle=bGrad(g,0,10,0,52,hl);g.fill();edge(g,.9);
+ for(i=0;i<8;i++){g.beginPath();g.rect(-14+i*3.6,37,3.2,5.4);g.fillStyle='#fffaf0';g.fill();g.strokeStyle='rgba(120,100,70,.7)';g.lineWidth=.5;g.stroke();}
+ g.restore();}
+/* বক্ষপিঞ্জর (সামনে) */
+function RIBS(g,cx,top,w,h,hl){g.save();g.translate(cx,top);
+ var step=h/12.5,i,side;
+ for(side=-1;side<=1;side+=2){for(i=0;i<12;i++){var a=6+i*step,wi=w*(i<7?(.62+i*.06):(1-(i-6)*.07)),endy=a+20+i*1.8,sx=side*7;
+  var ex=i<10?side*(7+(i>6?(i-6)*1.6:0)):side*wi*.55,ey=i<10?a+16+i*1.2+ (i<7?0:2):endy+8;
+  g.lineCap='round';g.strokeStyle='rgba(88,66,36,.7)';g.lineWidth=4.6;g.beginPath();g.moveTo(side*5,a);g.bezierCurveTo(side*wi*.85,a-7,side*wi*1.0,a+12+i,side*wi*.6,a+17+i*1.5);g.stroke();
+  g.strokeStyle=hl?'#fbbf24':'#ecdfbf';g.lineWidth=3.4;g.stroke();
+  g.strokeStyle='rgba(255,255,255,.55)';g.lineWidth=.9;g.beginPath();g.moveTo(side*wi*.9,a-1);g.bezierCurveTo(side*wi*.95,a+4,side*wi*1.0,a+12+i,side*wi*.66,a+16+i*1.5);g.stroke();
+  if(i<10){g.strokeStyle='#8fb4cf';g.lineWidth=3.2;g.beginPath();g.moveTo(side*wi*.6,a+17+i*1.5);g.quadraticCurveTo(side*wi*.3,a+18+i*1.5,side*8,6+i*step*1.0+10);g.stroke();}}}
+ g.beginPath();g.moveTo(-7,0);g.lineTo(7,0);g.lineTo(5,14);g.lineTo(-5,14);g.closePath();g.fillStyle=bGrad(g,-7,0,7,0,hl);g.fill();edge(g,.8);
+ g.beginPath();g.moveTo(-4.5,16);g.lineTo(4.5,16);g.lineTo(4,h*.62);g.lineTo(-4,h*.62);g.closePath();g.fillStyle=bGrad(g,-5,0,5,0,hl);g.fill();edge(g,.8);
+ g.beginPath();g.moveTo(-3,h*.62);g.lineTo(3,h*.62);g.lineTo(0,h*.62+9);g.closePath();g.fillStyle=BONE.md;g.fill();edge(g,.6);g.restore();}
+/* শ্রোণিচক্র (সামনে) */
+function PELV(g,cx,cy,s,hl){g.save();g.translate(cx,cy);g.scale(s,s);
+ for(var side=-1;side<=1;side+=2){g.save();g.scale(side,1);
+  g.beginPath();g.moveTo(8,-18);g.bezierCurveTo(30,-36,56,-30,60,-10);g.bezierCurveTo(62,6,52,20,38,28);g.lineTo(24,32);g.bezierCurveTo(15,24,12,8,8,-4);g.closePath();g.fillStyle=bGrad(g,8,-30,60,20,hl);g.fill();edge(g,1);
+  g.strokeStyle='rgba(120,98,64,.4)';g.lineWidth=.8;g.beginPath();g.moveTo(14,-8);g.bezierCurveTo(30,-16,46,-14,54,-6);g.stroke();
+  g.beginPath();g.moveTo(22,34);g.bezierCurveTo(26,46,24,54,16,54);g.lineTo(6,50);g.lineTo(5,38);g.lineTo(12,32);g.closePath();g.fillStyle=bGrad(g,0,30,30,54,hl);g.fill();edge(g,.8);
+  g.beginPath();g.ellipse(20,42,5.5,8,.2,0,7);g.fillStyle='#2a1d0e';g.fill();g.strokeStyle=BONE.sh;g.lineWidth=.8;g.stroke();
+  g.beginPath();g.arc(33,22,8,0,7);g.fillStyle='rgba(30,20,10,.6)';g.fill();g.strokeStyle='#bcd6e6';g.lineWidth=1.8;g.stroke();g.restore();}
+ g.beginPath();g.moveTo(-13,-22);g.lineTo(13,-22);g.bezierCurveTo(12,0,6,20,0,34);g.bezierCurveTo(-6,20,-12,0,-13,-22);g.closePath();g.fillStyle=bGrad(g,-13,0,13,0,hl);g.fill();edge(g,.9);
+ g.fillStyle='rgba(40,28,12,.55)';[[-6,-6],[6,-6],[-4,6],[4,6]].forEach(function(p){g.beginPath();g.ellipse(p[0],p[1],1.5,2,0,0,7);g.fill();});
+ g.beginPath();g.ellipse(0,50,4,5,0,0,7);g.fillStyle='#8fb4cf';g.fill();g.restore();}
+/* সামনের দিক থেকে মেরুদণ্ড */
+function FSP(g,cx,y0,y1,hl){var n=17,h=(y1-y0)/n,i;for(i=0;i<n;i++){var w=i<5?8+i*.6:i<13?10+(i-5)*.5:15+(i-13)*1.6,y=y0+i*h;
+ g.beginPath();g.moveTo(cx-w/2+1.5,y+.2);g.lineTo(cx+w/2-1.5,y+.2);g.quadraticCurveTo(cx+w/2,y+h*.4,cx+w/2-1.5,y+h*.78);g.lineTo(cx-w/2+1.5,y+h*.78);g.quadraticCurveTo(cx-w/2,y+h*.4,cx-w/2+1.5,y+.2);g.closePath();
+ g.fillStyle=bGrad(g,cx-w/2,0,cx+w/2,0,hl);g.fill();edge(g,.5);g.fillStyle='#6fa6c9';g.fillRect(cx-w/2+1.8,y+h*.78,w-3.6,h*.22);}}
+/* পূর্ণ কঙ্কাল (সামনে), ক্যাশ করা। hl: 0 করোটি 1 মেরুদণ্ড 2 বক্ষ 3 শ্রোণি 4 হাত-পা */
+function SKEL(g,hl){
+ var h4=hl===4;
+ function side(){
+  /* স্ক্যাপুলা */
+  g.beginPath();g.moveTo(66,66);g.lineTo(80,70);g.lineTo(76,98);g.bezierCurveTo(70,104,62,98,60,84);g.closePath();g.fillStyle='rgba(222,205,165,.85)';g.fill();edge(g,.6);
+  /* কণ্ঠাস্থি */
+  g.strokeStyle='rgba(88,66,36,.7)';g.lineWidth=4.6;g.lineCap='round';g.beginPath();g.moveTo(96,66);g.bezierCurveTo(88,60,76,64,62,62);g.stroke();g.strokeStyle=h4?'#fbbf24':'#ecdfbf';g.lineWidth=3.4;g.stroke();
+  LB(g,58,66,50,122,3.6,5.2,h4,1.15,1);
+  LB(g,52,124,50,166,2.4,3.4,h4,1,.8);LB(g,48,124,44,166,2.1,3,h4,.8,.9);
+  g.beginPath();g.ellipse(46,172,7,6,0,0,7);g.fillStyle=bGrad(g,38,166,54,178,h4);g.fill();edge(g,.6);
+  for(var f=0;f<5;f++){var fx=38+f*3.4,fl=f===0?18:22+(f===2?3:0)-(f===4?5:0);LB(g,fx+(f===0?-4:0),178,fx-(f===0?9:2)+(f-2)*.8,178+fl,.9,1.3,h4);}
+  /* পা */
+  LB(g,82,174,86,236,4.2,6.4,h4,1.25,1.1);
+  g.beginPath();g.ellipse(87,240,5,5.6,0,0,7);g.fillStyle=bRad(g,87,240,6,h4);g.fill();edge(g,.6);
+  LB(g,87,245,88,294,3.6,5.4,h4,1.1,1);LB(g,81,246,82,292,1.8,2.6,h4,.8,.9);
+  g.beginPath();g.moveTo(84,296);g.bezierCurveTo(82,306,80,308,74,308);g.lineTo(100,308);g.bezierCurveTo(102,302,96,296,92,294);g.closePath();g.fillStyle=bGrad(g,0,296,0,308,h4);g.fill();edge(g,.6);
+  for(f=0;f<5;f++)LB(g,78+f*4.4,306,76+f*4.4,311,.7,1,h4);
+ }
+ side();g.save();g.translate(200,0);g.scale(-1,1);side();g.restore();
+ FSP(g,100,58,160,hl===1);
+ RIBS(g,100,66,34,64,hl===2);
+ PELV(g,100,158,.62,hl===3);
+ SKULL(g,100,26,.46,hl===0);
+}
+var SKC={};
+function SK(x,cx,cy,s,hl){var k=s*.9,key='sk'+hl,c=RCV(key,200,312,function(g){SKEL(g,hl);});x.drawImage(c,cx-100*k,cy-142*s,200*k,312*k);}
+/* পেশি (স্পিন্ডল আকার, তন্তু ও টেনডনসহ): p1→p2 অক্ষ, w=মোটা, side=+1/-1 */
+function MUS(x,p1,p2,w,col,side,t){var dx=p2[0]-p1[0],dy=p2[1]-p1[1],L=Math.sqrt(dx*dx+dy*dy),a=Math.atan2(dy,dx),tl=L*.16;
+ x.save();x.translate(p1[0],p1[1]);x.rotate(a);
+ var gr=x.createLinearGradient(0,-w,0,w);gr.addColorStop(0,lt(col,.35));gr.addColorStop(.5,col);gr.addColorStop(1,dk(col,.45));
+ x.beginPath();x.moveTo(0,0);x.bezierCurveTo(tl,-w*.2,tl*1.5,-w,L*.5,-w*(1+.02));x.bezierCurveTo(L-tl*1.5,-w,L-tl,-w*.2,L,0);x.bezierCurveTo(L-tl,w*.2,L-tl*1.5,w,L*.5,w);x.bezierCurveTo(tl*1.5,w,tl,w*.2,0,0);x.closePath();
+ x.fillStyle=gr;x.fill();x.strokeStyle='rgba(60,10,10,.55)';x.lineWidth=1;x.stroke();
+ x.save();x.clip();x.strokeStyle='rgba(255,210,200,.28)';x.lineWidth=.8;for(var i=-5;i<=5;i++){x.beginPath();x.moveTo(0,0);x.bezierCurveTo(tl,i*w*.18,L-tl,i*w*.2,L,0);x.stroke();}x.restore();
+ x.fillStyle='rgba(255,255,255,.9)';x.beginPath();x.moveTo(-L*.08,-1.4);x.lineTo(tl*.9,-w*.12);x.lineTo(tl*.9,w*.12);x.lineTo(-L*.08,1.4);x.closePath();x.fill();
+ x.beginPath();x.moveTo(L*1.08,-1.4);x.lineTo(L-tl*.9,-w*.12);x.lineTo(L-tl*.9,w*.12);x.lineTo(L*1.08,1.4);x.closePath();x.fill();x.restore();}
+/* স্পঞ্জি অস্থি (ট্রাবেকুলা)। d: ০..১ ঘনত্ব */
+function TRAB(w,h,d,seed){var key='tr'+w+'x'+h+'d'+Math.round(d*10)+'s'+seed;return RCV(key,w,h,function(g){var R=srnd(seed||7),N=Math.round(220+d*620),pts=[],i,j;
+ var bg=g.createLinearGradient(0,0,0,h);bg.addColorStop(0,'#4a2a18');bg.addColorStop(1,'#2e1a10');g.fillStyle=bg;g.fillRect(0,0,w,h);
+ for(i=0;i<N;i++)pts.push([R()*w,R()*h]);
+ g.lineCap='round';var rad=Math.sqrt(w*h/N)*2.6;
+ for(var pass=0;pass<2;pass++)for(i=0;i<N;i++){var cn=0;for(j=i+1;j<N&&cn<5;j++){var dx=pts[i][0]-pts[j][0],dy=pts[i][1]-pts[j][1];if(dx*dx+dy*dy<rad*rad&&R()<(.3+d*.7)){var lw=.45+d*1.5*(.55+R()*.9);g.lineWidth=lw+(pass?0:.9);g.strokeStyle=pass?'#e2d2a8':'rgba(30,16,8,.75)';g.beginPath();g.moveTo(pts[i][0],pts[i][1]);var mx=(pts[i][0]+pts[j][0])/2+(R()-.5)*4,my=(pts[i][1]+pts[j][1])/2+(R()-.5)*4;g.quadraticCurveTo(mx,my,pts[j][0],pts[j][1]);g.stroke();cn++;}}
+  R=srnd((seed||7)+pass*13);}
+ g.fillStyle='#ecdcb4';for(i=0;i<N;i+=3){g.beginPath();g.arc(pts[i][0],pts[i][1],.6+d*1,0,7);g.fill();}});}
+
+/* ===== বাস্তব-ধাঁচের জীব ও কোষের ছবি (ক্যাশ করা)। নিজের আঁকা শিক্ষামূলক চিত্র ===== */
+function oval(g,cx,cy,rx,ry,rot,fill,stroke,lw){g.beginPath();g.ellipse(cx,cy,rx,ry,rot||0,0,7);if(fill){g.fillStyle=fill;g.fill();}if(stroke){g.strokeStyle=stroke;g.lineWidth=lw||1;g.stroke();}}
+function rg(g,cx,cy,r,stops,ox,oy){var q=g.createRadialGradient(cx+(ox||0)*r,cy+(oy||0)*r,r*.05,cx,cy,r);stops.forEach(function(s,i){q.addColorStop(s[0],s[1]);});return q;}
+function MITO(g,cx,cy,rot,s){g.save();g.translate(cx,cy);g.rotate(rot);g.scale(s,s);oval(g,0,0,17,8,0,rg(g,0,0,18,[[0,'#f6b087'],[.7,'#e0764a'],[1,'#a6401f']],-.3,-.3),'#7a2c10',1);oval(g,0,0,14.5,5.8,0,'#f4c4a0','#b9522b',.6);g.strokeStyle='#c9622f';g.lineWidth=1.1;g.beginPath();g.moveTo(-11,-5);g.lineTo(-11,1);g.moveTo(-7,5);g.lineTo(-7,-1);g.moveTo(-3,-5.5);g.lineTo(-3,1.2);g.moveTo(1,5.5);g.lineTo(1,-1.2);g.moveTo(5,-5.5);g.lineTo(5,1);g.moveTo(9,4.5);g.lineTo(9,-1);g.stroke();g.restore();}
+function RIBO(g,R,n,x0,y0,w,h,col){g.fillStyle=col||'#5b3a8c';for(var i=0;i<n;i++){g.beginPath();g.arc(x0+R()*w,y0+R()*h,1.2+R()*.5,0,7);g.fill();}}
+/* প্রোক্যারিওটা কোষ (ব্যাকটেরিয়া), কাটা ছবি। ২২০×१२০ */
+function PCELL(g){var R=srnd(4);
+ g.save();g.translate(110,66);
+ oval(g,0,0,96,40,0,'#c9e8b5','#4f7a35',3);oval(g,0,0,93,37,0,'#e6f3cf','#7fae5c',1.4);
+ oval(g,0,0,90,34,0,rg(g,0,0,92,[[0,'#f4f9e1'],[.8,'#dcebb7'],[1,'#b5d08a']],-.2,-.4));
+ g.beginPath();g.ellipse(0,0,90,34,0,0,7);g.clip();
+ g.strokeStyle='#7a2c5a';g.lineWidth=2.2;g.lineCap='round';g.beginPath();for(var i=0;i<=80;i++){var a=i/80*Math.PI*8,r=4+i*.22,X=Math.cos(a)*r*2.1+Math.sin(i*.4)*2,Y=Math.sin(a)*r*.85;if(i===0)g.moveTo(X,Y);else g.lineTo(X,Y);}g.stroke();
+ g.strokeStyle='rgba(180,90,150,.5)';g.lineWidth=5;g.stroke();
+ RIBO(g,R,70,-86,-30,172,60);g.restore();
+ /* ফ্ল্যাজেলা ও পিলি */
+ g.strokeStyle='#5f7f45';g.lineWidth=2;g.lineCap='round';g.beginPath();g.moveTo(14,66);g.bezierCurveTo(-4,80,-14,104,6,112);g.bezierCurveTo(14,116,22,108,18,100);g.stroke();
+ g.lineWidth=1.1;for(var k=0;k<10;k++){var yy=36+k*3.4,xx=110+(k%2?92:90);g.beginPath();g.moveTo(206,26+k*8);g.lineTo(216+R()*4,24+k*8+(R()-.5)*8);g.stroke();}}
+/* প্রাণীকোষ (ইউক্যারিওটা), কাটা ছবি। ২৬০×২৩০ */
+function ECELL(g){var R=srnd(9);
+ g.save();g.translate(130,115);
+ oval(g,0,0,118,100,0,'#e8a9b8','#a24a66',3);
+ oval(g,0,0,114,96,0,rg(g,0,0,118,[[0,'#fdf0f3'],[.7,'#f7d4dc'],[1,'#e9a7b6']],-.25,-.35));
+ g.beginPath();g.ellipse(0,0,114,96,0,0,7);g.clip();
+ /* ER */
+ g.strokeStyle='#7aa6d6';g.lineWidth=5;g.lineCap='round';for(var j=0;j<5;j++){g.beginPath();g.moveTo(-20,-40+j*0);var ox=18,oy=-42+j*7;g.bezierCurveTo(ox+20,oy-8,ox+50,oy+10,ox+70,oy);g.stroke();}
+ g.strokeStyle='rgba(255,255,255,.55)';g.lineWidth=1.2;for(j=0;j<5;j++){var oy2=-42+j*7;g.beginPath();g.moveTo(18,oy2);g.bezierCurveTo(38,oy2-8,68,oy2+10,88,oy2);g.stroke();}
+ g.fillStyle='#4c2a85';for(j=0;j<26;j++){g.beginPath();g.arc(20+R()*68,-47+R()*38,1.4,0,7);g.fill();}
+ /* গলগি */
+ for(j=0;j<5;j++){g.beginPath();g.moveTo(-90+j*2,48+j*7);g.bezierCurveTo(-70,40+j*7,-44,40+j*7,-24-j*2,50+j*7);g.lineWidth=5;g.strokeStyle=j%2?'#f2b34b':'#e59a2a';g.lineCap='round';g.stroke();}
+ for(j=0;j<7;j++)oval(g,-96+R()*86,34+R()*50,3+R()*2,3+R()*2,0,'#fbd38d','#c27c15',.8);
+ /* নিউক্লিয়াস */
+ oval(g,-26,-12,44,40,0,rg(g,-26,-12,46,[[0,'#cdb4ec'],[.75,'#a483d2'],[1,'#6b42a3']],-.3,-.3),'#4a2a7e',2.4);
+ oval(g,-26,-12,38,34,0,rg(g,-26,-12,40,[[0,'#e6d8f7'],[1,'#b99be0']],-.2,-.3));
+ g.strokeStyle='rgba(90,50,150,.6)';g.lineWidth=1.3;for(j=0;j<7;j++){g.beginPath();var a0=j*.9;g.moveTo(-26+Math.cos(a0)*20-10,-12+Math.sin(a0)*18);g.bezierCurveTo(-30+Math.cos(a0+1)*14,-12+Math.sin(a0+1)*10,-20+Math.cos(a0+2)*18,-12+Math.sin(a0+2)*14,-26+Math.cos(a0+3)*10,-12+Math.sin(a0+3)*8);g.stroke();}
+ oval(g,-18,-8,11,10,0,rg(g,-18,-8,12,[[0,'#5a3a96'],[1,'#2e1a5e']],-.3,-.3),'#241048',1);
+ g.fillStyle='#e8dcf8';for(j=0;j<16;j++){var pa=j/16*6.283;g.beginPath();g.arc(-26+Math.cos(pa)*43,-12+Math.sin(pa)*39,1.6,0,7);g.fill();}
+ MITO(g,50,18,.4,1.2);MITO(g,28,62,-.5,1);MITO(g,78,-2,1.1,.95);MITO(g,-62,-60,.3,.9);
+ oval(g,80,56,8,8,0,rg(g,80,56,9,[[0,'#c6f0a8'],[1,'#69a63f']],-.3,-.3),'#3f7020',1);oval(g,-80,10,6,6,0,rg(g,-80,10,7,[[0,'#c6f0a8'],[1,'#69a63f']],-.3,-.3),'#3f7020',1);
+ RIBO(g,R,50,-100,-80,200,170,'#4c2a85');g.restore();}
+/* অ্যামিবা ১৬০×১৩০ */
+function AMOEBA(g){var R=srnd(3);g.save();g.translate(80,66);g.beginPath();var n=18;for(var i=0;i<=n;i++){var a=i/n*6.283,r=44+Math.sin(a*3+1)*12+Math.sin(a*5)*5;if(i%6===2)r+=14;var X=Math.cos(a)*r*1.2,Y=Math.sin(a)*r*.9;if(i===0)g.moveTo(X,Y);else g.lineTo(X,Y);}g.closePath();
+ g.fillStyle=rg(g,0,0,66,[[0,'rgba(210,235,250,.95)'],[.7,'rgba(150,200,230,.92)'],[1,'rgba(90,150,200,.9)']],-.2,-.3);g.fill();g.strokeStyle='#4a86b8';g.lineWidth=2;g.stroke();g.clip();
+ g.fillStyle='rgba(255,255,255,.55)';for(i=0;i<38;i++){g.beginPath();g.arc(-50+R()*100,-36+R()*72,.8+R()*1.4,0,7);g.fill();}
+ oval(g,-8,-4,16,14,0,rg(g,-8,-4,17,[[0,'#b79ad8'],[1,'#6a4aa6']],-.3,-.3),'#3d2a78',1.2);oval(g,-5,-2,4,4,0,'#3a2370');
+ oval(g,24,12,10,10,0,'rgba(255,255,255,.7)','#5a95c4',1.2);oval(g,-30,22,7,7,0,'rgba(255,255,255,.65)','#5a95c4',1);oval(g,18,-20,5,5,0,'#b8d97a','#6a9a2a',1);oval(g,-28,-18,4,4,0,'#d9b67a','#9a742a',1);g.restore();}
+/* ডায়াটম ১৩০×১০০ */
+function DIATOM(g){g.save();g.translate(65,50);oval(g,0,0,54,22,0,rg(g,0,0,56,[[0,'#f4efb8'],[.7,'#d6c96a'],[1,'#a89a3a']],-.3,-.4),'#7a6e1e',1.8);oval(g,0,0,48,17,0,null,'rgba(120,100,20,.7)',.8);g.strokeStyle='rgba(110,90,20,.75)';g.lineWidth=1;g.beginPath();g.moveTo(-44,0);g.lineTo(44,0);g.stroke();for(var i=-10;i<=10;i++){if(!i)continue;var xx=i*4.2;g.beginPath();g.moveTo(xx,-14*Math.sqrt(Math.max(0,1-(i/11)*(i/11))));g.lineTo(xx,14*Math.sqrt(Math.max(0,1-(i/11)*(i/11))));g.stroke();}
+ oval(g,0,0,6,4,0,'#8a6a18');g.restore();}
+/* মাশরুম ১৬০×১৬০ */
+function MUSH(g){g.save();g.translate(80,0);
+ g.beginPath();g.moveTo(-14,150);g.bezierCurveTo(-18,110,-12,92,-10,80);g.lineTo(10,80);g.bezierCurveTo(12,92,18,110,16,150);g.closePath();g.fillStyle=(function(){var q=g.createLinearGradient(-18,0,18,0);q.addColorStop(0,'#cdb99a');q.addColorStop(.45,'#f6ecd8');q.addColorStop(1,'#b8a280');return q;})();g.fill();g.strokeStyle='rgba(110,86,50,.55)';g.lineWidth=1;g.stroke();
+ g.beginPath();g.ellipse(0,86,24,5,0,0,7);g.fillStyle='#efe3c9';g.fill();g.stroke();
+ g.beginPath();g.moveTo(-62,84);g.bezierCurveTo(-64,28,-34,4,0,4);g.bezierCurveTo(34,4,64,28,62,84);g.bezierCurveTo(30,92,-30,92,-62,84);g.closePath();
+ g.fillStyle=rg(g,0,70,90,[[0,'#e8704a'],[.55,'#c8442a'],[1,'#7e1f12']],-.15,-.9);g.fill();g.strokeStyle='#5e1409';g.lineWidth=1.4;g.stroke();
+ g.save();g.clip();g.fillStyle='rgba(255,246,228,.9)';[[-30,40,6],[-6,24,5],[22,38,7],[40,58,5],[-44,62,4],[8,60,4],[-18,70,3]].forEach(function(p){oval(g,p[0],p[1],p[2],p[2]*.8,0,'rgba(255,246,228,.92)');});g.restore();
+ g.strokeStyle='rgba(235,215,185,.9)';g.lineWidth=1;for(var i=-28;i<=28;i+=5){g.beginPath();g.moveTo(i*.3,86);g.lineTo(i*2.1,90);g.stroke();}
+ g.restore();}
+/* গাছ ১৮০×২০০ */
+function TREE(g){var R=srnd(12);g.save();g.translate(90,0);
+ g.beginPath();g.moveTo(-9,195);g.bezierCurveTo(-8,160,-14,130,-10,100);g.lineTo(10,100);g.bezierCurveTo(14,130,8,160,10,195);g.closePath();var q=g.createLinearGradient(-12,0,12,0);q.addColorStop(0,'#5a3a1c');q.addColorStop(.5,'#8a5e32');q.addColorStop(1,'#4a2e14');g.fillStyle=q;g.fill();
+ g.strokeStyle='rgba(40,22,8,.5)';g.lineWidth=.8;for(var i=0;i<6;i++){g.beginPath();g.moveTo(-6+i*2.4,190);g.lineTo(-5+i*2.2,110);g.stroke();}
+ g.strokeStyle='#6a4524';g.lineWidth=5;g.lineCap='round';g.beginPath();g.moveTo(0,120);g.lineTo(-34,84);g.moveTo(0,112);g.lineTo(34,80);g.stroke();
+ var blobs=[[0,54,58],[-40,78,40],[40,76,40],[-22,36,36],[26,34,36],[0,88,38]];
+ blobs.forEach(function(b,bi){oval(g,b[0],b[1],b[2],b[2]*.85,0,rg(g,b[0],b[1],b[2],[[0,'#6cc04a'],[.7,'#3f8f2e'],[1,'#256018']],-.3,-.4));});
+ for(i=0;i<90;i++){var a=R()*6.283,rr=Math.sqrt(R())*62,X=Math.cos(a)*rr,Y=58+Math.sin(a)*rr*.8;g.fillStyle=R()<.5?'rgba(160,225,110,.55)':'rgba(30,90,20,.35)';g.beginPath();g.ellipse(X,Y,3.4,2,R()*3,0,7);g.fill();}
+ g.restore();}
+/* বাঘ (সামনের মুখ) ১৮০×১৬০ */
+function TIGER(g){var R=srnd(21);g.save();g.translate(90,86);
+ [[-52,-52],[52,-52]].forEach(function(p){oval(g,p[0],p[1],20,20,0,rg(g,p[0],p[1],22,[[0,'#f2a43a'],[1,'#b65f10']],-.3,-.3),'#5a2c08',1.4);oval(g,p[0]*.98,p[1]+2,11,11,0,'#f6d6b0');});
+ g.beginPath();g.moveTo(-64,-30);g.bezierCurveTo(-72,20,-52,66,0,74);g.bezierCurveTo(52,66,72,20,64,-30);g.bezierCurveTo(50,-62,-50,-62,-64,-30);g.closePath();g.fillStyle=rg(g,0,0,86,[[0,'#f8b349'],[.65,'#e68a1f'],[1,'#a85208']],-.1,-.4);g.fill();g.strokeStyle='#5a2c08';g.lineWidth=1.8;g.stroke();
+ g.save();g.clip();oval(g,0,36,36,30,0,'#fbf3e4');oval(g,-52,26,22,18,0,'#fbf1e0');oval(g,52,26,22,18,0,'#fbf1e0');
+ g.fillStyle='#2a1406';[[-60,-30,-30,-26],[-62,-6,-34,-4],[-60,16,-38,12],[60,-30,30,-26],[62,-6,34,-4],[60,16,38,12],[-14,-58,-10,-36],[0,-60,0,-34],[14,-58,10,-36],[-30,-56,-24,-38],[30,-56,24,-38]].forEach(function(s){g.beginPath();g.moveTo(s[0],s[1]);g.quadraticCurveTo((s[0]+s[2])/2,(s[1]+s[3])/2-5,s[2],s[3]);g.quadraticCurveTo((s[0]+s[2])/2,(s[1]+s[3])/2+5,s[0],s[1]);g.fill();});g.restore();
+ [[-26,-6],[26,-6]].forEach(function(p){oval(g,p[0],p[1],11,8,0,'#f9e9a8','#2a1406',1.4);oval(g,p[0],p[1],6,6,0,rg(g,p[0],p[1],7,[[0,'#d98a1a'],[1,'#7a4a08']],-.3,-.3));oval(g,p[0],p[1],2.4,5,0,'#0a0402');oval(g,p[0]-2,p[1]-2,1.6,1.6,0,'#fff');});
+ g.beginPath();g.moveTo(-9,22);g.lineTo(9,22);g.lineTo(0,34);g.closePath();g.fillStyle='#d98a8a';g.fill();g.strokeStyle='#5a2c08';g.lineWidth=1.2;g.stroke();
+ g.strokeStyle='#2a1406';g.lineWidth=1.4;g.beginPath();g.moveTo(0,34);g.lineTo(0,44);g.moveTo(0,44);g.quadraticCurveTo(-14,56,-26,48);g.moveTo(0,44);g.quadraticCurveTo(14,56,26,48);g.stroke();
+ g.strokeStyle='rgba(255,255,255,.9)';g.lineWidth=.9;for(var i=0;i<4;i++){g.beginPath();g.moveTo(-18,40+i*3);g.lineTo(-68,34+i*8);g.moveTo(18,40+i*3);g.lineTo(68,34+i*8);g.stroke();}
+ g.restore();}
+var ORGS={pcell:[220,130,PCELL],ecell:[260,230,ECELL],amoeba:[160,132,AMOEBA],diatom:[130,100,DIATOM],mush:[160,160,MUSH],tree:[180,200,TREE],tiger:[180,172,TIGER]};
+/* OGM(x,'tiger',cx,cy,scale,rot): কেন্দ্র (cx,cy) */
+function OGM(x,k,cx,cy,s,rot){var o=ORGS[k],c=RCV('og_'+k,o[0],o[1],o[2]);x.save();x.translate(cx,cy);if(rot)x.rotate(rot);x.scale(s||1,s||1);x.drawImage(c,-o[0]/2,-o[1]/2,o[0],o[1]);x.restore();}
+
+/* ===== বাস্তব-ধাঁচের অঙ্গ ও কোষের ছবি (ক্যাশ করা)। নিজের আঁকা শিক্ষামূলক চিত্র ===== */
+function REDG(g,cx,cy,r,hi){return rg(g,cx,cy,r,[[0,hi||'#f87171'],[.6,'#c81e1e'],[1,'#7a0c0c']],-.3,-.35);}
+/* ফুসফুস ও শ্বাসনালি ২৪০×২৮০ */
+function LUNGS(g){var R=srnd(5);
+ function lung(sx){g.save();g.translate(120,0);g.scale(sx,1);
+  g.beginPath();g.moveTo(14,70);g.bezierCurveTo(60,60,104,96,106,170);g.bezierCurveTo(108,230,80,262,40,262);g.bezierCurveTo(22,262,14,240,14,210);g.closePath();
+  g.fillStyle=rg(g,60,160,130,[[0,'#f6b4b4'],[.55,'#e58585'],[1,'#b94a52']],-.3,-.4);g.fill();g.strokeStyle='#8e2e3a';g.lineWidth=1.8;g.stroke();
+  g.save();g.clip();g.strokeStyle='rgba(120,30,40,.18)';g.lineWidth=1;for(var i=0;i<60;i++){g.beginPath();var x0=20+R()*86,y0=80+R()*180;g.arc(x0,y0,2+R()*6,0,7);g.stroke();}
+  g.strokeStyle='rgba(130,40,60,.5)';g.lineWidth=1.6;g.beginPath();g.moveTo(34,150);g.bezierCurveTo(60,150,90,130,104,136);g.moveTo(24,196);g.bezierCurveTo(50,196,80,190,98,200);g.stroke();
+  g.restore();g.restore();}
+ lung(1);lung(-1);
+ /* শ্বাসনালি */
+ var q=g.createLinearGradient(104,0,136,0);q.addColorStop(0,'#cfd8e4');q.addColorStop(.5,'#f3f6fa');q.addColorStop(1,'#a9b6c6');
+ g.fillStyle=q;g.fillRect(108,10,24,92);g.strokeStyle='#6b7a8c';g.lineWidth=1.2;g.strokeRect(108,10,24,92);
+ for(var i=0;i<12;i++){g.strokeStyle='rgba(90,104,120,.7)';g.lineWidth=2;g.beginPath();g.moveTo(108,16+i*7.5);g.lineTo(132,16+i*7.5);g.stroke();}
+ /* ব্রংকাই ও শাখা */
+ function br(x0,y0,x1,y1,w,d){g.strokeStyle='#e9eff6';g.lineWidth=w;g.lineCap='round';g.beginPath();g.moveTo(x0,y0);g.lineTo(x1,y1);g.stroke();g.strokeStyle='#9aa8bb';g.lineWidth=w+1.2;g.globalCompositeOperation='destination-over';g.beginPath();g.moveTo(x0,y0);g.lineTo(x1,y1);g.stroke();g.globalCompositeOperation='source-over';
+  if(d>0){var a=Math.atan2(y1-y0,x1-x0),L=Math.hypot(x1-x0,y1-y0)*.72;br(x1,y1,x1+Math.cos(a-.55)*L,y1+Math.sin(a-.55)*L,w*.68,d-1);br(x1,y1,x1+Math.cos(a+.5)*L,y1+Math.sin(a+.5)*L,w*.68,d-1);}}
+ br(120,100,78,132,9,3);br(120,100,162,132,9,3);
+ g.fillStyle='rgba(255,255,255,.35)';g.fillRect(111,12,5,88);}
+/* অ্যালভিওলাস-গুচ্ছ ও কৈশিকজালক ২২০×২০০ */
+function ALVEOLI(g){var R=srnd(8);
+ g.strokeStyle='#d8dfe9';g.lineWidth=11;g.lineCap='round';g.beginPath();g.moveTo(10,100);g.lineTo(78,100);g.stroke();g.strokeStyle='#b2bdcc';g.lineWidth=1.4;g.beginPath();g.moveTo(10,94);g.lineTo(78,94);g.moveTo(10,106);g.lineTo(78,106);g.stroke();
+ var cs=[[110,40],[128,84],[132,130],[108,170],[160,60],[168,110],[160,156],[196,88],[196,134]];
+ cs.forEach(function(c,i){g.strokeStyle='#cdd6e2';g.lineWidth=4;g.beginPath();g.moveTo(78,100);g.quadraticCurveTo((78+c[0])/2,(100+c[1])/2+(i%2?8:-8),c[0]-10,c[1]);g.stroke();});
+ cs.forEach(function(c){var r=17+R()*3;oval(g,c[0],c[1],r,r,0,rg(g,c[0],c[1],r+3,[[0,'rgba(255,236,240,.95)'],[.8,'rgba(250,190,205,.9)'],[1,'rgba(230,130,155,.95)']],-.3,-.35),'#b4546e',1.6);
+  g.strokeStyle='#c81e1e';g.lineWidth=2;for(var k=0;k<3;k++){g.beginPath();g.arc(c[0],c[1],r-3+ (k?-1:0),R()*6,R()*6+3.5);g.stroke();}
+  g.strokeStyle='#5b8de0';g.lineWidth=1.4;g.beginPath();g.arc(c[0],c[1],r-6,R()*6,R()*6+2.2);g.stroke();oval(g,c[0]-r*.3,c[1]-r*.35,r*.28,r*.18,-.5,'rgba(255,255,255,.65)');});}
+/* হৃৎপিণ্ড (সামনের দৃশ্য, ৪ প্রকোষ্ঠ) ২২০×২৩০ */
+function HEART(g){
+ /* ডানে (ছবির বাঁয়ে) = ডান অলিন্দ/নিলয় */
+ g.save();
+ function vessel(pts,w,col,hi){g.strokeStyle=col;g.lineWidth=w;g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(pts[0][0],pts[0][1]);for(var i=1;i<pts.length;i++)g.lineTo(pts[i][0],pts[i][1]);g.stroke();g.strokeStyle=hi;g.lineWidth=w*.28;g.beginPath();g.moveTo(pts[0][0]-w*.2,pts[0][1]);for(i=1;i<pts.length;i++)g.lineTo(pts[i][0]-w*.2,pts[i][1]);g.stroke();}
+ /* মহাধমনি, ফুসফুসীয় ধমনি, শিরা */
+ vessel([[132,100],[134,40],[162,24],[196,52],[198,108]],22,'#d33a3a','#f2a0a0');
+ vessel([[104,100],[96,46],[74,26]],17,'#4a6fd0','#a9bdf0');vessel([[82,34],[48,40],[26,70]],14,'#4a6fd0','#a9bdf0');
+ vessel([[40,96],[40,50]],17,'#4a6fd0','#a9bdf0');vessel([[40,170],[40,214]],17,'#4a6fd0','#a9bdf0');
+ vessel([[160,86],[180,70],[212,80]],13,'#d33a3a','#f2a0a0');
+ /* অলিন্দ */
+ g.beginPath();g.moveTo(40,102);g.bezierCurveTo(30,150,52,170,86,172);g.lineTo(108,170);g.lineTo(108,100);g.bezierCurveTo(88,86,60,86,40,102);g.closePath();g.fillStyle=rg(g,70,140,70,[[0,'#7a8fe0'],[.7,'#4a62b8'],[1,'#2a3c85']],-.3,-.3);g.fill();g.strokeStyle='#1d2c66';g.lineWidth=1.6;g.stroke();
+ g.beginPath();g.moveTo(112,102);g.bezierCurveTo(112,86,150,78,170,92);g.bezierCurveTo(194,106,196,150,180,170);g.lineTo(112,172);g.closePath();g.fillStyle=rg(g,150,140,70,[[0,'#f08080'],[.7,'#cf3a3a'],[1,'#8a1c1c']],-.3,-.3);g.fill();g.strokeStyle='#6e1212';g.lineWidth=1.6;g.stroke();
+ /* নিলয় */
+ g.beginPath();g.moveTo(52,168);g.bezierCurveTo(46,206,84,236,110,244);g.lineTo(110,170);g.closePath();g.fillStyle=rg(g,80,200,70,[[0,'#8a5ab0'],[.7,'#5f3a8c'],[1,'#3a2160']],-.3,-.3);g.fill();g.strokeStyle='#2a1648';g.lineWidth=1.6;g.stroke();
+ g.beginPath();g.moveTo(110,170);g.lineTo(110,244);g.bezierCurveTo(158,226,198,196,188,168);g.closePath();g.fillStyle=rg(g,150,200,80,[[0,'#ee6a6a'],[.7,'#bd2a2a'],[1,'#741212']],-.3,-.3);g.fill();g.strokeStyle='#5e0e0e';g.lineWidth=1.6;g.stroke();
+ g.strokeStyle='rgba(255,255,255,.7)';g.lineWidth=2;g.beginPath();g.moveTo(110,168);g.lineTo(110,244);g.moveTo(52,168);g.lineTo(190,168);g.stroke();
+ /* কপাটিকা */
+ g.fillStyle='#f5e9b0';g.strokeStyle='#8a7a2a';g.lineWidth=1;[[84,168,16],[142,168,18]].forEach(function(v){g.beginPath();g.moveTo(v[0]-v[2],v[1]);g.quadraticCurveTo(v[0],v[1]+14,v[0]+v[2],v[1]);g.lineTo(v[0]+v[2],v[1]-3);g.lineTo(v[0]-v[2],v[1]-3);g.closePath();g.fill();g.stroke();});
+ g.strokeStyle='rgba(255,255,255,.75)';g.lineWidth=.9;[[78,176,74,200],[90,176,92,204],[136,176,130,210],[150,176,156,206]].forEach(function(c){g.beginPath();g.moveTo(c[0],c[1]);g.lineTo(c[2],c[3]);g.stroke();});
+ /* করোনারি রক্তনালি */
+ g.strokeStyle='#e04545';g.lineWidth=2;g.beginPath();g.moveTo(170,100);g.bezierCurveTo(196,130,190,170,160,200);g.stroke();g.strokeStyle='#4c6edb';g.beginPath();g.moveTo(70,110);g.bezierCurveTo(50,140,60,180,78,206);g.stroke();
+ g.restore();}
+/* বৃক্কের লম্বচ্ছেদ ২৪০×২৫০ */
+function KIDNEY(g){var R=srnd(14);g.save();g.translate(120,125);
+ g.beginPath();g.moveTo(-20,-110);g.bezierCurveTo(-88,-104,-100,-20,-88,50);g.bezierCurveTo(-76,110,-30,116,-6,92);g.bezierCurveTo(20,74,34,52,60,56);g.bezierCurveTo(96,62,100,-30,70,-82);g.bezierCurveTo(46,-114,10,-114,-20,-110);g.closePath();
+ g.fillStyle=rg(g,0,0,130,[[0,'#d98a6a'],[.6,'#b9563c'],[1,'#7b2a1c']],-.3,-.4);g.fill();g.strokeStyle='#5a1a10';g.lineWidth=2;g.stroke();
+ g.save();g.clip();g.beginPath();g.moveTo(-14,-96);g.bezierCurveTo(-72,-92,-84,-20,-74,44);g.bezierCurveTo(-64,96,-30,100,-8,78);g.bezierCurveTo(16,60,34,38,56,42);g.bezierCurveTo(86,48,88,-30,62,-74);g.bezierCurveTo(42,-100,10,-100,-14,-96);g.closePath();g.fillStyle=rg(g,0,0,110,[[0,'#e8a07c'],[1,'#c46e4a']],-.2,-.3);g.fill();
+ g.strokeStyle='rgba(120,40,24,.28)';g.lineWidth=1;for(var i=0;i<70;i++){var a=R()*6.28,rr=30+R()*50;g.beginPath();g.moveTo(Math.cos(a)*rr,Math.sin(a)*rr);g.lineTo(Math.cos(a)*(rr+14),Math.sin(a)*(rr+14));g.stroke();}
+ /* মেডুলা পিরামিড */
+ [[-52,-50,-.6],[-56,2,-1.6],[-36,50,-2.2],[28,-62,.5],[44,-12,1.2],[20,34,1.9]].forEach(function(p){g.save();g.translate(p[0],p[1]);g.rotate(p[2]);g.beginPath();g.moveTo(-17,-22);g.lineTo(17,-22);g.lineTo(3,16);g.lineTo(-3,16);g.closePath();g.fillStyle=rg(g,0,0,26,[[0,'#a8452e'],[1,'#7a2c1c']],-.2,-.4);g.fill();g.strokeStyle='rgba(255,200,170,.5)';g.lineWidth=.8;for(var k=-2;k<=2;k++){g.beginPath();g.moveTo(k*5,-18);g.lineTo(k*1,12);g.stroke();}g.restore();});
+ g.restore();
+ /* পেলভিস ও মূত্রনালি */
+ g.beginPath();g.moveTo(-8,4);g.bezierCurveTo(-30,-12,-36,22,-14,34);g.bezierCurveTo(6,40,14,70,8,96);g.lineTo(22,96);g.bezierCurveTo(26,66,16,34,2,24);g.bezierCurveTo(-2,16,4,10,-8,4);g.closePath();g.fillStyle='#f3e2a0';g.fill();g.strokeStyle='#8a7326';g.lineWidth=1.4;g.stroke();
+ g.strokeStyle='#d33a3a';g.lineWidth=5;g.lineCap='round';g.beginPath();g.moveTo(-6,10);g.bezierCurveTo(-30,0,-50,-4,-72,-6);g.stroke();g.strokeStyle='#4a6fd0';g.beginPath();g.moveTo(0,22);g.bezierCurveTo(-30,26,-54,32,-76,38);g.stroke();
+ g.restore();}
+/* নেফ্রন (সরল বাস্তব-ধাঁচ) ২২০×২৮০ */
+function NEPHRON(g){g.save();
+ function tube(pts,w,col,edge){g.lineCap='round';g.lineJoin='round';g.strokeStyle=edge;g.lineWidth=w+2;g.beginPath();g.moveTo(pts[0][0],pts[0][1]);for(var i=1;i<pts.length;i++)g.quadraticCurveTo(pts[i][2]||pts[i][0],pts[i][3]||pts[i][1],pts[i][0],pts[i][1]);g.stroke();g.strokeStyle=col;g.lineWidth=w;g.stroke();g.strokeStyle='rgba(255,255,255,.4)';g.lineWidth=w*.25;g.stroke();}
+ /* বোম্যান ক্যাপসুল + গ্লোমেরুলাস */
+ oval(g,60,50,34,32,0,rg(g,60,50,38,[[0,'#fff7d6'],[1,'#e6cd7a']],-.3,-.3),'#a08832',1.8);
+ for(var i=0;i<6;i++){g.strokeStyle='#c81e1e';g.lineWidth=3.4;g.beginPath();g.arc(60+Math.cos(i)*4,50+Math.sin(i)*4,8+i*2,i*1.1,i*1.1+4);g.stroke();}
+ oval(g,60,50,6,6,0,'#8a1010');
+ tube([[26,10],[10,10,10,10]],8,'#d33a3a','#7a1010');tube([[96,6],[110,12,110,6]],7,'#5b8de0','#2a4a9a');
+ /* নালিকা: সংবর্ত, হেনলির লুপ, দূরবর্তী */
+ tube([[92,70],[112,100,112,84],[96,122,96,112],[120,140,110,130]],11,'#f3c25a','#a06f14');
+ tube([[120,140],[128,190,130,160],[128,236,128,214],[150,236,140,244],[150,190,152,222],[158,140,150,160]],7,'#f7e19a','#a89040');
+ tube([[158,140],[150,112,162,126],[170,92,158,98],[190,110,182,92],[196,170,198,130],[196,260,196,214]],10,'#e8a24a','#92601a');
+ g.restore();}
+/* লোহিত ও শ্বেত রক্তকোষ ১৮০×১৪০ */
+function BLOODC(g){var R=srnd(6);
+ function rbc(x,y,r,rot){g.save();g.translate(x,y);g.rotate(rot);g.scale(1,.86);oval(g,0,0,r,r,0,rg(g,0,0,r*1.05,[[0,'#f08a8a'],[.45,'#d8383e'],[1,'#8e1218']],-.2,-.3),'#7a0e12',1);oval(g,0,0,r*.5,r*.5,0,rg(g,0,0,r*.55,[[0,'rgba(120,10,14,.7)'],[1,'rgba(230,100,100,.2)']],0,0));g.restore();}
+ [[30,34,16,.2],[70,22,16,.8],[112,38,17,1.2],[150,26,15,.3],[24,86,16,.9],[64,74,17,.1],[108,84,16,.6],[146,76,17,1.4],[40,122,15,.4],[90,120,16,1],[134,118,16,.2],[170,70,14,.5]].forEach(function(c){rbc(c[0],c[1],c[2],c[3]);});
+ oval(g,100,62,26,26,0,rg(g,100,62,30,[[0,'#f0f4ff'],[.7,'#cfd8f5'],[1,'#a9b8e8']],-.2,-.3),'#6f7fc0',1.6);oval(g,100,62,15,13,.5,rg(g,100,62,16,[[0,'#8a78d0'],[1,'#4a3a98']],-.3,-.3),'#2e2470',1.2);oval(g,94,56,5,3,.5,'rgba(255,255,255,.4)');g.fillStyle='rgba(120,100,200,.5)';for(var i=0;i<14;i++){g.beginPath();g.arc(100+(R()-.5)*36,62+(R()-.5)*36,1,0,7);g.fill();}
+ g.fillStyle='rgba(240,230,160,.9)';[[160,100],[164,106],[156,108]].forEach(function(p){g.beginPath();g.arc(p[0],p[1],2.4,0,7);g.fill();});}
+/* নিউরন ৩২০×১৮০ */
+function NEURON(g){var R=srnd(31);g.save();
+ function dend(x,y,a,L,w,d){var x2=x+Math.cos(a)*L,y2=y+Math.sin(a)*L;g.strokeStyle='#5b6fd0';g.lineWidth=w;g.lineCap='round';g.beginPath();g.moveTo(x,y);g.quadraticCurveTo((x+x2)/2+(R()-.5)*10,(y+y2)/2+(R()-.5)*10,x2,y2);g.stroke();if(d>0){dend(x2,y2,a-.5-R()*.3,L*.7,w*.7,d-1);dend(x2,y2,a+.5+R()*.3,L*.7,w*.7,d-1);}}
+ [-2.4,-2.0,-1.6,2.4,2.0,1.7,3.0].forEach(function(a){dend(72,90,a,34,3.4,2);});
+ /* অ্যাক্সন ও মায়েলিন */
+ g.strokeStyle='#8b9de6';g.lineWidth=4;g.lineCap='round';g.beginPath();g.moveTo(94,90);g.lineTo(290,90);g.stroke();
+ for(var i=0;i<5;i++){var x0=116+i*34;g.beginPath();g.moveTo(x0,80);g.bezierCurveTo(x0+4,76,x0+24,76,x0+28,80);g.lineTo(x0+28,100);g.bezierCurveTo(x0+24,104,x0+4,104,x0,100);g.closePath();g.fillStyle=rg(g,x0+14,90,18,[[0,'#fff3c4'],[1,'#e0b84a']],-.2,-.5);g.fill();g.strokeStyle='#8a6a14';g.lineWidth=1;g.stroke();}
+ [[290,90,310,70],[290,90,312,90],[290,90,308,110]].forEach(function(p){g.strokeStyle='#8b9de6';g.lineWidth=2.4;g.beginPath();g.moveTo(p[0],p[1]);g.lineTo(p[2],p[3]);g.stroke();oval(g,p[2]+2,p[3],4,4,0,'#f0c14a','#8a6a14',1);});
+ /* কোষদেহ */
+ oval(g,72,90,26,24,0,rg(g,72,90,30,[[0,'#9db0f0'],[.7,'#5f76d8'],[1,'#3a4aa0']],-.3,-.3),'#2a3678',1.6);
+ oval(g,70,88,11,10,0,rg(g,70,88,12,[[0,'#c6a8f0'],[1,'#7a50c0']],-.3,-.3),'#46288a',1);oval(g,70,88,3.5,3.5,0,'#3a1c78');g.fillStyle='rgba(60,70,150,.5)';for(i=0;i<20;i++){g.beginPath();g.arc(72+(R()-.5)*40,90+(R()-.5)*38,1,0,7);g.fill();}
+ g.restore();}
+/* মস্তিষ্ক (পার্শ্বদৃশ্য) ২৬০×২০০ */
+function BRAIN(g){var R=srnd(41);g.save();g.translate(130,96);
+ /* সেরিব্রাম */
+ g.beginPath();g.moveTo(-100,20);g.bezierCurveTo(-120,-30,-84,-84,-20,-88);g.bezierCurveTo(40,-96,104,-70,112,-10);g.bezierCurveTo(116,24,86,44,54,40);g.bezierCurveTo(30,36,10,40,-10,46);g.bezierCurveTo(-50,52,-84,44,-100,20);g.closePath();
+ g.fillStyle=rg(g,0,-20,130,[[0,'#f6c4c0'],[.6,'#e4959a'],[1,'#b85a66']],-.3,-.5);g.fill();g.strokeStyle='#8a3a48';g.lineWidth=1.8;g.stroke();
+ g.save();g.clip();g.strokeStyle='rgba(140,50,70,.55)';g.lineWidth=1.6;g.lineCap='round';
+ for(var i=0;i<34;i++){var x0=-96+R()*200,y0=-84+R()*120;g.beginPath();g.moveTo(x0,y0);g.bezierCurveTo(x0+10,y0-8,x0+20,y0+8,x0+30,y0-2);g.bezierCurveTo(x0+36,y0-6,x0+40,y0+6,x0+50,y0+2);g.stroke();}
+ g.strokeStyle='rgba(120,30,50,.8)';g.lineWidth=2.4;g.beginPath();g.moveTo(-14,-86);g.bezierCurveTo(-4,-50,6,-20,-8,6);g.moveTo(-96,10);g.bezierCurveTo(-50,0,0,20,50,10);g.stroke();g.restore();
+ /* সেরিবেলাম */
+ g.beginPath();g.moveTo(30,36);g.bezierCurveTo(60,28,108,36,106,62);g.bezierCurveTo(104,86,60,92,34,78);g.bezierCurveTo(22,68,20,44,30,36);g.closePath();g.fillStyle=rg(g,70,60,50,[[0,'#d8a8d0'],[.7,'#b57aaa'],[1,'#7a4272']],-.3,-.4);g.fill();g.strokeStyle='#5a2a52';g.lineWidth=1.6;g.stroke();
+ g.save();g.clip();g.strokeStyle='rgba(80,30,80,.5)';g.lineWidth=1.2;for(i=0;i<9;i++){g.beginPath();g.moveTo(24,40+i*5);g.bezierCurveTo(50,34+i*5,80,46+i*5,110,40+i*5);g.stroke();}g.restore();
+ /* ব্রেনস্টেম */
+ g.beginPath();g.moveTo(0,40);g.bezierCurveTo(8,66,12,86,8,110);g.lineTo(-14,110);g.bezierCurveTo(-20,80,-22,60,-18,44);g.closePath();g.fillStyle=rg(g,-6,80,40,[[0,'#f0dc9a'],[1,'#c4a64a']],-.3,-.3);g.fill();g.strokeStyle='#7a6620';g.lineWidth=1.6;g.stroke();
+ g.restore();}
+/* ডিএনএ ডাবল হেলিক্স ১৮০×২৮০ */
+function DNAH(g){g.save();var N=60;
+ for(var i=0;i<N;i++){var u=i/(N-1),y=14+u*252,ph=u*Math.PI*4,x1=90+Math.cos(ph)*38,x2=90-Math.cos(ph)*38,z=Math.sin(ph);
+  if(i%3===0){var t=Math.floor(i/3)%4,cs=[['#ef4444','#3b82f6'],['#3b82f6','#ef4444'],['#22c55e','#f59e0b'],['#f59e0b','#22c55e']][t],mx=90;
+   g.lineCap='round';g.lineWidth=6;g.strokeStyle=cs[0];g.beginPath();g.moveTo(x1,y);g.lineTo(mx,y);g.stroke();g.strokeStyle=cs[1];g.beginPath();g.moveTo(mx,y);g.lineTo(x2,y);g.stroke();g.strokeStyle='rgba(255,255,255,.35)';g.lineWidth=1.5;g.beginPath();g.moveTo(x1,y-1.4);g.lineTo(x2,y-1.4);g.stroke();}}
+ [[1],[-1]].forEach(function(sg,si){g.lineWidth=7;g.lineCap='round';g.strokeStyle=si?'#6d5acf':'#8f7cf0';g.beginPath();for(var i=0;i<=120;i++){var u=i/120,y=14+u*252,x=90+sg[0]*Math.cos(u*Math.PI*4)*38;if(i===0)g.moveTo(x,y);else g.lineTo(x,y);}g.stroke();g.strokeStyle='rgba(255,255,255,.35)';g.lineWidth=2;g.stroke();});
+ for(i=0;i<N;i+=2){u=i/(N-1);y=14+u*252;var xa=90+Math.cos(u*Math.PI*4)*38;oval(g,xa,y,4.6,4.6,0,rg(g,xa,y,5,[[0,'#cfc6ff'],[1,'#6d5acf']],-.3,-.3));oval(g,180-xa,y,4.6,4.6,0,rg(g,180-xa,y,5,[[0,'#cfc6ff'],[1,'#6d5acf']],-.3,-.3));}
+ g.restore();}
+/* উদ্ভিদকোষ ২৬০×২২০ */
+function PLCELL(g){var R=srnd(17);g.save();g.translate(130,110);
+ rr(g,-120,-98,240,196,16);g.fillStyle='#b8d98a';g.fill();g.strokeStyle='#4f7a2a';g.lineWidth=4;g.stroke();
+ rr(g,-114,-92,228,184,12);g.fillStyle=rg(g,0,0,150,[[0,'#f4fae4'],[1,'#d7ebb2']],-.2,-.3);g.fill();g.strokeStyle='#8fb85a';g.lineWidth=1.4;g.stroke();
+ /* বড় গহ্বর */
+ g.beginPath();g.moveTo(-60,-70);g.bezierCurveTo(10,-84,80,-70,92,-20);g.bezierCurveTo(100,30,60,74,-10,72);g.bezierCurveTo(-70,70,-90,20,-80,-30);g.bezierCurveTo(-78,-50,-70,-64,-60,-70);g.closePath();g.fillStyle=rg(g,0,0,110,[[0,'rgba(220,240,255,.95)'],[1,'rgba(150,200,235,.9)']],-.2,-.3);g.fill();g.strokeStyle='#5a95c4';g.lineWidth=1.8;g.stroke();
+ oval(g,-30,-30,16,6,-.4,'rgba(255,255,255,.7)');
+ /* নিউক্লিয়াস */
+ oval(g,-92,4,17,16,0,rg(g,-92,4,19,[[0,'#cdb4ec'],[1,'#7a50c0']],-.3,-.3),'#46288a',1.6);oval(g,-90,4,5,5,0,'#3a1c78');
+ /* ক্লোরোপ্লাস্ট */
+ [[-70,-78,.2],[40,-84,-.1],[100,-30,1.3],[96,40,1.1],[40,82,.1],[-30,84,-.2],[-100,-50,1.4],[-98,56,1.7],[104,6,1.5]].forEach(function(c){g.save();g.translate(c[0],c[1]);g.rotate(c[2]);oval(g,0,0,15,8,0,rg(g,0,0,16,[[0,'#8fe06a'],[1,'#2d8a22']],-.3,-.4),'#1d5a16',1);g.fillStyle='rgba(20,90,20,.55)';for(var k=-2;k<=2;k++){g.beginPath();g.rect(k*4-1.6,-3,3,6);g.fill();}g.restore();});
+ MITO(g,-30,62,.3,.8);MITO(g,62,60,-.4,.8);
+ g.restore();}
+/* ক্লোরোপ্লাস্ট বড় ২২০×১৪০ */
+function CHLORO(g){var R=srnd(23);g.save();g.translate(110,70);
+ oval(g,0,0,100,56,0,rg(g,0,0,110,[[0,'#8fdc6a'],[.7,'#3f9a2c'],[1,'#1d5a16']],-.3,-.4),'#14470e',2.4);oval(g,0,0,95,51,0,null,'rgba(220,255,200,.7)',1.2);
+ g.save();g.beginPath();g.ellipse(0,0,95,51,0,0,7);g.clip();g.fillStyle='rgba(180,230,150,.35)';g.fillRect(-100,-56,200,112);
+ function gr(cx,cy,n){for(var i=0;i<n;i++){oval(g,cx,cy-i*4.6+((n-1)*2.3),14,3.6,0,rg(g,cx,cy,14,[[0,'#2a7a1e'],[1,'#0f4a0a']],-.3,-.5),'#0a3406',.8);g.fillStyle='rgba(180,240,150,.5)';g.fillRect(cx-9,cy-i*4.6+((n-1)*2.3)-1.5,18,1.2);}}
+ [[-52,-8,7],[-10,14,8],[32,-16,7],[58,12,6],[-30,-24,5],[8,-8,6]].forEach(function(p){gr(p[0],p[1],p[2]);});
+ g.strokeStyle='rgba(60,140,40,.7)';g.lineWidth=1.6;g.beginPath();g.moveTo(-44,-8);g.lineTo(-10,14);g.lineTo(32,-16);g.lineTo(58,12);g.moveTo(-30,-24);g.lineTo(8,-8);g.stroke();
+ g.fillStyle='#f4efc4';for(var i=0;i<7;i++){g.beginPath();g.arc(-60+R()*120,-38+R()*76,3+R()*2,0,7);g.fill();}g.restore();g.restore();}
+/* পাতার প্রস্থচ্ছেদ + পত্ররন্ধ্র ২৬০×১৮০ */
+function LEAFSEC(g){var R=srnd(19);
+ g.fillStyle='#e6f4cf';g.fillRect(0,0,260,180);
+ g.fillStyle=rg(g,130,10,180,[[0,'#cfe8a8'],[1,'#a9d072']],0,0);g.fillRect(0,18,260,10);g.strokeStyle='#5a8a2a';g.lineWidth=1;g.strokeRect(0,18,260,10);
+ for(var i=0;i<13;i++){var x=i*20+4;g.strokeStyle='#4f7a2a';g.lineWidth=1.2;g.fillStyle='#bfe08a';g.fillRect(x,30,18,40);g.strokeRect(x,30,18,40);for(var k=0;k<3;k++){oval(g,x+9,40+k*12,6,3.6,0,'#3fa02e','#1d5a16',.6);}}
+ for(i=0;i<9;i++){var x2=i*30+8;g.fillStyle='#a5d46a';g.beginPath();g.ellipse(x2+10,102,14,22,0,0,7);g.fill();g.strokeStyle='#4f7a2a';g.lineWidth=1;g.stroke();for(var k2=0;k2<3;k2++)oval(g,x2+5+k2*5,96+k2*6,3.4,2,0,'#3fa02e');}
+ g.fillStyle='#e9f6d3';g.fillRect(0,126,260,22);g.fillStyle=rg(g,130,162,180,[[0,'#cfe8a8'],[1,'#a9d072']],0,0);g.fillRect(0,148,260,10);g.strokeRect(0,148,260,10);
+ /* পত্ররন্ধ্র */
+ [[60],[190]].forEach(function(p){var x=p[0];g.fillStyle='#4aa83a';g.beginPath();g.ellipse(x-9,153,9,7,0,0,7);g.ellipse(x+9,153,9,7,0,0,7);g.fill();g.strokeStyle='#1d5a16';g.lineWidth=1.2;g.stroke();g.fillStyle='#14320f';g.beginPath();g.ellipse(x,153,3,5,0,0,7);g.fill();g.fillStyle='rgba(180,240,150,.8)';[x-12,x-6,x+6,x+12].forEach(function(cx){g.beginPath();g.arc(cx,152,1.4,0,7);g.fill();});});}
+/* ফুলের লম্বচ্ছেদ ২২০×২৬০ */
+function FLOWER(g){g.save();
+ g.strokeStyle='#4a8a2a';g.lineWidth=10;g.lineCap='round';g.beginPath();g.moveTo(110,250);g.lineTo(110,150);g.stroke();g.strokeStyle='#7fc050';g.lineWidth=3;g.beginPath();g.moveTo(107,250);g.lineTo(107,150);g.stroke();
+ oval(g,110,150,22,14,0,rg(g,110,150,24,[[0,'#d9e8a0'],[1,'#8ab04a']],-.3,-.3),'#4a6a1a',1.4);
+ /* বৃতি */
+ [[-1],[1]].forEach(function(s){g.save();g.translate(110,150);g.scale(s[0],1);g.beginPath();g.moveTo(0,0);g.bezierCurveTo(14,-8,40,-4,52,10);g.bezierCurveTo(30,8,14,8,0,6);g.closePath();g.fillStyle='#6fb844';g.fill();g.strokeStyle='#2a6a14';g.lineWidth=1;g.stroke();g.restore();});
+ /* দল */
+ [[-1,1],[1,1]].forEach(function(s){g.save();g.translate(110,140);g.scale(s[0],1);g.beginPath();g.moveTo(0,0);g.bezierCurveTo(30,10,84,-6,96,-62);g.bezierCurveTo(66,-92,20,-60,0,-20);g.closePath();g.fillStyle=rg(g,40,-40,90,[[0,'#ffb3d0'],[.6,'#ee6fa4'],[1,'#b83a78']],-.3,-.3);g.fill();g.strokeStyle='#8a2658';g.lineWidth=1.4;g.stroke();g.strokeStyle='rgba(255,255,255,.4)';g.lineWidth=1;g.beginPath();g.moveTo(10,-6);g.bezierCurveTo(40,-20,66,-40,80,-60);g.stroke();g.restore();});
+ /* গর্ভদণ্ড, গর্ভাশয় */
+ var q=g.createLinearGradient(100,0,120,0);q.addColorStop(0,'#b8e08a');q.addColorStop(1,'#6a9a3a');g.fillStyle=q;g.beginPath();g.moveTo(104,60);g.lineTo(116,60);g.lineTo(115,130);g.lineTo(105,130);g.closePath();g.fill();g.strokeStyle='#3a6a1a';g.lineWidth=1;g.stroke();
+ oval(g,110,56,10,8,0,rg(g,110,56,11,[[0,'#ffe27a'],[1,'#d89a1a']],-.3,-.3),'#8a5a0a',1);
+ g.beginPath();g.moveTo(94,130);g.bezierCurveTo(90,166,130,166,126,130);g.closePath();g.fillStyle=rg(g,110,146,26,[[0,'#d6eca0'],[1,'#7aaa3a']],-.3,-.3);g.fill();g.strokeStyle='#3a6a1a';g.lineWidth=1.2;g.stroke();
+ [[104,142],[116,142],[110,152]].forEach(function(p){oval(g,p[0],p[1],4.4,5.4,0,rg(g,p[0],p[1],5,[[0,'#fff8c8'],[1,'#d8c060']],-.3,-.3),'#8a7420',.8);});
+ /* পুংকেশর */
+ [[-1],[1]].forEach(function(s){g.strokeStyle='#d9e8a0';g.lineWidth=3;g.beginPath();g.moveTo(110+s[0]*10,136);g.quadraticCurveTo(110+s[0]*30,100,110+s[0]*40,70);g.stroke();oval(g,110+s[0]*40,66,7,10,s[0]*.3,rg(g,110+s[0]*40,66,10,[[0,'#ffe27a'],[1,'#d89a1a']],-.3,-.3),'#8a5a0a',1);});
+ g.restore();}
+var ORGS2={lungs:[240,280,LUNGS],alveoli:[220,200,ALVEOLI],heart:[220,250,HEART],kidney:[240,250,KIDNEY],nephron:[220,280,NEPHRON],bloodc:[180,140,BLOODC],neuron:[320,180,NEURON],brain:[260,200,BRAIN],dna:[180,280,DNAH],plcell:[260,220,PLCELL],chloro:[220,140,CHLORO],leafsec:[260,180,LEAFSEC],flower:[220,260,FLOWER]};
+function OGB(x,k,cx,cy,s,rot){var o=ORGS2[k],c=RCV('ob_'+k,o[0],o[1],o[2]);x.save();x.translate(cx,cy);if(rot)x.rotate(rot);x.scale(s||1,s||1);x.drawImage(c,-o[0]/2,-o[1]/2,o[0],o[1]);x.restore();}
+function RBC1(g){g.save();g.translate(20,20);g.scale(1,.9);oval(g,0,0,17,17,0,rg(g,0,0,18,[[0,'#f08a8a'],[.5,'#d8383e'],[1,'#8e1218']],-.2,-.3),'#7a0e12',1);oval(g,0,0,8.5,8.5,0,rg(g,0,0,9,[[0,'rgba(110,8,12,.75)'],[1,'rgba(230,100,100,.15)']],0,0));g.restore();}
+ORGS2.rbc=[40,40,RBC1];
+/* বড় অ্যালভিওলাস-গোলক ৩৬০×১৬০ (উপরের অর্ধেক বায়ুথলি) */
+function ALVBIG(g){var R=srnd(2);g.save();g.beginPath();g.moveTo(40,150);g.bezierCurveTo(40,20,320,20,320,150);g.closePath();g.fillStyle=rg(g,180,120,200,[[0,'rgba(255,240,244,.95)'],[.7,'rgba(250,196,210,.9)'],[1,'rgba(232,134,160,.95)']],0,.2);g.fill();g.strokeStyle='#c0506c';g.lineWidth=3;g.stroke();
+ g.fillStyle='rgba(255,255,255,.5)';for(var i=0;i<40;i++){g.beginPath();g.arc(70+R()*220,50+R()*90,1+R()*2,0,7);g.fill();}
+ oval(g,130,56,40,12,-.2,'rgba(255,255,255,.35)');g.restore();}
+ORGS2.alvbig=[360,160,ALVBIG];
+/* নলাকার ৩ডি-ধাঁচের নালিকা (লাইভ আঁকা, হালকা)। pts: [[x,y],…] */
+function TUBE(x,pts,w,col,on){x.save();x.lineCap='round';x.lineJoin='round';var p=function(){x.beginPath();x.moveTo(pts[0][0],pts[0][1]);for(var i=1;i<pts.length;i++)x.lineTo(pts[i][0],pts[i][1]);};
+ if(on){p();x.strokeStyle='rgba(253,224,71,.35)';x.lineWidth=w+9;x.stroke();}
+ p();x.strokeStyle=dk(col,.45);x.lineWidth=w+2.5;x.stroke();p();x.strokeStyle=col;x.lineWidth=w;x.stroke();p();x.strokeStyle='rgba(255,255,255,.38)';x.lineWidth=Math.max(1.2,w*.22);x.translate(-w*.18,-w*.18);x.stroke();x.restore();}
+function WBC1(g){var R=srnd(3);g.save();g.translate(20,20);oval(g,0,0,17,17,0,rg(g,0,0,18,[[0,'#f6f8ff'],[.7,'#cbd5f3'],[1,'#98a8dc']],-.2,-.3),'#6070b8',1.2);[[-5,-4,7],[5,-2,6.5],[0,6,6]].forEach(function(p){oval(g,p[0],p[1],p[2],p[2]*.8,0,rg(g,p[0],p[1],p[2],[[0,'#9c88dc'],[1,'#4a3a9a']],-.3,-.3),'#32267a',.8);});g.fillStyle='rgba(150,130,210,.5)';for(var i=0;i<12;i++){g.beginPath();g.arc((R()-.5)*26,(R()-.5)*26,.8,0,7);g.fill();}g.restore();}
+ORGS2.wbc=[40,40,WBC1];
+
 /* ===== ল্যাব ১: ইমবাইবিশন ও ব্যাপন ===== */
 var A1={m:0};pills('a1p',function(k){A1.m=k;});
 DRAWS.push(function(){var x=ctxOf('a1c'),W=460,H=330,t=FR/60,m=A1.m,s=+$('a1k').value/100,i;$('a1kv').textContent=bn(Math.round(s*100));bgF(x,W,H);
@@ -590,9 +997,9 @@ DRAWS.push(function(){var x=ctxOf('h8c'),W=460,H=330,t=FR/60,m=H8.m,i;bgF(x,W,H)
   x.fillStyle='rgba(185,28,28,.75)';x.fillRect(44,64+4,102,220*.45-4);
   ft(x,'রক্তরস ৫৫%',95,220,12,'#fff');ft(x,'কোষ ৪৫%',95,120,12,'#fff');
   var info=[{c:YL,t:'রক্তরস',s:['পানি (প্রধান উপাদান)','প্রোটিন: অ্যালবুমিন, গ্লোবিউলিন, ফাইব্রিনোজেন','গ্লুকোজ, চর্বিকণা, খনিজ লবণ','ভিটামিন, হরমোন, অ্যান্টিবডি','বর্জ্য: CO₂, ইউরিয়া, ইউরিক অ্যাসিড']},{c:RD,t:'লোহিত কণিকা (RBC)',s:['নিউক্লিয়াসবিহীন, দ্বিঅবতল বৃত্ত','হিমোগ্লোবিন: O₂ ও CO₂ বহন','আয়ু প্রায় ১২০ দিন','লাল অস্থিমজ্জায় তৈরি','প্রতি কিউবিক মিমি: ~৫০ লক্ষ']},{c:'#e2e8f0',t:'শ্বেত কণিকা (WBC)',s:['নিউক্লিয়াসযুক্ত, নির্দিষ্ট আকার নেই','জীবাণু ধ্বংস (ফ্যাগোসাইটোসিস)','আয়ু ১–১৫ দিন','প্রতি ঘন মিমি: ৪–১০ হাজার','রোগ প্রতিরোধে সাহায্য']},{c:'#a78bfa',t:'অণুচক্রিকা (প্লেটলেট)',s:['নিউক্লিয়াস নেই, গোলাকার/ডিম্বাকার','রক্ত তঞ্চনে সাহায্য','আয়ু ৫–১০ দিন','প্রতি ঘন মিমি: ~আড়াই লাখ','ফাইব্রিন জাল তৈরিতে অংশ']}][m];
-  for(i=0;i<14;i++){var X=60+(i%4)*24+Math.sin(t+i)*2,Y=75+Math.floor(i/4)*10+(i%2)*4;if(m===1)circ(x,0,X,Y+Math.floor(i/4)*8,7,'#ef4444',null);}
+  for(i=0;i<14;i++){var X=60+(i%4)*24+Math.sin(t+i)*2,Y=75+Math.floor(i/4)*10+(i%2)*4;if(m===1)OGB(x,'rbc',X,Y+Math.floor(i/4)*8,.42,i);}
   if(m===1){for(i=0;i<8;i++){var X2=58+(i%4)*24,Y2=210+Math.floor(i/4)*30;}}
-  if(m===2)for(i=0;i<3;i++)circ(x,0,70+i*26,100,9,'#e2e8f0',null);
+  if(m===2)for(i=0;i<3;i++)OGB(x,'wbc',70+i*26,100,.7,i);
   if(m===3)for(i=0;i<6;i++)circ(x,0,66+i*14,100+(i%2)*10,3.5,'#a78bfa',null);
   hbox(x,170,50,280,250,info.c,.5);ft(x,info.t,310,75,14,info.c);for(i=0;i<info.s.length;i++)ft(x,'• '+info.s[i],310,110+i*38,10.5,'#fff');
   $('h8t').innerHTML='<b>রক্ত</b>: তরল যোজক টিস্যু (বই ৬.৩.১)। রক্তরস ও তিন ধরনের কোষ: লোহিত, শ্বেত, অণুচক্রিকা। <b>'+info.t+'</b>: '+info.s.join('; ')+'।<br><small>সংখ্যা বইয়ের তথ্য। ছবি সরল, আমার আঁকা।</small>';});
@@ -633,11 +1040,12 @@ var K11={m:0,auto:false,t:0};pills('k11p',function(k){K11.m=k;K11.auto=false;});
 DRAWS.push(function(){var x=ctxOf('k11c'),W=460,H=330,t=FR/60,i;bgF(x,W,H);
   if(K11.auto){K11.t+=DT;var ph=Math.floor(K11.t/1.1)%3;if(ph!==K11.m)K11.m=ph;}
   var m=K11.m,pulse=(m===2)?1:(m===0?.88:1);
-  var chamber=function(cx,cy,w,h,col,sc,lab){x.save();x.translate(cx,cy);x.scale(sc,sc);x.shadowColor=col;x.shadowBlur=14;x.fillStyle=col+'aa';x.strokeStyle=col;x.lineWidth=3;rr(x,-w/2,-h/2,w,h,22);x.fill();x.stroke();x.restore();ft(x,lab,cx,cy,11,'#fff');};
+  var hs=m===2?1.0:(m===0?1.03:.97);OGB(x,'heart',230,172,1.15*hs);
+  var chamber=function(cx,cy,w,h,col,sc,lab){x.save();x.globalAlpha=.22*(sc<1?0:1)+(m===2&&cy>150?.18:0);x.fillStyle=col;x.beginPath();x.ellipse(cx,cy,34,28,0,0,7);x.fill();x.restore();ft(x,lab,cx,cy,10.5,'#fff');};
   var aS=m===0?.84:1,vS=m===1?.84:1;
-  chamber(165,110,110,80,'#38bdf8',aS,'ডান অলিন্দ');chamber(295,110,110,80,'#ef4444',aS,'বাম অলিন্দ');
-  chamber(165,215,120,110,'#38bdf8',vS,'ডান নিলয়');chamber(295,215,120,110,'#ef4444',vS,'বাম নিলয়');
-  ft(x,'ট্রাইকাসপিড '+(m===0?'খোলা':m===1?'বন্ধ':'খোলা প্রায়'),165,160,9.5,YL);ft(x,'বাইকাসপিড '+(m===0?'খোলা':m===1?'বন্ধ':'খোলা প্রায়'),295,160,9.5,YL);
+  chamber(189,182,110,80,'#38bdf8',aS,'ডান অলিন্দ');chamber(276,182,110,80,'#ef4444',aS,'বাম অলিন্দ');
+  chamber(186,262,120,110,'#38bdf8',vS,'ডান নিলয়');chamber(278,262,120,110,'#ef4444',vS,'বাম নিলয়');
+  ft(x,'ট্রাইকাসপিড '+(m===0?'খোলা':m===1?'বন্ধ':'খোলা প্রায়'),150,226,9.5,YL);ft(x,'বাইকাসপিড '+(m===0?'খোলা':m===1?'বন্ধ':'খোলা প্রায়'),312,226,9.5,YL);
   for(i=0;i<5;i++){var u=((t*.7+i/5)%1);
     if(m===2){circ(x,0,120+i*8,20+u*60,4,'#38bdf8',null);circ(x,0,340-i*8,20+u*60,4,'#ef4444',null);}
     if(m===0){circ(x,0,165+Math.sin(i)*20,lerp(120,205,u),4,'#38bdf8',null);circ(x,0,295+Math.sin(i)*20,lerp(120,205,u),4,'#ef4444',null);}

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>বীজগাণিতিক রাশি (উচ্চতর গণিত অধ্যায় ২) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+canvas{width:100%;height:auto;max-width:700px;display:block;margin:8px auto;border-radius:12px;background:#fff;border:1px solid var(--line);touch-action:none}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.ctl input[type=range]{width:200px;max-width:100%}
+.ctl select,.ctl input[type=text],.ans input{font-family:inherit;font-size:16px;padding:6px 8px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;max-width:100%;width:auto}
+.eqb{background:#eaf7f5;border-radius:10px;padding:10px;text-align:center;font-weight:700;color:var(--navy);margin:8px 0;font-size:18px;overflow-x:auto}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.fb{font-weight:700;margin-top:6px}
+.res{background:#eef6ff;border-radius:10px;padding:10px 12px;margin:8px 0;line-height:1.9}
+.res b{color:#0b5ed7}
+.chips button{margin:3px;padding:6px 12px;border-radius:999px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.chips button.on{background:#0b5ed7;color:#fff;border-color:#0b5ed7}
+.step{background:#fff;border:1px solid var(--line);border-left:5px solid #2a9d8f;border-radius:8px;padding:8px 12px;margin:6px 0;display:none}
+.step.show{display:block}
+.ex{border:2px dashed #b8c7d6;border-radius:12px;padding:10px 14px;margin:14px 0;background:#fcfdff}
+.q{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:#fff}
+.q .opt{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 10px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:16px;cursor:pointer}
+.q .opt.good{background:#d8f3e3;border-color:#2a9d8f}
+.q .opt.bad{background:#fddcdc;border-color:#e76f51}
+.m{font-family:system-ui,'Segoe UI',Arial,sans-serif}
+table.t{border-collapse:collapse;margin:8px 0}
+table.t td,table.t th{border:1px solid #cfd9e1;padding:5px 12px;text-align:center}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">📐 গণিত &rsaquo; উচ্চতর গণিত &rsaquo; অধ্যায় ২ (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🧮 বীজগাণিতিক রাশি</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#ex">🪜 ধাপে ধাপে</a><a href="#lab1">📊 বহুপদী</a><a href="#lab2">➗ ভাগশেষ</a><a href="#lab3">🔍 উৎপাদক</a><a href="#lab4">🔄 প্রতিসম</a><a href="#lab5">⚖️ অভেদ</a><a href="#lab6">🧩 আংশিক ভগ্নাংশ</a><a href="#prac">✍️ প্র্যাকটিস</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্নোত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায়ে শিখবে:</b> বহুপদী, ভাগ সূত্র, ভাগশেষ ও উৎপাদক উপপাদ্য, উৎপাদকে বিশ্লেষণ, সমমাত্রিক-প্রতিসম-চক্রক্রমিক রাশি, বিশেষ সূত্র a³+b³+c³−3abc এবং আংশিক ভগ্নাংশ।</div>
+
+    <h3>১. বহুপদী (Polynomial) ⭐⭐⭐</h3>
+    <ul>
+      <li><b>বহুপদী</b> হলো এমন রাশি যার পদগুলো চলকের শুধু <b>অঋণাত্মক পূর্ণসাংখ্যিক ঘাত</b> ও ধ্রুবকের গুণফল। যেমন ২x² + ৭x + ৫। কিন্তু x⁻² বা √x থাকলে বহুপদী নয়।</li>
+      <li>cxᵖ পদে c = <b>সহগ</b>, p = পদের <b>মাত্রা</b>। সর্বোচ্চ মাত্রাটিই বহুপদীর <b>মাত্রা</b>, তার পদ <b>মুখ্যপদ</b>, সহগ <b>মুখ্যসহগ</b>। চলকবর্জিত পদ <b>ধ্রুবপদ</b>।</li>
+      <li>উদাহরণ: ২x⁶ − ৩x⁵ − x⁴ + ২x − ৫ এর মাত্রা ৬, মুখ্যপদ ২x⁶, মুখ্যসহগ ২, ধ্রুবপদ −৫।</li>
+      <li>আদর্শ রূপ: ঘাত বড় থেকে ছোট ক্রমে লেখা। P(x) লিখলে P(a) মানে x-এর জায়গায় a বসানো।</li>
+      <li>দুই চলকের বহুপদীর মাত্রা: প্রতিটি পদের ঘাতের যোগফলের সর্বোচ্চটি। P(x, y) = ৮x³ + y³ − ৪x²+ ৭xy + ২y − ৫ এর মাত্রা ৩।</li>
+    </ul>
+
+    <h3>২. ভাগ সূত্র ও ভাগশেষ উপপাদ্য ⭐⭐⭐</h3>
+    <ul>
+      <li><b>ভাগ সূত্র:</b> P(x) = F(x)·Q(x) + R(x), যেখানে R = ০ অথবা R-এর মাত্রা &lt; Q-এর মাত্রা। (সংখ্যার মতোই: ভাজ্য = ভাজক × ভাগফল + ভাগশেষ)</li>
+      <li><b>ভাগশেষ উপপাদ্য:</b> P(x)-কে (x − a) দিয়ে ভাগ করলে ভাগশেষ = <b>P(a)</b>। অর্থাৎ ভাগ না করেই ভাগশেষ জানা যায়!</li>
+      <li>(ax + b) দিয়ে ভাগ করলে ভাগশেষ = P(−b/a)।</li>
+      <li><b>উৎপাদক উপপাদ্য:</b> P(a) = ০ হলে (x − a) হলো P(x)-এর উৎপাদক, আর উল্টোটাও সত্য।</li>
+      <li>x − ১ উৎপাদক হবে যদি ও কেবল যদি সহগগুলোর যোগফল ০ হয়। (ax³+bx²+cx+d এর জন্য a+b+c+d = ০)</li>
+    </ul>
+
+    <h3>৩. অভেদ ও সমতা সূত্র ⭐⭐</h3>
+    <ul>
+      <li><b>অভেদ (≡):</b> চলকের সকল মানের জন্য সত্য। যেমন (x + y)² ≡ x² + ২xy + y²। আর সমীকরণ শুধু কিছু মানের জন্য সত্য।</li>
+      <li><b>সমতা সূত্র:</b> দুটি বহুপদী অভেদ হলে অনুরূপ পদের সহগ সমান। ax² + bx + c ≡ px² + qx + r হলে a = p, b = q, c = r।</li>
+    </ul>
+
+    <h3>৪. উৎপাদকে বিশ্লেষণ (মূলদ মূল পদ্ধতি) ⭐⭐⭐</h3>
+    <ul>
+      <li>সহগ পূর্ণসংখ্যা হলে P(x)-এর মূলদ মূল r = p/q (লঘিষ্ঠ আকারে) এর জন্য <b>p হলো ধ্রুবপদের উৎপাদক</b> এবং <b>q হলো মুখ্যসহগের উৎপাদক</b>।</li>
+      <li>তাই সম্ভাব্য সব ±p/q নিয়ে P বসিয়ে পরীক্ষা করো। যেটায় ০ হয় সেটাই উৎপাদক।</li>
+      <li>উদাহরণ: x³ − ৬x² + ১১x − ৬ এ ধ্রুবপদ −৬। সম্ভাব্য মান ±১, ±২, ±৩, ±৬। P(১) = P(২) = P(৩) = ০, তাই (x−১)(x−২)(x−৩)।</li>
+    </ul>
+
+    <h3>৫. সমমাত্রিক, প্রতিসম ও চক্রক্রমিক রাশি ⭐⭐⭐</h3>
+    <ul>
+      <li><b>সমমাত্রিক:</b> প্রতিটি পদের মাত্রা একই। x² + ২xy + ৫y² (প্রতিটি ২ মাত্রার)।</li>
+      <li><b>প্রতিসম:</b> যেকোনো দুটি চলক বদলালে রাশি একই থাকে। a+b+c, ab+bc+ca, a²+b²+c²।</li>
+      <li><b>চক্রক্রমিক:</b> a→b, b→c, c→a (গোল ঘুরিয়ে) বসালে রাশি একই থাকে। a²b + b²c + c²a চক্রক্রমিক, কিন্তু প্রতিসম নয়।</li>
+      <li><b>মনে রাখো:</b> তিন চলকে প্রতিটি প্রতিসম রাশি চক্রক্রমিক। কিন্তু প্রতিটি চক্রক্রমিক রাশি প্রতিসম নয়।</li>
+      <li>চক্রক্রমিক রাশির (a − b) উৎপাদক হলে (b − c) ও (c − a) ও উৎপাদক হয়।</li>
+      <li>এক মাত্রার চক্রক্রমিক: k(a+b+c)। দুই মাত্রার: k(a²+b²+c²) + m(ab+bc+ca)।</li>
+    </ul>
+
+    <h3>৬. বিশেষ সূত্র ⭐⭐⭐</h3>
+    <ul>
+      <li><b>a³ + b³ + c³ − ৩abc = (a + b + c)(a² + b² + c² − ab − bc − ca)</b></li>
+      <li>অনুসিদ্ধান্ত: = ½(a+b+c){(a−b)² + (b−c)² + (c−a)²}।</li>
+      <li>a + b + c = ০ হলে <b>a³ + b³ + c³ = ৩abc</b>। আবার a³+b³+c³ = ৩abc হলে a+b+c = ০ অথবা a = b = c।</li>
+      <li>(a−b)³ + (b−c)³ + (c−a)³ = ৩(a−b)(b−c)(c−a) (কারণ (a−b)+(b−c)+(c−a) = ০)।</li>
+    </ul>
+
+    <h3>৭. মূলদ ও আংশিক ভগ্নাংশ ⭐⭐⭐</h3>
+    <ul>
+      <li><b>প্রকৃত ভগ্নাংশ:</b> লবের মাত্রা &lt; হরের মাত্রা। <b>অপ্রকৃত:</b> লবের মাত্রা ≥ হরের মাত্রা। অপ্রকৃত হলে আগে ভাগ করে ভাগফল + প্রকৃত ভগ্নাংশ করে নাও।</li>
+      <li><b>ক) আলাদা একঘাত উৎপাদক:</b> (px+q)/((x−a)(x−b)) = A/(x−a) + B/(x−b)। দুই পাশ গুণ করে x = a ও x = b বসাও।</li>
+      <li><b>খ) পুনরাবৃত্ত একঘাত:</b> (x−a)² থাকলে A/(x−a) + B/(x−a)² লেখো।</li>
+      <li><b>গ) দ্বিঘাত উৎপাদক (যা ভাঙে না):</b> (x²+৪) থাকলে লব হবে (Bx + C)/(x²+৪)।</li>
+      <li><b>ঘ) পুনরাবৃত্ত দ্বিঘাত:</b> (x²+১)² থাকলে (Bx+C)/(x²+১) + (Dx+E)/(x²+১)²।</li>
+    </ul>
+    <div class="warn">⚠️ <b>সাধারণ ভুল:</b> ① P(a) বের করার সময় ঋণাত্মক সংখ্যায় বন্ধনী না দেওয়া, যেমন (−২)³ = −৮। ② (x + ২) দিয়ে ভাগে a = −২ নিতে ভুলে যাওয়া। ③ অপ্রকৃত ভগ্নাংশে ভাগ না করেই আংশিক ভগ্নাংশ শুরু করা।</div>
+  </section>
+
+  <section class="panel" id="ex">
+    <h2>🪜 ধাপে ধাপে উদাহরণ (বই থেকে)</h2>
+    <div class="say">👉 "পরের ধাপ" চাপো। আগে নিজে চেষ্টা করো, তারপর মিলিয়ে নাও।</div>
+
+    <div class="ex" id="E1"><b>উদাহরণ ১ (বই উ. ৮):</b> P(x) = ৫x³ + ৬x² − ax + ৬ কে (x − ২) দিয়ে ভাগ করলে ভাগশেষ ৬। a এর মান কত?
+      <div class="step">ধাপ ১: ভাগশেষ উপপাদ্য: ভাগশেষ = P(২)।</div>
+      <div class="step">ধাপ ২: P(২) = ৫·৮ + ৬·৪ − ২a + ৬ = ৪০ + ২৪ − ২a + ৬ = ৭০ − ২a।</div>
+      <div class="step">ধাপ ৩: শর্ত: ৭০ − ২a = ৬ ⇒ ২a = ৬৪ ⇒ <b>a = ৩২</b>।</div>
+      <button class="btn" data-ex="E1">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E1">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E2"><b>উদাহরণ ২ (বই উ. ১২):</b> P(x) = x³ − ৬x² + ১১x − ৬ কে উৎপাদকে বিশ্লেষণ করো।
+      <div class="step">ধাপ ১: ধ্রুবপদ −৬ এর উৎপাদক: ±১, ±২, ±৩, ±৬। মুখ্যসহগ ১, তাই মূলগুলো এগুলোর মধ্যে।</div>
+      <div class="step">ধাপ ২: P(১) = ১ − ৬ + ১১ − ৬ = ০ ✔ ⇒ (x − ১) উৎপাদক। P(−১) = −২৪ ≠ ০।</div>
+      <div class="step">ধাপ ৩: P(২) = ৮ − ২৪ + ২২ − ৬ = ০ ✔ ⇒ (x − ২)। P(৩) = ২৭ − ৫৪ + ৩৩ − ৬ = ০ ✔ ⇒ (x − ৩)।</div>
+      <div class="step">ধাপ ৪: মাত্রা ৩ আর ৩টি একঘাত উৎপাদক পেলাম। মুখ্যসহগ ১, তাই <b>P(x) = (x − ১)(x − ২)(x − ৩)</b>।</div>
+      <button class="btn" data-ex="E2">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E2">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E3"><b>উদাহরণ ৩ (বই উ. ১৩):</b> ১৮x³ + ১৫x² − x − ২ কে উৎপাদকে বিশ্লেষণ করো।
+      <div class="step">ধাপ ১: ধ্রুবপদ −২ এর উৎপাদক: ±১, ±২। মুখ্যসহগ ১৮ এর উৎপাদক: ১, ২, ৩, ৬, ৯, ১৮। সম্ভাব্য মূল r/s।</div>
+      <div class="step">ধাপ ২: পরীক্ষা করে পাই P(−১/২) = ১৮(−১/৮) + ১৫(১/৪) + ১/২ − ২ = −২.২৫ + ৩.৭৫ + ০.৫ − ২ = ০ ✔। তাই (২x + ১) উৎপাদক।</div>
+      <div class="step">ধাপ ৩: ভাগ করলে ভাগফল ৯x² + ৩x − ২।</div>
+      <div class="step">ধাপ ৪: ৯x² + ৩x − ২ = ৯x² + ৬x − ৩x − ২ = ৩x(৩x + ২) − ১(৩x + ২) = (৩x + ২)(৩x − ১)।</div>
+      <div class="step">ধাপ ৫: <b>১৮x³ + ১৫x² − x − ২ = (২x + ১)(৩x + ২)(৩x − ১)</b>। (গুণ করে মিলিয়ে দেখো।)</div>
+      <button class="btn" data-ex="E3">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E3">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E4"><b>উদাহরণ ৪ (বই উ. ১৫):</b> bc(b − c) + ca(c − a) + ab(a − b) কে উৎপাদকে বিশ্লেষণ করো (সহজ পদ্ধতি)।
+      <div class="step">ধাপ ১: রাশিটি a এর বহুপদী P(a) ধরি। a এর জায়গায় b বসালে: bc(b−c) + cb(c−b) + b²(b−b) = ০ ✔।</div>
+      <div class="step">ধাপ ২: তাই (a − b) উৎপাদক। রাশিটি চক্রক্রমিক, তাই (b − c) ও (c − a) ও উৎপাদক।</div>
+      <div class="step">ধাপ ৩: রাশিটি ৩ মাত্রার সমমাত্রিক, ৩টি একঘাত উৎপাদক পেয়েছি। অতএব রাশি = k(a−b)(b−c)(c−a), k ধ্রুবক।</div>
+      <div class="step">ধাপ ৪: a = ০, b = ১, c = ২ বসাই। বামপক্ষ = ১·২·(১−২) = −২। ডানপক্ষ = k(−১)(−১)(২) = ২k। তাই k = −১।</div>
+      <div class="step">ধাপ ৫: <b>উত্তর: −(a − b)(b − c)(c − a)</b>।</div>
+      <button class="btn" data-ex="E4">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E4">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E5"><b>উদাহরণ ৫ (বই উ. ২৩):</b> (৫x − ৭)/((x−১)(x−২)) কে আংশিক ভগ্নাংশে প্রকাশ করো।
+      <div class="step">ধাপ ১: ধরি (৫x−৭)/((x−১)(x−২)) ≡ A/(x−১) + B/(x−২)।</div>
+      <div class="step">ধাপ ২: দুই পাশে (x−১)(x−২) গুণ: ৫x − ৭ ≡ A(x−২) + B(x−১)।</div>
+      <div class="step">ধাপ ৩: x = ১ বসাই: −২ = −A ⇒ A = ২। x = ২ বসাই: ৩ = B।</div>
+      <div class="step">ধাপ ৪: <b>উত্তর: ২/(x−১) + ৩/(x−২)</b>। যাচাই: ২(x−২) + ৩(x−১) = ৫x − ৭ ✔</div>
+      <button class="btn" data-ex="E5">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E5">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E6"><b>উদাহরণ ৬ (বই উ. ২৫):</b> (x−১)(x−৫)/((x−২)(x−৪)) কে আংশিক ভগ্নাংশে প্রকাশ করো। (অপ্রকৃত ভগ্নাংশ)
+      <div class="step">ধাপ ১: লব ও হর দুটিই ২ মাত্রার, তাই ভগ্নাংশ অপ্রকৃত। লবকে হর দিয়ে ভাগ করলে ভাগফল ১। ধরি = ১ + A/(x−২) + B/(x−৪)।</div>
+      <div class="step">ধাপ ২: গুণ করে: (x−১)(x−৫) ≡ (x−২)(x−৪) + A(x−৪) + B(x−২)।</div>
+      <div class="step">ধাপ ৩: x = ২: (১)(−৩) = −৩ = A(−২) ⇒ A = ৩/২। x = ৪: (৩)(−১) = −৩ = B(২) ⇒ B = −৩/২।</div>
+      <div class="step">ধাপ ৪: <b>উত্তর: ১ + ৩/(২(x−২)) − ৩/(২(x−৪))</b>।</div>
+      <button class="btn" data-ex="E6">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E6">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E7"><b>উদাহরণ ৭ (বই উ. ২৯):</b> ১/(x(x²+১)²) কে আংশিক ভগ্নাংশে প্রকাশ করো।
+      <div class="step">ধাপ ১: ধরি = A/x + (Bx + C)/(x²+১) + (Dx + E)/(x²+১)²।</div>
+      <div class="step">ধাপ ২: গুণ করে: ১ ≡ A(x²+১)² + (Bx+C)(x²+১)x + (Dx+E)x।</div>
+      <div class="step">ধাপ ৩: x = ০ বসিয়ে A = ১। এরপর x⁴, x³, x², x এর সহগ তুলনা: A + B = ০, C = ০, ২A + B + D = ০, C + E = ০।</div>
+      <div class="step">ধাপ ৪: সমাধান: B = −১, C = ০, D = −১, E = ০।</div>
+      <div class="step">ধাপ ৫: <b>উত্তর: ১/x − x/(x²+১) − x/(x²+১)²</b>।</div>
+      <button class="btn" data-ex="E7">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E7">আবার শুরু</button>
+    </div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>📊 ল্যাব ১: বহুপদী চেনো ও মান বের করো</h2>
+    <div class="say">👉 সহগগুলো বড় ঘাত থেকে ছোট ঘাত ক্রমে কমা দিয়ে লেখো। যেমন ৩, ২, −৭, ৮ মানে ৩x³ + ২x² − ৭x + ৮। তারপর x-এর মান বদলাও।</div>
+    <div class="ctl"><label>সহগ:</label><input type="text" id="p1c" value="3, 2, -7, 8" size="20"><label>x = <span id="p1xv"></span></label><input type="range" id="p1x" min="-5" max="5" step="0.5" value="2"></div>
+    <canvas id="p1cv" width="600" height="320"></canvas>
+    <div class="res m" id="p1i"></div>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>➗ ল্যাব ২: ভাগশেষ উপপাদ্য ও সিনথেটিক ভাগ</h2>
+    <div class="say">👉 বহুপদী ও ভাজক লেখো (যেমন x-2, x+3 বা 2x-1)। ভাগ না করেই P(a) দিয়ে ভাগশেষ মিলিয়ে দেখো।</div>
+    <div class="ctl"><label>P(x) সহগ:</label><input type="text" id="p2c" value="2, -6, 0, 5, -2" size="22"><label>ভাজক:</label><input type="text" id="p2d" value="x-2" size="8"><button class="btn" id="p2go">হিসাব করো</button></div>
+    <canvas id="p2cv" width="600" height="300"></canvas>
+    <div class="res m" id="p2i"></div>
+    <small>উদাহরণ: বইয়ের কাজ — P(x) = ২x⁴ − ৬x³ + ৫x − ২ কে x−১, x−২, x+২, x+৩, ২x−১, ২x+১ দিয়ে ভাগ করে ভাগশেষ দেখো।</small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🔍 ল্যাব ৩: উৎপাদক খোঁজার মেশিন (মূলদ মূল পরীক্ষা)</h2>
+    <div class="say">👉 পূর্ণসংখ্যা সহগ লেখো। মেশিন সম্ভাব্য সব ±p/q পরীক্ষা করে উৎপাদক বের করবে। ডিফল্টে বইয়ের উদাহরণ ১৩।</div>
+    <div class="ctl"><label>সহগ:</label><input type="text" id="p3c" value="18, 15, -1, -2" size="22"><button class="btn" id="p3go">উৎপাদক খোঁজো</button></div>
+    <div class="chips" id="p3ex"></div>
+    <canvas id="p3cv" width="600" height="300"></canvas>
+    <div class="res m" id="p3i"></div>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🔄 ল্যাব ৪: প্রতিসম না চক্রক্রমিক?</h2>
+    <div class="say">👉 একটি রাশি বেছে নাও। মেশিন নানা সংখ্যা বসিয়ে (দুটি চলক বদল ও গোল ঘুরিয়ে) পরীক্ষা করে বলবে।</div>
+    <div class="ctl"><select id="sysel"></select></div>
+    <canvas id="sycv" width="560" height="280"></canvas>
+    <div class="res m" id="syi"></div>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>⚖️ ল্যাব ৫: বিশেষ সূত্র মিলিয়ে দেখো</h2>
+    <div class="say">👉 a, b, c এর যেকোনো মান দাও। বাম ও ডান পাশ সবসময় সমান হবে (অভেদ!)। "a+b+c = ০ করো" চাপলে ৩abc সূত্র দেখো।</div>
+    <div class="ctl"><label>a = <span id="ida"></span></label><input type="range" id="ia" min="-6" max="6" step="1" value="2"><label>b = <span id="idb"></span></label><input type="range" id="ib" min="-6" max="6" step="1" value="3"><label>c = <span id="idc"></span></label><input type="range" id="ic" min="-6" max="6" step="1" value="-1"></div>
+    <div class="ctl"><button class="btn alt" id="idz">a+b+c = ০ করো</button></div>
+    <div class="res m" id="idi"></div>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🧩 ল্যাব ৬: আংশিক ভগ্নাংশ মেশিন</h2>
+    <div class="say">👉 লবের সহগ (বড় ঘাত থেকে) ও হরের মূলগুলো লেখো। যেমন লব ৫, −৭ ও মূল ১, ২ মানে (৫x−৭)/((x−১)(x−২))।</div>
+    <div class="ctl"><label>লব সহগ:</label><input type="text" id="p6n" value="5, -7" size="14"><label>হরের মূল (আলাদা):</label><input type="text" id="p6r" value="1, 2" size="10"><button class="btn" id="p6go">ভাঙো</button></div>
+    <div class="chips" id="p6ex"></div>
+    <div class="res m" id="p6i"></div>
+    <small>এই মেশিন হরে আলাদা একঘাত উৎপাদক (x−a)(x−b)… থাকলে কাজ করে। পুনরাবৃত্ত বা দ্বিঘাত উৎপাদকের জন্য ধাপে ধাপে উদাহরণ ৭ দেখো।</small>
+  </section>
+
+  <section class="panel" id="prac">
+    <h2>✍️ প্র্যাকটিস (বইয়ের ধাঁচে)</h2>
+    <div class="say">👉 নিজে হিসাব করে উত্তর লেখো। ভগ্নাংশ হলে −১/৮ এভাবে লেখো। বাংলা বা ইংরেজি সংখ্যা চলবে।</div>
+    <div id="pracbox"></div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="fb" id="qscore"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>📖 সৃজনশীল ও সংক্ষিপ্ত প্রশ্নোত্তর</h2>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab · বীজগাণিতিক রাশি (উচ্চতর গণিত অধ্যায় ২)</footer>
+
+<script>
+var BNS='০১২৩৪৫৬৭৮৯',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BNS[d];});}
+function en(s){return String(s).replace(/[০-৯]/g,function(d){return BNS.indexOf(d);});}
+function $(id){return document.getElementById(id);}
+function R2(c){var d=Math.min(2,window.devicePixelRatio||1),w=c.width,h=c.height;c.width=w*d;c.height=h*d;var x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return x;}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t;}return a;}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+
+/* ---------- ভগ্নাংশ ও বহুপদী (সঠিক হিসাব) ---------- */
+function F(n,d){d=(d===undefined)?1:d;if(d<0){n=-n;d=-d;}var g=gcd(n,d)||1;return {n:n/g,d:d/g};}
+function fadd(a,b){return F(a.n*b.d+b.n*a.d,a.d*b.d);}
+function fsub(a,b){return F(a.n*b.d-b.n*a.d,a.d*b.d);}
+function fmul(a,b){return F(a.n*b.n,a.d*b.d);}
+function fdiv(a,b){return F(a.n*b.d,a.d*b.n);}
+function fz(a){return a.n===0;}
+function fnum(a){return a.n/a.d;}
+function fs(a){var s=(a.n<0?'−':'')+Math.abs(a.n)+(a.d!==1?'/'+a.d:'');return bn(s);}
+function parseF(s){s=en(s).replace(/[−–]/g,'-').trim();var m=s.match(/^(-?\d+)\s*\/\s*(\d+)$/);if(m&&+m[2]!==0)return F(+m[1],+m[2]);if(/^-?\d+(\.\d+)?$/.test(s)){var v=parseFloat(s),k=1;while(Math.abs(v*k-Math.round(v*k))>1e-9&&k<1e6)k*=10;return F(Math.round(v*k),k);}return null;}
+function parseCo(s){var a=en(s).replace(/[−–]/g,'-').split(/[,\s]+/).filter(function(t){return t;}),o=[];for(var i=0;i<a.length;i++){var f=parseF(a[i]);if(!f)return null;o.push(f);}
+  while(o.length>1&&fz(o[0]))o.shift();return o.length?o.slice(0,9):null;}
+function fpoly(co,v){v=v||'x';var n=co.length-1,out='',i;
+  for(i=0;i<co.length;i++){var c=co[i],p=n-i;if(fz(c))continue;var neg=c.n<0,ab=F(Math.abs(c.n),c.d),t;
+    var cs=(ab.n===1&&ab.d===1&&p>0)?'':(ab.d===1?bn(ab.n):'('+bn(ab.n)+'/'+bn(ab.d)+')');
+    t=cs+(p>0?v+(p>1?sup(p):''):'');if(p===0&&cs==='')t=bn(1);
+    if(out==='')out=(neg?'−':'')+t;else out+=(neg?' − ':' + ')+t;}
+  return out===''?'০':out;}
+function peval(co,x){var r=F(0);for(var i=0;i<co.length;i++)r=fadd(fmul(r,x),co[i]);return r;}
+function synth(co,a){var q=[],r=F(0),i;for(i=0;i<co.length;i++){r=fadd(fmul(r,a),co[i]);q.push(r);}var rem=q.pop();return {q:q,r:rem,row:q.concat([rem])};}
+function pdivlin(co,a){return synth(co,a);}
+function intPrim(co){var L=1,i;co.forEach(function(c){L=L/gcd(L,c.d)*c.d;});var ints=co.map(function(c){return c.n*(L/c.d);}),g=0;ints.forEach(function(v){g=gcd(g,v);});g=g||1;
+  var sgn=ints[0]<0?-1:1;return {ints:ints.map(function(v){return sgn*v/g;}),k:F(sgn*g,L)};}
+function divisors(n){n=Math.abs(n);var o=[];for(var i=1;i<=n;i++)if(n%i===0)o.push(i);return o;}
+function polyDivFull(N,D){ /* N÷D, সহগ F তালিকা */
+  var R=N.slice(),Q=[],dn=D.length-1;
+  if(N.length<D.length)return {q:[F(0)],r:N.slice()};
+  for(var i=0;i<=N.length-D.length;i++){var c=fdiv(R[i],D[0]);Q.push(c);for(var j=0;j<D.length;j++)R[i+j]=fsub(R[i+j],fmul(c,D[j]));}
+  var rem=R.slice(N.length-dn);while(rem.length>1&&fz(rem[0]))rem.shift();return {q:Q,r:rem};}
+
+/* ---------- ধাপে ধাপে ---------- */
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ex){var box=$(b.dataset.ex),s=box.querySelectorAll('.step:not(.show)');if(s.length){s[0].classList.add('show');}if(s.length<=1)b.disabled=true;}
+  if(b.dataset.rs){var bx=$(b.dataset.rs);bx.querySelectorAll('.step').forEach(function(x){x.classList.remove('show');});bx.querySelector('[data-ex]').disabled=false;}
+});
+
+/* ---------- গ্রাফ আঁকা ---------- */
+function plotPoly(cv,co,marks,xr){
+  var x=cv.x,W=cv.w,H=cv.h,x0=-xr,x1=xr,i,ys=[],N=300,mn=1e9,mx=-1e9;
+  function ev(X){var r=0;for(var k=0;k<co.length;k++)r=r*X+fnum(co[k]);return r;}
+  for(i=0;i<=N;i++){var X=x0+(x1-x0)*i/N,Y=ev(X);ys.push(Y);if(Y<mn)mn=Y;if(Y>mx)mx=Y;}
+  mn=Math.max(mn,-60);mx=Math.min(mx,60);if(mn>0)mn=-1;if(mx<0)mx=1;var pad=(mx-mn)*0.12+0.5;mn-=pad;mx+=pad;
+  function sx(X){return 20+(X-x0)/(x1-x0)*(W-40);} function sy(Y){return H-20-(Y-mn)/(mx-mn)*(H-40);}
+  x.clearRect(0,0,W,H);x.fillStyle='#fff';x.fillRect(0,0,W,H);
+  x.strokeStyle='#e3e9ee';x.lineWidth=1;for(i=Math.ceil(x0);i<=x1;i++){x.beginPath();x.moveTo(sx(i),0);x.lineTo(sx(i),H);x.stroke();}
+  x.strokeStyle='#1f3a5f';x.lineWidth=2;x.beginPath();x.moveTo(0,sy(0));x.lineTo(W,sy(0));x.stroke();if(x0<0&&x1>0){x.beginPath();x.moveTo(sx(0),0);x.lineTo(sx(0),H);x.stroke();}
+  x.fillStyle='#5b6770';x.font='11px system-ui';x.textAlign='center';for(i=Math.ceil(x0);i<=x1;i+=1)if(i!==0)x.fillText(bn(String(i).replace('-','−')),sx(i),sy(0)+14);
+  x.strokeStyle='#2a6fdb';x.lineWidth=3;x.beginPath();var st=false;for(i=0;i<=N;i++){var Y2=ys[i],px=sx(x0+(x1-x0)*i/N),py=sy(Y2);if(py<-50||py>H+50){st=false;continue;}if(!st){x.moveTo(px,py);st=true;}else x.lineTo(px,py);}x.stroke();
+  (marks||[]).forEach(function(m){var X=m.x;if(X<x0||X>x1)return;x.fillStyle=m.c;x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.arc(sx(X),sy(m.y),6,0,6.283);x.fill();x.stroke();
+    if(m.t){x.fillStyle=m.c;x.font='700 13px system-ui';x.textAlign='left';x.fillText(m.t,Math.min(sx(X)+9,W-90),sy(m.y)-10);}});
+}
+function mkCv(id){var c=$(id);return {x:R2(c),w:+c.getAttribute('width'),h:+c.getAttribute('height')};}
+
+/* ===================== ল্যাব ১ ===================== */
+var cv1=mkCv('p1cv');
+function p1(){
+  var co=parseCo($('p1c').value),xv=+$('p1x').value;$('p1xv').textContent=bn(String(xv).replace('-','−'));
+  if(!co){$('p1i').innerHTML='সহগ ঠিকমতো লেখো (যেমন: 3, 2, -7, 8)';return;}
+  var n=co.length-1,X=F(Math.round(xv*2),2),Y=peval(co,X);
+  plotPoly(cv1,co,[{x:xv,y:fnum(Y),c:'#e76f51',t:'P('+bn(String(xv).replace('-','−'))+')'}],5);
+  $('p1i').innerHTML='<b>P(x) = '+fpoly(co)+'</b><br>মাত্রা = <b>'+bn(n)+'</b>, মুখ্যপদ = '+fpoly([co[0]].concat(Array(n).fill(F(0))))+', মুখ্যসহগ = <b>'+fs(co[0])+'</b>, ধ্রুবপদ = <b>'+fs(co[n])+'</b><br>'+
+   'P('+fs(X)+') = <b>'+fs(Y)+'</b>'+(n>=1?'<br>সহগগুলোর যোগফল P(১) = '+fs(peval(co,F(1)))+(fz(peval(co,F(1)))?' → তাই <b>(x − ১) একটি উৎপাদক</b>':''):'')+
+   (n===1?'<br>এটি একঘাত বহুপদী (সরলরেখা)':n===2?'<br>এটি দ্বিঘাত বহুপদী (পরাবৃত্ত)':n===3?'<br>এটি ত্রিঘাত বহুপদী':'');
+}
+$('p1c').oninput=p1;$('p1x').oninput=p1;p1();
+
+/* ===================== ল্যাব ২ ===================== */
+var cv2=mkCv('p2cv');
+function parseDiv(s){s=en(s).replace(/[−–]/g,'-').replace(/\s+/g,'').toLowerCase();var m=s.match(/^(-?\d*)x([+-]\d+)?$/);if(!m)return null;var p=m[1]===''?1:(m[1]==='-'?-1:+m[1]),q=m[2]?+m[2]:0;if(p===0)return null;return {p:p,q:q};}
+function p2(){
+  var co=parseCo($('p2c').value),d=parseDiv($('p2d').value);
+  if(!co){$('p2i').innerHTML='P(x) এর সহগ ঠিকমতো লেখো।';return;}
+  if(!d){$('p2i').innerHTML='ভাজক এভাবে লেখো: x-2, x+3, 2x-1 বা 2x+1';return;}
+  var a=F(-d.q,d.p),sy=synth(co,a),pa=peval(co,a);
+  var q=sy.q.map(function(c){return fdiv(c,F(d.p));});
+  var tbl='<table class="t m"><tr><td><b>'+fs(a)+'</b></td>'+co.map(function(c){return '<td>'+fs(c)+'</td>';}).join('')+'</tr><tr><td>↓</td><td>—</td>'+co.slice(1).map(function(c,i){return '<td>'+fs(fmul(sy.row[i],a))+'</td>';}).join('')+'</tr><tr><td></td>'+sy.row.map(function(c,i){return '<td'+(i===sy.row.length-1?' style="background:#fff4dc"><b>':'><b>')+fs(c)+'</b></td>';}).join('')+'</tr></table>';
+  var divs='('+(d.p===1?'':(d.p===-1?'−':bn(d.p)))+'x'+(d.q>0?' + '+bn(d.q):(d.q<0?' − '+bn(-d.q):''))+')';
+  var qs=(co.length>1)?fpoly(q):'০';
+  plotPoly(cv2,co,[{x:fnum(a),y:fnum(pa),c:fz(pa)?'#2a9d8f':'#e76f51',t:'P('+fs(a)+')='+fs(pa)}],5);
+  $('p2i').innerHTML='<b>P(x) = '+fpoly(co)+'</b>, ভাজক = '+divs+'<br>সিনথেটিক ভাগ (x − ('+fs(a)+') দিয়ে):'+tbl+
+   'ভাগশেষ উপপাদ্য: ভাগশেষ = P('+fs(a)+') = <b>'+fs(pa)+'</b> ✔ (সিনথেটিক ভাগের শেষ ঘরের সাথে মিলেছে)<br>ভাগফল = <b>'+qs+'</b>'+
+   (fz(pa)?'<br>🎉 ভাগশেষ ০, তাই <b>'+divs+' এই বহুপদীর উৎপাদক</b>':'<br>ভাগশেষ ০ নয়, তাই '+divs+' উৎপাদক নয়');
+}
+$('p2go').onclick=p2;$('p2c').onkeyup=p2;$('p2d').onkeyup=p2;p2();
+
+/* ===================== ল্যাব ৩ ===================== */
+var cv3=mkCv('p3cv');
+var P3EX=[['18,15,-1,-2','বই উ.১৩'],['1,-6,11,-6','বই উ.১২'],['1,2,-5,-6','x³+২x²−৫x−৬'],['2,3,-3,-2','২x³+৩x²−৩x−২'],['1,0,1','x²+১ (ভাঙে না)'],['1,-3,3,-1','(x−১)³']];
+$('p3ex').innerHTML=P3EX.map(function(e,i){return '<button data-i="'+i+'">'+e[1]+'</button>';}).join('');
+$('p3ex').onclick=function(e){var b=e.target.closest('button');if(!b)return;$('p3c').value=P3EX[+b.dataset.i][0];p3();};
+function fstr(p,q){ /* (q x − p) */ var s=(q===1?'':bn(q))+'x';if(p>0)s+=' − '+bn(p);else if(p<0)s+=' + '+bn(-p);return '('+s+')';}
+function p3(){
+  var co=parseCo($('p3c').value);if(!co||co.length<2){$('p3i').innerHTML='সহগ লেখো (কমপক্ষে ২টি)।';return;}
+  var ip=intPrim(co),cur=ip.ints.map(function(v){return F(v);}),k=ip.k,facs=[],log=[],first=true,marks=[];
+  var P0=cur.slice();
+  var guard=0;
+  while(cur.length>1&&guard++<10){
+    var found=null,tested=[];
+    var cs=cur.map(function(c){return c.n;}),c0=cs[cs.length-1],an=cs[0];
+    if(c0===0){found=F(0);}else{
+      var ps=divisors(c0),qs=divisors(an),seen={};
+      outer:for(var qi=0;qi<qs.length;qi++)for(var pi=0;pi<ps.length;pi++){if(gcd(ps[pi],qs[qi])!==1)continue;
+        for(var sg=1;sg>=-1;sg-=2){var r=F(sg*ps[pi],qs[qi]),key=r.n+'/'+r.d;if(seen[key])continue;seen[key]=1;var v=peval(cur,r);tested.push([r,v]);if(fz(v)){found=r;break outer;}}}
+    }
+    if(first){first=false;
+      var cand=[],ps2=c0===0?[0]:divisors(c0),qs2=divisors(an),sn={};
+      ps2.forEach(function(pp){qs2.forEach(function(qq){if(pp!==0&&gcd(pp,qq)!==1)return;[1,-1].forEach(function(sg){var r=F(sg*pp,qq),key=r.n+'/'+r.d;if(sn[key])return;sn[key]=1;cand.push(r);});});});
+      cand=cand.slice(0,24);
+      log.push('<b>ধাপ ১:</b> ধ্রুবপদ '+bn(String(c0).replace('-','−'))+' এর উৎপাদক ও মুখ্যসহগ '+bn(Math.abs(an))+' এর উৎপাদক থেকে সম্ভাব্য মূল (±p/q): '+cand.map(fs).join(', ')+(sn&&Object.keys(sn).length>24?' …':''));
+      log.push('<b>ধাপ ২:</b> একে একে P বসিয়ে পরীক্ষা: '+cand.map(function(r){var v=peval(cur,r);return 'P('+fs(r)+') = '+fs(v)+(fz(v)?' ✔':'');}).join('; '));
+    }
+    if(!found)break;
+    var r2=found,sy=synth(cur,r2),qco=sy.q;
+    var ip2=intPrim(qco),pp=r2.n,qq=r2.d;
+    facs.push(r2.n===0?'x':fstr(pp,qq));marks.push({x:fnum(r2),y:0,c:'#2a9d8f',t:fs(r2)});
+    k=fmul(k,F(1,qq));k=fmul(k,ip2.k);
+    cur=ip2.ints.map(function(v){return F(v);});
+    log.push('<b>মূল x = '+fs(r2)+'</b> পাওয়া গেল ⇒ উৎপাদক '+(r2.n===0?'x':fstr(pp,qq))+'। ভাগ করে বাকি অংশ = '+fpoly(cur)+(cur.length===1?' (শুধু ধ্রুবক, শেষ)':''));
+  }
+  var rest=cur.length>1?'('+fpoly(cur)+')':'';
+  var kk=fmul(k,cur.length===1?cur[0]:F(1));
+  var ks=(kk.n===1&&kk.d===1)?'':(kk.n===-1&&kk.d===1?'−':fs(kk)+' × ');
+  var res=ks+facs.join('')+rest;
+  if(!facs.length&&!rest)res=fpoly(co);
+  var mxr=2;marks.forEach(function(m){mxr=Math.max(mxr,Math.ceil(Math.abs(m.x)*1.6));});plotPoly(cv3,co,marks,Math.min(mxr,8));
+  $('p3i').innerHTML='<b>P(x) = '+fpoly(co)+'</b><br>'+log.join('<br>')+'<br><b>ফলাফল: P(x) = '+res+'</b>'+(cur.length>1?'<br>বাকি অংশ ('+fpoly(cur)+') এর আর মূলদ মূল নেই, তাই এটুকু আর ভাঙল না।':'');
+}
+$('p3go').onclick=p3;p3();
+
+/* ===================== ল্যাব ৪ ===================== */
+var SYS=[
+ {t:'a + b + c',n:3,f:function(a,b,c){return a+b+c;}},
+ {t:'ab + bc + ca',n:3,f:function(a,b,c){return a*b+b*c+c*a;}},
+ {t:'x² + y² + z² + xy + yz + zx',n:3,f:function(a,b,c){return a*a+b*b+c*c+a*b+b*c+c*a;}},
+ {t:'x²y + y²z + z²x',n:3,f:function(a,b,c){return a*a*b+b*b*c+c*c*a;}},
+ {t:'x²(y − z) + y²(z − x) + z²(x − y)',n:3,f:function(a,b,c){return a*a*(b-c)+b*b*(c-a)+c*c*(a-b);}},
+ {t:'x² − y² + z²',n:3,f:function(a,b,c){return a*a-b*b+c*c;}},
+ {t:'x/y + y/z + z/x',n:3,f:function(a,b,c){return a/b+b/c+c/a;}},
+ {t:'a³ + b³ + c³ − 3abc',n:3,f:function(a,b,c){return a*a*a+b*b*b+c*c*c-3*a*b*c;}},
+ {t:'2x² + 5xy + 6y² (দুই চলক)',n:2,f:function(a,b){return 2*a*a+5*a*b+6*b*b;}}
+];
+$('sysel').innerHTML=SYS.map(function(s,i){return '<option value="'+i+'">'+s.t+'</option>';}).join('');
+var cvS=mkCv('sycv');
+function near(a,b){return Math.abs(a-b)<1e-9*Math.max(1,Math.abs(a),Math.abs(b));}
+function sysTest(S){var sym=true,cyc=true,i;
+  var pts=[[1,2,3],[2,5,7],[3,-1,4],[5,3,2],[-2,4,1],[7,2,-3]];
+  pts.forEach(function(p){var a=p[0],b=p[1],c=p[2];
+    if(S.n===3){var base=S.f(a,b,c);if(!near(base,S.f(b,a,c))||!near(base,S.f(a,c,b))||!near(base,S.f(c,b,a)))sym=false;if(!near(base,S.f(b,c,a)))cyc=false;}
+    else{var b2=S.f(a,b);if(!near(b2,S.f(b,a)))sym=false;cyc=sym;}});
+  return {sym:sym,cyc:cyc};}
+function sy(){
+  var S=SYS[+$('sysel').value],r=sysTest(S),x=cvS.x,W=cvS.w,H=cvS.h;x.clearRect(0,0,W,H);x.fillStyle='#fff';x.fillRect(0,0,W,H);
+  var P=S.n===3?[[280,50,'x'],[440,200,'y'],[120,200,'z']]:[[200,140,'x'],[360,140,'y']];
+  var ac=r.cyc?'#2a9d8f':'#e76f51';x.lineWidth=3;x.strokeStyle=ac;x.fillStyle=ac;
+  function arrow(i,j){var a=P[i],b=P[j],dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L,sx=a[0]+ux*34,sy2=a[1]+uy*34,ex=b[0]-ux*38,ey=b[1]-uy*38;x.beginPath();x.moveTo(sx,sy2);x.lineTo(ex,ey);x.stroke();x.beginPath();x.moveTo(ex,ey);x.lineTo(ex-12*ux+6*uy,ey-12*uy-6*ux);x.lineTo(ex-12*ux-6*uy,ey-12*uy+6*ux);x.fill();}
+  if(S.n===3){arrow(0,1);arrow(1,2);arrow(2,0);}else{arrow(0,1);}
+  P.forEach(function(p){x.fillStyle='#eaf7f5';x.strokeStyle='#1f3a5f';x.lineWidth=3;x.beginPath();x.arc(p[0],p[1],28,0,6.283);x.fill();x.stroke();x.fillStyle='#1f3a5f';x.font='700 22px system-ui';x.textAlign='center';x.fillText(p[2],p[0],p[1]+8);});
+  x.font='700 14px "Hind Siliguri",system-ui';x.fillStyle=ac;x.textAlign='center';x.fillText(S.n===3?'x→y, y→z, z→x গোল ঘুরিয়ে বসানো (চক্রক্রমিক পরীক্ষা)':'x ও y স্থান বদল (প্রতিসম পরীক্ষা)',W/2,H-14);
+  var a=2,b=3,c=5,e='';
+  if(S.n===3){var v0=S.f(a,b,c),v1=S.f(b,c,a),v2=S.f(b,a,c);function R(v){return bn(String(Math.round(v*1000)/1000).replace('-','−'));}
+    e='নমুনা: (x, y, z) = (২, ৩, ৫)<br>f(x, y, z) = '+R(v0)+'<br>গোল ঘুরিয়ে f(y, z, x) = '+R(v1)+(near(v0,v1)?' ✔ সমান':' ✘ আলাদা')+'<br>দুটি বদলে f(y, x, z) = '+R(v2)+(near(v0,v2)?' ✔ সমান':' ✘ আলাদা');}
+  else{var w0=S.f(2,3),w1=S.f(3,2);e='নমুনা: (x, y) = (২, ৩): f(x, y) = '+bn(w0)+', স্থান বদলে f(y, x) = '+bn(w1)+(w0===w1?' ✔':' ✘ আলাদা');}
+  $('syi').innerHTML='<b>'+esc(S.t)+'</b><br>'+e+'<br>৬টি আলাদা সংখ্যা-সেটে পরীক্ষা করে ফল:<br>প্রতিসম রাশি? <b>'+(r.sym?'হ্যাঁ ✔':'না ✘')+'</b>'+(S.n===3?' &nbsp; চক্রক্রমিক রাশি? <b>'+(r.cyc?'হ্যাঁ ✔':'না ✘')+'</b>':'')+
+   (S.n===3&&!r.sym&&r.cyc?'<br>👉 এটি চক্রক্রমিক কিন্তু প্রতিসম নয়: দুটি চলক বদলালে রাশি বদলে যায়।':'')+(r.sym&&S.n===3?'<br>👉 প্রতিসম, তাই চক্রক্রমিকও (তিন চলকে প্রতিটি প্রতিসম রাশি চক্রক্রমিক)।':'')+(!r.cyc&&S.n===3?'<br>👉 চক্রক্রমিকও নয়, কারণ গোল ঘুরিয়ে বসালে রাশি বদলে যায়।':'');
+}
+$('sysel').onchange=sy;sy();
+
+/* ===================== ল্যাব ৫ ===================== */
+function idr(){
+  var a=+$('ia').value,b=+$('ib').value,c=+$('ic').value;
+  $('ida').textContent=bn(String(a).replace('-','−'));$('idb').textContent=bn(String(b).replace('-','−'));$('idc').textContent=bn(String(c).replace('-','−'));
+  var L=a*a*a+b*b*b+c*c*c-3*a*b*c,s=a+b+c,Q=a*a+b*b+c*c-a*b-b*c-c*a,R=s*Q,H=s*((a-b)*(a-b)+(b-c)*(b-c)+(c-a)*(c-a))/2;
+  function Z(v){return bn(String(v).replace('-','−'));}
+  var cyc=a*a*a*(b-c)+b*b*b*(c-a)+c*c*c*(a-b),cyc2=-(a-b)*(b-c)*(c-a)*(a+b+c);
+  $('idi').innerHTML='বামপক্ষ a³ + b³ + c³ − ৩abc = <b>'+Z(L)+'</b><br>ডানপক্ষ (a+b+c)(a²+b²+c²−ab−bc−ca) = '+Z(s)+' × '+Z(Q)+' = <b>'+Z(R)+'</b> '+(L===R?'✔ সমান':'✘')+
+   '<br>অনুসিদ্ধান্ত ½(a+b+c){(a−b)²+(b−c)²+(c−a)²} = <b>'+Z(H)+'</b> '+(L===H?'✔ সমান':'✘')+
+   (s===0?'<br>🎉 a + b + c = ০, তাই a³+b³+c³ = '+Z(a*a*a+b*b*b+c*c*c)+' আর ৩abc = '+Z(3*a*b*c)+' → সমান ✔':'<br>a+b+c ≠ ০, তাই a³+b³+c³ = '+Z(a*a*a+b*b*b+c*c*c)+' আর ৩abc = '+Z(3*a*b*c)+' (সমান নয়, অথবা a=b=c)')+
+   '<br><br>আরেকটি: a³(b−c)+b³(c−a)+c³(a−b) = <b>'+Z(cyc)+'</b> এবং −(a−b)(b−c)(c−a)(a+b+c) = <b>'+Z(cyc2)+'</b> '+(cyc===cyc2?'✔ সমান':'✘');
+}
+['ia','ib','ic'].forEach(function(i){$(i).oninput=idr;});
+$('idz').onclick=function(){var a=+$('ia').value,b=+$('ib').value,c=-a-b;if(c<-6||c>6){a=2;b=3;c=-5;$('ia').value=a;$('ib').value=b;}$('ic').value=c;idr();};idr();
+
+/* ===================== ল্যাব ৬ ===================== */
+var P6EX=[['5,-7','1,2','বই উ.২৩'],['1,5','1,2,3','বই উ.২৪'],['1,-6,5','2,4','উ.২৫ (অপ্রকৃত)'],['2,0,0,0','1,2,3','উ.২৬ (অপ্রকৃত)'],['3,-8','1,-2','নিজে করো']];
+$('p6ex').innerHTML=P6EX.map(function(e,i){return '<button data-i="'+i+'">'+e[2]+'</button>';}).join('');
+$('p6ex').onclick=function(e){var b=e.target.closest('button');if(!b)return;$('p6n').value=P6EX[+b.dataset.i][0];$('p6r').value=P6EX[+b.dataset.i][1];p6();};
+function p6(){
+  var N=parseCo($('p6n').value),rs=en($('p6r').value).replace(/[−–]/g,'-').split(/[,\s]+/).filter(function(t){return t;}).map(parseF);
+  if(!N||rs.some(function(r){return !r;})||!rs.length||rs.length>4){$('p6i').innerHTML='লব সহগ ও ১–৪টি মূল ঠিকমতো লেখো।';return;}
+  for(var i=0;i<rs.length;i++)for(var j=i+1;j<rs.length;j++)if(fz(fsub(rs[i],rs[j]))){$('p6i').innerHTML='মূলগুলো আলাদা হতে হবে (পুনরাবৃত্তি হলে ধাপে ধাপে উদাহরণ ৭ দেখো)।';return;}
+  var D=[F(1)];rs.forEach(function(r){var nd=[],k;for(k=0;k<=D.length;k++)nd.push(F(0));for(k=0;k<D.length;k++){nd[k]=fadd(nd[k],D[k]);nd[k+1]=fsub(nd[k+1],fmul(D[k],r));}D=nd;});
+  var denStr=rs.map(function(r){return '(x'+(fz(r)?'':(r.n>0?' − '+fs(r):' + '+fs(F(-r.n,r.d))))+')';}).join('');
+  var improper=N.length>=D.length,Qp=[F(0)],Rm=N;
+  var out='<b>ভগ্নাংশ:</b> ('+fpoly(N)+') / '+denStr+'<br>'+(improper?'লবের মাত্রা ≥ হরের মাত্রা, তাই <b>অপ্রকৃত</b>। আগে ভাগ করি: ভাগফল = <b>'+(function(){var d=polyDivFull(N,D);Qp=d.q;Rm=d.r;return fpoly(d.q);})()+'</b>, ভাগশেষ = '+fpoly(Rm)+'<br>':'লবের মাত্রা &lt; হরের মাত্রা, তাই <b>প্রকৃত ভগ্নাংশ</b>।<br>');
+  var As=[];
+  rs.forEach(function(r,i){var den=F(1);rs.forEach(function(r2,j){if(j!==i)den=fmul(den,fsub(r,r2));});var A=fdiv(peval(Rm,r),den);As.push(A);
+    out+='x = '+fs(r)+' বসিয়ে: A<sub>'+bn(i+1)+'</sub> = ('+fpoly(Rm).replace(/x/g,'x')+' এ x='+fs(r)+' → '+fs(peval(Rm,r))+') ÷ '+fs(den)+' = <b>'+fs(A)+'</b><br>';});
+  function tm(A,r){var rr=(fz(r)?'x':'(x'+(r.n>0?' − '+fs(r):' + '+fs(F(-r.n,r.d)))+')');return A.d===1?bn(Math.abs(A.n))+'/'+rr:bn(Math.abs(A.n))+'/('+bn(A.d)+rr+')';}
+  var parts=[];As.forEach(function(A,i){if(fz(A))return;parts.push((A.n<0?'− ':'+ ')+tm(A,rs[i]));});
+  var qs=improper&&!(Qp.length===1&&fz(Qp[0]))?fpoly(Qp):'';
+  var body=parts.join(' ');if(!qs)body=body.replace(/^\+ /,'');out+='<br><b>ফলাফল: '+(qs?qs+' ':'')+(body||(qs?'':'০'))+'</b>';
+  var x0=null,cands=[F(7,2),F(11,3),F(-9,4),F(13,5)];for(var c=0;c<cands.length;c++){if(!rs.some(function(r){return fz(fsub(r,cands[c]));})){x0=cands[c];break;}}
+  var lhs=fdiv(peval(N,x0),peval(D,x0)),rhs=F(0);As.forEach(function(A,i){rhs=fadd(rhs,fdiv(A,fsub(x0,rs[i])));});if(improper)rhs=fadd(rhs,peval(Qp,x0));
+  out+='<br>যাচাই (x = '+fs(x0)+'): বামপক্ষ = '+fs(lhs)+', ডানপক্ষ = '+fs(rhs)+(fz(fsub(lhs,rhs))?' ✔ সমান':' ✘');
+  $('p6i').innerHTML=out;
+}
+$('p6go').onclick=p6;p6();
+
+/* ===================== প্র্যাকটিস ===================== */
+var PR=[
+ ['P(x) = ৩x³ + ২x² − ৭x + ৮ হলে P(২) = কত?',['26'],'৩·৮ + ২·৪ − ১৪ + ৮ = ২৪ + ৮ − ১৪ + ৮ = ২৬।'],
+ ['P(x) = ৩x³ + ২x² − ৭x + ৮ হলে P(−২) = কত?',['6'],'৩(−৮) + ২·৪ + ১৪ + ৮ = −২৪ + ৮ + ১৪ + ৮ = ৬।'],
+ ['P(x) = ২x⁴ − ৬x³ + ৫x − ২ কে (x − ২) দিয়ে ভাগ করলে ভাগশেষ কত?',['-8'],'P(২) = ৩২ − ৪৮ + ১০ − ২ = −৮।'],
+ ['P(x) = ২x⁴ − ৬x³ + ৫x − ২ কে (x + ২) দিয়ে ভাগ করলে ভাগশেষ কত?',['68'],'P(−২) = ৩২ + ৪৮ − ১০ − ২ = ৬৮।'],
+ ['P(x) = ২x⁴ − ৬x³ + ৫x − ২ কে (২x − ১) দিয়ে ভাগ করলে ভাগশেষ কত? (ভগ্নাংশে)',['-1/8'],'P(১/২) = ২/১৬ − ৬/৮ + ৫/২ − ২ = ১/৮ − ৬/৮ + ২০/৮ − ১৬/৮ = −১/৮।'],
+ ['x³ − ৮x² + ৬x + ৬০ কে (x + ২) দিয়ে ভাগ করলে ভাগশেষ কত?',['8'],'P(−২) = −৮ − ৩২ − ১২ + ৬০ = ৮।'],
+ ['২x³ + x² + ax − ৯ এর একটি উৎপাদক (x + ৩) হলে a = কত?',['-18'],'P(−৩) = −৫৪ + ৯ − ৩a − ৯ = −৫৪ − ৩a = ০ ⇒ a = −১৮।'],
+ ['x³ − ৬x² + ১১x − ৬ এর (x−১), (x−২) ছাড়া তৃতীয় উৎপাদক x − ? (সংখ্যাটি লেখো)',['3'],'P(৩) = ২৭ − ৫৪ + ৩৩ − ৬ = ০, তাই (x − ৩)।'],
+ ['(৫x − ৭)/((x−১)(x−২)) = A/(x−১) + B/(x−২) হলে A = কত?',['2'],'x = ১ বসিয়ে: −২ = −A ⇒ A = ২।'],
+ ['(x + ৫)/((x−১)(x−২)(x−৩)) এর আংশিক ভগ্নাংশে C (x−৩ এর) = কত?',['4'],'x = ৩: ৮ = C·(২)(১) ⇒ C = ৪।'],
+ ['x³ + y³ + z³ − ৩xyz এ x = ১, y = −২, z = ১ হলে মান কত?',['0'],'১ − ৮ + ১ + ৬ = ০। (কারণ x+y+z = ০)'],
+ ['a + b + c = ০ হলে a³ + b³ + c³ = ? (a, b, c দিয়ে লেখো, যেমন 3abc)',['3abc'],'বিশেষ সূত্র থেকে a³+b³+c³ = ৩abc।']
+];
+(function(){var h='';PR.forEach(function(p,i){h+='<div class="q"><b>'+bn(i+1)+'.</b> '+p[0]+'<div class="ans"> <input type="text" id="pi'+i+'" size="10"> <button class="btn" data-pc="'+i+'">যাচাই</button> <button class="btn alt" data-ph="'+i+'">সমাধান</button></div><div class="fb" id="pf'+i+'"></div></div>';});$('pracbox').innerHTML=h;})();
+function norm(s){return en(s).replace(/[−–]/g,'-').replace(/\s+/g,'').replace(/×|\*/g,'').toLowerCase();}
+$('pracbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.pc!==undefined){var i=+b.dataset.pc,v=norm($('pi'+i).value),ok=PR[i][1].some(function(a){return norm(a)===v;});
+    $('pf'+i).innerHTML=v===''?'আগে উত্তর লেখো।':(ok?'✅ ঠিক! সাবাশ।':'❌ আবার চেষ্টা করো, বা "সমাধান" দেখো।');}
+  if(b.dataset.ph!==undefined){var j=+b.dataset.ph;$('pf'+j).innerHTML='💡 '+PR[j][2]+' <b>উত্তর: '+bn(PR[j][1][0]).replace('-','−')+'</b>';}
+});
+
+/* ===================== কুইজ ===================== */
+var QZ=[];function M(q,c,w,e){QZ.push({q:q,o:[c].concat(w),e:e});}
+M('২x⁶ − ৩x⁵ − x⁴ + ২x − ৫ বহুপদীর ধ্রুবপদ কত?','−৫',['২','৬','০'],'চলকবর্জিত পদটিই ধ্রুবপদ।');
+M('২x⁶ − ৩x⁵ − x⁴ + ২x − ৫ বহুপদীর মাত্রা কত?','৬',['৫','২','১'],'সর্বোচ্চ ঘাত ৬।');
+M('কোনটি বহুপদী নয়?','x³ + x⁻²',['x² + ৩x + ১','৫','২x³ − ৭'],'ঋণাত্মক ঘাত থাকলে বহুপদী নয়।');
+M('ভাগশেষ উপপাদ্য অনুযায়ী P(x) কে (x − a) দিয়ে ভাগ করলে ভাগশেষ—','P(a)',['P(−a)','P(০)','a'],'x = a বসাতে হয়।');
+M('P(a) = ০ হলে নিচের কোনটি সত্য?','(x − a), P(x) এর উৎপাদক',['(x + a) উৎপাদক','P(x) = ০ নয়','a সবসময় ০'],'উৎপাদক উপপাদ্য।');
+M('P(x) = ২x² + ৩ হলে P(৬) = কত?','৭৫',['৭৫০','৩৯','১৫'],'২·৩৬ + ৩ = ৭৫।');
+M('P(x) = ২x² + ৩ হলে P(৫) = কত?','৫৩',['৫০','১৩','৫৫'],'২·২৫ + ৩ = ৫৩।');
+M('x² + ২xy + ৫y² রাশিটি কত মাত্রার সমমাত্রিক?','২',['১','৩','৪'],'প্রতিটি পদের মাত্রা ২।');
+M('কোনটি প্রতিসম রাশি?','ab + bc + ca',['x² − y² + z²','২a² − ৫bc − c²','x²y + y²z'],'যেকোনো দুটি চলক বদলালেও একই থাকে।');
+M('x² − y² + z² রাশিটি—','চক্রক্রমিক নয়',['চক্রক্রমিক','প্রতিসম','চক্রক্রমিক ও প্রতিসম'],'x→y, y→z, z→x বসালে y² − z² + x² হয়, যা আলাদা।');
+M('x/y + y/z + z/x রাশিটি—','চক্রক্রমিক কিন্তু প্রতিসম নয়',['প্রতিসম কিন্তু চক্রক্রমিক নয়','দুটিই','কোনোটিই নয়'],'x↔y বদলালে y/x + x/z + z/y হয়, আলাদা।');
+M('তিন চলকে প্রতিটি প্রতিসম রাশি—','চক্রক্রমিকও',['চক্রক্রমিক নয়','সমমাত্রিক নয়','ধ্রুবক'],'প্রতিসম হলে সবসময় চক্রক্রমিকও হয়।');
+M('a + b + c = ০ হলে a³ + b³ + c³ = ?','৩abc',['abc','০','a + b + c'],'বিশেষ সূত্রের অনুসিদ্ধান্ত।');
+M('a³ + b³ + c³ − ৩abc এর একটি উৎপাদক—','a + b + c',['a − b − c','abc','a² + b² + c²'],'সূত্র: (a+b+c)(a²+b²+c²−ab−bc−ca)।');
+M('(a − b)³ + (b − c)³ + (c − a)³ = ?','৩(a−b)(b−c)(c−a)',['০','(a−b)(b−c)(c−a)','a + b + c'],'তিন সংখ্যার যোগফল ০।');
+M('P(x) = x³ − ৬x² + ১১x − ৬ এর উৎপাদক কোনটি?','x − ১',['x + ১','x − ৬','x'],'P(১) = ০।');
+M('x³ − ৬x² + ১১x − ৬ = ?','(x−১)(x−২)(x−৩)',['(x+১)(x+২)(x+৩)','(x−১)(x−২)(x+৩)','(x−৬)(x−১)(x−১)'],'বই উদাহরণ ১২।');
+M('x² − ৫x + ৬ কে (x − ৪) দিয়ে ভাগ করলে ভাগশেষ কত?','২',['০','৬','−২'],'P(৪) = ১৬ − ২০ + ৬ = ২।');
+M('১৮x³ + ১৫x² − x − ২ এর একটি উৎপাদক কোনটি?','২x + ১',['২x − ১','x + ২','৩x + ১'],'P(−১/২) = ০।');
+M('বহুপদীর সহগ পূর্ণসংখ্যা হলে মূলদ মূল p/q এর p কার উৎপাদক?','ধ্রুবপদের',['মুখ্যসহগের','মাত্রার','x এর'],'q মুখ্যসহগের উৎপাদক, p ধ্রুবপদের।');
+M('(x + ৩) দিয়ে ভাগের ক্ষেত্রে ভাগশেষ বের করতে কার মান বসাবে?','P(−৩)',['P(৩)','P(০)','P(১)'],'x + ৩ = ০ ⇒ x = −৩।');
+M('ax³ + bx² + cx + d এর উৎপাদক x − ১ হওয়ার শর্ত—','a + b + c + d = ০',['a = ০','d = ০','a·b·c·d = ১'],'P(১) = ০।');
+M('সকল x এর জন্য সত্য এমন সমতাকে বলে—','অভেদ',['সমীকরণ','অসমতা','ফাংশন'],'অভেদ চিহ্ন ≡।');
+M('(৫x−৭)/((x−১)(x−২)) = A/(x−১) + B/(x−২) হলে A + B = ?','৫',['১','০','−৫'],'A = ২, B = ৩ ⇒ যোগফল ৫।');
+M('(x−১)(x−৫)/((x−২)(x−৪)) ভগ্নাংশটি—','অপ্রকৃত',['প্রকৃত','মূলদ নয়','অসংজ্ঞায়িত'],'লব ও হরের মাত্রা সমান।');
+M('x/((x−১)²(x−২)) এর আংশিক ভগ্নাংশের গঠন—','A/(x−১) + B/(x−১)² + C/(x−২)',['A/(x−১)² + B/(x−২)','A/(x−১) + B/(x−২)','A/((x−১)(x−২))'],'পুনরাবৃত্ত উৎপাদকে দুটি পদ।');
+M('x/((x−১)(x²+৪)) এর আংশিক ভগ্নাংশের গঠন—','A/(x−১) + (Bx+C)/(x²+৪)',['A/(x−১) + B/(x²+৪)','A/(x−১) + B/(x+২) + C/(x−২)','A/((x−১)(x²+৪))'],'দ্বিঘাত উৎপাদকের লব Bx + C।');
+M('১/(x(x²+১)²) কে আংশিক ভগ্নাংশে ভাঙলে কয়টি অজানা ধ্রুবক (A, B, C, …) থাকে?','৫টি',['৩টি','৪টি','২টি'],'A, B, C, D, E।');
+M('a/((a−b)(a−c)) + b/((b−c)(b−a)) + c/((c−a)(c−b)) = ?','০',['১','a + b + c','abc'],'বই উদাহরণ ১৯।');
+M('কোনটি প্রকৃত ভগ্নাংশ?','(x + ১)/(x² + ৩)',['২x⁴/(x + ১)','(x² + ১)/(x − ১)','x³/(x + ২)'],'লবের মাত্রা < হরের মাত্রা।');
+(function(){
+  var done=0,sc=0;
+  QZ.forEach(function(q){var ord=q.o.map(function(t,i){return {t:t,c:i===0};});
+    for(var i=ord.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),k=ord[i];ord[i]=ord[j];ord[j]=k;}q.ord=ord;});
+  var h='';QZ.forEach(function(q,qi){h+='<div class="q" id="qq'+qi+'"><b>'+bn(qi+1)+'.</b> '+q.q+q.ord.map(function(o,oi){return '<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+o.t+'</button>';}).join('')+'<div class="fb" id="qe'+qi+'"></div></div>';});
+  $('quizbox').innerHTML=h;
+  $('quizbox').addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b||b.parentNode.dataset.done)return;
+    var qi=+b.dataset.q,q=QZ[qi],o=q.ord[+b.dataset.o];b.parentNode.dataset.done=1;done++;
+    var btns=b.parentNode.querySelectorAll('.opt');btns.forEach(function(x,i){if(q.ord[i].c)x.classList.add('good');});
+    if(o.c){sc++;$('qe'+qi).textContent='✅ ঠিক! '+q.e;}else{b.classList.add('bad');$('qe'+qi).textContent='❌ ভুল। '+q.e;}
+    $('qscore').textContent='স্কোর: '+bn(sc)+' / '+bn(done)+' (মোট '+bn(QZ.length)+'টি)';
+    try{if(done===QZ.length){localStorage.setItem('sl_done_math-algebraic-expr','1');var xp=+(localStorage.getItem('sl_xp')||0);localStorage.setItem('sl_xp',xp+sc);}}catch(er){}
+  });
+})();
+
+/* ===================== প্রশ্নোত্তর ===================== */
+var QA=[
+ {h:'বহুনির্বাচনি (বইয়ের নমুনা ধাঁচে)',items:[
+  ['১. নিচের কোন রাশিটি প্রতিসম? (ক. a + b + c খ. xy − yz + zx গ. x² − y² + z² ঘ. ২a² − ৫bc − c²)','ক. a + b + c।'],
+  ['২. P(x, y, z) = x³ + y³ + z³ − ৩xyz হলে i. চক্রক্রমিক ii. প্রতিসম iii. P(১, −২, ১) = ০ — কোনটি সঠিক?','ঘ. i, ii ও iii। (P(১,−২,১) = ১ − ৮ + ১ + ৬ = ০)'],
+  ['৩. P(x) = x⁵ − x⁴ + x³ − x² + x − ১ এর একটি উৎপাদক কোনটি? (ক. x + ১ খ. x² − x − ১ গ. x² + x − ১ ঘ. x − ১)','ঘ. x − ১। কারণ P(১) = ১ − ১ + ১ − ১ + ১ − ১ = ০।'],
+  ['৪. উপরের P(x) এর জন্য P(−২) এর মান কত? (ক. −৬৩ খ. −৫৫ গ. −৪৭ ঘ. −৩১)','ক. −৬৩। (−৩২ − ১৬ − ৮ − ৪ − ২ − ১ = −৬৩)']]},
+ {h:'সৃজনশীল প্রশ্ন (নমুনা)',items:[
+  ['৫. P(a,b,c) = (a+b+c)(ab+bc+ca) এবং Q = a⁻³ + b⁻³ + c⁻³ − ৩a⁻¹b⁻¹c⁻¹। ক) P চক্রক্রমিক ও প্রতিসম কিনা কারণসহ লেখো। খ) Q = ০ হলে প্রমাণ করো a = b = c অথবা ab + bc + ca = ০। গ) P = abc হলে দেখাও ১/(a+b+c)⁷ = ১/a⁷ + ১/b⁷ + ১/c⁷।',
+   'ক) a, b দুটি বদলালে (b+a+c)(ba+ac+cb) = P, তাই প্রতিসম; তিন চলকে প্রতিসম হলে চক্রক্রমিকও। খ) ধরি x = ১/a, y = ১/b, z = ১/c; Q = x³+y³+z³−৩xyz = ০ ⇒ x+y+z = ০ অথবা x = y = z। x+y+z = ০ মানে ১/a+১/b+১/c = ০ ⇒ ab+bc+ca = ০; আর x = y = z মানে a = b = c। গ) (a+b+c)(ab+bc+ca) = abc ⇒ (a+b)(b+c)(c+a) = ০ (কারণ (a+b+c)(ab+bc+ca) − abc = (a+b)(b+c)(c+a))। তাই a + b = ০ অথবা b + c = ০ অথবা c + a = ০। a = −b হলে বামপক্ষ ১/c⁷ আর ডানপক্ষ ১/a⁷ + ১/(−a)⁷ + ১/c⁷ = ১/c⁷। অন্য দুই ক্ষেত্রেও একইভাবে সত্য।'],
+  ['৬. P(x) = ১৮x³ + bx² − x − ২ এবং Q(x) = ৪x⁴ + ১২x³ + ৭x² − ৩x − ২। ক) Q(x)/P(x) ভাগফলটির মাত্রা নির্ণয় করো। খ) ৩x + ২, P(x) এর একটি উৎপাদক হলে b এর মান নির্ণয় করো। গ) (৮x² − ২)/Q(x) কে আংশিক ভগ্নাংশে প্রকাশ করো।',
+   'ক) ভাগফলের মাত্রা = ৪ − ৩ = ১। খ) P(−২/৩) = ০: ১৮(−৮/২৭) + b(৪/৯) + ২/৩ − ২ = ০ ⇒ −১৬/৩ + ৪b/৯ + ২/৩ − ২ = ০ ⇒ ৪b/৯ = ২০/৩ ⇒ b = ১৫। গ) Q = (২x+১)(২x−১)(x+১)(x+২) এবং ৮x² − ২ = ২(২x−১)(২x+১)। তাই ভগ্নাংশ = ২/((x+১)(x+২)) = ২/(x+১) − ২/(x+২)।']]},
+ {h:'সংক্ষিপ্ত উত্তর প্রশ্ন',items:[
+  ['৭ক. x⁴ − ৫x³ + ৭x² − a এর একটি উৎপাদক (x − ২) হলে দেখাও a = ৪।','P(২) = ১৬ − ৪০ + ২৮ − a = ৪ − a = ০ ⇒ a = ৪।'],
+  ['৭খ. ৪x⁴ + ১২x³ + ৭x² − ৩x − ২ কে উৎপাদকে বিশ্লেষণ করো।','(২x+১)(২x−১)(x+১)(x+২)। (যাচাই: (৪x²−১)(x²+৩x+২) = ৪x⁴+১২x³+৭x²−৩x−২)'],
+  ['৭গ. সরল করো: a²/((a−b)(a−c)) + b²/((b−c)(b−a)) + c²/((c−a)(c−b))','মান = ১। (a=০, b=১, c=২ বসিয়ে: ০ − ১ + ২ = ১ ✔; সাধারণভাবে লব = (a−b)(b−c)(c−a) এর সমান)'],
+  ['৮. আংশিক ভগ্নাংশে প্রকাশ করো: (x + ৫)/((x−১)(x−২)(x−৩))','৩/(x−১) − ৭/(x−২) + ৪/(x−৩)।'],
+  ['৯. দেখাও x/y + y/z + z/x প্রতিসম নয় কিন্তু চক্রক্রমিক।','x ও y বদলালে y/x + x/z + z/y হয়, যা মূল রাশি থেকে আলাদা (যেমন x=১, y=২, z=৪: মূল = ১/২ + ১/২ + ৪ = ৫; বদলানো = ২ + ১/৪ + ২ = ৪.২৫)। কিন্তু x→y→z→x বসালে y/z + z/x + x/y, অর্থাৎ একই রাশি।']]}
+];
+(function(){var h='';QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){h+='<details class="ex"><summary><b>'+it[0]+'</b></summary><p>'+it[1]+'</p></details>';});});$('qabox').innerHTML=h;})();
+</script>
+</body>
+</html>

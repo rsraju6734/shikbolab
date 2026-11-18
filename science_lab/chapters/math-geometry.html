@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>জ্যামিতি (উচ্চতর গণিত অধ্যায় ৩) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+canvas{width:100%;height:auto;max-width:700px;display:block;margin:8px auto;border-radius:12px;background:#fff;border:1px solid var(--line);touch-action:none}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.ctl input[type=range]{width:200px;max-width:100%}
+.ctl select,.ctl input[type=text],.ans input{font-family:inherit;font-size:16px;padding:6px 8px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;max-width:100%;width:auto}
+.eqb{background:#eaf7f5;border-radius:10px;padding:10px;text-align:center;font-weight:700;color:var(--navy);margin:8px 0;font-size:18px;overflow-x:auto}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.fb{font-weight:700;margin-top:6px}
+.res{background:#eef6ff;border-radius:10px;padding:10px 12px;margin:8px 0;line-height:1.9}
+.res b{color:#0b5ed7}
+.chips button{margin:3px;padding:6px 12px;border-radius:999px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.chips button.on{background:#0b5ed7;color:#fff;border-color:#0b5ed7}
+.step{background:#fff;border:1px solid var(--line);border-left:5px solid #2a9d8f;border-radius:8px;padding:8px 12px;margin:6px 0;display:none}
+.step.show{display:block}
+.ex{border:2px dashed #b8c7d6;border-radius:12px;padding:10px 14px;margin:14px 0;background:#fcfdff}
+.q{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:#fff}
+.q .opt{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 10px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:16px;cursor:pointer}
+.q .opt.good{background:#d8f3e3;border-color:#2a9d8f}
+.q .opt.bad{background:#fddcdc;border-color:#e76f51}
+.m{font-family:system-ui,'Segoe UI',Arial,sans-serif}
+table.t{border-collapse:collapse;margin:8px 0}
+table.t td,table.t th{border:1px solid #cfd9e1;padding:5px 12px;text-align:center}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">📐 গণিত &rsaquo; উচ্চতর গণিত &rsaquo; অধ্যায় ৩ (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">📐 জ্যামিতি</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#ex">🪜 প্রমাণ ধাপে ধাপে</a><a href="#lab1">🔺 পিথাগোরাস</a><a href="#lab2">📏 স্থূল/সূক্ষ্ম</a><a href="#lab3">🧭 অ্যাপোলোনিয়াস</a><a href="#lab4">🎯 তিন কেন্দ্র</a><a href="#lab5">🔍 সদৃশতা</a><a href="#lab6">⭕ টলেমি</a><a href="#prac">✍️ প্র্যাকটিস</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্নোত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায়ে শিখবে:</b> পিথাগোরাসের উপপাদ্য ও বিপরীত, লম্ব অভিক্ষেপ, স্থূলকোণ-সূক্ষ্মকোণের সূত্র, অ্যাপোলোনিয়াসের উপপাদ্য, ভরকেন্দ্র-পরিকেন্দ্র-লম্ববিন্দু, সদৃশতা, ব্রহ্মগুপ্তের ও টলেমির উপপাদ্য। জ্যামিতিতে ছবি দেখাই সবচেয়ে বড় সাহায্য, তাই ল্যাবে নিজে টেনে টেনে দেখো।</div>
+
+    <h3>১. পিথাগোরাসের উপপাদ্য ⭐⭐⭐</h3>
+    <ul>
+      <li><b>উপপাদ্য ১:</b> সমকোণী ত্রিভুজে অতিভুজের বর্গ = অপর দুই বাহুর বর্গের সমষ্টি। a² = b² + c²। (b = ৮, c = ৬ হলে a = ১০)</li>
+      <li><b>উপপাদ্য ২ (বিপরীত):</b> কোনো ত্রিভুজের এক বাহুর বর্গ অপর দুই বাহুর বর্গের সমষ্টির সমান হলে ঐ দুই বাহুর অন্তর্ভুক্ত কোণ সমকোণ। (৬, ৮, ১০: ৩৬ + ৬৪ = ১০০ ✔)</li>
+    </ul>
+
+    <h3>২. লম্ব অভিক্ষেপ ⭐⭐</h3>
+    <ul>
+      <li><b>বিন্দুর লম্ব অভিক্ষেপ:</b> বিন্দু থেকে রেখার উপর লম্ব টানলে লম্বের পাদবিন্দু।</li>
+      <li><b>রেখাংশের লম্ব অভিক্ষেপ:</b> দুই প্রান্তবিন্দুর পাদবিন্দু যোগ করে পাওয়া রেখাংশ (A′B′)।</li>
+      <li>রেখার সমান্তরাল রেখাংশের লম্ব অভিক্ষেপের দৈর্ঘ্য = রেখাংশের দৈর্ঘ্য। রেখার উপর লম্ব রেখাংশের অভিক্ষেপ একটি বিন্দু (দৈর্ঘ্য শূন্য)।</li>
+    </ul>
+
+    <h3>৩. স্থূলকোণ ও সূক্ষ্মকোণের সূত্র ⭐⭐⭐</h3>
+    <ul>
+      <li><b>উপপাদ্য ৩ (∠ACB স্থূলকোণ):</b> AB² = AC² + BC² + ২·BC·CD। (CD হলো AC-এর BC-এর উপর লম্ব অভিক্ষেপ) অর্থাৎ AB² &gt; AC² + BC²।</li>
+      <li><b>উপপাদ্য ৪ (∠ACB সূক্ষ্মকোণ):</b> AB² = AC² + BC² − ২·BC·CD। অর্থাৎ AB² &lt; AC² + BC²।</li>
+      <li><b>মনে রাখার কৌশল:</b> সমকোণ হলে CD = ০, তখন সূত্রটি পিথাগোরাসই হয়ে যায়। তাই "স্থূলে +, সূক্ষ্মে −"।</li>
+      <li>সুতরাং ত্রিভুজে (বৃহত্তম বাহু c): c² &gt; a² + b² হলে স্থূলকোণী, = হলে সমকোণী, &lt; হলে সূক্ষ্মকোণী।</li>
+    </ul>
+
+    <h3>৪. অ্যাপোলোনিয়াসের উপপাদ্য ⭐⭐⭐</h3>
+    <ul>
+      <li><b>উপপাদ্য ৫:</b> AD মধ্যমা (D = BC-এর মধ্যবিন্দু) হলে <b>AB² + AC² = ২(AD² + BD²)</b>।</li>
+      <li>মধ্যমার দৈর্ঘ্য: d² = {২(b² + c²) − a²}/৪। (a, b, c বাহু, d = a-এর উপর মধ্যমা)</li>
+      <li>তিন মধ্যমার জন্য: <b>৩(a² + b² + c²) = ৪(d² + e² + f²)</b>। অর্থাৎ d² + e² + f² = ¾(a² + b² + c²)।</li>
+      <li>সমকোণী ত্রিভুজে: ২(d² + e² + f²) = ৩c² (c = অতিভুজ)।</li>
+    </ul>
+
+    <h3>৫. ভরকেন্দ্র, পরিকেন্দ্র, লম্ববিন্দু ⭐⭐⭐</h3>
+    <ul>
+      <li><b>ভরকেন্দ্র G:</b> তিন মধ্যমার ছেদবিন্দু। মধ্যমাকে শীর্ষ থেকে <b>২ : ১</b> অনুপাতে ভাগ করে।</li>
+      <li><b>পরিকেন্দ্র S:</b> তিন বাহুর লম্বদ্বিখণ্ডকের ছেদবিন্দু। (পরিবৃত্তের কেন্দ্র)</li>
+      <li><b>লম্ববিন্দু O:</b> তিন শীর্ষ থেকে বিপরীত বাহুর উপর লম্বের ছেদবিন্দু।</li>
+      <li><b>উপপাদ্য ১০:</b> লম্ববিন্দু, ভরকেন্দ্র ও পরিকেন্দ্র একই সরলরেখায় থাকে (অয়লার রেখা)। লম্ববিন্দু থেকে শীর্ষের দূরত্ব = পরিকেন্দ্র থেকে বিপরীত বাহুর দূরত্বের দ্বিগুণ।</li>
+      <li><b>নবমবিন্দু বৃত্ত:</b> তিন বাহুর মধ্যবিন্দু, তিন লম্বের পাদবিন্দু ও লম্ববিন্দু-শীর্ষ সংযোগকারী রেখার তিন মধ্যবিন্দু, এই ৯টি বিন্দু একই বৃত্তে। ব্যাসার্ধ = পরিব্যাসার্ধের অর্ধেক।</li>
+    </ul>
+
+    <h3>৬. সদৃশতা ⭐⭐⭐</h3>
+    <ul>
+      <li>দুই ত্রিভুজ <b>সদৃশকোণী</b> (অনুরূপ কোণ সমান) হলে অনুরূপ বাহুগুলো সমানুপাতিক, এবং উল্টোটাও সত্য (উপপাদ্য ৬, ৭)।</li>
+      <li><b>উপপাদ্য ৮:</b> এক কোণ সমান ও সেই কোণের সংলগ্ন বাহুগুলো সমানুপাতিক হলে ত্রিভুজ দুটি সদৃশ।</li>
+      <li><b>উপপাদ্য ৯:</b> সদৃশ ত্রিভুজের ক্ষেত্রফলের অনুপাত = অনুরূপ বাহুর বর্গের অনুপাত। বাহুর অনুপাত ১ : ২ হলে ক্ষেত্রফল ১ : ৪।</li>
+      <li>সাবধান: বহুভুজে শুধু কোণ সমান হলেই সদৃশ নয় (আয়ত ও বর্গ), আবার শুধু বাহুর অনুপাত সমান হলেও নয় (বর্গ ও রম্বস)। ত্রিভুজে দুটির একটি মিললেই অন্যটি মেলে।</li>
+    </ul>
+
+    <h3>৭. বৃত্তের দুটি বিখ্যাত উপপাদ্য ⭐⭐</h3>
+    <ul>
+      <li><b>ব্রহ্মগুপ্তের উপপাদ্য (১১):</b> বৃত্তে অন্তর্লিখিত চতুর্ভুজের কর্ণদ্বয় পরস্পর লম্ব হলে, তাদের ছেদবিন্দু থেকে কোনো বাহুর উপর অঙ্কিত লম্ব বিপরীত বাহুকে সমদ্বিখণ্ডিত করে।</li>
+      <li><b>টলেমির উপপাদ্য (১২):</b> বৃত্তে অন্তর্লিখিত চতুর্ভুজ ABCD-তে <b>AC·BD = AB·CD + BC·AD</b>। (কর্ণদ্বয়ের গুণফল = বিপরীত বাহুজোড়ার গুণফলের যোগ)</li>
+    </ul>
+    <div class="warn">⚠️ <b>সাধারণ ভুল:</b> ① স্থূলকোণ ও সূক্ষ্মকোণে + আর − উল্টে ফেলা। ② মধ্যমা আর লম্ব গুলিয়ে ফেলা (মধ্যমা মধ্যবিন্দুতে যায়, লম্ব ৯০° করে)। ③ ভরকেন্দ্রে ২ : ১ কোন দিক থেকে, তা ভুলে যাওয়া: বড় অংশ শীর্ষের দিকে।</div>
+  </section>
+
+  <section class="panel" id="ex">
+    <h2>🪜 প্রমাণ ধাপে ধাপে</h2>
+    <div class="say">👉 "পরের ধাপ" চাপো। জ্যামিতির প্রমাণ বুঝতে ছবি আঁকো এবং প্রতিটি ধাপের কারণ নিজে বলার চেষ্টা করো।</div>
+
+    <div class="ex" id="E1"><b>প্রমাণ ১ (উপপাদ্য ৩):</b> ∠ACB স্থূলকোণ হলে AB² = AC² + BC² + ২·BC·CD (D হলো BC-এর বর্ধিতাংশে A থেকে লম্বের পাদবিন্দু)।
+      <div class="step">ধাপ ১: A থেকে BC-এর বর্ধিতাংশে লম্ব AD আঁকি। তাহলে △ABD সমকোণী (∠ADB = ৯০°)।</div>
+      <div class="step">ধাপ ২: পিথাগোরাস: AB² = AD² + BD²। কিন্তু BD = BC + CD, তাই AB² = AD² + (BC + CD)² = AD² + BC² + CD² + ২·BC·CD ⋯ (১)</div>
+      <div class="step">ধাপ ৩: △ACD ও সমকোণী (∠ADC = ৯০°)। তাই AC² = AD² + CD² ⋯ (২)</div>
+      <div class="step">ধাপ ৪: (২) থেকে AD² + CD² এর জায়গায় AC² বসাই (১) এ। <b>AB² = AC² + BC² + ২·BC·CD</b> ✔ প্রমাণিত।</div>
+      <button class="btn" data-ex="E1">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E1">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E2"><b>প্রমাণ ২ (অ্যাপোলোনিয়াস, উপপাদ্য ৫):</b> AD মধ্যমা হলে AB² + AC² = ২(AD² + BD²)।
+      <div class="step">ধাপ ১: A থেকে BC-এ লম্ব AE আঁকি। D মধ্যবিন্দু বলে BD = DC। △ABD-এ ∠ADB স্থূলকোণ হলে ∠ADC সূক্ষ্মকোণ। (বা উল্টো)</div>
+      <div class="step">ধাপ ২: স্থূলকোণের সূত্র (উপপাদ্য ৩): AB² = AD² + BD² + ২·BD·DE ⋯ (১)</div>
+      <div class="step">ধাপ ৩: সূক্ষ্মকোণের সূত্র (উপপাদ্য ৪): AC² = AD² + DC² − ২·DC·DE ⋯ (২)</div>
+      <div class="step">ধাপ ৪: (১) + (২) করি। BD = DC বলে ২·BD·DE ও −২·DC·DE কেটে যায়। AB² + AC² = ২AD² + ২BD² = <b>২(AD² + BD²)</b> ✔</div>
+      <button class="btn" data-ex="E2">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E2">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E3"><b>উদাহরণ (বই উ. ১ খ):</b> △PQR এ ∠PQR = ৯০°, E হলো QR-এর মধ্যবিন্দু। প্রমাণ করো PR² = PE² + QE² + ২RE²।
+      <div class="step">ধাপ ১: △PQE সমকোণী (∠Q = ৯০°)। PE² = PQ² + QE² ⋯ (১)</div>
+      <div class="step">ধাপ ২: △PQR সমকোণী। PR² = PQ² + QR² = PQ² + (QE + RE)²।</div>
+      <div class="step">ধাপ ৩: খুলে: PR² = PQ² + QE² + RE² + ২·QE·RE। E মধ্যবিন্দু, তাই QE = RE। অতএব ২·QE·RE = ২RE²। আর RE² = QE² ধরে লিখি: PR² = PQ² + QE² + QE² + ২RE²।</div>
+      <div class="step">ধাপ ৪: (১) থেকে PQ² + QE² = PE²। তাই <b>PR² = PE² + QE² + ২RE²</b> ✔</div>
+      <button class="btn" data-ex="E3">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E3">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E4"><b>উদাহরণ (বই উ. ১ গ):</b> △PQR এ ∠Q = ৯০°, QF ⊥ PR। প্রমাণ করো QF² = PF·RF।
+      <div class="step">ধাপ ১: ∠PQF + ∠FQR = ৯০° ⋯ (১)</div>
+      <div class="step">ধাপ ২: △PQF-এ ∠PFQ = ৯০°, তাই ∠PQF + ∠QPF = ৯০° ⋯ (২)</div>
+      <div class="step">ধাপ ৩: (১) ও (২) থেকে ∠FQR = ∠QPF।</div>
+      <div class="step">ধাপ ৪: △PQF ও △QFR এ ∠PFQ = ∠QFR = ৯০° এবং ∠QPF = ∠FQR। তাই দুই ত্রিভুজ সদৃশকোণী, অনুরূপ বাহু সমানুপাতিক: PF/QF = QF/RF।</div>
+      <div class="step">ধাপ ৫: আড়গুণন করে <b>QF² = PF·RF</b> ✔ প্রমাণিত।</div>
+      <button class="btn" data-ex="E4">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E4">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E5"><b>প্রমাণ ৩ (টলেমির উপপাদ্য, সংক্ষেপে):</b> AC·BD = AB·CD + BC·AD
+      <div class="step">ধাপ ১: ∠BAC এর সমান করে ∠DAP আঁকি, যেন AP কর্ণ BD-কে P বিন্দুতে ছেদ করে।</div>
+      <div class="step">ধাপ ২: ∠BAP = ∠CAD (দুই পাশে ∠CAP যোগ করে)। আবার ∠ABD = ∠ACD (একই চাপের কোণ)। তাই △ABP ও △ACD সদৃশ: BP/CD = AB/AC, অর্থাৎ AC·BP = AB·CD ⋯ (১)</div>
+      <div class="step">ধাপ ৩: △ABC ও △APD সদৃশ (∠BAC = ∠PAD, ∠ACB = ∠ADP): AD/AC = PD/BC, অর্থাৎ AC·PD = BC·AD ⋯ (২)</div>
+      <div class="step">ধাপ ৪: (১) + (২): AC(BP + PD) = AB·CD + BC·AD। BP + PD = BD, তাই <b>AC·BD = AB·CD + BC·AD</b> ✔</div>
+      <button class="btn" data-ex="E5">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E5">আবার শুরু</button>
+    </div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🔺 ল্যাব ১: পিথাগোরাসের উপপাদ্য (বর্গক্ষেত্র দিয়ে দেখো)</h2>
+    <div class="say">👉 স্লাইডারে b ও c বদলাও। তিন বাহুর উপর আঁকা বর্গের ক্ষেত্রফল দেখো: বড় বর্গ = ছোট দুই বর্গের যোগফল।</div>
+    <div class="ctl"><label>b = <span id="l1bv"></span></label><input type="range" id="l1b" min="1" max="8" step="1" value="6"><label>c = <span id="l1cv"></span></label><input type="range" id="l1c" min="1" max="8" step="1" value="8"></div>
+    <canvas id="l1cv2" width="600" height="380"></canvas>
+    <div class="res m" id="l1i"></div>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>📏 ল্যাব ২: স্থূলকোণ না সূক্ষ্মকোণ? (A বিন্দুকে টেনে সরাও)</h2>
+    <div class="say">👉 নীল বিন্দু A-কে আঙুল বা মাউস দিয়ে টানো। দেখো ∠C কখন স্থূল, সমকোণ বা সূক্ষ্ম হয় এবং সূত্রের চিহ্ন (+ বা −) কীভাবে বদলায়।</div>
+    <canvas id="l2cv" width="600" height="380"></canvas>
+    <div class="res m" id="l2i"></div>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🧭 ল্যাব ৩: অ্যাপোলোনিয়াসের উপপাদ্য ও মধ্যমা</h2>
+    <div class="say">👉 A, B, C যেকোনোটি টানো। বাম পাশ = ডান পাশ সবসময় মিলবে। তিন মধ্যমার বর্গের সমষ্টি = ¾ × তিন বাহুর বর্গের সমষ্টি।</div>
+    <canvas id="l3cv" width="600" height="380"></canvas>
+    <div class="res m" id="l3i"></div>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🎯 ল্যাব ৪: ভরকেন্দ্র, পরিকেন্দ্র ও লম্ববিন্দু</h2>
+    <div class="say">👉 ত্রিভুজের শীর্ষগুলো টেনে আকার বদলাও। কী কী দেখাবে তা টিক দিয়ে বেছে নাও। G, S, O সবসময় এক রেখায় থাকে!</div>
+    <div class="chips" id="l4o"></div>
+    <canvas id="l4cv" width="600" height="400"></canvas>
+    <div class="res m" id="l4i"></div>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🔍 ল্যাব ৫: সদৃশ ত্রিভুজ</h2>
+    <div class="say">👉 k স্লাইডারে ছোট-বড় করো। তারপর "বিকৃতি" বাড়াও: তখন F বিন্দু সরে যাবে এবং ত্রিভুজ আর সদৃশ থাকবে না, অনুপাতগুলো আলাদা হয়ে যাবে।</div>
+    <div class="ctl"><label>k = <span id="l5kv"></span></label><input type="range" id="l5k" min="0.5" max="1.5" step="0.1" value="0.8"><label>বিকৃতি = <span id="l5dv"></span></label><input type="range" id="l5d" min="0" max="40" step="5" value="0"></div>
+    <canvas id="l5cv" width="600" height="340"></canvas>
+    <div class="res m" id="l5i"></div>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>⭕ ল্যাব ৬: টলেমি ও ব্রহ্মগুপ্তের উপপাদ্য</h2>
+    <div class="chips" id="l6m"></div>
+    <div class="say" id="l6s"></div>
+    <div id="l6c1" class="ctl"></div>
+    <canvas id="l6cv" width="600" height="380"></canvas>
+    <div class="res m" id="l6i"></div>
+  </section>
+
+  <section class="panel" id="prac">
+    <h2>✍️ প্র্যাকটিস (বইয়ের ধাঁচে)</h2>
+    <div class="say">👉 নিজে হিসাব করে উত্তর লেখো। দশমিক হলে ২ ঘর পর্যন্ত লিখলেই হবে। √ চিহ্ন না পারলে দশমিকে লেখো।</div>
+    <div id="pracbox"></div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="fb" id="qscore"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>📖 সৃজনশীল ও সংক্ষিপ্ত প্রশ্নোত্তর</h2>
+    <div id="qabox"></div>
+  </section>
+</div>
+
+<footer class="site">&copy; ShikboLab · জ্যামিতি (উচ্চতর গণিত অধ্যায় ৩)</footer>
+<script>
+var BNS='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BNS[d];});}
+function en(s){return String(s).replace(/[০-৯]/g,function(d){return BNS.indexOf(d);});}
+function $(id){return document.getElementById(id);}
+function R2(c){var d=Math.min(2,window.devicePixelRatio||1),w=c.width,h=c.height;c.width=w*d;c.height=h*d;var x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return x;}
+function fm(v,d){d=(d===undefined)?2:d;var k=Math.pow(10,d),r=Math.round(v*k)/k;if(Math.abs(r)<1e-9)r=0;return bn(String(r).replace('-','−'));}
+function mkCv(id){var c=$(id);return {el:c,x:R2(c),w:+c.getAttribute('width'),h:+c.getAttribute('height')};}
+function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y);}
+function mid(a,b){return {x:(a.x+b.x)/2,y:(a.y+b.y)/2};}
+function line(x,a,b,col,w,dash){x.strokeStyle=col;x.lineWidth=w||2;x.setLineDash(dash||[]);x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke();x.setLineDash([]);}
+function dot(x,p,col,lab,dx,dy,r){x.fillStyle=col;x.strokeStyle='#fff';x.lineWidth=2;x.beginPath();x.arc(p.x,p.y,r||6,0,6.2832);x.fill();x.stroke();if(lab){x.fillStyle=col;x.font='700 15px system-ui';x.textAlign='center';x.fillText(lab,p.x+(dx||0),p.y+(dy||-10));}}
+function circ(x,c,r,col,w,dash){x.strokeStyle=col;x.lineWidth=w||2;x.setLineDash(dash||[]);x.beginPath();x.arc(c.x,c.y,r,0,6.2832);x.stroke();x.setLineDash([]);}
+function clear(cv){cv.x.clearRect(0,0,cv.w,cv.h);cv.x.fillStyle='#fff';cv.x.fillRect(0,0,cv.w,cv.h);}
+function foot(p,a,b){var dx=b.x-a.x,dy=b.y-a.y,t=((p.x-a.x)*dx+(p.y-a.y)*dy)/(dx*dx+dy*dy);return {x:a.x+t*dx,y:a.y+t*dy};}
+function circumcenter(A,B,C){var d=2*(A.x*(B.y-C.y)+B.x*(C.y-A.y)+C.x*(A.y-B.y));if(Math.abs(d)<1e-6)return null;
+  var a2=A.x*A.x+A.y*A.y,b2=B.x*B.x+B.y*B.y,c2=C.x*C.x+C.y*C.y;
+  return {x:(a2*(B.y-C.y)+b2*(C.y-A.y)+c2*(A.y-B.y))/d,y:(a2*(C.x-B.x)+b2*(A.x-C.x)+c2*(B.x-A.x))/d};}
+function dragger(cv,pts,clamp,cb){var cur=null,el=cv.el;
+  function pos(e){var r=el.getBoundingClientRect();return {x:(e.clientX-r.left)*cv.w/r.width,y:(e.clientY-r.top)*cv.h/r.height};}
+  el.addEventListener('pointerdown',function(e){var p=pos(e),best=null,bd=28;pts.forEach(function(q){var d=dist(p,q);if(d<bd){bd=d;best=q;}});if(best){cur=best;try{el.setPointerCapture(e.pointerId);}catch(er){}e.preventDefault();}});
+  el.addEventListener('pointermove',function(e){if(!cur)return;var p=pos(e);cur.x=p.x;cur.y=p.y;clamp(cur);cb();e.preventDefault();});
+  function up(){cur=null;}el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);}
+function clampBox(p){p.x=Math.max(25,Math.min(575,p.x));p.y=Math.max(30,Math.min(360,p.y));}
+
+/* ---------- ধাপে ধাপে ---------- */
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ex){var box=$(b.dataset.ex),s=box.querySelectorAll('.step:not(.show)');if(s.length){s[0].classList.add('show');}if(s.length<=1)b.disabled=true;}
+  if(b.dataset.rs){var bx=$(b.dataset.rs);bx.querySelectorAll('.step').forEach(function(x){x.classList.remove('show');});bx.querySelector('[data-ex]').disabled=false;}
+});
+
+/* ===================== ল্যাব ১: পিথাগোরাস ===================== */
+var c1=mkCv('l1cv2');
+function sqPoly(x,P,Q,n,col,txt,tc){x.fillStyle=col;x.strokeStyle=tc;x.lineWidth=2;x.beginPath();x.moveTo(P.x,P.y);x.lineTo(Q.x,Q.y);x.lineTo(Q.x+n.x,Q.y+n.y);x.lineTo(P.x+n.x,P.y+n.y);x.closePath();x.fill();x.stroke();
+  x.fillStyle=tc;x.font='700 16px system-ui';x.textAlign='center';x.fillText(txt,(P.x+Q.x)/2+n.x/2,(P.y+Q.y)/2+n.y/2+5);}
+function l1(){
+  var b=+$('l1b').value,c=+$('l1c').value;$('l1bv').textContent=bn(b);$('l1cv').textContent=bn(c);
+  var s=17,A={x:200,y:265},C={x:A.x+s*b,y:A.y},B={x:A.x,y:A.y-s*c},x=c1.x;clear(c1);
+  sqPoly(x,A,C,{x:0,y:s*b},'rgba(42,111,219,.25)','b² = '+bn(b*b),'#1d4ea8');
+  sqPoly(x,B,A,{x:-s*c,y:0},'rgba(231,111,81,.25)','c² = '+bn(c*c),'#b4472d');
+  sqPoly(x,B,C,{x:s*c,y:-s*b},'rgba(42,157,143,.3)','a² = '+bn(b*b+c*c),'#1b7a6f');
+  x.fillStyle='#fff';x.strokeStyle='#1f3a5f';x.lineWidth=3;x.beginPath();x.moveTo(A.x,A.y);x.lineTo(C.x,C.y);x.lineTo(B.x,B.y);x.closePath();x.fill();x.stroke();
+  x.strokeStyle='#1f3a5f';x.lineWidth=2;x.strokeRect(A.x+1,A.y-13,12,12);
+  x.fillStyle='#1f3a5f';x.font='700 15px system-ui';x.textAlign='center';x.fillText('A',A.x-10,A.y+16);x.fillText('C',C.x+10,C.y+16);x.fillText('B',B.x-10,B.y-8);
+  var a2=b*b+c*c,a=Math.sqrt(a2),isInt=Math.abs(a-Math.round(a))<1e-9;
+  $('l1i').innerHTML='AC = b = <b>'+bn(b)+'</b>, AB = c = <b>'+bn(c)+'</b>, ∠A = ৯০°<br>b² + c² = '+bn(b*b)+' + '+bn(c*c)+' = <b>'+bn(a2)+'</b><br>অতিভুজ a = √'+bn(a2)+' = <b>'+fm(a)+'</b> ('+(isInt?'পূর্ণসংখ্যা! এটি একটি পিথাগোরীয় ত্রয়ী: '+bn(b)+', '+bn(c)+', '+bn(a)+')':'পূর্ণসংখ্যা নয়')+'<br>তিন বর্গের ক্ষেত্রফল: <b>'+bn(a2)+' = '+bn(b*b)+' + '+bn(c*c)+'</b> ✔<br><small>বিপরীত উপপাদ্য: যেকোনো ত্রিভুজের বাহু '+bn(b)+', '+bn(c)+', '+fm(a)+' হলে তাদের অন্তর্ভুক্ত কোণ সমকোণ হবে।</small>';
+}
+$('l1b').oninput=l1;$('l1c').oninput=l1;l1();
+
+/* ===================== ল্যাব ২: স্থূল/সূক্ষ্ম ===================== */
+var c2=mkCv('l2cv'),U=30,B2={x:150,y:300},C2={x:330,y:300},A2={x:430,y:120};
+function l2(){
+  var x=c2.x;clear(c2);A2.y=Math.min(A2.y,285);
+  var D={x:A2.x,y:300},bc=dist(B2,C2)/U,ac=dist(A2,C2)/U,ab=dist(A2,B2)/U;
+  var t=-((A2.x-C2.x)/U); /* C থেকে D এর সাইনযুক্ত দূরত্ব (B এর দিকে ধনাত্মক) */
+  var cd=Math.abs(t),kind=Math.abs(t)<0.05?0:(t<0?1:-1); /* 1 স্থূল, -1 সূক্ষ্ম, 0 সমকোণ */
+  line(x,{x:10,y:300},{x:590,y:300},'#cfd9e1',2,[6,5]);
+  line(x,A2,D,'#9aa8b5',2,[5,4]);
+  line(x,C2,D,'#e76f51',6);
+  line(x,B2,C2,'#1f3a5f',3);line(x,A2,B2,'#1f3a5f',3);line(x,A2,C2,'#1f3a5f',3);
+  if(cd>0.05){x.strokeStyle='#9aa8b5';x.lineWidth=2;var sg=(C2.x-D.x)>=0?1:-1;x.strokeRect(Math.min(D.x,D.x+sg*12),288,12,12);}
+  dot(x,B2,'#1f3a5f','B',0,22);dot(x,C2,'#1f3a5f','C',0,22);dot(x,D,'#e76f51','D',0,22,4);dot(x,A2,'#2a6fdb','A (টানো)',0,-14,9);
+  x.fillStyle='#e76f51';x.font='700 14px system-ui';x.textAlign='center';if(cd>0.3)x.fillText('CD',(C2.x+D.x)/2,288);
+  var ab2=ab*ab,ac2=ac*ac,bc2=bc*bc,ext=2*bc*cd;
+  var sign=kind===1?'+':(kind===-1?'−':'±০');
+  $('l2i').innerHTML='AB² = <b>'+fm(ab2)+'</b>, AC² = '+fm(ac2)+', BC² = '+fm(bc2)+', CD = <b>'+fm(cd)+'</b><br>'+
+   '∠ACB '+(kind===1?'<b style="color:#e76f51">স্থূলকোণ</b> (D বিন্দু B-এর উল্টো দিকে, BC-এর বর্ধিতাংশে)':(kind===-1?'<b style="color:#2a9d8f">সূক্ষ্মকোণ</b> (D বিন্দু BC-এর ভেতরের দিকে)':'<b>প্রায় সমকোণ</b> (D ও C একই বিন্দু, CD = ০)'))+'<br>'+
+   (kind===1?'উপপাদ্য ৩: AB² = AC² + BC² + ২·BC·CD<br>= '+fm(ac2)+' + '+fm(bc2)+' + '+fm(ext)+' = <b>'+fm(ac2+bc2+ext)+'</b> ✔ (AB² = '+fm(ab2)+')':
+    (kind===-1?'উপপাদ্য ৪: AB² = AC² + BC² − ২·BC·CD<br>= '+fm(ac2)+' + '+fm(bc2)+' − '+fm(ext)+' = <b>'+fm(ac2+bc2-ext)+'</b> ✔ (AB² = '+fm(ab2)+')':'পিথাগোরাস: AB² = AC² + BC² = '+fm(ac2+bc2)+' ✔'))+
+   '<br>AC² + BC² = '+fm(ac2+bc2)+(ab2>ac2+bc2+1e-9?' &lt; AB² (তাই স্থূলকোণ)':(ab2<ac2+bc2-1e-9?' &gt; AB² (তাই সূক্ষ্মকোণ)':' = AB² (সমকোণ)'));
+}
+dragger(c2,[A2],function(p){p.x=Math.max(30,Math.min(570,p.x));p.y=Math.max(30,Math.min(285,p.y));},l2);
+var snapBtn=document.createElement('button');snapBtn.className='btn alt';snapBtn.textContent='∠C = ৯০° করো';snapBtn.onclick=function(){A2.x=C2.x;l2();};$('l2i').parentNode.insertBefore(snapBtn,$('l2i'));
+l2();
+
+/* ===================== ল্যাব ৩: অ্যাপোলোনিয়াস ===================== */
+var c3=mkCv('l3cv'),P3={A:{x:300,y:80},B:{x:120,y:300},C:{x:480,y:300}};
+function l3(){
+  var x=c3.x,A=P3.A,B=P3.B,C=P3.C;clear(c3);
+  var D=mid(B,C),E=mid(C,A),Fp=mid(A,B),G={x:(A.x+B.x+C.x)/3,y:(A.y+B.y+C.y)/3};
+  line(x,A,D,'#2a9d8f',2.5,[6,4]);line(x,B,E,'#9b5de5',2.5,[6,4]);line(x,C,Fp,'#e76f51',2.5,[6,4]);
+  line(x,A,B,'#1f3a5f',3);line(x,B,C,'#1f3a5f',3);line(x,C,A,'#1f3a5f',3);
+  dot(x,G,'#f4a261','G',14,-8,5);dot(x,D,'#2a9d8f','D',0,20,4);dot(x,E,'#9b5de5','E',14,-6,4);dot(x,Fp,'#e76f51','F',-14,-6,4);
+  dot(x,A,'#2a6fdb','A',0,-14,8);dot(x,B,'#2a6fdb','B',-12,20,8);dot(x,C,'#2a6fdb','C',12,20,8);
+  var a=dist(B,C)/U,b=dist(C,A)/U,c=dist(A,B)/U,d=dist(A,D)/U,e=dist(B,E)/U,f=dist(C,Fp)/U,bd=a/2;
+  var lhs=c*c+b*b,rhs=2*(d*d+bd*bd),d2=(2*(b*b+c*c)-a*a)/4,e2=(2*(c*c+a*a)-b*b)/4,f2=(2*(a*a+b*b)-c*c)/4;
+  $('l3i').innerHTML='a = BC = '+fm(a)+', b = CA = '+fm(b)+', c = AB = '+fm(c)+'<br>AD = '+fm(d)+', BD = '+fm(bd)+'<br>AB² + AC² = <b>'+fm(lhs)+'</b><br>২(AD² + BD²) = ২(' +fm(d*d)+' + '+fm(bd*bd)+') = <b>'+fm(rhs)+'</b> ✔ সমান (অ্যাপোলোনিয়াস)<br>'+
+   'সূত্র থেকে d² = {২(b² + c²) − a²}/৪ = '+fm(d2)+' (মাপা d² = '+fm(d*d)+') ✔<br>'+
+   'd² + e² + f² = <b>'+fm(d*d+e*e+f*f)+'</b>, আর ¾(a² + b² + c²) = <b>'+fm(0.75*(a*a+b*b+c*c))+'</b> ✔<br>৩(a² + b² + c²) = '+fm(3*(a*a+b*b+c*c))+' = ৪(d² + e² + f²) = '+fm(4*(d*d+e*e+f*f))+' ✔';
+}
+dragger(c3,[P3.A,P3.B,P3.C],clampBox,l3);l3();
+
+/* ===================== ল্যাব ৪: তিন কেন্দ্র ===================== */
+var c4=mkCv('l4cv'),P4={A:{x:300,y:70},B:{x:120,y:320},C:{x:500,y:320}};
+var O4=[['med','মধ্যমা (ভরকেন্দ্র)',1],['alt','লম্ব (লম্ববিন্দু)',1],['pb','লম্বদ্বিখণ্ডক (পরিকেন্দ্র)',1],['cc','পরিবৃত্ত',1],['euler','অয়লার রেখা',1],['nine','নবমবিন্দু বৃত্ত',0]],S4={};
+O4.forEach(function(o){S4[o[0]]=!!o[2];});
+function l4b(){$('l4o').innerHTML=O4.map(function(o){return '<button data-k="'+o[0]+'" class="'+(S4[o[0]]?'on':'')+'">'+o[1]+'</button>';}).join('');}
+$('l4o').onclick=function(e){var b=e.target.closest('button');if(!b)return;S4[b.dataset.k]=!S4[b.dataset.k];l4b();l4();};
+function l4(){
+  var x=c4.x,A=P4.A,B=P4.B,C=P4.C;clear(c4);
+  var S=circumcenter(A,B,C);
+  if(!S){$('l4i').innerHTML='তিনটি বিন্দু একই সরলরেখায় এসেছে। একটু সরাও।';return;}
+  var G={x:(A.x+B.x+C.x)/3,y:(A.y+B.y+C.y)/3},O={x:A.x+B.x+C.x-2*S.x,y:A.y+B.y+C.y-2*S.y},R=dist(S,A);
+  var D=mid(B,C),E=mid(C,A),Fp=mid(A,B),HA=foot(A,B,C),HB=foot(B,C,A),HC=foot(C,A,B);
+  if(S4.cc)circ(x,S,R,'#c9d6e2',2);
+  if(S4.nine){var N=mid(O,S);circ(x,N,R/2,'#9b5de5',2.5);[D,E,Fp,HA,HB,HC,mid(O,A),mid(O,B),mid(O,C)].forEach(function(p){dot(x,p,'#9b5de5',null,0,0,3.5);});dot(x,N,'#9b5de5','N',12,16,4);}
+  if(S4.med){line(x,A,D,'#2a9d8f',2,[6,4]);line(x,B,E,'#2a9d8f',2,[6,4]);line(x,C,Fp,'#2a9d8f',2,[6,4]);}
+  if(S4.alt){line(x,A,HA,'#e76f51',2,[2,3]);line(x,B,HB,'#e76f51',2,[2,3]);line(x,C,HC,'#e76f51',2,[2,3]);}
+  if(S4.pb){[[B,C,D],[C,A,E],[A,B,Fp]].forEach(function(t){var dx=t[1].y-t[0].y,dy=-(t[1].x-t[0].x),L=Math.hypot(dx,dy);line(x,{x:t[2].x-dx/L*500,y:t[2].y-dy/L*500},{x:t[2].x+dx/L*500,y:t[2].y+dy/L*500},'#2a6fdb',1.5,[8,4]);});}
+  line(x,A,B,'#1f3a5f',3);line(x,B,C,'#1f3a5f',3);line(x,C,A,'#1f3a5f',3);
+  if(S4.euler){var dx=O.x-S.x,dy=O.y-S.y,L=Math.hypot(dx,dy)||1;line(x,{x:S.x-dx/L*700,y:S.y-dy/L*700},{x:S.x+dx/L*700,y:S.y+dy/L*700},'#f4a261',2.5);}
+  dot(x,G,'#2a9d8f','G',14,-8,6);dot(x,S,'#2a6fdb','S',-14,-8,6);dot(x,O,'#e76f51','O',14,16,6);
+  dot(x,A,'#1f3a5f','A',0,-14,8);dot(x,B,'#1f3a5f','B',-12,20,8);dot(x,C,'#1f3a5f','C',12,20,8);
+  var og=dist(O,G)/U,gs=dist(G,S)/U,ag=dist(A,G)/U,gd=dist(G,D)/U,ao=dist(A,O)/U,sd=dist(S,D)/U;
+  $('l4i').innerHTML='ভরকেন্দ্র G, পরিকেন্দ্র S, লম্ববিন্দু O<br>AG = '+fm(ag)+', GD = '+fm(gd)+' ⇒ AG : GD = <b>'+fm(ag/gd)+' : ১</b> (ভরকেন্দ্র মধ্যমাকে ২ : ১ এ ভাগ করে)<br>'+
+   'OG = '+fm(og)+', GS = '+fm(gs)+' ⇒ OG : GS = <b>'+fm(og/gs)+' : ১</b> (O, G, S একই রেখায়)<br>AO = '+fm(ao)+' এবং ২·SD = '+fm(2*sd)+' ✔ (লম্ববিন্দু থেকে শীর্ষের দূরত্ব = পরিকেন্দ্র থেকে বিপরীত বাহুর দূরত্বের দ্বিগুণ)<br>'+
+   'পরিব্যাসার্ধ R = '+fm(R/U)+'; নবমবিন্দু বৃত্তের ব্যাসার্ধ = R/২ = <b>'+fm(R/U/2)+'</b>'+
+   (Math.abs(dist(A,S)-R)<1e-6&&dist(O,A)<4?'':'' )+(isRight(A,B,C)?'<br>এটি সমকোণী ত্রিভুজ: লম্ববিন্দু সমকোণের শীর্ষে (O = শীর্ষ বিন্দু)':'');
+}
+function isRight(A,B,C){var d=function(p,q,r){return Math.abs((p.x-q.x)*(r.x-q.x)+(p.y-q.y)*(r.y-q.y));};return d(B,A,C)<400||d(A,B,C)<400||d(A,C,B)<400;}
+dragger(c4,[P4.A,P4.B,P4.C],function(p){p.x=Math.max(25,Math.min(575,p.x));p.y=Math.max(30,Math.min(370,p.y));},l4);l4b();l4();
+
+/* ===================== ল্যাব ৫: সদৃশতা ===================== */
+var c5=mkCv('l5cv');
+function ang(P,Q,R){var a=Math.atan2(P.y-Q.y,P.x-Q.x),b=Math.atan2(R.y-Q.y,R.x-Q.x),d=Math.abs(a-b)*180/Math.PI;if(d>180)d=360-d;return d;}
+function area(P,Q,R){return Math.abs((Q.x-P.x)*(R.y-P.y)-(R.x-P.x)*(Q.y-P.y))/2;}
+function l5(){
+  var k=+$('l5k').value,dl=+$('l5d').value;$('l5kv').textContent=bn(k);$('l5dv').textContent=bn(dl);
+  var x=c5.x;clear(c5);var u=20;
+  var B={x:20,y:300},C={x:180,y:300},A={x:100,y:170},E={x:300,y:300},D={x:E.x+k*(A.x-B.x),y:E.y+k*(A.y-B.y)},F={x:E.x+k*(C.x-B.x)+dl,y:E.y};
+  function tri(P,Q,R,col){x.fillStyle=col;x.strokeStyle='#1f3a5f';x.lineWidth=3;x.beginPath();x.moveTo(P.x,P.y);x.lineTo(Q.x,Q.y);x.lineTo(R.x,R.y);x.closePath();x.fill();x.stroke();}
+  tri(A,B,C,'rgba(42,111,219,.18)');tri(D,E,F,dl?'rgba(231,111,81,.18)':'rgba(42,157,143,.22)');
+  dot(x,A,'#2a6fdb','A',0,-12,5);dot(x,B,'#2a6fdb','B',-10,18,5);dot(x,C,'#2a6fdb','C',10,18,5);dot(x,D,'#1b7a6f','D',0,-12,5);dot(x,E,'#1b7a6f','E',-10,18,5);dot(x,F,'#1b7a6f','F',10,18,5);
+  var r1=dist(A,B)/dist(D,E),r2=dist(A,C)/dist(D,F),r3=dist(B,C)/dist(E,F),ar=area(A,B,C)/area(D,E,F),sim=dl===0;
+  var an=[ang(B,A,C),ang(A,B,C),ang(A,C,B)],bn2=[ang(E,D,F),ang(D,E,F),ang(D,F,E)];
+  $('l5i').innerHTML='AB/DE = <b>'+fm(r1)+'</b>, AC/DF = <b>'+fm(r2)+'</b>, BC/EF = <b>'+fm(r3)+'</b><br>∠A = '+fm(an[0],1)+'°, ∠D = '+fm(bn2[0],1)+'° | ∠B = '+fm(an[1],1)+'°, ∠E = '+fm(bn2[1],1)+'° | ∠C = '+fm(an[2],1)+'°, ∠F = '+fm(bn2[2],1)+'°<br>'+
+   'ক্ষেত্রফলের অনুপাত △ABC : △DEF = <b>'+fm(ar)+'</b>, আর (BC/EF)² = <b>'+fm(r3*r3)+'</b>'+(sim?' ✔ সমান (উপপাদ্য ৯)':' (এখন সমান নয়, কারণ সদৃশ নয়)')+'<br>'+
+   (sim?'🎉 তিনটি অনুপাত সমান ও কোণগুলো সমান, তাই △ABC ~ △DEF সদৃশ।':'⚠️ F বিন্দু সরে গেছে। অনুপাতগুলো সমান নয় ও কোণও আলাদা, তাই ত্রিভুজ দুটি সদৃশ নয়।');
+}
+$('l5k').oninput=l5;$('l5d').oninput=l5;l5();
+
+/* ===================== ল্যাব ৬: টলেমি ও ব্রহ্মগুপ্ত ===================== */
+var c6=mkCv('l6cv'),M6=0,CX=300,CY=190,RR=150,u6=RR/5,TH=[20,100,200,300],MM={x:1,y:1};
+$('l6m').innerHTML='<button data-m="0" class="on">টলেমির উপপাদ্য</button><button data-m="1">ব্রহ্মগুপ্তের উপপাদ্য</button>';
+$('l6m').onclick=function(e){var b=e.target.closest('button');if(!b)return;M6=+b.dataset.m;[].forEach.call($('l6m').children,function(x){x.classList.toggle('on',x===b);});l6ui();};
+function l6ui(){
+  if(M6===0){$('l6s').innerHTML='👉 চারটি স্লাইডারে বৃত্তের ওপর চারটি বিন্দু সরাও। AC·BD সবসময় AB·CD + BC·AD এর সমান হবে।';
+    $('l6c1').innerHTML=TH.map(function(t,i){return '<label>'+'ABCD'[i]+' ('+'<span id="t6v'+i+'"></span>°)</label><input type="range" id="t6'+i+'" min="0" max="359" step="1" value="'+t+'">';}).join('');
+    TH.forEach(function(t,i){$('t6'+i).oninput=function(){TH[i]=+this.value;l6();};});}
+  else{$('l6s').innerHTML='👉 M বিন্দুকে সরাও (AC ও BD লম্ব)। M থেকে BC-এর উপর লম্ব টানলে তা AD-কে ঠিক মাঝখানে (AF = FD) কাটে।';
+    $('l6c1').innerHTML='<label>M এর x = <span id="mxv"></span></label><input type="range" id="mx" min="-3" max="3" step="0.5" value="'+MM.x+'"><label>M এর y = <span id="myv"></span></label><input type="range" id="my" min="-3" max="3" step="0.5" value="'+MM.y+'">';
+    $('mx').oninput=function(){MM.x=+this.value;l6();};$('my').oninput=function(){MM.y=+this.value;l6();};}
+  l6();}
+function P2c(p){return {x:CX+p.x*u6,y:CY-p.y*u6};}
+function l6(){
+  var x=c6.x;clear(c6);circ(x,{x:CX,y:CY},RR,'#9aa8b5',2.5);
+  if(M6===0){
+    var ang2=TH.map(function(t,i){return {t:t,i:i};});TH.forEach(function(t,i){$('t6v'+i).textContent=bn(t);});
+    var s=TH.slice().sort(function(a,b){return a-b;}),pts=s.map(function(t){return {x:CX+RR*Math.cos(t*Math.PI/180),y:CY-RR*Math.sin(t*Math.PI/180)};}),nm='ABCD',i;
+    x.fillStyle='rgba(42,111,219,.1)';x.strokeStyle='#1f3a5f';x.lineWidth=3;x.beginPath();x.moveTo(pts[0].x,pts[0].y);for(i=1;i<4;i++)x.lineTo(pts[i].x,pts[i].y);x.closePath();x.fill();x.stroke();
+    line(x,pts[0],pts[2],'#e76f51',2.5,[6,4]);line(x,pts[1],pts[3],'#2a9d8f',2.5,[6,4]);
+    var lab=[[-14,-8],[12,-8],[12,20],[-14,20]];pts.forEach(function(p,j){dot(x,p,'#1f3a5f',nm[j],(p.x<CX?-14:14),(p.y<CY?-10:20),6);});
+    var AB=dist(pts[0],pts[1])/u6,BC=dist(pts[1],pts[2])/u6,CD=dist(pts[2],pts[3])/u6,DA=dist(pts[3],pts[0])/u6,AC=dist(pts[0],pts[2])/u6,BD=dist(pts[1],pts[3])/u6;
+    $('l6i').innerHTML='AB = '+fm(AB)+', BC = '+fm(BC)+', CD = '+fm(CD)+', DA = '+fm(DA)+'<br>কর্ণ AC = '+fm(AC)+', BD = '+fm(BD)+'<br>AC·BD = <b>'+fm(AC*BD)+'</b><br>AB·CD + BC·AD = '+fm(AB*CD)+' + '+fm(BC*DA)+' = <b>'+fm(AB*CD+BC*DA)+'</b> ✔ সমান (টলেমি)';
+  } else {
+    $('mxv').textContent=fm(MM.x,1);$('myv').textContent=fm(MM.y,1);
+    var Rr=5,xa=Math.sqrt(Rr*Rr-MM.y*MM.y),yb=Math.sqrt(Rr*Rr-MM.x*MM.x);
+    var A={x:-xa,y:MM.y},C={x:xa,y:MM.y},B={x:MM.x,y:yb},D={x:MM.x,y:-yb},Mp={x:MM.x,y:MM.y};
+    var bc={x:C.x-B.x,y:C.y-B.y},t=((Mp.x-B.x)*bc.x+(Mp.y-B.y)*bc.y)/(bc.x*bc.x+bc.y*bc.y),E={x:B.x+t*bc.x,y:B.y+t*bc.y};
+    var n={x:-bc.y,y:bc.x},ad={x:D.x-A.x,y:D.y-A.y},den=n.x*ad.y-n.y*ad.x,F=null;
+    if(Math.abs(den)>1e-9){var sM=((A.x-Mp.x)*ad.y-(A.y-Mp.y)*ad.x)/den;F={x:Mp.x+sM*n.x,y:Mp.y+sM*n.y};}
+    var pA=P2c(A),pB=P2c(B),pC=P2c(C),pD=P2c(D),pM=P2c(Mp),pE=P2c(E);
+    x.fillStyle='rgba(42,111,219,.08)';x.strokeStyle='#1f3a5f';x.lineWidth=3;x.beginPath();x.moveTo(pA.x,pA.y);x.lineTo(pB.x,pB.y);x.lineTo(pC.x,pC.y);x.lineTo(pD.x,pD.y);x.closePath();x.fill();x.stroke();
+    line(x,pA,pC,'#e76f51',2.5,[6,4]);line(x,pB,pD,'#2a9d8f',2.5,[6,4]);
+    if(F){var pF=P2c(F);line(x,pE,pF,'#9b5de5',2.5);dot(x,pF,'#9b5de5','F',(pF.x<CX?-14:14),-8,5);}
+    dot(x,pE,'#9b5de5','E',14,16,5);dot(x,pM,'#f4a261','M',12,-8,6);
+    dot(x,pA,'#1f3a5f','A',-14,-8,6);dot(x,pB,'#1f3a5f','B',0,-14,6);dot(x,pC,'#1f3a5f','C',14,-8,6);dot(x,pD,'#1f3a5f','D',0,22,6);
+    var AF=F?dist(A,F):0,FD=F?dist(F,D):0;
+    $('l6i').innerHTML='AC ও BD পরস্পর লম্ব, M-এ ছেদ করেছে। ME ⊥ BC, ঐ রেখা বর্ধিত হয়ে AD-কে F-এ ছেদ করেছে।<br>'+(F?'AF = <b>'+fm(AF)+'</b>, FD = <b>'+fm(FD)+'</b> ✔ সমান, তাই F হলো AD-এর মধ্যবিন্দু (ব্রহ্মগুপ্ত)':'এই অবস্থানে রেখাগুলো সমান্তরাল, M সরাও।');
+  }
+}
+l6ui();
+
+/* ===================== প্র্যাকটিস ===================== */
+var PR=[
+ ['সমকোণী ত্রিভুজে সমকোণ সংলগ্ন বাহু ৮ ও ৬ হলে অতিভুজ কত?',[10],'√(৬৪ + ৩৬) = √১০০ = ১০।'],
+ ['সমকোণী ত্রিভুজে অতিভুজ ১৩ ও এক বাহু ৫ হলে অপর বাহু কত?',[12],'√(১৬৯ − ২৫) = √১৪৪ = ১২।'],
+ ['ত্রিভুজের বাহু ৫, ৬, ৭ হলে (বৃহত্তম বাহুর বর্গ) − (অপর দুই বাহুর বর্গের সমষ্টি) = কত? (ঋণাত্মক হলে −)',[-12],'৪৯ − (২৫ + ৩৬) = ৪৯ − ৬১ = −১২, ঋণাত্মক তাই সূক্ষ্মকোণী।'],
+ ['△ABC তে ∠C স্থূলকোণ, AC = ৫, BC = ৪, CD = ২ (D, A থেকে BC বর্ধিতাংশে লম্বের পাদবিন্দু)। AB² = কত?',[57],'AB² = ২৫ + ১৬ + ২·৪·২ = ৫৭।'],
+ ['একই ত্রিভুজ কিন্তু ∠C সূক্ষ্মকোণ (AC = ৫, BC = ৪, CD = ২)। AB² = কত?',[25],'AB² = ২৫ + ১৬ − ২·৪·২ = ২৫।'],
+ ['△ABC তে AB = ৮, AC = ৬, BC = ১০। BC-এর উপর মধ্যমা AD = কত?',[5],'AD² = {২(৬৪ + ৩৬) − ১০০}/৪ = ১০০/৪ = ২৫, AD = ৫।'],
+ ['তিন বাহু ৪, ৫, ৬ সেমি হলে মধ্যমা তিনটির বর্গের সমষ্টি কত? (দশমিকে)',[57.75],'¾(১৬ + ২৫ + ৩৬) = ¾ × ৭৭ = ৫৭.৭৫।'],
+ ['সমকোণী ত্রিভুজের মধ্যমাত্রয়ের বর্গের সমষ্টি ৩৭.৫ হলে অতিভুজ কত?',[5],'২(d²+e²+f²) = ৩c² ⇒ ৭৫ = ৩c² ⇒ c² = ২৫ ⇒ c = ৫।'],
+ ['সমবাহু ত্রিভুজের প্রতিটি মধ্যমা ৩ সেমি হলে বাহু কত? (দশমিকে ২ ঘর)',[3.46],'মধ্যমা = (√৩/২)a = ৩ ⇒ a = ৬/√৩ = ২√৩ ≈ ৩.৪৬।'],
+ ['সমবাহু ত্রিভুজের পরিব্যাসার্ধ ৩ সেমি হলে বাহু কত? (দশমিকে ২ ঘর)',[5.2],'R = a/√৩ ⇒ a = ৩√৩ ≈ ৫.২০।'],
+ ['দুটি সদৃশ ত্রিভুজের অনুরূপ বাহুর অনুপাত ২ : ৩। ছোটটির ক্ষেত্রফল ২০ হলে বড়টির ক্ষেত্রফল কত?',[45],'ক্ষেত্রফলের অনুপাত ৪ : ৯। ২০ × ৯/৪ = ৪৫।'],
+ ['বৃত্তস্থ চতুর্ভুজ আয়তের বাহু ৬ ও ৮ হলে টলেমির সূত্রে AB·CD + BC·AD = কত?',[100],'৬·৬ + ৮·৮ = ৩৬ + ৬৪ = ১০০ (কর্ণ ১০ ⇒ ১০ × ১০ ✔)।']
+];
+(function(){var h='';PR.forEach(function(p,i){h+='<div class="q"><b>'+bn(i+1)+'.</b> '+p[0]+'<div class="ans"> <input type="text" id="pi'+i+'" size="10"> <button class="btn" data-pc="'+i+'">যাচাই</button> <button class="btn alt" data-ph="'+i+'">সমাধান</button></div><div class="fb" id="pf'+i+'"></div></div>';});$('pracbox').innerHTML=h;})();
+function numOf(s){s=en(s).replace(/[−–]/g,'-').replace(/\s+/g,'').toLowerCase();var m=s.match(/^(-?\d*\.?\d*)√(\d+(\.\d+)?)$/);if(m){var k=(m[1]===''||m[1]==='+')?1:(m[1]==='-'?-1:parseFloat(m[1]));return k*Math.sqrt(parseFloat(m[2]));}if(/^-?\d+(\.\d+)?$/.test(s))return parseFloat(s);var f=s.match(/^(-?\d+)\/(\d+)$/);if(f)return +f[1]/+f[2];return NaN;}
+$('pracbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.pc!==undefined){var i=+b.dataset.pc,raw=$('pi'+i).value,v=numOf(raw),ok=!isNaN(v)&&PR[i][1].some(function(a){return Math.abs(a-v)<=0.011;});
+    $('pf'+i).innerHTML=raw.trim()===''?'আগে উত্তর লেখো।':(ok?'✅ ঠিক! সাবাশ।':'❌ আবার চেষ্টা করো, বা "সমাধান" দেখো।');}
+  if(b.dataset.ph!==undefined){var j=+b.dataset.ph;$('pf'+j).innerHTML='💡 '+PR[j][2]+' <b>উত্তর: '+bn(PR[j][1][0]).replace('-','−')+'</b>';}
+});
+
+/* ===================== কুইজ ===================== */
+var QZ=[];function M(q,c,w,e){QZ.push({q:q,o:[c].concat(w),e:e});}
+M('সমকোণী ত্রিভুজের সমকোণ সংলগ্ন বাহু ৮ ও ৬ হলে অতিভুজ কত?','১০',['১৪','৭','১২'],'√(৬৪ + ৩৬) = ১০।');
+M('ত্রিভুজের বাহু ৬, ৮, ১০ হলে এটি—','সমকোণী',['স্থূলকোণী','সূক্ষ্মকোণী','সমবাহু'],'৩৬ + ৬৪ = ১০০ (উপপাদ্য ২)।');
+M('ত্রিভুজের বাহু ৫, ৬, ৭ হলে এটি—','সূক্ষ্মকোণী',['সমকোণী','স্থূলকোণী','সমবাহু'],'৪৯ < ২৫ + ৩৬ = ৬১।');
+M('ত্রিভুজের বাহু ৪, ৫, ৭ হলে এটি—','স্থূলকোণী',['সমকোণী','সূক্ষ্মকোণী','সমদ্বিবাহু'],'৪৯ > ১৬ + ২৫ = ৪১।');
+M('∠ACB স্থূলকোণ হলে নিচের কোনটি সঠিক?','AB² > AC² + BC²',['AB² = AC² + BC²','AB² < AC² + BC²','AB = AC + BC'],'উপপাদ্য ৩।');
+M('∠ACB সূক্ষ্মকোণ হলে নিচের কোনটি সঠিক?','AB² < AC² + BC²',['AB² > AC² + BC²','AB² = AC² + BC²','AB² = ২AC·BC'],'উপপাদ্য ৪।');
+M('কোনো রেখার সমান্তরাল রেখাংশের লম্ব অভিক্ষেপের দৈর্ঘ্য—','রেখাংশের দৈর্ঘ্যের সমান',['শূন্য','অর্ধেক','দ্বিগুণ'],'সমান্তরাল হলে দৈর্ঘ্য অপরিবর্তিত।');
+M('কোনো রেখার উপর লম্ব একটি রেখাংশের ঐ রেখার উপর লম্ব অভিক্ষেপ—','একটি বিন্দু',['রেখাংশের সমান','অর্ধেক','দ্বিগুণ'],'দৈর্ঘ্য শূন্য।');
+M('বিন্দুর লম্ব অভিক্ষেপ বলতে বোঝায়—','লম্বের পাদবিন্দু',['মধ্যবিন্দু','কেন্দ্রবিন্দু','ছেদবিন্দু'],'বিন্দু থেকে রেখায় লম্বের পাদবিন্দু।');
+M('অ্যাপোলোনিয়াসের উপপাদ্য অনুসারে (AD মধ্যমা)—','AB² + AC² = ২(AD² + BD²)',['AB² + AC² = BC²','AB² − AC² = AD²','AB·AC = AD·BD'],'উপপাদ্য ৫।');
+M('ভরকেন্দ্র মধ্যমাকে শীর্ষ থেকে কত অনুপাতে ভাগ করে?','২ : ১',['১ : ২','১ : ১','৩ : ১'],'বড় অংশটি শীর্ষের দিকে।');
+M('তিনটি মধ্যমার ছেদবিন্দুকে বলে—','ভরকেন্দ্র',['পরিকেন্দ্র','লম্ববিন্দু','অন্তঃকেন্দ্র'],'ভরকেন্দ্র।');
+M('তিনটি বাহুর লম্বদ্বিখণ্ডকের ছেদবিন্দুকে বলে—','পরিকেন্দ্র',['ভরকেন্দ্র','লম্ববিন্দু','অন্তঃকেন্দ্র'],'পরিবৃত্তের কেন্দ্র।');
+M('তিন শীর্ষ থেকে বিপরীত বাহুর উপর অঙ্কিত লম্বের ছেদবিন্দুকে বলে—','লম্ববিন্দু',['ভরকেন্দ্র','পরিকেন্দ্র','নবমবিন্দু কেন্দ্র'],'লম্ববিন্দু (orthocentre)।');
+M('ত্রিভুজের ভরকেন্দ্র, পরিকেন্দ্র ও লম্ববিন্দু—','একই সরলরেখায় থাকে',['সবসময় একই বিন্দু','কোনোদিন সমরেখ নয়','ত্রিভুজ সমবাহু হলেই সমরেখ'],'উপপাদ্য ১০ (অয়লার রেখা)।');
+M('সমবাহু ত্রিভুজের প্রতিটি মধ্যমা ৩ সেমি হলে প্রতিটি বাহু প্রায়—','৩.৪৬ সেমি',['৪.৫ সেমি','৩.৩৫ সেমি','২.৫৯ সেমি'],'বাহু = ৩ ÷ (√৩/২) = ২√৩ ≈ ৩.৪৬।');
+M('নবমবিন্দু বৃত্তের ব্যাসার্ধ ত্রিভুজের পরিব্যাসার্ধের—','অর্ধেক',['সমান','দ্বিগুণ','এক-তৃতীয়াংশ'],'R/২।');
+M('সদৃশকোণী দুই ত্রিভুজের অনুরূপ বাহুগুলো—','সমানুপাতিক',['সমান','লম্ব','সমান্তরাল'],'উপপাদ্য ৬।');
+M('দুটি সদৃশ ত্রিভুজের অনুরূপ বাহুর অনুপাত ১ : ২ হলে ক্ষেত্রফলের অনুপাত—','১ : ৪',['১ : ২','১ : ৮','২ : ১'],'বাহুর অনুপাতের বর্গ।');
+M('একটি কোণ সমান এবং ঐ কোণের সংলগ্ন বাহুগুলো সমানুপাতিক হলে ত্রিভুজ দুটি—','সদৃশ',['সর্বসম','সমকোণী','সমবাহু'],'উপপাদ্য ৮।');
+M('আয়ত ও বর্গ সদৃশ নয়, কারণ—','অনুরূপ বাহুর অনুপাত সমান নয়',['কোণ সমান নয়','দুটিই ত্রিভুজ নয়','ক্ষেত্রফল সমান'],'সব কোণ সমান, কিন্তু বাহুর অনুপাত আলাদা।');
+M('বৃত্তে অন্তর্লিখিত চতুর্ভুজ ABCD তে টলেমির উপপাদ্য—','AC·BD = AB·CD + BC·AD',['AC + BD = AB + CD','AC·BD = AB·BC','AC² + BD² = AB² + CD²'],'কর্ণের গুণফল = বিপরীত বাহুজোড়ার গুণফলের যোগ।');
+M('ব্রহ্মগুপ্তের উপপাদ্যে কর্ণদ্বয় পরস্পর—','লম্ব',['সমান্তরাল','সমান','সমদ্বিখণ্ডিত'],'কর্ণদ্বয় লম্ব।');
+M('৩(a² + b² + c²) = ?','৪(d² + e² + f²)',['d² + e² + f²','২(d² + e² + f²)','৩(d² + e² + f²)'],'তিন বাহু ও তিন মধ্যমার সম্পর্ক।');
+M('সমকোণী ত্রিভুজে অতিভুজ c ও মধ্যমাত্রয় d, e, f হলে—','২(d² + e² + f²) = ৩c²',['d² + e² + f² = c²','d + e + f = c','৪(d² + e² + f²) = ৩c²'],'বইয়ের সিদ্ধান্ত।');
+M('বাহু ৪, ৫, ৬ হলে মধ্যমা তিনটির বর্গের সমষ্টি—','৫৭.৭৫',['৭৭','৫৭','৩৮.৫'],'¾ × (১৬ + ২৫ + ৩৬)।');
+M('AB = ৮, AC = ৬, BC = ১০ হলে BC-এর উপর মধ্যমা AD =','৫',['৪','৬','৭'],'AD² = (২·১০০ − ১০০)/৪ = ২৫।');
+M('△ABC এ ∠B = ৬০° হলে—','AC² = AB² + BC² − AB·BC',['AC² = AB² + BC² + AB·BC','AC² = AB² + BC²','AC² = AB² + BC² − ২AB·BC'],'BD = AB/২, উপপাদ্য ৪ থেকে।');
+M('△ABC এ ∠B = ১২০° হলে—','AC² = AB² + BC² + AB·BC',['AC² = AB² + BC² − AB·BC','AC² = AB² + BC²','AC² = AB² − BC²'],'স্থূলকোণের সূত্র, BD = AB/২।');
+M('△ABC এ AD মধ্যমা, BD = ৩ ও AD = ৪ হলে AB² + AC² = কত?','৫০',['২৫','২৪','১০০'],'২(AD² + BD²) = ২(১৬ + ৯) = ৫০।');
+(function(){
+  var done=0,sc=0;
+  QZ.forEach(function(q){var ord=q.o.map(function(t,i){return {t:t,c:i===0};});
+    for(var i=ord.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),k=ord[i];ord[i]=ord[j];ord[j]=k;}q.ord=ord;});
+  var h='';QZ.forEach(function(q,qi){h+='<div class="q" id="qq'+qi+'"><b>'+bn(qi+1)+'.</b> '+q.q+q.ord.map(function(o,oi){return '<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+o.t+'</button>';}).join('')+'<div class="fb" id="qe'+qi+'"></div></div>';});
+  $('quizbox').innerHTML=h;
+  $('quizbox').addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b||b.parentNode.dataset.done)return;
+    var qi=+b.dataset.q,q=QZ[qi],o=q.ord[+b.dataset.o];b.parentNode.dataset.done=1;done++;
+    var btns=b.parentNode.querySelectorAll('.opt');btns.forEach(function(x,i){if(q.ord[i].c)x.classList.add('good');});
+    if(o.c){sc++;$('qe'+qi).textContent='✅ ঠিক! '+q.e;}else{b.classList.add('bad');$('qe'+qi).textContent='❌ ভুল। '+q.e;}
+    $('qscore').textContent='স্কোর: '+bn(sc)+' / '+bn(done)+' (মোট '+bn(QZ.length)+'টি)';
+    try{if(done===QZ.length){localStorage.setItem('sl_done_math-geometry','1');var xp=+(localStorage.getItem('sl_xp')||0);localStorage.setItem('sl_xp',xp+sc);}}catch(er){}
+  });
+})();
+
+/* ===================== প্রশ্নোত্তর ===================== */
+var QA=[
+ {h:'বহুনির্বাচনি (বইয়ের নমুনা ধাঁচে)',items:[
+  ['১. একটি সমবাহু ত্রিভুজের প্রতিটি মধ্যমার দৈর্ঘ্য ৩ সেমি হলে প্রতিটি বাহুর দৈর্ঘ্য কত? (ক. ৪.৫ খ. ৩.৪৬ গ. ৩.৩৫ ঘ. ২.৫৯)','খ. ৩.৪৬ সেমি। মধ্যমা = (√৩/২)a = ৩ ⇒ a = ২√৩ ≈ ৩.৪৬।'],
+  ['২. △ABC এ i. ∠ACB স্থূলকোণ হলে AB² > AC² + BC² ii. সমকোণ হলে AB² = AC² + BC² iii. সূক্ষ্মকোণ হলে AB² < AC² + BC²','তিনটিই সঠিক (উপপাদ্য ৩, ১, ৪)।'],
+  ['৩. ত্রিভুজের তিন মধ্যমা যে বিন্দুতে মিলিত হয় তার নাম কী?','ভরকেন্দ্র (G)।'],
+  ['৪. △ABC এর ক্ষেত্রে কোনটি অ্যাপোলোনিয়াসের উপপাদ্য সমর্থন করে? (ক. AB² + AC² = BC² খ. AB² + AC² = ২(AD² + BD²) গ. AB² + AC² = ২(AG² + GD²) ঘ. AB² + AC² = ২(BD² + CD²))','খ. AB² + AC² = ২(AD² + BD²)।']]},
+ {h:'সৃজনশীল প্রশ্ন (নমুনা)',items:[
+  ['৫. △ABC এ S পরিকেন্দ্র, O লম্ববিন্দু, AP মধ্যমা, BC = a, AC = b, AB = c। ক) চিত্র এঁকে BC এর উপর BE এর লম্ব অভিক্ষেপ চিহ্নিত করো। খ) দেখাও যে S, G, O একই সরলরেখায়। গ) ∠C সূক্ষ্মকোণ হলে a·CD = b·CE প্রতিষ্ঠিত করো।',
+   'ক) E হলো B থেকে AC-এর উপর লম্বের পাদবিন্দু। BE রেখাংশের প্রান্ত B ও E থেকে BC-এর উপর লম্ব টানি। B-এর পাদবিন্দু B নিজেই, E-এর পাদবিন্দু ধরি E′। তাহলে BE′ হলো BC-এর উপর BE-এর লম্ব অভিক্ষেপ। খ) AP মধ্যমা, G তে AG:GP = ২:১ ধরে প্রমাণ করা হয় (উপপাদ্য ১০)। △AGO ও △PGS সদৃশ, কারণ ∠OAG = ∠SPG (একান্তর) ও ∠AGO = ∠PGS (বিপ্রতীপ), এবং OA = ২SP। তাই AG/GP = OA/SP = ২/১, G ভরকেন্দ্র, অর্থাৎ O, G, S সমরেখ। গ) △CDA ও △CEB এ ∠C সাধারণ এবং ∠CDA = ∠CEB = ৯০°। তাই সদৃশ, CD/CE = CA/CB = b/a। অতএব a·CD = b·CE।']]},
+ {h:'অনুশীলনী ও সংক্ষিপ্ত উত্তর (বই থেকে)',items:[
+  ['অনু. ৩.১ প্রশ্ন ১: △ABC এ ∠B = ৬০° হলে প্রমাণ করো AC² = AB² + BC² − AB·BC','A থেকে BC-এ লম্ব AD আঁকি। △ABD তে ∠B = ৬০° বলে BD = AB/২। ∠B সূক্ষ্মকোণ, তাই উপপাদ্য ৪: AC² = AB² + BC² − ২·BC·BD = AB² + BC² − BC·AB। ✔'],
+  ['অনু. ৩.১ প্রশ্ন ২: ∠B = ১২০° হলে AC² = AB² + BC² + AB·BC','A থেকে CB-এর বর্ধিতাংশে লম্ব AD। ∠ABD = ৬০°, তাই BD = AB/২। ∠B স্থূলকোণ, উপপাদ্য ৩: AC² = AB² + BC² + ২·BC·BD = AB² + BC² + AB·BC। ✔'],
+  ['অনু. ৩.১ প্রশ্ন ৩: ∠C = ৯০°, D হলো BC-এর মধ্যবিন্দু। প্রমাণ করো AB² = AD² + ৩BD²','AB² = AC² + BC² (পিথাগোরাস)। AD² = AC² + CD² = AC² + BD²। BC = ২BD, তাই BC² = ৪BD²। AB² = (AD² − BD²) + ৪BD² = AD² + ৩BD²। ✔'],
+  ['অনু. ৩.১ প্রশ্ন ৪: AD ⊥ BC, BE ⊥ AC। দেখাও BC·CD = AC·CE','△CDA ও △CEB এ ∠C সাধারণ, ∠CDA = ∠CEB = ৯০°। সদৃশ, তাই CD/CE = CA/CB, অর্থাৎ BC·CD = AC·CE। ✔'],
+  ['অনু. ৩.১ প্রশ্ন ৭: মধ্যমাত্রয় G তে মিললে AB² + BC² + CA² = ৩(GA² + GB² + GC²)','GA = ২d/৩, GB = ২e/৩, GC = ২f/৩। GA² + GB² + GC² = (৪/৯)(d² + e² + f²) = (৪/৯)(৩/৪)(a² + b² + c²) = (১/৩)(a² + b² + c²)। তাই ৩(GA² + GB² + GC²) = a² + b² + c²। ✔'],
+  ['বই: ক) তিন বাহু ৪, ৫, ৬ সেমি হলে মধ্যমাত্রয়ের বর্গের সমষ্টি কত?','¾(১৬ + ২৫ + ৩৬) = ¾ × ৭৭ = ২৩১/৪ = ৫৭.৭৫ বর্গ সেমি।'],
+  ['বই: খ) সমকোণী ত্রিভুজের মধ্যমাত্রয়ের বর্গের সমষ্টি ৩৭.৫ হলে অতিভুজ কত?','২(d² + e² + f²) = ৩c² ⇒ ৭৫ = ৩c² ⇒ c² = ২৫ ⇒ c = ৫ একক।'],
+  ['বই: গ) সমবাহু ত্রিভুজের পরিবৃত্তের ব্যাসার্ধ ৩ সেমি হলে বাহু কত?','সমবাহু ত্রিভুজে R = a/√৩। তাই a = ৩√৩ ≈ ৫.২ সেমি।']]}
+];
+(function(){var h='';QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){h+='<details class="ex"><summary><b>'+it[0]+'</b></summary><p>'+it[1]+'</p></details>';});});$('qabox').innerHTML=h;})();
+
+</script>
+</body>
+</html>
