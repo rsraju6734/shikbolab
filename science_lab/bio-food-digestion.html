@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>খাদ্য, পুষ্টি এবং পরিপাক (জীববিজ্ঞান অধ্যায় ৫) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+small{color:#567}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/lab-boost.js?v=2"></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#physics">&larr; সব অধ্যায়</a>
+</header><div class="wrap">
+  <div class="crumb">🧬 জীববিজ্ঞান &rsaquo; পঞ্চম অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🍽️ খাদ্য, পুষ্টি এবং পরিপাক</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">🌱 ল্যাব ১</a><a href="#lab2">🍂 ল্যাব ২</a><a href="#lab3">⛏️ ল্যাব ৩</a><a href="#lab4">🍽️ ল্যাব ৪</a><a href="#lab5">🍚 ল্যাব ৫</a><a href="#lab6">🔺 ল্যাব ৬</a><a href="#lab7">🧮 ল্যাব ৭</a><a href="#lab8">🩺 ল্যাব ৮</a><a href="#lab9">⚖️ ল্যাব ৯</a><a href="#lab10">🔥 ল্যাব ১০</a><a href="#lab11">🧪 ল্যাব ১১</a><a href="#lab12">🧑‍⚕️ ল্যাব ১২</a><a href="#lab13">🧬 ল্যাব ১৩</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+<section class="panel" id="note">
+<h3>🌱 ৫.১ উদ্ভিদের খনিজ পুষ্টি</h3>
+<ul>
+<li>উদ্ভিদে প্রায় ৬০টি উপাদান শনাক্ত হয়েছে, কিন্তু স্বাভাবিক বৃদ্ধির জন্য ১৬টি <b>অত্যাবশ্যকীয়</b>। একটির কাজ অপরটি দিয়ে হয় না।</li>
+<li><b>ম্যাক্রো (৯টি)</b>: N, K, P, Ca, Mg, C, H, O, S। <b>মাইক্রো (৭টি)</b>: Zn, Mn, Mo, B, Cu, Cl, Fe।</li>
+<li>উৎস: C ও O বাতাস থেকে; H ও O পানি থেকে; বাকিগুলো মাটি থেকে মূল দিয়ে <b>আয়ন</b> হিসেবে (Ca⁺⁺, Mg⁺⁺, NH₄⁺, NO₃⁻, K⁺)।</li>
+<li><b>অভাবজনিত লক্ষণ</b>: N অভাবে ক্লোরোসিস (পাতা হলুদ); P অভাবে পাতা বেগুনি; K অভাবে কিনারা পোড়া; Mg-তে শিরার মাঝে ক্লোরোসিস; Fe-তে কচি পাতা হালকা; S অভাবে ডাইব্যাক; B অভাবে অগ্রমুকুল মরে।</li>
+</ul>
+<h3>🍽️ ৫.২ প্রাণীর খাদ্য ও পুষ্টি</h3>
+<ul>
+<li>খাদ্যের কাজ: দেহের বৃদ্ধিসাধন ও ক্ষয়পূরণ, রোগ প্রতিরোধ, শক্তি ও তাপ উৎপাদন।</li>
+<li>৭ উপাদান: আমিষ (বৃদ্ধি, ক্ষয়পূরণ), শর্করা (শক্তি), স্নেহ (তাপ ও শক্তি), ভিটামিন, খনিজ লবণ, পানি (দেহের ৫০–৬৫%), আঁশ (মল নিষ্কাশন)।</li>
+<li>শর্করা: এক (গ্লুকোজ), দ্বি (সুক্রোজ, ল্যাক্টোজ), বহু (শ্বেতসার, গ্লাইকোজেন)। শ্বেতসার হজমে সরল শর্করা হয়ে শোষিত হয়।</li>
+<li>ভিটামিন: চর্বিতে দ্রবণীয় A, D, E, K; পানিতে দ্রবণীয় B, C।</li>
+<li><b>আদর্শ খাদ্য পিরামিড</b>: ভিত্তি শর্করা, তারপর শাকসবজি-ফল, আমিষ, সবার উপরে স্নেহ-চর্বি।</li>
+<li>সুষম খাদ্য: প্রয়োজনীয় শক্তি, নির্দিষ্ট অনুপাতে শর্করা-আমিষ-চর্বি, ভিটামিন ও আঁশ, পানি-খনিজ, সহজপাচ্য।</li>
+</ul>
+<h3>🩺 ৫.৩ পুষ্টির অভাবজনিত রোগ</h3>
+<ul>
+<li>গয়টার: আয়োডিনের অভাব। রাতকানা/জেরোফথ্যালমিয়া: ভিটামিন A। রিকেটস: ভিটামিন D। রক্তশূন্যতা: প্রধানত লৌহ।</li>
+</ul>
+<h3>🧮 ৫.৪–৫.৬ শক্তি, BMR, BMI</h3>
+<ul>
+<li>১ গ্রাম শর্করা = ৪, আমিষ = ৪, চর্বি = ৯ কিলোক্যালরি। ১ কিলোক্যালরি ≈ ৪.২ কিলোজুল। প্রাপ্তবয়স্কের দিনে ২০০০–২৫০০ খাদ্য ক্যালরি।</li>
+<li>বিএমআর (মেয়ে) = 655 + (9.6×ওজন) + (1.8×উচ্চতা সেমি) − (4.7×বয়স); (ছেলে) = 66 + (13.7×ওজন) + (5×উচ্চতা) − (6.8×বয়স)। দৈনিক চাহিদা = বিএমআর × ১.২ থেকে ১.৯ (পরিশ্রম অনুযায়ী)।</li>
+<li>বিএমআই = ওজন (কেজি) ÷ উচ্চতা² (মিটার)। আদর্শ ১৮.৫–২৪.৯।</li>
+<li>পরিমিত শরীরচর্চা ও বিশ্রাম সুস্থ জীবনের জন্য জরুরি।</li>
+</ul>
+<h3>🧪 ৫.৭ সংরক্ষণ ও ভেজাল</h3>
+<ul>
+<li>অনুমোদিত সংরক্ষক: লবণ, সোডিয়াম নাইট্রেট, বেনজয়েট, সরবেট ইত্যাদি। ফরমালিন, বাণিজ্যিক রং, নিষিদ্ধ কীটনাশক ও হেভি মেটাল ক্ষতিকর।</li>
+</ul>
+<h3>🧑‍⚕️ ৫.৮ পরিপাক</h3>
+<ul>
+<li>যান্ত্রিক (দাঁত দিয়ে চিবানো) ও রাসায়নিক (এনজাইম) প্রক্রিয়া। পৌষ্টিকনালি: মুখ ➜ মুখগহ্বর ➜ গলবিল ➜ অন্ননালি ➜ পাকস্থলী ➜ অন্ত্র ➜ পায়ু।</li>
+<li>দাঁত: কর্তন, ছেদন, অগ্রপেষণ, পেষণ। স্থায়ী দাঁত ২৮–৩২টি। গঠন: ডেন্টিন, এনামেল, দন্তমজ্জা, সিমেন্ট।</li>
+<li>গ্রন্থি: লালা (টায়ালিন), যকৃৎ (পিত্তরস, এনজাইম নেই), অগ্ন্যাশয় (ট্রিপসিন, লাইপেজ, অ্যামাইলেজ; মিশ্র গ্রন্থি; ইনসুলিন, গ্লুকাগন), গ্যাস্ট্রিক ও আন্ত্রিক গ্রন্থি।</li>
+<li>পাকস্থলী: HCl + পেপসিনোজেন ➜ পেপসিন; আমিষ ➜ পলিপেপটাইড। ক্ষুদ্রান্ত্রে ভিলাইয়ে শোষণ, বৃহদন্ত্রে পানি শোষণ।</li>
+<li>আত্তীকরণ: শোষিত খাদ্য প্রোটোপ্লাজমে রূপান্তর।</li>
+<li>আন্ত্রিক সমস্যা: অজীর্ণতা, আমাশয়, কোষ্ঠকাঠিন্য, পেপটিক আলসার (Helicobacter pylori), অ্যাপেনডিসাইটিস, কৃমি, ডায়রিয়া (খাবার স্যালাইন)।</li>
+</ul>
+<p><small>বইয়ের তথ্য ভিত্তি। আমার বিশ্লেষণ থাকলে আলাদা চিহ্নিত।</small></p>
+</section>
+
+  <section class="panel" id="lab1">
+    <h2>🌱 ল্যাব 1: ম্যাক্রো ও মাইক্রো উপাদান</h2>
+    <div class="say">👉 কোন উপাদান বেশি লাগে (ম্যাক্রো), কোনটি সামান্য (মাইক্রো)? সঠিক বাক্সে পাঠাও।</div>
+    <div class="btnrow"><button class="btn" id="a1j">🟢 ম্যাক্রো</button><button class="btn alt" id="a1d">🔵 মাইক্রো</button></div>
+    <div class="row"><div><canvas id="a1c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="a1t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="a1q"></div><div class="cls" id="a1o"></div><div class="fb" id="a1fb"></div><small id="a1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🍂 ল্যাব 2: পাতা দেখে অভাব চেনো</h2>
+    <div class="say">👉 উপাদান বেছে নাও, স্লাইডার টেনে অভাব বাড়াও: পাতার রং কীভাবে বদলায় দেখো।</div>
+<div class="pills" id="b2p"><button data-k="0" class="on">নাইট্রোজেন</button><button data-k="1">ফসফরাস</button><button data-k="2">পটাশিয়াম</button><button data-k="3">ম্যাগনেসিয়াম</button><button data-k="4">লৌহ</button></div>
+    <div class="ctl"><label>অভাবের মাত্রা: <span id="b2kv"></span> %</label><input type="range" id="b2k" min="0" max="100" step="1" value="0"></div>
+    <div class="row"><div><canvas id="b2c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="b2t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="b2q"></div><div class="cls" id="b2o"></div><div class="fb" id="b2fb"></div><small id="b2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>⛏️ ল্যাব 3: বাতাস, পানি ও মাটি</h2>
+    <div class="say">👉 কোন উপাদান কোথা থেকে আসে, মূল কীভাবে শোষণ করে, আয়ন হয়ে।</div>
+<div class="pills" id="c3p"><button data-k="0" class="on">বাতাস থেকে</button><button data-k="1">পানি থেকে</button><button data-k="2">মাটি থেকে (আয়ন)</button></div>
+    <div class="row"><div><canvas id="c3c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="c3t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="c3q"></div><div class="cls" id="c3o"></div><div class="fb" id="c3fb"></div><small id="c3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🍽️ ল্যাব 4: কাজ ও উৎস</h2>
+    <div class="say">👉 প্রতিটি উপাদানের কাজ আর উৎস আলাদা করে দেখো।</div>
+<div class="pills" id="d4p"><button data-k="0" class="on">আমিষ</button><button data-k="1">শর্করা</button><button data-k="2">স্নেহ</button><button data-k="3">ভিটামিন</button><button data-k="4">খনিজ</button><button data-k="5">পানি</button><button data-k="6">আঁশ</button></div>
+    <div class="row"><div><canvas id="d4c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="d4t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="d4q"></div><div class="cls" id="d4o"></div><div class="fb" id="d4fb"></div><small id="d4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🍚 ল্যাব 5: একক, দ্বি ও বহু শর্করা</h2>
+    <div class="say">👉 শর্করার অণু কত বড়, আর হজমে কীভাবে গ্লুকোজ হয়।</div>
+<div class="pills" id="e5p"><button data-k="0" class="on">এক শর্করা</button><button data-k="1">দ্বি-শর্করা</button><button data-k="2">বহু শর্করা</button></div>
+    <div class="row"><div><canvas id="e5c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="e5t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="e5q"></div><div class="cls" id="e5o"></div><div class="fb" id="e5fb"></div><small id="e5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🔺 ল্যাব 6: কোনটা বেশি, কোনটা কম</h2>
+    <div class="say">👉 পিরামিডের স্তরে ক্লিক করো, কোন খাবার কতটা খাওয়া উচিত দেখো।</div>
+<div class="pills" id="f6p"><button data-k="0" class="on">১. শর্করা</button><button data-k="1">২. শাকসবজি-ফল</button><button data-k="2">৩. আমিষ</button><button data-k="3">৪. স্নেহ-চর্বি</button></div>
+    <div class="row"><div><canvas id="f6c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="f6t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="f6q"></div><div class="cls" id="f6o"></div><div class="fb" id="f6fb"></div><small id="f6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>🧮 ল্যাব 7: শর্করা, আমিষ ও চর্বির শক্তি</h2>
+    <div class="say">👉 তিনটি স্লাইডার নাড়ো: মোট কিলোক্যালরি ও কিলোজুল দেখো। শর্করা ও আমিষে ৪, চর্বিতে ৯।</div>
+    <div class="ctl"><label>শর্করা: <span id="g7xv"></span> g</label><input type="range" id="g7x" min="0" max="100" step="1" value="15"><label>আমিষ: <span id="g7yv"></span> g</label><input type="range" id="g7y" min="0" max="100" step="1" value="1"><label>চর্বি: <span id="g7zv"></span> g</label><input type="range" id="g7z" min="0" max="100" step="1" value="0"></div>
+    <div class="row"><div><canvas id="g7c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="g7t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="g7q"></div><div class="cls" id="g7o"></div><div class="fb" id="g7fb"></div><small id="g7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>🩺 ল্যাব 8: রোগ ও কারণ মেলাও</h2>
+    <div class="say">👉 গয়টার, রাতকানা, রিকেটস, রক্তশূন্যতা: কোন রোগ কোন অভাবে হয়?</div>
+    <div class="btnrow"><button class="btn" id="h8j">🧂 খনিজের অভাব</button><button class="btn alt" id="h8d">💊 ভিটামিনের অভাব</button></div>
+    <div class="row"><div><canvas id="h8c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="h8t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="h8q"></div><div class="cls" id="h8o"></div><div class="fb" id="h8fb"></div><small id="h8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>⚖️ ল্যাব 9: ওজন ও উচ্চতা দিয়ে শরীর মাপো</h2>
+    <div class="say">👉 ওজন ও উচ্চতার স্লাইডার নাড়ো: বিএমআই ও শ্রেণি বদলাবে।</div>
+    <div class="ctl"><label>ওজন: <span id="i9av"></span> কেজি</label><input type="range" id="i9a" min="20" max="130" step="1" value="50"><label>উচ্চতা: <span id="i9bv"></span> সেমি</label><input type="range" id="i9b" min="100" max="200" step="1" value="125"></div>
+    <div class="row"><div><canvas id="i9c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="i9t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="i9q"></div><div class="cls" id="i9o"></div><div class="fb" id="i9fb"></div><small id="i9sc"></small>
+  </section>
+
+  <section class="panel" id="lab10">
+    <h2>🔥 ল্যাব 10: হ্যারিস-বেনেডিক্ট সূত্র</h2>
+    <div class="say">👉 বয়স, ওজন, উচ্চতা, লিঙ্গ ও পরিশ্রম দিয়ে দৈনিক ক্যালরি বের করো।</div>
+<div class="pills" id="j10p"><button data-k="0" class="on">👩 মেয়ে</button><button data-k="1">👨 ছেলে</button></div>
+    <div class="ctl"><label>বয়স: <span id="j10uv"></span> বছর</label><input type="range" id="j10u" min="10" max="80" step="1" value="33"><label>ওজন: <span id="j10vv"></span> কেজি</label><input type="range" id="j10v" min="30" max="120" step="1" value="94"><label>উচ্চতা: <span id="j10xv"></span> সেমি</label><input type="range" id="j10x" min="130" max="200" step="1" value="165"><label>পরিশ্রম স্তর: <span id="j10yv"></span> </label><input type="range" id="j10y" min="0" max="4" step="1" value="3"></div>
+    <div class="row"><div><canvas id="j10c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="j10t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="j10q"></div><div class="cls" id="j10o"></div><div class="fb" id="j10fb"></div><small id="j10sc"></small>
+  </section>
+
+  <section class="panel" id="lab11">
+    <h2>🧪 ল্যাব 11: অনুমোদিত না ক্ষতিকর?</h2>
+    <div class="say">👉 সংরক্ষণে কোন রাসায়নিক অনুমোদিত, কোনটি ভেজাল ও বিষাক্ত, আলাদা করো।</div>
+    <div class="btnrow"><button class="btn" id="k11j">✅ অনুমোদিত</button><button class="btn alt" id="k11d">☠️ ক্ষতিকর</button></div>
+    <div class="row"><div><canvas id="k11c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="k11t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="k11q"></div><div class="cls" id="k11o"></div><div class="fb" id="k11fb"></div><small id="k11sc"></small>
+  </section>
+
+  <section class="panel" id="lab12">
+    <h2>🧑‍⚕️ ল্যাব 12: মুখ থেকে পায়ু পর্যন্ত</h2>
+    <div class="say">👉 স্লাইডারে খাবারকে নালিপথে এগিয়ে নাও: কোন অঙ্গে কী ঘটে দেখো।</div>
+    <div class="ctl"><label>যাত্রাপথ: <span id="l12kv"></span> %</label><input type="range" id="l12k" min="0" max="100" step="1" value="0"></div>
+    <div class="row"><div><canvas id="l12c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="l12t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="l12q"></div><div class="cls" id="l12o"></div><div class="fb" id="l12fb"></div><small id="l12sc"></small>
+  </section>
+
+  <section class="panel" id="lab13">
+    <h2>🧬 ল্যাব 13: শ্বেতসার, আমিষ ও চর্বির হজম</h2>
+    <div class="say">👉 কোন এনজাইম কোন খাদ্যকে ভেঙে কী বানায়, দেখো।</div>
+<div class="pills" id="m13p"><button data-k="0" class="on">শ্বেতসার</button><button data-k="1">আমিষ</button><button data-k="2">স্নেহ</button></div>
+    <div class="btnrow"><button class="btn" id="m13g">▶ এনজাইম যোগ করো</button></div>
+    <div class="row"><div><canvas id="m13c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="m13t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="m13q"></div><div class="cls" id="m13o"></div><div class="fb" id="m13fb"></div><small id="m13sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। বইয়ের নমুনা প্রশ্নের উত্তরমালা নেই, তাই উত্তরগুলো আমার হিসাব করা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; খাদ্য, পুষ্টি এবং পরিপাক (জীববিজ্ঞান অধ্যায় ৫)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+var SKIP={};function ctxOf(id){var c=$(id);if(c.__off)throw SKIP;return c.getContext('2d');}
+(function(){if(!window.IntersectionObserver)return;var io=new IntersectionObserver(function(es){es.forEach(function(e){e.target.__off=!e.isIntersecting;});},{rootMargin:'150px'});document.querySelectorAll('canvas').forEach(function(c){io.observe(c);});})();
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+function opts(correct,wrongs){var seen={},a=[{t:correct,ok:1}];seen[correct]=1;wrongs.forEach(function(w){if(!seen[w]){seen[w]=1;a.push({t:w,ok:0});}});return shuffle(a);}
+function arrow(x,x1,y1,x2,y2,col,lw){var a=Math.atan2(y2-y1,x2-x1);x.strokeStyle=col;x.fillStyle=col;x.lineWidth=lw||3;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-11*Math.cos(a-.4),y2-11*Math.sin(a-.4));x.lineTo(x2-11*Math.cos(a+.4),y2-11*Math.sin(a+.4));x.closePath();x.fill();}
+function person(x,px,py,col){circ(x,0,px,py-22,6,col,null);x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(px,py-16);x.lineTo(px,py-4);x.moveTo(px-6,py-11);x.lineTo(px+6,py-11);x.moveTo(px,py-4);x.lineTo(px-5,py+6);x.moveTo(px,py-4);x.lineTo(px+5,py+6);x.stroke();}
+/* ---------- সাধারণ সহায়ক ---------- */
+function pills(id,fn){$(id).onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var all=$(id).querySelectorAll('button'),i;for(i=0;i<all.length;i++)all[i].classList.toggle('on',all[i]===b);fn(+b.getAttribute('data-k'));};}
+function sci(x){if(!(x>0))return bn(0);var e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);if(+m.toFixed(2)>=10){m/=10;e++;}return bn(parseFloat(m.toFixed(2)))+' × ১০'+(e<0?'⁻':'')+sup(Math.abs(e));}
+function brow(label,val,max,col,txtv){return '<div class="bar"><div class="bl">'+label+'</div><div class="bt"><div class="bf" style="width:'+clamp(val/max*100,1,100)+'%;background:'+col+'"></div></div><b style="min-width:80px;font-size:14px;color:#1f3a5f">'+(txtv||'')+'</b></div>';}
+function on(ids,fn){ids.forEach(function(i){$(i).oninput=fn;$(i).onchange=fn;});}
+var G=9.8;
+function box(x,px,py,w,h,fill,stroke){x.fillStyle=fill;x.fillRect(px,py,w,h);if(stroke){x.strokeStyle=stroke;x.lineWidth=2;x.strokeRect(px,py,w,h);}}
+function wheel(x,px,py,r){circ(x,0,px,py,r,'#333',null);circ(x,0,px,py,r*.4,'#bbb',null);}
+
+
+/* ---------- সুন্দর আঁকার সহায়ক (নতুন) ---------- */
+function shade(c,a){var h=hx(c),o='#';for(var i=0;i<3;i++){var v=clamp(Math.round(h[i]+a),0,255).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function grad(x,px,py,w,h,c1,c2){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1);g.addColorStop(1,c2);x.fillStyle=g;x.fillRect(px,py,w,h);}
+function ball(x,px,py,r,col){var g=x.createRadialGradient(px-r*.35,py-r*.35,r*.08,px,py,r);g.addColorStop(0,'#ffffff');g.addColorStop(.3,col);g.addColorStop(1,shade(col,-55));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();}
+function rr(x,px,py,w,h,r){r=Math.min(r,w/2,h/2);x.beginPath();x.moveTo(px+r,py);x.lineTo(px+w-r,py);x.quadraticCurveTo(px+w,py,px+w,py+r);x.lineTo(px+w,py+h-r);x.quadraticCurveTo(px+w,py+h,px+w-r,py+h);x.lineTo(px+r,py+h);x.quadraticCurveTo(px,py+h,px,py+h-r);x.lineTo(px,py+r);x.quadraticCurveTo(px,py,px+r,py);x.closePath();}
+function tag(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.lineJoin='round';x.lineWidth=4;x.strokeStyle='rgba(255,255,255,.92)';x.strokeText(s,px,py);x.fillStyle=col||NAVY;x.fillText(s,px,py);}
+function wave(x,px,py,w,h,t,c1,c2,amp){amp=amp===undefined?2.5:amp;var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1||'rgba(86,176,240,.88)');g.addColorStop(1,c2||'rgba(22,84,172,.96)');x.fillStyle=g;x.beginPath();x.moveTo(px,py+h);x.lineTo(px,py);var i;for(i=0;i<=w;i+=4)x.lineTo(px+i,py+Math.sin(i/13+t*.05)*amp);x.lineTo(px+w,py+h);x.closePath();x.fill();x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=1.6;x.beginPath();for(i=0;i<=w;i+=4){var yy=py+Math.sin(i/13+t*.05)*amp;if(i===0)x.moveTo(px,yy);else x.lineTo(px+i,yy);}x.stroke();}
+function bubs(x,px,py,w,h,n,t){for(var i=0;i<n;i++){var u=((t*.004*(0.6+rp(i,0,.8))+rp(i+50,0,1))%1),bx=px+rp(i,6,w-6)+Math.sin(t*.04+i)*3,by=py+h-u*h,r=1.5+rp(i+9,0,2.2);if(by<py+4)continue;x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=1.2;x.beginPath();x.arc(bx,by,r,0,7);x.stroke();}}
+function glassBox(x,px,py,w,h){x.strokeStyle='#5b7389';x.lineWidth=3;x.beginPath();x.moveTo(px,py);x.lineTo(px,py+h);x.lineTo(px+w,py+h);x.lineTo(px+w,py);x.stroke();x.fillStyle='rgba(255,255,255,.18)';x.fillRect(px+4,py+4,5,h-8);}
+function sun(x,px,py,r,t){x.save();x.translate(px,py);x.rotate(t*.004);x.strokeStyle='rgba(255,196,60,.7)';x.lineWidth=3;for(var i=0;i<12;i++){x.rotate(Math.PI/6);x.beginPath();x.moveTo(r+4,0);x.lineTo(r+11,0);x.stroke();}x.restore();ball(x,px,py,r,'#ffc83d');}
+function cloud(x,px,py,s,col){x.fillStyle=col||'rgba(255,255,255,.95)';[[0,0,14],[16,-6,17],[34,0,14],[17,6,15]].forEach(function(c){x.beginPath();x.arc(px+c[0]*s,py+c[1]*s,c[2]*s,0,7);x.fill();});}
+function dial(x,cx,cy,r,frac,txtv,col){x.strokeStyle='#dfe7ee';x.lineWidth=9;x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*2.2);x.stroke();x.strokeStyle=col||'#2a9d8f';x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*(.8+1.4*clamp(frac,0,1)));x.stroke();var a=Math.PI*(.8+1.4*clamp(frac,0,1));x.strokeStyle=NAVY;x.lineWidth=3;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a)*(r-6),cy+Math.sin(a)*(r-6));x.stroke();circ(x,0,cx,cy,4,NAVY,null);if(txtv)tag(x,txtv,cx,cy+r*.62,NAVY,12);}
+function sand(x,px,py,w,h){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,'#eccb8a');g.addColorStop(1,'#c99a55');x.fillStyle=g;x.fillRect(px,py,w,h);}
+function atom(x,px,py,r,col,t){ball(x,px,py,r,col);}
+function fmtN(v){if(Math.abs(v)>=1000)return bn(Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g,','));return bn(parseFloat(v.toFixed(2)));}
+
+function tagd(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=4;x.fillStyle=col||'#fff';x.fillText(s,px,py);x.restore();}
+
+/* ===== ফিউচারিস্টিক জীববিজ্ঞান ল্যাব লাইব্রেরি (ডার্ক হলোগ্রাম, নিয়ন গ্লো, 3D-ধাঁচের গোলক) ===== */
+document.documentElement.classList.add('fut');(function(){var st=document.createElement('style');st.textContent=".th-bg i,.th-hero i.o,.th-hero .ico{animation:none!important}.th-bg i{filter:none!important;opacity:.18!important}header.site,.tabs{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(255,255,255,.96)!important}.lbh i,.th-live::before{animation:none!important}";document.head.appendChild(st);})();(function(){var d=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,'shadowBlur');if(d&&d.set&&!CanvasRenderingContext2D.prototype.__sb){CanvasRenderingContext2D.prototype.__sb=1;Object.defineProperty(CanvasRenderingContext2D.prototype,'shadowBlur',{get:function(){return d.get.call(this);},set:function(v){d.set.call(this,v*.4);},configurable:true});}})();
+function hx(c){if(c.length===4)c='#'+c[1]+c[1]+c[2]+c[2]+c[3]+c[3];return [parseInt(c.substr(1,2),16)||0,parseInt(c.substr(3,2),16)||0,parseInt(c.substr(5,2),16)||0];}
+var DT=.02,TKL=performance.now();
+DRAWS.push(function(){var n=performance.now();DT=Math.min(.05,(n-TKL)/1000);TKL=n;});
+var CY='#22d3ee',GR='#4ade80',PK='#f472b6',YL='#fbbf24',PU='#a78bfa',OR='#fb923c',RD='#f87171',BL='#60a5fa',WH='#e6f1ff';
+function lt(c,t){return mixc(c,'#ffffff',t);} function dk(c,t){return mixc(c,'#000000',t);}
+function ln(x,x1,y1,x2,y2,col,lw,dash){x.strokeStyle=col;x.lineWidth=lw||2;if(dash)x.setLineDash(dash);x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();if(dash)x.setLineDash([]);}
+/* ডার্ক হলোগ্রাম পটভূমি */
+function bgF(x,w,h){var g=x.createRadialGradient(w*.5,h*.35,10,w*.5,h*.5,Math.max(w,h)*.85);g.addColorStop(0,'#0f2c52');g.addColorStop(.6,'#081833');g.addColorStop(1,'#030814');x.fillStyle=g;x.fillRect(0,0,w,h);
+  x.strokeStyle='rgba(56,189,248,.09)';x.lineWidth=1;var i;x.beginPath();for(i=0;i<w;i+=26){x.moveTo(i+.5,0);x.lineTo(i+.5,h);}for(i=0;i<h;i+=26){x.moveTo(0,i+.5);x.lineTo(w,i+.5);}x.stroke();
+  var sy=(FR*1.1)%(h+60)-30,sg=x.createLinearGradient(0,sy-24,0,sy+24);sg.addColorStop(0,'rgba(34,211,238,0)');sg.addColorStop(.5,'rgba(34,211,238,.13)');sg.addColorStop(1,'rgba(34,211,238,0)');x.fillStyle=sg;x.fillRect(0,sy-24,w,48);
+  x.strokeStyle='rgba(34,211,238,.7)';x.lineWidth=2;var L=14;x.beginPath();[[6,6,1,1],[w-6,6,-1,1],[6,h-6,1,-1],[w-6,h-6,-1,-1]].forEach(function(c){x.moveTo(c[0],c[1]+c[3]*L);x.lineTo(c[0],c[1]);x.lineTo(c[0]+c[2]*L,c[1]);});x.stroke();
+  x.fillStyle='rgba(125,211,252,.22)';x.beginPath();for(i=0;i<8;i++){var px=(rp(i,0,w)+Math.sin(FR/80+i)*8+w)%w,py=(rp(i+30,0,h)-FR*(.15+i%4*.06)+h*3)%h;x.moveTo(px+1.6,py);x.arc(px,py,1.6,0,7);}x.fill();}
+/* 3D-ধাঁচের গ্লোবুল */
+function orb(x,px,py,r,col,glow){x.save();if(glow!==0){x.shadowColor=col;x.shadowBlur=glow||16;}
+  var g=x.createRadialGradient(px-r*.38,py-r*.42,r*.06,px,py,r);g.addColorStop(0,lt(col,.85));g.addColorStop(.35,col);g.addColorStop(1,dk(col,.62));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();x.restore();
+  x.strokeStyle='rgba(255,255,255,.28)';x.lineWidth=1;x.beginPath();x.arc(px,py,r-.5,Math.PI*1.05,Math.PI*1.75);x.stroke();}
+function ring(x,px,py,r,col,lw,dash){x.save();x.shadowColor=col;x.shadowBlur=10;x.strokeStyle=col;x.lineWidth=lw||2;if(dash)x.setLineDash(dash);x.beginPath();x.arc(px,py,r,0,7);x.stroke();x.restore();}
+function neon(x,x1,y1,x2,y2,col,lw,dash){x.save();x.shadowColor=col;x.shadowBlur=9;ln(x,x1,y1,x2,y2,col,lw||2,dash);x.restore();}
+function ft(x,s,px,py,size,col,al){x.font='700 '+(size||13)+'px "Hind Siliguri",sans-serif';x.textAlign=al||'center';x.textBaseline='middle';x.fillStyle=col||WH;x.fillText(s,px,py);}
+function hbox(x,px,py,w,h,col,a){col=col||CY;x.save();x.shadowColor=col;x.shadowBlur=10;rr(x,px,py,w,h,9);x.fillStyle='rgba(10,30,60,'+(a===undefined?.72:a)+')';x.fill();x.strokeStyle=col;x.lineWidth=1.6;x.stroke();x.restore();}
+function bar3d(x,px,py,w,h,col,d){d=d||8;var g=x.createLinearGradient(px,py,px,py+h);g.addColorStop(0,lt(col,.35));g.addColorStop(1,dk(col,.35));x.save();x.shadowColor=col;x.shadowBlur=9;x.fillStyle=g;x.fillRect(px,py,w,h);x.restore();
+  x.fillStyle=lt(col,.55);x.beginPath();x.moveTo(px,py);x.lineTo(px+d,py-d*.7);x.lineTo(px+w+d,py-d*.7);x.lineTo(px+w,py);x.closePath();x.fill();
+  x.fillStyle=dk(col,.45);x.beginPath();x.moveTo(px+w,py);x.lineTo(px+w+d,py-d*.7);x.lineTo(px+w+d,py+h-d*.7);x.lineTo(px+w,py+h);x.closePath();x.fill();}
+function disc(x,px,py,rx,ry,col){var g=x.createRadialGradient(px,py-ry*.3,2,px,py,rx);g.addColorStop(0,col);g.addColorStop(1,dk(col,.7));x.save();x.shadowColor=col;x.shadowBlur=12;x.fillStyle=g;x.beginPath();x.ellipse(px,py,rx,ry,0,0,7);x.fill();x.restore();}
+function pedestal(x,px,py,r,col){var g=x.createRadialGradient(px,py,2,px,py,r);g.addColorStop(0,'rgba(34,211,238,.35)');g.addColorStop(1,'rgba(34,211,238,0)');x.fillStyle=g;x.beginPath();x.ellipse(px,py,r,r*.32,0,0,7);x.fill();x.strokeStyle=col||'rgba(34,211,238,.8)';x.lineWidth=1.5;x.beginPath();x.ellipse(px,py,r*.8,r*.26,0,0,7);x.stroke();}
+/* ব্যাকটেরিয়া (দণ্ডাকার) */
+function bact(x,px,py,len,r,ang,col,t){x.save();x.translate(px,py);x.rotate(ang);
+  for(var k=0;k<2;k++){x.strokeStyle='rgba(125,255,200,.8)';x.lineWidth=1.6;x.beginPath();x.moveTo(-len/2,k*4-2);for(var s=1;s<=14;s++){x.lineTo(-len/2-s*3.2,(k*4-2)+Math.sin(s*.7-t*5+k)*3.2*s/6);}x.stroke();}
+  x.shadowColor=col;x.shadowBlur=14;var g=x.createLinearGradient(0,-r,0,r);g.addColorStop(0,lt(col,.6));g.addColorStop(.5,col);g.addColorStop(1,dk(col,.55));x.fillStyle=g;rr(x,-len/2,-r,len,2*r,r);x.fill();x.restore();
+  x.save();x.translate(px,py);x.rotate(ang);x.fillStyle='rgba(255,255,255,.55)';rr(x,-len/2+r*.6,-r*.65,len-r*1.2,r*.45,r*.2);x.fill();for(var i=0;i<6;i++){x.fillStyle='rgba(255,255,255,.35)';x.beginPath();x.arc(-len/2+r+(len-2*r)*i/5,((i*7)%3-1)*r*.3,1.6,0,7);x.fill();}x.restore();}
+/* অ্যামিবা */
+function blob(x,px,py,r,t,col){x.save();x.shadowColor=col;x.shadowBlur=18;var g=x.createRadialGradient(px-r*.3,py-r*.35,r*.1,px,py,r*1.15);g.addColorStop(0,lt(col,.7));g.addColorStop(.6,col);g.addColorStop(1,dk(col,.5));x.fillStyle=g;x.beginPath();
+  for(var i=0;i<=40;i++){var a=i/40*Math.PI*2,rad=r*(1+.16*Math.sin(a*3+t*1.6)+.1*Math.sin(a*5-t*1.1));var X=px+Math.cos(a)*rad,Y=py+Math.sin(a)*rad*.88;if(i===0)x.moveTo(X,Y);else x.lineTo(X,Y);}x.closePath();x.fill();x.restore();
+  orb(x,px+r*.12,py-r*.05,r*.26,'#6366f1',8);for(var k=0;k<5;k++)circ(x,0,px+Math.cos(k*1.9+t*.4)*r*.5,py+Math.sin(k*2.3+t*.3)*r*.4,2.4,'rgba(255,255,255,.55)',null);}
+/* ডায়াটম (লেন্স আকার) */
+function diatom(x,px,py,len,w,ang,col,t){x.save();x.translate(px,py);x.rotate(ang);x.shadowColor=col;x.shadowBlur=14;var g=x.createLinearGradient(0,-w,0,w);g.addColorStop(0,lt(col,.55));g.addColorStop(.5,col);g.addColorStop(1,dk(col,.55));x.fillStyle=g;x.beginPath();x.moveTo(-len,0);x.quadraticCurveTo(0,-w*2,len,0);x.quadraticCurveTo(0,w*2,-len,0);x.fill();x.shadowBlur=0;
+  x.strokeStyle='rgba(255,255,255,.7)';x.lineWidth=1.4;x.beginPath();x.moveTo(-len*.9,0);x.lineTo(len*.9,0);x.stroke();for(var i=-4;i<=4;i++){var X=i*len/5,H=w*1.4*(1-Math.abs(i)/5.5);x.beginPath();x.moveTo(X,-H);x.lineTo(X,H);x.stroke();}x.restore();}
+/* মাশরুম */
+function mush(x,px,py,s,col){var g=x.createRadialGradient(px-s*.25,py-s*.7,2,px,py-s*.4,s);g.addColorStop(0,lt(col,.7));g.addColorStop(1,dk(col,.45));x.save();x.shadowColor=col;x.shadowBlur=12;
+  x.fillStyle='#e8dcc8';rr(x,px-s*.18,py-s*.45,s*.36,s*.62,s*.12);x.fill();x.fillStyle=g;x.beginPath();x.ellipse(px,py-s*.5,s*.8,s*.52,0,Math.PI,0);x.lineTo(px+s*.8,py-s*.46);x.quadraticCurveTo(px,py-s*.2,px-s*.8,py-s*.46);x.fill();x.restore();for(var i=0;i<4;i++)circ(x,0,px+(i-1.5)*s*.3,py-s*.74+(i%2)*s*.1,s*.07,'rgba(255,255,255,.7)',null);}
+/* গাছ */
+function tree(x,px,py,s,t){x.save();x.fillStyle='#8b5a2b';var g=x.createLinearGradient(px-s*.12,0,px+s*.12,0);g.addColorStop(0,'#a0703a');g.addColorStop(1,'#5a3a18');x.fillStyle=g;x.fillRect(px-s*.11,py-s*.6,s*.22,s*.7);x.restore();
+  var C=[[0,-1.0,.5],[-.34,-.78,.4],[.34,-.78,.4],[-.18,-.62,.36],[.2,-.6,.34]];C.forEach(function(c,i){orb(x,px+c[0]*s+Math.sin(t*1.2+i)*1.4,py+c[1]*s,c[2]*s,i%2?'#22c55e':'#4ade80',10);});}
+/* প্রাণী: ইমোজি ভিত্তিক */
+function emo(x,e,px,py,s){x.font=s+'px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(e,px,py);}
+/* সরল ক্রোমোজোম/অণু বিন্দুর ঝাঁক */
+function swarm(x,cx,cy,rad,n,col,t){for(var i=0;i<n;i++){var a=i*2.399+t*.3,rr_=rad*Math.sqrt((i+.5)/n);circ(x,0,cx+Math.cos(a)*rr_,cy+Math.sin(a)*rr_*.8,2.2,col,null);}}
+/* কার্ড/লেবেল */
+function chip(x,s,px,py,col,size){x.font='700 '+(size||12)+'px "Hind Siliguri",sans-serif';var w=x.measureText(s).width+16;hbox(x,px-w/2,py-11,w,22,col,.8);ft(x,s,px,py,size||12,'#fff');}
+function nbtn(x,s,px,py,w,h,col,on){x.save();x.shadowColor=col;x.shadowBlur=on?16:5;rr(x,px,py,w,h,10);x.fillStyle=on?dk(col,.2):'rgba(8,24,52,.85)';x.fill();x.strokeStyle=col;x.lineWidth=on?2.4:1.4;x.stroke();x.restore();ft(x,s,px+w/2,py+h/2+1,12,on?'#fff':lt(col,.4));}
+/* পাঠ্য মোড়ানো */
+function wrapT(x,s,px,py,mw,lh,size,col,al){x.font='700 '+size+'px "Hind Siliguri",sans-serif';var w=s.split(' '),l='',y=py,i;for(i=0;i<w.length;i++){var tt=l?l+' '+w[i]:w[i];if(x.measureText(tt).width>mw&&l){ft(x,l,px,y,size,col,al);y+=lh;l=w[i];}else l=tt;}if(l)ft(x,l,px,y,size,col,al);return y;}
+/* একটি ক্যানভাসে ক্লিক-স্থানাঙ্ক (লজিক্যাল) */
+function cpos(cv,ev){var r=cv.getBoundingClientRect(),w=cv.__lw||cv.width,h=cv.__lh||cv.height;return [(ev.clientX-r.left)/r.width*w,(ev.clientY-r.top)/r.height*h];}
+
+function rq(i,a,b){var v=Math.sin(i*12.9898+78.233)*43758.5453;v=v-Math.floor(v);return a+v*(b-a);}
+
+/* ===== সাধারণ: বাছাই (sort) ও ঘূর্ণি-রিং ===== */
+function SORT(P){
+  var S={q:shuffle(P.items),i:0,ok:0,n:0,res:0,t:0,side:0,cnt:[0,0]},id=P.id;
+  function cur(){return S.q[S.i];}
+  function intro(){$(id+'t').innerHTML=P.intro;}
+  function ans(side){if(S.res)return;var it=cur();S.n++;S.side=side;S.res=(it.t===side)?1:2;if(S.res===1){S.ok++;S.cnt[side]++;}S.t=0;
+    $(id+'t').innerHTML=(S.res===1?'✅ ঠিক! ':'❌ ভুল! ')+'<b>'+it.n+'</b> ➜ <b>'+P.names[it.t]+'</b>।<br>'+it.d;
+    setTimeout(function(){S.i++;if(S.i>=S.q.length){S.q=shuffle(S.q);S.i=0;}S.res=0;S.t=0;intro();},2300);}
+  $(id+'j').onclick=function(){ans(0);};$(id+'d').onclick=function(){ans(1);};intro();
+  DRAWS.push(function(){var x=ctxOf(id+'c'),it=cur(),W=460,H=330,u,px=230,py=165+Math.sin(FR/22)*5,sc=1,al=1;bgF(x,W,H);
+    var bins=[[10,P.colL],[W-120,P.colR]];
+    bins.forEach(function(b,k){hbox(x,b[0],176,110,128,b[1],.55);ft(x,P.names[k],b[0]+55,194,13,lt(b[1],.4));ft(x,bn(S.cnt[k]),b[0]+55,252,30,'#fff');ft(x,'সাজানো হয়েছে',b[0]+55,282,10.5,'#9bc4de');});
+    pedestal(x,230,248,70);
+    if(S.res){S.t+=DT;if(S.res===1){u=ease(S.t/.9);var tx=S.side?W-65:65;px=lerp(230,tx,u);py=lerp(165,225,u);sc=1-.45*u;al=1-.35*u;if(S.t<.9&&FR%2===0)for(var k=0;k<1;k++)circ(x,0,px+rnd(-8,8),py+rnd(-8,8),2.5,lt(P.colL,.4),null);}
+      else{px=230+Math.sin(S.t*38)*9*Math.max(0,1-S.t/.8);ring(x,230,py,52,RD,3);}}
+    x.save();x.globalAlpha=al;if(it.e){x.translate(px,py);x.scale(sc,sc);emo(x,it.e,0,0,66);x.restore();x.save();x.globalAlpha=al;hbox(x,px-70*sc,py+44*sc,140*sc,26*sc,CY,.7);ft(x,it.n,px,py+57*sc,14*sc,'#fff');}
+    else{x.translate(px,py);x.scale(sc,sc);hbox(x,-100,-34,200,68,CY,.85);ft(x,it.n,0,-8,22,'#fff');ft(x,it.en,0,20,13,'#8fd3ff');}
+    x.restore();
+    ft(x,'স্কোর: '+bn(S.ok)+' / '+bn(S.n),64,24,13,YL);ft(x,'নম্বর '+bn(S.i+1)+' / '+bn(S.q.length),W-64,24,12,'#9bc4de');
+    ft(x,P.hint,230,24,12.5,'#7dd3fc');});
+}
+function RING(id,items,getSel,pal){
+  var rot=0,last=-1;
+  DRAWS.push(function(){var x=ctxOf(id+'c'),W=460,H=330,n=items.length,s=getSel(),cx=230,cy=178,RX=172,RY=74,i,tg=Math.PI/2-s*2*Math.PI/n;bgF(x,W,H);
+    var d=((tg-rot+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;rot+=d*Math.min(1,DT*5);
+    var it=items[s];
+    if(s!==last){last=s;$(id+'t').innerHTML='<b>'+it.n+'</b> ('+it.en+')<br>'+it.d;}
+    ring(x,cx,cy+22,RX+6,'rgba(34,211,238,.35)',1.2);x.save();x.strokeStyle='rgba(34,211,238,.45)';x.lineWidth=1.4;x.beginPath();x.ellipse(cx,cy+22,RX,RY,0,0,7);x.stroke();x.restore();
+    var nodes=items.map(function(m,k){var a=rot+k*2*Math.PI/n,dp=(Math.sin(a)+1)/2;return {k:k,x:cx+Math.cos(a)*RX,y:cy+22+Math.sin(a)*RY,dp:dp,r:10+9*dp};}).sort(function(a,b){return a.dp-b.dp;});
+    nodes.forEach(function(o){var col=pal[o.k%pal.length],sel=o.k===s;if(sel)neon(x,cx,cy-20,o.x,o.y,CY,2,[5,5]);
+      x.save();x.globalAlpha=.45+.55*o.dp;orb(x,o.x,o.y,o.r+(sel?4:0),sel?'#22d3ee':col,sel?22:8);emo(x,items[o.k].e,o.x,o.y+1,(o.r+(sel?4:0))*1.15);x.restore();if(sel)ring(x,o.x,o.y,o.r+9+Math.sin(FR/9)*2,CY,2);});
+    pedestal(x,cx,cy+8,52);x.save();x.translate(0,Math.sin(FR/24)*4);emo(x,it.e,cx,cy-24,58);x.restore();
+    ft(x,it.n,cx,34,22,'#fff');ft(x,it.en,cx,58,12.5,'#7dd3fc');
+    hbox(x,cx-92,H-34,184,24,CY,.7);ft(x,'ঘুরছে: '+bn(s+1)+' / '+bn(n),cx,H-22,11.5,'#c7ecff');});
+}
+var PAL=[CY,GR,PK,YL,PU,OR,BL,'#2dd4bf','#f87171','#a3e635'];
+
+/* ===== হালকা ও মসৃণ চালানোর ব্যবস্থা (ল্যাগ কমানো) ===== */
+(function(){
+  var P=CanvasRenderingContext2D.prototype,d=Object.getOwnPropertyDescriptor(P,'shadowBlur');
+  var phone=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)||innerWidth<760;
+  window.LITE=false;
+  Object.defineProperty(P,'shadowBlur',{configurable:true,set:function(v){d.set.call(this,window.LITE?0:Math.min(v,phone?3:6));},get:function(){return d.get.call(this);}});
+  /* একসময়ে শুধু পর্দার মাঝের ল্যাবটাই চলবে */
+  var CUR=null;
+  function pick(){var best=null,bd=1e9,h=innerHeight,cs=document.querySelectorAll('canvas:not(.lbo)');for(var i=0;i<cs.length;i++){var c=cs[i];if(c.__off)continue;var r=c.getBoundingClientRect();if(r.bottom<0||r.top>h)continue;var dd=Math.abs((r.top+r.bottom)/2-h/2);if(dd<bd){bd=dd;best=c;}}CUR=best;}
+  setInterval(pick,200);setTimeout(pick,300);
+  var oc=ctxOf;
+  ctxOf=function(id){var c=$(id);if(c.__off)throw SKIP;if(CUR&&c!==CUR)throw SKIP;return oc(id);};
+  /* খুব ধীর হলে নিজে থেকে আরও হালকা মোডে যাবে */
+  var last=performance.now(),sum=0,n=0;
+  DRAWS.push(function(){var t=performance.now(),dt=t-last;last=t;if(window.LITE||dt>400)return;sum+=dt;n++;if(n===90){if(sum/n>52){window.LITE=true;var s=document.createElement('style');s.textContent='*{animation:none!important;backdrop-filter:none!important;filter:none!important}.lbs,.lbs *{box-shadow:none!important}';document.head.appendChild(s);}sum=0;n=0;}});
+})();
+
+/* ===== ল্যাব ১: ম্যাক্রো/মাইক্রো ===== */
+SORT({id:'a1',colL:'#4ade80',colR:'#38bdf8',names:['ম্যাক্রো','মাইক্রো'],hint:'কোন ধরনের উপাদান?',
+ intro:'উপাদানটি বেশি লাগে (ম্যাক্রো) না সামান্য (মাইক্রো)? বই: ম্যাক্রো ৯টি, মাইক্রো ৭টি।',
+ items:[{e:'🟢',n:'নাইট্রোজেন (N)',t:0,d:'ম্যাক্রো উপাদান।'},{e:'🟣',n:'পটাশিয়াম (K)',t:0,d:'ম্যাক্রো উপাদান।'},{e:'🟠',n:'ফসফরাস (P)',t:0,d:'ম্যাক্রো উপাদান।'},{e:'⚪',n:'ক্যালসিয়াম (Ca)',t:0,d:'ম্যাক্রো উপাদান।'},{e:'💚',n:'ম্যাগনেসিয়াম (Mg)',t:0,d:'ম্যাক্রো উপাদান।'},{e:'⚫',n:'কার্বন (C)',t:0,d:'ম্যাক্রো উপাদান।'},{e:'🟡',n:'সালফার (S)',t:0,d:'ম্যাক্রো উপাদান।'},{e:'⚙️',n:'দস্তা বা জিংক (Zn)',t:1,d:'মাইক্রো উপাদান।'},{e:'🔩',n:'লৌহ (Fe)',t:1,d:'মাইক্রো উপাদান।'},{e:'🧿',n:'বোরন (B)',t:1,d:'মাইক্রো উপাদান।'},{e:'🟤',n:'তামা বা কপার (Cu)',t:1,d:'মাইক্রো উপাদান।'},{e:'💧',n:'ক্লোরিন (Cl)',t:1,d:'মাইক্রো উপাদান।'},{e:'🔬',n:'ম্যাঙ্গানিজ (Mn)',t:1,d:'মাইক্রো উপাদান।'},{e:'🧪',n:'মলিবডেনাম (Mo)',t:1,d:'মাইক্রো উপাদান।'}]});
+qgame('a1q','a1o','a1fb','a1sc',[
+ ['উদ্ভিদের জন্য অত্যাবশ্যকীয় উপাদান কয়টি?','১৬টি',['৬০টি','৯টি','৭টি'],'বই ৫.১।'],
+ ['ম্যাক্রো উপাদান কয়টি (বই)?','৯টি',['৭টি','১৬টি','৬০টি'],'বই ৫.১ (a)।'],
+ ['কোনটি ম্যাক্রো উপাদান?','পটাশিয়াম',['জিংক','বোরন','কপার'],'বই।'],
+ ['ম্যাক্রো উপাদান কাকে বলে?','যা বেশি পরিমাণে লাগে',['যা অল্প লাগে','যা লাগে না','যা মাটিতে নেই'],'বইয়ের সৃজনশীল ১(ক)।']]);
+/* ===== ল্যাব ২: অভাবজনিত লক্ষণ ===== */
+var B2={m:0};pills('b2p',function(k){B2.m=k;});
+var B2D=[{n:'নাইট্রোজেন (N)',c:['#16a34a','#fde047'],tx:'ক্লোরোফিল তৈরি ব্যাহত, সবুজ রং হালকা হয়ে হলুদ। একে <b>ক্লোরোসিস</b> বলে। কোষ বিভাজন ও বৃদ্ধি কমে যায়।',sp:0},{n:'ফসফরাস (P)',c:['#16a34a','#7c3aed'],tx:'পাতা বেগুনি হয়ে যায়, মৃত অঞ্চল সৃষ্টি। বৃদ্ধি বন্ধ, উদ্ভিদ খর্বাকৃতি। পাতা, ফুল ও ফল ঝরে যায়।',sp:1},{n:'পটাশিয়াম (K)',c:['#16a34a','#ca8a04'],tx:'পাতার শীর্ষ ও কিনারা হলুদ, মৃত অঞ্চল। কিনারা পুড়ে বাদামি, পাতা কুঁকড়ে আসে। শীর্ষ ও পার্শ্ব মুকুল মরে যায়।',sp:2},{n:'ম্যাগনেসিয়াম (Mg)',c:['#16a34a','#bef264'],tx:'ক্লোরোফিল সংশ্লেষিত হয় না, সবুজ রং হালকা। শিরার মধ্যবর্তী স্থানে বেশি ক্লোরোসিস, সালোকসংশ্লেষণের হার কমে।',sp:3},{n:'লৌহ (Fe)',c:['#16a34a','#fef9c3'],tx:'প্রথমে কচি পাতার রং হালকা। সরু শিরার মধ্যবর্তী স্থানে ক্লোরোসিস। কখনো সম্পূর্ণ পাতা বিবর্ণ, কাণ্ড দুর্বল ও ছোট।',sp:3}];
+DRAWS.push(function(){var x=ctxOf('b2c'),W=460,H=330,t=FR/60,D=B2D[B2.m],s=+$('b2k').value/100,i;$('b2kv').textContent=bn(Math.round(s*100));bgF(x,W,H);
+  var mix=function(a,b,u){var A=[parseInt(a.substr(1,2),16),parseInt(a.substr(3,2),16),parseInt(a.substr(5,2),16)],B=[parseInt(b.substr(1,2),16),parseInt(b.substr(3,2),16),parseInt(b.substr(5,2),16)];return 'rgb('+[0,1,2].map(function(k){return Math.round(lerp(A[k],B[k],u));}).join(',')+')';};
+  var col=mix(D.c[0],D.c[1],Math.min(1,s*1.1));
+  x.save();x.translate(230,185);x.shadowColor=GR;x.shadowBlur=10;x.fillStyle=col;x.beginPath();x.moveTo(-170,0);x.quadraticCurveTo(0,-135,170,0);x.quadraticCurveTo(0,135,-170,0);x.fill();x.shadowBlur=0;
+  var vc=D.sp===3?'#16a34a':'rgba(255,255,255,.55)';x.strokeStyle=D.sp===3?mix('#16a34a',col,.2):vc;x.lineWidth=2.5;x.beginPath();x.moveTo(-170,0);x.lineTo(170,0);for(i=1;i<5;i++){x.moveTo(-120+i*48,0);x.lineTo(-90+i*48,-52+i*4);x.moveTo(-120+i*48,0);x.lineTo(-90+i*48,52-i*4);}x.stroke();
+  if(D.sp===1||D.sp===2||s>.6&&D.sp===0){var n=Math.floor(s*14);for(i=0;i<n;i++){var a=i*2.399,r=40+(i%5)*22;x.fillStyle='rgba(68,30,10,.7)';x.beginPath();x.arc(Math.cos(a)*r*1.5,Math.sin(a)*r*.7,2.5+s*3,0,7);x.fill();}}
+  if(D.sp===2&&s>.3){x.strokeStyle='rgba(120,53,15,.8)';x.lineWidth=4*s;x.beginPath();x.moveTo(-170,0);x.quadraticCurveTo(0,-135,170,0);x.quadraticCurveTo(0,135,-170,0);x.stroke();}
+  x.restore();
+  chip(x,D.n+' এর অভাব: '+(s<.2?'সুস্থ পাতা':s<.6?'অভাব শুরু':'স্পষ্ট লক্ষণ'),230,24,s<.2?GR:s<.6?YL:RD,12);
+  ft(x,'সুস্থ ➜ অভাবগ্রস্ত',230,320,11,'#9bc4de');
+  $('b2t').innerHTML='<b>'+D.n+'</b>: '+D.tx+'<br><small>বইয়ের বর্ণনা অনুযায়ী আমার সরল আঁকা, বইয়ের ছবির হুবহু রং নয়।</small>';});
+qgame('b2q','b2o','b2fb','b2sc',[
+ ['পাতা হলুদ হয়ে যাওয়াকে বলে—','ক্লোরোসিস',['ডাইব্যাক','রিকেটস','গয়টার'],'বই ৫.১.২।'],
+ ['ফসফরাসের অভাবে পাতার রং কেমন হয়?','বেগুনি',['নীল','লাল','সাদা'],'বই।'],
+ ['পটাশিয়ামের অভাবে পাতার কী হয়?','কিনারা পুড়ে বাদামি ও কুঁকড়ে যায়',['পাতা বড় হয়','রং গাঢ় সবুজ','কিছুই হয় না'],'বই।'],
+ ['নাইট্রোজেনের অভাবে কী ব্যাহত হয়?','ক্লোরোফিল সৃষ্টি',['পানি শোষণ','ফুলের গন্ধ','মূলের রং'],'বই।']]);
+/* ===== ল্যাব ৩: পুষ্টির উৎস ===== */
+var C3={m:0};pills('c3p',function(k){C3.m=k;});
+DRAWS.push(function(){var x=ctxOf('c3c'),W=460,H=330,t=FR/60,m=C3.m,i;bgF(x,W,H);
+  x.fillStyle='rgba(120,70,30,.45)';x.fillRect(0,210,W,120);x.fillStyle='rgba(56,189,248,.18)';x.fillRect(0,240,W,90);
+  x.save();x.strokeStyle='#4ade80';x.shadowColor=GR;x.shadowBlur=8;x.lineWidth=7;x.lineCap='round';x.beginPath();x.moveTo(230,210);x.lineTo(230,90);x.stroke();x.lineWidth=5;[[-60,-20],[60,-40],[-45,-55]].forEach(function(p){x.beginPath();x.moveTo(230,150+p[1]);x.quadraticCurveTo(230+p[0]/2,120+p[1],230+p[0],130+p[1]);x.stroke();});x.lineWidth=3;[-60,-25,25,60].forEach(function(a){x.beginPath();x.moveTo(230,210);x.quadraticCurveTo(230+a/2,250,230+a*1.5,285);x.stroke();});x.restore();
+  var items,tx,msg;
+  if(m===0){for(i=0;i<8;i++){var u=((t*.35+i/8)%1);circ(x,0,lerp(30+(i%3)*30,200,u),lerp(40+i*12,100,u),5,i%2?'#94a3b8':PK,null);}ft(x,'CO₂ (C)',70,40,11,'#cbd5e1');ft(x,'O₂ (O)',70,24,11,PK);msg='<b>বাতাস</b>: কার্বন (C) ও অক্সিজেন (O) বায়ুমণ্ডল থেকে নেয়।';}
+  else if(m===1){for(i=0;i<8;i++){var u2=((t*.3+i/8)%1);circ(x,0,lerp(60+i*40,230,u2*.8),lerp(290,215,u2),4.5,BL,null);}ft(x,'পানি ➜ হাইড্রোজেন (H) ও অক্সিজেন (O)',230,310,11.5,BL);msg='<b>পানি</b>: হাইড্রোজেন (H) ও অক্সিজেন (O) পানি থেকে নেয়।';}
+  else{var ions=['Ca⁺⁺','Mg⁺⁺','NH₄⁺','NO₃⁻','K⁺'],cc=[CY,GR,PU,OR,YL];ions.forEach(function(n,j){var u3=((t*.25+j/5)%1),sx=70+j*80;circ(x,0,lerp(sx,230+(j-2)*22,Math.min(1,u3*1.3)),lerp(265,222,Math.min(1,u3*1.3)),8,cc[j],null);ft(x,n,lerp(sx,230+(j-2)*22,Math.min(1,u3*1.3)),lerp(265,222,Math.min(1,u3*1.3))-14,10,'#fff');});msg='<b>মাটি</b>: বাকি উপাদান মূল দিয়ে শোষণ করে, কিন্তু লবণ হিসেবে নয়, <b>আয়ন</b> হিসেবে শোষণ করে।';}
+  ft(x,['বায়ুমণ্ডল','পানি','মাটি'][m],400,40,13,'#fff');
+  $('c3t').innerHTML=msg+'<br><small>বইয়ের ৫.১.১। ছবি আমার সরল আঁকা।</small>';});
+qgame('c3q','c3o','c3fb','c3sc',[
+ ['উদ্ভিদ কার্বন ও অক্সিজেন কোথা থেকে নেয়?','বায়ুমণ্ডল থেকে',['মাটি থেকে','মূল থেকে শুধু','বৃষ্টি থেকে'],'বই।'],
+ ['উদ্ভিদ মাটির খনিজ কীভাবে শোষণ করে?','আয়ন হিসেবে',['লবণ হিসেবে','গ্যাস হিসেবে','কঠিন কণা হিসেবে'],'বই।'],
+ ['কোনটি আয়ন?','NO₃⁻',['H₂O','CO₂','O₂'],'বইয়ের উদাহরণে Ca⁺⁺, Mg⁺⁺, NH₄⁺, NO₃⁻, K⁺।']]);
+/* ===== ল্যাব ৪: ৭ উপাদান ===== */
+var D4={m:0};pills('d4p',function(k){D4.m=k;});
+var D4D=[{e:'🥩',n:'আমিষ (Protein)',f:'দেহের বৃদ্ধিসাধন ও ক্ষয়পূরণ',s:'মাছ, মাংস, ডিম, দুধ, ডাল, শিমের বীচি, চিনাবাদাম',c:PK,x:'C, H, O, N দিয়ে গঠিত; ১৬% নাইট্রোজেন।'},{e:'🍚',n:'শর্করা',f:'দেহে শক্তি উৎপাদন',s:'চাল, আটা, আলু, চিনি, মধু',c:YL,x:'কার্বন, হাইড্রোজেন ও অক্সিজেন দিয়ে গঠিত।'},{e:'🧈',n:'স্নেহ ও চর্বি',f:'তাপ ও শক্তি উৎপাদন',s:'তেল, ঘি, মাখন, ডিমের কুসুম',c:OR,x:'শর্করা ও আমিষের দ্বিগুণ ক্যালরি।'},{e:'🍊',n:'ভিটামিন',f:'রোগ প্রতিরোধ, রাসায়নিক বিক্রিয়ায় উদ্দীপনা',s:'ফল, শাকসবজি, দুধ, ডিম, মাছ',c:GR,x:'চর্বিতে বা পানিতে দ্রবণীয়।'},{e:'🧂',n:'খনিজ লবণ',f:'দেহ গঠন, অভ্যন্তরীণ কাজ নিয়ন্ত্রণ',s:'দুধ, মাছ, শাক, আয়োডিনযুক্ত লবণ',c:CY,x:'ক্যালসিয়াম, লৌহ, সোডিয়াম, আয়োডিন ইত্যাদি।'},{e:'💧',n:'পানি',f:'দেহ গঠন, অভ্যন্তরীণ কাজ নিয়ন্ত্রণ, দূষিত পদার্থ নির্গমন',s:'পানি, ফল, তরকারি',c:BL,x:'দেহের ওজনের ৫০–৬৫%।'},{e:'🌾',n:'খাদ্য আঁশ (ফাইবার)',f:'মলের পরিমাণ বাড়ায়, মল নিষ্কাশনে সাহায্য',s:'শস্যদানার বহিরাবরণ, সবজি, ফলের খোসা',c:'#a3e635',x:'শরীরে হজম হয় না, তবু গুরুত্বপূর্ণ।'}];
+DRAWS.push(function(){var x=ctxOf('d4c'),W=460,H=330,t=FR/60,D=D4D[D4.m],i;bgF(x,W,H);
+  D4D.forEach(function(d,j){var X=40+j*63,on=j===D4.m;orb(x,X,50,on?19:14,on?d.c:'#475569',on?18:0);emo(x,d.e,X,51,on?22:16);});
+  orb(x,230,170,52+Math.sin(t*2)*3,D.c,26);emo(x,D.e,230,171,54);ft(x,D.n,230,236,15,'#fff');
+  hbox(x,14,258,432,60,D.c,.5);ft(x,'কাজ: '+D.f,230,276,11.5,'#fff');ft(x,'উৎস: '+D.s,230,300,10.5,'#c7ecff');
+  for(i=0;i<6;i++){var a=t*.7+i*1.047;circ(x,0,230+Math.cos(a)*86,170+Math.sin(a)*52,4,D.c,null);}
+  $('d4t').innerHTML='<b>'+D.n+'</b>: '+D.x+' বই ৫.২.১: খাদ্যের ৭টি উপাদান (আমিষ, শর্করা, স্নেহ, ভিটামিন, খনিজ লবণ, পানি, আঁশ)।';});
+qgame('d4q','d4o','d4fb','d4sc',[
+ ['দেহের ক্ষয়পূরণ করে কোন উপাদান?','আমিষ',['শর্করা','পানি','আঁশ'],'বই।'],
+ ['দেহে শক্তি যোগায় প্রধানত—','শর্করা',['খনিজ লবণ','আঁশ','পানি'],'বই।'],
+ ['মানবদেহে পানি কত শতাংশ?','৫০–৬৫%',['১০%','৯০%','৫%'],'বই ৫.২.১।'],
+ ['কোনটি হজম হয় না কিন্তু দরকারি?','খাদ্য আঁশ',['আমিষ','শর্করা','ভিটামিন'],'বই।']]);
+/* ===== ল্যাব ৫: শর্করার শ্রেণি ===== */
+var E5={m:0};pills('e5p',function(k){E5.m=k;});
+DRAWS.push(function(){var x=ctxOf('e5c'),W=460,H=330,t=FR/60,m=E5.m,i,j;bgF(x,W,H);
+  var hex=function(X,Y,c){x.save();x.shadowColor=c;x.shadowBlur=8;x.fillStyle=c+'55';x.strokeStyle=c;x.lineWidth=2;x.beginPath();for(var k=0;k<6;k++){x.lineTo(X+Math.cos(k*1.047)*17,Y+Math.sin(k*1.047)*17);}x.closePath();x.fill();x.stroke();x.restore();};
+  var nm=[1,2,12][m];var c=m===0?'#facc15':m===1?'#fb923c':'#4ade80';
+  if(m<2){for(i=0;i<nm;i++)hex(230+(i-(nm-1)/2)*40,120,c);}else{for(i=0;i<nm;i++){var a=i*.5,X=60+(i%6)*68,Y=90+Math.floor(i/6)*34+Math.sin(t*2+i)*3;hex(X,Y,c);if(i%6<5)neon(x,X+17,Y,X+51,Y,c,2);}}
+  ft(x,['মনোমার ×১','ডাইমার ×২','পলিমার ×অনেক'][m],230,200,13,'#fff');
+  chip(x,'উদাহরণ: '+['গ্লুকোজ','সুক্রোজ, ল্যাক্টোজ','শ্বেতসার, গ্লাইকোজেন'][m],230,236,c,12);ft(x,'উৎস: '+['মধু, ফলের রস','চিনি ও দুধ','চাল, আটা, আলু, সবজি'][m],230,270,12,'#c7ecff');
+  if(m>0){ft(x,'হজমে ভেঙে ➜ সরল শর্করা (গ্লুকোজ) ➜ রক্তে শোষণ',230,304,11,YL);}else ft(x,'সরাসরি শোষণযোগ্য, মানবদেহ শুধু সরল শর্করা শোষণ করে',230,304,11,YL);
+  $('e5t').innerHTML='<b>'+['এক শর্করা (Monosaccharide)','দ্বি-শর্করা (Disaccharide)','বহু শর্করা (Polysaccharide)'][m]+'</b>: '+['একটি মনোমারবিশিষ্ট শর্করা।','দুইটি মনোমারবিশিষ্ট (ডাইমার) শর্করা।','বহু মনোমারবিশিষ্ট (পলিমার) শর্করা।'][m]+' (বই সারণি: শর্করার শ্রেণিবিভাগ)<br><small>ষড়ভুজের ছবি সরল, আমার আঁকা।</small>';});
+qgame('e5q','e5o','e5fb','e5sc',[
+ ['গ্লুকোজ কোন ধরনের শর্করা?','এক শর্করা',['দ্বি-শর্করা','বহু শর্করা','স্নেহ'],'বই।'],
+ ['সুক্রোজ কোন শ্রেণির?','দ্বি-শর্করা',['এক শর্করা','বহু শর্করা','আমিষ'],'বই।'],
+ ['শ্বেতসার কোন শ্রেণির?','বহু শর্করা',['এক শর্করা','দ্বি-শর্করা','ভিটামিন'],'বই।'],
+ ['মানবদেহ কোন শর্করা শোষণ করতে পারে?','সরল শর্করা',['শুধু শ্বেতসার','শুধু সেলুলোজ','কোনোটি না'],'বই।']]);
+
+/* ===== ল্যাব ৬: খাদ্য পিরামিড ===== */
+var F6={m:0};pills('f6p',function(k){F6.m=k;});
+DRAWS.push(function(){var x=ctxOf('f6c'),W=460,H=330,t=FR/60,m=F6.m,i;bgF(x,W,H);
+  var Lv=[{n:'শর্করা',w:300,c:'#fb923c',y:250,e:'🍚🥔🍞'},{n:'শাকসবজি ও ফলমূল',w:230,c:'#facc15',y:200,e:'🥦🥕🍎'},{n:'আমিষ (মাছ, মাংস, ডিম, দুধ, ডাল)',w:160,c:'#38bdf8',y:150,e:'🐟🥚🥛'},{n:'স্নেহ ও চর্বি, মিষ্টি',w:90,c:'#a78bfa',y:100,e:'🧈'}];
+  Lv.forEach(function(l,j){var on=j===m;x.save();x.shadowColor=l.c;x.shadowBlur=on?24:6;x.fillStyle=on?l.c:l.c+'88';x.beginPath();x.moveTo(230-l.w/2,l.y+40);x.lineTo(230+l.w/2,l.y+40);x.lineTo(230+(l.w-40)/2,l.y);x.lineTo(230-(l.w-40)/2,l.y);x.closePath();x.fill();x.restore();ft(x,l.e,230,l.y+20,on?18:14,'#fff');});
+  ft(x,'বেশি খাও ⬇',60,280,11,'#fb923c');ft(x,'কম খাও ⬆',60,110,11,'#a78bfa');
+  ft(x,Lv[m].n,230,40,13.5,'#fff');
+  hbox(x,330,60,120,40,Lv[m].c,.6);ft(x,['সবচেয়ে বেশি','এর চেয়ে কম','আরও কম','সবচেয়ে কম'][m],390,80,11.5,'#fff');
+  $('f6t').innerHTML=['<b>শর্করা</b>: পিরামিডের ভিত্তি, সবচেয়ে বেশি খেতে হয় (ভাত, আলু, রুটি)।','<b>শাকসবজি ও ফলমূল</b>: শর্করার চেয়ে কম পরিমাণে।','<b>আমিষ</b>: মাছ, মাংস, ডিম, দুধ, ডাল, পনির, ছানা, দই আরও কম খেতে হয়।','<b>স্নেহ ও চর্বি, মিষ্টি</b>: সবচেয়ে কম খাওয়া উচিত (তেল, চর্বি, মিষ্টিজাতীয়)।'][m]+'<br><small>বই ৫.২.২। আদর্শ খাদ্য পিরামিড: শর্করাকে নিচে রেখে পরিমাণ অনুযায়ী স্তরে সাজানো।</small>';});
+qgame('f6q','f6o','f6fb','f6sc',[
+ ['আদর্শ খাদ্য পিরামিডের ভিত্তিতে কোনটি থাকে?','শর্করা',['স্নেহ','আমিষ','ভিটামিন'],'বই ৫.২.২।'],
+ ['পিরামিডের সবচেয়ে উপরে—','স্নেহ ও চর্বিজাতীয় খাদ্য',['শর্করা','শাকসবজি','ফল'],'বই।'],
+ ['সুষম খাদ্য কেমন হতে হবে?','সহজপাচ্য ও সব উপাদানযুক্ত',['শুধু মিষ্টি','শুধু আমিষ','শুধু ভাত'],'বই ৫.২.৩।']]);
+/* ===== ল্যাব ৭: ক্যালরি হিসাব ===== */
+DRAWS.push(function(){var x=ctxOf('g7c'),W=460,H=330,t=FR/60,a=+$('g7x').value,b=+$('g7y').value,c=+$('g7z').value,i;
+  $('g7xv').textContent=bn(a);$('g7yv').textContent=bn(b);$('g7zv').textContent=bn(c);bgF(x,W,H);
+  var ka=a*4,kb=b*4,kc=c*9,tot=ka+kb+kc,kj=tot*4.2;var mx=Math.max(100,tot);
+  [['শর্করা ×৪',ka,YL],['আমিষ ×৪',kb,PK],['চর্বি ×৯',kc,OR]].forEach(function(r,j){var h=r[1]/mx*150;bar3d(x,50+j*80,230-h,52,h,r[2],8);ft(x,bn(Math.round(r[1])),76+j*80,222-h,13,'#fff');ft(x,r[0],76+j*80,250,11,'#9bc4de');});
+  hbox(x,290,70,160,130,CY,.6);ft(x,'মোট খাদ্য ক্যালরি',370,90,11.5,CY);ft(x,bn(Math.round(tot*100)/100),370,128,28,'#fff');ft(x,'কিলোক্যালরি',370,152,11,'#9bc4de');ft(x,'≈ '+bn(Math.round(kj))+' কিলোজুল',370,180,13,YL);
+  ft(x,'১ কিলোক্যালরি ≈ ৪.২ কিলোজুল',370,215,10.5,'#c7ecff');
+  if(a==15&&b==1&&c==0)ft(x,'(বইয়ের উদাহরণের কাছাকাছি)',230,296,10.5,'#9bc4de');
+  $('g7t').innerHTML='বই ৫.৪.২: ১ গ্রাম <b>শর্করা = ৪</b>, <b>আমিষ = ৪</b>, <b>চর্বি = ৯</b> খাদ্য ক্যালরি। ১ খাদ্য ক্যালরি = ১ কিলোক্যালরি ≈ ৪.২ কিলোজুল।<br><small>বইয়ের উদাহরণে ২০ গ্রাম চিড়ায় ১৫.৪ g শর্করা, ১.৩২ g আমিষ, ০.২৪ g স্নেহ থেকে ৬৯.০৪ কিলোক্যালরি। স্লাইডারে পূর্ণসংখ্যা, তাই ওটার সাথে সামান্য ফারাক হবে।</small>';});
+qgame('g7q','g7o','g7fb','g7sc',[
+ ['১ গ্রাম চর্বি থেকে কত খাদ্য ক্যালরি?','৯',['৪','২','১'],'বই ৫.৪.২।'],
+ ['১ কিলোক্যালরি প্রায় কত কিলোজুল?','৪.২',['১','১০০','০.৫'],'বই।'],
+ ['১ গ্রাম শর্করায় কত ক্যালরি?','৪',['৯','২','০'],'বই।'],
+ ['কোন উপাদান শক্তি দিতে পারে না?','ভিটামিন, খনিজ ও পানি',['শর্করা','আমিষ','স্নেহ'],'বই ৫.৪।']]);
+/* ===== ল্যাব ৮: রোগ ===== */
+SORT({id:'h8',colL:'#22d3ee',colR:'#f472b6',names:['খনিজের অভাব','ভিটামিনের অভাব'],hint:'কীসের অভাবে?',
+ intro:'রোগটি কোন ধরনের পুষ্টি উপাদানের অভাবে হয়?',
+ items:[{e:'🦃',n:'গয়টার',t:0,d:'আয়োডিনের অভাবে গলগণ্ড (গয়টার)।'},{e:'🩸',n:'রক্তশূন্যতা',t:0,d:'প্রধানত লৌহের অভাবে (বাংলাদেশে সাধারণত)।'},{e:'🌙',n:'রাতকানা',t:1,d:'ভিটামিন A-এর অভাবে।'},{e:'👁️',n:'জেরোফথ্যালমিয়া',t:1,d:'ভিটামিন A-এর অভাবে চোখের ক্ষতি।'},{e:'🦴',n:'রিকেটস',t:1,d:'ভিটামিন D-এর অভাবে।'},{e:'🧂',n:'আয়োডিনের অভাব',t:0,d:'গলগণ্ড হয়, খনিজ লবণ।'}]});
+qgame('h8q','h8o','h8fb','h8sc',[
+ ['আয়োডিনের অভাবে কী রোগ হয়?','গয়টার',['রিকেটস','রাতকানা','রক্তশূন্যতা'],'বই ৫.৩ (a)।'],
+ ['রাতকানা কোন ভিটামিনের অভাবে?','ভিটামিন A',['ভিটামিন C','ভিটামিন D','ভিটামিন K'],'বই।'],
+ ['রিকেটস কোন ভিটামিনের অভাবে?','ভিটামিন D',['ভিটামিন A','ভিটামিন B','ভিটামিন E'],'বই।'],
+ ['গর্ভবতী নারীর রক্তশূন্যতার প্রধান কারণ?','লৌহের অভাব',['আয়োডিন','ভিটামিন D','পানি'],'বই ৫.৩ (d), সংক্ষিপ্ত প্রশ্ন ৫।']]);
+/* ===== ল্যাব ৯: BMI ===== */
+DRAWS.push(function(){var x=ctxOf('i9c'),W=460,H=330,t=FR/60,w=+$('i9a').value,h=+$('i9b').value,i;$('i9av').textContent=bn(w);$('i9bv').textContent=bn(h);bgF(x,W,H);
+  var m=h/100,B=w/(m*m);var cat=B<18.5?0:B<25?1:B<30?2:B<35?3:B<40?4:5;
+  var N=['ওজন কম','সুস্বাস্থ্যের আদর্শ মান','ওজন অতিরিক্ত','মোটা (প্রথম স্তর)','মোটা (দ্বিতীয় স্তর)','অতিরিক্ত মোটাত্ব'],C=['#38bdf8',GR,YL,OR,'#f87171','#ef4444'];
+  var seg=[[10,18.5,'#38bdf8'],[18.5,25,GR],[25,30,YL],[30,35,OR],[35,40,'#f87171'],[40,50,'#ef4444']];
+  seg.forEach(function(s){var x1=40+(s[0]-10)/40*380,x2=40+(s[1]-10)/40*380;x.fillStyle=s[2];x.globalAlpha=.8;x.fillRect(x1,190,x2-x1,22);x.globalAlpha=1;});
+  [18.5,25,30,35,40].forEach(function(v){var X=40+(v-10)/40*380;ft(x,bn(v),X,228,10.5,'#9bc4de');});
+  var px=40+(Math.max(10,Math.min(50,B))-10)/40*380;x.save();x.shadowColor='#fff';x.shadowBlur=10;x.fillStyle='#fff';x.beginPath();x.moveTo(px,184);x.lineTo(px-7,170);x.lineTo(px+7,170);x.fill();x.restore();
+  var bw=24+Math.max(0,B-18)*2.2,bh=70+h*.5;x.save();x.shadowColor=C[cat];x.shadowBlur=14;x.fillStyle=C[cat]+'88';x.strokeStyle=C[cat];x.lineWidth=2.5;rr(x,70-bw/2,150-bh*.55,bw,bh*.55,bw/3);x.fill();x.stroke();x.beginPath();x.arc(70,150-bh*.55-14,14,0,7);x.fill();x.stroke();x.restore();
+  hbox(x,130,40,320,100,C[cat],.55);ft(x,'বিএমআই',290,60,12,'#9bc4de');ft(x,bn(Math.round(B*10)/10),290,98,32,'#fff');ft(x,N[cat],290,126,13,C[cat]);
+  chip(x,'বিএমআই = ওজন (কেজি) ÷ উচ্চতা² (মিটার)',230,264,CY,11);
+  var ideal=Math.round(18.5*m*m*10)/10+'–'+Math.round(24.9*m*m*10)/10;ft(x,'এই উচ্চতায় আদর্শ ওজন প্রায় '+bn(ideal.replace('–',' থেকে '))+' কেজি',230,300,11,'#c7ecff');
+  $('i9t').innerHTML='<b>বিএমআই</b> দেহের গঠন ও চর্বির সূচক। বইয়ের ছক: ১৮.৫-এর নিচে ওজন কম, ১৮.৫–২৪.৯ আদর্শ, ২৫–২৯.৯ ওজন অতিরিক্ত, ৩০–৩৪.৯ মোটা (১ম স্তর), ৩৫–৩৯.৯ মোটা (২য় স্তর), ৪০ এর ওপরে অতিরিক্ত মোটাত্ব।<br><small>বইয়ের উদাহরণ: ১.২৫ মিটার ও ৫০ কেজি ➜ ৩২। শরীরের ছবি সরল, আমার আঁকা।</small>';});
+qgame('i9q','i9o','i9fb','i9sc',[
+ ['সুস্বাস্থ্যের আদর্শ বিএমআই—','১৮.৫–২৪.৯',['৩০–৩৪.৯','১৮.৫ এর নিচে','৪০ এর উপরে'],'বই ৫.৫.২।'],
+ ['১.২৫ মিটার, ৫০ কেজির বিএমআই কত?','৩২',['১৮','২৫','৪০'],'বইয়ের উদাহরণ।'],
+ ['বিএমআই ৩৭ হলে কী বলে?','মোটা (দ্বিতীয় স্তর)',['আদর্শ','ওজন কম','স্বাভাবিক'],'বই ছক।'],
+ ['তাসফিকের (১৭০ সেমি, ৬২ কেজি) বিএমআই প্রায়—','২১.৫',['২৫.৫','১৫','৩০'],'আমার বিশ্লেষণ: ৬২ ÷ (১.৭)² ≈ ২১.৪৫।']]);
+/* ===== ল্যাব ১০: BMR ===== */
+var J10={m:0};pills('j10p',function(k){J10.m=k;});
+DRAWS.push(function(){var x=ctxOf('j10c'),W=460,H=330,t=FR/60,age=+$('j10u').value,w=+$('j10v').value,h=+$('j10x').value,lv=+$('j10y').value,i;
+  var AL=['পরিশ্রম না করলে','হালকা পরিশ্রম','পরিশ্রমী','খুব পরিশ্রমী','অত্যন্ত পরিশ্রমী'],MU=[1.2,1.375,1.55,1.725,1.9];
+  $('j10uv').textContent=bn(age);$('j10vv').textContent=bn(w);$('j10xv').textContent=bn(h);$('j10yv').textContent=AL[lv];bgF(x,W,H);
+  var bmr=J10.m===0?655+9.6*w+1.8*h-4.7*age:66+13.7*w+5*h-6.8*age,tot=bmr*MU[lv];
+  var mx=3800;[['বিএমআর',bmr,CY],['দৈনিক চাহিদা',tot,OR]].forEach(function(r,j){var hh=r[1]/mx*190;bar3d(x,60+j*140,250-hh,70,hh,r[2],8);ft(x,bn(Math.round(r[1])),95+j*140,232-hh,15,'#fff');ft(x,r[0],95+j*140,272,11.5,'#9bc4de');});
+  hbox(x,300,50,150,90,YL,.6);ft(x,AL[lv],375,68,11,YL);ft(x,'× '+bn(MU[lv]),375,98,22,'#fff');ft(x,'দৈনিক ক্যালরি = বিএমআর × '+bn(MU[lv]),375,126,9.5,'#c7ecff');
+  ft(x,'কিলোক্যালরি/দিন',230,306,10.5,'#9bc4de');
+  $('j10t').innerHTML='<b>বিএমআর</b> পূর্ণ বিশ্রামরত অবস্থায় শক্তির পরিমাণ। '+(J10.m===0?'মেয়েদের: 655 + (9.6 × ওজন) + (1.8 × উচ্চতা) − (4.7 × বয়স)':'ছেলেদের: 66 + (13.7 × ওজন) + (5 × উচ্চতা) − (6.8 × বয়স)')+'<br>বইয়ের উদাহরণ: ৩৩ বছর, ১৬৫ সেমি, ৯৪ কেজি নারীর বিএমআর ১৬৯৯.৩, প্রতিদিন প্রচুর খেলাধুলায় ×১.৭২৫ = ২৯৩১ কিলোক্যালরির কাছাকাছি।';});
+qgame('j10q','j10o','j10fb','j10sc',[
+ ['বিএমআর (BMR) কী?','বিশ্রামে ব্যবহৃত শক্তির পরিমাণ',['ওজনের সূচক','পানির পরিমাণ','রক্তচাপ'],'বই ৫.৫।'],
+ ['বয়স বাড়লে বিএমআর কী হয়?','কমতে থাকে',['বাড়ে','একই থাকে','দ্বিগুণ হয়'],'বই ৫.৫.১।'],
+ ['পরিশ্রম না করলে ক্যালরি = বিএমআর ×?','১.২',['১.৯','১.৭২৫','২'],'বইয়ের ছক।'],
+ ['তাসফিকের (ছেলে, ১৬ বছর, ১৭০ সেমি, ৬২ কেজি) বিএমআর প্রায়—','১৬৫৭',['১২০০','২৫০০','৮০০'],'আমার বিশ্লেষণ: 66+849.4+850−108.8 ≈ ১৬৫৬.৬। হালকা পরিশ্রমে ×১.৩৭৫ ≈ ২২৭৮। শিক্ষকের সাথে মিলিয়ে নিও।']]);
+
+/* ===== ল্যাব ১১: সংরক্ষণ ও ভেজাল ===== */
+SORT({id:'k11',colL:'#4ade80',colR:'#f87171',names:['অনুমোদিত','ক্ষতিকর'],hint:'খাদ্যে চলবে?',
+ intro:'খাদ্য সংরক্ষণে কোনটি অনুমোদিত, আর কোনটি ক্ষতিকর ভেজাল?',
+ items:[{e:'🧂',n:'খাবার লবণ (সোডিয়াম ক্লোরাইড)',t:0,d:'বইয়ে অনুমোদিত সংরক্ষক।'},{e:'⚗️',n:'সোডিয়াম নাইট্রেট',t:0,d:'বইয়ে অনুমোদিত।'},{e:'🧴',n:'সোডিয়াম বেনজয়েট',t:0,d:'অনুমোদিত সংরক্ষক।'},{e:'🌫️',n:'সালফার ডাই-অক্সাইড',t:0,d:'অনুমোদিত।'},{e:'🥫',n:'সরবেট',t:0,d:'অনুমোদিত সংরক্ষক।'},{e:'🧊',n:'বরফ দিয়ে শীতলকরণ',t:0,d:'প্রচলিত নিরাপদ সংরক্ষণ উপায়।'},{e:'☠️',n:'ফরমালিন',t:1,d:'লাশ সংরক্ষণের উপাদান, খাদ্যে সম্পূর্ণ নিষিদ্ধ।'},{e:'🎨',n:'কাপড়ের রং (বাণিজ্যিক রং)',t:1,d:'অননুমোদিত, লিভারের ক্ষতি করে।'},{e:'🐛',n:'নিষিদ্ধ কীটনাশক',t:1,d:'বিষাক্ততা থাকলে স্বাস্থ্যঝুঁকি।'},{e:'🔋',n:'হেভি মেটাল',t:1,d:'প্রাণীর শরীরে জমা, ক্ষতিকর।'},{e:'💊',n:'অননুমোদিত অ্যান্টিবায়োটিক',t:1,d:'শুধু রেজিস্টার্ড চিকিৎসকের পরামর্শে ব্যবহার।'},{e:'🧪',n:'অননুমোদিত কার্বাইড',t:1,d:'ফল পাকাতে অননুমোদিত।'}]});
+qgame('k11q','k11o','k11fb','k11sc',[
+ ['খাদ্য সংরক্ষণে কখনো ব্যবহার করা উচিত নয়—','ফরমালিন',['লবণ','সরবেট','বরফ'],'বই ৫.৭।'],
+ ['ফরমালিন সাধারণত কী সংরক্ষণে ব্যবহৃত হয়?','মর্গে লাশ',['দুধ','ভাত','ফল'],'বই ৫.৭।'],
+ ['কোনটি অনুমোদিত খাদ্য সংরক্ষক?','সোডিয়াম বেনজয়েট',['ফরমালিন','কার্বাইড','কীটনাশক'],'বই।'],
+ ['ভেজাল খাদ্য প্রধানত কোন অঙ্গের ক্ষতি করে?','যকৃৎ',['হাড়','চুল','নখ'],'বই: বাণিজ্যিক রং যকৃতের কার্যকারিতা নষ্ট করে।']]);
+/* ===== ল্যাব ১২: পৌষ্টিকনালির যাত্রা ===== */
+var ST=[{n:'মুখগহ্বর',e:'👄',a:0,tx:'দাঁত চিবিয়ে ছোট টুকরো করে। লালাগ্রন্থি থেকে লালা: টায়ালিন (স্যালিভারি অ্যামাইলেজ) শ্বেতসারকে মলটোজে পরিণত করে।'},{n:'অন্ননালি',e:'🧵',a:15,tx:'পেরিস্টালসিসে খাবার পাকস্থলীতে যায়। এখানে কোনো পরিপাক ঘটে না।'},{n:'পাকস্থলী',e:'🫃',a:28,tx:'গ্যাস্ট্রিক রসে HCl ও পেপসিন। আমিষ ভেঙে পলিপেপটাইড হয়। খাদ্য মণ্ড (কাইম) হয়।'},{n:'ক্ষুদ্রান্ত্র',e:'🌀',a:50,tx:'পিত্তরস ও অগ্ন্যাশয় রস। শর্করা, আমিষ, স্নেহ পরিপাক। ভিলাইয়ে শোষণ।'},{n:'বৃহদন্ত্র',e:'🟤',a:80,tx:'পরিপাক নেই। পানি ও লবণ শোষিত হয়, মল তৈরি ও জমা থাকে।'},{n:'পায়ু',e:'🚪',a:95,tx:'পৌষ্টিকনালির শেষ প্রান্তের ছিদ্রপথ, মল বের হয়।'}];
+DRAWS.push(function(){var x=ctxOf('l12c'),W=460,H=330,t=FR/60,k=+$('l12k').value,i;$('l12kv').textContent=bn(k);bgF(x,W,H);
+  var cur=0;for(i=0;i<ST.length;i++)if(k>=ST[i].a)cur=i;
+  var X=function(i){return 40+i*76;};
+  neon(x,X(0),150,X(5),150,'rgba(34,211,238,.4)',10);neon(x,X(0),150,X(0)+(X(5)-X(0))*k/100,150,CY,4);
+  ST.forEach(function(s,j){var on=j===cur;x.save();x.globalAlpha=j<=cur?1:.45;orb(x,X(j),150,on?24:17,on?YL:CY,on?22:6);emo(x,s.e,X(j),151,on?26:18);x.restore();ft(x,s.n,X(j),190,on?11.5:10,on?'#fff':'#9bc4de');});
+  var fx=X(0)+(X(5)-X(0))*k/100;orb(x,fx,108,11,OR,16);ft(x,'খাবার',fx,90,10.5,OR);
+  hbox(x,14,208,432,106,CY,.5);ft(x,ST[cur].n,230,224,13.5,YL);wrapT(x,ST[cur].tx,230,246,410,16,10.5,'#fff');
+  $('l12t').innerHTML='<b>'+ST[cur].n+'</b>: '+ST[cur].tx+'<br><small>বই ৫.৮.১–৫.৮.৩। পৌষ্টিকনালি মুখ থেকে শুরু হয়ে পায়ুতে শেষ। ছবি সরল, আমার আঁকা।</small>';});
+qgame('l12q','l12o','l12fb','l12sc',[
+ ['পাকস্থলীতে কোন এনজাইম আমিষ ভাঙে?','পেপসিন',['টায়ালিন','লাইপেজ','অ্যামাইলেজ'],'বই ৫.৮.৩ (b)।'],
+ ['মুখগহ্বরে কোন এনজাইম শ্বেতসার ভাঙে?','টায়ালিন (স্যালিভারি অ্যামাইলেজ)',['পেপসিন','ট্রিপসিন','লাইপেজ'],'বই (a)।'],
+ ['পরিপাকের জন্য পাকস্থলীর রসের মাধ্যম কেমন?','অম্লীয়',['ক্ষারীয়','নিরপেক্ষ','কোনোটি নয়'],'বই (HCl)।'],
+ ['কোথায় পানি শোষিত হয়ে মল তৈরি হয়?','বৃহদন্ত্র',['মুখ','পাকস্থলী','অন্ননালি'],'বই ৫.৮.৩ (d)।'],
+ ['পিত্তরস কোথায় জমা থাকে?','পিত্তথলিতে',['পাকস্থলীতে','কিডনিতে','ফুসফুসে'],'বই ৫.৮.২ (b)।']]);
+/* ===== ল্যাব ১৩: এনজাইম ===== */
+var M13={m:0,t:-1};pills('m13p',function(k){M13.m=k;M13.t=-1;});$('m13g').onclick=function(){M13.t=0;};
+var M13D=[{en:'অ্যামাইলেজ',s:'শ্বেতসার',p:'গ্লুকোজ / সরল শর্করা',cs:'#4ade80',cp:'#facc15',n:6,tx:'অ্যামাইলেজ শ্বেতসারকে সরল শর্করায় (গ্লুকোজ) পরিণত করে। মুখে টায়ালিন শ্বেতসারকে মলটোজে ভাঙে।'},{en:'পেপসিন, ট্রিপসিন',s:'আমিষ',p:'অ্যামাইনো এসিড',cs:'#f472b6',cp:'#fb7185',n:4,tx:'পেপসিন আমিষকে পলিপেপটাইডে ভাঙে। ক্ষুদ্রান্ত্রে ট্রিপসিন পলিপেপটাইডকে অ্যামাইনো এসিড ও সরল পেপটাইডে ভাঙে।'},{en:'লাইপেজ',s:'স্নেহ',p:'ফ্যাটি এসিড + গ্লিসারল',cs:'#fb923c',cp:'#fde047',n:3,tx:'পিত্তরস স্নেহকে ক্ষুদ্র দানায় ভাঙে। লাইপেজ দানাগুলোকে ফ্যাটি এসিড ও গ্লিসারলে পরিণত করে।'}];
+DRAWS.push(function(){var x=ctxOf('m13c'),W=460,H=330,t=FR/60,D=M13D[M13.m],i;bgF(x,W,H);if(M13.t>=0)M13.t=Math.min(1.6,M13.t+DT*.7);var u=ease(Math.max(0,Math.min(1,M13.t-.3)));
+  ft(x,D.s+' ➜ '+D.p,230,26,13,'#fff');
+  var go=M13.t>=0;
+  for(i=0;i<D.n;i++){var bx=60+i*32+(1-u)*0,by=110+Math.sin(t*2+i)*4;
+    if(!go||u<.15){x.save();x.shadowColor=D.cs;x.shadowBlur=8;x.fillStyle=D.cs+'88';x.strokeStyle=D.cs;x.lineWidth=2;rr(x,60+i*32-13,by-13,26,26,6);x.fill();x.stroke();if(i<D.n-1){x.beginPath();x.moveTo(60+i*32+13,by);x.lineTo(60+i*32+19,by);x.stroke();}x.restore();}
+    else{var tx=lerp(60+i*32,60+(i%3)*80+60,u),ty=lerp(by,230+Math.floor(i/3)*38,u);x.save();x.shadowColor=D.cp;x.shadowBlur=8;x.fillStyle=D.cp+'99';x.strokeStyle=D.cp;x.lineWidth=2;x.beginPath();x.arc(tx,ty,11,0,7);x.fill();x.stroke();x.restore();}}
+  if(go&&M13.t<1.2){var ex=lerp(10,90+i*0,Math.min(1,M13.t*1.2));x.save();x.shadowColor=CY;x.shadowBlur=14;x.fillStyle=CY;x.beginPath();x.moveTo(60+Math.min(D.n-1,Math.floor(M13.t*D.n*1.2))*32,70);x.lineTo(50+Math.min(D.n-1,Math.floor(M13.t*D.n*1.2))*32,52);x.lineTo(70+Math.min(D.n-1,Math.floor(M13.t*D.n*1.2))*32,52);x.fill();x.restore();ft(x,'✂️ '+D.en,230,52,11.5,CY);}
+  chip(x,go&&u>.9?'হজম শেষ: '+D.p:go?'এনজাইম কাজ করছে...':'▶ বোতাম চাপো (এনজাইম যোগ করো)',230,300,go&&u>.9?GR:YL,11.5);
+  $('m13t').innerHTML='<b>'+D.s+'</b>: '+D.tx+'<br><small>বই ৫.৮.৩। ছবি সরল, আমার আঁকা।</small>';});
+qgame('m13q','m13o','m13fb','m13sc',[
+ ['অ্যামাইলেজ কী পরিপাক করে?','শ্বেতসার',['আমিষ','স্নেহ','ভিটামিন'],'বই।'],
+ ['লাইপেজ স্নেহকে কী বানায়?','ফ্যাটি এসিড ও গ্লিসারল',['গ্লুকোজ','অ্যামাইনো এসিড','পানি'],'বই।'],
+ ['ট্রিপসিন কাজ করে—','ক্ষুদ্রান্ত্রে',['মুখে','অন্ননালিতে','পায়ুতে'],'বই।'],
+ ['পিত্তরসে কি এনজাইম আছে?','না, এতে এনজাইম নেই',['হ্যাঁ, লাইপেজ','হ্যাঁ, পেপসিন','হ্যাঁ, টায়ালিন'],'বই ৫.৮.২ (b): পিত্তরসে কোনো উৎসেচক বা এনজাইম থাকে না।']]);
+
+var QUIZ=[];function M(q,c,w,e,fix){var o=[c].concat(w);QUIZ.push({q:q,o:o,a:0,e:e,fix:!!fix});}
+M('উদ্ভিদের স্বাভাবিক বৃদ্ধির জন্য অত্যাবশ্যকীয় উপাদান কয়টি?','১৬টি',['৯টি', '৭টি', '৬০টি'],'বই অধ্যায় ৫।');
+M('ম্যাক্রো উপাদান কয়টি (বই)?','৯টি',['৭টি', '১৬টি', '৫টি'],'বই অধ্যায় ৫।');
+M('কোনটি ম্যাক্রো উপাদান?','ম্যাগনেসিয়াম',['জিংক', 'মলিবডেনাম', 'বোরন'],'বই অধ্যায় ৫।');
+M('পাতা হলুদ হওয়াকে বলে—','ক্লোরোসিস',['ডাইব্যাক', 'গয়টার', 'রিকেটস'],'বই অধ্যায় ৫।');
+M('ফসফরাসের অভাবে পাতার রং—','বেগুনি',['নীল', 'সাদা', 'কালো'],'বই অধ্যায় ৫।');
+M('উদ্ভিদ মাটির খনিজ শোষণ করে—','আয়ন হিসেবে',['লবণ হিসেবে', 'গ্যাস হিসেবে', 'কণা হিসেবে'],'বই অধ্যায় ৫।');
+M('সালফারের অভাবে চরম অবস্থায় যা ঘটে—','ডাইব্যাক',['পাতা নীল', 'ফুল বড়', 'মূল বাড়ে'],'বই অধ্যায় ৫।');
+M('দেহের বৃদ্ধি ও ক্ষয়পূরণ করে—','আমিষ',['শর্করা', 'পানি', 'আঁশ'],'বই অধ্যায় ৫।');
+M('আমিষে কত শতাংশ নাইট্রোজেন থাকে?','১৬%',['৫০%', '১%', '৯০%'],'বই অধ্যায় ৫।');
+M('সুক্রোজ কোন শ্রেণির শর্করা?','দ্বি-শর্করা',['এক শর্করা', 'বহু শর্করা', 'আমিষ'],'বই অধ্যায় ৫।');
+M('শ্বেতসার কোন শ্রেণির?','বহু শর্করা',['এক শর্করা', 'দ্বি-শর্করা', 'স্নেহ'],'বই অধ্যায় ৫।');
+M('মানবদেহ শোষণ করতে পারে—','সরল শর্করা',['শ্বেতসার সরাসরি', 'সেলুলোজ', 'কোনোটিই নয়'],'বই অধ্যায় ৫।');
+M('চর্বির ক্যালরি শর্করার প্রায়—','দ্বিগুণ',['অর্ধেক', 'সমান', 'দশগুণ'],'বই অধ্যায় ৫।');
+M('ঘি ও মাখন কোন ধরনের স্নেহপদার্থ?','প্রাণিজ',['উদ্ভিজ্জ', 'খনিজ', 'কৃত্রিম'],'বই অধ্যায় ৫।');
+M('চর্বিতে দ্রবণীয় ভিটামিন—','A, D, E, K',['B ও C', 'শুধু B', 'শুধু C'],'বই অধ্যায় ৫।');
+M('মানবদেহে পানি কত শতাংশ?','৫০–৬৫%',['৫%', '১০%', '৯০%'],'বই অধ্যায় ৫।');
+M('আদর্শ খাদ্য পিরামিডের ভিত্তি—','শর্করা',['স্নেহ', 'আমিষ', 'ভিটামিন'],'বই অধ্যায় ৫।');
+M('আয়োডিনের অভাবে হয়—','গয়টার',['রিকেটস', 'রাতকানা', 'অ্যাপেনডিসাইটিস'],'বই অধ্যায় ৫।');
+M('রাতকানা রোগ ভিটামিন—','A এর অভাবে',['D এর অভাবে', 'C এর অভাবে', 'K এর অভাবে'],'বই অধ্যায় ৫।');
+M('রিকেটস ভিটামিন—','D এর অভাবে',['A এর অভাবে', 'B এর অভাবে', 'E এর অভাবে'],'বই অধ্যায় ৫।');
+M('১ গ্রাম আমিষে খাদ্য ক্যালরি—','৪',['৯', '২', '১'],'বই অধ্যায় ৫।');
+M('১ কিলোক্যালরি প্রায় কত কিলোজুল?','৪.২',['১০০', '০.২', '৪২'],'বই অধ্যায় ৫।');
+M('বিএমআই আদর্শ মান—','১৮.৫–২৪.৯',['৩০–৩৪.৯', '৪০+', '১০ এর নিচে'],'বই অধ্যায় ৫।');
+M('বিএমআই সূত্র—','ওজন (কেজি) ÷ উচ্চতা² (মিটার)',['ওজন × উচ্চতা', 'উচ্চতা ÷ ওজন', 'ওজন + উচ্চতা'],'বই অধ্যায় ৫।');
+M('খাদ্য সংরক্ষণে কখনো ব্যবহার্য নয়—','ফরমালিন',['লবণ', 'সরবেট', 'সোডিয়াম বেনজয়েট'],'বই অধ্যায় ৫।');
+M('মুখে শ্বেতসার ভাঙে—','টায়ালিন',['পেপসিন', 'লাইপেজ', 'ট্রিপসিন'],'বই অধ্যায় ৫।');
+M('পাকস্থলীতে আমিষ ভাঙে—','পেপসিন',['টায়ালিন', 'অ্যামাইলেজ', 'লাইপেজ'],'বই অধ্যায় ৫।');
+M('পিত্তরসে থাকে না—','এনজাইম',['পানি', 'কোলেস্টেরল', 'খনিজ লবণ'],'বই অধ্যায় ৫।');
+M('মিশ্র গ্রন্থি—','অগ্ন্যাশয়',['যকৃৎ', 'লালাগ্রন্থি', 'থাইরয়েড'],'বই অধ্যায় ৫।');
+M('পেপটিক আলসারের অন্যতম প্রধান কারণ ব্যাকটেরিয়া—','হেলিকোব্যাকটার পাইলোরি',['ই. কোলাই', 'নিউমোনিয়া', 'সিগেলা'],'বই অধ্যায় ৫।');
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+var QA=[
+{h:'বহুনির্বাচনি (বইয়ের নমুনা, উত্তর আমার বিশ্লেষণ)',items:[
+['১. উদ্ভিদের ক্ষেত্রে কোনটি মাইক্রোনিউট্রিয়েন্ট হিসেবে কাজ করে? (ক. দস্তা খ. ক্লোরিন গ. বোরন ঘ. পটাশিয়াম)','বইয়ের তালিকায় দস্তা, ক্লোরিন ও বোরন তিনটিই মাইক্রো, শুধু পটাশিয়াম ম্যাক্রো। তাই প্রশ্নটিতে একাধিক ঠিক উত্তর আছে। বই অনুযায়ী ক. দস্তা সঠিক ধরা যায়। শিক্ষকের কাছে মিলিয়ে নিও।'],
+['২. ক্লোরোসিস হয়— i. নাইট্রোজেনের অভাবে ii. সালফারের ঘাটতিজনিত কারণে iii. লৌহের অনুপস্থিতিতে','বই অনুযায়ী তিনটিতেই ক্লোরোসিস হয়: উত্তর ঘ. i, ii ও iii (আমার বিশ্লেষণ)।'],
+['৩. সানজানার (রাতে পড়তে পারে না) কোন ভিটামিনের অভাব?','ক. ভিটামিন-এ (রাতকানা)।'],
+['৪. সবুজের (পায়ের হাড় বেঁকে গেছে) রোগ প্রতিরোধে অধিক খেতে হবে— i. দুধ ও মাখন ii. শিমের বীজ ও মুগডাল iii. ডিম ও কডলিভার তেল','রিকেটস (ভিটামিন D)। দুধ, মাখন, ডিম, কডলিভার তেলে ভিটামিন D আছে। উত্তর খ. i ও iii (আমার বিশ্লেষণ)।']]},
+{h:'সৃজনশীল প্রশ্ন (বইয়ের প্রশ্ন, উত্তর আমার লেখা, শিক্ষকের সাথে মিলিয়ে নিও)',items:[
+['১. ইরফান মিয়ার বাগানে ফুলগাছের পাতা, ফুল ও কুঁড়ি ঝরছে; প্রতিবেশীর ধান গাছের পাতা হলুদ। (ক) ম্যাক্রোনিউট্রিয়েন্ট কাকে বলে? (খ) অত্যাবশ্যকীয় পুষ্টি উপাদান কী? (গ) সমস্যার কারণ। (ঘ) পরামর্শ মূল্যায়ন।','(ক) যেসব উপাদান বেশি পরিমাণে লাগে। (খ) উদ্ভিদের স্বাভাবিক বৃদ্ধির জন্য একান্ত প্রয়োজনীয় ১৬টি উপাদান, যার অভাবে অভাবজনিত লক্ষণ দেখা দেয়। (গ) পাতা, ফুল ও কুঁড়ি ঝরা ফসফরাসের অভাবের লক্ষণ হতে পারে, ধানের পাতা হলুদ হওয়া নাইট্রোজেনের অভাব (আমার বিশ্লেষণ)। (ঘ) সার (ইউরিয়া, ফসফেট) ব্যবহারের পরামর্শ যুক্তিসঙ্গত।'],
+['২. তাসফিক ১৬ বছর, ১৭০ সেমি, ৬২ কেজি। (ক) খাদ্য সংরক্ষণ কাকে বলে? (খ) যকৃৎকে রসায়ন গবেষণাগার বলা হয় কেন? (গ) বিএমআই নির্ণয় (ঘ) ওজন ধরে রাখতে ক্যালরি বিশ্লেষণ','(ক) খাদ্যের পচন রোধ করে গুণাগুণ ও গ্রহণযোগ্যতা ঠিক রাখার প্রক্রিয়া। (খ) যকৃতে বিভিন্ন জৈব রাসায়নিক ক্রিয়া ঘটে। (গ) ৬২ ÷ (১.৭)² ≈ ২১.৪৫ (আদর্শ)। (ঘ) আমার বিশ্লেষণ: ছেলেদের বিএমআর ≈ ১৬৫৭; হালকা পরিশ্রমে ×১.৩৭৫ ≈ ২২৭৮ কিলোক্যালরি।']]},
+{h:'সংক্ষিপ্ত প্রশ্ন (উত্তর আমার লেখা)',items:[
+['১. আয়োডিনের অভাবে কোন রোগ হয়?','গয়টার বা গলগণ্ড। খাবারে আয়োডিন কম হলে থাইরয়েড গ্রন্থি ফুলে যায়।'],
+['২. পাতার ক্লোরোসিসের লক্ষণ লেখো।','ক্লোরোফিল কমে সবুজ রং হালকা হয়ে হলুদ হয়, কোষের বৃদ্ধি ও বিভাজন কমে।'],
+['৩. অগ্ন্যাশয়কে কেন মিশ্র গ্রন্থি বলা হয়?','এটি বহিঃক্ষরা (এনজাইম, নালি দিয়ে) ও অন্তঃক্ষরা (ইনসুলিন, গ্লুকাগন) দুই ধরনেরই কাজ করে।'],
+['৪. উদ্ভিদের ডাইব্যাক রোগের কারণ ব্যাখ্যা করো।','সালফারের অভাবে মূল, কাণ্ড ও পাতার শীর্ষ থেকে ক্রমান্বয়ে টিস্যু মরতে থাকে।'],
+['৫. গর্ভবতী নারীর লৌহের অভাবে কোন রোগ হয়? প্রতিরোধে কী খাবার খেতে হয়?','রক্তশূন্যতা। যকৃৎ, মাংস, ডিম, শাকসবজি, বরবটি, ডাল, খেজুরের গুড় ইত্যাদি লৌহসমৃদ্ধ খাবার।']]}
+];
+
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+function frame(){FR++;if(document.hidden||(FR&1)){requestAnimationFrame(frame);return;}for(var i=0;i<DRAWS.length;i++){try{DRAWS[i]();}catch(e){if(e!==SKIP)throw e;}}requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>

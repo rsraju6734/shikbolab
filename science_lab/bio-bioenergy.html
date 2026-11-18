@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>জীবনীশক্তি (জীববিজ্ঞান অধ্যায় ৪) - ShikboLab</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+.row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.row>.grow{flex:1;min-width:260px}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.fb{font-weight:700;margin-top:6px;min-height:26px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.pills button{font-family:inherit}
+/* timeline */
+.tl{display:flex;gap:6px;overflow-x:auto;padding:10px 2px 14px;margin:8px 0}
+.tl button{flex:0 0 auto;min-width:112px;font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;text-align:center;position:relative;transition:transform .2s,border-color .2s,background .2s}
+.tl button b{display:block;color:var(--navy);font-size:15px}
+.tl button small{color:var(--muted);font-size:13px}
+.tl button .em{font-size:26px;display:block}
+.tl button.on{border-color:var(--teal);background:#eaf7f5;transform:translateY(-4px)}
+.tlinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:96px;animation:fade .4s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.flow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.flow span{background:#fff;border:2px solid var(--teal);border-radius:10px;padding:6px 12px;font-weight:700;color:var(--navy);opacity:.25;transition:opacity .5s,transform .5s;transform:scale(.9)}
+.flow span.show{opacity:1;transform:none}
+.flow i{font-style:normal;color:var(--teal);font-weight:800}
+/* bars */
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0}
+.bar .bl{width:150px;font-weight:700;color:var(--navy);font-size:15px}
+.bar .bt{flex:1;background:#e8eef3;border-radius:8px;height:22px;overflow:hidden}
+.bar .bf{height:100%;border-radius:8px;transition:width .3s}
+/* stepper */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.stepper span{background:#e8eef3;color:#5b6770;border-radius:999px;padding:4px 12px;font-size:14px;font-weight:700}
+.stepper span.on{background:#2a9d8f;color:#fff}
+.stepper span.done{background:#d9f2ee;color:#1d7a6f}
+table.dt{border-collapse:collapse;width:100%;max-width:380px;margin:8px 0}
+table.dt th{background:var(--navy);color:#fff;padding:6px 8px}
+table.dt td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.dt tr.new td{background:#fff4dc}
+canvas.w{max-width:380px}
+/* hazards */
+.hz{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:10px 0}
+.hz button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:12px;padding:6px;cursor:pointer;font-size:13px;font-weight:700;color:var(--navy)}
+.hz button svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.hz button.on{border-color:var(--orange);background:#fff4ee}
+.hinfo{background:#f6f9fb;border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:100px}
+.hinfo .big{float:left;width:84px;height:84px;margin-right:12px}
+.hinfo .big svg{width:84px;height:84px}
+.ppe{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.ppe button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700}
+.ppe button.on{border-color:var(--teal);background:#d9f2ee}
+.cls{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.cls button{font-family:inherit;font-weight:700;border:2px solid var(--navy);background:#fff;color:var(--navy);border-radius:10px;padding:6px 14px;cursor:pointer}
+.cls button.ok{background:#d9f2ee;border-color:#2a9d8f}
+.cls button.no{background:#fde0da;border-color:#e76f51}
+.ans{display:none;background:#f0f6fa;border-radius:8px;padding:10px 14px;margin-top:6px}
+.ans.open{display:block;animation:fade .3s}
+.flame{display:inline-block;font-size:54px;animation:flick .25s infinite alternate}
+@keyframes flick{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12,1.2) rotate(3deg)}}
+@media(max-width:600px){.bar .bl{width:110px}}
+
+.elgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:8px 0 12px}
+.elgrid button{font-family:inherit;border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:4px 2px;cursor:pointer;color:var(--navy);line-height:1.1}
+.elgrid button b{display:block;font-size:17px}.elgrid button small{font-size:11px;color:var(--muted)}
+.elgrid button.on{border-color:var(--teal);background:#eaf7f5}
+.formula{font-size:30px;font-weight:700;color:var(--navy);min-height:42px;text-align:center}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.legend{margin:8px 0;font-size:14px}
+.lg{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle}
+.chip{display:inline-block;background:#d9f2ee;color:#1d7a6f;border-radius:999px;padding:3px 12px;font-weight:700;font-size:14px;margin:2px 4px 2px 0}
+.tlinfo p{margin:6px 0}
+canvas{max-width:100%;height:auto}
+.jars{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.jars span{width:34px;height:44px;border:3px solid #6b7c8a;border-top:none;border-radius:0 0 10px 10px;position:relative;background:#fff;overflow:hidden}
+.jars span i{position:absolute;left:0;right:0;bottom:0;background:#2a9d8f;transition:height .4s}
+.beq{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0;font-size:22px;font-weight:700;color:var(--navy)}
+.beq .cf{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:12px;padding:4px 8px}
+.beq .cf button{width:28px;height:28px;border-radius:50%;border:2px solid var(--teal);background:#fff;font-size:18px;font-weight:800;cursor:pointer;line-height:1;padding:0}
+.beq .cf b{min-width:22px;text-align:center}
+.beq .op{color:var(--teal)}
+table.at{border-collapse:collapse;margin:8px 0}
+table.at th{background:var(--navy);color:#fff;padding:5px 12px}
+table.at td{padding:5px 12px;border-bottom:1px solid var(--line);text-align:center;font-weight:700}
+table.at tr.okr td{background:#d9f2ee}
+table.at tr.bad td{background:#fde0da}
+.pills button{border:2px solid #cfd9e1;background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer;font-weight:700;color:var(--navy)}
+.pills button.on{border-color:var(--teal);background:#d9f2ee}
+table.t{display:block;overflow-x:auto;max-width:100%}
+.kv{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}
+.kv span{background:#eef5f9;border-radius:8px;padding:3px 10px;font-weight:700;color:var(--navy);font-size:14px}
+.big2{font-size:22px;font-weight:700;color:var(--navy)}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.sw label{display:inline-flex;align-items:center;gap:4px;background:#f6f9fb;border:2px solid #cfd9e1;border-radius:10px;padding:4px 10px;font-weight:700;cursor:pointer}
+canvas.w2{max-width:380px}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+p.eq{font-size:17px;margin:8px 0;line-height:1.7}
+h4{margin:14px 0 4px;color:var(--navy);font-size:17px}
+small{color:#567}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/theme.js" defer></script>
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/lab-boost.js?v=2"></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html#physics">&larr; সব অধ্যায়</a>
+</header><div class="wrap">
+  <div class="crumb">🧬 জীববিজ্ঞান &rsaquo; চতুর্থ অধ্যায় (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">⚡ জীবনীশক্তি (Bioenergy)</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#lab1">⚡ ল্যাব ১</a><a href="#lab2">☀️ ল্যাব ২</a><a href="#lab3">🧪 ল্যাব ৩</a><a href="#lab4">🔍 ল্যাব ৪</a><a href="#lab5">🔆 ল্যাব ৫</a><a href="#lab6">🔄 ল্যাব ৬</a><a href="#lab7">🌈 ল্যাব ৭</a><a href="#lab8">🎛️ ল্যাব ৮</a><a href="#lab9">⚖️ ল্যাব ৯</a><a href="#lab10">🌍 ল্যাব ১০</a><a href="#lab11">🫁 ল্যাব ১১</a><a href="#lab12">🔥 ল্যাব ১২</a><a href="#lab13">🧫 ল্যাব ১৩</a><a href="#quiz">❓ কুইজ</a><a href="#qa">✍️ প্রশ্ন-উত্তর</a></nav>
+<section class="panel" id="note">
+<h3>⚡ ৪.১ জীবনীশক্তি ও ATP</h3>
+<ul>
+<li>সূর্য শক্তির মূল উৎস। সবুজ উদ্ভিদ সৌরশক্তিকে রাসায়নিক শক্তিতে বদলে খাদ্যে জমা রাখে। প্রাণী ও অসবুজ উদ্ভিদ সরাসরি সৌরশক্তি কাজে লাগাতে পারে না।</li>
+<li><b>ATP (অ্যাডিনোসিন ট্রাইফসফেট)</b>: কোষের শক্তির মুদ্রা। ADP-র সাথে ফসফেট যুক্ত হলে ATP হয় (ফসফোরাইলেশন), ফসফেট খুলে গেলে শক্তি বের হয় (ডিফসফোরাইলেশন)।</li>
+<li>ATP-র শক্তিতে পেশি সংকোচন, চিন্তা, বৃদ্ধি, দেহের তাপমাত্রা ঠিক রাখা চলে।</li>
+</ul>
+<h3>🌿 ৪.২ সালোকসংশ্লেষণ</h3>
+<ul>
+<li>সমীকরণ: 6CO₂ + 12H₂O ➜(আলো, ক্লোরোফিল)➜ C₆H₁₂O₆ + 6H₂O + 6O₂।</li>
+<li>স্থান: পাতার মেসোফিল টিস্যুর ক্লোরোপ্লাস্ট। CO₂ ঢোকে পত্ররন্ধ্র দিয়ে।</li>
+<li><b>আলোনির্ভর পর্যায়</b>: গ্রানায়। ফোটন শোষণ, পানির ফটোলাইসিস (O₂ নির্গত), ATP ও NADPH তৈরি।</li>
+<li><b>অন্ধকার পর্যায়</b>: স্ট্রোমায়। ক্যালভিন চক্র (C₃, প্রথম পদার্থ ৩-কার্বন) ও হ্যাচ-স্ল্যাক চক্র (C₄, ৪-কার্বন)।</li>
+<li>আলোর রং: লাল, নীল, বেগুনিতে ভালো; সবুজ-হলুদে কম।</li>
+<li><b>বাহ্যিক প্রভাবক</b>: আলো, CO₂, তাপমাত্রা (২২–৩৫°C ভালো), পানি, অক্সিজেন, খনিজ, রাসায়নিক। <b>অভ্যন্তরীণ</b>: ক্লোরোফিল, পাতার বয়স ও সংখ্যা, শর্করা, এনজাইম, পটাশিয়াম।</li>
+<li>গুরুত্ব: খাদ্যের উৎস, বায়ুর O₂ (২০.৯৫ ভাগ)-CO₂ (০.০৩৩ ভাগ) ভারসাম্য, সভ্যতার উপকরণ।</li>
+</ul>
+<h3>🔥 ৪.৩ শ্বসন</h3>
+<ul>
+<li><b>সবাত</b>: অক্সিজেন লাগে, ১ গ্লুকোজে ৩৮ ATP (৬৮৬ kCal)। ধাপ: গ্লাইকোলাইসিস ➜ অ্যাসিটাইল কো-এ ➜ ক্রেবস চক্র ➜ ইলেকট্রন প্রবাহ।</li>
+<li><b>অবাত</b>: অক্সিজেন ছাড়া, আংশিক জারণ, ২ ATP (৫৬ kCal); ইথাইল অ্যালকোহল/ল্যাকটিক অ্যাসিড ও CO₂।</li>
+<li>পরীক্ষা: আয়োডিনে আলোর অপরিহার্যতা; থার্মোফ্লাস্কে শ্বসনে তাপ নির্গমন।</li>
+</ul>
+<p><small>বইয়ের তথ্য ভিত্তি। আমার বিশ্লেষণ থাকলে আলাদা চিহ্নিত।</small></p>
+</section>
+
+  <section class="panel" id="lab1">
+    <h2>⚡ ল্যাব 1: ATP ও ADP: শক্তির ব্যাটারি</h2>
+    <div class="say">👉 ফসফেট জুড়লে শক্তি জমা হয় (ATP), ফসফেট খুলে গেলে শক্তি বেরিয়ে আসে (ADP)।</div>
+<div class="pills" id="a1p"><button data-k="0" class="on">ফসফোরাইলেশন (ADP ➜ ATP)</button><button data-k="1">ডিফসফোরাইলেশন (ATP ➜ ADP)</button></div>
+    <div class="row"><div><canvas id="a1c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="a1t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="a1q"></div><div class="cls" id="a1o"></div><div class="fb" id="a1fb"></div><small id="a1sc"></small>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>☀️ ল্যাব 2: সূর্য থেকে কাজ পর্যন্ত</h2>
+    <div class="say">👉 সূর্যের শক্তি কীভাবে ধাপে ধাপে আমাদের কাজের শক্তি হয়, ধাপগুলো এক এক করে দেখো।</div>
+<div class="pills" id="b2p"><button data-k="0" class="on">১. সূর্যের আলো</button><button data-k="1">২. সালোকসংশ্লেষণ</button><button data-k="2">৩. খাদ্যে জমা</button><button data-k="3">৪. শ্বসনে ATP</button><button data-k="4">৫. কাজে ব্যবহার</button></div>
+    <div class="row"><div><canvas id="b2c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="b2t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="b2q"></div><div class="cls" id="b2o"></div><div class="fb" id="b2fb"></div><small id="b2sc"></small>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🧪 ল্যাব 3: কাঁচামাল থেকে খাদ্য</h2>
+    <div class="say">👉 আলোর স্লাইডার বাড়াও-কমাও: আলো না থাকলে খাদ্য তৈরি থেমে যায়।</div>
+<div class="pills" id="c3p"><button data-k="0" class="on">কাঁচামাল</button><button data-k="1">আলো ও ক্লোরোফিল</button><button data-k="2">উৎপাদ</button></div>
+    <div class="ctl"><label>আলোর পরিমাণ: <span id="c3kv"></span> %</label><input type="range" id="c3k" min="0" max="100" step="1" value="70"></div>
+    <div class="row"><div><canvas id="c3c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="c3t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="c3q"></div><div class="cls" id="c3o"></div><div class="fb" id="c3fb"></div><small id="c3sc"></small>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🔍 ল্যাব 4: জুম করে ভেতরে ঢোকো</h2>
+    <div class="say">👉 স্লাইডার টেনে পাতা থেকে ক্লোরোপ্লাস্ট পর্যন্ত জুম করো। পত্ররন্ধ্র দিয়ে CO₂ ঢোকে।</div>
+    <div class="ctl"><label>জুম: <span id="d4kv"></span> %</label><input type="range" id="d4k" min="0" max="100" step="1" value="0"></div>
+    <div class="row"><div><canvas id="d4c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="d4t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="d4q"></div><div class="cls" id="d4o"></div><div class="fb" id="d4fb"></div><small id="d4sc"></small>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🔆 ল্যাব 5: আলো থেকে ATP ও NADPH</h2>
+    <div class="say">👉 আলো বাড়াও: ATP, NADPH ও অক্সিজেন বেশি তৈরি হবে। পানি ভাঙার ঘটনাও দেখো।</div>
+    <div class="ctl"><label>আলোর তীব্রতা: <span id="e5kv"></span> </label><input type="range" id="e5k" min="0" max="10" step="1" value="5"></div>
+    <div class="row"><div><canvas id="e5c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="e5t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="e5q"></div><div class="cls" id="e5o"></div><div class="fb" id="e5fb"></div><small id="e5sc"></small>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🔄 ল্যাব 6: ক্যালভিন চক্র (C₃) ও C₄ পথ</h2>
+    <div class="say">👉 দুই রকম পথ আছে: C₃ ও C₄। প্রথম স্থায়ী পদার্থের কার্বন সংখ্যা আলাদা।</div>
+<div class="pills" id="f6p"><button data-k="0" class="on">C₃ (ক্যালভিন চক্র)</button><button data-k="1">C₄ (হ্যাচ ও স্ল্যাক চক্র)</button></div>
+    <div class="row"><div><canvas id="f6c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="f6t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="f6q"></div><div class="cls" id="f6o"></div><div class="fb" id="f6fb"></div><small id="f6sc"></small>
+  </section>
+
+  <section class="panel" id="lab7">
+    <h2>🌈 ল্যাব 7: কোন রঙে সবচেয়ে ভালো</h2>
+    <div class="say">👉 স্লাইডারে আলোর তরঙ্গদৈর্ঘ্য বদলাও। নীল ও লালে সালোকসংশ্লেষণ ভালো, সবুজে কম।</div>
+    <div class="ctl"><label>তরঙ্গদৈর্ঘ্য: <span id="g7kv"></span> nm</label><input type="range" id="g7k" min="400" max="700" step="5" value="450"></div>
+    <div class="row"><div><canvas id="g7c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="g7t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="g7q"></div><div class="cls" id="g7o"></div><div class="fb" id="g7fb"></div><small id="g7sc"></small>
+  </section>
+
+  <section class="panel" id="lab8">
+    <h2>🎛️ ল্যাব 8: আলো, CO₂, তাপমাত্রা, পানি, O₂</h2>
+    <div class="say">👉 প্রভাবক বেছে নাও, স্লাইডার টেনে দেখো সালোকসংশ্লেষণের হার কীভাবে বদলায়।</div>
+<div class="pills" id="h8p"><button data-k="0" class="on">☀️ আলো</button><button data-k="1">🫧 CO₂</button><button data-k="2">🌡️ তাপমাত্রা</button><button data-k="3">💧 পানি</button><button data-k="4">🌬️ অক্সিজেন</button></div>
+    <div class="ctl"><label>মান: <span id="h8kv"></span> %</label><input type="range" id="h8k" min="0" max="100" step="1" value="40"></div>
+    <div class="row"><div><canvas id="h8c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="h8t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="h8q"></div><div class="cls" id="h8o"></div><div class="fb" id="h8fb"></div><small id="h8sc"></small>
+  </section>
+
+  <section class="panel" id="lab9">
+    <h2>⚖️ ল্যাব 9: প্রভাবকের দুই দল</h2>
+    <div class="say">👉 কোনটা বাইরের প্রভাবক, কোনটা ভেতরের, সঠিক বাক্সে পাঠাও।</div>
+    <div class="btnrow"><button class="btn" id="i9j">🌍 বাহ্যিক</button><button class="btn alt" id="i9d">🌱 অভ্যন্তরীণ</button></div>
+    <div class="row"><div><canvas id="i9c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="i9t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="i9q"></div><div class="cls" id="i9o"></div><div class="fb" id="i9fb"></div><small id="i9sc"></small>
+  </section>
+
+  <section class="panel" id="lab10">
+    <h2>🌍 ল্যাব 10: খাদ্য, বাতাস ও সভ্যতা</h2>
+    <div class="say">👉 পৃথিবীর প্রায় সব জীব এই প্রক্রিয়ার ওপর নির্ভর করে। তিনটি দিক দেখো।</div>
+<div class="pills" id="j10p"><button data-k="0" class="on">খাদ্যের উৎস</button><button data-k="1">বাতাসের ভারসাম্য</button><button data-k="2">মানবসভ্যতা</button></div>
+    <div class="row"><div><canvas id="j10c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="j10t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="j10q"></div><div class="cls" id="j10o"></div><div class="fb" id="j10fb"></div><small id="j10sc"></small>
+  </section>
+
+  <section class="panel" id="lab11">
+    <h2>🫁 ল্যাব 11: অক্সিজেন থাকলে ও না থাকলে</h2>
+    <div class="say">👉 দুই রকম শ্বসনে শক্তির পরিমাণ কত আলাদা, নিজে দেখো।</div>
+<div class="pills" id="k11p"><button data-k="0" class="on">সবাত (অক্সিজেন সহ)</button><button data-k="1">অবাত (অক্সিজেন ছাড়া)</button></div>
+    <div class="row"><div><canvas id="k11c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="k11t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="k11q"></div><div class="cls" id="k11o"></div><div class="fb" id="k11fb"></div><small id="k11sc"></small>
+  </section>
+
+  <section class="panel" id="lab12">
+    <h2>🔥 ল্যাব 12: ৩৮ ATP কোন ধাপে কত</h2>
+    <div class="say">👉 ধাপ বেছে নাও, ATP ও CO₂ কীভাবে জমে ওঠে দেখো।</div>
+<div class="pills" id="l12p"><button data-k="0" class="on">১. গ্লাইকোলাইসিস</button><button data-k="1">২. অ্যাসিটাইল কো-এ</button><button data-k="2">৩. ক্রেবস চক্র</button><button data-k="3">৪. মোট ফল</button></div>
+    <div class="row"><div><canvas id="l12c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="l12t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="l12q"></div><div class="cls" id="l12o"></div><div class="fb" id="l12fb"></div><small id="l12sc"></small>
+  </section>
+
+  <section class="panel" id="lab13">
+    <h2>🧫 ল্যাব 13: আলোর দরকার ও শ্বসনে তাপ</h2>
+    <div class="say">👉 বইয়ের দুটি পরীক্ষা পর্দায় করো। স্লাইডার সময় এগিয়ে নেয়।</div>
+<div class="pills" id="m13p"><button data-k="0" class="on">আলোর অপরিহার্যতা</button><button data-k="1">শ্বসনে তাপ নির্গমন</button></div>
+    <div class="ctl"><label>সময়: <span id="m13kv"></span> %</label><input type="range" id="m13k" min="0" max="100" step="1" value="0"></div>
+    <div class="row"><div><canvas id="m13c" class="w" width="460" height="330"></canvas></div><div class="grow"><div class="tlinfo" id="m13t"></div></div></div>
+    <h3>🎮 খেলা</h3>
+    <div class="tlinfo" id="m13q"></div><div class="cls" id="m13o"></div><div class="fb" id="m13fb"></div><small id="m13sc"></small>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ (<span id="qn"></span>টি MCQ)</h2>
+    <div id="quizbox"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>✍️ সৃজনশীল ও সংক্ষিপ্ত প্রশ্ন (মডেল উত্তরসহ)</h2>
+    <div class="warn">ℹ️ আগে নিজে লিখে চেষ্টা করো, তারপর উত্তর খোলো। বইয়ের নমুনা প্রশ্নের উত্তরমালা নেই, তাই উত্তরগুলো আমার হিসাব করা।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+<footer class="site">&copy; ShikboLab &mdash; জীবনীশক্তি (জীববিজ্ঞান অধ্যায় ৪)</footer>
+<script>
+var BN='০১২৩৪৫৬৭৮৯',SUB='₀₁₂₃₄₅₆₇₈₉',SUP='⁰¹²³⁴⁵⁶⁷⁸⁹';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BN[d];});}
+function sub(n){return String(n).replace(/[0-9]/g,function(d){return SUB[d];});}
+function sup(n){return String(n).replace(/[0-9]/g,function(d){return SUP[d];});}
+function $(id){return document.getElementById(id);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+var ORG='#e9a23b',BLU='#2b6cb0',RED='#e63946',NAVY='#1f3a5f';
+var SKIP={};function ctxOf(id){var c=$(id);if(c.__off)throw SKIP;return c.getContext('2d');}
+(function(){if(!window.IntersectionObserver)return;var io=new IntersectionObserver(function(es){es.forEach(function(e){e.target.__off=!e.isIntersecting;});},{rootMargin:'150px'});document.querySelectorAll('canvas').forEach(function(c){io.observe(c);});})();
+function circ(x,c,px,py,r,fill,stroke,lw){x.beginPath();x.arc(px,py,r,0,7);if(fill){x.fillStyle=fill;x.fill();}if(stroke){x.strokeStyle=stroke;x.lineWidth=lw||1;x.stroke();}}
+function txt(x,s,px,py,font,col,al){x.font=font;x.fillStyle=col;x.textAlign=al||'center';x.textBaseline='middle';x.fillText(s,px,py);}
+
+
+function f(x,d){d=d===undefined?3:d;return bn(parseFloat(x.toFixed(d)));}
+function pick(a){return a[Math.floor(Math.random()*a.length)];}
+function mkGame(q,o,fb,sc,gen){
+  var ok=0,t=0,cur;
+  function nxt(){cur=gen();$(q).innerHTML=cur.q;$(o).innerHTML=cur.o.map(function(x,i){return '<button data-i="'+i+'">'+x.t+'</button>';}).join('');$(fb).textContent='';}
+  $(o).addEventListener('click',function(ev){
+    var b=ev.target.closest('button');if(!b||b.disabled)return;
+    var i=+b.getAttribute('data-i'),all=$(o).querySelectorAll('button');t++;
+    for(var k=0;k<all.length;k++){all[k].disabled=true;if(cur.o[k].ok)all[k].classList.add('ok');}
+    if(cur.o[i].ok){ok++;$(fb).textContent='✅ '+cur.good;}else{b.classList.add('no');$(fb).textContent='❌ '+cur.bad;}
+    $(sc).textContent='স্কোর: '+bn(ok)+'/'+bn(t);setTimeout(nxt,2000);
+  });
+  nxt();
+}
+function opts(correct,wrongs){var a=[{t:correct,ok:1}];wrongs.forEach(function(w){a.push({t:w,ok:0});});return shuffle(a);}
+var FR=0;
+function hx(c){return [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];}
+function mixc(a,b,t){var A=hx(a),B=hx(b);return 'rgb('+Math.round(lerp(A[0],B[0],t))+','+Math.round(lerp(A[1],B[1],t))+','+Math.round(lerp(A[2],B[2],t))+')';}
+function stp(id,labs,k){$(id).innerHTML=labs.map(function(l,i){return '<span class="'+(i<=k?'on':'')+'">'+l+'</span>';}).join('');}
+function rp(i,a,b){return a+((i*7919+13)%1000)/1000*(b-a);}
+function wdots(x,pts,ph,col){var L=[],tot=0,i;for(i=0;i<pts.length-1;i++){var d=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);L.push(d);tot+=d;}
+  for(var k=0;k<8;k++){var s=((ph+k/8)%1)*tot,j=0;while(j<L.length-1&&s>L[j]){s-=L[j];j++;}var u=s/L[j];circ(x,0,lerp(pts[j][0],pts[j+1][0],u),lerp(pts[j][1],pts[j+1][1],u),3,col,null);}}
+function qgame(a,b,c,d,Q){mkGame(a,b,c,d,function(){var g=pick(Q);return {q:g[0],o:opts(g[1],g[2]),good:g[3],bad:g[3]};});}
+
+var DRAWS=[];
+function opts(correct,wrongs){var seen={},a=[{t:correct,ok:1}];seen[correct]=1;wrongs.forEach(function(w){if(!seen[w]){seen[w]=1;a.push({t:w,ok:0});}});return shuffle(a);}
+function arrow(x,x1,y1,x2,y2,col,lw){var a=Math.atan2(y2-y1,x2-x1);x.strokeStyle=col;x.fillStyle=col;x.lineWidth=lw||3;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-11*Math.cos(a-.4),y2-11*Math.sin(a-.4));x.lineTo(x2-11*Math.cos(a+.4),y2-11*Math.sin(a+.4));x.closePath();x.fill();}
+function person(x,px,py,col){circ(x,0,px,py-22,6,col,null);x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.moveTo(px,py-16);x.lineTo(px,py-4);x.moveTo(px-6,py-11);x.lineTo(px+6,py-11);x.moveTo(px,py-4);x.lineTo(px-5,py+6);x.moveTo(px,py-4);x.lineTo(px+5,py+6);x.stroke();}
+/* ---------- সাধারণ সহায়ক ---------- */
+function pills(id,fn){$(id).onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var all=$(id).querySelectorAll('button'),i;for(i=0;i<all.length;i++)all[i].classList.toggle('on',all[i]===b);fn(+b.getAttribute('data-k'));};}
+function sci(x){if(!(x>0))return bn(0);var e=Math.floor(Math.log10(x)),m=x/Math.pow(10,e);if(+m.toFixed(2)>=10){m/=10;e++;}return bn(parseFloat(m.toFixed(2)))+' × ১০'+(e<0?'⁻':'')+sup(Math.abs(e));}
+function brow(label,val,max,col,txtv){return '<div class="bar"><div class="bl">'+label+'</div><div class="bt"><div class="bf" style="width:'+clamp(val/max*100,1,100)+'%;background:'+col+'"></div></div><b style="min-width:80px;font-size:14px;color:#1f3a5f">'+(txtv||'')+'</b></div>';}
+function on(ids,fn){ids.forEach(function(i){$(i).oninput=fn;$(i).onchange=fn;});}
+var G=9.8;
+function box(x,px,py,w,h,fill,stroke){x.fillStyle=fill;x.fillRect(px,py,w,h);if(stroke){x.strokeStyle=stroke;x.lineWidth=2;x.strokeRect(px,py,w,h);}}
+function wheel(x,px,py,r){circ(x,0,px,py,r,'#333',null);circ(x,0,px,py,r*.4,'#bbb',null);}
+
+
+/* ---------- সুন্দর আঁকার সহায়ক (নতুন) ---------- */
+function shade(c,a){var h=hx(c),o='#';for(var i=0;i<3;i++){var v=clamp(Math.round(h[i]+a),0,255).toString(16);o+=(v.length<2?'0':'')+v;}return o;}
+function grad(x,px,py,w,h,c1,c2){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1);g.addColorStop(1,c2);x.fillStyle=g;x.fillRect(px,py,w,h);}
+function ball(x,px,py,r,col){var g=x.createRadialGradient(px-r*.35,py-r*.35,r*.08,px,py,r);g.addColorStop(0,'#ffffff');g.addColorStop(.3,col);g.addColorStop(1,shade(col,-55));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();}
+function rr(x,px,py,w,h,r){r=Math.min(r,w/2,h/2);x.beginPath();x.moveTo(px+r,py);x.lineTo(px+w-r,py);x.quadraticCurveTo(px+w,py,px+w,py+r);x.lineTo(px+w,py+h-r);x.quadraticCurveTo(px+w,py+h,px+w-r,py+h);x.lineTo(px+r,py+h);x.quadraticCurveTo(px,py+h,px,py+h-r);x.lineTo(px,py+r);x.quadraticCurveTo(px,py,px+r,py);x.closePath();}
+function tag(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.lineJoin='round';x.lineWidth=4;x.strokeStyle='rgba(255,255,255,.92)';x.strokeText(s,px,py);x.fillStyle=col||NAVY;x.fillText(s,px,py);}
+function wave(x,px,py,w,h,t,c1,c2,amp){amp=amp===undefined?2.5:amp;var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,c1||'rgba(86,176,240,.88)');g.addColorStop(1,c2||'rgba(22,84,172,.96)');x.fillStyle=g;x.beginPath();x.moveTo(px,py+h);x.lineTo(px,py);var i;for(i=0;i<=w;i+=4)x.lineTo(px+i,py+Math.sin(i/13+t*.05)*amp);x.lineTo(px+w,py+h);x.closePath();x.fill();x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=1.6;x.beginPath();for(i=0;i<=w;i+=4){var yy=py+Math.sin(i/13+t*.05)*amp;if(i===0)x.moveTo(px,yy);else x.lineTo(px+i,yy);}x.stroke();}
+function bubs(x,px,py,w,h,n,t){for(var i=0;i<n;i++){var u=((t*.004*(0.6+rp(i,0,.8))+rp(i+50,0,1))%1),bx=px+rp(i,6,w-6)+Math.sin(t*.04+i)*3,by=py+h-u*h,r=1.5+rp(i+9,0,2.2);if(by<py+4)continue;x.strokeStyle='rgba(255,255,255,.75)';x.lineWidth=1.2;x.beginPath();x.arc(bx,by,r,0,7);x.stroke();}}
+function glassBox(x,px,py,w,h){x.strokeStyle='#5b7389';x.lineWidth=3;x.beginPath();x.moveTo(px,py);x.lineTo(px,py+h);x.lineTo(px+w,py+h);x.lineTo(px+w,py);x.stroke();x.fillStyle='rgba(255,255,255,.18)';x.fillRect(px+4,py+4,5,h-8);}
+function sun(x,px,py,r,t){x.save();x.translate(px,py);x.rotate(t*.004);x.strokeStyle='rgba(255,196,60,.7)';x.lineWidth=3;for(var i=0;i<12;i++){x.rotate(Math.PI/6);x.beginPath();x.moveTo(r+4,0);x.lineTo(r+11,0);x.stroke();}x.restore();ball(x,px,py,r,'#ffc83d');}
+function cloud(x,px,py,s,col){x.fillStyle=col||'rgba(255,255,255,.95)';[[0,0,14],[16,-6,17],[34,0,14],[17,6,15]].forEach(function(c){x.beginPath();x.arc(px+c[0]*s,py+c[1]*s,c[2]*s,0,7);x.fill();});}
+function dial(x,cx,cy,r,frac,txtv,col){x.strokeStyle='#dfe7ee';x.lineWidth=9;x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*2.2);x.stroke();x.strokeStyle=col||'#2a9d8f';x.beginPath();x.arc(cx,cy,r,Math.PI*.8,Math.PI*(.8+1.4*clamp(frac,0,1)));x.stroke();var a=Math.PI*(.8+1.4*clamp(frac,0,1));x.strokeStyle=NAVY;x.lineWidth=3;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a)*(r-6),cy+Math.sin(a)*(r-6));x.stroke();circ(x,0,cx,cy,4,NAVY,null);if(txtv)tag(x,txtv,cx,cy+r*.62,NAVY,12);}
+function sand(x,px,py,w,h){var g=x.createLinearGradient(0,py,0,py+h);g.addColorStop(0,'#eccb8a');g.addColorStop(1,'#c99a55');x.fillStyle=g;x.fillRect(px,py,w,h);}
+function atom(x,px,py,r,col,t){ball(x,px,py,r,col);}
+function fmtN(v){if(Math.abs(v)>=1000)return bn(Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g,','));return bn(parseFloat(v.toFixed(2)));}
+
+function tagd(x,s,px,py,col,size,al){x.font='bold '+(size||13)+'px Hind Siliguri';x.textAlign=al||'center';x.textBaseline='middle';x.save();x.shadowColor='rgba(0,0,0,.6)';x.shadowBlur=4;x.fillStyle=col||'#fff';x.fillText(s,px,py);x.restore();}
+
+/* ===== ফিউচারিস্টিক জীববিজ্ঞান ল্যাব লাইব্রেরি (ডার্ক হলোগ্রাম, নিয়ন গ্লো, 3D-ধাঁচের গোলক) ===== */
+document.documentElement.classList.add('fut');(function(){var st=document.createElement('style');st.textContent=".th-bg i,.th-hero i.o,.th-hero .ico{animation:none!important}.th-bg i{filter:none!important;opacity:.18!important}header.site,.tabs{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:rgba(255,255,255,.96)!important}.lbh i,.th-live::before{animation:none!important}";document.head.appendChild(st);})();(function(){var d=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,'shadowBlur');if(d&&d.set&&!CanvasRenderingContext2D.prototype.__sb){CanvasRenderingContext2D.prototype.__sb=1;Object.defineProperty(CanvasRenderingContext2D.prototype,'shadowBlur',{get:function(){return d.get.call(this);},set:function(v){d.set.call(this,v*.4);},configurable:true});}})();
+function hx(c){if(c.length===4)c='#'+c[1]+c[1]+c[2]+c[2]+c[3]+c[3];return [parseInt(c.substr(1,2),16)||0,parseInt(c.substr(3,2),16)||0,parseInt(c.substr(5,2),16)||0];}
+var DT=.02,TKL=performance.now();
+DRAWS.push(function(){var n=performance.now();DT=Math.min(.05,(n-TKL)/1000);TKL=n;});
+var CY='#22d3ee',GR='#4ade80',PK='#f472b6',YL='#fbbf24',PU='#a78bfa',OR='#fb923c',RD='#f87171',BL='#60a5fa',WH='#e6f1ff';
+function lt(c,t){return mixc(c,'#ffffff',t);} function dk(c,t){return mixc(c,'#000000',t);}
+function ln(x,x1,y1,x2,y2,col,lw,dash){x.strokeStyle=col;x.lineWidth=lw||2;if(dash)x.setLineDash(dash);x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();if(dash)x.setLineDash([]);}
+/* ডার্ক হলোগ্রাম পটভূমি */
+function bgF(x,w,h){var g=x.createRadialGradient(w*.5,h*.35,10,w*.5,h*.5,Math.max(w,h)*.85);g.addColorStop(0,'#0f2c52');g.addColorStop(.6,'#081833');g.addColorStop(1,'#030814');x.fillStyle=g;x.fillRect(0,0,w,h);
+  x.strokeStyle='rgba(56,189,248,.09)';x.lineWidth=1;var i;x.beginPath();for(i=0;i<w;i+=26){x.moveTo(i+.5,0);x.lineTo(i+.5,h);}for(i=0;i<h;i+=26){x.moveTo(0,i+.5);x.lineTo(w,i+.5);}x.stroke();
+  var sy=(FR*1.1)%(h+60)-30,sg=x.createLinearGradient(0,sy-24,0,sy+24);sg.addColorStop(0,'rgba(34,211,238,0)');sg.addColorStop(.5,'rgba(34,211,238,.13)');sg.addColorStop(1,'rgba(34,211,238,0)');x.fillStyle=sg;x.fillRect(0,sy-24,w,48);
+  x.strokeStyle='rgba(34,211,238,.7)';x.lineWidth=2;var L=14;x.beginPath();[[6,6,1,1],[w-6,6,-1,1],[6,h-6,1,-1],[w-6,h-6,-1,-1]].forEach(function(c){x.moveTo(c[0],c[1]+c[3]*L);x.lineTo(c[0],c[1]);x.lineTo(c[0]+c[2]*L,c[1]);});x.stroke();
+  x.fillStyle='rgba(125,211,252,.22)';x.beginPath();for(i=0;i<8;i++){var px=(rp(i,0,w)+Math.sin(FR/80+i)*8+w)%w,py=(rp(i+30,0,h)-FR*(.15+i%4*.06)+h*3)%h;x.moveTo(px+1.6,py);x.arc(px,py,1.6,0,7);}x.fill();}
+/* 3D-ধাঁচের গ্লোবুল */
+function orb(x,px,py,r,col,glow){x.save();if(glow!==0){x.shadowColor=col;x.shadowBlur=glow||16;}
+  var g=x.createRadialGradient(px-r*.38,py-r*.42,r*.06,px,py,r);g.addColorStop(0,lt(col,.85));g.addColorStop(.35,col);g.addColorStop(1,dk(col,.62));x.fillStyle=g;x.beginPath();x.arc(px,py,r,0,7);x.fill();x.restore();
+  x.strokeStyle='rgba(255,255,255,.28)';x.lineWidth=1;x.beginPath();x.arc(px,py,r-.5,Math.PI*1.05,Math.PI*1.75);x.stroke();}
+function ring(x,px,py,r,col,lw,dash){x.save();x.shadowColor=col;x.shadowBlur=10;x.strokeStyle=col;x.lineWidth=lw||2;if(dash)x.setLineDash(dash);x.beginPath();x.arc(px,py,r,0,7);x.stroke();x.restore();}
+function neon(x,x1,y1,x2,y2,col,lw,dash){x.save();x.shadowColor=col;x.shadowBlur=9;ln(x,x1,y1,x2,y2,col,lw||2,dash);x.restore();}
+function ft(x,s,px,py,size,col,al){x.font='700 '+(size||13)+'px "Hind Siliguri",sans-serif';x.textAlign=al||'center';x.textBaseline='middle';x.fillStyle=col||WH;x.fillText(s,px,py);}
+function hbox(x,px,py,w,h,col,a){col=col||CY;x.save();x.shadowColor=col;x.shadowBlur=10;rr(x,px,py,w,h,9);x.fillStyle='rgba(10,30,60,'+(a===undefined?.72:a)+')';x.fill();x.strokeStyle=col;x.lineWidth=1.6;x.stroke();x.restore();}
+function bar3d(x,px,py,w,h,col,d){d=d||8;var g=x.createLinearGradient(px,py,px,py+h);g.addColorStop(0,lt(col,.35));g.addColorStop(1,dk(col,.35));x.save();x.shadowColor=col;x.shadowBlur=9;x.fillStyle=g;x.fillRect(px,py,w,h);x.restore();
+  x.fillStyle=lt(col,.55);x.beginPath();x.moveTo(px,py);x.lineTo(px+d,py-d*.7);x.lineTo(px+w+d,py-d*.7);x.lineTo(px+w,py);x.closePath();x.fill();
+  x.fillStyle=dk(col,.45);x.beginPath();x.moveTo(px+w,py);x.lineTo(px+w+d,py-d*.7);x.lineTo(px+w+d,py+h-d*.7);x.lineTo(px+w,py+h);x.closePath();x.fill();}
+function disc(x,px,py,rx,ry,col){var g=x.createRadialGradient(px,py-ry*.3,2,px,py,rx);g.addColorStop(0,col);g.addColorStop(1,dk(col,.7));x.save();x.shadowColor=col;x.shadowBlur=12;x.fillStyle=g;x.beginPath();x.ellipse(px,py,rx,ry,0,0,7);x.fill();x.restore();}
+function pedestal(x,px,py,r,col){var g=x.createRadialGradient(px,py,2,px,py,r);g.addColorStop(0,'rgba(34,211,238,.35)');g.addColorStop(1,'rgba(34,211,238,0)');x.fillStyle=g;x.beginPath();x.ellipse(px,py,r,r*.32,0,0,7);x.fill();x.strokeStyle=col||'rgba(34,211,238,.8)';x.lineWidth=1.5;x.beginPath();x.ellipse(px,py,r*.8,r*.26,0,0,7);x.stroke();}
+/* ব্যাকটেরিয়া (দণ্ডাকার) */
+function bact(x,px,py,len,r,ang,col,t){x.save();x.translate(px,py);x.rotate(ang);
+  for(var k=0;k<2;k++){x.strokeStyle='rgba(125,255,200,.8)';x.lineWidth=1.6;x.beginPath();x.moveTo(-len/2,k*4-2);for(var s=1;s<=14;s++){x.lineTo(-len/2-s*3.2,(k*4-2)+Math.sin(s*.7-t*5+k)*3.2*s/6);}x.stroke();}
+  x.shadowColor=col;x.shadowBlur=14;var g=x.createLinearGradient(0,-r,0,r);g.addColorStop(0,lt(col,.6));g.addColorStop(.5,col);g.addColorStop(1,dk(col,.55));x.fillStyle=g;rr(x,-len/2,-r,len,2*r,r);x.fill();x.restore();
+  x.save();x.translate(px,py);x.rotate(ang);x.fillStyle='rgba(255,255,255,.55)';rr(x,-len/2+r*.6,-r*.65,len-r*1.2,r*.45,r*.2);x.fill();for(var i=0;i<6;i++){x.fillStyle='rgba(255,255,255,.35)';x.beginPath();x.arc(-len/2+r+(len-2*r)*i/5,((i*7)%3-1)*r*.3,1.6,0,7);x.fill();}x.restore();}
+/* অ্যামিবা */
+function blob(x,px,py,r,t,col){x.save();x.shadowColor=col;x.shadowBlur=18;var g=x.createRadialGradient(px-r*.3,py-r*.35,r*.1,px,py,r*1.15);g.addColorStop(0,lt(col,.7));g.addColorStop(.6,col);g.addColorStop(1,dk(col,.5));x.fillStyle=g;x.beginPath();
+  for(var i=0;i<=40;i++){var a=i/40*Math.PI*2,rad=r*(1+.16*Math.sin(a*3+t*1.6)+.1*Math.sin(a*5-t*1.1));var X=px+Math.cos(a)*rad,Y=py+Math.sin(a)*rad*.88;if(i===0)x.moveTo(X,Y);else x.lineTo(X,Y);}x.closePath();x.fill();x.restore();
+  orb(x,px+r*.12,py-r*.05,r*.26,'#6366f1',8);for(var k=0;k<5;k++)circ(x,0,px+Math.cos(k*1.9+t*.4)*r*.5,py+Math.sin(k*2.3+t*.3)*r*.4,2.4,'rgba(255,255,255,.55)',null);}
+/* ডায়াটম (লেন্স আকার) */
+function diatom(x,px,py,len,w,ang,col,t){x.save();x.translate(px,py);x.rotate(ang);x.shadowColor=col;x.shadowBlur=14;var g=x.createLinearGradient(0,-w,0,w);g.addColorStop(0,lt(col,.55));g.addColorStop(.5,col);g.addColorStop(1,dk(col,.55));x.fillStyle=g;x.beginPath();x.moveTo(-len,0);x.quadraticCurveTo(0,-w*2,len,0);x.quadraticCurveTo(0,w*2,-len,0);x.fill();x.shadowBlur=0;
+  x.strokeStyle='rgba(255,255,255,.7)';x.lineWidth=1.4;x.beginPath();x.moveTo(-len*.9,0);x.lineTo(len*.9,0);x.stroke();for(var i=-4;i<=4;i++){var X=i*len/5,H=w*1.4*(1-Math.abs(i)/5.5);x.beginPath();x.moveTo(X,-H);x.lineTo(X,H);x.stroke();}x.restore();}
+/* মাশরুম */
+function mush(x,px,py,s,col){var g=x.createRadialGradient(px-s*.25,py-s*.7,2,px,py-s*.4,s);g.addColorStop(0,lt(col,.7));g.addColorStop(1,dk(col,.45));x.save();x.shadowColor=col;x.shadowBlur=12;
+  x.fillStyle='#e8dcc8';rr(x,px-s*.18,py-s*.45,s*.36,s*.62,s*.12);x.fill();x.fillStyle=g;x.beginPath();x.ellipse(px,py-s*.5,s*.8,s*.52,0,Math.PI,0);x.lineTo(px+s*.8,py-s*.46);x.quadraticCurveTo(px,py-s*.2,px-s*.8,py-s*.46);x.fill();x.restore();for(var i=0;i<4;i++)circ(x,0,px+(i-1.5)*s*.3,py-s*.74+(i%2)*s*.1,s*.07,'rgba(255,255,255,.7)',null);}
+/* গাছ */
+function tree(x,px,py,s,t){x.save();x.fillStyle='#8b5a2b';var g=x.createLinearGradient(px-s*.12,0,px+s*.12,0);g.addColorStop(0,'#a0703a');g.addColorStop(1,'#5a3a18');x.fillStyle=g;x.fillRect(px-s*.11,py-s*.6,s*.22,s*.7);x.restore();
+  var C=[[0,-1.0,.5],[-.34,-.78,.4],[.34,-.78,.4],[-.18,-.62,.36],[.2,-.6,.34]];C.forEach(function(c,i){orb(x,px+c[0]*s+Math.sin(t*1.2+i)*1.4,py+c[1]*s,c[2]*s,i%2?'#22c55e':'#4ade80',10);});}
+/* প্রাণী: ইমোজি ভিত্তিক */
+function emo(x,e,px,py,s){x.font=s+'px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(e,px,py);}
+/* সরল ক্রোমোজোম/অণু বিন্দুর ঝাঁক */
+function swarm(x,cx,cy,rad,n,col,t){for(var i=0;i<n;i++){var a=i*2.399+t*.3,rr_=rad*Math.sqrt((i+.5)/n);circ(x,0,cx+Math.cos(a)*rr_,cy+Math.sin(a)*rr_*.8,2.2,col,null);}}
+/* কার্ড/লেবেল */
+function chip(x,s,px,py,col,size){x.font='700 '+(size||12)+'px "Hind Siliguri",sans-serif';var w=x.measureText(s).width+16;hbox(x,px-w/2,py-11,w,22,col,.8);ft(x,s,px,py,size||12,'#fff');}
+function nbtn(x,s,px,py,w,h,col,on){x.save();x.shadowColor=col;x.shadowBlur=on?16:5;rr(x,px,py,w,h,10);x.fillStyle=on?dk(col,.2):'rgba(8,24,52,.85)';x.fill();x.strokeStyle=col;x.lineWidth=on?2.4:1.4;x.stroke();x.restore();ft(x,s,px+w/2,py+h/2+1,12,on?'#fff':lt(col,.4));}
+/* পাঠ্য মোড়ানো */
+function wrapT(x,s,px,py,mw,lh,size,col,al){x.font='700 '+size+'px "Hind Siliguri",sans-serif';var w=s.split(' '),l='',y=py,i;for(i=0;i<w.length;i++){var tt=l?l+' '+w[i]:w[i];if(x.measureText(tt).width>mw&&l){ft(x,l,px,y,size,col,al);y+=lh;l=w[i];}else l=tt;}if(l)ft(x,l,px,y,size,col,al);return y;}
+/* একটি ক্যানভাসে ক্লিক-স্থানাঙ্ক (লজিক্যাল) */
+function cpos(cv,ev){var r=cv.getBoundingClientRect(),w=cv.__lw||cv.width,h=cv.__lh||cv.height;return [(ev.clientX-r.left)/r.width*w,(ev.clientY-r.top)/r.height*h];}
+
+function rq(i,a,b){var v=Math.sin(i*12.9898+78.233)*43758.5453;v=v-Math.floor(v);return a+v*(b-a);}
+
+/* ===== সাধারণ: বাছাই (sort) ও ঘূর্ণি-রিং ===== */
+function SORT(P){
+  var S={q:shuffle(P.items),i:0,ok:0,n:0,res:0,t:0,side:0,cnt:[0,0]},id=P.id;
+  function cur(){return S.q[S.i];}
+  function intro(){$(id+'t').innerHTML=P.intro;}
+  function ans(side){if(S.res)return;var it=cur();S.n++;S.side=side;S.res=(it.t===side)?1:2;if(S.res===1){S.ok++;S.cnt[side]++;}S.t=0;
+    $(id+'t').innerHTML=(S.res===1?'✅ ঠিক! ':'❌ ভুল! ')+'<b>'+it.n+'</b> ➜ <b>'+P.names[it.t]+'</b>।<br>'+it.d;
+    setTimeout(function(){S.i++;if(S.i>=S.q.length){S.q=shuffle(S.q);S.i=0;}S.res=0;S.t=0;intro();},2300);}
+  $(id+'j').onclick=function(){ans(0);};$(id+'d').onclick=function(){ans(1);};intro();
+  DRAWS.push(function(){var x=ctxOf(id+'c'),it=cur(),W=460,H=330,u,px=230,py=165+Math.sin(FR/22)*5,sc=1,al=1;bgF(x,W,H);
+    var bins=[[10,P.colL],[W-120,P.colR]];
+    bins.forEach(function(b,k){hbox(x,b[0],176,110,128,b[1],.55);ft(x,P.names[k],b[0]+55,194,13,lt(b[1],.4));ft(x,bn(S.cnt[k]),b[0]+55,252,30,'#fff');ft(x,'সাজানো হয়েছে',b[0]+55,282,10.5,'#9bc4de');});
+    pedestal(x,230,248,70);
+    if(S.res){S.t+=DT;if(S.res===1){u=ease(S.t/.9);var tx=S.side?W-65:65;px=lerp(230,tx,u);py=lerp(165,225,u);sc=1-.45*u;al=1-.35*u;if(S.t<.9&&FR%2===0)for(var k=0;k<1;k++)circ(x,0,px+rnd(-8,8),py+rnd(-8,8),2.5,lt(P.colL,.4),null);}
+      else{px=230+Math.sin(S.t*38)*9*Math.max(0,1-S.t/.8);ring(x,230,py,52,RD,3);}}
+    x.save();x.globalAlpha=al;if(it.e){x.translate(px,py);x.scale(sc,sc);emo(x,it.e,0,0,66);x.restore();x.save();x.globalAlpha=al;hbox(x,px-70*sc,py+44*sc,140*sc,26*sc,CY,.7);ft(x,it.n,px,py+57*sc,14*sc,'#fff');}
+    else{x.translate(px,py);x.scale(sc,sc);hbox(x,-100,-34,200,68,CY,.85);ft(x,it.n,0,-8,22,'#fff');ft(x,it.en,0,20,13,'#8fd3ff');}
+    x.restore();
+    ft(x,'স্কোর: '+bn(S.ok)+' / '+bn(S.n),64,24,13,YL);ft(x,'নম্বর '+bn(S.i+1)+' / '+bn(S.q.length),W-64,24,12,'#9bc4de');
+    ft(x,P.hint,230,24,12.5,'#7dd3fc');});
+}
+function RING(id,items,getSel,pal){
+  var rot=0,last=-1;
+  DRAWS.push(function(){var x=ctxOf(id+'c'),W=460,H=330,n=items.length,s=getSel(),cx=230,cy=178,RX=172,RY=74,i,tg=Math.PI/2-s*2*Math.PI/n;bgF(x,W,H);
+    var d=((tg-rot+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;rot+=d*Math.min(1,DT*5);
+    var it=items[s];
+    if(s!==last){last=s;$(id+'t').innerHTML='<b>'+it.n+'</b> ('+it.en+')<br>'+it.d;}
+    ring(x,cx,cy+22,RX+6,'rgba(34,211,238,.35)',1.2);x.save();x.strokeStyle='rgba(34,211,238,.45)';x.lineWidth=1.4;x.beginPath();x.ellipse(cx,cy+22,RX,RY,0,0,7);x.stroke();x.restore();
+    var nodes=items.map(function(m,k){var a=rot+k*2*Math.PI/n,dp=(Math.sin(a)+1)/2;return {k:k,x:cx+Math.cos(a)*RX,y:cy+22+Math.sin(a)*RY,dp:dp,r:10+9*dp};}).sort(function(a,b){return a.dp-b.dp;});
+    nodes.forEach(function(o){var col=pal[o.k%pal.length],sel=o.k===s;if(sel)neon(x,cx,cy-20,o.x,o.y,CY,2,[5,5]);
+      x.save();x.globalAlpha=.45+.55*o.dp;orb(x,o.x,o.y,o.r+(sel?4:0),sel?'#22d3ee':col,sel?22:8);emo(x,items[o.k].e,o.x,o.y+1,(o.r+(sel?4:0))*1.15);x.restore();if(sel)ring(x,o.x,o.y,o.r+9+Math.sin(FR/9)*2,CY,2);});
+    pedestal(x,cx,cy+8,52);x.save();x.translate(0,Math.sin(FR/24)*4);emo(x,it.e,cx,cy-24,58);x.restore();
+    ft(x,it.n,cx,34,22,'#fff');ft(x,it.en,cx,58,12.5,'#7dd3fc');
+    hbox(x,cx-92,H-34,184,24,CY,.7);ft(x,'ঘুরছে: '+bn(s+1)+' / '+bn(n),cx,H-22,11.5,'#c7ecff');});
+}
+var PAL=[CY,GR,PK,YL,PU,OR,BL,'#2dd4bf','#f87171','#a3e635'];
+
+/* ===== হালকা ও মসৃণ চালানোর ব্যবস্থা (ল্যাগ কমানো) ===== */
+(function(){
+  var P=CanvasRenderingContext2D.prototype,d=Object.getOwnPropertyDescriptor(P,'shadowBlur');
+  var phone=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)||innerWidth<760;
+  window.LITE=false;
+  Object.defineProperty(P,'shadowBlur',{configurable:true,set:function(v){d.set.call(this,window.LITE?0:Math.min(v,phone?3:6));},get:function(){return d.get.call(this);}});
+  /* একসময়ে শুধু পর্দার মাঝের ল্যাবটাই চলবে */
+  var CUR=null;
+  function pick(){var best=null,bd=1e9,h=innerHeight,cs=document.querySelectorAll('canvas:not(.lbo)');for(var i=0;i<cs.length;i++){var c=cs[i];if(c.__off)continue;var r=c.getBoundingClientRect();if(r.bottom<0||r.top>h)continue;var dd=Math.abs((r.top+r.bottom)/2-h/2);if(dd<bd){bd=dd;best=c;}}CUR=best;}
+  setInterval(pick,200);setTimeout(pick,300);
+  var oc=ctxOf;
+  ctxOf=function(id){var c=$(id);if(c.__off)throw SKIP;if(CUR&&c!==CUR)throw SKIP;return oc(id);};
+  /* খুব ধীর হলে নিজে থেকে আরও হালকা মোডে যাবে */
+  var last=performance.now(),sum=0,n=0;
+  DRAWS.push(function(){var t=performance.now(),dt=t-last;last=t;if(window.LITE||dt>400)return;sum+=dt;n++;if(n===90){if(sum/n>52){window.LITE=true;var s=document.createElement('style');s.textContent='*{animation:none!important;backdrop-filter:none!important;filter:none!important}.lbs,.lbs *{box-shadow:none!important}';document.head.appendChild(s);}sum=0;n=0;}});
+})();
+
+/* ===== ল্যাব ১: ATP চক্র ===== */
+var A1={m:0,t:0};pills('a1p',function(k){A1.m=k;A1.t=0;});
+function atpMol(x,cx,cy,nP,t,shake){x.save();x.translate(cx,cy);
+  x.shadowColor=CY;x.shadowBlur=8;x.fillStyle='rgba(34,211,238,.25)';x.strokeStyle=CY;x.lineWidth=2;x.beginPath();for(var i=0;i<6;i++){var a=i*1.047;x.lineTo(-92+Math.cos(a)*22,Math.sin(a)*22);}x.closePath();x.fill();x.stroke();
+  x.beginPath();for(i=0;i<5;i++){var b=i*1.2566-1.57;x.lineTo(-46+Math.cos(b)*20,Math.sin(b)*20);}x.closePath();x.fill();x.stroke();
+  ft(x,'অ্যাডেনিন',-92,34,10,CY);ft(x,'রাইবোজ',-46,34,10,CY);
+  for(i=0;i<nP;i++){var px=-6+i*38;orb(x,px,0,15,YL,12);ft(x,'P',px,1,12,'#78350f');if(i>0){x.strokeStyle='#ef4444';x.lineWidth=2;x.beginPath();x.moveTo(px-23,0);x.lineTo(px-19,0);x.stroke();}}
+  x.restore();}
+DRAWS.push(function(){var x=ctxOf('a1c'),W=460,H=330,t=FR/60,m=A1.m,i;bgF(x,W,H);A1.t+=DT;var p=(A1.t%4)/4,u=ease(Math.min(1,p*1.6));
+  if(m===0){atpMol(x,200,170,2+(p>.55?1:0),t);if(p<=.55){var px=lerp(420,284,u);orb(x,px,170,15,YL,12);ft(x,'P',px,171,12,'#78350f');ft(x,'Pi (মুক্ত ফসফেট)',px,206,10.5,YL);}
+    x.save();x.globalAlpha=p<.55?1:.3;x.strokeStyle=OR;x.fillStyle=OR;x.shadowColor=OR;x.shadowBlur=10;x.lineWidth=4;x.beginPath();x.moveTo(40,70);x.lineTo(130,100);x.stroke();x.restore();ft(x,'খাবার থেকে পাওয়া শক্তি ঢুকছে',140,60,12,OR);
+    chip(x,p<.55?'ADP + Pi':'ATP তৈরি হলো ✓',230,28,CY,13);if(p>.55)for(i=0;i<6;i++)circ(x,0,350+Math.cos(i+t*3)*10*(p-.55)*3,170+Math.sin(i*1.3+t*3)*14,2.4,'#fde68a',null);}
+  else{var det=p>.35,ex=det?ease((p-.35)/.5):0;atpMol(x,200,170,det?2:3,t);if(det){var px2=lerp(322,430,ex);x.save();x.globalAlpha=1-ex*.5;orb(x,px2,170-ex*40,15,YL,12);ft(x,'Pi',px2,171-ex*40,12,'#78350f');x.restore();}
+    x.save();x.globalAlpha=det?1:.25;x.strokeStyle=RD;x.shadowColor=RD;x.shadowBlur=10;x.lineWidth=4;x.beginPath();x.moveTo(330,240);x.lineTo(430,270);x.stroke();x.restore();ft(x,det?'শক্তি বের হচ্ছে ➜ কাজে লাগছে':'শক্তি জমা আছে',300,226,12,RD);
+    chip(x,det?'ADP + Pi':'ATP',230,28,CY,13);if(det)for(i=0;i<8;i++)circ(x,0,330+rq(i,0,90)*ex,240+rq(i+5,-30,30)*ex,2.6,'#fca5a5',null);}
+  ft(x,'প্রতিমোল ATP-তে প্রায় ৭.৩ কিলোক্যালরি (৩০.৫৫ kJ) শক্তি',230,308,11,'#9bc4de');
+  $('a1t').innerHTML=m===0?'<b>ফসফোরাইলেশন</b>: ADP-র সাথে ফসফেট যুক্ত হয়ে ATP হয়। এতে বাইরে থেকে শক্তি দিতে হয় (বই ৪.১)।':'<b>ডিফসফোরাইলেশন</b>: ATP থেকে প্রান্তীয় ফসফেট খুলে গেলে শক্তি বের হয় (বই ৪.১)। কোষে এই দুই প্রক্রিয়া চক্রের মতো চলতে থাকে।<br><small>(অণুর ছবি আমার সরল আঁকা)</small>';});
+qgame('a1q','a1o','a1fb','a1sc',[
+ ['ADP-র সাথে ফসফেট যুক্ত হওয়ার প্রক্রিয়ার নাম কী?','ফসফোরাইলেশন',['ডিফসফোরাইলেশন','ফটোলাইসিস','গ্লাইকোলাইসিস'],'বই ৪.১।'],
+ ['ডিফসফোরাইলেশনে কী ঘটে?','ফসফেট খুলে শক্তি বের হয়',['শক্তি জমা হয়','পানি তৈরি হয়','কিছুই ঘটে না'],'বইয়ের সৃজনশীল ১(ক)-র উত্তর।'],
+ ['ATP-র পূর্ণরূপ কী?','অ্যাডিনোসিন ট্রাইফসফেট',['অ্যাডিনোসিন ডাইফসফেট','অ্যাডিনোসিন মনোফসফেট','অ্যাসিটাইল ট্রাইফসফেট'],'বই।'],
+ ['ATP-কে "জৈবমুদ্রা" বলা হয় কেন?','শক্তি জমা রাখে ও দরকারমতো সরবরাহ করে',['টাকার মতো দেখতে','শুধু উদ্ভিদে থাকে','খাদ্য তৈরি করে'],'বই ৪.১।']]);
+/* ===== ল্যাব ২: শক্তির প্রবাহ ===== */
+var B2={m:0};pills('b2p',function(k){B2.m=k;});
+DRAWS.push(function(){var x=ctxOf('b2c'),W=460,H=330,t=FR/60,m=B2.m,i;bgF(x,W,H);
+  var N=[['☀️','সূর্য'],['🌿','সবুজ উদ্ভিদ'],['🍚','খাদ্য'],['⚡','ATP'],['🏃','কাজ']],X=[50,140,230,320,410];
+  for(i=0;i<4;i++){var on=m>i;neon(x,X[i]+22,170,X[i+1]-22,170,on?YL:'rgba(155,196,222,.35)',on?3:1.5,on?null:[4,4]);if(on){var q=((t*.8+i*.25)%1);circ(x,0,lerp(X[i]+22,X[i+1]-22,q),170,4,'#fde68a',null);}}
+  for(i=0;i<5;i++){var sel=i===m,pa=i<=m;x.save();x.globalAlpha=pa?1:.4;orb(x,X[i],170,sel?30:24,sel?YL:CY,sel?24:8);emo(x,N[i][0],X[i],171,sel?32:26);x.restore();ft(x,N[i][1],X[i],218,11.5,sel?'#fff':'#9bc4de');}
+  ft(x,['সূর্যই শক্তির মূল উৎস','সৌরশক্তি ➜ রাসায়নিক শক্তি','শর্করায় শক্তি জমা (স্থিতি শক্তি)','খাদ্য ভেঙে ATP তৈরি','ATP ভেঙে কাজ: পেশি, চিন্তা, বৃদ্ধি...'][m],230,40,13.5,'#fff');
+  $('b2t').innerHTML=['<b>সূর্য</b>: পৃথিবীতে শক্তির মূল উৎস। প্রাণী বা অসবুজ উদ্ভিদ সৌরশক্তি সরাসরি কাজে লাগাতে পারে না (বই)।','<b>সালোকসংশ্লেষণ</b>: সবুজ উদ্ভিদ সৌরশক্তিকে রাসায়নিক শক্তিতে বদলে শর্করা তৈরি করে।','<b>খাদ্য</b>: শর্করার মধ্যে শক্তি স্থিতি শক্তিরূপে জমা থাকে, জীব সরাসরি এটা কাজে লাগাতে পারে না।','<b>শ্বসন</b>: খাদ্য ভেঙে শক্তি ATP রূপে তাপসহ মুক্ত হয়।','<b>কাজ</b>: ATP-র শক্তিতে পেশি সংকোচন, নিঃশ্বাস, চিন্তা, বৃদ্ধি, দেহের তাপমাত্রা ঠিক রাখা সবই চলে (বই ৪.১)।'][m];});
+qgame('b2q','b2o','b2fb','b2sc',[
+ ['পৃথিবীতে শক্তির মূল উৎস কী?','সূর্য',['চাঁদ','বাতাস','পানি'],'বই ৪।'],
+ ['সৌরশক্তিকে রাসায়নিক শক্তিতে বদলায় কোন প্রক্রিয়া?','সালোকসংশ্লেষণ',['শ্বসন','বাষ্পমোচন','পরিপাক'],'বই ৪.২।'],
+ ['সৌরশক্তি সরাসরি কাজে লাগাতে পারে কারা?','সবুজ উদ্ভিদ',['প্রাণী','অসবুজ উদ্ভিদ','কেউ না'],'বই ৪।']]);
+/* ===== ল্যাব ৩: সালোকসংশ্লেষণ সমীকরণ ===== */
+var C3={m:0,t:0,P:[]};pills('c3p',function(k){C3.m=k;});
+for(var q3=0;q3<18;q3++)C3.P.push({k:q3%3,o:rq(q3,0,1)});
+DRAWS.push(function(){var x=ctxOf('c3c'),W=460,H=330,t=FR/60,m=C3.m,L=+$('c3k').value/100,i;$('c3kv').textContent=bn(Math.round(L*100));bgF(x,W,H);C3.t+=DT*L;var T=C3.t;
+  x.save();x.shadowColor=GR;x.shadowBlur=18*L;x.fillStyle='rgba(20,100,50,'+(.25+.3*L)+')';x.strokeStyle=GR;x.lineWidth=2.4;x.beginPath();x.ellipse(230,170,80,56,0,0,7);x.fill();x.stroke();x.restore();ft(x,'ক্লোরোপ্লাস্ট',230,170,12,'#bbf7d0');
+  for(i=0;i<5;i++){var a=i*1.2+t;x.save();x.globalAlpha=L*.6;x.strokeStyle=YL;x.lineWidth=2;x.beginPath();x.moveTo(190+i*18,18);x.lineTo(200+i*18,108);x.stroke();x.restore();}emo(x,'☀️',230,26,26);
+  C3.P.forEach(function(p,j){var u=((T*.5+p.o)%1);if(p.k===0){circ(x,0,lerp(30,150,u),lerp(90+j*5,150,u),5,'#94a3b8',null);}else if(p.k===1){circ(x,0,lerp(30,150,u),lerp(250-j*3,190,u),5,BL,null);}else{var oc=j%2?'#f472b6':'#38bdf8';circ(x,0,lerp(310,430,u),lerp(150,90+j*8,u),j%2?6:5,oc,null);}});
+  ft(x,'CO₂ (ধূসর)',60,70,11,'#cbd5e1');ft(x,'H₂O (নীল)',60,270,11,BL);ft(x,'গ্লুকোজ (গোলাপি) ও O₂',380,70,10.5,PK);
+  hbox(x,12,296,436,26,YL,.7);ft(x,'6CO₂ + 12H₂O  ➜(আলো, ক্লোরোফিল)➜  C₆H₁₂O₆ + 6H₂O + 6O₂',230,310,11.5,'#fff');
+  if(L<.05)chip(x,'আলো নেই ➜ খাদ্য তৈরি থেমে গেছে',230,252,RD,11.5);
+  $('c3t').innerHTML=['<b>কাঁচামাল</b>: কার্বন ডাই-অক্সাইড ও পানি। সাথে ক্লোরোফিল ও আলো লাগে (বই ৪.২)।','<b>আলো ও ক্লোরোফিল</b>: ক্লোরোফিল আলো শোষণ করে, আলোক শক্তি রাসায়নিক শক্তিতে বদলায়।','<b>উৎপাদ</b>: গ্লুকোজ (কার্বোহাইড্রেট), পানি ও অক্সিজেন। অক্সিজেন ও পানি উপজাত দ্রব্য (বই)।<br><small>(কণার সংখ্যা সরল দেখানো, আমার আঁকা)</small>'][m];});
+qgame('c3q','c3o','c3fb','c3sc',[
+ ['কোনটি সালোকসংশ্লেষণ প্রক্রিয়ায় উপজাত হিসেবে নির্গত হয়?','অক্সিজেন',['শক্তি','শর্করা','কার্বন ডাই-অক্সাইড'],'বইয়ের নমুনা প্রশ্ন ১।'],
+ ['সালোকসংশ্লেষণের জন্য কোনটি দরকার নয়?','অক্সিজেন গ্যাস',['ক্লোরোফিল','আলো','কার্বন ডাই-অক্সাইড'],'বই ৪.২: ক্লোরোফিল, আলো, পানি, CO₂।'],
+ ['গ্লুকোজের সংকেত কোনটি?','C₆H₁₂O₆',['CO₂','H₂O','O₂'],'বইয়ের সমীকরণ।'],
+ ['কোন কোষে সালোকসংশ্লেষণ প্রধানত ঘটে?','পাতার মেসোফিল টিস্যু',['মূলের কোষ','জাইলেম','ফ্লোয়েম'],'বই ৪.২।']]);
+/* ===== ল্যাব ৪: পাতা থেকে ক্লোরোপ্লাস্ট ===== */
+DRAWS.push(function(){var x=ctxOf('d4c'),W=460,H=330,t=FR/60,z=+$('d4k').value/100,i,j;$('d4kv').textContent=bn(Math.round(z*100));bgF(x,W,H);
+  var s1=1-ease(Math.min(1,z/.4)),s2=ease(Math.min(1,z/.35))*(1-ease(Math.max(0,(z-.55)/.3))),s3=ease(Math.max(0,(z-.55)/.35));
+  if(s1>.02){x.save();x.globalAlpha=s1;x.translate(230,170);x.scale(1+z*2,1+z*2);x.shadowColor=GR;x.shadowBlur=14;x.fillStyle='#15803d';x.beginPath();x.moveTo(-130,0);x.quadraticCurveTo(0,-110,130,0);x.quadraticCurveTo(0,110,-130,0);x.fill();x.strokeStyle='#bbf7d0';x.lineWidth=2;x.beginPath();x.moveTo(-130,0);x.lineTo(130,0);for(i=1;i<4;i++){x.moveTo(-90+i*40,0);x.lineTo(-60+i*40,-40+i*3);x.moveTo(-90+i*40,0);x.lineTo(-60+i*40,40-i*3);}x.stroke();x.fillStyle='#fff';x.beginPath();x.arc(30,-25,3,0,7);x.fill();x.restore();ft(x,'পাতা',230,300,13,'#bbf7d0');}
+  if(s2>.02){x.save();x.globalAlpha=s2;for(j=0;j<3;j++)for(i=0;i<7;i++){var X=60+i*55+(j%2)*18,Y=130+j*50;x.fillStyle='rgba(34,197,94,.22)';x.strokeStyle='#86efac';x.lineWidth=1.4;x.beginPath();x.ellipse(X,Y,24,20,0,0,7);x.fill();x.stroke();for(var c=0;c<3;c++)circ(x,0,X-10+c*10,Y+((c%2)*8)-4,4,'#16a34a',null);}
+    x.fillStyle='#14532d';rr(x,40,78,380,22,6);x.fill();x.fillStyle='#052e16';x.beginPath();x.ellipse(230,89,22,9,0,0,7);x.fill();ft(x,'পত্ররন্ধ্র (স্টোমা)',230,64,11.5,'#fff');
+    for(i=0;i<4;i++){var u=((t*.5+i/4)%1);circ(x,0,206+i*8,28+u*84,3.6,'#cbd5e1',null);}ft(x,'CO₂ ঢুকছে',140,40,10.5,'#cbd5e1');for(i=0;i<3;i++){var u2=((t*.4+i/3)%1);circ(x,0,260+i*6,110-u2*86,4,PK,null);}ft(x,'O₂ বের হচ্ছে',320,40,10.5,PK);
+    ft(x,'মেসোফিল টিস্যু (সবুজ কণা = ক্লোরোপ্লাস্ট)',230,300,11.5,'#bbf7d0');x.restore();}
+  if(s3>.02){x.save();x.globalAlpha=s3;x.shadowColor=GR;x.shadowBlur=18;x.fillStyle='rgba(22,163,74,.55)';x.strokeStyle=GR;x.lineWidth=3;x.beginPath();x.ellipse(230,170,170,100,0,0,7);x.fill();x.stroke();x.shadowBlur=0;for(j=0;j<3;j++){var gx=120+j*110;for(i=0;i<5;i++){x.fillStyle='#15803d';x.strokeStyle='#bbf7d0';x.lineWidth=1.2;x.beginPath();x.ellipse(gx,128+i*13+(j%2)*18,24,5.5,0,0,7);x.fill();x.stroke();}}
+    ft(x,'গ্রানা (থাইলাকয়েড)',120,98,11,'#fff');ft(x,'স্ট্রোমা',330,236,12,'#fff');x.restore();}
+  chip(x,z<.3?'পুরো পাতা':z<.65?'পাতার ভেতরের অংশ':'ক্লোরোপ্লাস্ট',230,24,CY,12.5);
+  $('d4t').innerHTML='বই ৪.২: পাতার <b>মেসোফিল টিস্যু</b> সালোকসংশ্লেষণের প্রধান স্থান। <b>পত্ররন্ধ্র</b> দিয়ে CO₂ ঢোকে, যা মেসোফিলের ক্লোরোপ্লাস্টে পৌঁছে। ক্লোরোপ্লাস্টে <b>গ্রানা</b> (থাইলাকয়েড) ও <b>স্ট্রোমা</b> আছে।<br><small>(ছবি সরল, আমার আঁকা)</small>';});
+qgame('d4q','d4o','d4fb','d4sc',[
+ ['পাতায় CO₂ ঢোকে কোন পথে?','পত্ররন্ধ্র (স্টোমা)',['মূল','কাণ্ড','ফুল'],'বই ৪.২।'],
+ ['ক্লোরোপ্লাস্টের স্তূপাকার অংশ কী?','গ্রানা',['স্ট্রোমা','ক্রিস্টি','কাইটিন'],'বই চিত্র ৪.০২।'],
+ ['সালোকসংশ্লেষণের প্রধান স্থান কোথায়?','পাতার মেসোফিল টিস্যু',['ফুলের পাপড়ি','মূলের ডগা','কাণ্ডের ছাল'],'বই।'],
+ ['স্টোমা খোলা-বন্ধ করে কোনটি?','রক্ষী কোষ (গার্ড সেল)',['সঙ্গী কোষ','ভেসেল','গ্রানা'],'বই চিত্র ৪.০৩।']]);
+/* ===== ল্যাব ৫: আলোনির্ভর পর্যায় ===== */
+var E5={atp:0,nad:0,o2:0};
+DRAWS.push(function(){var x=ctxOf('e5c'),W=460,H=330,t=FR/60,L=+$('e5k').value,i;$('e5kv').textContent=bn(L);bgF(x,W,H);
+  E5.atp+=DT*L*1.4;E5.nad+=DT*L*1.4;E5.o2+=DT*L*.7;
+  x.save();x.shadowColor=GR;x.shadowBlur=10;x.fillStyle='rgba(22,163,74,.5)';x.strokeStyle=GR;x.lineWidth=3;rr(x,30,150,400,36,18);x.fill();x.stroke();x.restore();ft(x,'থাইলাকয়েড পর্দা (ক্লোরোফিল)',230,168,12,'#fff');
+  for(i=0;i<L*1.4;i++){var u=((t*.7+i*.19)%1);x.save();x.shadowColor=YL;x.shadowBlur=8;circ(x,0,50+i*55%380,lerp(20,148,u),4,YL,null);x.restore();}ft(x,'আলোর ফোটন',90,26,11,YL);
+  for(i=0;i<3;i++){var q=((t*.5+i/3)%1);circ(x,0,200+i*14,lerp(300,190,q),4.5,BL,null);}ft(x,'পানি (H₂O) ভাঙছে',170,314,11,BL);
+  for(i=0;i<Math.ceil(L/2);i++){var o=((t*.6+i*.3)%1);circ(x,0,300+i*12,lerp(185,290,o),5,PK,null);}ft(x,'O₂ বের',360,300,11,PK);
+  [['ATP',YL,60],['NADPH',PU,170],['H⁺',RD,290]].forEach(function(r,j){hbox(x,r[2]+20,222,96,38,r[1],.7);ft(x,r[0],r[2]+68,234,11,r[1]);ft(x,bn(Math.floor(j===0?E5.atp:j===1?E5.nad:E5.o2*2)),r[2]+68,252,14,'#fff');});
+  ft(x,'ফোটন ➜ ক্লোরোফিল ➜ ADP+Pi=ATP, NADP⁺=NADPH',230,92,11.5,'#c7ecff');
+  $('e5t').innerHTML='<b>আলোনির্ভর পর্যায়</b>: ক্লোরোফিল ফোটন শোষণ করে। এই শক্তিতে ADP ও অজৈব ফসফেট (Pi) থেকে ATP তৈরি হয় (ফটোফসফোরাইলেশন)। NADPH ও H⁺ও উৎপন্ন হয়। পানি ভেঙে অক্সিজেন, প্রোটন ও ইলেকট্রন তৈরি হয় (পানির ফটোলাইসিস)।<br><small>(কাউন্টারের সংখ্যা সরল দেখানো, বইয়ের হিসাব নয়)</small>';});
+qgame('e5q','e5o','e5fb','e5sc',[
+ ['পানির ফটোলাইসিস কী?','আলোতে পানি ভেঙে O₂, প্রোটন ও ইলেকট্রন তৈরি',['পানি জমে যাওয়া','পানি শোষণ','পানি বাষ্প'],'বই ৪.২.১ (a)।'],
+ ['ফটোফসফোরাইলেশন কী?','আলোর সাহায্যে ATP তৈরি',['তাপে ATP ভাঙা','পানি তৈরি','শর্করা পোড়ানো'],'বই।'],
+ ['আলোনির্ভর পর্যায়ে কোনটি উৎপন্ন হয় না?','গ্লুকোজ (সরাসরি)',['ATP','NADPH','অক্সিজেন'],'গ্লুকোজ তৈরি হয় অন্ধকার পর্যায়ে (বই)।']]);
+
+/* ===== ল্যাব ৬: ক্যালভিন চক্র ও C4 ===== */
+var F6={m:0};pills('f6p',function(k){F6.m=k;});
+function cring(x,cx,cy,r,col,t,n,lab){x.save();x.shadowColor=col;x.shadowBlur=10;x.strokeStyle=col;x.lineWidth=3;x.beginPath();x.arc(cx,cy,r,0,7);x.stroke();x.restore();for(var i=0;i<n;i++){var a=t*.8+i*6.283/n;orb(x,cx+Math.cos(a)*r,cy+Math.sin(a)*r,6,col,8);}ft(x,lab,cx,cy,12,'#fff');}
+DRAWS.push(function(){var x=ctxOf('f6c'),W=460,H=330,t=FR/60,m=F6.m,i;bgF(x,W,H);
+  var co=function(px,py,s){circ(x,0,px,py,5,'#94a3b8',null);ft(x,'CO₂',px,py-12,10,'#cbd5e1');};
+  if(m===0){cring(x,250,170,64,'#f472b6',t,5,'ক্যালভিন চক্র');var u=(t*.4)%1;circ(x,0,lerp(60,190,u),lerp(80,150,u),5,'#94a3b8',null);ft(x,'CO₂',60,66,11,'#cbd5e1');
+    for(i=0;i<3;i++)circ(x,0,330+i*14,170+Math.sin(t*2+i)*6,5,YL,null);ft(x,'প্রথম স্থায়ী পদার্থ: ৩-কার্বন (ফসফোগ্লিসারিক অ্যাসিড)',230,40,11.5,YL);ft(x,'3C',350,194,12,YL);
+    x.save();x.strokeStyle='#4ade80';x.shadowColor='#4ade80';x.shadowBlur=8;x.lineWidth=3;x.beginPath();x.moveTo(316,170);x.lineTo(420,170);x.stroke();x.restore();ft(x,'শর্করা',420,150,12,'#86efac');ft(x,'ATP, NADPH (আলোক পর্যায় থেকে) ▲',250,262,11,'#c7ecff');chip(x,'C₃ উদ্ভিদ: অধিকাংশ উদ্ভিদ',230,300,PK,11);}
+  else{cring(x,110,170,52,'#38bdf8',t,4,'হ্যাচ ও স্ল্যাক');cring(x,350,170,52,'#f472b6',t,5,'ক্যালভিন');var u2=(t*.4)%1;circ(x,0,lerp(30,70,u2),lerp(80,140,u2),5,'#94a3b8',null);ft(x,'CO₂',30,66,11,'#cbd5e1');
+    var q=(t*.5)%1;x.save();x.strokeStyle='#fbbf24';x.shadowColor='#fbbf24';x.shadowBlur=8;x.lineWidth=3;x.beginPath();x.moveTo(166,170);x.lineTo(294,170);x.stroke();x.restore();circ(x,0,lerp(166,294,q),170,6,'#fbbf24',null);ft(x,'4C (অক্সালো অ্যাসিটিক এসিড)',230,194,10.5,'#fbbf24');
+    ft(x,'প্রথম স্থায়ী পদার্থ: ৪-কার্বন (অক্সালো অ্যাসিটিক এসিড)',230,40,11.5,YL);x.save();x.strokeStyle='#4ade80';x.lineWidth=3;x.beginPath();x.moveTo(402,170);x.lineTo(440,170);x.stroke();x.restore();ft(x,'শর্করা',428,150,11,'#86efac');chip(x,'C₄ উদ্ভিদ: ভুট্টা, আখ, মুথা ঘাস, নটে',230,300,'#38bdf8',11);}
+  $('f6t').innerHTML=m===0?'<b>ক্যালভিন চক্র (C₃)</b>: CO₂ আত্তীকরণের এই পথ আবিষ্কার করেন ক্যালভিন, বেনসন ও ব্যাশাম। ক্যালভিন ১৯৬১ সালে নোবেল পান। প্রথম স্থায়ী পদার্থ ৩-কার্বনবিশিষ্ট ফসফোগ্লিসারিক এসিড।':'<b>হ্যাচ ও স্ল্যাক চক্র (C₄)</b>: অস্ট্রেলীয় বিজ্ঞানী হ্যাচ ও স্ল্যাক ১৯৬৬ সালে আবিষ্কার করেন। প্রথম স্থায়ী পদার্থ ৪-কার্বনবিশিষ্ট অক্সালো অ্যাসিটিক এসিড। C₄ উদ্ভিদে হার ও উৎপাদন বেশি।<br><small>(চক্রের ছবি সরল, আমার আঁকা)</small>';});
+qgame('f6q','f6o','f6fb','f6sc',[
+ ['ভুট্টাকে C₄ উদ্ভিদ বলা হয় কেন?','প্রথম স্থায়ী পদার্থ ৪-কার্বনবিশিষ্ট',['৪টি পাতা থাকে','৪ মাসে হয়','CO₂ লাগে না'],'বইয়ের সংক্ষিপ্ত প্রশ্ন ২। হ্যাচ ও স্ল্যাক চক্র চলে (আমার বিশ্লেষণ)।'],
+ ['C₃ চক্রের প্রথম স্থায়ী পদার্থে কয়টি কার্বন?','৩টি',['৪টি','২টি','৬টি'],'বই।'],
+ ['ক্যালভিন নোবেল পান কত সালে (বই)?','১৯৬১',['১৯০৫','১৯৬৬','২০০৪'],'বই।'],
+ ['হ্যাচ ও স্ল্যাক চক্র কে আবিষ্কার করেন?','এম. ডি. হ্যাচ ও সি. আর. স্ল্যাক',['ব্ল্যাকম্যান','ক্যালভিন','লিনিয়াস'],'বই ৪.২.১।']]);
+/* ===== ল্যাব ৭: আলোর রং ===== */
+function rate7(w){var g=.95*Math.exp(-Math.pow((w-440)/45,2))+Math.exp(-Math.pow((w-675)/26,2));return Math.max(.1,Math.min(1,g));}
+function wcol(w){var r,g,b;if(w<440){r=(440-w)/40;g=0;b=1;}else if(w<490){r=0;g=(w-440)/50;b=1;}else if(w<510){r=0;g=1;b=(510-w)/20;}else if(w<580){r=(w-510)/70;g=1;b=0;}else if(w<645){r=1;g=(645-w)/65;b=0;}else{r=1;g=0;b=0;}return 'rgb('+Math.round(r*255)+','+Math.round(g*255)+','+Math.round(b*255)+')';}
+DRAWS.push(function(){var x=ctxOf('g7c'),W=460,H=330,t=FR/60,w=+$('g7k').value,i;$('g7kv').textContent=bn(w);bgF(x,W,H);
+  for(i=0;i<300;i++){x.fillStyle=wcol(400+i);x.fillRect(80+i*.93,40,1.2,22);}ft(x,'দৃশ্যমান আলো (400–700 nm)',230,28,11.5,'#9bc4de');
+  var px=80+(w-400)*.93;x.save();x.shadowColor='#fff';x.shadowBlur=10;x.fillStyle='#fff';x.beginPath();x.moveTo(px,66);x.lineTo(px-6,76);x.lineTo(px+6,76);x.fill();x.restore();
+  x.save();x.strokeStyle='rgba(155,196,222,.4)';x.beginPath();x.moveTo(60,100);x.lineTo(60,250);x.lineTo(400,250);x.stroke();x.restore();
+  x.save();x.strokeStyle=CY;x.shadowColor=CY;x.shadowBlur=8;x.lineWidth=2.5;x.beginPath();for(i=0;i<=300;i+=4){var X=80+i*.93,Y=250-rate7(400+i)*140;if(i===0)x.moveTo(X,Y);else x.lineTo(X,Y);}x.stroke();x.restore();
+  var r=rate7(w),Y2=250-r*140;orb(x,px,Y2,8,wcol(w),12);neon(x,px,Y2,px,250,wcol(w),1.4,[3,3]);ft(x,'হার',40,170,11,'#9bc4de');ft(x,'তরঙ্গদৈর্ঘ্য ➜',230,270,11,'#9bc4de');
+  emo(x,'🌿',420,150,38);x.save();x.globalAlpha=.7;x.strokeStyle=wcol(w);x.lineWidth=3;x.beginPath();x.moveTo(420,60);x.lineTo(420,128);x.stroke();x.restore();
+  hbox(x,300,280,150,34,YL,.7);ft(x,'আনুমানিক হার: '+bn(Math.round(r*100))+'%',375,297,12,'#fff');
+  $('g7t').innerHTML='বই ৪.২.৩: সালোকসংশ্লেষণ আলোর <b>লাল, নীল, কমলা ও বেগুনি</b> অংশে ভালো হয়, সবুজ বা হলুদ আলোতে ভালো হয় না। সাধারণত ৪০০–৪৮০ nm এবং ৬৮০ nm তরঙ্গদৈর্ঘ্যে সবচেয়ে ভালো।<br><small>রেখাটি আমার আঁকা সরল রূপ, বইয়ের সঠিক গ্রাফ নয়।</small>';});
+qgame('g7q','g7o','g7fb','g7sc',[
+ ['কোন রঙের আলোতে সালোকসংশ্লেষণ ভালো হয় না?','সবুজ বা হলুদ',['লাল','নীল','বেগুনি'],'বই ৪.২.৩।'],
+ ['সালোকসংশ্লেষণ সবচেয়ে ভালো হয় (বই) আলোর—','৪০০–৪৮০ nm ও ৬৮০ nm এ',['১০০ nm এ','১০০০ nm এ','০ nm এ'],'বই।'],
+ ['আলো খুব বেশি হলে কী হয়?','এনজাইম নষ্ট হয়ে হার কমে',['হার সবসময় বাড়ে','কিছুই হয় না','পাতা বড় হয়'],'বই ৪.২.৩।']]);
+/* ===== ল্যাব ৮: বাহ্যিক প্রভাবক ===== */
+var H8={m:0};pills('h8p',function(k){H8.m=k;});
+var H8D=[
+ {n:'আলো',u:'আলোর তীব্রতা',f:function(v){return v<55?v/55:Math.max(.35,1-(v-55)/90);},tx:'আলো বাড়লে হার বাড়ে একটি সীমা পর্যন্ত। এরপর আলো খুব বেশি হলে এনজাইম নষ্ট হয়ে ক্লোরোফিল কমে, হার কমে (বই)।'},
+ {n:'CO₂',u:'CO₂ ঘনত্ব',f:function(v){return v<35?.25+v/35*.75:Math.max(.2,1-(v-35)/80);},tx:'বায়ুতে CO₂ ০.০৩%। উদ্ভিদ ১% পর্যন্ত ব্যবহার করতে পারে। অতিরিক্ত বাড়লে মেসোফিলের অম্লত্ব বাড়ে, পত্ররন্ধ্র বন্ধ হয়ে হার কমে (বই)।'},
+ {n:'তাপমাত্রা',u:'তাপমাত্রা',f:function(v){var T=v/2;return (T<0||T>45)?0:T<22?Math.max(0,T/22)*.9:T<=35?1:Math.max(0,1-(T-35)/10);},tx:'সবচেয়ে ভালো ২২°C থেকে ৩৫°C। ০°C-এর কাছে ও ৪৫°C-এর ওপরে প্রক্রিয়া চলে না (বই)।'},
+ {n:'পানি',u:'পানির পরিমাণ',f:function(v){return v<40?.2+v/40*.8:Math.max(.15,1-(v-40)/70);},tx:'পানি কমে গেলে রক্ষী কোষ চুপসে পত্ররন্ধ্র বন্ধ হয়, CO₂ ঢুকতে পারে না। অতিরিক্ত পানিতেও হার কমে (বই)।'},
+ {n:'অক্সিজেন',u:'অক্সিজেন ঘনত্ব',f:function(v){return Math.max(.1,1-v/110);},tx:'বাতাসে অক্সিজেন বেশি হলে হার কমে, কম হলে বাড়ে (বই)। বই আরও বলে অক্সিজেনবিহীন পরিবেশে প্রক্রিয়া সম্পূর্ণ বন্ধ থাকে।'}];
+DRAWS.push(function(){var x=ctxOf('h8c'),W=460,H=330,t=FR/60,D=H8D[H8.m],v=+$('h8k').value,i;$('h8kv').textContent=H8.m===2?bn(Math.round(v/2))+'°C':bn(v)+'%';bgF(x,W,H);
+  x.save();x.strokeStyle='rgba(155,196,222,.4)';x.beginPath();x.moveTo(50,60);x.lineTo(50,260);x.lineTo(420,260);x.stroke();x.restore();
+  x.save();x.strokeStyle=CY;x.shadowColor=CY;x.shadowBlur=8;x.lineWidth=2.5;x.beginPath();for(i=0;i<=100;i+=2){var X=50+i*3.6,Y=260-D.f(i)*180;if(i===0)x.moveTo(X,Y);else x.lineTo(X,Y);}x.stroke();x.restore();
+  var r=D.f(v),px=50+v*3.6,py=260-r*180;neon(x,px,py,px,260,YL,1.5,[3,3]);orb(x,px,py,9,YL,14);
+  ft(x,'হার',28,160,11,'#9bc4de');ft(x,D.u+' ➜',235,282,11,'#9bc4de');
+  chip(x,D.n+' ➜ হার প্রায় '+bn(Math.round(r*100))+'%',230,26,r>.75?GR:r>.35?YL:RD,12.5);
+  var n=Math.round(r*10);for(i=0;i<n;i++)circ(x,0,330+((t*50+i*17)%80),120-((t*30+i*20)%60),3,PK,null);emo(x,'🌿',380,150,30);ft(x,'O₂ উৎপাদন',380,196,10.5,PK);
+  $('h8t').innerHTML='<b>'+D.n+'</b>: '+D.tx+'<br><small>বাহ্যিক প্রভাবক বইয়ে: আলো, CO₂, তাপমাত্রা, পানি, অক্সিজেন, খনিজ পদার্থ, রাসায়নিক পদার্থ। রেখাগুলো আমার সরল আঁকা, বইয়ের সঠিক গ্রাফ নয়।</small>';});
+qgame('h8q','h8o','h8fb','h8sc',[
+ ['সালোকসংশ্লেষণের জন্য সবচেয়ে ভালো তাপমাত্রা কত?','২২°C থেকে ৩৫°C',['০°C','৪৫°C এর ওপরে','১০০°C'],'বই ৪.২.৪।'],
+ ['বায়ুমণ্ডলে CO₂ এর পরিমাণ প্রায় কত?','০.০৩%',['৩০%','২০%','৯০%'],'বইয়ের সংক্ষিপ্ত প্রশ্ন ৫-এর প্রসঙ্গ।'],
+ ['CO₂ খুব বেশি হলে কী হয়?','পত্ররন্ধ্র বন্ধ হয়ে হার কমে',['হার সবসময় বাড়ে','পাতা বেড়ে যায়','কোনো পরিবর্তন নেই'],'বইয়ের সংক্ষিপ্ত প্রশ্ন ৫। অতিরিক্ত CO₂-তে অম্লত্ব বেড়ে পত্ররন্ধ্র বন্ধ হয়।'],
+ ['পানির ঘাটতিতে সালোকসংশ্লেষণ কমে কেন?','পত্ররন্ধ্র বন্ধ হয়ে CO₂ ঢুকতে পারে না',['আলো বেড়ে যায়','ক্লোরোফিল বাড়ে','তাপ বাড়ে'],'বই (iv)।']]);
+/* ===== ল্যাব ৯: বাহ্যিক বনাম অভ্যন্তরীণ ===== */
+SORT({id:'i9',colL:'#38bdf8',colR:'#4ade80',names:['বাহ্যিক','অভ্যন্তরীণ'],hint:'কোন প্রভাবক?',
+ intro:'প্রভাবকটি পরিবেশের (বাহ্যিক) না উদ্ভিদের ভেতরের (অভ্যন্তরীণ)?',
+ items:[{e:'☀️',n:'আলো',t:0,d:'আলো বাহ্যিক প্রভাবক (বই ৪.২.৪ a)।'},{e:'🫧',n:'কার্বন ডাই-অক্সাইড',t:0,d:'বাহ্যিক প্রভাবক।'},{e:'🌡️',n:'তাপমাত্রা',t:0,d:'বাহ্যিক প্রভাবক।'},{e:'💧',n:'পানি',t:0,d:'বাহ্যিক প্রভাবক।'},{e:'🧂',n:'খনিজ পদার্থ',t:0,d:'মাটির খনিজ বাহ্যিক প্রভাবক (নাইট্রোজেন, ম্যাগনেসিয়াম)।'},{e:'☠️',n:'ক্লোরোফর্ম, মিথেন ইত্যাদি গ্যাস',t:0,d:'বাতাসের রাসায়নিক পদার্থ বাহ্যিক প্রভাবক।'},{e:'🟢',n:'ক্লোরোফিল',t:1,d:'অভ্যন্তরীণ প্রভাবক (বই ৪.২.৪ b)।'},{e:'🍂',n:'পাতার বয়স ও সংখ্যা',t:1,d:'অভ্যন্তরীণ প্রভাবক।'},{e:'🍬',n:'শর্করার পরিমাণ',t:1,d:'পাতায় বেশি শর্করা জমলে গতি মন্থর হয়, অভ্যন্তরীণ।'},{e:'🧬',n:'এনজাইম',t:1,d:'অভ্যন্তরীণ প্রভাবক।'},{e:'⚗️',n:'পটাশিয়াম',t:1,d:'পটাশিয়াম অনুঘটক হিসেবে কাজ করে, অভ্যন্তরীণ।'}]});
+qgame('i9q','i9o','i9fb','i9sc',[
+ ['কোনটি অভ্যন্তরীণ প্রভাবক?','ক্লোরোফিল',['আলো','তাপমাত্রা','পানি'],'বই ৪.২.৪ (b)।'],
+ ['কোনটি বাহ্যিক প্রভাবক?','কার্বন ডাই-অক্সাইড',['এনজাইম','পাতার বয়স','ক্লোরোফিল'],'বই (a)।'],
+ ['ক্লোরোফিল খুব কম থাকলে কী হয়?','এনজাইমের অভাবে সালোকসংশ্লেষণ কমে',['বেড়ে যায়','একই থাকে','পাতা সবুজ হয়'],'বই ৪.২.২।']]);
+
+/* ===== ল্যাব ১০: সালোকসংশ্লেষণের গুরুত্ব ===== */
+var J10={m:0};pills('j10p',function(k){J10.m=k;});
+DRAWS.push(function(){var x=ctxOf('j10c'),W=460,H=330,t=FR/60,m=J10.m,i;bgF(x,W,H);
+  if(m===0){var C=[['🌿','উদ্ভিদ',230,70],['🐇','তৃণভোজী',120,170],['🐅','মাংসাশী',340,170],['🧑','মানুষ',230,260]];C.forEach(function(c,j){orb(x,c[2],c[3],26,j===0?GR:CY,14);emo(x,c[0],c[2],c[3]+1,28);ft(x,c[1],c[2],c[3]+40,11,'#fff');});
+    [[0,1],[0,2],[0,3],[1,2],[1,3]].forEach(function(p,j){var a=C[p[0]],b=C[p[1]],q=((t*.4+j*.2)%1);neon(x,a[2],a[3]+26,b[2],b[3]-26,'rgba(250,204,21,.5)',1.6);circ(x,0,lerp(a[2],b[2],q),lerp(a[3]+26,b[3]-26,q),4,YL,null);});
+    ft(x,'সব খাদ্য সরাসরি বা পরোক্ষভাবে সবুজ উদ্ভিদ থেকে',230,24,12.5,'#fff');}
+  else if(m===1){var oo=20.95,cc=.033;hbox(x,40,70,170,120,CY,.6);hbox(x,250,70,170,120,GR,.6);ft(x,'অক্সিজেন (O₂)',125,92,12,CY);ft(x,bn(oo)+' ভাগ',125,140,26,'#fff');ft(x,'CO₂',335,92,12,GR);ft(x,bn(cc)+' ভাগ',335,140,26,'#fff');
+    for(i=0;i<6;i++){var u=((t*.4+i/6)%1);circ(x,0,lerp(250,210,u),150-u*0+Math.sin(i)*14,4,PK,null);}ft(x,'শ্বসনে O₂ কমে, CO₂ বাড়ে ⟷ সালোকসংশ্লেষণে উল্টো',230,230,11.5,'#c7ecff');
+    chip(x,'দুইয়ের অনুপাত ঠিক রাখে সবুজ উদ্ভিদ',230,282,GR,12);ft(x,'বায়ুমণ্ডলের গ্যাসের ভারসাম্য (বই ৪.২.৫)',230,28,12.5,'#fff');}
+  else{[['🍚','অন্ন'],['👕','বস্ত্র'],['💊','ঔষধ'],['🛢️','জ্বালানি'],['🪵','কাঠ'],['📄','কাগজ']].forEach(function(o,j){var X=70+(j%3)*160,Y=110+Math.floor(j/3)*100;orb(x,X,Y,28,j%2?PU:CY,12);emo(x,o[0],X,Y+1,30);ft(x,o[1],X,Y+44,12,'#fff');});
+    ft(x,'সালোকসংশ্লেষণ না থাকলে সভ্যতা বিলুপ্ত হতো (বই)',230,28,12.5,'#fff');chip(x,'আদি উদ্ভিদই পৃথিবীকে বাসযোগ্য করেছিল',230,304,YL,11);}
+  $('j10t').innerHTML=['<b>খাদ্যের উৎস</b>: প্রাণী নিজে খাদ্য প্রস্তুত করতে পারে না। সবাই সরাসরি বা পরোক্ষভাবে সবুজ উদ্ভিদের ওপর নির্ভরশীল (বই ৪.২.৫)।','<b>বায়ুর ভারসাম্য</b>: বায়ুতে O₂ ২০.৯৫ ভাগ ও CO₂ ০.০৩৩ ভাগ। শ্বসনে O₂ কমে, সালোকসংশ্লেষণে ফিরে আসে। তাই বেশি গাছ লাগাতে হবে।','<b>মানবসভ্যতা</b>: অন্ন, বস্ত্র, শিল্পসামগ্রী (রেয়ন, কাগজ, কাঠ, রাবার), ঔষধ (কুইনাইন, মরফিন), জ্বালানি (কয়লা, পেট্রল, গ্যাস) উদ্ভিদ থেকে আসে। প্রায় ৫ বিলিয়ন বছর আগের আদি উদ্ভিদ অক্সিজেন তৈরি করে পৃথিবীকে বাসযোগ্য করেছিল।'][m];});
+qgame('j10q','j10o','j10fb','j10sc',[
+ ['বায়ুতে অক্সিজেনের পরিমাণ কত ভাগ (বই)?','২০.৯৫',['০.০৩৩','৭৮','১০০'],'বই ৪.২.৫।'],
+ ['প্রাণীরা খাদ্যের জন্য নির্ভর করে—','সবুজ উদ্ভিদের ওপর',['পাথরের ওপর','বাতাসের ওপর','ব্যাকটেরিয়ার ওপর'],'বই।'],
+ ['বায়ুমণ্ডলে O₂ ও CO₂ এর অনুপাত রক্ষায় কোন প্রক্রিয়া ভূমিকা রাখে?','সালোকসংশ্লেষণ',['পরিপাক','শিলাক্ষয়','কোষ বিভাজন'],'বই।']]);
+/* ===== ল্যাব ১১: সবাত ও অবাত শ্বসন ===== */
+var K11={m:0};pills('k11p',function(k){K11.m=k;});
+DRAWS.push(function(){var x=ctxOf('k11c'),W=460,H=330,t=FR/60,m=K11.m,i;bgF(x,W,H);
+  var big=m===0;
+  hbox(x,20,50,200,130,CY,.5);ft(x,'গ্লুকোজ',120,70,13,PK);orb(x,120,110,20,PK,12);ft(x,big?'+ 6O₂':'(অক্সিজেন নেই)',120,150,12,big?CY:RD);
+  neon(x,222,115,260,115,YL,3);ft(x,big?'বিভিন্ন এনজাইম':'এনজাইম',240,100,9.5,YL);
+  hbox(x,264,50,180,130,big?GR:OR,.5);
+  if(big){ft(x,'6CO₂ + 6H₂O',354,78,13,'#fff');ft(x,'+ শক্তি',354,108,13,YL);ft(x,'৩৮ ATP',354,145,20,YL);}else{ft(x,'2C₂H₅OH + 2CO₂',354,78,12.5,'#fff');ft(x,'+ শক্তি',354,108,13,YL);ft(x,'২ ATP',354,145,20,YL);}
+  var h=big?686:56;bar3d(x,60,260-h/686*70,60,h/686*70,YL,8);ft(x,bn(big?686:56)+' kCal',90,250-h/686*70-8,11,'#fff');ft(x,'শক্তি (প্রতিমোল)',90,282,10.5,'#9bc4de');
+  if(!big){for(i=0;i<8;i++){var u=((t*.5+i/8)%1);circ(x,0,320+Math.sin(i*2+t)*20,lerp(250,200,u),3+rq(i,0,3),'rgba(253,230,138,.8)',null);}ft(x,'ইস্ট: ফুটছে, ফাঁপছে (রুটি/ফার্মেন্টেশন)',330,290,10.5,'#fde68a');emo(x,'🍞',420,250,28);}else{for(i=0;i<6;i++){var u2=((t*.4+i/6)%1);circ(x,0,300+i*18,lerp(240,200,u2),4,'#cbd5e1',null);}ft(x,'মানুষ, প্রাণী, উদ্ভিদের স্বাভাবিক শ্বসন',320,290,10.5,'#86efac');}
+  $('k11t').innerHTML=big?'<b>সবাত শ্বসন</b>: অক্সিজেন লাগে। শ্বসনিক বস্তু সম্পূর্ণ জারিত হয়ে CO₂, পানি ও প্রচুর শক্তি (৬৮৬ kCal/mole) দেয়। এক অণু গ্লুকোজে মোট ৩৮ ATP (বই ৪.৩.১)।':'<b>অবাত শ্বসন</b>: অক্সিজেন ছাড়া, আংশিক জারণ। ইথাইল অ্যালকোহল বা ল্যাকটিক অ্যাসিড, CO₂ ও সামান্য শক্তি (৫৬ kCal/mole)। ব্যাকটেরিয়া ও ইস্টে হয়। রুটি ফোলে CO₂-তে।';});
+qgame('k11q','k11o','k11fb','k11sc',[
+ ['সবাত শ্বসনে এক অণু গ্লুকোজ থেকে মোট কত ATP হয়?','৩৮টি',['২টি','৮টি','৬টি'],'বই ৪.৩.১।'],
+ ['অবাত শ্বসনে এক অণু গ্লুকোজে কত ATP?','২টি',['৩৮টি','১৮টি','৬টি'],'বই ৪.৩.১ (b)।'],
+ ['অবাত শ্বসনে শক্তি কম হয় কেন?','গ্লুকোজের অসম্পূর্ণ জারণ হয় বলে',['পানি বেশি বলে','আলো নেই বলে','কোষ ছোট বলে'],'বইয়ের সৃজনশীল ১(খ)। আংশিক জারণ, তাই কম শক্তি।'],
+ ['ইস্টে অবাত শ্বসনে কী তৈরি হয়?','ইথাইল অ্যালকোহল ও CO₂',['শুধু পানি','O₂','গ্লুকোজ'],'বই।']]);
+/* ===== ল্যাব ১২: সবাত শ্বসনের ধাপ ===== */
+var L12={m:0,t:0};pills('l12p',function(k){L12.m=k;L12.t=0;});
+var L12D=[{n:'গ্লাইকোলাইসিস',w:'সাইটোপ্লাজমে',atp:8,co:0,i:'১ গ্লুকোজ ➜ ২ পাইরুভিক এসিড, ২ NADH, ৪ ATP (২ ATP ব্যয়)। নিট ৬+২ = ৮ ATP (বইয়ের ছক)।'},{n:'অ্যাসিটাইল কো-এ',w:'মাইটোকন্ড্রিয়ার ম্যাট্রিক্সে',atp:6,co:2,i:'২ পাইরুভিক ➜ ২ অ্যাসিটাইল কো-এ + ২ CO₂ + ২ NADH। নিট ৬ ATP। বই: সাম্প্রতিক তথ্যে এটি ম্যাট্রিক্সে ঘটে।'},{n:'ক্রেবস চক্র',w:'মাইটোকন্ড্রিয়ায়',atp:24,co:4,i:'২ অ্যাসিটাইল কো-এ ➜ ৪ CO₂, ৬ NADH, ২ FADH₂, ২ GTP। নিট ১৮+৪+২ = ২৪ ATP (বইয়ের ছক)।'},{n:'ইলেকট্রন প্রবাহ ও মোট',w:'মাইটোকন্ড্রিয়ায়',atp:38,co:6,i:'NADH ও FADH₂ থেকে ATP তৈরি। মোট ৩৮ ATP ও ৬ CO₂ (এক অণু গ্লুকোজ থেকে)।'}];
+DRAWS.push(function(){var x=ctxOf('l12c'),W=460,H=330,t=FR/60,m=L12.m,D=L12D[m],i;bgF(x,W,H);L12.t+=DT;
+  var cum=[8,14,38,38][m],co=[0,2,6,6][m];var tg=[0,8,14,38][m],h0=tg;
+  ft(x,'ধাপ '+bn(m+1)+': '+D.n,230,26,14,'#fff');chip(x,D.w,230,54,m===0?'#94a3b8':OR,11);
+  x.save();x.shadowColor=m===0?'#94a3b8':OR;x.shadowBlur=14;x.fillStyle='rgba(120,50,10,.28)';x.strokeStyle=m===0?'#94a3b8':OR;x.lineWidth=2.5;x.beginPath();x.ellipse(130,160,100,60,0,0,7);x.fill();x.stroke();x.restore();
+  for(i=0;i<5;i++){var a=L12.t*.8+i*1.256;orb(x,130+Math.cos(a)*40,160+Math.sin(a)*24,7,i%2?YL:PK,8);}
+  [['ATP',cum,YL,38],['CO₂',co,'#94a3b8',6]].forEach(function(b,j){var X=270+j*90,h=b[1]/b[3]*130;bar3d(x,X,250-h,44,h,b[2],8);ft(x,bn(b[1]),X+22,242-h,14,'#fff');ft(x,b[0],X+22,268,11,'#9bc4de');});
+  if(m>0&&m<3){var d=D.atp;chip(x,'এই ধাপে +'+bn(d)+' ATP',340,300,YL,11);}
+  $('l12t').innerHTML='<b>'+D.n+'</b> ('+D.w+'): '+D.i+'<br><small>বইয়ে সংখ্যাগুলো ছক অনুযায়ী। NADH=৩ ATP, FADH₂=২ ATP, GTP=১ ATP ধরা হয়েছে।</small>';});
+qgame('l12q','l12o','l12fb','l12sc',[
+ ['গ্লাইকোলাইসিসের নিট ATP উৎপাদন (বইয়ের ছক) কত?','৮টি (৬+২)',['৪টি','২টি','২৪টি'],'বইয়ের নমুনা প্রশ্ন ২-এর বিকল্প অনুযায়ী ৮। আমার বিশ্লেষণ: ছকে নিট ৬ ATP + ২ ATP।'],
+ ['ক্রেবস চক্র কোথায় ঘটে?','মাইটোকন্ড্রিয়ায়',['সাইটোপ্লাজমে শুধু','নিউক্লিয়াসে','কোষপ্রাচীরে'],'বই ৪.৩.১।'],
+ ['এক অণু গ্লুকোজের সবাত শ্বসনে কয় অণু CO₂ তৈরি হয়?','৬ অণু',['২ অণু','১২ অণু','৩৮ অণু'],'বই।'],
+ ['১ অণু NADH থেকে কত ATP (বই)?','৩ অণু',['১ অণু','২ অণু','৩৮ অণু'],'বইয়ের ছক।']]);
+/* ===== ল্যাব ১৩: পরীক্ষা ===== */
+var M13={m:0};pills('m13p',function(k){M13.m=k;});
+function therm(x,px,py,tp,col,lab){x.save();x.strokeStyle='#e2e8f0';x.lineWidth=2;rr(x,px-6,py-70,12,80,6);x.stroke();var h=Math.max(4,(tp-20)/20*64);x.fillStyle=col;x.shadowColor=col;x.shadowBlur=8;rr(x,px-3,py+6-h,6,h,3);x.fill();x.beginPath();x.arc(px,py+14,9,0,7);x.fill();x.restore();ft(x,tp.toFixed(1)+'°C',px,py-80,12,'#fff');ft(x,lab,px,py+40,12,col);}
+DRAWS.push(function(){var x=ctxOf('m13c'),W=460,H=330,t=FR/60,m=M13.m,k=+$('m13k').value/100,i;$('m13kv').textContent=bn(Math.round(k*100));bgF(x,W,H);
+  if(m===0){var st=k<.35?0:k<.7?1:2;
+    var base=st===0?'#15803d':st===1?'#d9f99d':'#fef9c3';
+    x.save();x.translate(230,170);x.shadowColor=GR;x.shadowBlur=14;x.fillStyle=base;x.beginPath();x.moveTo(-150,0);x.quadraticCurveTo(0,-120,150,0);x.quadraticCurveTo(0,120,-150,0);x.fill();
+    if(st===2){var ex=ease(Math.min(1,(k-.7)/.3));x.save();x.beginPath();x.moveTo(-150,0);x.quadraticCurveTo(0,-120,150,0);x.quadraticCurveTo(0,120,-150,0);x.clip();x.fillStyle='rgba(30,10,80,'+(.88*ex)+')';x.fillRect(-150,-120,300,240);x.restore();}
+    x.fillStyle='#0f172a';x.strokeStyle='#64748b';x.lineWidth=2;rr(x,-30,-30,70,60,6);x.fill();x.stroke();
+    if(st===2){var ex2=ease(Math.min(1,(k-.7)/.3));x.fillStyle=base;x.fillRect(-29,-29,68,58);x.globalAlpha=1;x.fillStyle='#0f172a';rr(x,-30,-30,70,60,6);x.globalAlpha=.0;x.fill();x.globalAlpha=1;x.save();x.beginPath();rr(x,-29,-29,68,58,5);x.clip();x.fillStyle='#fef08a';x.fillRect(-30,-30,70,60);x.restore();x.strokeStyle='#64748b';rr(x,-30,-30,70,60,6);x.stroke();}
+    x.restore();ft(x,'কালো কাগজ ঢাকা অংশ',270,230,11,'#cbd5e1');
+    ft(x,['আলোতে রাখা পাতা (ঢাকা অংশে আলো ঢোকে না)','অ্যালকোহলে সিদ্ধ: সবুজ রং উঠে বিবর্ণ','আয়োডিন দিলে: আলো-পাওয়া অংশ নীল-বেগুনি, ঢাকা অংশ ফ্যাকাশে'][st],230,28,12,'#fff');
+    $('m13t').innerHTML=['<b>ধাপ ১</b>: গাছ ৪৮ ঘণ্টা অন্ধকারে রেখে শ্বেতসার মুক্ত করা হয়। পাতার একাংশ কালো কাগজে ঢেকে ৬–৭ ঘণ্টা রোদে রাখা হয়।','<b>ধাপ ২</b>: পাতা পানিতে সিদ্ধ করে ৯৫% অ্যালকোহলে ফুটিয়ে ক্লোরোফিলমুক্ত করা হয় (সরাসরি তাপ নয়)।','<b>সিদ্ধান্ত</b>: আয়োডিনে আলো-পাওয়া অংশ নীল বা গাঢ় বেগুনি হয়, ঢাকা অংশ হয় না। তাই সালোকসংশ্লেষণ ও শ্বেতসার তৈরিতে <b>আলো অপরিহার্য</b> (বই পরীক্ষা)।<br><small>(ছবির রং সরল দেখানো, আমার আঁকা)</small>'][st];}
+  else{var ta=25+k*6.2,tb=25;x.save();[[120,'(ক) অঙ্কুরিত ছোলা (জীবিত)',tb+0,ta],[340,'(খ) মারকিউরিক ক্লোরাইডে মারা ছোলা',tb,tb]].forEach(function(f){var X=f[0];x.strokeStyle='#cbd5e1';x.lineWidth=2.5;x.fillStyle='rgba(125,211,252,.12)';rr(x,X-62,120,124,140,16);x.fill();x.stroke();x.fillStyle='#e2e8f0';rr(x,X-24,106,48,16,4);x.fill();for(i=0;i<14;i++){var sx=X-48+(i%5)*24,sy=222+Math.floor(i/5)*14;circ(x,0,sx,sy,7,f[1].indexOf('(ক)')===0?'#fde68a':'#a8a29e',null);}});x.restore();
+    therm(x,120,150,ta,RD,'ক');therm(x,340,150,tb,CY,'খ');ft(x,'জীবিত বীজে শ্বসন চলে ➜ তাপ বাড়ে',120,296,11,'#fca5a5');ft(x,'মৃত বীজে শ্বসন নেই ➜ তাপ একই',340,296,11,'#7dd3fc');ft(x,'শ্বসন প্রক্রিয়ায় তাপ নির্গমনের পরীক্ষা',230,28,12.5,'#fff');
+    $('m13t').innerHTML='<b>থার্মোফ্লাস্ক পরীক্ষা</b>: (ক) ফ্লাস্কে সজীব অঙ্কুরিত ছোলায় শ্বসন চলে, তাপ নির্গত হয়, তাপমাত্রা বাড়ে। (খ) ফ্লাস্কে ১০% মারকিউরিক ক্লোরাইডে মরা ছোলা, শ্বসন নেই, তাপমাত্রা একই। তাই <b>শ্বসনে তাপ নির্গত হয়</b> (বই)।<br><small>তাপমাত্রার বাড়ার পরিমাণ আমার সরল মডেল, বইয়ে সংখ্যা নেই।</small>';}});
+qgame('m13q','m13o','m13fb','m13sc',[
+ ['আলোর অপরিহার্যতার পরীক্ষায় আয়োডিন কীসের জন্য?','শ্বেতসার শনাক্ত করতে',['প্রোটিন শনাক্ত করতে','CO₂ শনাক্ত করতে','পানি মাপতে'],'বই: শ্বেতসার থাকলে নীল-বেগুনি।'],
+ ['থার্মোফ্লাস্ক পরীক্ষায় কোন ফ্লাস্কে তাপ বাড়ে?','জীবিত অঙ্কুরিত ছোলার ফ্লাস্কে',['মরা ছোলার ফ্লাস্কে','দুটিতেই সমান','কোনোটিতে না'],'বই।'],
+ ['পাতাকে ক্লোরোফিলমুক্ত করতে কী ব্যবহার হয়?','৯৫% ইথাইল অ্যালকোহল',['আয়োডিন','পানি শুধু','কালো কাগজ'],'বই।'],
+ ['অ্যালকোহলে পাতা সিদ্ধ করার সময় সাবধানতা কী?','সরাসরি তাপ না দেওয়া',['সরাসরি আগুন দেওয়া','ঢেকে না রাখা','কিছুই নয়'],'বই।']]);
+
+var QUIZ=[];function M(q,c,w,e,fix){var o=[c].concat(w);QUIZ.push({q:q,o:o,a:0,e:e,fix:!!fix});}
+M('সালোকসংশ্লেষণ প্রক্রিয়ায় উপজাত হিসেবে কোনটি নির্গত হয়?','অক্সিজেন',['শক্তি', 'শর্করা', 'CO₂'],'বইয়ের নমুনা প্রশ্ন।');
+M('ADP-র সাথে ফসফেট যুক্ত হওয়াকে বলে—','ফসফোরাইলেশন',['ডিফসফোরাইলেশন', 'গ্লাইকোলাইসিস', 'ফটোলাইসিস'],'বই ৪.১।');
+M('সবাত শ্বসনে এক অণু গ্লুকোজে মোট ATP—','৩৮',['২', '৮', '১৮'],'বই।');
+M('অবাত শ্বসনে এক অণু গ্লুকোজে ATP—','২',['৩৮', '৬', '৩৬'],'বই।');
+M('ক্যালভিন চক্রের প্রথম স্থায়ী পদার্থে কার্বন—','৩টি',['২টি', '৪টি', '৬টি'],'বই।');
+M('C₄ চক্রের প্রথম স্থায়ী পদার্থ—','অক্সালো অ্যাসিটিক এসিড',['ফসফোগ্লিসারিক এসিড', 'পাইরুভিক এসিড', 'গ্লুকোজ'],'বই।');
+M('হ্যাচ ও স্ল্যাক চক্র আবিষ্কৃত হয়—','১৯৬৬ সালে',['১৯০৫ সালে', '১৯৬১ সালে', '২০০০ সালে'],'বই।');
+M('ক্যালভিন নোবেল পুরস্কার পান—','১৯৬১ সালে',['১৯৬৬ সালে', '১৯২০ সালে', '২০১০ সালে'],'বই।');
+M('ক্লোরোপ্লাস্টে আলোনির্ভর পর্যায় ঘটে—','গ্রানায়',['স্ট্রোমায়', 'নিউক্লিয়াসে', 'কোষপ্রাচীরে'],'বই।');
+M('অন্ধকার পর্যায় ঘটে—','স্ট্রোমায়',['গ্রানায়', 'রাইবোজোমে', 'গলজিতে'],'বই।');
+M('আলোতে পানি ভেঙে যাওয়াকে বলে—','ফটোলাইসিস',['ফসফোরাইলেশন', 'গ্লাইকোলাইসিস', 'অসমোসিস'],'বই।');
+M('CO₂ পাতায় ঢোকে—','পত্ররন্ধ্র দিয়ে',['মূল দিয়ে', 'কাণ্ড দিয়ে', 'ফুল দিয়ে'],'বই।');
+M('সালোকসংশ্লেষণ কম হয় কোন আলোতে?','সবুজ-হলুদ',['লাল', 'নীল', 'বেগুনি'],'বই।');
+M('সালোকসংশ্লেষণের জন্য সবচেয়ে ভালো তাপমাত্রা—','২২–৩৫°C',['০°C', '৫০°C', '৮০°C'],'বই।');
+M('বাতাসে CO₂ প্রায়—','০.০৩%',['২০%', '৭৮%', '৫০%'],'বই।');
+M('বায়ুতে O₂ কত ভাগ (বই)?','২০.৯৫',['০.০৩৩', '৭৮', '১০০'],'বই।');
+M('কোনটি অভ্যন্তরীণ প্রভাবক?','ক্লোরোফিল',['আলো', 'তাপমাত্রা', 'CO₂'],'বই।');
+M('কোনটি বাহ্যিক প্রভাবক?','পানি',['এনজাইম', 'ক্লোরোফিল', 'পাতার বয়স'],'বই।');
+M('সবাত শ্বসনের প্রথম ধাপ—','গ্লাইকোলাইসিস',['ক্রেবস চক্র', 'ইলেকট্রন প্রবাহ', 'ফটোলাইসিস'],'বই।');
+M('গ্লাইকোলাইসিস ঘটে—','সাইটোপ্লাজমে',['নিউক্লিয়াসে', 'ক্লোরোপ্লাস্টে', 'গলজিতে'],'বই।');
+M('এক গ্লুকোজের সবাত শ্বসনে CO₂ হয়—','৬ অণু',['২ অণু', '৩৮ অণু', '১ অণু'],'বই।');
+M('১ NADH থেকে ATP (বইয়ের ছক)—','৩',['১', '২', '৩৮'],'বই।');
+M('সবাত শ্বসনে শক্তি (প্রতিমোল)—','৬৮৬ kCal',['৫৬ kCal', '১০০ kCal', '২ kCal'],'বই।');
+M('অবাত শ্বসনে শক্তি (প্রতিমোল)—','৫৬ kCal',['৬৮৬ kCal', '৩৮ kCal', '০ kCal'],'বই।');
+M('ইস্টে অবাত শ্বসনে তৈরি—','ইথাইল অ্যালকোহল ও CO₂',['শুধু O₂', 'গ্লুকোজ', 'ATP ছাড়া কিছু নয়'],'বই।');
+M('আয়োডিন শনাক্ত করে—','শ্বেতসার',['প্রোটিন', 'চর্বি', 'CO₂'],'বই।');
+M('পাতা ক্লোরোফিলমুক্ত করতে ব্যবহার—','৯৫% অ্যালকোহল',['আয়োডিন', 'কালো কাগজ', 'সাবান'],'বই।');
+M('শ্বসনে তাপ নির্গমনের পরীক্ষায় তাপ বাড়ে—','জীবিত ছোলার ফ্লাস্কে',['মরা ছোলার ফ্লাস্কে', 'দুটিতেই', 'কোনোটিতে না'],'বই।');
+M('ATP-কে জৈবমুদ্রা বলার কারণ—','শক্তি জমা রেখে সরবরাহ করে',['টাকার মতো', 'শুধু উদ্ভিদে থাকে', 'খাদ্য তৈরি করে'],'বই।');
+M('ভুট্টা কোন ধরনের উদ্ভিদ (বই)?','C₄',['C₃', 'C₂', 'C₅'],'বইয়ের সংক্ষিপ্ত প্রশ্ন, প্রথম পদার্থ ৪-কার্বন।');
+
+var answered=0,correct=0;
+(function(){
+  $('qn').textContent=bn(QUIZ.length);
+  var box=$('quizbox');
+  QUIZ.forEach(function(item,qi){
+    var div=document.createElement('div');div.className='q';
+    var html='<p>'+bn(qi+1)+'. '+item.q+'</p>';
+    var ord=item.o.map(function(_,i){return i;});
+    if(!item.fix)ord=shuffle(ord);
+    item.ord=ord;item.a2=ord.indexOf(item.a);
+    ord.forEach(function(oi,pos){html+='<button class="opt" data-q="'+qi+'" data-o="'+pos+'">'+item.o[oi]+'</button>';});
+    html+='<div class="exp" id="exp'+qi+'">💡 '+item.e+'</div>';
+    div.innerHTML=html;box.appendChild(div);
+  });
+  box.addEventListener('click',function(ev){
+    var b=ev.target.closest('.opt');if(!b||b.parentNode.getAttribute('data-done'))return;
+    var qi=+b.getAttribute('data-q'),oi=+b.getAttribute('data-o');
+    b.parentNode.setAttribute('data-done','1');
+    var btns=b.parentNode.querySelectorAll('.opt');btns[QUIZ[qi].a2].classList.add('ok');
+    if(oi===QUIZ[qi].a2)correct++;else b.classList.add('no');
+    $('exp'+qi).style.display='block';answered++;
+    if(answered===QUIZ.length)$('score').textContent='🎉 তোমার স্কোর: '+bn(correct)+' / '+bn(QUIZ.length);
+  });
+})();
+
+var QA=[
+{h:'সৃজনশীল প্রশ্ন (উত্তর আমার লেখা, শিক্ষকের সাথে মিলিয়ে নিও)',items:[
+['ডিফসফোরাইলেশন কাকে বলে?','ATP থেকে প্রান্তীয় ফসফেট খুলে গিয়ে শক্তি বের হওয়ার প্রক্রিয়া, ফলে ADP তৈরি হয়।'],
+['অবাত শ্বসনে শক্তি কম হয় কেন?','গ্লুকোজের আংশিক (অসম্পূর্ণ) জারণ হয় বলে মাত্র ২ ATP পাওয়া যায়, সবাতে সম্পূর্ণ জারণে ৩৮ ATP।'],
+['সালোকসংশ্লেষণের গুরুত্ব ব্যাখ্যা করো।','খাদ্যের উৎস, বায়ুতে O₂ ও CO₂-র ভারসাম্য রক্ষা, অন্ন-বস্ত্র-ঔষধ-জ্বালানির উপকরণ জোগান।']]},
+{h:'সংক্ষিপ্ত প্রশ্ন',items:[
+['ক্যালভিন চক্র ও হ্যাচ-স্ল্যাক চক্রের পার্থক্য কী?','ক্যালভিনে প্রথম স্থায়ী পদার্থ ৩-কার্বন (C₃); হ্যাচ-স্ল্যাকে ৪-কার্বন (C₄), C₄ উদ্ভিদে হার বেশি।'],
+['পানির ফটোলাইসিস কী?','আলোর সাহায্যে পানি ভেঙে অক্সিজেন, প্রোটন ও ইলেকট্রন তৈরি।'],
+['সালোকসংশ্লেষণের বাহ্যিক প্রভাবক কী কী?','আলো, CO₂, তাপমাত্রা, পানি, অক্সিজেন, খনিজ ও রাসায়নিক পদার্থ।'],
+['সালোকসংশ্লেষণ ও সবাত শ্বসনের একটি পার্থক্য লেখো।','সালোকসংশ্লেষণে শক্তি জমা ও O₂ নির্গত হয়; শ্বসনে শক্তি মুক্ত ও CO₂ নির্গত হয়।'],
+['আলো অপরিহার্য কীভাবে প্রমাণ করবে?','পাতার একাংশ কালো কাগজে ঢেকে রোদে রেখে অ্যালকোহলে সিদ্ধ করে আয়োডিন দিলে আলো-পাওয়া অংশ নীল-বেগুনি হয়, ঢাকা অংশ হয় না।']]}
+];
+
+(function(){
+  var h='',n=0;
+  QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){var id='qa'+(n++);
+    h+='<div class="q"><p>'+it[0]+'</p><button class="btn alt" data-id="'+id+'">উত্তর দেখো</button><div class="ans" id="'+id+'">'+it[1]+'</div></div>';});});
+  $('qabox').innerHTML=h;
+  $('qabox').onclick=function(ev){var b=ev.target.closest('button');if(!b)return;var a=$(b.getAttribute('data-id'));var o=a.classList.toggle('open');b.textContent=o?'উত্তর লুকাও':'উত্তর দেখো';};
+})();
+
+function frame(){FR++;if(document.hidden||(FR&1)){requestAnimationFrame(frame);return;}for(var i=0;i<DRAWS.length;i++){try{DRAWS[i]();}catch(e){if(e!==SKIP)throw e;}}requestAnimationFrame(frame);}
+frame();
+</script>
+</body>
+</html>
