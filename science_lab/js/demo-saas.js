@@ -11,7 +11,7 @@
   FREE:['chem-concepts-of-chemistry','phy-physical-quantities','math-functions-graphs','bio-heredity-mendel','chem-x-lab-safety'],
   PAY:{bkash:'01719531952',nagad:'01719531952',wa:'8801719531952'},
   INSTANT:true, /* true = ডেমোতে পেমেন্ট দিলেই সাথে সাথে চালু। false = শুধু অ্যাডমিনকে অনুরোধ পাঠানো যাবে (আসল ম্যানুয়াল মোড) */
-  CLOUD_URL:'https://script.google.com/macros/s/AKfycby-xoc8oyYNvTK5xUGjCg3QdyI7xVTuF3Z1uuakmFoxkZOFvJnbzTw5UMqAs5MFwuR7mA/exec', /* ক্লাউড চালু করতে এখানে Google Apps Script-এর Web App URL বসাও। খালি থাকলে আগের মতো শুধু ব্রাউজারে সেভ হবে */
+  CLOUD_URL:'', /* ক্লাউড চালু করতে এখানে Google Apps Script-এর Web App URL বসাও। খালি থাকলে আগের মতো শুধু ব্রাউজারে সেভ হবে */
   PLANS:{
    student:{key:'student',name:'স্টুডেন্ট প্ল্যান',emoji:'🎒',desc:'একজন শিক্ষার্থীর জন্য',students:1,teachers:0,devices:2,price:{month:99,week:35},color:'#2a9d8f'},
    family:{key:'family',name:'ফ্যামিলি প্ল্যান',emoji:'👨‍👩‍👧‍👦',desc:'পরিবারের ৪ জন পর্যন্ত',students:4,teachers:0,devices:2,price:{month:249,week:89},color:'#3f6fd1'},
@@ -208,7 +208,7 @@
  }
  /* কুইজ স্কোর ট্র্যাক */
  function track(){
-  var sc=d.getElementById('score');if(!sc||!acc())return;var f=chFile();
+  var sc=d.getElementById('score')||d.getElementById('qscore');if(!sc||!acc())return;var f=chFile();
   new MutationObserver(function(){var m=en(sc.textContent||'').match(/(\d+)\s*\/\s*(\d+)/);if(m&&+m[2]>0)SL.record(f,+m[1],+m[2]);}).observe(sc,{childList:true,characterData:true,subtree:true});
  }
  /* হোমপেজে কার্ডে 🔒/ফ্রি ব্যাজ */
