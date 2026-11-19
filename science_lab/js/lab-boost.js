@@ -68,7 +68,7 @@
         var L = { w: wd.get.call(c), h: hd.get.call(c) };
         var S = Math.min(1.3, 560 / L.w);
         if (S < 1) S = 1;
-        var k = Math.min(dpr * S, 4);
+        var k = Math.min(dpr * S, document.documentElement.classList.contains('fut') ? 1.25 : 4);
         c.__lb = L;
         var ctx = gc.call(c, type, opt);
         var apply = function () {

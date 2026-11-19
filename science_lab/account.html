@@ -53,7 +53,7 @@
  function chTitle(f){var L=window.CHAPTERS||[];for(var i=0;i<L.length;i++)if(L[i].file.split('/').pop()===f+'.html')return L[i].title;return f;}
  function dash(){
   var a=SL.acc(),s=SL.status(a),P=C.PLANS[a.kind],c=SL.counts(a),pl=SL.profiles(a),pg=SL.progress(a.email);
-  var st=s.state==='active'?'✅ চালু':s.state==='trial'?'🎁 ফ্রি ট্রায়াল':s.state==='suspended'?'🚫 বন্ধ':'⛔ মেয়াদ শেষ';
+  var st=s.state==='active'?(s.comp?'🎁 ফ্রি অ্যাক্সেস (অ্যাডমিন দিয়েছে)':'✅ চালু'):s.state==='trial'?'🎁 ফ্রি ট্রায়াল':s.state==='suspended'?'🚫 বন্ধ':'⛔ মেয়াদ শেষ';
   var h='<div class="sl-hero" style="margin-bottom:8px"><span class="sl-chip">'+P.emoji+' '+P.name+'</span><h1>'+(P.isSchool&&a.school?esc(a.school):'হ্যালো, '+esc(a.name)+' 👋')+'</h1></div>'+DEMO;
   h+='<div class="sl-box"><h2>📌 প্ল্যানের অবস্থা</h2><div class="sl-stat"><div><small>অবস্থা</small><b>'+st+'</b></div><div><small>বাকি দিন</small><b>'+bn(s.left)+' দিন</b></div><div><small>মেয়াদ শেষ</small><b style="font-size:19px">'+(s.until?fd(s.until):'—')+'</b></div><div><small>ডিভাইস লিমিট</small><b>'+bn(P.devices)+'টি/জন</b></div></div>'+(a.kind==='custom'?'<p style="margin:12px 0 0;font-size:17px">🧩 <b>'+bn(a.seats||1)+' জন</b> · বিষয়: <b>'+((a.subs||[]).map(function(k){return SL.SUBJ[k];}).join(', ')||'—')+'</b></p>':'')+'</div>';
   /* সদস্য */
@@ -102,7 +102,7 @@
   if(location.hash==='#pay')q('pay').scrollIntoView();
  }
  function importView(o){
-  var st=SL.status({trialEnd:o.te,paidUntil:o.pu,suspended:o.su}),P=C.PLANS[o.k]||C.PLANS.student;
+  var st=SL.status({trialEnd:o.te,paidUntil:o.pu,compUntil:o.cu,suspended:o.su}),P=C.PLANS[o.k]||C.PLANS.student;
   app.innerHTML='<div class="sl-hero"><h1>অ্যাডমিন তোমার অ্যাকাউন্ট তৈরি করেছেন 🎉</h1></div><div class="sl-box" style="max-width:520px;margin:0 auto;text-align:center"><div style="font-size:50px">'+P.emoji+'</div><h2>'+esc(o.s?o.s:o.n)+'</h2><p>'+P.name+' · '+(st.state==='suspended'?'🚫 বন্ধ':st.state==='expired'?'⛔ মেয়াদ শেষ':bn(st.left)+' দিন বাকি')+'<br><small>ইমেইল: '+esc(o.e)+'</small></p><button class="slb o" id="go">✅ অ্যাকাউন্ট চালু করো</button><p style="color:#5b6b78;font-size:14.5px">চালু করার পর অ্যাডমিনের দেওয়া পাসওয়ার্ড দিয়ে লগইন করো।</p></div>';
   q('go').onclick=function(){var r=SL.mergeIn(o,false);try{sessionStorage.setItem('sl_prefill',o.e);}catch(e){}if(SL.get().ses!==o.e)SL.logout();history.replaceState(null,'','account.html#login');location.reload();};
  }

@@ -3,9 +3,11 @@
 (function(){
  if(window.SL)return;
  var d=document,inCh=/\/chapters\/[^\/]*$/.test(location.pathname),B=inCh?'../':'';
+ if(!window.SL_CONTENT&&d.readyState==='loading')d.write('<script src="'+B+'js/content.js"><\/script>');
  /* ====== এখানে দাম, লিমিট, ফ্রি অধ্যায় বদলাতে পারবে ====== */
  var CFG={
   TRIAL_DAYS:7,
+  TRIAL_CH:[],
   SUBJECTS:{chemistry:'রসায়ন',physics:'পদার্থবিজ্ঞান',math:'গণিত',biology:'জীববিজ্ঞান'},
   CUSTOM_MAX:30,
   FREE:['chem-concepts-of-chemistry','phy-physical-quantities','math-functions-graphs','bio-heredity-mendel','chem-x-lab-safety'],
@@ -24,8 +26,18 @@
  };
  var CLOUD=CFG.CLOUD_URL||'';if(CLOUD)CFG.INSTANT=false;
  function applyPrices(src){if(!src||!src.plans)return;Object.keys(src.plans).forEach(function(k){var p=CFG.PLANS[k],o=src.plans[k];if(!p||!o)return;if(o.month>=0)p.price.month=+o.month;if(o.week>=0)p.price.week=+o.week;p.disc=Math.min(90,Math.max(0,+o.disc||0));p.dlabel=o.label||'';p.duntil=+o.until||0;});}
- applyPrices(window.SL_PRICES);try{if(isAdmin())applyPrices(JSON.parse(localStorage.getItem('sl_prices')||'null'));}catch(e){}
+ applyPrices(window.SL_PRICES);
+ function applyContent(){var c=window.SL_CONTENT;if(!c)return;CFG.TRIAL_CH=Array.isArray(c.trialChapters)?c.trialChapters.map(String):[];if(+c.trialDays>0)CFG.TRIAL_DAYS=Math.min(90,+c.trialDays);if(Array.isArray(c.freeChapters)&&c.freeChapters.length)CFG.FREE=c.freeChapters.map(String);
+  (Array.isArray(c.plans)?c.plans:[]).forEach(function(o){if(!o||!/^[a-z0-9_]{1,24}$/.test(String(o.key||'')))return;var p=CFG.PLANS[o.key]||(CFG.PLANS[o.key]={key:o.key,emoji:'📦',color:'#3f6fd1',students:1,teachers:0,devices:2,price:{month:0,week:0}});
+   ['name','emoji','desc','color'].forEach(function(f){if(typeof o[f]==='string'&&o[f])p[f]=o[f];});['students','teachers','devices'].forEach(function(f){if(+o[f]>=0&&o[f]!=null)p[f]=+o[f];});
+   p.isSchool=!!o.isSchool;if(o.price){p.price={month:Math.max(0,+o.price.month||0),week:Math.max(0,+o.price.week||0)};}p.days={month:Math.max(1,+(o.days&&o.days.month)||30),week:Math.max(1,+(o.days&&o.days.week)||7)};
+   p.disc=Math.min(90,Math.max(0,+o.disc||0));p.dlabel=o.label||'';p.duntil=+o.until||0;p.off=o.active===false;p.features=Array.isArray(o.features)?o.features.map(String):[];});
+  if(Array.isArray(c.plans)&&c.plans.length){var have={};c.plans.forEach(function(o){if(o&&o.key)have[o.key]=1;});Object.keys(CFG.PLANS).forEach(function(k){if(!have[k])CFG.PLANS[k].off=true;});}}
+ applyContent();
+ if(!window.SL_CONTENT)d.addEventListener('DOMContentLoaded',applyContent);
+ try{if(isAdmin())applyPrices(JSON.parse(localStorage.getItem('sl_prices')||'null'));}catch(e){}
  function price(k,per){var p=CFG.PLANS[k],b=p.price[per==='week'?'week':'month'],on=p.disc>0&&(!p.duntil||p.duntil>Date.now()),e=on?Math.round(b*(1-p.disc/100)):b;return {base:b,eff:e,disc:on?p.disc:0,label:on?(p.dlabel||''):'',until:on?(p.duntil||0):0};}
+ function days(k,per){var p=CFG.PLANS[k],d=(p&&p.days)||{};return per==='week'?(+d.week||7):(+d.month||30);}
  function maxDisc(){var m=0;Object.keys(CFG.PLANS).forEach(function(k){m=Math.max(m,price(k,'month').disc);});return m;}
  var K='sl_demo_v1',DAY=864e5;
  function bn(n){return String(n).replace(/\d/g,function(c){return '০১২৩৪৫৬৭৮৯'.charAt(c);});}
@@ -39,15 +51,16 @@
   if(a.suspended)return {state:'suspended',left:0};
   var n=Date.now();
   if(a.paidUntil&&a.paidUntil>n)return {state:'active',left:Math.ceil((a.paidUntil-n)/DAY),until:a.paidUntil};
+  if(a.compUntil&&a.compUntil>n)return {state:'active',comp:true,left:Math.ceil((a.compUntil-n)/DAY),until:a.compUntil};
   if(a.trialEnd>n)return {state:'trial',left:Math.ceil((a.trialEnd-n)/DAY),until:a.trialEnd};
   return {state:'expired',left:0,until:Math.max(a.trialEnd||0,a.paidUntil||0)};
  }
  function isAdmin(){try{return +localStorage.getItem('sl_admin_until')>Date.now();}catch(e){return false;}}
  function hasAccess(){if(isAdmin())return true;var s=status(acc()).state;return s==='trial'||s==='active';}
  function chFile(){return decodeURIComponent(location.pathname.split('/').pop()||'').replace(/\.html$/,'');}
- function isFree(f){return CFG.FREE.indexOf(f)>-1;}
+ function isFree(f){var L=(window.SL_CONTENT&&window.SL_CONTENT.labs)||[];for(var i=0;i<L.length;i++){var l=L[i];if(l&&l.chapter===f&&l.active!==false&&(l.access==='free'||l.access==='premium'))return l.access==='free';}return CFG.FREE.indexOf(f)>-1;}
  function subOf(f){var p=String(f).split('-')[0];return p==='chem'?'chemistry':p==='phy'?'physics':p==='math'?'math':p==='bio'?'biology':'';}
- function canOpen(f){if(isAdmin()||isFree(f))return true;var a=acc(),s=status(a).state;if(s==='trial')return true;if(s!=='active')return false;if(a.kind!=='custom')return true;return (a.subs||[]).indexOf(subOf(f))>-1;}
+ function canOpen(f){if(isAdmin()||isFree(f))return true;var a=acc(),s=status(a).state;if(s==='trial')return !CFG.TRIAL_CH.length||CFG.TRIAL_CH.indexOf(f)>-1;if(s!=='active')return false;if(a.comp||status(a).comp||a.kind!=='custom')return true;return (a.subs||[]).indexOf(subOf(f))>-1;}
  function hash(s){
   s=String(s);
   if(window.crypto&&crypto.subtle&&window.TextEncoder){
@@ -98,13 +111,13 @@
  }
  var syncT=null;
  function schedSync(ms){if(!CLOUD)return;clearTimeout(syncT);syncT=setTimeout(cloudSync,ms||1500);}
- function pack(a,withMem){var o={e:a.email,h:a.hash,n:a.name,k:a.kind,s:a.school||'',te:a.trialEnd,pu:a.paidUntil||0,su:a.suspended?1:0,c:a.created,v:Date.now()};if(withMem)o.m=a.members||[];return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+ function pack(a,withMem){var o={e:a.email,h:a.hash,n:a.name,k:a.kind,s:a.school||'',te:a.trialEnd,pu:a.paidUntil||0,cu:a.compUntil||0,su:a.suspended?1:0,c:a.created,v:Date.now()};if(withMem)o.m=a.members||[];return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
  function unpack(c){try{c=String(c).trim();var i=c.indexOf('#a=');if(i>-1)c=c.slice(i+3);c=c.replace(/-/g,'+').replace(/_/g,'/');while(c.length%4)c+='=';var o=JSON.parse(decodeURIComponent(escape(atob(c))));return o&&o.e&&o.h?o:null;}catch(e){return null;}}
  function mergeIn(o,useMem){var x=get(),a=x.acc[o.e],nw=!a;
-  if(!a)a=x.acc[o.e]={email:o.e,hash:o.h,name:o.n,kind:o.k,school:o.s||'',logo:'',created:o.c||Date.now(),trialEnd:o.te,paidUntil:o.pu,suspended:false,members:[],active:'owner',pays:[]};
-  a.hash=o.h;a.name=o.n;a.kind=CFG.PLANS[o.k]?o.k:a.kind;a.school=o.s||'';a.trialEnd=o.te;a.paidUntil=o.pu;a.suspended=!!o.su;if(useMem&&o.m)a.members=o.m;
+  if(!a)a=x.acc[o.e]={email:o.e,hash:o.h,name:o.n,kind:o.k,school:o.s||'',logo:'',created:o.c||Date.now(),trialEnd:o.te,paidUntil:o.pu,compUntil:o.cu||0,suspended:false,members:[],active:'owner',pays:[]};
+  a.hash=o.h;a.name=o.n;a.kind=CFG.PLANS[o.k]?o.k:a.kind;a.school=o.s||'';a.trialEnd=o.te;a.paidUntil=o.pu;a.compUntil=o.cu||0;a.suspended=!!o.su;if(useMem&&o.m)a.members=o.m;
   put(x);return {ok:true,isNew:nw,acc:a};}
- var SL={price:price,maxDisc:maxDisc,applyPrices:applyPrices,isAdmin:isAdmin,pack:pack,unpack:unpack,mergeIn:mergeIn,cfg:CFG,bn:bn,en:en,esc:esc,get:get,put:put,acc:acc,status:status,hasAccess:hasAccess,isFree:isFree,limits:limits,profiles:profiles,counts:counts,ROLE:ROLE,hash:hash,B:B,
+ var SL={days:days,price:price,maxDisc:maxDisc,applyPrices:applyPrices,isAdmin:isAdmin,pack:pack,unpack:unpack,mergeIn:mergeIn,cfg:CFG,bn:bn,en:en,esc:esc,get:get,put:put,acc:acc,status:status,hasAccess:hasAccess,isFree:isFree,limits:limits,profiles:profiles,counts:counts,ROLE:ROLE,hash:hash,B:B,
   signup:function(o){
    var em=(o.email||'').trim().toLowerCase();
    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))return Promise.resolve({ok:false,err:'সঠিক ইমেইল লেখো।'});
@@ -141,7 +154,7 @@
    var c=counts(a),own=a.kind==='student'?1:0;
    if(plan==='student'&&(a.members||[]).length)return {ok:false,err:'এই অ্যাকাউন্টে সদস্য আছে, স্টুডেন্ট প্ল্যানে নামানো যাবে না।'};
    if(c.students-own+(plan==='student'?1:0)>P.students||c.teachers>P.teachers)return {ok:false,err:'বর্তমান সদস্য সংখ্যা এই প্ল্যানের লিমিটের বেশি।'};
-   var days=period==='week'?7:30,n=Date.now(),base=Math.max(n,a.paidUntil||0);
+   var days=SL.days(plan,period),n=Date.now(),base=Math.max(n,a.paidUntil||0);
    a.kind=plan;a.paidUntil=base+days*DAY;a.pays.unshift({t:n,plan:plan,period:period,price:price(plan,period).eff,trx:trx});return {ok:true};
   });},
   progress:function(email){return (get().prog[email])||{};},
@@ -199,8 +212,9 @@
   if(canOpen(f))return;
   var g=d.createElement('div');g.className='sl-gate';
   var msg,btns;
-  if(!a){msg='এই অধ্যায় দেখতে একটা ফ্রি অ্যাকাউন্ট খুলে '+bn(CFG.TRIAL_DAYS)+' দিনের ফ্রি ট্রায়াল শুরু করো। সব অধ্যায় ও ল্যাব খোলা থাকবে।';btns='<a class="slb o" href="'+B+'account.html#signup">🎁 ফ্রি ট্রায়াল শুরু করো</a><a class="slb s" href="'+B+'account.html#login">লগইন</a>';}
+  if(!a){msg='এই অধ্যায় দেখতে একটা ফ্রি অ্যাকাউন্ট খুলে '+bn(CFG.TRIAL_DAYS)+' দিনের ফ্রি ট্রায়াল শুরু করো। '+(CFG.TRIAL_CH.length?'ট্রায়ালে বাছাই করা '+bn(CFG.TRIAL_CH.length)+'টি অধ্যায় খোলা থাকে।':'সব অধ্যায় ও ল্যাব খোলা থাকবে।')+'';btns='<a class="slb o" href="'+B+'account.html#signup">🎁 ফ্রি ট্রায়াল শুরু করো</a><a class="slb s" href="'+B+'account.html#login">লগইন</a>';}
   else if(s.state==='active'&&a.kind==='custom'){msg='এই বিষয়টি ('+(CFG.SUBJECTS[subOf(f)]||'')+') তোমার কাস্টম প্ল্যানে নেই। বিষয় যোগ করতে আবার প্ল্যান নাও।';btns='<a class="slb o" href="'+B+'account.html#pay">➕ বিষয় যোগ করো</a><a class="slb s" href="'+B+'account.html">অ্যাকাউন্ট দেখো</a>';}
+  else if(s.state==='trial'){msg='এই অধ্যায়টি ফ্রি ট্রায়ালে খোলা নেই (ট্রায়ালে শুধু বাছাই করা '+bn(CFG.TRIAL_CH.length)+'টি অধ্যায় পাওয়া যায়)। সব অধ্যায়ের জন্য প্ল্যান নাও।';btns='<a class="slb o" href="'+B+'account.html#pay">💳 প্ল্যান নাও</a><a class="slb s" href="'+B+'plans.html">প্ল্যান দেখো</a>';}
   else if(s.state==='suspended'){msg='তোমার অ্যাকাউন্ট সাময়িক বন্ধ আছে। অ্যাডমিনের সাথে যোগাযোগ করো।';btns='<a class="slb s" href="'+B+'account.html">অ্যাকাউন্ট দেখো</a>';}
   else{msg='তোমার ট্রায়াল/প্ল্যানের মেয়াদ শেষ। প্ল্যান নিলে আবার সব অধ্যায় খুলবে।';btns='<a class="slb o" href="'+B+'account.html#pay">💳 প্ল্যান নাও</a><a class="slb s" href="'+B+'plans.html">প্ল্যান দেখো</a>';}
   g.innerHTML='<div class="card"><span class="lk">🔒</span><h2>এই অধ্যায়টি প্ল্যানের অন্তর্ভুক্ত</h2><p>'+msg+'</p><div class="row">'+btns+'</div><p style="margin:16px 0 0"><a href="'+B+'index.html" style="color:#1f3a5f;font-weight:600">← সব অধ্যায়</a></p></div>';

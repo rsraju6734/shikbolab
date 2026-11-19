@@ -59,6 +59,31 @@ window.CHAPTERS = [
   { subject:'math', title:'♾️ অসীম ধারা (উচ্চতর গণিত অধ্যায় ৭)', desc:'অনুক্রম, আংশিক সমষ্টি, অসীম গুণোত্তর ধারা, আবৃত্ত দশমিক থেকে ভগ্নাংশ: ৪টি ল্যাব, ৫টি ধাপে ধাপে, ৩০টি কুইজ', file:'chapters/math-infinite-series.html', status:'live' },
   { subject:'math', title:'📐 ত্রিকোণমিতি (উচ্চতর গণিত অধ্যায় ৮)', desc:'রেডিয়ান, s = rθ, ছয়টি অনুপাত, ইউনিট বৃত্ত, nπ/2 ± θ নিয়ম, সমীকরণ: ৫টি ল্যাব, ৭টি ধাপে ধাপে, ৩০টি কুইজ', file:'chapters/math-trigonometry.html', status:'live' },
   { subject:'math', title:'📈 সূচকীয় ও লগারিদমীয় ফাংশন (উচ্চতর গণিত অধ্যায় ৯)', desc:'সূচক সূত্র, মূল, লগারিদম ও ভিত্তি পরিবর্তন, লেখচিত্র, ডোমেন-রেঞ্জ: ৫টি ল্যাব, ৭টি ধাপে ধাপে, ৩০টি কুইজ', file:'chapters/math-exp-log.html', status:'live' },
+  { subject:'math', title:'🔺 দ্বিপদী বিস্তৃতি (উচ্চতর গণিত অধ্যায় ১০)', desc:'প্যাসকেলের ত্রিভুজ, n!, ⁿCᵣ, (x+y)ⁿ, সাধারণ পদ ও x মুক্ত পদ: ৫টি ল্যাব, ৬টি ধাপে ধাপে, ৩০টি কুইজ', file:'chapters/math-binomial.html', status:'live' },
+  { subject:'math', title:'📍 স্থানাঙ্ক জ্যামিতি (উচ্চতর গণিত অধ্যায় ১১)', desc:'দূরত্ব, ত্রিভুজ-চতুর্ভুজের ক্ষেত্রফল, ঢাল ও সরলরেখার সমীকরণ — টেনে দেখার ৬টি ল্যাব।', file:'chapters/math-coordinate-geometry.html', status:'live' },
+  { subject:'math', title:'➡️ সমতলীয় ভেক্টর (উচ্চতর গণিত অধ্যায় ১২)', desc:'ভেক্টরের যোগ-বিয়োগ, সংখ্যা-গুণিতক, অবস্থান ভেক্টর ও জ্যামিতির প্রমাণ — টেনে দেখার ৬টি ল্যাব।', file:'chapters/math-planar-vector.html', status:'live' },
+  { subject:'math', title:'🧊 ঘন জ্যামিতি (উচ্চতর গণিত অধ্যায় ১৩)', desc:'আয়তাকার ঘনবস্তু, প্রিজম, পিরামিড, কোণক, গোলক ও গলিয়ে ঢালাই — ঘুরিয়ে দেখার ৬টি ল্যাব।', file:'chapters/math-solid-geometry.html', status:'live' },
+  { subject:'math', title:'🎲 সম্ভাবনা (উচ্চতর গণিত অধ্যায় ১৪)', desc:'বলের থলে, ছক্কা, মুদ্রা, probability tree ও তথ্যভিত্তিক সম্ভাবনার ৬টি ল্যাব।', file:'chapters/math-probability.html', status:'live' },
   { subject:'math',      title:'📈 ফাংশন ও গ্রাফ (বিশেষ)', desc:'স্লাইডার নেড়ে সরলরেখা ও দ্বিঘাত ফাংশনের গ্রাফ বদলাতে দেখো, সমীকরণ সমাধান করো।', file:'chapters/math-functions-graphs.html', status:'live', extra:true },
   { subject:'biology',   title:'🧬 বংশগতি: মেন্ডেলের ল্যাব (বিশেষ)', desc:'পানেট বর্গ বানাও, ৩ : ১ ও ৯ : ৩ : ৩ : ১ অনুপাত নিজে বের করো, রক্তের গ্রুপ ও লিঙ্গ নির্ধারণ দেখো।', file:'chapters/bio-heredity-mendel.html', status:'live', extra:true }
 ];
+
+/* ===== কনটেন্ট ওভাররাইড (js/content.js থেকে)। content.js না থাকলে কিছুই বদলায় না ===== */
+(function(){
+ var base=(window.CHAPTERS||[]).slice();window.CHAPTERS_BASE=base;
+ var C=window.SL_CONTENT;if(!C||!C.chapters)return;
+ var hid={};(C.subjects||[]).forEach(function(s){if(s&&s.visible===false)hid[s.k]=1;});
+ var off={};(C.labs||[]).forEach(function(l){if(l&&l.chapter&&l.active===false)off[l.chapter]=1;});
+ var out=[];
+ base.forEach(function(c,i){
+  var f=String(c.file||'').split('/').pop().replace(/\.html.*$/,''),o=C.chapters[f]||{};
+  if(o.hidden||hid[c.subject]||off[f])return;
+  var n={};for(var k in c)n[k]=c[k];
+  if(typeof o.title==='string'&&o.title.trim())n.title=o.title.trim();
+  if(typeof o.desc==='string'&&o.desc.trim())n.desc=o.desc.trim();
+  if(o.state==='draft')n.status='soon';
+  n._o=typeof o.order==='number'?o.order:(i+1)*10;n._i=i;out.push(n);
+ });
+ out.sort(function(a,b){return a._o-b._o||a._i-b._i;});
+ window.CHAPTERS=out;
+})();
