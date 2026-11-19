@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>স্থানাঙ্ক জ্যামিতি (উচ্চতর গণিত অধ্যায় ১১) - ShikboLab</title>
+<meta name="description" content="📍 স্থানাঙ্ক জ্যামিতি (উচ্চতর গণিত অধ্যায় ১১) — ShikboLab এ বাংলায় ইন্টারঅ্যাকটিভ ব্যাখ্যা, ভার্চুয়াল ল্যাব ও কুইজ।">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+canvas{width:100%;height:auto;max-width:640px;display:block;margin:8px auto;border-radius:12px;background:#fff;border:1px solid var(--line);touch-action:none;cursor:crosshair}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.ctl input[type=range]{width:200px;max-width:100%}
+.ctl select,.ctl input[type=text],.ans input,.ctl input[type=number]{font-family:inherit;font-size:16px;padding:5px 6px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;max-width:100%;width:auto}
+.ctl input[type=number]{width:64px}
+.pt{background:#f4f8fb;border-radius:10px;padding:6px 10px;white-space:nowrap}
+.pt b{color:var(--navy)}
+.eqb{background:#eaf7f5;border-radius:10px;padding:10px;text-align:center;font-weight:700;color:var(--navy);margin:8px 0;font-size:18px;overflow-x:auto}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.fb{font-weight:700;margin-top:6px}
+.res{background:#eef6ff;border-radius:10px;padding:10px 12px;margin:8px 0;line-height:1.9}
+.res b{color:#0b5ed7}
+.res .ok{color:#1b8a5a;font-weight:700}.res .no{color:#c0392b;font-weight:700}
+.chips button{margin:3px;padding:6px 12px;border-radius:999px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.chips button.on{background:#0b5ed7;color:#fff;border-color:#0b5ed7}
+.step{background:#fff;border:1px solid var(--line);border-left:5px solid #2a9d8f;border-radius:8px;padding:8px 12px;margin:6px 0;display:none}
+.step.show{display:block}
+.ex{border:2px dashed #b8c7d6;border-radius:12px;padding:10px 14px;margin:14px 0;background:#fcfdff}
+.q{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:#fff}
+.q .opt{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 10px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:16px;cursor:pointer}
+.q .opt.good{background:#d8f3e3;border-color:#2a9d8f}
+.q .opt.bad{background:#fddcdc;border-color:#e76f51}
+.m{font-family:system-ui,'Segoe UI',Arial,sans-serif}
+table.t{border-collapse:collapse;margin:8px 0}
+table.t td,table.t th{border:1px solid #cfd9e1;padding:5px 12px;text-align:center}
+.det{display:inline-block;vertical-align:middle;border-left:2px solid var(--navy);border-right:2px solid var(--navy);padding:0 8px;margin:0 4px;line-height:1.5}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/theme.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">📐 গণিত &rsaquo; উচ্চতর গণিত &rsaquo; অধ্যায় ১১ (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">📍 স্থানাঙ্ক জ্যামিতি</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#ex">🪜 ধাপে ধাপে</a><a href="#lab1">📏 দূরত্ব</a><a href="#lab2">🔺 ত্রিভুজ</a><a href="#lab3">▱ চতুর্ভুজ</a><a href="#lab4">📈 ঢাল</a><a href="#lab5">🧮 সমীকরণ</a><a href="#lab6">✖️ দুই রেখা</a><a href="#prac">✍️ প্র্যাকটিস</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্নোত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায়ে শিখবে:</b> সমতলে বিন্দুর অবস্থান (কার্তেসীয় স্থানাঙ্ক), দুই বিন্দুর দূরত্ব, স্থানাঙ্ক দিয়ে ত্রিভুজ ও চতুর্ভুজের ক্ষেত্রফল, সরলরেখার ঢাল এবং সরলরেখার সমীকরণ। এখানে সব হিসাব শুধু <b>সরলরেখা</b> নিয়ে, বক্ররেখা বা বৃত্ত নয়।</div>
+
+    <h3>১. আয়তাকার কার্তেসীয় স্থানাঙ্ক ⭐</h3>
+    <ul>
+      <li>সমতলে পরস্পর <b>সমকোণে</b> ছেদ করা দুটি রেখা আঁকি: আনুভূমিক <b>x অক্ষ</b> (XOX′) ও খাড়া <b>y অক্ষ</b> (YOY′)। ছেদবিন্দু O হলো <b>মূলবিন্দু</b> (০, ০)।</li>
+      <li>কোনো বিন্দু P থেকে x অক্ষের উপর লম্ব PN আর y অক্ষের উপর লম্ব PM টানলে: y অক্ষ থেকে P এর দূরত্ব হলো <b>ভুজ</b> (x স্থানাঙ্ক), x অক্ষ থেকে দূরত্ব হলো <b>কোটি</b> (y স্থানাঙ্ক)। বিন্দুটি লেখা হয় <b>P(x, y)</b>।</li>
+      <li>ক্রম গুরুত্বপূর্ণ: (x, y) আর (y, x) দুটি আলাদা বিন্দু (x ≠ y হলে)। প্রথমে ভুজ, তারপর কোটি।</li>
+      <li><b>চিহ্নের নিয়ম:</b> বিন্দু y অক্ষের ডানে থাকলে ভুজ ধনাত্মক, বামে থাকলে ঋণাত্মক। বিন্দু x অক্ষের উপরে থাকলে কোটি ধনাত্মক, নিচে থাকলে ঋণাত্মক। x অক্ষের উপর কোটি শূন্য, y অক্ষের উপর ভুজ শূন্য।</li>
+    </ul>
+    <table class="t m"><tr><th>চতুর্ভাগ</th><th>অবস্থান</th><th>চিহ্ন (x, y)</th></tr>
+      <tr><td>১ম</td><td>উপরে-ডানে</td><td>(+, +)</td></tr>
+      <tr><td>২য়</td><td>উপরে-বামে</td><td>(−, +)</td></tr>
+      <tr><td>৩য়</td><td>নিচে-বামে</td><td>(−, −)</td></tr>
+      <tr><td>৪র্থ</td><td>নিচে-ডানে</td><td>(+, −)</td></tr></table>
+    <div class="say">XOY প্রথম চতুর্ভাগ ধরা হয়। ঘড়ির কাঁটার <b>বিপরীত দিকে</b> ২য়, ৩য় ও ৪র্থ চতুর্ভাগ।</div>
+
+    <h3>২. দুটি বিন্দুর মধ্যবর্তী দূরত্ব ⭐⭐</h3>
+    <ul>
+      <li>P(x₁, y₁) ও Q(x₂, y₂) হলে একটি সমকোণী ত্রিভুজ বানিয়ে পীথাগোরাসের উপপাদ্য খাটালে পাই:</li>
+    </ul>
+    <div class="eqb m">PQ = √[(x₂ − x₁)² + (y₂ − y₁)²]</div>
+    <ul>
+      <li>দূরত্ব সবসময় অঋণাত্মক, তাই বর্গমূলের ঋণাত্মক মান নেওয়া হয় না। আর PQ = QP।</li>
+      <li><b>অনুসিদ্ধান্ত:</b> মূলবিন্দু (০, ০) থেকে P(x, y) এর দূরত্ব = <b>√(x² + y²)</b>।</li>
+      <li>দূরত্ব দিয়ে বোঝা যায় ত্রিভুজ/চতুর্ভুজের ধরন: দুই বাহু সমান হলে সমদ্বিবাহু; a² + b² = c² হলে সমকোণী; বিপরীত বাহু সমান হলে সামান্তরিক; কর্ণ দুটিও সমান হলে আয়তক্ষেত্র; চার বাহু সমান হলে রম্বস, সাথে কর্ণ সমান হলে বর্গ।</li>
+      <li><b>ত্রিভুজ হয় কি না:</b> দুই বাহুর সমষ্টি তৃতীয় বাহুর সমান হলে বিন্দু তিনটি একই সরলরেখায় থাকে, তাই ত্রিভুজ হয় না (উদাহরণ ৫)।</li>
+    </ul>
+
+    <h3>৩. ত্রিভুজক্ষেত্রের ক্ষেত্রফল: দুটি পদ্ধতি ⭐⭐⭐</h3>
+    <p><b>পদ্ধতি ১: বাহুর দৈর্ঘ্য দিয়ে (হেরনের সূত্র)</b></p>
+    <ul>
+      <li>আগে দূরত্ব সূত্র দিয়ে বাহু a, b, c বের করি। অর্ধ-পরিসীমা <b>s = (a + b + c)/2</b>।</li>
+    </ul>
+    <div class="eqb m">ক্ষেত্রফল = √[ s(s − a)(s − b)(s − c) ] বর্গ একক</div>
+    <ul>
+      <li>বইয়ের নোট: এই সূত্রের প্রমাণ নবম-দশম শ্রেণির গণিত বইয়ের পরিমিতি অংশে আছে।</li>
+      <li>চতুর্ভুজকে কর্ণ দিয়ে দুটি ত্রিভুজে ভাগ করে ক্ষেত্রফল বের করা যায় (উদাহরণ ৯–১১)।</li>
+    </ul>
+    <p><b>পদ্ধতি ২: শীর্ষবিন্দুর স্থানাঙ্ক দিয়ে</b></p>
+    <ul>
+      <li>A(x₁, y₁), B(x₂, y₂), C(x₃, y₃) কে <b>ঘড়ির কাঁটার বিপরীত দিকে</b> সাজালে:</li>
+    </ul>
+    <div class="eqb m">△ABC = ½ | x₁y₂ + x₂y₃ + x₃y₁ − x₂y₁ − x₃y₂ − x₁y₃ | বর্গ একক</div>
+    <ul>
+      <li>মনে রাখার কৌশল: x₁ x₂ x₃ x₁ ও y₁ y₂ y₃ y₁ দুই সারিতে লিখে <b>↘ গুণফলগুলো যোগ</b>, <b>↗ গুণফলগুলো বিয়োগ</b>। শেষে ½ দিয়ে গুণ।</li>
+      <li>একই নিয়মে চতুর্ভুজ ও পঞ্চভুজ: সারির শেষে প্রথম বিন্দুটি আবার লিখে ঘুরে আসো। যেকোনো বহুভুজের শীর্ষবিন্দুর স্থানাঙ্ক জানা থাকলে এই পদ্ধতিতে ক্ষেত্রফল হয়।</li>
+      <li>সতর্কতা: বিন্দুগুলো ক্রমানুসারে (চারদিকে ঘুরে ঘুরে) না নিলে ভুল উত্তর আসে। ঘড়ির কাঁটার দিকে নিলে ফল ঋণাত্মক আসে, তখন মান নিলে ঠিক ক্ষেত্রফল পাওয়া যায়।</li>
+      <li>কখন কোনটা? জমির কৌণিক বিন্দুর স্থানাঙ্ক না পেলেও বাহু মেপে পদ্ধতি ১ খাটে। স্থানাঙ্ক জানা থাকলে পদ্ধতি ২ সবচেয়ে ছোট।</li>
+    </ul>
+
+    <h3>৪. সরলরেখার ঢাল ⭐⭐</h3>
+    <ul>
+      <li>A(x₁, y₁) ও B(x₂, y₂) দিয়ে যাওয়া রেখার <b>ঢাল m = (y₂ − y₁)/(x₂ − x₁)</b> = ওঠা / হাঁটা (rise / run), যেখানে x₁ ≠ x₂।</li>
+      <li>রেখা x অক্ষের ধনাত্মক দিকের সাথে θ কোণ করলে <b>m = tan θ</b>।</li>
+      <li>ঢাল ধনাত্মক ⇒ θ সূক্ষ্মকোণ। ঢাল ঋণাত্মক ⇒ θ স্থূলকোণ। ঢাল ০ ⇒ রেখা x অক্ষের সমান্তরাল (θ = ০°)।</li>
+      <li>x₁ = x₂ হলে রেখা <b>y অক্ষের সমান্তরাল</b> (খাড়া), তখন ঢাল নির্ণয় করা যায় না (ঢাল অসংজ্ঞায়িত)।</li>
+      <li><b>সমান্তরাল:</b> দুই রেখার ঢাল সমান হলে তারা সমান্তরাল।</li>
+      <li><b>সমরেখ:</b> তিনটি বিন্দু A, B, C একই সরলরেখায় হলে AB ও BC এর ঢাল সমান।</li>
+    </ul>
+
+    <h3>৫. সরলরেখার সমীকরণ ⭐⭐⭐</h3>
+    <ul>
+      <li>রেখার উপর যেকোনো বিন্দু P(x, y) নিলে AP ও AB এর ঢাল সমান: এভাবেই সমীকরণ পাওয়া যায়।</li>
+      <li><b>ঢাল ও এক বিন্দু জানা:</b> <span class="m">y − y₁ = m(x − x₁)</span></li>
+      <li><b>দুই বিন্দু জানা:</b> <span class="m">(y − y₁)/(x − x₁) = (y₂ − y₁)/(x₂ − x₁)</span></li>
+      <li><b>সাধারণ রূপ:</b> <span class="m">y = mx + c</span>, এখানে m = ঢাল, c = y অক্ষের ছেদক (রেখা y অক্ষকে (০, c) বিন্দুতে কাটে)।</li>
+      <li><b>x অক্ষের সমান্তরাল</b> রেখা: y = b। <b>y অক্ষের সমান্তরাল</b> রেখা: x = a।</li>
+      <li>c = ০ হলে রেখা মূলবিন্দু দিয়ে যায় (y = mx)। x অক্ষের সমীকরণ y = ০, y অক্ষের সমীকরণ x = ০।</li>
+      <li><b>ছেদবিন্দু বের করার কৌশল:</b> x অক্ষে ছেদ পেতে y = ০ বসাও। y অক্ষে ছেদ পেতে x = ০ বসাও।</li>
+      <li>একঘাত সমীকরণ (x ও y এর) সবসময় একটি সরলরেখা দেখায়। যেমন ax + by + c = ০ রেখার ঢাল −a/b।</li>
+    </ul>
+    <div class="warn">⚠️ <b>সাবধান:</b> (১) ঢাল সূত্রে উপরের অংশ ও নিচের অংশ একই ক্রমে বিয়োগ করো: (y₂ − y₁)/(x₂ − x₁), উল্টাপাল্টা নয়। (২) ত্রিভুজের স্থানাঙ্ক-সূত্রে শীর্ষ ঘড়ির কাঁটার <b>বিপরীত দিকে</b> সাজাও। (৩) x = a রেখার ঢাল ০ নয়, অসংজ্ঞায়িত। y = b রেখার ঢাল ০।</div>
+  </section>
+
+  <section class="panel" id="ex">
+    <h2>🪜 ধাপে ধাপে (বইয়ের উদাহরণ)</h2>
+    <div class="say">👉 "পরের ধাপ" চাপতে থাকো। প্রতিটি ধাপ নিজে খাতায় করে মেলাও।</div>
+
+    <div class="ex" id="E1"><b>১) A(2, 0), B(7, 0), C(3, 4) ত্রিভুজের পরিসীমা</b> (বই উদাহরণ ৩)
+      <div class="step">ধাপ ১: AB = √[(7 − 2)² + (0 − 0)²] = √25 = <b>5</b> একক।</div>
+      <div class="step">ধাপ ২: BC = √[(3 − 7)² + (4 − 0)²] = √(16 + 16) = <b>4√2</b> একক।</div>
+      <div class="step">ধাপ ৩: AC = √[(3 − 2)² + (4 − 0)²] = √(1 + 16) = <b>√17</b> একক।</div>
+      <div class="step">ধাপ ৪: পরিসীমা = 5 + 4√2 + √17 ≈ 5 + 5.65685 + 4.12311 = <b>14.77996</b> একক (প্রায়)।</div>
+      <button class="btn" data-ex="E1">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E1">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E2"><b>২) (0, −1), (−2, 3), (6, 7), (8, 3) একটি আয়তক্ষেত্রের চার শীর্ষ</b> (বই উদাহরণ ৪)
+      <div class="step">ধাপ ১: A(0, −1), B(−2, 3), C(6, 7), D(8, 3)। AB = √(4 + 16) = 2√5, CD = √(4 + 16) = 2√5 ⇒ AB = CD।</div>
+      <div class="step">ধাপ ২: AD = √(64 + 16) = 4√5, BC = √(64 + 16) = 4√5 ⇒ AD = BC। বিপরীত বাহু সমান, তাই ABCD <b>সামান্তরিক</b>।</div>
+      <div class="step">ধাপ ৩: কর্ণ BD = √[(8 + 2)² + (3 − 3)²] = √100 = 10।</div>
+      <div class="step">ধাপ ৪: AB² + AD² = 20 + 80 = 100 = BD² ⇒ ∠BAD = ৯০° (পীথাগোরাসের বিপরীত উপপাদ্য)।</div>
+      <div class="step">ধাপ ৫: সামান্তরিকের এক কোণ সমকোণ, তাই ABCD একটি <b>আয়তক্ষেত্র</b> ✔।</div>
+      <button class="btn" data-ex="E2">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E2">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E3"><b>৩) A(2, 5), B(−1, 1), C(2, 1) এর ক্ষেত্রফল (পদ্ধতি ১)</b> (বই উদাহরণ ৬)
+      <div class="step">ধাপ ১: c = AB = √(9 + 16) = 5, a = BC = √(9 + 0) = 3, b = AC = √(0 + 16) = 4।</div>
+      <div class="step">ধাপ ২: s = (3 + 4 + 5)/2 = 6।</div>
+      <div class="step">ধাপ ৩: ক্ষেত্রফল = √[6 × (6 − 3) × (6 − 4) × (6 − 5)] = √(6 × 3 × 2 × 1) = √36 = <b>6</b> বর্গ একক।</div>
+      <div class="step">ধাপ ৪: ধরন: 3² + 4² = 9 + 16 = 25 = 5², তাই ত্রিভুজটি <b>সমকোণী</b> (AB অতিভুজ, ∠C সমকোণ)।</div>
+      <button class="btn" data-ex="E3">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E3">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E4"><b>৪) A(2, 3), B(5, 6), C(−1, 4) এর ক্ষেত্রফল (পদ্ধতি ২)</b> (বই উদাহরণ ১২)
+      <div class="step">ধাপ ১: বিন্দুগুলো ঘড়ির কাঁটার বিপরীত দিকে নেওয়া আছে। দুই সারি লিখি: x: 2, 5, −1, 2 ও y: 3, 6, 4, 3।</div>
+      <div class="step">ধাপ ২: ↘ গুণফল: 2×6 + 5×4 + (−1)×3 = 12 + 20 − 3 = 29।</div>
+      <div class="step">ধাপ ৩: ↗ গুণফল: 5×3 + (−1)×6 + 2×4 = 15 − 6 + 8 = 17।</div>
+      <div class="step">ধাপ ৪: ক্ষেত্রফল = ½ |29 − 17| = ½ × 12 = <b>6</b> বর্গ একক ✔।</div>
+      <button class="btn" data-ex="E4">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E4">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E5"><b>৫) A(1, 3), B(5, 1), C(3, r) এর ক্ষেত্রফল ৪ বর্গ একক। r = ?</b> (বই উদাহরণ ১৩)
+      <div class="step">ধাপ ১: ক্ষেত্রফল = ½ |(1·1 + 5·r + 3·3) − (5·3 + 3·1 + 1·r)|।</div>
+      <div class="step">ধাপ ২: = ½ |(1 + 5r + 9) − (15 + 3 + r)| = ½ |4r − 8| = |2r − 4|।</div>
+      <div class="step">ধাপ ৩: |2r − 4| = 4 ⇒ 2r − 4 = 4 অথবা 2r − 4 = −4।</div>
+      <div class="step">ধাপ ৪: r = 4 অথবা r = 0। <b>r এর সম্ভাব্য মান ০ ও ৪</b> ✔।</div>
+      <button class="btn" data-ex="E5">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E5">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E6"><b>৬) A(1, 4), B(−4, 3), C(1, −2), D(4, 0) চতুর্ভুজের ক্ষেত্রফল</b> (বই উদাহরণ ১৪)
+      <div class="step">ধাপ ১: চার বিন্দু ঘুরিয়ে লিখি: x: 1, −4, 1, 4, 1 ও y: 4, 3, −2, 0, 4।</div>
+      <div class="step">ধাপ ২: ↘ গুণফল: 1×3 + (−4)(−2) + 1×0 + 4×4 = 3 + 8 + 0 + 16 = 27।</div>
+      <div class="step">ধাপ ৩: ↗ গুণফল: (−4)(4) + 1×3 + 4×(−2) + 1×0 = −16 + 3 − 8 + 0 = −21।</div>
+      <div class="step">ধাপ ৪: ক্ষেত্রফল = ½ |27 − (−21)| = ½ × 48 = <b>24</b> বর্গ একক ✔ (বইয়ের উত্তরের সাথে মিলেছে)।</div>
+      <button class="btn" data-ex="E6">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E6">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E7"><b>৭) A(1, −1), B(2, 2), C(4, t) সমরেখ হলে t = ?</b> (বই উদাহরণ ১৮)
+      <div class="step">ধাপ ১: সমরেখ হলে AB ও BC এর ঢাল সমান।</div>
+      <div class="step">ধাপ ২: AB এর ঢাল = (2 + 1)/(2 − 1) = 3। BC এর ঢাল = (t − 2)/(4 − 2) = (t − 2)/2।</div>
+      <div class="step">ধাপ ৩: 3 = (t − 2)/2 ⇒ t − 2 = 6 ⇒ <b>t = 8</b> ✔।</div>
+      <button class="btn" data-ex="E7">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E7">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E8"><b>৮) A(3, 4) ও B(6, 7) দিয়ে যাওয়া রেখার সমীকরণ</b> (বই উদাহরণ ২০)
+      <div class="step">ধাপ ১: ঢাল m = (7 − 4)/(6 − 3) = 3/3 = 1।</div>
+      <div class="step">ধাপ ২: A(3, 4) বিন্দুর জন্য y − y₁ = m(x − x₁) ⇒ y − 4 = 1·(x − 3)।</div>
+      <div class="step">ধাপ ৩: y − 4 = x − 3 ⇒ <b>y = x + 1</b>।</div>
+      <div class="step">ধাপ ৪: যাচাই: B(6, 7) বসাই: ৭ = ৬ + ১ ✔। অর্থাৎ যে বিন্দু ব্যবহার করো, একই সমীকরণ আসে।</div>
+      <button class="btn" data-ex="E8">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E8">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E9"><b>৯) A(−1, 3) ও B(5, 15) এর সংযোগ রেখা অক্ষদ্বয়কে P ও Q তে ছেদ করে। PQ এর সমীকরণ ও দৈর্ঘ্য</b> (বই উদাহরণ ২৪)
+      <div class="step">ধাপ ১: AB এর ঢাল = (15 − 3)/(5 + 1) = 12/6 = 2। সমীকরণ: y − 3 = 2(x + 1) ⇒ <b>y = 2x + 5</b>।</div>
+      <div class="step">ধাপ ২: x অক্ষে ছেদ (y = 0): 0 = 2x + 5 ⇒ x = −5/2। তাই <b>P(−5/2, 0)</b>।</div>
+      <div class="step">ধাপ ৩: y অক্ষে ছেদ (x = 0): y = 5। তাই <b>Q(0, 5)</b>।</div>
+      <div class="step">ধাপ ৪: PQ ও AB একই রেখা, তাই PQ এর সমীকরণ y = 2x + 5।</div>
+      <div class="step">ধাপ ৫: PQ = √[(5/2)² + 5²] = √(25/4 + 25) = √(125/4) = <b>5√5/2</b> একক ✔।</div>
+      <button class="btn" data-ex="E9">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E9">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E10"><b>১০) A(3, 4), B(−4, 2), C(6, −1), D(k, 3): P(x, y) যদি A ও B থেকে সমদূরবর্তী হয়</b> (বই উদাহরণ ২৫ খ)
+      <div class="step">ধাপ ১: PA = PB ⇒ PA² = PB²।</div>
+      <div class="step">ধাপ ২: (x − 3)² + (y − 4)² = (x + 4)² + (y − 2)²।</div>
+      <div class="step">ধাপ ৩: x² − 6x + 9 + y² − 8y + 16 = x² + 8x + 16 + y² − 4y + 4।</div>
+      <div class="step">ধাপ ৪: −6x − 8y + 25 = 8x − 4y + 20 ⇒ −14x − 4y = −5 ⇒ <b>14x + 4y = 5</b> ✔। এটাই AB এর লম্ব-সমদ্বিখণ্ডক রেখা।</div>
+      <button class="btn" data-ex="E10">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E10">আবার শুরু</button>
+    </div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>📏 ল্যাব ১: কার্তেসীয় স্থানাঙ্ক ও দুই বিন্দুর দূরত্ব</h2>
+    <div class="say">👉 গ্রিডে বিন্দু P ও Q কে <b>টেনে</b> সরাও (অথবা নিচের ঘরে সংখ্যা লেখো)। নীল ডটেড ত্রিভুজের দুই বাহু x ও y এর পার্থক্য, কর্ণ হলো দূরত্ব PQ।</div>
+    <div class="ctl" id="l1in"></div>
+    <div class="chips" id="l1pre"><button data-pre="[[1,1],[2,2]]">উদাহরণ ১: (১,১),(২,২)</button><button data-pre="[[3,0],[0,3]]">(৩,০) ও (০,৩)</button><button data-pre="[[-4,3],[0,0]]">মূলবিন্দু থেকে (−৪,৩)</button></div>
+    <canvas id="l1cv" width="600" height="600"></canvas>
+    <div class="res m" id="l1res"></div>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🔺 ল্যাব ২: ত্রিভুজের ক্ষেত্রফল (দুই পদ্ধতিতে) ও ধরন</h2>
+    <div class="say">👉 তিনটি শীর্ষ টেনে সরাও। নিচে বাহু, অর্ধ-পরিসীমা s, <b>হেরনের সূত্র</b> ও <b>স্থানাঙ্ক-সূত্র</b> দুটোই দেখাবে, আর দুটি একই উত্তর দেবে। তিন বিন্দু একই রেখায় আনলে কী হয় দেখো।</div>
+    <div class="ctl" id="l2in"></div>
+    <div class="chips" id="l2pre"><button data-pre="[[2,5],[-1,1],[2,1]]">উদাহরণ ৬</button><button data-pre="[[2,-4],[-4,4],[3,3]]">উদাহরণ ৭</button><button data-pre="[[-2,0],[5,0],[1,4]]">উদাহরণ ৮</button><button data-pre="[[-3,-3],[0,0],[3,3]]">উদাহরণ ৫ (সমরেখ)</button></div>
+    <canvas id="l2cv" width="600" height="600"></canvas>
+    <div class="res m" id="l2res"></div>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>▱ ল্যাব ৩: চতুর্ভুজের ক্ষেত্রফল ও ধরন</h2>
+    <div class="say">👉 A, B, C, D চারটি শীর্ষ <b>ক্রমানুসারে</b> (ঘুরে ঘুরে) নাও। ক্ষেত্রফল স্থানাঙ্ক-সূত্র ও কর্ণ দিয়ে দুই ত্রিভুজে ভাগ করে মিলিয়ে দেখো। ধরন (সামান্তরিক, আয়তক্ষেত্র, রম্বস, বর্গ) নিজে ধরা পড়বে।</div>
+    <div class="ctl" id="l3in"></div>
+    <div class="chips" id="l3pre"><button data-pre="[[0,-1],[8,3],[6,7],[-2,3]]">উদাহরণ ৮ (আয়তক্ষেত্র)</button><button data-pre="[[1,0],[0,1],[-1,0],[0,-1]]">উদাহরণ ৯ (বর্গ)</button><button data-pre="[[-1,1],[2,-1],[3,3],[1,6]]">উদাহরণ ১০</button><button data-pre="[[1,4],[-4,3],[1,-2],[4,0]]">উদাহরণ ১৪</button></div>
+    <canvas id="l3cv" width="600" height="600"></canvas>
+    <div class="res m" id="l3res"></div>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>📈 ল্যাব ৪: সরলরেখার ঢাল, সমান্তরাল ও সমরেখ</h2>
+    <div class="say">👉 রেখা ১ (A, B) এর ঢাল ও কোণ দেখো। রেখা ২ (C, D) আনো; ঢাল সমান হলে রেখা দুটি সমান্তরাল। দুটি রেখা একই হলে বিন্দুগুলো সমরেখ।</div>
+    <div class="ctl" id="l4in"></div>
+    <div class="chips" id="l4pre"><button data-pre="[[2,3],[6,7],[0,-2],[3,1]]">পাঠের উদাহরণ: A(২,৩), B(৬,৭)</button><button data-pre="[[-3,2],[3,-2],[-3,-2],[0,0]]">উদাহরণ ১৭ (ঋণাত্মক ঢাল)</button><button data-pre="[[2,2],[5,2],[2,2],[2,7]]">উদাহরণ ১৬ (০ ও অসংজ্ঞায়িত)</button><button data-pre="[[1,-1],[2,2],[2,2],[4,8]]">উদাহরণ ১৮ (সমরেখ)</button></div>
+    <canvas id="l4cv" width="600" height="600"></canvas>
+    <div class="res m" id="l4res"></div>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🧮 ল্যাব ৫: সরলরেখার সমীকরণ বানাও</h2>
+    <div class="say">👉 "দুই বিন্দু" বা "বিন্দু ও ঢাল" বেছে নাও। ধাপে ধাপে ঢাল → y − y₁ = m(x − x₁) → y = mx + c দেখবে, সাথে দুই অক্ষে ছেদবিন্দু।</div>
+    <div class="chips" id="l5mode"><button data-mode="2" class="on">দুই বিন্দু</button><button data-mode="1">বিন্দু ও ঢাল</button></div>
+    <div class="ctl" id="l5in"></div>
+    <div class="chips" id="l5pre"></div>
+    <canvas id="l5cv" width="600" height="600"></canvas>
+    <div class="res m" id="l5res"></div>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>✖️ ল্যাব ৬: y = mx + c এবং দুই রেখার ছেদবিন্দু</h2>
+    <div class="say">👉 m (ঢাল) ও c (y অক্ষের ছেদক) বদলাও। রেখা ২ চালু করলে দুই রেখা কোথায় কাটে (বা সমান্তরাল কি না) দেখাবে। (বইয়ের অনুশীলনী ১১.৪ এর ১৫, ১৭, ১৮ এর ধারণা)</div>
+    <div class="ctl"><b style="color:#d9480f">রেখা ১:</b>
+      <label>m = <span id="l6m1v"></span></label><input type="range" id="l6m1" min="-10" max="10" step="1" value="6">
+      <label>c = <span id="l6c1v"></span></label><input type="range" id="l6c1" min="-10" max="10" step="1" value="4"></div>
+    <div class="ctl"><label style="color:#1971c2"><input type="checkbox" id="l6on" checked> রেখা ২ চালু</label>
+      <label>m = <span id="l6m2v"></span></label><input type="range" id="l6m2" min="-10" max="10" step="1" value="-6">
+      <label>c = <span id="l6c2v"></span></label><input type="range" id="l6c2" min="-10" max="10" step="1" value="10"></div>
+    <div class="say" style="font-weight:500">নোট: m স্লাইডার অর্ধেক-একক ধাপে চলে (যেমন স্লাইডারে ৬ মানে m = ৩)।</div>
+    <div class="chips" id="l6pre"><button data-pre="[6,4,-6,10]">উদাহরণ ১৭: y = ৩x + ৪ ও ৩x + y = ১০</button><button data-pre="[4,-4,4,2]">সমান্তরাল</button><button data-pre="[2,1,-2,5]">যেকোনো ছেদ</button></div>
+    <canvas id="l6cv" width="600" height="600"></canvas>
+    <div class="res m" id="l6res"></div>
+  </section>
+
+  <section class="panel" id="prac">
+    <h2>✍️ প্র্যাকটিস (বইয়ের ধাঁচে)</h2>
+    <div class="say">👉 উত্তর পূর্ণসংখ্যা, দশমিক বা ভগ্নাংশ (যেমন ৩/২) লিখতে পারো। ঋণাত্মক হলে মাইনাস দাও। √ এর উত্তরে দুই দশমিক স্থান পর্যন্ত লিখলেই চলবে।</div>
+    <div id="pracbox"></div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="fb" id="qscore"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>📖 বই থেকে প্রশ্নোত্তর</h2>
+    <div class="say">নিজে করে তারপর দেখো। যেসব প্রশ্নের চিত্র/ছাপা অস্পষ্ট ছিল, সেগুলো আমি বাদ দিয়েছি।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+
+<footer class="site">&copy; ShikboLab · স্থানাঙ্ক জ্যামিতি (উচ্চতর গণিত অধ্যায় ১১)</footer>
+<script>
+var BNS='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BNS[d];});}
+function en(s){return String(s).replace(/[০-৯]/g,function(d){return BNS.indexOf(d);});}
+function $(id){return document.getElementById(id);}
+function R2(c){var d=Math.min(2,window.devicePixelRatio||1),w=c.width,h=c.height;c.width=w*d;c.height=h*d;var x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return x;}
+function fm(v,d){d=(d===undefined)?2:d;var k=Math.pow(10,d),r=Math.round(v*k)/k;if(Math.abs(r)<1e-9)r=0;return bn(String(r).replace('-','−'));}
+function sg(v){return v<0?'−'+bn(-v):bn(v);}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t;}return a;}
+function red(n,d){if(d<0){n=-n;d=-d;}var g=gcd(n,d)||1;return [n/g,d/g];}
+function frac(n,d){var r=red(n,d);return r[1]===1?sg(r[0]):sg(r[0])+'/'+bn(r[1]);}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ex){var box=$(b.dataset.ex),s=box.querySelectorAll('.step:not(.show)');if(s.length){s[0].classList.add('show');}if(s.length<=1)b.disabled=true;}
+  if(b.dataset.rs){var bx=$(b.dataset.rs);bx.querySelectorAll('.step').forEach(function(x){x.classList.remove('show');});bx.querySelector('[data-ex]').disabled=false;}
+});
+/* ===== সাধারণ সহায়ক: গ্রিড, বিন্দু টানা, সংখ্যা-ঘর ===== */
+function sq(N){N=Math.round(N);if(N<0)return '?';if(N===0)return '০';var k=1,m=N,f;for(f=2;f*f<=m;f++){while(m%(f*f)===0){m/=f*f;k*=f;}}if(m===1)return bn(k);if(k===1)return '√'+bn(m);return bn(k)+'√'+bn(m);}
+function dc(N){return fm(Math.sqrt(N),4);}
+function d2(p,q){return (p[0]-q[0])*(p[0]-q[0])+(p[1]-q[1])*(p[1]-q[1]);}
+function sh(P){var s=0,n=P.length,i,a,b;for(i=0;i<n;i++){a=P[i];b=P[(i+1)%n];s+=a[0]*b[1]-b[0]*a[1];}return s;}
+function cr(o,a,b){return (a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);}
+function segX(a,b,c,d){var d1=cr(a,b,c),d2_=cr(a,b,d),d3=cr(c,d,a),d4=cr(c,d,b);return d1*d2_<0&&d3*d4<0;}
+function pn(p){return '('+sg(p[0])+', '+sg(p[1])+')';}
+function quad(p){var x=p[0],y=p[1];if(x===0&&y===0)return 'মূলবিন্দু';if(y===0)return 'x অক্ষের উপর';if(x===0)return 'y অক্ষের উপর';return x>0?(y>0?'১ম চতুর্ভাগ':'৪র্থ চতুর্ভাগ'):(y>0?'২য় চতুর্ভাগ':'৩য় চতুর্ভাগ');}
+function half(S){return fm(Math.abs(S)/2,1);}
+function minus(sym,v){return v===0?sym:sym+(v>0?' − '+bn(v):' + '+bn(-v));}
+var COL=['#e53935','#1971c2','#2a9d8f','#e08a00'],NM=['A','B','C','D'];
+function Cv(id,R){var c=$(id),W=c.width,H=c.height,x=R2(c),s=W/(2*R);return {c:c,x:x,W:W,H:H,R:R,s:s,X:function(u){return W/2+u*s;},Y:function(v){return H/2-v*s;}};}
+function grid(o){var x=o.x,R=o.R,i;x.fillStyle='#fff';x.fillRect(0,0,o.W,o.H);
+  for(i=-R;i<=R;i++){x.strokeStyle=i===0?'#1f3a5f':'#e3eaf0';x.lineWidth=i===0?1.8:1;x.beginPath();x.moveTo(o.X(i),0);x.lineTo(o.X(i),o.H);x.stroke();x.beginPath();x.moveTo(0,o.Y(i));x.lineTo(o.W,o.Y(i));x.stroke();}
+  x.fillStyle='#6b7f95';x.font='11px system-ui';
+  for(i=-R+1;i<R;i++){if(i===0||i%2)continue;x.textAlign='center';x.fillText(sg(i),o.X(i),o.Y(0)+14);x.textAlign='right';x.fillText(sg(i),o.X(0)-4,o.Y(i)+4);}
+  x.textAlign='center';x.fillStyle='#1f3a5f';x.font='700 13px system-ui';x.fillText('X',o.W-10,o.Y(0)-6);x.fillText('Y',o.X(0)+12,12);x.fillText('O',o.X(0)-8,o.Y(0)+14);}
+function seg(o,p,q,col,w,dash){var x=o.x;x.strokeStyle=col;x.lineWidth=w||2;x.setLineDash(dash||[]);x.beginPath();x.moveTo(o.X(p[0]),o.Y(p[1]));x.lineTo(o.X(q[0]),o.Y(q[1]));x.stroke();x.setLineDash([]);}
+function lineMC(o,m,c,col,w){seg(o,[-o.R,m*-o.R+c],[o.R,m*o.R+c],col,w||2.5);}
+function lineVert(o,a,col,w){seg(o,[a,-o.R],[a,o.R],col,w||2.5);}
+function lineThru(o,p,q,col,w){var dx=q[0]-p[0],dy=q[1]-p[1];if(dx===0&&dy===0)return;if(dx===0)lineVert(o,p[0],col,w);else{var m=dy/dx;lineMC(o,m,p[1]-m*p[0],col,w);}}
+function dot(o,p,name,col,lab){var x=o.x;x.fillStyle=col;x.beginPath();x.arc(o.X(p[0]),o.Y(p[1]),6.5,0,6.2832);x.fill();x.strokeStyle='#fff';x.lineWidth=2;x.stroke();
+  x.fillStyle=col;x.font='700 13px system-ui';x.textAlign='left';var tx=o.X(p[0])+9,ty=o.Y(p[1])-9;if(tx>o.W-90)tx-=110;if(ty<16)ty+=26;x.fillText(name+(lab===false?'':pn(p)),tx,ty);}
+function tag(o,p,txt,col){var x=o.x;x.fillStyle=col||'#1f3a5f';x.font='700 12px system-ui';x.textAlign='center';x.fillText(txt,o.X(p[0]),o.Y(p[1])-5);}
+function Ed(boxId,names,pts,R,redraw,idx){
+  var box=$(boxId),h='';idx=idx||names.map(function(n,i){return i;});
+  names.forEach(function(n,i){h+='<span class="pt"><b style="color:'+COL[idx[i]%4]+'">'+n+'</b> ( <input type="number" min="'+(-R)+'" max="'+R+'" step="1" data-i="'+i+'" data-k="0" aria-label="'+n+' এর x"> , <input type="number" min="'+(-R)+'" max="'+R+'" step="1" data-i="'+i+'" data-k="1" aria-label="'+n+' এর y"> )</span>';});
+  box.insertAdjacentHTML('afterbegin',h);
+  function sync(){[].forEach.call(box.querySelectorAll('input[data-i]'),function(e){e.value=pts[+e.dataset.i][+e.dataset.k];});}
+  box.addEventListener('input',function(e){var t=e.target;if(t.dataset.i===undefined)return;var v=Math.round(parseFloat(t.value));if(isNaN(v))return;pts[+t.dataset.i][+t.dataset.k]=Math.max(-R,Math.min(R,v));redraw();});
+  sync();return {sync:sync};}
+function Drag(o,get,after){var act=-1,c=o.c;
+  function pos(e){var r=c.getBoundingClientRect();return [(e.clientX-r.left)*o.W/r.width,(e.clientY-r.top)*o.H/r.height];}
+  c.addEventListener('pointerdown',function(e){var p=pos(e),best=-1,bd=1e9,P=get();P.forEach(function(q,i){var dx=o.X(q[0])-p[0],dy=o.Y(q[1])-p[1],d=dx*dx+dy*dy;if(d<bd){bd=d;best=i;}});
+    if(bd<=28*28){act=best;try{c.setPointerCapture(e.pointerId);}catch(er){}e.preventDefault();}});
+  c.addEventListener('pointermove',function(e){if(act<0)return;var P=get(),p=pos(e),R=o.R,u=Math.round((p[0]-o.W/2)/o.s),v=Math.round((o.H/2-p[1])/o.s);
+    u=Math.max(-R,Math.min(R,u));v=Math.max(-R,Math.min(R,v));if(P[act][0]!==u||P[act][1]!==v){P[act][0]=u;P[act][1]=v;after();}});
+  function up(){act=-1;}c.addEventListener('pointerup',up);c.addEventListener('pointercancel',up);}
+function Pre(boxId,pts,after){$(boxId).addEventListener('click',function(e){var b=e.target.closest('button[data-pre]');if(!b)return;var a=JSON.parse(b.dataset.pre);a.forEach(function(p,i){pts[i][0]=p[0];pts[i][1]=p[1];});after();});}
+function slopeOf(P,Q){var dx=Q[0]-P[0],dy=Q[1]-P[1];return {dx:dx,dy:dy,same:dx===0&&dy===0,vert:dx===0&&dy!==0};}
+function eqStr(n,d,cn,cd){var m=red(n,d),c=red(cn,cd),s='y = ';
+  if(m[0]===0)return 'y = '+(c[0]===0?'০':frac(c[0],c[1]));
+  s+=(m[0]===1&&m[1]===1)?'x':(m[0]===-1&&m[1]===1)?'−x':(m[1]===1?sg(m[0]):'('+frac(m[0],m[1])+')')+'x';
+  if(c[0]!==0)s+=(c[0]>0?' + ':' − ')+frac(Math.abs(c[0]),c[1]);return s;}
+
+/* ===== ল্যাব ১: দূরত্ব ===== */
+var P1=[[1,1],[2,2]],o1=Cv('l1cv',9),e1;
+function lab1(){
+  var o=o1,x=o.x,P=P1[0],Q=P1[1],R=[Q[0],P[1]];grid(o);
+  seg(o,P,R,'#1971c2',2,[6,5]);seg(o,R,Q,'#1971c2',2,[6,5]);seg(o,P,Q,'#e53935',3.2);
+  var dx=Q[0]-P[0],dy=Q[1]-P[1];
+  if(dx!==0)tag(o,[(P[0]+R[0])/2,P[1]],'x এর পার্থক্য = '+sg(dx),'#1971c2');
+  if(dy!==0){x.save();tag(o,[R[0]+(dx>=0?0.2:-0.2),(R[1]+Q[1])/2],'y এর পার্থক্য = '+sg(dy),'#1971c2');x.restore();}
+  dot(o,P,'P',COL[0]);dot(o,Q,'Q',COL[1]);
+  var N=dx*dx+dy*dy,h='';
+  h+='P'+pn(P)+' → <b>'+quad(P)+'</b>; Q'+pn(Q)+' → <b>'+quad(Q)+'</b><br>';
+  h+='x এর পার্থক্য x₂ − x₁ = '+sg(Q[0])+' − '+(P[0]<0?'('+sg(P[0])+')':sg(P[0]))+' = <b>'+sg(dx)+'</b>, y এর পার্থক্য y₂ − y₁ = '+sg(Q[1])+' − '+(P[1]<0?'('+sg(P[1])+')':sg(P[1]))+' = <b>'+sg(dy)+'</b><br>';
+  h+='PQ² = ('+sg(dx)+')² + ('+sg(dy)+')² = '+bn(dx*dx)+' + '+bn(dy*dy)+' = <b>'+bn(N)+'</b><br>';
+  h+=N===0?'দুটি বিন্দু একই জায়গায়, দূরত্ব <b>০</b>।':'<b>PQ = √'+bn(N)+(sq(N)!=='√'+bn(N)?' = '+sq(N):'')+' ≈ '+dc(N)+' একক</b><br>';
+  h+='মূলবিন্দু থেকে P এর দূরত্ব = √('+bn(P[0]*P[0])+' + '+bn(P[1]*P[1])+') = '+sq(P[0]*P[0]+P[1]*P[1])+'; Q এর দূরত্ব = '+sq(Q[0]*Q[0]+Q[1]*Q[1]);
+  $('l1res').innerHTML=h;
+}
+e1=Ed('l1in',['P','Q'],P1,9,lab1);Drag(o1,function(){return P1;},function(){e1.sync();lab1();});Pre('l1pre',P1,function(){e1.sync();lab1();});lab1();
+
+/* ===== ল্যাব ২: ত্রিভুজ ===== */
+var P2=[[2,5],[-1,1],[2,1]],o2=Cv('l2cv',9),e2;
+function lab2(){
+  var o=o2,x=o.x,A=P2[0],B=P2[1],C=P2[2];grid(o);
+  x.fillStyle='rgba(25,113,194,.12)';x.beginPath();x.moveTo(o.X(A[0]),o.Y(A[1]));x.lineTo(o.X(B[0]),o.Y(B[1]));x.lineTo(o.X(C[0]),o.Y(C[1]));x.closePath();x.fill();
+  seg(o,A,B,'#1f3a5f',2.8);seg(o,B,C,'#1f3a5f',2.8);seg(o,C,A,'#1f3a5f',2.8);
+  var c2=d2(A,B),a2=d2(B,C),b2=d2(C,A);
+  tag(o,[(A[0]+B[0])/2,(A[1]+B[1])/2],'c = '+dc(c2));tag(o,[(B[0]+C[0])/2,(B[1]+C[1])/2],'a = '+dc(a2));tag(o,[(C[0]+A[0])/2,(C[1]+A[1])/2],'b = '+dc(b2));
+  dot(o,A,'A',COL[0]);dot(o,B,'B',COL[1]);dot(o,C,'C',COL[2]);
+  var a=Math.sqrt(a2),b=Math.sqrt(b2),c=Math.sqrt(c2),s=(a+b+c)/2,S=sh([A,B,C]),h='';
+  h+='<b>বাহু:</b> AB = c = '+sq(c2)+' ≈ '+dc(c2)+'; BC = a = '+sq(a2)+' ≈ '+dc(a2)+'; CA = b = '+sq(b2)+' ≈ '+dc(b2)+'<br>';
+  if(S===0){
+    var L=[[a,'a'],[b,'b'],[c,'c']].sort(function(p,q){return p[0]-q[0];});
+    h+='<span class="no">⚠️ তিনটি বিন্দু একই সরলরেখায় আছে। ত্রিভুজ গঠিত হয় না।</span><br>';
+    if(Math.abs(L[0][0]+L[1][0]-L[2][0])<1e-9&&L[2][0]>0)h+='কারণ: ছোট দুই বাহুর সমষ্টি ('+dc(L[0][0]*L[0][0])+' + '+dc(L[1][0]*L[1][0])+') = বড় বাহু ('+dc(L[2][0]*L[2][0])+')। ক্ষেত্রফল = <b>০</b>।';
+    else h+='বিন্দুগুলো মিলে গেছে বা একই রেখায় আছে। ক্ষেত্রফল = <b>০</b>।';
+  }else{
+    var hv=Math.sqrt(Math.max(0,s*(s-a)*(s-b)*(s-c)));
+    h+='<b>পদ্ধতি ১ (হেরন):</b> s = (a + b + c)/2 = '+fm(s,4)+'; ক্ষেত্রফল = √[s(s−a)(s−b)(s−c)] = <b>'+fm(hv,4)+'</b> বর্গ একক<br>';
+    var d1=A[0]*B[1]+B[0]*C[1]+C[0]*A[1],d3=B[0]*A[1]+C[0]*B[1]+A[0]*C[1];
+    h+='<b>পদ্ধতি ২ (স্থানাঙ্ক):</b> ↘ = '+sg(d1)+', ↗ = '+sg(d3)+' ⇒ ½|'+sg(d1)+' − ('+sg(d3)+')| = <b>'+half(S)+'</b> বর্গ একক'+(S>0?' (A, B, C ঘড়ির কাঁটার বিপরীতে ✔)':' (A, B, C ঘড়ির কাঁটার দিকে, তাই মান নিয়েছি)')+'<br>';
+    h+=Math.abs(hv-Math.abs(S)/2)<1e-6?'<span class="ok">✅ দুই পদ্ধতিতে একই ক্ষেত্রফল।</span><br>':'';
+    var q=[c2,a2,b2],sr=q.slice().sort(function(p,r){return p-r;}),eq=(q[0]===q[1])+(q[1]===q[2])+(q[0]===q[2]),rt=sr[0]+sr[1]===sr[2];
+    var nm=(rt?'সমকোণী ':'')+(eq===3?'সমবাহু':eq===1?'সমদ্বিবাহু':'বিষমবাহু')+' ত্রিভুজ';
+    h+='<b>ধরন:</b> '+nm+(rt?' (বড় বাহুর বর্গ = অপর দুটির বর্গের যোগ: '+bn(sr[2])+' = '+bn(sr[0])+' + '+bn(sr[1])+')':'');
+  }
+  $('l2res').innerHTML=h;
+}
+e2=Ed('l2in',['A','B','C'],P2,9,lab2);Drag(o2,function(){return P2;},function(){e2.sync();lab2();});Pre('l2pre',P2,function(){e2.sync();lab2();});lab2();
+
+/* ===== ল্যাব ৩: চতুর্ভুজ ===== */
+var P3=[[0,-1],[8,3],[6,7],[-2,3]],o3=Cv('l3cv',9),e3;
+function lab3(){
+  var o=o3,x=o.x,A=P3[0],B=P3[1],C=P3[2],D=P3[3];grid(o);
+  x.fillStyle='rgba(42,157,143,.14)';x.beginPath();x.moveTo(o.X(A[0]),o.Y(A[1]));[B,C,D].forEach(function(p){x.lineTo(o.X(p[0]),o.Y(p[1]));});x.closePath();x.fill();
+  seg(o,A,B,'#1f3a5f',2.8);seg(o,B,C,'#1f3a5f',2.8);seg(o,C,D,'#1f3a5f',2.8);seg(o,D,A,'#1f3a5f',2.8);
+  seg(o,A,C,'#e08a00',1.8,[6,5]);seg(o,B,D,'#e08a00',1.8,[6,5]);
+  dot(o,A,'A',COL[0]);dot(o,B,'B',COL[1]);dot(o,C,'C',COL[2]);dot(o,D,'D',COL[3]);
+  var ab=d2(A,B),bc=d2(B,C),cd=d2(C,D),da=d2(D,A),ac=d2(A,C),bd=d2(B,D),S=sh([A,B,C,D]),h='';
+  h+='<b>বাহু:</b> AB = '+sq(ab)+', BC = '+sq(bc)+', CD = '+sq(cd)+', DA = '+sq(da)+'<br><b>কর্ণ:</b> AC = '+sq(ac)+' ≈ '+dc(ac)+', BD = '+sq(bd)+' ≈ '+dc(bd)+'<br>';
+  var cross=segX(A,B,C,D)||segX(B,C,D,A);
+  if(cross){h+='<span class="no">⚠️ বাহুগুলো একে অপরকে কাটছে (বিন্দুগুলো ক্রমানুসারে নেই)। এটা সাধারণ চতুর্ভুজ নয়, ক্ষেত্রফল সূত্র খাটে না। A→B→C→D ঘুরে ঘুরে সাজাও।</span>';}
+  else if(S===0){h+='<span class="no">⚠️ চারটি বিন্দু একই রেখায় বা মিলে গেছে। ক্ষেত্রফল <b>০</b>।</span>';}
+  else{
+    var dd=function(P,Q,R_){var a=Math.sqrt(d2(P,Q)),b=Math.sqrt(d2(Q,R_)),c=Math.sqrt(d2(R_,P)),s=(a+b+c)/2;return Math.sqrt(Math.max(0,s*(s-a)*(s-b)*(s-c)));};
+    var t1=dd(A,B,C),t2=dd(A,C,D);
+    h+='<b>স্থানাঙ্ক-সূত্র:</b> ½|↘ − ↗| = ½ × '+bn(Math.abs(S))+' = <b>'+half(S)+'</b> বর্গ একক'+(S>0?' (ঘড়ির কাঁটার বিপরীতে)':' (ঘড়ির কাঁটার দিকে, তাই মান নিয়েছি)')+'<br>';
+    h+='<b>দুই ত্রিভুজ (কর্ণ AC দিয়ে):</b> △ABC = '+fm(t1,3)+' ও △ACD = '+fm(t2,3)+' ⇒ যোগফল = '+fm(t1+t2,3)+'<br>';
+    h+=Math.abs(t1+t2-Math.abs(S)/2)<1e-6?'<span class="ok">✅ দুই পদ্ধতিতে মিলেছে।</span><br>':'ℹ️ মেলেনি, কারণ চতুর্ভুজটি "অবতল" (কর্ণ AC বাইরে পড়েছে)। স্থানাঙ্ক-সূত্রই এখানে ঠিক।<br>';
+    var par=(B[0]-A[0]===C[0]-D[0]&&B[1]-A[1]===C[1]-D[1]),rec=par&&((B[0]-A[0])*(D[0]-A[0])+(B[1]-A[1])*(D[1]-A[1])===0),rh=par&&ab===da,nm;
+    if(rec&&rh)nm='বর্গ';else if(rec)nm='আয়তক্ষেত্র';else if(rh)nm='রম্বস';else if(par)nm='সামান্তরিক';
+    else if(cr(A,B,[C[0]-D[0]+A[0],C[1]-D[1]+A[1]])===0||(B[0]-A[0])*(D[1]-C[1])===(B[1]-A[1])*(D[0]-C[0])||(C[0]-B[0])*(A[1]-D[1])===(C[1]-B[1])*(A[0]-D[0]))nm='ট্র্যাপিজিয়াম (এক জোড়া বিপরীত বাহু সমান্তরাল)';
+    else nm='সাধারণ চতুর্ভুজ';
+    h+='<b>ধরন:</b> '+nm+(par?' (বিপরীত বাহু সমান ও সমান্তরাল)':'')+(rec&&!rh?'; কর্ণ দুটি '+(ac===bd?'সমান':'অসমান'):'')+(rh&&!rec?'; কর্ণ দুটি '+(ac===bd?'সমান':'অসমান')+', তাই বর্গ নয়':'');
+  }
+  $('l3res').innerHTML=h;
+}
+e3=Ed('l3in',['A','B','C','D'],P3,9,lab3);Drag(o3,function(){return P3;},function(){e3.sync();lab3();});Pre('l3pre',P3,function(){e3.sync();lab3();});lab3();
+
+/* ===== ল্যাব ৪: ঢাল ===== */
+var P4=[[2,3],[6,7],[0,-2],[3,1]],o4=Cv('l4cv',9),e4;
+function descSlope(P,Q,nm){var s=slopeOf(P,Q);
+  if(s.same)return nm+': দুটি বিন্দু একই, রেখা নির্ণয় হয় না।';
+  if(s.vert)return nm+': x₁ = x₂ ('+sg(P[0])+'), তাই রেখা <b>y অক্ষের সমান্তরাল (খাড়া)</b>। ঢাল <b>অসংজ্ঞায়িত</b>। সমীকরণ x = '+sg(P[0])+'।';
+  var th=Math.atan2(s.dy,s.dx)*180/Math.PI;if(th<0)th+=180;if(th>=180)th-=180;
+  var ty=s.dy===0?'০° (x অক্ষের সমান্তরাল)':(s.dy*s.dx>0?'সূক্ষ্মকোণ':'স্থূলকোণ');
+  return nm+': ঢাল m = (y₂ − y₁)/(x₂ − x₁) = ('+sg(P[1]+s.dy)+' − '+(P[1]<0?'('+sg(P[1])+')':sg(P[1]))+')/('+sg(Q[0])+' − '+(P[0]<0?'('+sg(P[0])+')':sg(P[0]))+') = '+sg(s.dy)+'/'+sg(s.dx)+' = <b>'+frac(s.dy,s.dx)+'</b>; θ = tan⁻¹ m ≈ '+fm(th,1)+'° → <b>'+ty+'</b>'+(s.dy===0?' (সমীকরণ y = '+sg(P[1])+')':'');}
+function lab4(){
+  var o=o4,x=o.x,A=P4[0],B=P4[1],C=P4[2],D=P4[3];grid(o);
+  lineThru(o,A,B,'#e8590c',2.4);lineThru(o,C,D,'#1971c2',2.4);
+  var s1=slopeOf(A,B);
+  if(!s1.same&&!s1.vert&&s1.dy!==0){var R_=[B[0],A[1]];seg(o,A,R_,'#e8590c',1.4,[4,4]);seg(o,R_,B,'#e8590c',1.4,[4,4]);tag(o,[(A[0]+R_[0])/2,A[1]-0.7],'হাঁটা = '+sg(s1.dx),'#e8590c');tag(o,[R_[0]+(s1.dx>0?0.9:-0.9),(R_[1]+B[1])/2],'ওঠা = '+sg(s1.dy),'#e8590c');}
+  dot(o,A,'A',COL[0],false);dot(o,B,'B',COL[1],false);dot(o,C,'C',COL[2],false);dot(o,D,'D',COL[3],false);
+  var s2=slopeOf(C,D),h=descSlope(A,B,'<b style="color:#e8590c">রেখা ১ (AB)</b>')+'<br>'+descSlope(C,D,'<b style="color:#1971c2">রেখা ২ (CD)</b>')+'<br>';
+  if(!s1.same&&!s2.same){
+    var cx=s1.dy*s2.dx-s2.dy*s1.dx,e_=s1.dx*s2.dx;
+    if(cx===0){var same=cr(A,B,C)===0&&cr(A,B,D)===0;
+      h+=same?'<span class="ok">✅ দুটি রেখা একই। তাই A, B, C, D চারটি বিন্দুই <b>সমরেখ</b> (একই সরলরেখায়)।</span>':'<span class="ok">✅ ঢাল সমান ('+(s1.vert?'দুটিই খাড়া':frac(s1.dy,s1.dx))+'), তাই রেখা দুটি <b>সমান্তরাল</b>।</span>';}
+    else{h+='<span class="no">দুটি রেখার ঢাল আলাদা, তাই সমান্তরাল নয়, কোথাও না কোথাও কাটবে।</span>';
+      if(!s1.vert&&!s2.vert)h+=' ঢালের গুণফল = '+frac(s1.dy*s2.dy,e_)+(s1.dx*s2.dx+s1.dy*s2.dy===0?' (বইয়ের বাইরের তথ্য: গুণফল −১ হলে রেখা দুটি পরস্পর লম্ব)':'');}
+  }
+  $('l4res').innerHTML=h;
+}
+e4=Ed('l4in',['A','B','C','D'],P4,9,lab4);Drag(o4,function(){return P4;},function(){e4.sync();lab4();});Pre('l4pre',P4,function(){e4.sync();lab4();});lab4();
+
+/* ===== ল্যাব ৫: সমীকরণ বানাও ===== */
+var mode5=2,P5=[[3,4],[6,7]],Q5=[[-2,-3]],M5=[3,1],o5=Cv('l5cv',9),e5=null;
+function lab5(){
+  var o=o5,x=o.x,pts=mode5===2?P5:Q5,A=pts[0],n,d,h='';grid(o);
+  if(mode5===2){var B=P5[1],dx=B[0]-A[0],dy=B[1]-A[1];
+    if(dx===0&&dy===0){dot(o,A,'A',COL[0]);$('l5res').innerHTML='দুটি বিন্দু একই। রেখা নির্ণয় হয় না, আলাদা বিন্দু বেছে নাও।';return;}
+    n=dy;d=dx;h+='<b>ধাপ ১ (ঢাল):</b> m = (y₂ − y₁)/(x₂ − x₁) = ('+sg(B[1])+' − '+(A[1]<0?'('+sg(A[1])+')':sg(A[1]))+')/('+sg(B[0])+' − '+(A[0]<0?'('+sg(A[0])+')':sg(A[0]))+') = '+sg(dy)+'/'+sg(dx)+(dx===0?' (হর ০, ঢাল অসংজ্ঞায়িত)':' = <b>'+frac(dy,dx)+'</b>')+'<br>';
+  }else{n=M5[0];d=M5[1];if(d===0){h+='<b>ঢাল:</b> হর ০ হলে ঢাল অসংজ্ঞায়িত, রেখা খাড়া।<br>';}else h+='<b>ধাপ ১ (ঢাল দেওয়া আছে):</b> m = '+frac(n,d)+'<br>';}
+  var vert=(mode5===2?(P5[1][0]===A[0]):d===0);
+  if(vert){lineVert(o,A[0],'#e8590c');dot(o,A,'A',COL[0]);if(mode5===2)dot(o,P5[1],'B',COL[1]);
+    h+='<b>সমীকরণ:</b> x = '+sg(A[0])+' (y অক্ষের সমান্তরাল রেখা, সাধারণ রূপ x = a)।<br>x অক্ষে ছেদ: ('+sg(A[0])+', ০); y অক্ষে ছেদ নেই'+(A[0]===0?' (রেখাটিই y অক্ষ)':'')+'।';$('l5res').innerHTML=h;return;}
+  var r=red(n,d),Cc=r[1]*A[1]-r[0]*A[0];
+  lineMC(o,r[0]/r[1],Cc/r[1],'#e8590c');
+  h+='<b>ধাপ ২ (y − y₁ = m(x − x₁)):</b> '+minus('y',A[1])+' = '+(r[1]===1?sg(r[0]):'('+frac(r[0],r[1])+')')+'·('+minus('x',A[0])+')<br>';
+  h+='<b>ধাপ ৩ (সরল করে y = mx + c):</b> <b>'+eqStr(r[0],r[1],Cc,r[1])+'</b><br>';
+  var gA=r[0],gB=-r[1],gC=Cc;h+='<b>সাধারণ রূপ:</b> '+(gA===0?'':sg(gA)+'x ')+(gB<0?'− '+bn(-gB)+'y ':'+ '+bn(gB)+'y ')+(gC===0?'':(gC>0?'+ ':'− ')+bn(Math.abs(gC))+' ')+'= ০<br>';
+  h+='<b>ঢাল m = </b>'+frac(r[0],r[1])+(r[0]===0?' (x অক্ষের সমান্তরাল)':'')+'; <b>y অক্ষের ছেদক c = </b>'+frac(Cc,r[1])+'<br>';
+  var yi=[0,Cc/r[1]];dot(o,yi,'',COL[2],false);tag(o,[yi[0]+1.6,yi[1]],'y ছেদ','#2a9d8f');
+  h+='<b>y অক্ষে ছেদ</b> (x = ০ বসিয়ে): (০, '+frac(Cc,r[1])+')';
+  if(r[0]!==0){var xi=[-Cc/r[0],0];dot(o,xi,'',COL[3],false);tag(o,[xi[0],xi[1]+1.1],'x ছেদ','#e08a00');h+='; <b>x অক্ষে ছেদ</b> (y = ০ বসিয়ে): ('+frac(-Cc,r[0])+', ০)';
+    if(Cc!==0){var dist=Math.sqrt(Math.pow(Cc/r[0],2)+Math.pow(Cc/r[1],2));h+='<br>দুই ছেদবিন্দুর দূরত্ব ≈ '+fm(dist,4)+' একক (উদাহরণ ২৪ এর মতো)';}
+  }else h+='; x অক্ষে ছেদ নেই (রেখা x অক্ষের সমান্তরাল)';
+  dot(o,A,'A',COL[0],true);if(mode5===2)dot(o,P5[1],'B',COL[1],true);
+  $('l5res').innerHTML=h;
+}
+function build5(){var box=$('l5in');box.innerHTML='';
+  if(mode5===2){e5=Ed('l5in',['A','B'],P5,9,lab5);}
+  else{e5=Ed('l5in',['P'],Q5,9,lab5);box.insertAdjacentHTML('beforeend','<span class="pt"><b>m</b> = <input type="number" id="l5p" step="1" value="'+M5[0]+'" aria-label="ঢালের লব"> / <input type="number" id="l5q" step="1" value="'+M5[1]+'" aria-label="ঢালের হর"></span>');
+    $('l5p').oninput=function(){var v=Math.round(parseFloat(this.value));if(!isNaN(v)){M5[0]=Math.max(-20,Math.min(20,v));lab5();}};$('l5q').oninput=function(){var v=Math.round(parseFloat(this.value));if(!isNaN(v)){M5[1]=Math.max(-20,Math.min(20,v));lab5();}};}
+  $('l5pre').innerHTML=mode5===2?'<button data-pre="[[3,4],[6,7]]">উদাহরণ ২০: (৩,৪),(৬,৭)</button><button data-pre="[[-1,3],[5,15]]">উদাহরণ ২৪: (−১,৩),(৫,১৫)</button><button data-pre="[[0,-3],[4,-2]]">(০,−৩),(৪,−২)</button><button data-pre="[[2,2],[2,-3]]">খাড়া রেখা</button>':'<button data-m="-2,-3,3,1">উদাহরণ ২১: m = ৩, (−২,−৩)</button><button data-m="0,4,-1,2">m = −১/২, (০,৪)</button><button data-m="1,1,0,1">m = ০ (আনুভূমিক)</button>';
+  lab5();}
+$('l5mode').addEventListener('click',function(e){var b=e.target.closest('button[data-mode]');if(!b)return;mode5=+b.dataset.mode;[].forEach.call($('l5mode').querySelectorAll('button'),function(x){x.classList.toggle('on',x===b);});build5();});
+$('l5pre').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.pre){var a=JSON.parse(b.dataset.pre);a.forEach(function(p,i){P5[i][0]=p[0];P5[i][1]=p[1];});e5.sync();lab5();}
+  if(b.dataset.m){var m=b.dataset.m.split(',').map(Number);Q5[0][0]=m[0];Q5[0][1]=m[1];M5[0]=m[2];M5[1]=m[3];e5.sync();$('l5p').value=M5[0];$('l5q').value=M5[1];lab5();}});
+Drag(o5,function(){return mode5===2?P5:Q5;},function(){e5.sync();lab5();});
+build5();
+
+/* ===== ল্যাব ৬: y = mx + c ও ছেদবিন্দু ===== */
+var o6=Cv('l6cv',10);
+function lab6(){
+  var o=o6,x=o.x,k1=+$('l6m1').value,c1=+$('l6c1').value,k2=+$('l6m2').value,c2=+$('l6c2').value,on=$('l6on').checked,h='';
+  $('l6m1v').textContent=frac(k1,2);$('l6c1v').textContent=sg(c1);$('l6m2v').textContent=frac(k2,2);$('l6c2v').textContent=sg(c2);
+  grid(o);lineMC(o,k1/2,c1,'#e8590c');dot(o,[0,c1],'',COL[2],false);
+  function info(k,c,nm,col){var s='<b style="color:'+col+'">'+nm+':</b> '+eqStr(k,2,c,1)+'; ঢাল = '+frac(k,2)+', y ছেদক = '+sg(c)+'; ';
+    s+=k===0?'x অক্ষের সমান্তরাল (x অক্ষে ছেদ নেই)':'x অক্ষে ছেদ ('+frac(-2*c,k)+', ০); θ '+(k>0?'সূক্ষ্মকোণ':'স্থূলকোণ');return s+'<br>';}
+  h+=info(k1,c1,'রেখা ১','#e8590c');
+  if(on){lineMC(o,k2/2,c2,'#1971c2');dot(o,[0,c2],'',COL[2],false);h+=info(k2,c2,'রেখা ২','#1971c2');
+    if(k1===k2){h+=c1===c2?'<span class="ok">দুটি রেখা একই (একে অপরের উপর)।</span>':'<span class="ok">ঢাল সমান ('+frac(k1,2)+'), তাই রেখা দুটি <b>সমান্তরাল</b>। কোনো সাধারণ বিন্দু নেই, অর্থাৎ সমীকরণ দুটির সমাধান নেই (অনুশীলনী ১১.৪ এর ১৫)।</span>';}
+    else{var den=k1-k2,xn=2*(c2-c1),yn=k1*c2-k2*c1,xv=xn/den,yv=yn/den;
+      h+='<span class="ok">ছেদবিন্দু = ('+frac(xn,den)+', '+frac(yn,den)+')</span> ≈ ('+fm(xv,3)+', '+fm(yv,3)+')'+(Math.abs(xv)>o.R||Math.abs(yv)>o.R?' (গ্রিডের বাইরে)':'');
+      if(Math.abs(xv)<=o.R&&Math.abs(yv)<=o.R){dot(o,[xv,yv],'ছেদ',COL[0],false);o.x.fillStyle='#c0392b';}
+      h+='<br>এই বিন্দুতে দুই রেখার সমীকরণই সিদ্ধ হয়: x = '+frac(xn,den)+' বসিয়ে দুই রেখা থেকে একই y পাওয়া যায়।';}
+  }
+  $('l6res').innerHTML=h;
+}
+['l6m1','l6c1','l6m2','l6c2','l6on'].forEach(function(i){$(i).addEventListener('input',lab6);$(i).addEventListener('change',lab6);});
+$('l6pre').addEventListener('click',function(e){var b=e.target.closest('button[data-pre]');if(!b)return;var a=JSON.parse(b.dataset.pre);$('l6m1').value=a[0];$('l6c1').value=a[1];$('l6m2').value=a[2];$('l6c2').value=a[3];$('l6on').checked=true;lab6();});
+lab6();
+/* ===== প্র্যাকটিস ===== */
+function numOf(s){s=en(s).replace(/[−–]/g,'-').replace(/\s+/g,'');var m=s.match(/^(-?\d+)\/(\d+)$/);if(m)return +m[1]/+m[2];if(/^-?\d*\.?\d+$/.test(s))return parseFloat(s);return NaN;}
+var PR=[
+ ['(2, −1) ও (5, 3) বিন্দুর দূরত্ব কত একক?',[5],'√[(5−2)² + (3+1)²] = √(9 + 16) = 5।'],
+ ['(−3, 4) বিন্দু থেকে মূলবিন্দুর দূরত্ব কত?',[5],'√(9 + 16) = 5।'],
+ ['A(0, 0), B(3, 0), C(0, 4) ত্রিভুজের পরিসীমা কত?',[12],'AB = 3, AC = 4, BC = √(9 + 16) = 5। পরিসীমা = 12।'],
+ ['A(1, 1), B(5, 1), C(3, 5) ত্রিভুজের ক্ষেত্রফল কত বর্গ একক?',[8],'½|(1·1 + 5·5 + 3·1) − (5·1 + 3·1 + 1·5)| = ½|29 − 13| = 8।'],
+ ['(0, 0), (4, 0), (4, 3), (0, 3) আয়তের ক্ষেত্রফল কত?',[12],'দৈর্ঘ্য ৪ × প্রস্থ ৩ = ১২। স্থানাঙ্ক-সূত্রে: ↘ = 0·0 + 4·3 + 4·3 + 0·0 = 24, ↗ = 0, ক্ষেত্রফল = ½ × 24 = 12।'],
+ ['(2, 3) ও (6, 11) দিয়ে যাওয়া রেখার ঢাল কত?',[2],'(11 − 3)/(6 − 2) = 8/4 = 2।'],
+ ['A(1, 2), B(3, 6), C(5, t) সমরেখ হলে t = ?',[10],'AB এর ঢাল = 4/2 = 2। BC এর ঢাল = (t − 6)/2 = 2 ⇒ t = 10।'],
+ ['ঢাল −2 এবং (0, 5) দিয়ে যাওয়া রেখা x অক্ষকে কোন x বিন্দুতে কাটে?',[2.5],'y = −2x + 5। y = 0 বসিয়ে x = 5/2 = 2.5।'],
+ ['y = 2x + 1 ও y = −x + 7 রেখা দুটির ছেদবিন্দুর x স্থানাঙ্ক কত?',[2],'2x + 1 = −x + 7 ⇒ 3x = 6 ⇒ x = 2 (y = 5)।'],
+ ['(1, 4) ও (−3, 0) দিয়ে যাওয়া রেখার y অক্ষের ছেদক c কত?',[3],'ঢাল = 4/4 = 1। y − 4 = 1·(x − 1) ⇒ y = x + 3। c = 3।']
+];
+(function(){var h='';PR.forEach(function(p,i){h+='<div class="q"><b>'+bn(i+1)+'.</b> '+p[0]+'<div class="ans"> <input type="text" id="pi'+i+'" size="10"> <button class="btn" data-pc="'+i+'">যাচাই</button> <button class="btn alt" data-ph="'+i+'">সমাধান</button></div><div class="fb" id="pf'+i+'"></div></div>';});$('pracbox').innerHTML=h;})();
+$('pracbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.pc!==undefined){var i=+b.dataset.pc,raw=$('pi'+i).value,v=numOf(raw),ok=!isNaN(v)&&PR[i][1].some(function(a){return Math.abs(a-v)<=0.0151;});
+    $('pf'+i).innerHTML=raw.trim()===''?'আগে উত্তর লেখো।':(ok?'✅ ঠিক! সাবাশ।':'❌ আবার চেষ্টা করো, বা "সমাধান" দেখো।');}
+  if(b.dataset.ph!==undefined){var j=+b.dataset.ph;$('pf'+j).innerHTML='💡 '+PR[j][2];}
+});
+/* ===== কুইজ ===== */
+var QZ=[];function M(q,c,w,e){QZ.push({q:q,o:[c].concat(w),e:e});}
+M('x অক্ষের উপর যেকোনো বিন্দুর কোটি কত?','০',['১','x এর সমান','অসংজ্ঞায়িত'],'x অক্ষ থেকে দূরত্বই কোটি, আর অক্ষের উপর সেই দূরত্ব ০।');
+M('(−3, 5) বিন্দুটি কোন চতুর্ভাগে?','২য়',['১ম','৩য়','৪র্থ'],'ভুজ ঋণাত্মক, কোটি ধনাত্মক ⇒ ২য় চতুর্ভাগ।');
+M('(2, −7) বিন্দুটি কোন চতুর্ভাগে?','৪র্থ',['১ম','২য়','৩য়'],'ভুজ ধনাত্মক, কোটি ঋণাত্মক ⇒ ৪র্থ চতুর্ভাগ।');
+M('মূলবিন্দুর স্থানাঙ্ক কত?','(০, ০)',['(১, ১)','(০, ১)','(১, ০)'],'দুই অক্ষের ছেদবিন্দু।');
+M('(x₁, y₁) ও (x₂, y₂) এর দূরত্বের সূত্র কোনটি?','√[(x₂ − x₁)² + (y₂ − y₁)²]',['(x₂ − x₁)² + (y₂ − y₁)²','√(x₂² + y₂²) − √(x₁² + y₁²)','|x₂ − x₁| + |y₂ − y₁|'],'পীথাগোরাসের উপপাদ্য থেকে।');
+M('(3, 4) থেকে মূলবিন্দুর দূরত্ব কত?','৫',['৭','১','২৫'],'√(9 + 16) = 5।');
+M('(1, 1) ও (2, 2) এর দূরত্ব কত?','√২',['২','১','√৫'],'√(1 + 1) = √2 (বই উদাহরণ ১)।');
+M('A(2, 0), B(7, 0) হলে AB = ?','৫',['৯','৭','২'],'|7 − 2| = 5।');
+M('ত্রিভুজের তিন বাহু ৩, ৪, ৫ হলে অর্ধ-পরিসীমা s = ?','৬',['১২','৪','৫'],'(3 + 4 + 5)/2 = 6।');
+M('বাহু ৩, ৪, ৫ হলে হেরনের সূত্রে ক্ষেত্রফল কত?','৬',['১২','৭.৫','৬০'],'√[6 × 3 × 2 × 1] = √36 = 6।');
+M('A(2, 3), B(5, 6), C(−1, 4) ত্রিভুজের ক্ষেত্রফল কত বর্গ একক?','৬',['১২','২৯','১৭'],'½|29 − 17| = 6 (বই উদাহরণ ১২)।');
+M('স্থানাঙ্ক-সূত্রে ত্রিভুজের শীর্ষবিন্দু কোন ক্রমে নিতে হয়?','ঘড়ির কাঁটার বিপরীত দিকে',['ঘড়ির কাঁটার দিকে','যেকোনো ক্রমে','ছোট x থেকে বড় x'],'বিপরীত দিকে নিলে ফল ধনাত্মক আসে। উল্টো দিকে নিলে ফল ঋণাত্মক, তখন মান নিতে হয়।');
+M('তিনটি বিন্দু একই সরলরেখায় থাকলে ত্রিভুজের ক্ষেত্রফল কত হয়?','০',['১','অসীম','ঋণাত্মক'],'ত্রিভুজ গঠিত হয় না, তাই ক্ষেত্রফল শূন্য।');
+M('A(−3, −3), B(0, 0), C(3, 3) বিন্দু তিনটি—','সমরেখ',['সমবাহু ত্রিভুজ','সমকোণী ত্রিভুজ','সমদ্বিবাহু ত্রিভুজ'],'AB + BC = AC (৩√২ + ৩√২ = ৬√২), তাই একই রেখায়।');
+M('চতুর্ভুজের বিপরীত বাহুগুলো সমান এবং কর্ণ দুটিও সমান হলে এটি—','আয়তক্ষেত্র',['রম্বস','ট্র্যাপিজিয়াম','শুধু সামান্তরিক'],'সামান্তরিকের কর্ণ সমান হলে এক কোণ সমকোণ হয় ⇒ আয়তক্ষেত্র।');
+M('(0, 0), (2, 3), (5, 3), (3, 0) বিন্দু ক্রমে নিলে চতুর্ভুজটি—','রম্বস নয়, সামান্তরিক',['আয়তক্ষেত্র','বর্গ','রম্বস'],'AB = √13 = CD, BC = 3 = DA। বিপরীত বাহু সমান, কিন্তু সব সমান নয়, কোণ সমকোণও নয়।');
+M('(2, 3) ও (6, 11) এর সংযোগ রেখার ঢাল কত?','২',['১/২','৪','−২'],'(11 − 3)/(6 − 2) = 2।');
+M('x অক্ষের সমান্তরাল রেখার ঢাল কত?','০',['১','অসংজ্ঞায়িত','−১'],'y₁ = y₂ ⇒ লব ০ ⇒ ঢাল ০।');
+M('y অক্ষের সমান্তরাল (x = a) রেখার ঢাল—','অসংজ্ঞায়িত',['০','১','a'],'x₁ = x₂ ⇒ হর ০ ⇒ ঢাল নির্ণয় করা যায় না।');
+M('রেখা x অক্ষের ধনাত্মক দিকের সাথে ১৩৫° কোণ করলে ঢাল কত?','−১',['১','০','অসংজ্ঞায়িত'],'tan 135° = −1।');
+M('দুটি রেখার ঢাল সমান হলে রেখা দুটি—','সমান্তরাল',['পরস্পর লম্ব','একই সরলরেখা সবসময়','x অক্ষ'],'একই ঢাল মানে একই দিক, তাই সমান্তরাল (বা একই রেখা)।');
+M('ঢাল m এবং বিন্দু (x₁, y₁) জানা থাকলে রেখার সমীকরণ—','y − y₁ = m(x − x₁)',['y + y₁ = m(x + x₁)','y = m + x','x − y = m'],'এটাই বিন্দু-ঢাল রূপ।');
+M('y = mx + c এ c কী নির্দেশ করে?','y অক্ষের ছেদক',['x অক্ষের ছেদক','ঢাল','মূলবিন্দু থেকে দূরত্ব'],'x = 0 বসালে y = c, অর্থাৎ রেখা (০, c) বিন্দুতে y অক্ষ কাটে।');
+M('y = 3x − 6 রেখা x অক্ষকে কোথায় কাটে?','(২, ০)',['(০, −৬)','(−২, ০)','(৬, ০)'],'y = 0 ⇒ x = 2।');
+M('2x + y = 6 রেখার ঢাল কত?','−২',['২','৬','১/২'],'y = −2x + 6 ⇒ ঢাল −2।');
+M('(0, 0) দিয়ে যায় এবং ঢাল ৩ — রেখার সমীকরণ কোনটি?','y = 3x',['y = x + 3','y = 3','x = 3'],'c = 0 ⇒ y = mx।');
+M('A(3, 4) ও B(6, 7) দিয়ে যাওয়া রেখার সমীকরণ—','y = x + 1',['y = x − 1','y = 3x − 5','y = x + 4'],'ঢাল 1, y − 4 = x − 3 ⇒ y = x + 1 (বই উদাহরণ ২০)।');
+M('y = 3x + 4 ও 3x + y = 10 এর ছেদবিন্দু—','(১, ৭)',['(৭, ১)','(২, ১০)','(০, ৪)'],'3x + 4 = 10 − 3x ⇒ x = 1, y = 7 (অনুশীলনী ১১.৪ এর ১৭)।');
+M('x − 2y = 3 ও 2x − 4y = 7 রেখা দুটি—','সমান্তরাল (ছেদ করে না)',['এক বিন্দুতে ছেদ করে','লম্ব','একই রেখা'],'দুটির ঢাল 1/2 সমান, কিন্তু c ভিন্ন। তাই সমান্তরাল।');
+M('A(1, −1), B(2, 2), C(4, t) সমরেখ হলে t = ?','৮',['৬','৫','১০'],'ঢাল 3 = (t − 2)/2 ⇒ t = 8।');
+(function(){
+  var done=0,sc=0;
+  QZ.forEach(function(q){var ord=q.o.map(function(t,i){return {t:t,c:i===0};});
+    for(var i=ord.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),k=ord[i];ord[i]=ord[j];ord[j]=k;}q.ord=ord;});
+  var h='';QZ.forEach(function(q,qi){h+='<div class="q" id="qq'+qi+'"><b>'+bn(qi+1)+'.</b> '+q.q+q.ord.map(function(o,oi){return '<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+o.t+'</button>';}).join('')+'<div class="fb" id="qe'+qi+'"></div></div>';});
+  $('quizbox').innerHTML=h;
+  $('quizbox').addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b||b.parentNode.dataset.done)return;
+    var qi=+b.dataset.q,q=QZ[qi],o=q.ord[+b.dataset.o];b.parentNode.dataset.done=1;done++;
+    var btns=b.parentNode.querySelectorAll('.opt');btns.forEach(function(x,i){if(q.ord[i].c)x.classList.add('good');});
+    if(o.c){sc++;$('qe'+qi).textContent='✅ ঠিক! '+q.e;}else{b.classList.add('bad');$('qe'+qi).textContent='❌ ভুল। '+q.e;}
+    $('qscore').textContent='স্কোর: '+bn(sc)+' / '+bn(done)+' (মোট '+bn(QZ.length)+'টি)';
+    try{if(done===QZ.length){localStorage.setItem('sl_done_math-coordinate-geometry','1');var xp=+(localStorage.getItem('sl_xp')||0);localStorage.setItem('sl_xp',xp+sc);}}catch(er){}
+  });
+})();
+/* ===== প্রশ্নোত্তর ===== */
+var QA=[
+ {h:'অনুশীলনী ১১.১ (দূরত্ব)',items:[
+  ['১. তিনটি বিন্দুজোড়ার দূরত্ব','প্রথম জোড়া ও তৃতীয় জোড়ার দূরত্ব √13 ≈ 3.606; দ্বিতীয় জোড়ার দূরত্ব √32 = 4√2 ≈ 5.657। প্রতিটিতে সূত্র: √[(x₂ − x₁)² + (y₂ − y₁)²]।'],
+  ['২. সমদ্বিবাহু ত্রিভুজ দেখাও','AB = 10, BC = CA = √50। দুই বাহু সমান ⇒ সমদ্বিবাহু।'],
+  ['৩. সমকোণী ত্রিভুজ দেখাও','বাহু ৩, ৪, ৫। 3² + 4² = 5² ⇒ সমকোণী।'],
+  ['৪. তিন বিন্দু দিয়ে ত্রিভুজ হয় কি না','হয়। ত্রিভুজটির ক্ষেত্রফল 0.75 বর্গ একক (≠ ০), তাই বিন্দু তিনটি সমরেখ নয়।'],
+  ['৫. ত্রিভুজের পরিসীমা','পরিসীমা = 12√2 ≈ 16.97 একক।'],
+  ['৭. চতুর্ভুজ কী ধরনের','সামান্তরিক, কিন্তু আয়তক্ষেত্র নয় (কর্ণ দুটি অসমান)।'],
+  ['৮. কোন বিন্দু সবচেয়ে কাছে ও দূরে','বইয়ের বিন্দুগুলোর মধ্যে B সবচেয়ে কাছে এবং A সবচেয়ে দূরে (সবচেয়ে বড় দূরত্ব ≈ 9.899)।'],
+  ['৯. A(3, 2) ও B(x, y) এর অবস্থান থেকে সম্পর্ক','বইয়ের শর্ত দিয়ে দূরত্ব-বর্গ সমীকরণ সরলে পাই: y² − 4y − 6x + 13 = 0।']]},
+ {h:'অনুশীলনী ১১.২ (ক্ষেত্রফল)',items:[
+  ['১. ত্রিভুজের বাহু ও ক্ষেত্রফল','বাহু 7, 4√2, 5 এবং ক্ষেত্রফল 14 বর্গ একক।'],
+  ['৫. a এর মান (ক্ষেত্রফল ও বাহু দেওয়া)','a = 5 অথবা a = 15। (ক্ষেত্রফল যথাক্রমে 59.5 ও 84.5, দুই ক্ষেত্রেই একটি বাহু 13)।'],
+  ['৬. a এর মান','a = 2 হলে ত্রিভুজ সমকোণী, ক্ষেত্রফল 25। a = 16/3 হলে ত্রিভুজ বিষমবাহু, ক্ষেত্রফল 40।'],
+  ['৯. p এর মান যাতে চতুর্ভুজ ABCD এর ক্ষেত্রফল ৪১','△ABC এর ক্ষেত্রফল 20.5। চতুর্ভুজের ক্ষেত্রফল 41 হতে হলে p = 59/5।']]},
+ {h:'অনুশীলনী ১১.৩ (ঢাল)',items:[
+  ['১. রেখার ঢাল','বইয়ের প্রশ্নের উত্তর: (ক) ঢাল −1; (খ) ঢাল 3/2। সূত্র: m = (y₂ − y₁)/(x₂ − x₁)।'],
+  ['২. সমরেখ কি না','হ্যাঁ, সমরেখ। প্রতিটি জোড়ার ঢাল 1/4 (সমান)।'],
+  ['৪. সমরেখ হলে p = ?','p = 1 অথবা p = 2।'],
+  ['৫. দেখাও যে ... 1/a + 1/b = 1','ঢাল সমান করে সরল করলে 1/a + 1/b = 1 পাওয়া যায়।']]},
+ {h:'অনুশীলনী ১১.৪ (সরলরেখার সমীকরণ)',items:[
+  ['MCQ ১–৭','১. গ; ২. খ (−2); ৩. গ (6); ৪. খ; ৫. (3, 0) গ; ৬. (1, 1) ঘ; ৭. খ (1)।'],
+  ['৮. সমীকরণ নির্ণয়','(ক) y = −x + 6; (খ) y = x − 3; (গ) y = 3x − 3a।'],
+  ['৯. ঢাল ±3 এবং ছেদক ±5','y = 3x + 5; y = 3x − 5; y = −3x + 5; y = −3x − 5।'],
+  ['১০. অক্ষদ্বয়ের ছেদবিন্দু','(ক) (1, 0) ও (0, −3); (খ) (−6/5, 0) ও (0, 3); (গ) (4/3, 0) ও (0, −2)।'],
+  ['১১. k এর মান','k = 2 অথবা k = 3।'],
+  ['১২. k এর মান','k = 2 অথবা k = −1। রেখা: x − ky + k² = 0।'],
+  ['১৩. k এর মান','k = 11/2।'],
+  ['১৪. ত্রিভুজের বাহুর সমীকরণ ও ক্ষেত্রফল','AB: y = 3x + 9; AC: y = −2x + 4; ক্ষেত্রফল = 15 বর্গ একক।'],
+  ['১৫. রেখা দুটির সম্পর্ক','দুটি রেখা সমান্তরাল, তাই কোনো ছেদবিন্দু নেই।'],
+  ['১৬. ত্রিভুজের ক্ষেত্রফল','9 বর্গ একক।'],
+  ['১৭. y = 3x + 4 ও 3x + y = 10','ছেদবিন্দু (1, 7)। এই ছেদবিন্দু ও অক্ষের সাথে গঠিত ত্রিভুজের ক্ষেত্রফল 49/3 বর্গ একক।'],
+  ['১৮. তিন রেখা সমবিন্দু','তিনটি রেখা (4, 3) বিন্দুতে মিলিত হয়।'],
+  ['১৯. বর্গক্ষেত্রের ক্ষেত্রফল','18 বর্গ একক।']]},
+ {h:'নমুনা প্রশ্ন (সংক্ষেপে)',items:[
+  ['MCQ ১–৪','১. ঘ (−1); ২. ক (i, ii); ৩. ঘ (135°); ৪. ক (0, 3)।'],
+  ['সংক্ষিপ্ত ক, খ, গ, ঘ','ক. k = ±5; খ. 2a²; গ. t = 5; ঘ. y = 2x − 5।'],
+  ['সৃজনশীল ৬ (ক, খ, গ)','ক. a + b = ab; খ. t = 20; গ. 41/30 (△ABC এর ৪র্থ চতুর্ভাগের অংশ)।']]}
+];
+(function(){var h='';QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){h+='<details class="ex"><summary><b>'+it[0]+'</b></summary><p>'+it[1]+'</p></details>';});});$('qabox').innerHTML=h;})();
+</script>
+</body>
+</html>

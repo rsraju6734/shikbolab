@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>সম্ভাবনা (উচ্চতর গণিত অধ্যায় ১৪) - ShikboLab</title>
+<meta name="description" content="🎲 সম্ভাবনা (উচ্চতর গণিত অধ্যায় ১৪) — মুদ্রা, ছক্কা ও বল দিয়ে সম্ভাবনা, probability tree ও তথ্যভিত্তিক সম্ভাবনার বাংলা ভার্চুয়াল ল্যাব ও কুইজ।">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+canvas{width:100%;height:auto;max-width:640px;display:block;margin:8px auto;border-radius:12px;background:#fff;border:1px solid var(--line);touch-action:none;cursor:crosshair}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.ctl input[type=range]{width:200px;max-width:100%}
+.ctl select,.ctl input[type=text],.ans input,.ctl input[type=number]{font-family:inherit;font-size:16px;padding:5px 6px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;max-width:100%;width:auto}
+.ctl input[type=number]{width:64px}
+.pt{background:#f4f8fb;border-radius:10px;padding:6px 10px;white-space:nowrap}
+.pt b{color:var(--navy)}
+.eqb{background:#eaf7f5;border-radius:10px;padding:10px;text-align:center;font-weight:700;color:var(--navy);margin:8px 0;font-size:18px;overflow-x:auto}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.fb{font-weight:700;margin-top:6px}
+.res{background:#eef6ff;border-radius:10px;padding:10px 12px;margin:8px 0;line-height:1.9}
+.res b{color:#0b5ed7}
+.res .ok{color:#1b8a5a;font-weight:700}.res .no{color:#c0392b;font-weight:700}
+.chips button{margin:3px;padding:6px 12px;border-radius:999px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.chips button.on{background:#0b5ed7;color:#fff;border-color:#0b5ed7}
+.step{background:#fff;border:1px solid var(--line);border-left:5px solid #2a9d8f;border-radius:8px;padding:8px 12px;margin:6px 0;display:none}
+.step.show{display:block}
+.ex{border:2px dashed #b8c7d6;border-radius:12px;padding:10px 14px;margin:14px 0;background:#fcfdff}
+.q{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:#fff}
+.q .opt{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 10px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:16px;cursor:pointer}
+.q .opt.good{background:#d8f3e3;border-color:#2a9d8f}
+.q .opt.bad{background:#fddcdc;border-color:#e76f51}
+.m{font-family:system-ui,'Segoe UI',Arial,sans-serif}
+table.t{border-collapse:collapse;margin:8px 0}
+table.t td,table.t th{border:1px solid #cfd9e1;padding:5px 12px;text-align:center}
+.det{display:inline-block;vertical-align:middle;border-left:2px solid var(--navy);border-right:2px solid var(--navy);padding:0 8px;margin:0 4px;line-height:1.5}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/theme.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">📐 গণিত &rsaquo; উচ্চতর গণিত &rsaquo; অধ্যায় ১৪ (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🎲 সম্ভাবনা</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#ex">🪜 ধাপে ধাপে</a><a href="#lab1">🎒 বলের থলে</a><a href="#lab2">🎲 ছক্কার ঘটনা</a><a href="#lab3">🪙 বারবার নিক্ষেপ</a><a href="#lab4">🌳 Probability Tree</a><a href="#lab5">✖️ দুই ধাপের গাছ</a><a href="#lab6">📊 তথ্যের সারণি</a><a href="#prac">✍️ প্র্যাকটিস</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্নোত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সংক্ষিপ্ত নোট</h2>
+    <div class="say">👉 সম্ভাবনা হলো কোনো ঘটনা ঘটার সম্ভাবনাকে <b>সংখ্যা</b> দিয়ে মাপা। সংখ্যাটি সবসময় ০ থেকে ১ এর মধ্যে থাকে।</div>
+    <h3>প্রয়োজনীয় ধারণা</h3>
+    <table class="t">
+      <tr><th>শব্দ</th><th>মানে</th><th>উদাহরণ</th></tr>
+      <tr><td>দৈব পরীক্ষা</td><td>সম্ভাব্য ফলাফলগুলো আগে জানা আছে, কিন্তু কোনটি আসবে নিশ্চিত বলা যায় না</td><td>মুদ্রা বা ছক্কা নিক্ষেপ</td></tr>
+      <tr><td>ঘটনা</td><td>পরীক্ষার কোনো ফলাফল বা ফলাফলের সমাহার</td><td>ছক্কায় জোড় সংখ্যা পাওয়া</td></tr>
+      <tr><td>সমসম্ভাব্য ঘটনা</td><td>কোনোটির ঘটার সম্ভাবনা অন্যটির চেয়ে বেশি বা কম নয়</td><td>নিরপেক্ষ মুদ্রায় H বা T</td></tr>
+      <tr><td>পরস্পর বিচ্ছিন্ন ঘটনা</td><td>একটি ঘটলে অন্যটি ঘটতে পারে না</td><td>একবার নিক্ষেপে H ও T একসাথে আসে না</td></tr>
+      <tr><td>অনুকূল ফলাফল</td><td>ঘটনাটির পক্ষের ফলাফল</td><td>ছক্কায় বিজোড় সংখ্যার অনুকূল ফলাফল ৩টি</td></tr>
+      <tr><td>নমুনাক্ষেত্র S</td><td>সব সম্ভাব্য ফলাফলের সেট</td><td>S = {H, T}</td></tr>
+      <tr><td>নমুনা বিন্দু</td><td>নমুনাক্ষেত্রের প্রতিটি উপাদান</td><td>H, T প্রত্যেকে</td></tr>
+    </table>
+    <h3>সম্ভাবনার সংজ্ঞা (যুক্তিভিত্তিক)</h3>
+    <div class="eqb">ঘটনার সম্ভাবনা P = অনুকূল ফলাফলের সংখ্যা ÷ সমগ্র সম্ভাব্য ফলাফলের সংখ্যা</div>
+    <ul>
+      <li>অনুকূল ফলাফল ০ থেকে n পর্যন্ত হতে পারে, তাই <b>০ ≤ P ≤ ১</b>।</li>
+      <li><b>নিশ্চিত ঘটনা:</b> অবশ্যই ঘটবে, P = ১। যেমন মুদ্রায় H অথবা T আসা।</li>
+      <li><b>অসম্ভব ঘটনা:</b> কখনো ঘটবে না, P = ০। যেমন ছক্কায় ৭ আসা।</li>
+      <li><b>ঘটনা না ঘটার সম্ভাবনা:</b> P(E নয়) = ১ − P(E)।</li>
+    </ul>
+    <h3>তথ্যভিত্তিক সম্ভাবনা</h3>
+    <div class="eqb">আপেক্ষিক গণসংখ্যা = ঘটনাটি যতবার ঘটেছে ÷ পরীক্ষা যতবার করা হয়েছে</div>
+    <p>সব ক্ষেত্রে ফলাফল সমসম্ভাব্য হয় না (যেমন আবহাওয়ার পূর্বাভাস)। তখন অতীতের পরিসংখ্যান দেখে সম্ভাবনা বের করি। পরীক্ষা যত বেশি বার করা হয়, আপেক্ষিক গণসংখ্যা তত একটি নির্দিষ্ট সংখ্যার কাছাকাছি যায়।</p>
+    <h3>Probability Tree</h3>
+    <ul>
+      <li>পরীক্ষাকে ধাপে ধাপে ভাগ করি। প্রতি ধাপের সম্ভাব্য ফলাফল একটি করে শাখা।</li>
+      <li>গাছের শেষ প্রান্তের প্রতিটি পাতা একটি নমুনা বিন্দু।</li>
+      <li>দুটি মুদ্রা নিক্ষেপে ২² = ৪টি, তিনটি মুদ্রায় ২³ = ৮টি, n টি মুদ্রায় <b>২ⁿ</b>টি নমুনা বিন্দু।</li>
+      <li>ধাপে ধাপে সম্ভাবনা দেওয়া থাকলে শাখা বরাবর <b>গুণ</b> করে পাতার সম্ভাবনা পাই (উদাহরণ ৯)।</li>
+    </ul>
+    <div class="warn">⚠️ সাবধান: (১) সম্ভাবনা ১ এর বেশি বা ঋণাত্মক হয় না। (২) যুক্তিভিত্তিক সূত্র শুধু তখনই খাটে যখন সব ফলাফল সমসম্ভাব্য। (৩) "কমপক্ষে ১টি T" মানে ১টি বা তার বেশি T, তাই সহজ উপায় হলো ১ − P(কোনো T নয়)।</div>
+  </section>
+
+  <section class="panel" id="ex">
+    <h2>🪜 ধাপে ধাপে (বইয়ের উদাহরণ)</h2>
+    <div class="say">👉 "পরের ধাপ" চাপতে থাকো। প্রতিটি ধাপ নিজে খাতায় করে মেলাও।</div>
+
+    <div class="ex" id="E1"><b>১) একটি নিরপেক্ষ ছক্কা নিক্ষেপে 5 আসার সম্ভাবনা কত?</b> (বই উদাহরণ ১)
+      <div class="step">ধাপ ১: সম্ভাব্য ফলাফল 1, 2, 3, 4, 5, 6 মোট <b>৬টি</b>। ছক্কা নিরপেক্ষ, তাই সবগুলো সমসম্ভাব্য।</div>
+      <div class="step">ধাপ ২: 5 আসার অনুকূল ফলাফল মাত্র <b>১টি</b>।</div>
+      <div class="step">ধাপ ৩: P(5) = ১ ÷ ৬ = <b>1/6</b> ✔।</div>
+      <button class="btn" data-ex="E1">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E1">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E2"><b>২) একটি নিরপেক্ষ ছক্কা নিক্ষেপে জোড় সংখ্যা আসার সম্ভাবনা কত?</b> (বই উদাহরণ ২)
+      <div class="step">ধাপ ১: মোট ফলাফল ৬টি।</div>
+      <div class="step">ধাপ ২: জোড় সংখ্যা 2, 4, 6, অর্থাৎ অনুকূল ফলাফল <b>৩টি</b>।</div>
+      <div class="step">ধাপ ৩: P(জোড়) = ৩/৬ = <b>1/2</b> ✔।</div>
+      <button class="btn" data-ex="E2">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E2">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E3"><b>৩) থলেতে 4টা লাল, 5টা সাদা ও 6টা কালো বল। দৈবভাবে একটা বল নিলে লাল, সাদা ও কালো হওয়ার সম্ভাবনা কত?</b> (বই উদাহরণ ৩)
+      <div class="step">ধাপ ১: মোট বল = 4 + 5 + 6 = <b>15টি</b>, তাই সমগ্র সম্ভাব্য ফলাফল ১৫।</div>
+      <div class="step">ধাপ ২: লাল: P(R) = 4/15।</div>
+      <div class="step">ধাপ ৩: সাদা: P(W) = 5/15 = <b>1/3</b>।</div>
+      <div class="step">ধাপ ৪: কালো: P(B) = 6/15 = <b>2/5</b>।</div>
+      <div class="step">ধাপ ৫: যোগফল 4/15 + 5/15 + 6/15 = 1, কারণ বল নিলে এই তিনটির একটি অবশ্যই আসে ✔।</div>
+      <button class="btn" data-ex="E3">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E3">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E4"><b>৪) জুলাই মাসে ঢাকায় 21 দিন বৃষ্টি হয়েছে। 8 জুলাই বৃষ্টি হওয়ার সম্ভাবনা কত?</b> (বই উদাহরণ ৪, তথ্যভিত্তিক)
+      <div class="step">ধাপ ১: জুলাই মাসে মোট দিন <b>৩১</b>।</div>
+      <div class="step">ধাপ ২: বৃষ্টির দিন ২১। যেকোনো একদিন বৃষ্টি হওয়ার আপেক্ষিক গণসংখ্যা ২১/৩১।</div>
+      <div class="step">ধাপ ৩: তাই 8 জুলাই বৃষ্টির সম্ভাবনা <b>21/31</b> ✔।</div>
+      <button class="btn" data-ex="E4">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E4">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E5"><b>৫) জরিপে 65 জন প্রথম আলো, 40 জন ভোরের কাগজ, 45 জন জনকণ্ঠ, 52 জন যুগান্তর পড়েন। একজনকে নিলে যুগান্তর পড়েন এবং প্রথম আলো পড়েন না এর সম্ভাবনা কত?</b> (বই উদাহরণ ৫)
+      <div class="step">ধাপ ১: মোট = 65 + 40 + 45 + 52 = <b>202 জন</b>।</div>
+      <div class="step">ধাপ ২: যুগান্তর: P = <b>52/202</b> (= 26/101)।</div>
+      <div class="step">ধাপ ৩: প্রথম আলো পড়েন না = 202 − 65 = 137 জন।</div>
+      <div class="step">ধাপ ৪: P(প্রথম আলো নয়) = <b>137/202</b>। এটা 1 − 65/202 এর সমান ✔।</div>
+      <button class="btn" data-ex="E5">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E5">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E6"><b>৬) দুটি নিরপেক্ষ মুদ্রা একসাথে নিক্ষেপ। নমুনাক্ষেত্র লেখো এবং প্রথম মুদ্রায় H, দ্বিতীয়টিতে T আসার সম্ভাবনা বের করো।</b> (বই উদাহরণ ৬)
+      <div class="step">ধাপ ১: প্রথম ধাপে H বা T (২টি শাখা), দ্বিতীয় ধাপেও H বা T। মোট 2 × 2 = <b>৪টি</b> পাতা।</div>
+      <div class="step">ধাপ ২: নমুনাক্ষেত্র S = {HH, HT, TH, TT}।</div>
+      <div class="step">ধাপ ৩: প্রতিটি নমুনা বিন্দুর সম্ভাবনা ১/৪। "প্রথমে H, দ্বিতীয়ে T" মানে HT।</div>
+      <div class="step">ধাপ ৪: P(HT) = <b>1/4</b> ✔।</div>
+      <button class="btn" data-ex="E6">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E6">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E7"><b>৭) তিনটি নিরপেক্ষ মুদ্রা একসাথে নিক্ষেপ। (ক) কেবল একটি T (খ) তিনটাই H (গ) কমপক্ষে একটি T এর সম্ভাবনা কত?</b> (বই উদাহরণ ৭)
+      <div class="step">ধাপ ১: তিন ধাপে 2 × 2 × 2 = <b>৮টি</b> নমুনা বিন্দু: HHH, HHT, HTH, HTT, THH, THT, TTH, TTT।</div>
+      <div class="step">ধাপ ২: (ক) কেবল একটি T: {THH, HTH, HHT} = ৩টি, তাই P = <b>3/8</b>।</div>
+      <div class="step">ধাপ ৩: (খ) তিনটাই H: {HHH} = ১টি, তাই P = <b>1/8</b>।</div>
+      <div class="step">ধাপ ৪: (গ) কমপক্ষে একটি T: HHH বাদে সবগুলো = ৭টি, তাই P = <b>7/8</b>।</div>
+      <div class="step">ধাপ ৫: সহজ উপায়: 1 − P(HHH) = 1 − 1/8 = 7/8 ✔।</div>
+      <button class="btn" data-ex="E7">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E7">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E8"><b>৮) একটি ছক্কা ও একটি মুদ্রা একবার নিক্ষেপ। ছক্কায় 5 এবং মুদ্রায় H আসার সম্ভাবনা কত?</b> (বই উদাহরণ ৮)
+      <div class="step">ধাপ ১: প্রথম ধাপে ছক্কার ৬টি শাখা (1 থেকে 6)।</div>
+      <div class="step">ধাপ ২: প্রতিটি শাখা থেকে মুদ্রার ২টি শাখা (H, T)। মোট 6 × 2 = <b>১২টি</b> নমুনা বিন্দু।</div>
+      <div class="step">ধাপ ৩: নমুনাক্ষেত্র {1H, 1T, 2H, 2T, 3H, 3T, 4H, 4T, 5H, 5T, 6H, 6T}।</div>
+      <div class="step">ধাপ ৪: 5H মাত্র ১টি, তাই P(5H) = <b>1/12</b> ✔।</div>
+      <button class="btn" data-ex="E8">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E8">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E9"><b>৯) ঢাকা থেকে খুলনায় বাসে যাওয়ার সম্ভাবনা 2/5, খুলনা থেকে রাজশাহী ট্রেনে যাওয়ার সম্ভাবনা 5/8। লোকটি খুলনায় বাসে এবং রাজশাহীতে ট্রেনে না যাওয়ার সম্ভাবনা কত?</b> (বই উদাহরণ ৯)
+      <div class="step">ধাপ ১: প্রথম ধাপ: বাসে 2/5, বাসে নয় 1 − 2/5 = 3/5।</div>
+      <div class="step">ধাপ ২: দ্বিতীয় ধাপ: ট্রেনে 5/8, ট্রেনে নয় 1 − 5/8 = <b>3/8</b>।</div>
+      <div class="step">ধাপ ৩: আমরা চাই "খুলনায় বাস" এবং "রাজশাহীতে ট্রেনে নয়", গাছের এই শাখা বরাবর গুণ করি।</div>
+      <div class="step">ধাপ ৪: P = 2/5 × 3/8 = 6/40 = <b>3/20</b> ✔।</div>
+      <button class="btn" data-ex="E9">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E9">আবার শুরু</button>
+    </div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>🎒 ল্যাব ১: বলের থলে</h2>
+    <div class="say">👉 থলেতে কয়টি লাল, সাদা ও কালো বল আছে ঠিক করো। তারপর ঘটনা বাছো। <b>P = অনুকূল ÷ মোট</b> কীভাবে আসে দেখো। নিচে "দৈবভাবে বল তোলো" চাপলে সত্যিকারের পরীক্ষার ফল দেখবে।</div>
+    <div class="ctl"><label>🔴 লাল <span id="l1rv"></span></label><input type="range" id="l1r" min="0" max="15" step="1" value="4"> <label>⚪ সাদা <span id="l1wv"></span></label><input type="range" id="l1w" min="0" max="15" step="1" value="5"> <label>⚫ কালো <span id="l1kv"></span></label><input type="range" id="l1k" min="0" max="15" step="1" value="6"></div>
+    <div class="ctl"><label>ঘটনা:</label><select id="l1e"><option value="r">লাল বল</option><option value="w">সাদা বল</option><option value="k">কালো বল</option><option value="nr">লাল নয়</option><option value="nw">সাদা নয়</option><option value="nk">কালো নয়</option></select> <button class="btn" id="l1d1">🎲 ১ বার তোলো</button> <button class="btn" id="l1d100">১০০ বার তোলো</button> <button class="btn alt" id="l1clr">পরিষ্কার</button></div>
+    <div class="chips" id="l1pre"><button data-pre="[4,5,6]">উদাহরণ ৩ (৪, ৫, ৬)</button><button data-pre="[8,10,7]">সৃজনশীল ৫ (৮, ১০, ৭)</button><button data-pre="[12,16,20]">MCQ (১২, ১৬, ২০)</button><button data-pre="[3,0,0]">সব লাল (নিশ্চিত)</button></div>
+    <canvas id="l1cvs" width="640" height="260"></canvas>
+    <div class="res m" id="l1res"></div>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🎲 ল্যাব ২: ছক্কার ঘটনা, নিশ্চিত, অসম্ভব ও সম্ভাব্য</h2>
+    <div class="say">👉 ১ থেকে ৬ এর বোতাম চেপে ঘটনা বানাও (যে সংখ্যাগুলো এলে ঘটনাটি ঘটবে)। সম্ভাবনা k/6 হিসাব হবে। কোনো সংখ্যা না বাছলে ঘটনা অসম্ভব (P = ০), সবগুলো বাছলে নিশ্চিত (P = ১)।</div>
+    <div class="ctl" id="l2faces"><button class="btn alt" data-f="1">১</button><button class="btn alt" data-f="2">২</button><button class="btn alt" data-f="3">৩</button><button class="btn alt" data-f="4">৪</button><button class="btn alt" data-f="5">৫</button><button class="btn alt" data-f="6">৬</button> <button class="btn" id="l2roll">🎲 ছক্কা ছুঁড়ি</button></div>
+    <div class="chips" id="l2pre"><button data-pre="[2,4,6]">জোড় সংখ্যা</button><button data-pre="[1,3,5]">বিজোড় সংখ্যা</button><button data-pre="[1,2,3,4]">৫ এর কম</button><button data-pre="[5,6]">৫ বা বেশি</button><button data-pre="[2,3,4,6]">জোড় অথবা ৩ দ্বারা বিভাজ্য</button><button data-pre="[]">৭ আসা (অসম্ভব)</button><button data-pre="[1,2,3,4,5,6]">১ থেকে ৬ (নিশ্চিত)</button></div>
+    <canvas id="l2cvs" width="640" height="210"></canvas>
+    <div class="res m" id="l2res"></div>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🪙 ল্যাব ৩: বারবার নিক্ষেপ ও আপেক্ষিক গণসংখ্যা</h2>
+    <div class="say">👉 মুদ্রা বারবার ছুঁড়ে H এর আপেক্ষিক গণসংখ্যা দেখো। নিক্ষেপ যত বাড়ে, রেখাটি তত লাল ডটেড রেখার (আসল সম্ভাবনা) কাছে স্থির হয়। (ফল দৈব, তাই প্রতিবার একটু আলাদা হবে।)</div>
+    <div class="ctl"><label>H আসার সম্ভাবনা p = <span id="l3pv"></span></label><input type="range" id="l3p" min="5" max="95" step="5" value="50"></div>
+    <div class="ctl" id="l3btns"><button class="btn" data-n="10">১০ বার</button><button class="btn" data-n="100">১০০ বার</button><button class="btn" data-n="1000">১০০০ বার</button><button class="btn" data-n="5000">৫০০০ বার</button> <button class="btn alt" id="l3clr">নতুন করে শুরু</button></div>
+    <div class="say" style="font-weight:500">নোট: p বদলালে পরীক্ষা নতুন করে শুরু হয়। p = ৫০% হলে মুদ্রা নিরপেক্ষ।</div>
+    <canvas id="l3cvs" width="640" height="320"></canvas>
+    <div class="res m" id="l3res"></div>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🌳 ল্যাব ৪: Probability Tree ও নমুনাক্ষেত্র</h2>
+    <div class="say">👉 কয়টি মুদ্রা (এবং চাইলে একটি ছক্কা) নিক্ষেপ হবে ঠিক করো। গাছ আপনাআপনি আঁকা হবে। এরপর ঘটনা বাছো, <b style="color:#e53935">লাল পাতাগুলো</b> অনুকূল ফলাফল।</div>
+    <div class="ctl"><label>🪙 মুদ্রা <span id="l4nv"></span> টি</label><input type="range" id="l4n" min="1" max="4" step="1" value="3"> <label><input type="checkbox" id="l4d"> সাথে একটি ছক্কা (তখন মুদ্রা সর্বোচ্চ ২টি)</label> <label>ছক্কায় <select id="l4dv"><option value="0">যেকোনো সংখ্যা</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label></div>
+    <div class="ctl"><label>ঘটনা: মুদ্রায় <select id="l4m"><option value="0">ঠিক</option><option value="1">কমপক্ষে</option><option value="2">বড়জোর</option></select> <span id="l4kv"></span> <input type="range" id="l4k" min="0" max="4" step="1" value="1"> টি <select id="l4f"><option value="H">H</option><option value="T">T</option></select></label></div>
+    <div class="chips" id="l4pre"><button data-pre="[3,0,0,1,&quot;T&quot;,0]">উদাহরণ ৭ (ক): ঠিক ১টি T</button><button data-pre="[3,0,0,3,&quot;H&quot;,0]">উদাহরণ ৭ (খ): তিনটাই H</button><button data-pre="[3,0,1,1,&quot;T&quot;,0]">উদাহরণ ৭ (গ): কমপক্ষে ১টি T</button><button data-pre="[2,0,0,1,&quot;H&quot;,0]">দুই মুদ্রা: ঠিক ১টি H</button><button data-pre="[1,1,0,1,&quot;H&quot;,5]">উদাহরণ ৮: ছক্কায় ৫, মুদ্রায় H</button></div>
+    <canvas id="l4cvs" width="640" height="400"></canvas>
+    <div class="res m" id="l4res"></div>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>✖️ ল্যাব ৫: দুই ধাপের গাছ (শাখা বরাবর গুণ)</h2>
+    <div class="say">👉 প্রথম ধাপের ঘটনা A-র সম্ভাবনা ও দ্বিতীয় ধাপের ঘটনা B-র সম্ভাবনা ভগ্নাংশে লেখো (লব ≤ হর)। চার পাতার সম্ভাবনা শাখা বরাবর গুণ করে পাবে।</div>
+    <div class="ctl"><label>P(A) =</label><input type="number" id="l5a" min="0" step="1" value="2"> / <input type="number" id="l5b" min="1" step="1" value="5"> <label>P(B) =</label><input type="number" id="l5c" min="0" step="1" value="5"> / <input type="number" id="l5d" min="1" step="1" value="8"></div>
+    <div class="ctl"><label>ঘটনা:</label><select id="l5e"><option value="0">A ঘটে এবং B ঘটে</option><option value="1">A ঘটে এবং B ঘটে না</option><option value="2">A ঘটে না এবং B ঘটে</option><option value="3">A ও B কোনোটিই ঘটে না</option><option value="4">কমপক্ষে একটি ঘটে</option></select></div>
+    <div class="chips" id="l5pre"><button data-pre="[2,5,5,8,1]">উদাহরণ ৯ (বাস ২/৫, ট্রেন ৫/৮)</button><button data-pre="[5,9,2,7,0]">অনুশীলনী ৮ (৫/৯, ২/৭)</button><button data-pre="[1,2,1,2,4]">দুই মুদ্রা</button></div>
+    <canvas id="l5cvs" width="640" height="320"></canvas>
+    <div class="res m" id="l5res"></div>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>📊 ল্যাব ৬: তথ্যের সারণি থেকে সম্ভাবনা</h2>
+    <div class="say">👉 প্রতিটি সারিতে নাম ও সংখ্যা বদলাতে পারো। যে সারিগুলো ঘটনার পক্ষে, ঠিক চিহ্ন দাও। একজনকে দৈবভাবে নিলে সম্ভাবনা = বাছাই করা সংখ্যা ÷ মোট।</div>
+    <div class="chips" id="l6pre"><button data-pre="0">অনুশীলনী ৪ (কারখানা)</button><button data-pre="1">অনুশীলনী ৫ (ড্রাইভার)</button><button data-pre="2">অনুশীলনী ৩ (শিশু)</button></div>
+    <div id="l6rows"></div>
+    <canvas id="l6cvs" width="640" height="260"></canvas>
+    <div class="res m" id="l6res"></div>
+  </section>
+
+  <section class="panel" id="prac">
+    <h2>✍️ প্র্যাকটিস (বইয়ের ধাঁচে)</h2>
+    <div class="say">👉 সব ছক্কা, মুদ্রা ও বল নিরপেক্ষ ও দৈবভাবে নেওয়া। উত্তর ভগ্নাংশে (যেমন 1/6) বা দশমিকে (দুই-তিন দশমিক স্থান) লেখো।</div>
+    <div id="pracbox"></div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="fb" id="qscore"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>📖 বই থেকে প্রশ্নোত্তর</h2>
+    <div class="say">নিজে করে তারপর দেখো। বইয়ের শর্ত অস্পষ্ট হলে আমি কী ধরেছি তা লিখে দিয়েছি।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+
+<footer class="site">&copy; ShikboLab · সম্ভাবনা (উচ্চতর গণিত অধ্যায় ১৪)</footer>
+<script>
+var BNS='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BNS[d];});}
+function en(s){return String(s).replace(/[০-৯]/g,function(d){return BNS.indexOf(d);});}
+function $(id){return document.getElementById(id);}
+function R2(c){var d=Math.min(2,window.devicePixelRatio||1),w=c.width,h=c.height;c.width=w*d;c.height=h*d;var x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return x;}
+function fm(v,d){d=(d===undefined)?2:d;var k=Math.pow(10,d),r=Math.round(v*k)/k;if(Math.abs(r)<1e-9)r=0;return bn(String(r).replace('-','−'));}
+function sg(v){return v<0?'−'+bn(-v):bn(v);}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t;}return a;}
+function red(n,d){if(d<0){n=-n;d=-d;}var g=gcd(n,d)||1;return [n/g,d/g];}
+function frac(n,d){var r=red(n,d);return r[1]===1?sg(r[0]):sg(r[0])+'/'+bn(r[1]);}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ex){var box=$(b.dataset.ex),s=box.querySelectorAll('.step:not(.show)');if(s.length){s[0].classList.add('show');}if(s.length<=1)b.disabled=true;}
+  if(b.dataset.rs){var bx=$(b.dataset.rs);bx.querySelectorAll('.step').forEach(function(x){x.classList.remove('show');});bx.querySelector('[data-ex]').disabled=false;}
+});
+/* ===== সাধারণ সহায়ক: গ্রিড, বিন্দু টানা, সংখ্যা-ঘর ===== */
+function sq(N){N=Math.round(N);if(N<0)return '?';var k=1,m=N,f;for(f=2;f*f<=m;f++){while(m%(f*f)===0){m/=f*f;k*=f;}}if(m===1)return bn(k);if(k===1)return '√'+bn(m);return bn(k)+'√'+bn(m);}
+function dc(N){return fm(Math.sqrt(N),4);}
+function d2(p,q){return (p[0]-q[0])*(p[0]-q[0])+(p[1]-q[1])*(p[1]-q[1]);}
+function sh(P){var s=0,n=P.length,i,a,b;for(i=0;i<n;i++){a=P[i];b=P[(i+1)%n];s+=a[0]*b[1]-b[0]*a[1];}return s;}
+function cr(o,a,b){return (a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);}
+function segX(a,b,c,d){var d1=cr(a,b,c),d2_=cr(a,b,d),d3=cr(c,d,a),d4=cr(c,d,b);return d1*d2_<0&&d3*d4<0;}
+function pn(p){return '('+sg(p[0])+', '+sg(p[1])+')';}
+function quad(p){var x=p[0],y=p[1];if(x===0&&y===0)return 'মূলবিন্দু';if(y===0)return 'x অক্ষের উপর';if(x===0)return 'y অক্ষের উপর';return x>0?(y>0?'১ম চতুর্ভাগ':'৪র্থ চতুর্ভাগ'):(y>0?'২য় চতুর্ভাগ':'৩য় চতুর্ভাগ');}
+function half(S){return fm(Math.abs(S)/2,1);}
+function minus(sym,v){return v===0?sym:sym+(v>0?' − '+bn(v):' + '+bn(-v));}
+var COL=['#e53935','#1971c2','#2a9d8f','#e08a00'],NM=['A','B','C','D'];
+function Cv(id,R){var c=$(id),W=c.width,H=c.height,x=R2(c),s=W/(2*R);return {c:c,x:x,W:W,H:H,R:R,s:s,X:function(u){return W/2+u*s;},Y:function(v){return H/2-v*s;}};}
+function grid(o){var x=o.x,R=o.R,i;x.fillStyle='#fff';x.fillRect(0,0,o.W,o.H);
+  for(i=-R;i<=R;i++){x.strokeStyle=i===0?'#1f3a5f':'#e3eaf0';x.lineWidth=i===0?1.8:1;x.beginPath();x.moveTo(o.X(i),0);x.lineTo(o.X(i),o.H);x.stroke();x.beginPath();x.moveTo(0,o.Y(i));x.lineTo(o.W,o.Y(i));x.stroke();}
+  x.fillStyle='#6b7f95';x.font='11px system-ui';
+  for(i=-R+1;i<R;i++){if(i===0||i%2)continue;x.textAlign='center';x.fillText(sg(i),o.X(i),o.Y(0)+14);x.textAlign='right';x.fillText(sg(i),o.X(0)-4,o.Y(i)+4);}
+  x.textAlign='center';x.fillStyle='#1f3a5f';x.font='700 13px system-ui';x.fillText('X',o.W-10,o.Y(0)-6);x.fillText('Y',o.X(0)+12,12);x.fillText('O',o.X(0)-8,o.Y(0)+14);}
+function seg(o,p,q,col,w,dash){var x=o.x;x.strokeStyle=col;x.lineWidth=w||2;x.setLineDash(dash||[]);x.beginPath();x.moveTo(o.X(p[0]),o.Y(p[1]));x.lineTo(o.X(q[0]),o.Y(q[1]));x.stroke();x.setLineDash([]);}
+function lineMC(o,m,c,col,w){seg(o,[-o.R,m*-o.R+c],[o.R,m*o.R+c],col,w||2.5);}
+function lineVert(o,a,col,w){seg(o,[a,-o.R],[a,o.R],col,w||2.5);}
+function lineThru(o,p,q,col,w){var dx=q[0]-p[0],dy=q[1]-p[1];if(dx===0&&dy===0)return;if(dx===0)lineVert(o,p[0],col,w);else{var m=dy/dx;lineMC(o,m,p[1]-m*p[0],col,w);}}
+function dot(o,p,name,col,lab){var x=o.x;x.fillStyle=col;x.beginPath();x.arc(o.X(p[0]),o.Y(p[1]),6.5,0,6.2832);x.fill();x.strokeStyle='#fff';x.lineWidth=2;x.stroke();
+  x.fillStyle=col;x.font='700 13px system-ui';x.textAlign='left';var tx=o.X(p[0])+9,ty=o.Y(p[1])-9;if(tx>o.W-90)tx-=110;if(ty<16)ty+=26;x.fillText(name+(lab===false?'':pn(p)),tx,ty);}
+function tag(o,p,txt,col){var x=o.x;x.fillStyle=col||'#1f3a5f';x.font='700 12px system-ui';x.textAlign='center';x.fillText(txt,o.X(p[0]),o.Y(p[1])-5);}
+function Ed(boxId,names,pts,R,redraw,idx){
+  var box=$(boxId),h='';idx=idx||names.map(function(n,i){return i;});
+  names.forEach(function(n,i){h+='<span class="pt"><b style="color:'+COL[idx[i]%4]+'">'+n+'</b> ( <input type="number" min="'+(-R)+'" max="'+R+'" step="1" data-i="'+i+'" data-k="0" aria-label="'+n+' এর x"> , <input type="number" min="'+(-R)+'" max="'+R+'" step="1" data-i="'+i+'" data-k="1" aria-label="'+n+' এর y"> )</span>';});
+  box.insertAdjacentHTML('afterbegin',h);
+  function sync(){[].forEach.call(box.querySelectorAll('input[data-i]'),function(e){e.value=pts[+e.dataset.i][+e.dataset.k];});}
+  box.addEventListener('input',function(e){var t=e.target;if(t.dataset.i===undefined)return;var v=Math.round(parseFloat(t.value));if(isNaN(v))return;pts[+t.dataset.i][+t.dataset.k]=Math.max(-R,Math.min(R,v));redraw();});
+  sync();return {sync:sync};}
+function Drag(o,get,after){var act=-1,c=o.c;
+  function pos(e){var r=c.getBoundingClientRect();return [(e.clientX-r.left)*o.W/r.width,(e.clientY-r.top)*o.H/r.height];}
+  c.addEventListener('pointerdown',function(e){var p=pos(e),best=-1,bd=1e9,P=get();P.forEach(function(q,i){var dx=o.X(q[0])-p[0],dy=o.Y(q[1])-p[1],d=dx*dx+dy*dy;if(d<bd){bd=d;best=i;}});
+    if(bd<=28*28){act=best;try{c.setPointerCapture(e.pointerId);}catch(er){}e.preventDefault();}});
+  c.addEventListener('pointermove',function(e){if(act<0)return;var P=get(),p=pos(e),R=o.R,u=Math.round((p[0]-o.W/2)/o.s),v=Math.round((o.H/2-p[1])/o.s);
+    u=Math.max(-R,Math.min(R,u));v=Math.max(-R,Math.min(R,v));if(P[act][0]!==u||P[act][1]!==v){P[act][0]=u;P[act][1]=v;after();}});
+  function up(){act=-1;}c.addEventListener('pointerup',up);c.addEventListener('pointercancel',up);}
+function Pre(boxId,pts,after){$(boxId).addEventListener('click',function(e){var b=e.target.closest('button[data-pre]');if(!b)return;var a=JSON.parse(b.dataset.pre);a.forEach(function(p,i){pts[i][0]=p[0];pts[i][1]=p[1];});after();});}
+function slopeOf(P,Q){var dx=Q[0]-P[0],dy=Q[1]-P[1];return {dx:dx,dy:dy,same:dx===0&&dy===0,vert:dx===0&&dy!==0};}
+function eqStr(n,d,cn,cd){var m=red(n,d),c=red(cn,cd),s='y = ';
+  if(m[0]===0)return 'y = '+(c[0]===0?'০':frac(c[0],c[1]));
+  s+=(m[0]===1&&m[1]===1)?'x':(m[0]===-1&&m[1]===1)?'−x':(m[1]===1?sg(m[0]):'('+frac(m[0],m[1])+')')+'x';
+  if(c[0]!==0)s+=(c[0]>0?' + ':' − ')+frac(Math.abs(c[0]),c[1]);return s;}
+
+/* ===== সহায়ক ===== */
+var PI=Math.PI;
+function sl(id){return +$(id).value;}
+function wire(ids,fn){ids.forEach(function(i){$(i).addEventListener('input',fn);$(i).addEventListener('change',fn);});}
+function preS(box,ids,fn){$(box).addEventListener('click',function(e){var b=e.target.closest('button[data-pre]');if(!b)return;JSON.parse(b.dataset.pre).forEach(function(v,i){$(ids[i]).value=v;});fn();});}
+function C2(id){var c=$(id),W=c.width,H=c.height;return {c:c,x:R2(c),W:W,H:H};}
+function clr(o){o.x.fillStyle='#f4f8fb';o.x.fillRect(0,0,o.W,o.H);}
+function pf(n,d){if(d===0)return '০';var r=red(n,d);return (r[1]===1?bn(r[0]):bn(r[0])+'/'+bn(r[1]));}
+function pd(n,d){return d===0?'০':fm(n/d,4);}
+function pe(n,d){var r=red(n,d),t=bn(n)+'/'+bn(d);if(d===0)return '০';return t+((r[1]!==d||r[0]!==n)?' = '+pf(n,d):'')+' ≈ '+pd(n,d);}
+function kind(n,d){return n===0?'<span class="no">অসম্ভব ঘটনা (P = ০)</span>':(n===d?'<span class="ok">নিশ্চিত ঘটনা (P = ১)</span>':'সম্ভাব্য ঘটনা (০ < P < ১)');}
+function circ(x,cx,cy,r,fill,stroke,w){x.beginPath();x.arc(cx,cy,r,0,2*PI);x.fillStyle=fill;x.fill();x.strokeStyle=stroke;x.lineWidth=w||2;x.stroke();}
+function ttl(x,t,px,py,col,sz,al){x.fillStyle=col||'#1f3a5f';x.font='700 '+(sz||14)+'px system-ui';x.textAlign=al||'center';x.fillText(t,px,py);}
+
+/* ===== ল্যাব ১: বলের থলে ===== */
+var S1={n:0,h:0,last:''};
+function l1fav(e,R,W,K){return {r:R,w:W,k:K,nr:W+K,nw:R+K,nk:R+W}[e];}
+function l1cls(e,c){return e==='r'?c==='r':e==='w'?c==='w':e==='k'?c==='k':e==='nr'?c!=='r':e==='nw'?c!=='w':c!=='k';}
+function lab1(){
+  var R=sl('l1r'),W=sl('l1w'),K=sl('l1k'),e=$('l1e').value,t=R+W+K,o=C2('l1cvs'),x=o.x;
+  $('l1rv').textContent=bn(R);$('l1wv').textContent=bn(W);$('l1kv').textContent=bn(K);clr(o);
+  var cols=[],i;for(i=0;i<R;i++)cols.push('r');for(i=0;i<W;i++)cols.push('w');for(i=0;i<K;i++)cols.push('k');
+  var fav=l1fav(e,R,W,K),per=15,sp=38,x0=(o.W-Math.min(per,Math.max(t,1))*sp)/2+sp/2;
+  cols.forEach(function(c,j){var cx=x0+(j%per)*sp,cy=40+Math.floor(j/per)*sp,ok=l1cls(e,c);x.globalAlpha=ok?1:0.3;
+    circ(x,cx,cy,15,c==='r'?'#e53935':c==='w'?'#fff':'#222','#1f3a5f',2);x.globalAlpha=1;if(ok)circ(x,cx,cy,19,'rgba(0,0,0,0)','#1b8a5a',3);});
+  ttl(x,t===0?'থলে খালি। বল বাড়াও।':'সবুজ বৃত্তে ঘেরা বলগুলো অনুকূল ফলাফল',o.W/2,o.H-18,'#1b8a5a',14);
+  var nm={r:'লাল বল',w:'সাদা বল',k:'কালো বল',nr:'লাল নয়',nw:'সাদা নয়',nk:'কালো নয়'}[e],h='';
+  if(t===0){$('l1res').innerHTML='<span class="no">থলেতে অন্তত একটি বল রাখো।</span>';return;}
+  h+='মোট বল = '+bn(R)+' + '+bn(W)+' + '+bn(K)+' = <b>'+bn(t)+'</b> (সমগ্র সম্ভাব্য ফলাফল)<br>';
+  h+='ঘটনা "'+nm+'" এর অনুকূল ফলাফল = <b>'+bn(fav)+'</b><br>';
+  h+='<b>P = অনুকূল ÷ মোট = '+pe(fav,t)+'</b>'+'<br>'+kind(fav,t)+'<br>';
+  h+='ঘটনা না ঘটার সম্ভাবনা = ১ − '+pf(fav,t)+' = <b>'+pf(t-fav,t)+'</b><br>';
+  if(S1.n>0)h+='<hr>🎲 <b>'+bn(S1.n)+'</b> বার তুলে (প্রতিবার বল ফিরিয়ে দিয়ে) ঘটনাটি ঘটেছে <b>'+bn(S1.h)+'</b> বার ⇒ আপেক্ষিক গণসংখ্যা = <b>'+fm(S1.h/S1.n,3)+'</b> (তাত্ত্বিক '+fm(fav/t,3)+')'+(S1.last?'<br>শেষবার উঠেছে: '+S1.last:'');
+  $('l1res').innerHTML=h;
+}
+function l1draw(m){var R=sl('l1r'),W=sl('l1w'),K=sl('l1k'),t=R+W+K,e=$('l1e').value,i,v,c;if(!t)return;
+  for(i=0;i<m;i++){v=Math.floor(Math.random()*t);c=v<R?'r':v<R+W?'w':'k';S1.n++;if(l1cls(e,c))S1.h++;S1.last={r:'লাল',w:'সাদা',k:'কালো'}[c];}lab1();}
+function l1reset(){S1={n:0,h:0,last:''};lab1();}
+wire(['l1r','l1w','l1k','l1e'],l1reset);
+$('l1pre').addEventListener('click',function(e){var b=e.target.closest('button[data-pre]');if(!b)return;JSON.parse(b.dataset.pre).forEach(function(v,i){$(['l1r','l1w','l1k'][i]).value=v;});l1reset();});
+$('l1d1').addEventListener('click',function(){l1draw(1);});$('l1d100').addEventListener('click',function(){l1draw(100);});$('l1clr').addEventListener('click',l1reset);lab1();
+
+/* ===== ল্যাব ২: ছক্কার ঘটনা ===== */
+var SEL2=[0,0,0,0,0,0],LAST2=0;
+function lab2(){
+  var o=C2('l2cvs'),x=o.x,k=0,i;clr(o);
+  SEL2.forEach(function(v){if(v)k++;});
+  [].slice.call($('l2faces').querySelectorAll('button[data-f]')).forEach(function(b){var on=SEL2[+b.dataset.f-1];b.style.background=on?'#1b8a5a':'';b.style.color=on?'#fff':'';});
+  var sz=64,gap=22,x0=(o.W-(6*sz+5*gap))/2;
+  for(i=0;i<6;i++){var px=x0+i*(sz+gap),py=24,on=SEL2[i];x.fillStyle=on?'#d8f3e3':'#fff';x.strokeStyle=on?'#1b8a5a':'#9fb0bd';x.lineWidth=on?4:2;
+    x.beginPath();if(x.roundRect)x.roundRect(px,py,sz,sz,10);else x.rect(px,py,sz,sz);x.fill();x.stroke();
+    var pips={1:[[.5,.5]],2:[[.25,.25],[.75,.75]],3:[[.25,.25],[.5,.5],[.75,.75]],4:[[.25,.25],[.75,.25],[.25,.75],[.75,.75]],5:[[.25,.25],[.75,.25],[.5,.5],[.25,.75],[.75,.75]],6:[[.25,.22],[.75,.22],[.25,.5],[.75,.5],[.25,.78],[.75,.78]]}[i+1];
+    pips.forEach(function(p){circ(x,px+p[0]*sz,py+p[1]*sz,5,on?'#1b8a5a':'#1f3a5f','#1f3a5f',1);});
+    if(LAST2===i+1){x.strokeStyle='#e53935';x.lineWidth=4;x.setLineDash([6,4]);x.strokeRect(px-6,py-6,sz+12,sz+12);x.setLineDash([]);}}
+  var ax=50,aw=o.W-100,ay=160;x.strokeStyle='#1f3a5f';x.lineWidth=3;x.beginPath();x.moveTo(ax,ay);x.lineTo(ax+aw,ay);x.stroke();
+  for(i=0;i<=6;i++){var tx=ax+aw*i/6;x.beginPath();x.moveTo(tx,ay-6);x.lineTo(tx,ay+6);x.stroke();}
+  ttl(x,'০',ax,ay+26);ttl(x,'১',ax+aw,ay+26);ttl(x,'½',ax+aw/2,ay+26);
+  circ(x,ax+aw*k/6,ay,10,k===0?'#c0392b':k===6?'#1b8a5a':'#0b5ed7','#fff',3);ttl(x,'P',ax+aw*k/6,ay-18,'#0b5ed7');
+  var nums=[];SEL2.forEach(function(v,j){if(v)nums.push(bn(j+1));});
+  var h='ঘটনার পক্ষের সংখ্যা: <b>'+(nums.length?'{'+nums.join(', ')+'}':'কোনোটিই নয় (ফাঁকা সেট)')+'</b><br>অনুকূল ফলাফল = <b>'+bn(k)+'</b>, মোট ফলাফল = <b>৬</b><br><b>P = '+pe(k,6)+'</b>'+'<br>'+kind(k,6)+'<br>এই ঘটনা না ঘটার সম্ভাবনা = ১ − '+pf(k,6)+' = <b>'+pf(6-k,6)+'</b>';
+  if(LAST2)h+='<br>🎲 শেষ নিক্ষেপে এসেছে <b>'+bn(LAST2)+'</b> ⇒ ঘটনাটি '+(SEL2[LAST2-1]?'<span class="ok">ঘটেছে</span>':'<span class="no">ঘটেনি</span>');
+  $('l2res').innerHTML=h;
+}
+$('l2faces').addEventListener('click',function(e){var b=e.target.closest('button[data-f]');if(!b)return;var i=+b.dataset.f-1;SEL2[i]=SEL2[i]?0:1;lab2();});
+$('l2roll').addEventListener('click',function(){LAST2=1+Math.floor(Math.random()*6);lab2();});
+$('l2pre').addEventListener('click',function(e){var b=e.target.closest('button[data-pre]');if(!b)return;SEL2=[0,0,0,0,0,0];JSON.parse(b.dataset.pre).forEach(function(v){SEL2[v-1]=1;});lab2();});
+SEL2[1]=SEL2[3]=SEL2[5]=1;lab2();
+
+/* ===== ল্যাব ৩: বারবার নিক্ষেপ ===== */
+var HIST=[],N3=0,H3=0;
+function lab3(){
+  var p=sl('l3p')/100,o=C2('l3cvs'),x=o.x,L=50,R=o.W-20,T=20,B=o.H-45,i;clr(o);$('l3pv').textContent=bn(Math.round(p*100))+'%';
+  var mx=Math.max(10,N3),lg=Math.log(mx)/Math.LN10;
+  function X(n){return L+(R-L)*Math.log(Math.max(n,1))/Math.LN10/lg;}function Y(v){return B-(B-T)*v;}
+  x.strokeStyle='#cfd9e1';x.lineWidth=1;x.fillStyle='#5b6b7a';x.font='12px system-ui';x.textAlign='right';
+  for(i=0;i<=10;i+=2){x.beginPath();x.moveTo(L,Y(i/10));x.lineTo(R,Y(i/10));x.stroke();x.fillText(fm(i/10,1),L-6,Y(i/10)+4);}
+  x.textAlign='center';for(i=0;Math.pow(10,i)<=mx;i++){x.beginPath();x.moveTo(X(Math.pow(10,i)),T);x.lineTo(X(Math.pow(10,i)),B);x.stroke();x.fillText(bn(Math.pow(10,i)),X(Math.pow(10,i)),B+16);}
+  x.fillText('নিক্ষেপের সংখ্যা (লগ স্কেল)',(L+R)/2,B+36);
+  x.strokeStyle='#e53935';x.lineWidth=2.4;x.setLineDash([7,5]);x.beginPath();x.moveTo(L,Y(p));x.lineTo(R,Y(p));x.stroke();x.setLineDash([]);
+  if(HIST.length){x.strokeStyle='#0b5ed7';x.lineWidth=2.2;x.beginPath();HIST.forEach(function(v,j){var px=X(j+1),py=Y(v);j?x.lineTo(px,py):x.moveTo(px,py);});x.stroke();}
+  var h='সত্যিকারের সম্ভাবনা p = <b>'+fm(p,2)+'</b> (লাল ডটেড)<br>';
+  if(N3===0)h+='উপরের বোতাম চেপে মুদ্রা ছোড়ো।';
+  else{var f=H3/N3;h+='মোট নিক্ষেপ <b>'+bn(N3)+'</b>, H এসেছে <b>'+bn(H3)+'</b> বার<br>আপেক্ষিক গণসংখ্যা = '+bn(H3)+'/'+bn(N3)+' = <b>'+fm(f,4)+'</b><br>পার্থক্য |'+fm(f,4)+' − '+fm(p,2)+'| = <b>'+fm(Math.abs(f-p),4)+'</b>'+(N3>=1000?'<br><span class="ok">নিক্ষেপ অনেক বেশি হলে আপেক্ষিক গণসংখ্যা সম্ভাবনার খুব কাছে যায়। এটাই তথ্যভিত্তিক সম্ভাবনার মূল ধারণা।</span>':'<br>নিক্ষেপ কম, তাই এখনো অনেক ওঠানামা করছে। আরও ছোড়ো।');}
+  $('l3res').innerHTML=h;
+}
+function l3reset(){HIST=[];N3=0;H3=0;lab3();}
+$('l3btns').addEventListener('click',function(e){var b=e.target.closest('button[data-n]');if(!b)return;var m=+b.dataset.n,p=sl('l3p')/100,i;if(N3+m>20000){$('l3res').innerHTML='<span class="no">২০০০০ বারের বেশি হবে না। "নতুন করে শুরু" চাপো।</span>';return;}
+  for(i=0;i<m;i++){N3++;if(Math.random()<p)H3++;HIST.push(H3/N3);}lab3();});
+$('l3clr').addEventListener('click',l3reset);$('l3p').addEventListener('input',l3reset);l3reset();
+
+/* ===== ল্যাব ৪: Probability Tree ===== */
+function lab4(){
+  var d=$('l4d').checked;$('l4n').max=d?2:4;var n=sl('l4n'),dv=+$('l4dv').value,m=+$('l4m').value,k=sl('l4k'),f=$('l4f').value,o=C2('l4cvs'),x=o.x;clr(o);
+  $('l4k').max=n;if(k>n){k=n;$('l4k').value=n;}$('l4nv').textContent=bn(n);$('l4kv').textContent=bn(k);
+  var seqs=[[]],lv=[];if(d)lv.push(['1','2','3','4','5','6']);for(var i=0;i<n;i++)lv.push(['H','T']);
+  lv.forEach(function(L){var nx=[];seqs.forEach(function(s){L.forEach(function(c){nx.push(s.concat([c]));});});seqs=nx;});
+  function leafLab(s){return d?s[0]+s.slice(1).join(''):s.join('');}
+  function match(s){var c=0,face=d?+s[0]:0;s.slice(d?1:0).forEach(function(v){if(v===f)c++;});var ok=m===0?c===k:m===1?c>=k:c<=k;return ok&&(!d||dv===0||face===dv);}
+  var tot=seqs.length,Ls=lv.length,top=34,bot=o.H-34,lh=(bot-top)/Ls,sp=(o.W-40)/tot,small=tot>12;
+  function nodeX(depth,idx){var span=tot/Math.pow(1,0),cnt=1,j;for(j=0;j<depth;j++)cnt*=lv[j].length;var per=tot/cnt;return 20+sp*(idx*per+per/2);}
+  function nodeY(depth){return top+lh*depth;}
+  var root=[o.W/2,top];ttl(x,'শুরু',root[0]-0,top-12,'#1f3a5f',13);
+  var depth,idx;
+  for(depth=1;depth<=Ls;depth++){var cnt=1,j;for(j=0;j<depth;j++)cnt*=lv[j].length;
+    for(idx=0;idx<cnt;idx++){var pc=Math.floor(idx/lv[depth-1].length),px=depth===1?root[0]:nodeX(depth-1,pc),py=nodeY(depth-1),cx=nodeX(depth,idx),cy=nodeY(depth);
+      x.strokeStyle='#9fb0bd';x.lineWidth=1.4;x.beginPath();x.moveTo(px,py);x.lineTo(cx,cy);x.stroke();
+      if(!small||depth===1){var lab=lv[depth-1][idx%lv[depth-1].length];ttl(x,lab,(px+cx)/2+(cx<px?-8:8),(py+cy)/2,'#5b6b7a',12);}}}
+  seqs.forEach(function(s,i){var cx=nodeX(Ls,i),cy=nodeY(Ls),ok=match(s),r=Math.min(small?13:18,sp/2-1);
+    circ(x,cx,cy,r,ok?'#ffd9d7':'#fff',ok?'#e53935':'#1f3a5f',ok?3:1.6);ttl(x,leafLab(s),cx,cy+4,ok?'#c0392b':'#1f3a5f',small?10:13);});
+  var fav=seqs.filter(match),h='<b>নমুনা বিন্দু:</b> '+(d?'৬ × ':'')+bn(Math.pow(2,n))+' = <b>'+bn(tot)+'টি</b>'+(d?'':' (২<sup>'+bn(n)+'</sup>)')+'<br>';
+  h+='<b>নমুনাক্ষেত্র S</b> = {'+seqs.map(function(s){return bn(leafLab(s));}).join(', ')+'}<br>';
+  h+='ঘটনা: '+(d&&dv?'ছক্কায় '+bn(dv)+' এবং ':'')+'মুদ্রায় '+(m===0?'ঠিক ':m===1?'কমপক্ষে ':'বড়জোর ')+bn(k)+'টি '+f+'<br>';
+  h+='অনুকূল ফলাফল ('+bn(fav.length)+'টি, লাল): '+(fav.length?'{'+fav.map(function(s){return bn(leafLab(s));}).join(', ')+'}':'কোনোটিই নয়')+'<br>';
+  h+='<b>P = '+pe(fav.length,tot)+'</b>'+'<br>'+kind(fav.length,tot);
+  $('l4res').innerHTML=h;
+}
+wire(['l4n','l4d','l4dv','l4m','l4k','l4f'],lab4);
+$('l4pre').addEventListener('click',function(e){var b=e.target.closest('button[data-pre]');if(!b)return;var a=JSON.parse(b.dataset.pre);$('l4n').value=a[0];$('l4d').checked=!!a[1];$('l4m').value=a[2];$('l4k').max=a[0];$('l4k').value=a[3];$('l4f').value=a[4];$('l4dv').value=a[5];lab4();});lab4();
+
+/* ===== ল্যাব ৫: দুই ধাপের গাছ ===== */
+function lab5(){
+  var a=sl('l5a'),b=sl('l5b'),c=sl('l5c'),d=sl('l5d'),e=+$('l5e').value,o=C2('l5cvs'),x=o.x;clr(o);
+  var okv=[a,b,c,d].every(function(v){return Math.floor(v)===v&&v>=0;})&&b>=1&&d>=1&&a<=b&&c<=d;
+  if(!okv){$('l5res').innerHTML='<span class="no">লব ও হর পূর্ণসংখ্যা হতে হবে, হর ১ বা বেশি, আর লব ≤ হর (সম্ভাবনা ১ এর বেশি হয় না)।</span>';return;}
+  var D=b*d,P=[a*c,a*(d-c),(b-a)*c,(b-a)*(d-c)],lab=['A ও B','A, B নয়','A নয়, B','A নয়, B নয়'];
+  var hl={0:[0],1:[1],2:[2],3:[3],4:[0,1,2]}[e];
+  var rx=60,ry=160,n1=[250,80],n2=[250,240],lx=470,ly=[40,120,200,280];
+  function ed(x1,y1,x2,y2,t,col){x.strokeStyle=col||'#9fb0bd';x.lineWidth=2;x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();ttl(x,t,(x1+x2)/2,(y1+y2)/2-6,'#1f3a5f',13);}
+  ed(rx,ry,n1[0],n1[1],pf(a,b));ed(rx,ry,n2[0],n2[1],pf(b-a,b));
+  ed(n1[0],n1[1],lx,ly[0],pf(c,d));ed(n1[0],n1[1],lx,ly[1],pf(d-c,d));ed(n2[0],n2[1],lx,ly[2],pf(c,d));ed(n2[0],n2[1],lx,ly[3],pf(d-c,d));
+  circ(x,rx,ry,12,'#fff','#1f3a5f',2);ttl(x,'শুরু',rx,ry+30,'#1f3a5f',13);
+  circ(x,n1[0],n1[1],14,'#fff','#1f3a5f',2);ttl(x,'A',n1[0],n1[1]+5);circ(x,n2[0],n2[1],14,'#fff','#1f3a5f',2);ttl(x,'A নয়',n2[0],n2[1]+5,'#1f3a5f',11);
+  P.forEach(function(v,i){var on=hl.indexOf(i)>-1;circ(x,lx,ly[i],15,on?'#ffd9d7':'#fff',on?'#e53935':'#1f3a5f',on?3.4:1.6);
+    ttl(x,lab[i],lx+26,ly[i]-2,on?'#c0392b':'#1f3a5f',13,'left');ttl(x,pf(v,D),lx+26,ly[i]+16,on?'#c0392b':'#5b6b7a',13,'left');});
+  var h='P(A) = '+pf(a,b)+', P(A নয়) = '+pf(b-a,b)+'<br>P(B) = '+pf(c,d)+', P(B নয়) = '+pf(d-c,d)+'<br>';
+  var nm=['A ও B','A ঘটে, B ঘটে না','A ঘটে না, B ঘটে','কোনোটিই ঘটে না','কমপক্ষে একটি ঘটে'];
+  if(e<4){var P1=[a,a,b-a,b-a][e],Q1=[b,b,b,b][e],P2=[c,d-c,c,d-c][e];h+='<b>'+nm[e]+':</b> '+pf(P1,Q1)+' × '+pf(P2,d)+' = <b>'+pe(P1*P2,D)+'</b>'+'<br>';}
+  else{h+='<b>কমপক্ষে একটি ঘটে:</b> তিনটি পাতার যোগ = '+pf(P[0],D)+' + '+pf(P[1],D)+' + '+pf(P[2],D)+' = <b>'+pf(P[0]+P[1]+P[2],D)+'</b><br>সহজ উপায়: ১ − P(কোনোটিই নয়) = ১ − '+pf(P[3],D)+' = <b>'+pf(D-P[3],D)+'</b> ✔<br>';}
+  h+='চার পাতার সম্ভাবনার যোগফল = '+bn(P[0]+P[1]+P[2]+P[3])+'/'+bn(D)+' = <b>১</b> ✅ (সব ফলাফল মিলে নিশ্চিত ঘটনা)';
+  $('l5res').innerHTML=h;
+}
+wire(['l5a','l5b','l5c','l5d','l5e'],lab5);preS('l5pre',['l5a','l5b','l5c','l5d','l5e'],lab5);lab5();
+
+/* ===== ল্যাব ৬: তথ্যের সারণি ===== */
+var PD=[
+ {r:[['ব্যবস্থাপনা',157],['পরিদর্শক',52],['উৎপাদন কাজ',1473],['অফিসিয়াল কাজ',215],['',0],['',0]],s:[1,0,0,0,0,0]},
+ {r:[['০ বার',1910],['১ বার',46],['২ বার',18],['৩ বার',12],['৪ বার',9],['৪ এর অধিক',5]],s:[0,1,0,0,0,0]},
+ {r:[['কম ওজন',155],['স্বাভাবিক ওজন',386],['বেশি ওজন',98],['',0],['',0],['',0]],s:[0,0,1,0,0,0]}];
+(function(){var h='',i;for(i=0;i<6;i++)h+='<div class="ctl"><input type="text" id="l6n'+i+'" size="14" placeholder="নাম"> <input type="number" id="l6c'+i+'" min="0" step="1" style="width:90px"> <label><input type="checkbox" id="l6s'+i+'"> ঘটনার পক্ষে</label></div>';$('l6rows').innerHTML=h;})();
+function lab6(){
+  var o=C2('l6cvs'),x=o.x,rows=[],i;clr(o);
+  for(i=0;i<6;i++)rows.push({n:$('l6n'+i).value.trim(),c:Math.max(0,Math.floor(+$('l6c'+i).value||0)),s:$('l6s'+i).checked});
+  var tot=0,sel=0;rows.forEach(function(r){tot+=r.c;if(r.s)sel+=r.c;});
+  var vis=rows.filter(function(r){return r.n||r.c;}),mx=Math.max.apply(null,[1].concat(vis.map(function(r){return r.c;}))),bw=Math.min(70,(o.W-60)/Math.max(vis.length,1)-14);
+  vis.forEach(function(r,j){var px=40+j*((o.W-60)/vis.length)+10,hh=(o.H-80)*r.c/mx,py=o.H-40-hh;x.fillStyle=r.s?'#e53935':'#74a9d8';x.fillRect(px,py,bw,hh);ttl(x,bn(r.c),px+bw/2,py-6,'#1f3a5f',13);ttl(x,r.n||'—',px+bw/2,o.H-18,'#1f3a5f',12);});
+  var h;if(tot===0){h='<span class="no">অন্তত একটি সারিতে সংখ্যা দাও।</span>';}
+  else{h='মোট = <b>'+bn(tot)+'</b> জন/বার/টি<br>বাছাই করা সারিগুলোর যোগ = <b>'+bn(sel)+'</b><br><b>P(ঘটনা) = '+pe(sel,tot)+'</b>'+'<br>P(ঘটনা নয়) = ১ − '+pf(sel,tot)+' = <b>'+pf(tot-sel,tot)+'</b> ≈ '+pd(tot-sel,tot)+'<br>'+kind(sel,tot)+'<br><span style="color:#5b6b7a">এটি তথ্যভিত্তিক সম্ভাবনা: সম্ভাবনা বের হয়েছে সংগ্রহ করা তথ্যের আপেক্ষিক গণসংখ্যা থেকে।</span>';}
+  $('l6res').innerHTML=h;
+}
+function l6load(k){var p=PD[k],i;for(i=0;i<6;i++){$('l6n'+i).value=p.r[i][0];$('l6c'+i).value=p.r[i][1];$('l6s'+i).checked=!!p.s[i];}lab6();}
+$('l6rows').addEventListener('input',lab6);$('l6rows').addEventListener('change',lab6);
+$('l6pre').addEventListener('click',function(e){var b=e.target.closest('button[data-pre]');if(!b)return;l6load(+b.dataset.pre);});l6load(0);
+/* ===== প্র্যাকটিস ===== */
+function numOf(s){s=en(s).replace(/[−–]/g,'-').replace(/\s+/g,'');var m=s.match(/^(-?\d+)\/(\d+)$/);if(m)return +m[2]===0?NaN:+m[1]/+m[2];if(/^-?\d*\.?\d+$/.test(s))return parseFloat(s);return NaN;}
+var PR=[
+ ['একটি ছক্কা নিক্ষেপে 4 বা তার চেয়ে বড় সংখ্যা আসার সম্ভাবনা কত?',[0.5],'অনুকূল ফলাফল 4, 5, 6 অর্থাৎ ৩টি। P = 3/6 = 1/2 = 0.5।'],
+ ['1 থেকে 20 পর্যন্ত নম্বরের টিকিট থেকে একটি তুললে মৌলিক সংখ্যা ওঠার সম্ভাবনা কত?',[0.4],'মৌলিক সংখ্যা 2, 3, 5, 7, 11, 13, 17, 19 = ৮টি। P = 8/20 = 2/5 = 0.4।'],
+ ['থলেতে 3টি লাল, 4টি সাদা ও 5টি কালো বল। একটি বল তুললে কালো নয় হওয়ার সম্ভাবনা কত?',[0.5833],'মোট 12টি। কালো নয় = 3 + 4 = 7টি। P = 7/12 ≈ 0.583। (বা 1 − 5/12)'],
+ ['তিনটি মুদ্রা একসাথে নিক্ষেপে বড়জোর একটি H আসার সম্ভাবনা কত?',[0.5],'বড়জোর একটি H: TTT, HTT, THT, TTH = ৪টি। মোট ৮টি। P = 4/8 = 0.5।'],
+ ['তিনটি মুদ্রা একসাথে নিক্ষেপে ঠিক দুটি H আসার সম্ভাবনা কত?',[0.375],'অনুকূল: HHT, HTH, THH = ৩টি। P = 3/8 = 0.375।'],
+ ['একটি ছক্কা ও একটি মুদ্রা একসাথে নিক্ষেপে ছক্কায় জোড় সংখ্যা এবং মুদ্রায় H আসার সম্ভাবনা কত?',[0.25],'মোট 6 × 2 = 12টি। অনুকূল: 2H, 4H, 6H = ৩টি। P = 3/12 = 1/4 = 0.25।'],
+ ['সেপ্টেম্বর মাসে (30 দিন) ঢাকায় 18 দিন বৃষ্টি হয়েছে। 15 সেপ্টেম্বর বৃষ্টির সম্ভাবনা কত?',[0.6],'P = 18/30 = 3/5 = 0.6 (তথ্যভিত্তিক সম্ভাবনা)।'],
+ ['ঢাকা থেকে খুলনায় বাসে যাওয়ার সম্ভাবনা 2/5 এবং খুলনা থেকে রাজশাহী ট্রেনে যাওয়ার সম্ভাবনা 5/8। দুটিই ঘটার সম্ভাবনা কত?',[0.25],'শাখা বরাবর গুণ: 2/5 × 5/8 = 10/40 = 1/4 = 0.25।'],
+ ['দুটি মুদ্রা নিক্ষেপে কমপক্ষে একটি T আসার সম্ভাবনা কত?',[0.75],'S = {HH, HT, TH, TT}। শুধু HH বাদে ৩টি অনুকূল। P = 3/4 = 0.75।'],
+ ['50 জনের একটি দলে 32 জন মেয়ে। দৈবভাবে একজনকে নিলে সে মেয়ে হওয়ার সম্ভাবনা কত?',[0.64],'P = 32/50 = 16/25 = 0.64।']
+];
+(function(){var h='';PR.forEach(function(p,i){h+='<div class="q"><b>'+bn(i+1)+'.</b> '+p[0]+'<div class="ans"> <input type="text" id="pi'+i+'" size="10"> <button class="btn" data-pc="'+i+'">যাচাই</button> <button class="btn alt" data-ph="'+i+'">সমাধান</button></div><div class="fb" id="pf'+i+'"></div></div>';});$('pracbox').innerHTML=h;})();
+$('pracbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.pc!==undefined){var i=+b.dataset.pc,raw=$('pi'+i).value,v=numOf(raw),ok=!isNaN(v)&&PR[i][1].some(function(a){return Math.abs(a-v)<=0.0151;});
+    $('pf'+i).innerHTML=raw.trim()===''?'আগে উত্তর লেখো।':(ok?'✅ ঠিক! সাবাশ।':'❌ আবার চেষ্টা করো, বা "সমাধান" দেখো।');}
+  if(b.dataset.ph!==undefined){var j=+b.dataset.ph;$('pf'+j).innerHTML='💡 '+PR[j][2];}
+});
+/* ===== কুইজ ===== */
+var QZ=[];function M(q,c,w,e){QZ.push({q:q,o:[c].concat(w),e:e});}
+M('যে পরীক্ষার সম্ভাব্য ফলাফল আগে জানা, কিন্তু কোনটি আসবে নিশ্চিত বলা যায় না, তাকে বলে—','দৈব পরীক্ষা',['নিশ্চিত পরীক্ষা','অসম্ভব পরীক্ষা','নমুনা বিন্দু'],'যেমন মুদ্রা বা ছক্কা নিক্ষেপ।');
+M('একটি পরীক্ষার সব সম্ভাব্য ফলাফলের সেটকে বলে—','নমুনাক্ষেত্র',['ঘটনা','নমুনা বিন্দু','অনুকূল ফলাফল'],'একে S দিয়ে লেখা হয়।');
+M('একটি মুদ্রা একবার নিক্ষেপের নমুনাক্ষেত্র—','{H, T}',['{H}','{HH, TT}','{H, T, HT}'],'দুটি সম্ভাব্য ফলাফল।');
+M('নমুনাক্ষেত্রের প্রতিটি উপাদানকে বলে—','নমুনা বিন্দু',['ঘটনা','নিশ্চিত ঘটনা','দৈব পরীক্ষা'],'যেমন H বা T।');
+M('একটি ঘটলে অন্যটি ঘটতে পারে না, এমন ঘটনাকে বলে—','পরস্পর বিচ্ছিন্ন ঘটনা',['সমসম্ভাব্য ঘটনা','নিশ্চিত ঘটনা','তথ্যভিত্তিক ঘটনা'],'মুদ্রায় H ও T একসাথে আসে না।');
+M('ছক্কায় বিজোড় সংখ্যা পাওয়ার অনুকূল ফলাফল কয়টি?','৩টি',['২টি','৪টি','৬টি'],'1, 3, 5।');
+M('ঘটনার সম্ভাবনার সংজ্ঞা অনুযায়ী P =','অনুকূল ফলাফল ÷ সমগ্র সম্ভাব্য ফলাফল',['সমগ্র ফলাফল ÷ অনুকূল ফলাফল','অনুকূল × মোট','মোট − অনুকূল'],'এটি যুক্তিভিত্তিক সম্ভাবনার সংজ্ঞা, যখন ফলাফলগুলো সমসম্ভাব্য।');
+M('সম্ভাবনার মান কোন সীমার মধ্যে থাকে?','০ থেকে ১',['−১ থেকে ১','০ থেকে ১০০','১ থেকে ∞'],'অনুকূল ফলাফল ০ থেকে n পর্যন্ত, তাই P ০ থেকে ১।');
+M('নিশ্চিত ঘটনার সম্ভাবনা কত?','১',['০','½','২'],'সব ফলাফলই অনুকূল।');
+M('অসম্ভব ঘটনার সম্ভাবনা কত?','০',['১','½','−১'],'অনুকূল ফলাফল একটিও নেই।');
+M('ছক্কায় ৭ আসা কী ধরনের ঘটনা?','অসম্ভব ঘটনা',['নিশ্চিত ঘটনা','সম্ভাব্য ঘটনা','সমসম্ভাব্য ঘটনা'],'ছক্কায় সর্বোচ্চ ৬ আছে।');
+M('একটি নিরপেক্ষ ছক্কা নিক্ষেপে 5 আসার সম্ভাবনা—','1/6',['1/5','5/6','1/2'],'মোট ৬টি ফলাফলের মধ্যে ১টি অনুকূল।');
+M('ছক্কা নিক্ষেপে জোড় সংখ্যা আসার সম্ভাবনা—','1/2',['1/3','2/3','1/6'],'২, ৪, ৬ মোট ৩টি, তাই 3/6।');
+M('ছক্কায় 3 অথবা 3 এর চেয়ে ছোট সংখ্যা আসার সম্ভাবনা—','1/2',['1/3','2/3','1/6'],'1, 2, 3 মোট ৩টি।');
+M('থলেতে 4টি লাল, 5টি সাদা, 6টি কালো বল। সাদা বল ওঠার সম্ভাবনা—','1/3',['5/6','1/5','2/5'],'5/15 = 1/3।');
+M('একই থলেতে (4, 5, 6) লাল না ওঠার সম্ভাবনা—','11/15',['4/15','4/11','11/4'],'1 − 4/15 = 11/15।');
+M('ঘটনা E না ঘটার সম্ভাবনা কত?','1 − P(E)',['P(E) − 1','1 + P(E)','P(E)²'],'ঘটা ও না ঘটা মিলে নিশ্চিত ঘটনা।');
+M('জুলাই মাসের 31 দিনের মধ্যে 21 দিন বৃষ্টি হয়েছে। 8 জুলাই বৃষ্টির সম্ভাবনা—','21/31',['10/31','21/8','8/31'],'এটি তথ্যভিত্তিক সম্ভাবনা।');
+M('মুদ্রাকে 1000 বার ছুঁড়ে 523 বার H পাওয়া গেল। H এর আপেক্ষিক গণসংখ্যা—','0.523',['0.477','0.5','523'],'523 ÷ 1000।');
+M('পরীক্ষা অনেক বেশিবার করলে আপেক্ষিক গণসংখ্যা—','একটি নির্দিষ্ট সংখ্যার কাছাকাছি যায়',['বাড়তেই থাকে','শূন্য হয়','প্রতিবার এক থাকে'],'এই সংখ্যাকেই তথ্যভিত্তিক সম্ভাবনা ধরা হয়।');
+M('আবহাওয়ার পূর্বাভাসের সম্ভাবনা কোন ধরনের?','তথ্যভিত্তিক',['যুক্তিভিত্তিক','অসম্ভব','নিশ্চিত'],'ফলাফলগুলো সমসম্ভাব্য নয়, তাই অতীত পরিসংখ্যান থেকে বের হয়।');
+M('দুটি মুদ্রা একসাথে নিক্ষেপের নমুনা বিন্দু কয়টি?','৪টি',['২টি','৩টি','৮টি'],'HH, HT, TH, TT।');
+M('তিনটি মুদ্রা একসাথে নিক্ষেপের নমুনা বিন্দু কয়টি?','৮টি',['৬টি','৪টি','৯টি'],'২ × ২ × ২ = ৮।');
+M('n সংখ্যক মুদ্রা নিক্ষেপে নমুনা বিন্দুর সংখ্যা—','2ⁿ',['2n','n²','n!'],'প্রতি ধাপে ২টি করে শাখা, গুণ হয়।');
+M('একটি ছক্কা ও একটি মুদ্রা একবার নিক্ষেপে নমুনা বিন্দু কয়টি?','১২টি',['৮টি','৬টি','২টি'],'৬ × ২ = ১২।');
+M('তিনটি মুদ্রায় তিনটিই H আসার সম্ভাবনা—','1/8',['1/3','3/8','1/2'],'শুধু HHH অনুকূল।');
+M('তিনটি মুদ্রায় কমপক্ষে একটি T আসার সম্ভাবনা—','7/8',['1/8','3/8','1/2'],'1 − P(HHH) = 7/8।');
+M('দুটি মুদ্রায় ঠিক একটি H আসার সম্ভাবনা—','1/2',['1/4','3/4','1/3'],'HT ও TH, ২/৪।');
+M('Probability tree এ দুই ধাপের সম্ভাবনা দেওয়া থাকলে পাতার সম্ভাবনা বের করতে শাখা বরাবর কী করি?','গুণ',['যোগ','বিয়োগ','ভাগ'],'যেমন 2/5 × 3/8 = 3/20 (উদাহরণ ৯)।');
+M('প্রথম ধাপে A এর সম্ভাবনা 1/3 হলে "A নয়" শাখার সম্ভাবনা—','2/3',['1/3','1/2','3'],'1 − 1/3।');
+(function(){
+  var done=0,sc=0;
+  QZ.forEach(function(q){var ord=q.o.map(function(t,i){return {t:t,c:i===0};});
+    for(var i=ord.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),k=ord[i];ord[i]=ord[j];ord[j]=k;}q.ord=ord;});
+  var h='';QZ.forEach(function(q,qi){h+='<div class="q" id="qq'+qi+'"><b>'+bn(qi+1)+'.</b> '+q.q+q.ord.map(function(o,oi){return '<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+o.t+'</button>';}).join('')+'<div class="fb" id="qe'+qi+'"></div></div>';});
+  $('quizbox').innerHTML=h;
+  $('quizbox').addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b||b.parentNode.dataset.done)return;
+    var qi=+b.dataset.q,q=QZ[qi],o=q.ord[+b.dataset.o];b.parentNode.dataset.done=1;done++;
+    var btns=b.parentNode.querySelectorAll('.opt');btns.forEach(function(x,i){if(q.ord[i].c)x.classList.add('good');});
+    if(o.c){sc++;$('qe'+qi).textContent='✅ ঠিক! '+q.e;}else{b.classList.add('bad');$('qe'+qi).textContent='❌ ভুল। '+q.e;}
+    $('qscore').textContent='স্কোর: '+bn(sc)+' / '+bn(done)+' (মোট '+bn(QZ.length)+'টি)';
+    try{if(done===QZ.length){localStorage.setItem('sl_done_math-probability','1');var xp=+(localStorage.getItem('sl_xp')||0);localStorage.setItem('sl_xp',xp+sc);}}catch(er){}
+  });
+})();
+/* ===== প্রশ্নোত্তর ===== */
+var QA=[
+ {h:'অনুশীলনী ১৪',items:[
+  ['১. 30টি টিকিট (1 থেকে 30)। একটি তুললে (ক) জোড় (খ) 4 দ্বারা বিভাজ্য (গ) 4 এর চেয়ে ছোট (ঘ) 22 এর চেয়ে বড় হওয়ার সম্ভাবনা','মোট ফলাফল ৩০। (ক) জোড় ১৫টি ⇒ <b>15/30 = 1/2</b>। (খ) 4, 8, …, 28 মোট ৭টি ⇒ <b>7/30</b>। (গ) 1, 2, 3 মোট ৩টি ⇒ <b>3/30 = 1/10</b>। (ঘ) 23 থেকে 30 মোট ৮টি ⇒ <b>8/30 = 4/15</b>।'],
+  ['২. 570টি টিকিটের লটারিতে রহিম 15টি কিনেছে। প্রথম পুরস্কার পাওয়ার সম্ভাবনা','P = 15/570 = <b>1/38</b>।'],
+  ['৩. স্বাস্থ্য কেন্দ্র: কম ওজন 155, স্বাভাবিক 386, বেশি ওজন 98। বেশি ওজনের শিশু হওয়ার সম্ভাবনা','মোট = 155 + 386 + 98 = 639। P = <b>98/639</b> ≈ 0.153।'],
+  ['৪. কারখানা: ব্যবস্থাপনা 157, পরিদর্শক 52, উৎপাদন 1473, অফিসিয়াল 215। (ক) ব্যবস্থাপনায় (খ) ব্যবস্থাপনায় অথবা উৎপাদনে (গ) উৎপাদনে নয়','মোট = 157 + 52 + 1473 + 215 = 1897। (ক) <b>157/1897</b>। (খ) (157 + 1473)/1897 = <b>1630/1897</b>। (গ) 1 − 1473/1897 = <b>424/1897</b>।'],
+  ['৫. 2000 ড্রাইভার: 0 বার 1910, 1 বার 46, 2 বার 18, 3 বার 12, 4 বার 9, 4 এর অধিক 5। (ক) ঠিক 1 বার ভাঙার (খ) 4 এর অধিক বার ভাঙার সম্ভাবনা','মোট 2000 ✔। (ক) 46/2000 = <b>23/1000</b>। (খ) 5/2000 = <b>1/400</b>।'],
+  ['৬. 1টি মুদ্রা ও 1টি ছক্কা নিক্ষেপের probability tree','প্রথম ধাপে ছক্কা (৬ শাখা: 1 থেকে 6), প্রতিটি থেকে মুদ্রার ২ শাখা (H, T)। মোট ১২টি পাতা: {1H, 1T, 2H, 2T, 3H, 3T, 4H, 4T, 5H, 5T, 6H, 6T}। ল্যাব ৪-এ "উদাহরণ ৮" চাপলে এই গাছ দেখা যাবে।'],
+  ['৭. সারণি পূরণ (একবার, দুইবার, তিনবার মুদ্রা নিক্ষেপ)','একবার: S = {H, T}, P(T) = <b>1/2</b>। দুইবার: S = {HH, HT, TH, TT}, P(1H) = 2/4 = <b>1/2</b>, P(HT) = <b>1/4</b>। তিনবার: ৮টি নমুনা বিন্দু, P(HHT) = <b>1/8</b>, P(2H) = 3/8 = <b>3/8</b> (HHT, HTH, THH)।'],
+  ['৮. ঢাকা → রাজশাহী ট্রেনে 5/9, রাজশাহী → দিনাজপুর বাসে 2/7। (ক) ট্রেনে নয় এবং বাসে যাওয়ার (খ) ট্রেনে কিন্তু বাসে নয় এর সম্ভাবনা','(ক) ট্রেনে নয় = 4/9, তাই 4/9 × 2/7 = <b>8/63</b>। (খ) বাসে নয় = 5/7, তাই 5/9 × 5/7 = <b>25/63</b>।'],
+  ['৯. ঢাকা → চট্টগ্রাম ট্রেনে 2/9, চট্টগ্রাম → কক্সবাজার বাসে 2/5। দুটিই ঘটার সম্ভাবনা','শাখা বরাবর গুণ: 2/9 × 2/5 = <b>4/45</b>। (অন্য যানবাহনের সম্ভাবনাগুলো এই প্রশ্নে লাগে না।)'],
+  ['১০. একটি মুদ্রা চারবার নিক্ষেপ (ক) দুইবার নিক্ষেপে একটি L আসার সম্ভাবনা (খ) probability tree ও নমুনাক্ষেত্র (গ) n বার নিক্ষেপে নমুনা বিন্দু 2ⁿ','(ক) দুইবারে S = {LL, LC, CL, CC}। ঠিক একটি L: LC, CL ⇒ <b>2/4 = 1/2</b>। (প্রশ্নের "একটি C না আসা" অংশ অস্পষ্ট। আমি ধরলে "কোনো C নয়" হয় LL ⇒ 1/4। বইয়ের সাথে মিলিয়ে নিও।) (খ) চার ধাপে 2⁴ = <b>১৬টি</b> পাতা। ল্যাব ৪-এ মুদ্রা ৪টি দিয়ে গাছ ও নমুনাক্ষেত্র দেখো। (গ) প্রতি ধাপে সংখ্যা দ্বিগুণ হয়: ২ → ২² → ২³ → … → <b>২ⁿ</b>।']]},
+ {h:'নমুনা প্রশ্ন',items:[
+  ['MCQ ১. ছক্কা নিক্ষেপে 3 ওঠার সম্ভাবনা','ক. 1/6।'],
+  ['MCQ ২. দুটি মুদ্রার (i) বড়জোর একটি H = 0.75 (ii) কমপক্ষে একটি H = 0.75 (iii) HH একটি নমুনা বিন্দু','ঘ. i, ii ও iii। S = {HH, HT, TH, TT}। বড়জোর একটি H: HT, TH, TT = 3/4। কমপক্ষে একটি H: HH, HT, TH = 3/4। HH নমুনা বিন্দু।'],
+  ['MCQ ৩. থলেতে নীল 12, সাদা 16, কালো 20। বলটি নীল হওয়ার সম্ভাবনা','ঘ. 1/4, কারণ মোট 48 এবং 12/48 = 1/4।'],
+  ['MCQ ৪. বলটি সাদা না হওয়ার সম্ভাবনা','খ. 2/3, কারণ 1 − 16/48 = 32/48 = 2/3।'],
+  ['সৃজনশীল ৫ (ক) প্রমাণ করো 0 ≤ P(A) ≤ 1','n টি সমসম্ভাব্য ফলাফল, ঘটনা A এর অনুকূল ফলাফল m টি। m এর মান 0 থেকে n এর মধ্যে (0 ≤ m ≤ n)। সবগুলো পক্ষ n > 0 দিয়ে ভাগ করলে 0 ≤ m/n ≤ 1, অর্থাৎ <b>0 ≤ P(A) ≤ 1</b>।'],
+  ['সৃজনশীল ৫ (খ) 8 লাল, 10 সাদা, 7 কালো মার্বেল। (১) লাল (২) সাদা নয়','মোট = 25। (১) P(লাল) = <b>8/25</b>। (২) সাদা নয় = 8 + 7 = 15 ⇒ <b>15/25 = 3/5</b>।'],
+  ['সৃজনশীল ৫ (গ) প্রতিস্থাপন ছাড়া পরপর চারটি মার্বেল তুললে সবগুলো সাদা','প্রথমবার 10/25, তারপর 9/24, 8/23, 7/22। গুণ: (10 × 9 × 8 × 7)/(25 × 24 × 23 × 22) = 5040/303600 = <b>21/1265</b> ≈ 0.0166। (এখানে ধাপে ধাপে গুণের ধারণা, ল্যাব ৫ এর মতো।)'],
+  ['সংক্ষিপ্ত ৬ (ক) ছক্কায় জোড় অথবা 3 দ্বারা বিভাজ্য সংখ্যা','2, 3, 4, 6 মোট ৪টি। P = <b>4/6 = 2/3</b>।'],
+  ['সংক্ষিপ্ত ৬ (খ) তিন মুদ্রায় বড়জোর 2T','শুধু TTT অনুকূল নয়। তাই 7টি অনুকূল। P = <b>7/8</b>।'],
+  ['সংক্ষিপ্ত ৬ (গ) ছক্কায় 5 এবং মুদ্রায় H','P = <b>1/12</b>।'],
+  ['সংক্ষিপ্ত ৬ (ঘ) 1 থেকে 20 টিকিট, 20 এর গুণনীয়ক নম্বর','এখানে "গুণনীয়ক" লেখা আছে। 20 এর গুণনীয়ক 1, 2, 4, 5, 10, 20 মোট ৬টি ⇒ <b>6/20 = 3/10</b>। (বইয়ের প্রশ্নে "গুণিতক" ছাপা হয়ে থাকলে উত্তর 1/20, কারণ 1 থেকে 20 এর মধ্যে 20 এর গুণিতক একটিই। বইয়ের শব্দ মিলিয়ে নিও।)']]}
+];
+(function(){var h='';QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){h+='<details class="ex"><summary><b>'+it[0]+'</b></summary><p>'+it[1]+'</p></details>';});});$('qabox').innerHTML=h;})();
+</script>
+</body>
+</html>

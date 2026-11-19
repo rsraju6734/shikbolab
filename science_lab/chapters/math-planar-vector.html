@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>সমতলীয় ভেক্টর (উচ্চতর গণিত অধ্যায় ১২) - ShikboLab</title>
+<meta name="description" content="➡️ সমতলীয় ভেক্টর (উচ্চতর গণিত অধ্যায় ১২) — ShikboLab এ বাংলায় ইন্টারঅ্যাকটিভ ব্যাখ্যা, ভার্চুয়াল ল্যাব ও কুইজ।">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+canvas{width:100%;height:auto;max-width:640px;display:block;margin:8px auto;border-radius:12px;background:#fff;border:1px solid var(--line);touch-action:none;cursor:crosshair}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.ctl input[type=range]{width:200px;max-width:100%}
+.ctl select,.ctl input[type=text],.ans input,.ctl input[type=number]{font-family:inherit;font-size:16px;padding:5px 6px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;max-width:100%;width:auto}
+.ctl input[type=number]{width:64px}
+.pt{background:#f4f8fb;border-radius:10px;padding:6px 10px;white-space:nowrap}
+.pt b{color:var(--navy)}
+.eqb{background:#eaf7f5;border-radius:10px;padding:10px;text-align:center;font-weight:700;color:var(--navy);margin:8px 0;font-size:18px;overflow-x:auto}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.fb{font-weight:700;margin-top:6px}
+.res{background:#eef6ff;border-radius:10px;padding:10px 12px;margin:8px 0;line-height:1.9}
+.res b{color:#0b5ed7}
+.res .ok{color:#1b8a5a;font-weight:700}.res .no{color:#c0392b;font-weight:700}
+.chips button{margin:3px;padding:6px 12px;border-radius:999px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.chips button.on{background:#0b5ed7;color:#fff;border-color:#0b5ed7}
+.step{background:#fff;border:1px solid var(--line);border-left:5px solid #2a9d8f;border-radius:8px;padding:8px 12px;margin:6px 0;display:none}
+.step.show{display:block}
+.ex{border:2px dashed #b8c7d6;border-radius:12px;padding:10px 14px;margin:14px 0;background:#fcfdff}
+.q{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:#fff}
+.q .opt{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 10px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:16px;cursor:pointer}
+.q .opt.good{background:#d8f3e3;border-color:#2a9d8f}
+.q .opt.bad{background:#fddcdc;border-color:#e76f51}
+.m{font-family:system-ui,'Segoe UI',Arial,sans-serif}
+table.t{border-collapse:collapse;margin:8px 0}
+table.t td,table.t th{border:1px solid #cfd9e1;padding:5px 12px;text-align:center}
+.det{display:inline-block;vertical-align:middle;border-left:2px solid var(--navy);border-right:2px solid var(--navy);padding:0 8px;margin:0 4px;line-height:1.5}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/theme.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">📐 গণিত &rsaquo; উচ্চতর গণিত &rsaquo; অধ্যায় ১২ (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">➡️ সমতলীয় ভেক্টর</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#ex">🪜 ধাপে ধাপে</a><a href="#lab1">➕ যোগ ও বিয়োগ</a><a href="#lab2">✖️ ভেক্টর গুণ</a><a href="#lab3">📍 অবস্থান ভেক্টর</a><a href="#lab4">▱ সামান্তরিক</a><a href="#lab5">🔺 মধ্যবিন্দু উপপাদ্য</a><a href="#lab6">◇ চতুর্ভুজ</a><a href="#prac">✍️ প্র্যাকটিস</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্নোত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায়ে শিখবে:</b> স্কেলার ও ভেক্টর রাশি, সমান ও বিপরীত ভেক্টর, ভেক্টরের যোগ-বিয়োগ, সংখ্যা দিয়ে গুণ, অবস্থান ভেক্টর এবং ভেক্টর দিয়ে জ্যামিতির উপপাদ্য প্রমাণ। বইয়ে এখানে ভেক্টর মানে <b>জ্যামিতিক ভেক্টর</b> (দিক নির্দেশক রেখাংশ)। i, j দিয়ে উপাংশ লেখা এই অধ্যায়ে নেই।</div>
+
+    <h3>১. স্কেলার ও ভেক্টর রাশি ⭐</h3>
+    <ul>
+      <li><b>স্কেলার (অদিক) রাশি:</b> শুধু পরিমাণ দিয়েই পুরোটা বোঝা যায়। যেমন দৈর্ঘ্য, ভর, আয়তন, দ্রুতি, তাপমাত্রা।</li>
+      <li><b>ভেক্টর (সদিক) রাশি:</b> পূর্ণ করে বলতে <b>পরিমাণ ও দিক</b> দুটোই লাগে। যেমন সরণ, বেগ, ত্বরণ, ওজন, বল।</li>
+      <li>উদাহরণ: "৩ কি.মি. দূরে" বললে দিক জানা যায় না। "৩ কি.মি. <b>দক্ষিণে</b>" বললে ভেক্টর হয়।</li>
+    </ul>
+
+    <h3>২. ভেক্টরের জ্যামিতিক রূপ: দিক নির্দেশক রেখাংশ ⭐</h3>
+    <ul>
+      <li>রেখাংশের একপ্রান্ত <b>আদিবিন্দু</b> A, অন্যপ্রান্ত <b>অন্তবিন্দু</b> B হলে এটি ভেক্টর <span class="m">AB&#8594;</span>। এর দৈর্ঘ্য |AB|, দিক A থেকে B এর দিকে।</li>
+      <li>সংক্ষেপে একটি অক্ষর দিয়ে লেখা হয়, যেমন <b>u = AB</b> (অক্ষরের নিচে দাগ দিয়ে)। দৈর্ঘ্য |u| = AB রেখাংশের দৈর্ঘ্য।</li>
+      <li>ভেক্টরটি যে অসীম সরলরেখার অংশ, সেই রেখাকে তার <b>ধারক রেখা</b> বলে।</li>
+    </ul>
+
+    <h3>৩. সমান ও বিপরীত ভেক্টর ⭐⭐</h3>
+    <ul>
+      <li><b>সমান ভেক্টর (u = v):</b> (ক) |u| = |v|, (খ) ধারক রেখা অভিন্ন বা সমান্তরাল, (গ) দিক একই মুখী। তিনটি শর্তই মানতে হবে।</li>
+      <li>যেকোনো বিন্দু থেকে যেকোনো ভেক্টরের সমান ভেক্টর আঁকা যায়। তাই ভেক্টর এক জায়গা থেকে অন্য জায়গায় <b>সরালেও</b> (দৈর্ঘ্য-দিক না বদলালে) একই থাকে।</li>
+      <li><b>বিপরীত ভেক্টর (−u):</b> দৈর্ঘ্য সমান, ধারক রেখা অভিন্ন বা সমান্তরাল, কিন্তু দিক <b>উল্টো</b>। u = AB হলে −u = BA।</li>
+    </ul>
+
+    <h3>৪. ভেক্টরের যোগ ও বিয়োগ ⭐⭐⭐</h3>
+    <ul>
+      <li><b>ত্রিভুজবিধি:</b> u এর প্রান্তবিন্দু থেকে v আঁকো। তাহলে u এর আদিবিন্দু থেকে v এর অন্তবিন্দু পর্যন্ত ভেক্টরই <b>u + v</b>। AB + BC = AC।</li>
+      <li><b>সামান্তরিকবিধি:</b> একই বিন্দু থেকে u ও v আঁকলে এদের নিয়ে গঠিত সামান্তরিকের <b>কর্ণ</b>ই u + v।</li>
+      <li>দুটি ভেক্টর <b>সমান্তরাল</b> হলে সামান্তরিক হয় না, তখন শুধু ত্রিভুজবিধি খাটে। ত্রিভুজবিধি সবসময় খাটে।</li>
+      <li><b>বিয়োগ:</b> u − v মানে u + (−v)। একই আদিবিন্দুর দুই ভেক্টর AB = u, AC = v হলে <b>u − v = CB</b>, অর্থাৎ AB − AC = CB। (অন্তবিন্দু থেকে অন্তবিন্দু, উল্টো ক্রমে।)</li>
+      <li><b>শূন্য ভেক্টর (0):</b> দৈর্ঘ্য শূন্য, দিক বা ধারক রেখা নেই। u + (−u) = 0, u + 0 = u। AA = 0।</li>
+      <li><b>অনুসিদ্ধান্ত:</b> ত্রিভুজের তিন বাহু একই ক্রমে ধরলে যোগফল শূন্য: AB + BC + CA = 0।</li>
+    </ul>
+    <table class="t m"><tr><th>যোগের নিয়ম</th><th>সূত্র</th></tr>
+      <tr><td>বিনিময়</td><td>u + v = v + u</td></tr>
+      <tr><td>সংযোগ</td><td>(u + v) + w = u + (v + w)</td></tr>
+      <tr><td>শূন্য ও বিপরীত</td><td>u + 0 = u, u + (−u) = 0</td></tr>
+      <tr><td>বর্জন</td><td>u + v = u + w হলে v = w</td></tr></table>
+
+    <h3>৫. ভেক্টরের সংখ্যা দিয়ে গুণ (স্কেলার গুণিতক) ⭐⭐</h3>
+    <ul>
+      <li>m একটি বাস্তব সংখ্যা। <b>m = 0</b> হলে mu = 0 (শূন্য ভেক্টর)।</li>
+      <li><b>m ≠ 0</b> হলে mu এর দৈর্ঘ্য = |m| × |u| এবং ধারক রেখা u এর সাথে অভিন্ন। m &gt; 0 হলে দিক u এর একই, m &lt; 0 হলে দিক u এর বিপরীত।</li>
+      <li>1·u = u, (−1)·u = −u। m(nu) = n(mu) = (mn)u।</li>
+      <li><b>বণ্টন সূত্র:</b> (m + n)u = mu + nu এবং m(u + v) = mu + mv।</li>
+      <li>দুটি ভেক্টরের ধারক রেখা অভিন্ন বা সমান্তরাল হলে একটিকে আরেকটির সংখ্যা-গুণিতক হিসেবে লেখা যায়: AB ∥ CD হলে AB = m·CD।</li>
+      <li><b>সমরেখ:</b> তিনটি বিন্দু A, B, C একই রেখায় হবে যদি এবং কেবল যদি AC, AB এর সংখ্যা-গুণিতক হয়।</li>
+      <li><b>একক ভেক্টর:</b> দৈর্ঘ্য ১ এমন ভেক্টর। a ≠ 0 হলে (1/|a|)·a হলো a এর দিকে একক ভেক্টর।</li>
+    </ul>
+
+    <h3>৬. অবস্থান ভেক্টর ⭐⭐</h3>
+    <ul>
+      <li>একটা নির্দিষ্ট বিন্দু O (মূলবিন্দু) ধরলে অন্য বিন্দু P এর <b>অবস্থান ভেক্টর</b> হলো OP।</li>
+      <li>A ও B এর অবস্থান ভেক্টর a ও b হলে <div class="eqb m">AB = b − a</div> অর্থাৎ <b>প্রান্তবিন্দুর অবস্থান ভেক্টর − আদিবিন্দুর অবস্থান ভেক্টর</b>।</li>
+      <li>মূলবিন্দু বদলালে অবস্থান ভেক্টরও বদলায়। একটি সমস্যায় সব বিন্দুর জন্য একই মূলবিন্দু নিতে হয়।</li>
+      <li>AB এর মধ্যবিন্দু M হলে OM = ½(a + b)। (AM = ½AB থেকে সহজেই আসে, উদাহরণ ৩ ও ৫ এ এই ধারণাই কাজে লাগে।)</li>
+    </ul>
+
+    <h3>৭. ভেক্টর দিয়ে জ্যামিতি প্রমাণের কৌশল ⭐⭐⭐</h3>
+    <ul>
+      <li>ধাপ ১: চিত্র এঁকে প্রতিটি বাহুকে ভেক্টর নাম দাও (যেমন AB = a, AC = b)।</li>
+      <li>ধাপ ২: ত্রিভুজবিধি দিয়ে অন্য ভেক্টরগুলোকে a, b এর মাধ্যমে প্রকাশ করো।</li>
+      <li>ধাপ ৩: দুটি ভেক্টর একটি আরেকটির সংখ্যা-গুণিতক হলে বাহু দুটি <b>সমান্তরাল</b>। গুণিতকের মান থেকে দৈর্ঘ্যের অনুপাত মেলে।</li>
+      <li>ধাপ ৪: a, b অসমান্তরাল হলে ma + nb = 0 থেকে m = n = 0 পাওয়া যায় (দুই পাশের সহগ আলাদা করে মেলানো যায়)।</li>
+    </ul>
+    <div class="warn">⚠️ <b>সাবধান:</b> (১) AB ও BA বিপরীত ভেক্টর, AB = −BA। (২) AB − AC = <b>CB</b>, BC নয়। (৩) ভেক্টর সমান হতে হলে শুধু দৈর্ঘ্য সমান হলেই হয় না, দিকও একই লাগে। (৪) ভেক্টরের দৈর্ঘ্য কখনও ঋণাত্মক হয় না, ঋণাত্মক হয় শুধু সংখ্যা m।</div>
+  </section>
+
+  <section class="panel" id="ex">
+    <h2>🪜 ধাপে ধাপে (বইয়ের উদাহরণ)</h2>
+    <div class="say">👉 "পরের ধাপ" চাপতে থাকো। প্রতিটি ধাপ নিজে খাতায় করে মেলাও।</div>
+
+    <div class="ex" id="E1"><b>১) প্রমাণ করো: −(−a) = a</b> (বই উদাহরণ ১ ক)
+      <div class="step">ধাপ ১: বিপরীত ভেক্টরের ধর্মে a + (−a) = 0।</div>
+      <div class="step">ধাপ ২: আবার (−a) + (−(−a)) = 0।</div>
+      <div class="step">ধাপ ৩: দুটোই 0 এর সমান, তাই (−a) + (−(−a)) = a + (−a)। ডানদিকে বামদিকে একই (−a) আছে।</div>
+      <div class="step">ধাপ ৪: যোগের বর্জনবিধি (u + v = u + w হলে v = w) খাটিয়ে <b>−(−a) = a</b> ✔।</div>
+      <button class="btn" data-ex="E1">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E1">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E2"><b>২) (1/|a|)·a একক ভেক্টর, দিক a এর দিকেই</b> (বই উদাহরণ ১ গ)
+      <div class="step">ধাপ ১: a ≠ 0 হওয়ায় |a| ≠ 0। ধরি â = (1/|a|)·a।</div>
+      <div class="step">ধাপ ২: দৈর্ঘ্য |â| = (1/|a|)·|a| = <b>1</b>, কারণ 1/|a| ধনাত্মক সংখ্যা।</div>
+      <div class="step">ধাপ ৩: সংখ্যাটা ধনাত্মক, তাই দিক a এর দিকেই।</div>
+      <div class="step">ধাপ ৪: সংখ্যা উদাহরণ: দৈর্ঘ্য ৫ এর ভেক্টর a এর জন্য â = a/5, যার দৈর্ঘ্য ১ ✔।</div>
+      <button class="btn" data-ex="E2">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E2">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E3"><b>৩) ABCD সামান্তরিকের কর্ণ AC, BD। AC ও BD কে AB ও AD এর মাধ্যমে প্রকাশ</b> (বই উদাহরণ ২ ক)
+      <div class="step">ধাপ ১: সামান্তরিকে DC = AB (বিপরীত বাহু সমান ও সমান্তরাল)।</div>
+      <div class="step">ধাপ ২: ত্রিভুজবিধি: AC = AD + DC = AD + AB। অর্থাৎ <b>AC = AB + AD</b>।</div>
+      <div class="step">ধাপ ৩: আবার AB + BD = AD, তাই <b>BD = AD − AB</b> ✔।</div>
+      <button class="btn" data-ex="E3">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E3">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E4"><b>৪) ত্রিভুজের দুই বাহুর মধ্যবিন্দুর সংযোজক রেখা তৃতীয় বাহুর সমান্তরাল ও অর্ধেক</b> (বই উদাহরণ ৩)
+      <div class="step">ধাপ ১: ABC ত্রিভুজে AB, AC এর মধ্যবিন্দু D, E। প্রমাণ করতে হবে DE ∥ BC এবং DE = ½BC।</div>
+      <div class="step">ধাপ ২: বিয়োগের ত্রিভুজবিধি: AE − AD = DE ……(১) এবং AC − AB = BC।</div>
+      <div class="step">ধাপ ৩: D, E মধ্যবিন্দু বলে AC = 2AE ও AB = 2AD। বসিয়ে 2AE − 2AD = BC, অর্থাৎ 2(AE − AD) = BC।</div>
+      <div class="step">ধাপ ৪: (১) থেকে 2·DE = BC, তাই <b>DE = ½BC</b>। ভেক্টর দুটি সংখ্যা-গুণিতক, তাই DE ∥ BC এবং দৈর্ঘ্যে DE = ½BC ✔।</div>
+      <button class="btn" data-ex="E4">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E4">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E5"><b>৫) সামান্তরিকের কর্ণদ্বয় পরস্পরকে সমদ্বিখণ্ডিত করে</b> (বই উদাহরণ ৪)
+      <div class="step">ধাপ ১: কর্ণ AC, BD পরস্পরকে O এ ছেদ করেছে। ধরি AO = a, BO = b, OC = c, OD = d।</div>
+      <div class="step">ধাপ ২: AD = BC (সামান্তরিক), আর AD = AO + OD = a + d এবং BC = BO + OC = b + c। তাই a + d = b + c।</div>
+      <div class="step">ধাপ ৩: উভয় পক্ষে (−c − d) যোগ করে a − c = b − d।</div>
+      <div class="step">ধাপ ৪: a − c এর ধারক AC, আর b − d এর ধারক BD। AC, BD পরস্পর ছেদী, সমান্তরাল নয়। দুটি অসমান্তরাল ধারকের সমান ভেক্টর শুধু শূন্য হতে পারে।</div>
+      <div class="step">ধাপ ৫: তাই a − c = 0 ও b − d = 0, অর্থাৎ |a| = |c|, |b| = |d|। <b>AO = OC, BO = OD</b> ✔।</div>
+      <button class="btn" data-ex="E5">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E5">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E6"><b>৬) চতুর্ভুজের সন্নিহিত বাহুর মধ্যবিন্দুর সংযোগে সামান্তরিক</b> (বই উদাহরণ ৫)
+      <div class="step">ধাপ ১: ABCD এর AB, BC, CD, DA এর মধ্যবিন্দু P, Q, R, S। ধরি AB = a, BC = b, CD = c, DA = d।</div>
+      <div class="step">ধাপ ২: PQ = PB + BQ = ½a + ½b = ½(a + b)। একইভাবে QR = ½(b + c), RS = ½(c + d), SP = ½(d + a)।</div>
+      <div class="step">ধাপ ৩: চার বাহু ঘুরে এসে যোগফল শূন্য: a + b + c + d = AC + CA = 0, তাই (a + b) = −(c + d)।</div>
+      <div class="step">ধাপ ৪: PQ = ½(a + b) = −½(c + d) = −RS = <b>SR</b>। PQ ও SR সমান ও সমান্তরাল।</div>
+      <div class="step">ধাপ ৫: একইভাবে QR = PS। তাহলে <b>PQRS সামান্তরিক</b> ✔।</div>
+      <button class="btn" data-ex="E6">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E6">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E7"><b>৭) ট্র্যাপিজিয়ামে অসমান্তরাল বাহুর মধ্যবিন্দুদ্বয়ের সংযোজক রেখা: PQ = ½(AD + BC)</b> (অনুশীলনী ১২ এর ৯ ও নমুনা MCQ ৪)
+      <div class="step">ধাপ ১: AD ∥ BC। P, Q যথাক্রমে AB, DC এর মধ্যবিন্দু। P, Q তে বাহু ভাগ হয়েছে।</div>
+      <div class="step">ধাপ ২: ভিন্ন দুই পথে PQ লিখি: PQ = PA + AD + DQ এবং PQ = PB + BC + CQ।</div>
+      <div class="step">ধাপ ৩: দুটো যোগ করি: 2PQ = (PA + PB) + (AD + BC) + (DQ + CQ)।</div>
+      <div class="step">ধাপ ৪: P মধ্যবিন্দু, তাই PA + PB = 0। Q মধ্যবিন্দু, তাই DQ + CQ = 0।</div>
+      <div class="step">ধাপ ৫: সুতরাং 2PQ = AD + BC, অর্থাৎ <b>PQ = ½(AD + BC)</b>। AD, BC একই দিকের সমান্তরাল, তাই PQ ওদের সমান্তরাল এবং দৈর্ঘ্যে সমান্তরাল বাহুদ্বয়ের যোগফলের অর্ধেক ✔।</div>
+      <button class="btn" data-ex="E7">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E7">আবার শুরু</button>
+    </div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>➕ ল্যাব ১: ভেক্টরের যোগ ও বিয়োগ (ত্রিভুজবিধি ও সামান্তরিকবিধি)</h2>
+    <div class="say">👉 মূলবিন্দু O থেকে ভেক্টর u এর অগ্র U ও ভেক্টর v এর অগ্র V <b>টেনে</b> সরাও। <b style="color:#e53935">u</b> আঁকা হয়েছে O → U, তারপর U থেকে <b style="color:#1971c2">v</b> আঁকা হয়েছে (ত্রিভুজবিধি)। <b style="color:#1b8a5a">u + v</b> হলো O থেকে শেষ বিন্দু পর্যন্ত, আর ছায়া দেওয়া সামান্তরিকের কর্ণও একই।</div>
+    <div class="ctl" id="l1in"></div>
+    <div class="ctl"><label><input type="checkbox" id="l1d"> u − v দেখাও (V থেকে U)</label></div>
+    <div class="chips" id="l1pre"><button data-pre="[[4,1],[1,4]]">সাধারণ</button><button data-pre="[[4,2],[2,1]]">সমান্তরাল (সামান্তরিক হয় না)</button><button data-pre="[[3,-2],[-3,2]]">u + v = ০</button></div>
+    <canvas id="l1cv" width="600" height="600"></canvas>
+    <div class="res m" id="l1res"></div>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>✖️ ল্যাব ২: ভেক্টরের সংখ্যা-গুণিতক ও বণ্টন সূত্র</h2>
+    <div class="say">👉 U টেনে ভেক্টর u বদলাও আর m, n স্লাইডার দিয়ে সংখ্যা বদলাও। <b style="color:#1971c2">mu</b> এর শেষ থেকে <b style="color:#e08a00">nu</b> আঁকা হয়েছে, আর সবুজ ডটেড ভেক্টর (m + n)u। দুটো মিলে যায়, এটাই সূত্র ১।</div>
+    <div class="ctl" id="l2in"></div>
+    <div class="ctl"><label>m = <span id="l2mv"></span></label><input type="range" id="l2m" min="-8" max="8" step="1" value="4"> <label>n = <span id="l2nv"></span></label><input type="range" id="l2n" min="-8" max="8" step="1" value="-2"></div>
+    <div class="say" style="font-weight:500">নোট: স্লাইডারের মান অর্ধেক ধাপে চলে (স্লাইডারে ৪ মানে m = ২)। m, n এর মান −৪ থেকে ৪ পর্যন্ত।</div>
+    <canvas id="l2cv" width="600" height="600"></canvas>
+    <div class="res m" id="l2res"></div>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>📍 ল্যাব ৩: অবস্থান ভেক্টর ও AB = b − a</h2>
+    <div class="say">👉 মূলবিন্দু O। A ও B টেনে সরাও। <b style="color:#e53935">a = OA</b>, <b style="color:#1971c2">b = OB</b>, আর <b style="color:#1b8a5a">AB = b − a</b>। ডটেড সবুজ ভেক্টরটি b − a কে O থেকে এঁকে দেখায়: ভেক্টর সরালেও সমান থাকে।</div>
+    <div class="ctl" id="l3in"></div>
+    <div class="chips" id="l3pre"><button data-pre="[[2,1],[6,4]]">উদাহরণ</button><button data-pre="[[-3,2],[4,-1]]">দুই চতুর্ভাগ জুড়ে</button><button data-pre="[[3,3],[3,3]]">A = B (শূন্য ভেক্টর)</button></div>
+    <canvas id="l3cv" width="600" height="600"></canvas>
+    <div class="res m" id="l3res"></div>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>▱ ল্যাব ৪: সামান্তরিকের কর্ণ পরস্পরকে সমদ্বিখণ্ডিত করে</h2>
+    <div class="say">👉 A, B, D টেনে সরাও। C নিজে নিজে ঠিক হয় (C = B + D − A, এতে ABCD সবসময় সামান্তরিক)। AC = AB + AD আর BD = AD − AB মিলিয়ে দেখো, আর কর্ণ দুটির মধ্যবিন্দু একই O।</div>
+    <div class="ctl" id="l4in"></div>
+    <div class="chips" id="l4pre"><button data-pre="[[-4,-2],[2,-3],[-3,3]]">সাধারণ</button><button data-pre="[[-3,-3],[3,-3],[-3,3]]">বর্গ</button></div>
+    <canvas id="l4cv" width="600" height="600"></canvas>
+    <div class="res m" id="l4res"></div>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>🔺 ল্যাব ৫: ত্রিভুজের মধ্যবিন্দু উপপাদ্য (DE = ½BC)</h2>
+    <div class="say">👉 A, B, C টেনে সরাও। D, E যথাক্রমে AB, AC এর মধ্যবিন্দু। দেখো BC যেদিকেই ঘুরুক, DE সবসময় BC এর সমান্তরাল ও অর্ধেক।</div>
+    <div class="ctl" id="l5in"></div>
+    <div class="chips" id="l5pre"><button data-pre="[[0,6],[-6,-3],[6,-3]]">সমদ্বিবাহু</button><button data-pre="[[-5,5],[-7,-4],[4,-2]]">বিষমবাহু</button></div>
+    <canvas id="l5cv" width="600" height="600"></canvas>
+    <div class="res m" id="l5res"></div>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>◇ ল্যাব ৬: চতুর্ভুজের মধ্যবিন্দু দিয়ে সামান্তরিক</h2>
+    <div class="say">👉 ABCD এর চার শীর্ষ টেনে যেভাবে খুশি সরাও। AB, BC, CD, DA এর মধ্যবিন্দু P, Q, R, S জুড়লে PQRS সবসময় সামান্তরিক হয়। চেক করো PQ = SR আর QR = PS।</div>
+    <div class="ctl" id="l6in"></div>
+    <div class="chips" id="l6pre"><button data-pre="[[-6,-2],[5,-4],[7,4],[-4,6]]">সাধারণ</button><button data-pre="[[-5,-5],[5,-5],[5,5],[-5,5]]">বর্গ ABCD</button><button data-pre="[[-6,-3],[6,-3],[3,4],[-3,4]]">AC = BD (সমদ্বিবাহু ট্র্যাপিজিয়াম)</button></div>
+    <canvas id="l6cv" width="600" height="600"></canvas>
+    <div class="res m" id="l6res"></div>
+  </section>
+
+  <section class="panel" id="prac">
+    <h2>✍️ প্র্যাকটিস (বইয়ের ধাঁচে)</h2>
+    <div class="say">👉 এখানে ভেক্টরকে (x, y) আকারে ধরা হয়েছে শুধু অনুশীলনের জন্য, যাতে সংখ্যা মিলিয়ে দেখা যায়। উত্তর পূর্ণসংখ্যা, দশমিক বা ভগ্নাংশ (যেমন ৩/২) হতে পারে। ঋণাত্মক হলে মাইনাস দাও। √ এর উত্তর দুই দশমিক স্থান পর্যন্ত লিখলেই চলবে।</div>
+    <div id="pracbox"></div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="fb" id="qscore"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>📖 বই থেকে প্রশ্নোত্তর</h2>
+    <div class="say">নিজে করে তারপর দেখো। যে প্রশ্নের উত্তর নিশ্চিত করা যায়নি, সেটি আমি বাদ দিয়েছি।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+
+<footer class="site">&copy; ShikboLab · সমতলীয় ভেক্টর (উচ্চতর গণিত অধ্যায় ১২)</footer>
+<script>
+var BNS='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BNS[d];});}
+function en(s){return String(s).replace(/[০-৯]/g,function(d){return BNS.indexOf(d);});}
+function $(id){return document.getElementById(id);}
+function R2(c){var d=Math.min(2,window.devicePixelRatio||1),w=c.width,h=c.height;c.width=w*d;c.height=h*d;var x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return x;}
+function fm(v,d){d=(d===undefined)?2:d;var k=Math.pow(10,d),r=Math.round(v*k)/k;if(Math.abs(r)<1e-9)r=0;return bn(String(r).replace('-','−'));}
+function sg(v){return v<0?'−'+bn(-v):bn(v);}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t;}return a;}
+function red(n,d){if(d<0){n=-n;d=-d;}var g=gcd(n,d)||1;return [n/g,d/g];}
+function frac(n,d){var r=red(n,d);return r[1]===1?sg(r[0]):sg(r[0])+'/'+bn(r[1]);}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ex){var box=$(b.dataset.ex),s=box.querySelectorAll('.step:not(.show)');if(s.length){s[0].classList.add('show');}if(s.length<=1)b.disabled=true;}
+  if(b.dataset.rs){var bx=$(b.dataset.rs);bx.querySelectorAll('.step').forEach(function(x){x.classList.remove('show');});bx.querySelector('[data-ex]').disabled=false;}
+});
+/* ===== সাধারণ সহায়ক: গ্রিড, বিন্দু টানা, সংখ্যা-ঘর ===== */
+function sq(N){N=Math.round(N);if(N<0)return '?';var k=1,m=N,f;for(f=2;f*f<=m;f++){while(m%(f*f)===0){m/=f*f;k*=f;}}if(m===1)return bn(k);if(k===1)return '√'+bn(m);return bn(k)+'√'+bn(m);}
+function dc(N){return fm(Math.sqrt(N),4);}
+function d2(p,q){return (p[0]-q[0])*(p[0]-q[0])+(p[1]-q[1])*(p[1]-q[1]);}
+function sh(P){var s=0,n=P.length,i,a,b;for(i=0;i<n;i++){a=P[i];b=P[(i+1)%n];s+=a[0]*b[1]-b[0]*a[1];}return s;}
+function cr(o,a,b){return (a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);}
+function segX(a,b,c,d){var d1=cr(a,b,c),d2_=cr(a,b,d),d3=cr(c,d,a),d4=cr(c,d,b);return d1*d2_<0&&d3*d4<0;}
+function pn(p){return '('+sg(p[0])+', '+sg(p[1])+')';}
+function quad(p){var x=p[0],y=p[1];if(x===0&&y===0)return 'মূলবিন্দু';if(y===0)return 'x অক্ষের উপর';if(x===0)return 'y অক্ষের উপর';return x>0?(y>0?'১ম চতুর্ভাগ':'৪র্থ চতুর্ভাগ'):(y>0?'২য় চতুর্ভাগ':'৩য় চতুর্ভাগ');}
+function half(S){return fm(Math.abs(S)/2,1);}
+function minus(sym,v){return v===0?sym:sym+(v>0?' − '+bn(v):' + '+bn(-v));}
+var COL=['#e53935','#1971c2','#2a9d8f','#e08a00'],NM=['A','B','C','D'];
+function Cv(id,R){var c=$(id),W=c.width,H=c.height,x=R2(c),s=W/(2*R);return {c:c,x:x,W:W,H:H,R:R,s:s,X:function(u){return W/2+u*s;},Y:function(v){return H/2-v*s;}};}
+function grid(o){var x=o.x,R=o.R,i;x.fillStyle='#fff';x.fillRect(0,0,o.W,o.H);
+  for(i=-R;i<=R;i++){x.strokeStyle=i===0?'#1f3a5f':'#e3eaf0';x.lineWidth=i===0?1.8:1;x.beginPath();x.moveTo(o.X(i),0);x.lineTo(o.X(i),o.H);x.stroke();x.beginPath();x.moveTo(0,o.Y(i));x.lineTo(o.W,o.Y(i));x.stroke();}
+  x.fillStyle='#6b7f95';x.font='11px system-ui';
+  for(i=-R+1;i<R;i++){if(i===0||i%2)continue;x.textAlign='center';x.fillText(sg(i),o.X(i),o.Y(0)+14);x.textAlign='right';x.fillText(sg(i),o.X(0)-4,o.Y(i)+4);}
+  x.textAlign='center';x.fillStyle='#1f3a5f';x.font='700 13px system-ui';x.fillText('X',o.W-10,o.Y(0)-6);x.fillText('Y',o.X(0)+12,12);x.fillText('O',o.X(0)-8,o.Y(0)+14);}
+function seg(o,p,q,col,w,dash){var x=o.x;x.strokeStyle=col;x.lineWidth=w||2;x.setLineDash(dash||[]);x.beginPath();x.moveTo(o.X(p[0]),o.Y(p[1]));x.lineTo(o.X(q[0]),o.Y(q[1]));x.stroke();x.setLineDash([]);}
+function lineMC(o,m,c,col,w){seg(o,[-o.R,m*-o.R+c],[o.R,m*o.R+c],col,w||2.5);}
+function lineVert(o,a,col,w){seg(o,[a,-o.R],[a,o.R],col,w||2.5);}
+function lineThru(o,p,q,col,w){var dx=q[0]-p[0],dy=q[1]-p[1];if(dx===0&&dy===0)return;if(dx===0)lineVert(o,p[0],col,w);else{var m=dy/dx;lineMC(o,m,p[1]-m*p[0],col,w);}}
+function dot(o,p,name,col,lab){var x=o.x;x.fillStyle=col;x.beginPath();x.arc(o.X(p[0]),o.Y(p[1]),6.5,0,6.2832);x.fill();x.strokeStyle='#fff';x.lineWidth=2;x.stroke();
+  x.fillStyle=col;x.font='700 13px system-ui';x.textAlign='left';var tx=o.X(p[0])+9,ty=o.Y(p[1])-9;if(tx>o.W-90)tx-=110;if(ty<16)ty+=26;x.fillText(name+(lab===false?'':pn(p)),tx,ty);}
+function tag(o,p,txt,col){var x=o.x;x.fillStyle=col||'#1f3a5f';x.font='700 12px system-ui';x.textAlign='center';x.fillText(txt,o.X(p[0]),o.Y(p[1])-5);}
+function Ed(boxId,names,pts,R,redraw,idx){
+  var box=$(boxId),h='';idx=idx||names.map(function(n,i){return i;});
+  names.forEach(function(n,i){h+='<span class="pt"><b style="color:'+COL[idx[i]%4]+'">'+n+'</b> ( <input type="number" min="'+(-R)+'" max="'+R+'" step="1" data-i="'+i+'" data-k="0" aria-label="'+n+' এর x"> , <input type="number" min="'+(-R)+'" max="'+R+'" step="1" data-i="'+i+'" data-k="1" aria-label="'+n+' এর y"> )</span>';});
+  box.insertAdjacentHTML('afterbegin',h);
+  function sync(){[].forEach.call(box.querySelectorAll('input[data-i]'),function(e){e.value=pts[+e.dataset.i][+e.dataset.k];});}
+  box.addEventListener('input',function(e){var t=e.target;if(t.dataset.i===undefined)return;var v=Math.round(parseFloat(t.value));if(isNaN(v))return;pts[+t.dataset.i][+t.dataset.k]=Math.max(-R,Math.min(R,v));redraw();});
+  sync();return {sync:sync};}
+function Drag(o,get,after){var act=-1,c=o.c;
+  function pos(e){var r=c.getBoundingClientRect();return [(e.clientX-r.left)*o.W/r.width,(e.clientY-r.top)*o.H/r.height];}
+  c.addEventListener('pointerdown',function(e){var p=pos(e),best=-1,bd=1e9,P=get();P.forEach(function(q,i){var dx=o.X(q[0])-p[0],dy=o.Y(q[1])-p[1],d=dx*dx+dy*dy;if(d<bd){bd=d;best=i;}});
+    if(bd<=28*28){act=best;try{c.setPointerCapture(e.pointerId);}catch(er){}e.preventDefault();}});
+  c.addEventListener('pointermove',function(e){if(act<0)return;var P=get(),p=pos(e),R=o.R,u=Math.round((p[0]-o.W/2)/o.s),v=Math.round((o.H/2-p[1])/o.s);
+    u=Math.max(-R,Math.min(R,u));v=Math.max(-R,Math.min(R,v));if(P[act][0]!==u||P[act][1]!==v){P[act][0]=u;P[act][1]=v;after();}});
+  function up(){act=-1;}c.addEventListener('pointerup',up);c.addEventListener('pointercancel',up);}
+function Pre(boxId,pts,after){$(boxId).addEventListener('click',function(e){var b=e.target.closest('button[data-pre]');if(!b)return;var a=JSON.parse(b.dataset.pre);a.forEach(function(p,i){pts[i][0]=p[0];pts[i][1]=p[1];});after();});}
+function slopeOf(P,Q){var dx=Q[0]-P[0],dy=Q[1]-P[1];return {dx:dx,dy:dy,same:dx===0&&dy===0,vert:dx===0&&dy!==0};}
+function eqStr(n,d,cn,cd){var m=red(n,d),c=red(cn,cd),s='y = ';
+  if(m[0]===0)return 'y = '+(c[0]===0?'০':frac(c[0],c[1]));
+  s+=(m[0]===1&&m[1]===1)?'x':(m[0]===-1&&m[1]===1)?'−x':(m[1]===1?sg(m[0]):'('+frac(m[0],m[1])+')')+'x';
+  if(c[0]!==0)s+=(c[0]>0?' + ':' − ')+frac(Math.abs(c[0]),c[1]);return s;}
+
+/* ===== ভেক্টর সহায়ক ===== */
+function arr(o,p,q,col,w,dash){var x=o.x,X1=o.X(p[0]),Y1=o.Y(p[1]),X2=o.X(q[0]),Y2=o.Y(q[1]);if(X1===X2&&Y1===Y2)return;seg(o,p,q,col,w||2.6,dash);
+  var a=Math.atan2(Y2-Y1,X2-X1),L=12;x.fillStyle=col;x.beginPath();x.moveTo(X2,Y2);x.lineTo(X2-L*Math.cos(a-0.4),Y2-L*Math.sin(a-0.4));x.lineTo(X2-L*Math.cos(a+0.4),Y2-L*Math.sin(a+0.4));x.closePath();x.fill();}
+function vt(v){return '('+f1(v[0])+', '+f1(v[1])+')';}
+function f1(n){return fm(n,1);}
+function ln(v){return Math.sqrt(v[0]*v[0]+v[1]*v[1]);}
+function len(v){var N=v[0]*v[0]+v[1]*v[1];return (N===Math.round(N))?sq(N)+(sq(N).indexOf('√')>-1?' ≈ '+fm(Math.sqrt(N),3):''):fm(Math.sqrt(N),3);}
+function sub(a,b){return [a[0]-b[0],a[1]-b[1]];}function add(a,b){return [a[0]+b[0],a[1]+b[1]];}function mul(m,a){return [m*a[0],m*a[1]];}
+function mid(a,b){return [(a[0]+b[0])/2,(a[1]+b[1])/2];}
+function par(a,b){return a[0]*b[1]-a[1]*b[0]===0;}
+function inb(o,p){return Math.abs(p[0])<=o.R&&Math.abs(p[1])<=o.R;}
+function lab_(o,p,t,c){if(inb(o,p))tag(o,p,t,c);}
+
+/* ===== ল্যাব ১: যোগ-বিয়োগ ===== */
+var P1=[[4,1],[1,4]],o1=Cv('l1cv',9),e1;
+function lab1(){
+  var o=o1,U=P1[0],V=P1[1],O=[0,0],S=add(U,V),w=sub(U,V);grid(o);
+  var x=o.x;x.fillStyle="rgba(42,157,143,.10)";x.beginPath();[O,U,S,V].forEach(function(p,i){i?x.lineTo(o.X(p[0]),o.Y(p[1])):x.moveTo(o.X(p[0]),o.Y(p[1]));});x.closePath();x.fill();
+  seg(o,V,S,'#1971c2',1.4,[5,5]);seg(o,O,V,'#1971c2',1.4,[5,5]);
+  arr(o,O,U,'#e53935',3);arr(o,U,S,'#1971c2',3);arr(o,O,S,'#1b8a5a',3.4);
+  if($('l1d').checked)arr(o,V,U,'#8e44ad',2.6);
+  lab_(o,mid(O,U),'u','#e53935');lab_(o,mid(U,S),'v','#1971c2');lab_(o,mid(O,S),'u+v','#1b8a5a');
+  if($('l1d').checked)lab_(o,mid(V,U),'u−v','#8e44ad');
+  dot(o,U,'U',COL[0]);dot(o,V,'V',COL[1]);
+  var h='u = OU = '+vt(U)+', |u| = '+len(U)+'; v = OV = '+vt(V)+', |v| = '+len(V)+'<br>';
+  h+='<b>u + v</b> = '+vt(U)+' + '+vt(V)+' = <b>'+vt(S)+'</b>, |u + v| = '+len(S)+(inb(o,S)?'':' (গ্রিডের বাইরে)')+'<br>';
+  h+='<b>বিনিময়বিধি:</b> v + u = '+vt(add(V,U))+' ⇒ <span class="ok">u + v = v + u ✅</span><br>';
+  h+='<b>বিয়োগ:</b> u − v = '+vt(w)+' (V থেকে U পর্যন্ত ভেক্টর, মানে অন্তবিন্দু − অন্তবিন্দু)<br>';
+  h+='u + (−u) = '+vt(add(U,mul(-1,U)))+' = <b>০ (শূন্য ভেক্টর)</b><br>';
+  if(U[0]===0&&U[1]===0||V[0]===0&&V[1]===0)h+='<span class="no">একটি ভেক্টর শূন্য, তাই ত্রিভুজ/সামান্তরিক কিছুই হয় না। u + 0 = u।</span>';
+  else if(par(U,V))h+='<span class="no">u ও v সমান্তরাল (একই রেখায়), তাই সামান্তরিক হয় না। শুধু <b>ত্রিভুজবিধি</b> খাটে, ফল একই রেখার উপর পড়ে।</span>';
+  else h+='<span class="ok">ত্রিভুজবিধি ও সামান্তরিকবিধি দুটোতেই একই কর্ণ পাওয়া গেছে ✅</span>';
+  if(U[0]+V[0]===0&&U[1]+V[1]===0&&!(U[0]===0&&U[1]===0))h+='<br>এখানে v = −u, তাই u + v = 0 (বিপরীত ভেক্টরের যোগফল শূন্য)।';
+  $('l1res').innerHTML=h;
+}
+e1=Ed('l1in',['U','V'],P1,9,lab1);Drag(o1,function(){return P1;},function(){e1.sync();lab1();});Pre('l1pre',P1,function(){e1.sync();lab1();});$('l1d').addEventListener('change',lab1);lab1();
+
+/* ===== ল্যাব ২: ভেক্টর গুণ ===== */
+var P2=[[3,2]],o2=Cv('l2cv',9),e2;
+function lab2(){
+  var o=o2,U=P2[0],m=+$('l2m').value/2,n=+$('l2n').value/2,O=[0,0],mu=mul(m,U),nu=mul(n,U),s=mul(m+n,U),A=add(mu,nu);
+  $('l2mv').textContent=f1(m);$('l2nv').textContent=f1(n);grid(o);
+  arr(o,O,s,'#1b8a5a',5,[7,5]);arr(o,O,U,'#e53935',2.6);arr(o,O,mu,'#1971c2',3.2);arr(o,mu,add(mu,nu),'#e08a00',3.2);
+  lab_(o,mid(O,U),'u','#e53935');lab_(o,mid(O,mu),'mu','#1971c2');lab_(o,add(mu,mul(0.5,nu)),'nu','#e08a00');
+  dot(o,U,'U',COL[0]);
+  var lu=ln(U),h='u = '+vt(U)+', |u| = '+len(U)+'<br>';
+  h+='<b>mu</b> = '+f1(m)+' × '+vt(U)+' = '+vt(mu)+'; |mu| = |m|·|u| = '+f1(Math.abs(m))+' × '+fm(lu,3)+' = '+fm(Math.abs(m)*lu,3)+'<br>';
+  h+=m===0?'m = ০, তাই mu = শূন্য ভেক্টর।':(m>0?'m ধনাত্মক ⇒ mu এর দিক u এর দিকেই।':'m ঋণাত্মক ⇒ mu এর দিক u এর <b>বিপরীত</b>।');
+  if(U[0]===0&&U[1]===0)h+=' (u নিজেই শূন্য ভেক্টর, তাই সব গুণিতকই শূন্য।)';
+  h+='<br><b>nu</b> = '+vt(nu)+' ; <b>(m + n)u</b> = '+f1(m+n)+' × u = '+vt(s)+'<br>';
+  h+='<b>mu + nu</b> = '+vt(A)+' ⇒ <span class="ok">(m + n)u = mu + nu ✅ (সূত্র ১)</span><br>';
+  h+=(m===1?'এখন m = ১, তাই 1·u = u। ':'')+(m===-1?'এখন m = −১, তাই (−1)u = −u (বিপরীত ভেক্টর)। ':'')+'যেকোনো ভেক্টর u এর জন্য mu সবসময় u এর ধারক রেখার উপরেই থাকে।';
+  $('l2res').innerHTML=h;
+}
+e2=Ed('l2in',['U'],P2,9,lab2);Drag(o2,function(){return P2;},function(){e2.sync();lab2();});['l2m','l2n'].forEach(function(i){$(i).addEventListener('input',lab2);});lab2();
+
+/* ===== ল্যাব ৩: অবস্থান ভেক্টর ===== */
+var P3=[[2,1],[6,4]],o3=Cv('l3cv',9),e3;
+function lab3(){
+  var o=o3,A=P3[0],B=P3[1],O=[0,0],d=sub(B,A),M=mid(A,B);grid(o);
+  arr(o,O,A,'#e53935',2.8);arr(o,O,B,'#1971c2',2.8);arr(o,A,B,'#1b8a5a',3.4);
+  if(!(d[0]===0&&d[1]===0))arr(o,O,d,'#1b8a5a',2,[6,5]);
+  lab_(o,mid(O,A),'a','#e53935');lab_(o,mid(O,B),'b','#1971c2');lab_(o,M,'AB','#1b8a5a');if(inb(o,d))lab_(o,mid(O,d),'b−a','#1b8a5a');
+  dot(o,A,'A',COL[0]);dot(o,B,'B',COL[1]);dot(o,M,'M',COL[2],false);
+  var h='a = OA = '+vt(A)+'; b = OB = '+vt(B)+'<br><b>AB = b − a</b> = '+vt(B)+' − '+vt(A)+' = <b>'+vt(d)+'</b>; |AB| = '+len(d)+'<br>';
+  h+='BA = a − b = '+vt(sub(A,B))+' = −AB (বিপরীত ভেক্টর)<br>';
+  h+='AB এর মধ্যবিন্দু M এর অবস্থান ভেক্টর = ½(a + b) = '+vt(M)+'<br>';
+  h+=(d[0]===0&&d[1]===0)?'<span class="no">A ও B একই বিন্দু, তাই AB = শূন্য ভেক্টর।</span>':'ডটেড সবুজ ভেক্টরটি O থেকে আঁকা b − a। এটি A থেকে B এর ভেক্টর AB এর সমান (দৈর্ঘ্য ও দিক একই), শুধু অবস্থান আলাদা।';
+  $('l3res').innerHTML=h;
+}
+e3=Ed('l3in',['A','B'],P3,9,lab3);Drag(o3,function(){return P3;},function(){e3.sync();lab3();});Pre('l3pre',P3,function(){e3.sync();lab3();});lab3();
+
+/* ===== ল্যাব ৪: সামান্তরিকের কর্ণ ===== */
+var P4=[[-4,-2],[2,-3],[-3,3]],o4=Cv('l4cv',9),e4;
+function lab4(){
+  var o=o4,A=P4[0],B=P4[1],D=P4[2],C=sub(add(B,D),A),O=mid(A,C),O2=mid(B,D),AB=sub(B,A),AD=sub(D,A),AC=sub(C,A),BD=sub(D,B),h='';grid(o);
+  var x=o.x;x.fillStyle='rgba(25,113,194,.10)';x.beginPath();[A,B,C,D].forEach(function(p,i){i?x.lineTo(o.X(p[0]),o.Y(p[1])):x.moveTo(o.X(p[0]),o.Y(p[1]));});x.closePath();x.fill();
+  seg(o,A,B,'#1f3a5f',2.6);seg(o,B,C,'#1f3a5f',2.6);seg(o,C,D,'#1f3a5f',2.6);seg(o,D,A,'#1f3a5f',2.6);
+  arr(o,A,C,'#1b8a5a',3);arr(o,B,D,'#e08a00',3);
+  dot(o,A,'A',COL[0]);dot(o,B,'B',COL[1]);dot(o,C,'C',COL[2]);dot(o,D,'D',COL[3]);dot(o,O,'O',COL[0],false);
+  h+='C = B + D − A = '+vt(C)+(inb(o,C)?'':' <span class="no">(গ্রিডের বাইরে পড়েছে, ছবিতে কাটা যেতে পারে)</span>')+'<br>';
+  if(par(AB,AD)){h+='<span class="no">A, B, D একই রেখায় আছে, তাই সামান্তরিক গঠিত হয় না। কোনো একটি বিন্দু সরাও।</span>';}
+  else{
+   h+='AB = '+vt(AB)+', AD = '+vt(AD)+'<br><b>AC = AB + AD</b> = '+vt(add(AB,AD))+' = '+vt(AC)+' ✅<br><b>BD = AD − AB</b> = '+vt(sub(AD,AB))+' = '+vt(BD)+' ✅<br>';
+   h+='AC এর মধ্যবিন্দু = '+vt(O)+'; BD এর মধ্যবিন্দু = '+vt(O2)+' ⇒ <span class="ok">কর্ণ দুটি একই বিন্দু O তে পরস্পরকে সমদ্বিখণ্ডিত করেছে ✅</span><br>';
+   h+='AC + BD = '+vt(add(AC,BD))+' = 2AD = '+vt(mul(2,AD))+' (বইয়ের অনুশীলনী ১২ এর ৪) ; AC − BD = '+vt(sub(AC,BD))+' = 2AB = '+vt(mul(2,AB))+'<br>';
+   var rec=AB[0]*AD[0]+AB[1]*AD[1]===0,rh=AB[0]*AB[0]+AB[1]*AB[1]===AD[0]*AD[0]+AD[1]*AD[1];h+='<b>ধরন:</b> '+(rec&&rh?'বর্গ (সামান্তরিক, এক কোণ সমকোণ ও সন্নিহিত বাহু সমান)':rec?'আয়তক্ষেত্র (সামান্তরিক ও এক কোণ সমকোণ)':rh?'রম্বস (সামান্তরিক ও সন্নিহিত বাহু সমান)':'সামান্তরিক');
+  }
+  $('l4res').innerHTML=h;
+}
+e4=Ed('l4in',['A','B','D'],P4,9,lab4,[0,1,3]);Drag(o4,function(){return P4;},function(){e4.sync();lab4();});Pre('l4pre',P4,function(){e4.sync();lab4();});lab4();
+
+/* ===== ল্যাব ৫: মধ্যবিন্দু উপপাদ্য ===== */
+var P5=[[0,6],[-6,-3],[6,-3]],o5=Cv('l5cv',9),e5;
+function lab5(){
+  var o=o5,A=P5[0],B=P5[1],C=P5[2],D=mid(A,B),E=mid(A,C),DE=sub(E,D),BC=sub(C,B),h='';grid(o);
+  var x=o.x;x.fillStyle='rgba(42,157,143,.10)';x.beginPath();x.moveTo(o.X(A[0]),o.Y(A[1]));x.lineTo(o.X(B[0]),o.Y(B[1]));x.lineTo(o.X(C[0]),o.Y(C[1]));x.closePath();x.fill();
+  seg(o,A,B,'#1f3a5f',2.6);seg(o,A,C,'#1f3a5f',2.6);arr(o,B,C,'#1971c2',3);arr(o,D,E,'#e53935',3.2);
+  lab_(o,mid(B,C),'BC','#1971c2');lab_(o,mid(D,E),'DE','#e53935');
+  dot(o,A,'A',COL[0],false);dot(o,B,'B',COL[1],false);dot(o,C,'C',COL[2],false);dot(o,D,'D',COL[3],false);dot(o,E,'E',COL[3],false);
+  h+='AB = '+vt(sub(B,A))+', AC = '+vt(sub(C,A))+'; D, E মধ্যবিন্দু: D = '+vt(D)+', E = '+vt(E)+'<br>';
+  if(par(sub(B,A),sub(C,A))){h+='<span class="no">A, B, C একই রেখায়, ত্রিভুজ হয় না।</span>';}
+  else{
+   h+='DE = AE − AD = '+vt(DE)+'; BC = AC − AB = '+vt(BC)+'<br><b>2·DE</b> = '+vt(mul(2,DE))+' = <b>BC</b> '+(Math.abs(2*DE[0]-BC[0])<1e-9&&Math.abs(2*DE[1]-BC[1])<1e-9?'✅':'')+'<br>';
+   h+='<span class="ok">DE = ½BC, তাই DE ∥ BC এবং DE = ½BC ✅</span> (|DE| = '+fm(ln(DE),3)+', |BC| = '+fm(ln(BC),3)+')';
+  }
+  $('l5res').innerHTML=h;
+}
+e5=Ed('l5in',['A','B','C'],P5,9,lab5);Drag(o5,function(){return P5;},function(){e5.sync();lab5();});Pre('l5pre',P5,function(){e5.sync();lab5();});lab5();
+
+/* ===== ল্যাব ৬: চতুর্ভুজের মধ্যবিন্দু ===== */
+var P6=[[-6,-2],[5,-4],[7,4],[-4,6]],o6=Cv('l6cv',9),e6;
+function lab6(){
+  var o=o6,A=P6[0],B=P6[1],C=P6[2],D=P6[3],P=mid(A,B),Q=mid(B,C),R=mid(C,D),S=mid(D,A),h='';grid(o);
+  var x=o.x;x.fillStyle='rgba(224,138,0,.12)';x.beginPath();[P,Q,R,S].forEach(function(p,i){i?x.lineTo(o.X(p[0]),o.Y(p[1])):x.moveTo(o.X(p[0]),o.Y(p[1]));});x.closePath();x.fill();
+  [[A,B],[B,C],[C,D],[D,A]].forEach(function(s){seg(o,s[0],s[1],'#1f3a5f',2.4);});
+  [[P,Q],[Q,R],[R,S],[S,P]].forEach(function(s){seg(o,s[0],s[1],'#e08a00',2.8);});
+  seg(o,A,C,'#9fb0bd',1.2,[5,5]);seg(o,B,D,'#9fb0bd',1.2,[5,5]);
+  dot(o,A,'A',COL[0],false);dot(o,B,'B',COL[1],false);dot(o,C,'C',COL[2],false);dot(o,D,'D',COL[3],false);
+  [[P,'P'],[Q,'Q'],[R,'R'],[S,'S']].forEach(function(z){dot(o,z[0],z[1],'#e08a00',false);});
+  var PQ=sub(Q,P),SR=sub(R,S),QR=sub(R,Q),PS=sub(S,P),AC=sub(C,A),BD=sub(D,B);
+  h+='P = '+vt(P)+', Q = '+vt(Q)+', R = '+vt(R)+', S = '+vt(S)+'<br>';
+  h+='PQ = '+vt(PQ)+' ; SR = '+vt(SR)+' ⇒ <span class="ok">PQ = SR ✅</span><br>QR = '+vt(QR)+' ; PS = '+vt(PS)+' ⇒ <span class="ok">QR = PS ✅</span><br>';
+  if(par(PQ,QR))h+='<span class="no">P, Q, R একই রেখায় আছে, তাই সামান্তরিক "চ্যাপ্টা" হয়ে গেছে (ক্ষেত্রফল ০)।</span>';
+  else h+='<b>PQRS সামান্তরিক ✔</b>, আর PQ = ½AC, QR = ½BD (বইয়ের উদাহরণ ৫ এর যুক্তি থেকেই আসে)।<br>বইয়ের বাইরের তথ্য: AC = BD হলে PQRS রম্বস, AC ⊥ BD হলে আয়তক্ষেত্র। এখন |AC| = '+fm(ln(AC),3)+', |BD| = '+fm(ln(BD),3)+(function(){var e=Math.abs(ln(AC)-ln(BD))<1e-9,pp=(AC[0]*BD[0]+AC[1]*BD[1])===0;return e&&pp?' ⇒ <b>PQRS বর্গ</b>':e?' ⇒ <b>PQRS রম্বস</b>':pp?' ⇒ <b>PQRS আয়তক্ষেত্র</b>':'';})();
+  $('l6res').innerHTML=h;
+}
+e6=Ed('l6in',['A','B','C','D'],P6,9,lab6);Drag(o6,function(){return P6;},function(){e6.sync();lab6();});Pre('l6pre',P6,function(){e6.sync();lab6();});lab6();
+/* ===== প্র্যাকটিস ===== */
+function numOf(s){s=en(s).replace(/[−–]/g,'-').replace(/\s+/g,'');var m=s.match(/^(-?\d+)\/(\d+)$/);if(m)return +m[1]/+m[2];if(/^-?\d*\.?\d+$/.test(s))return parseFloat(s);return NaN;}
+var PR=[
+ ['u = (3, 4) ভেক্টরের দৈর্ঘ্য |u| কত?',[5],'|u| = √(3² + 4²) = √25 = 5।'],
+ ['u = (2, 3), v = (4, −1) হলে u + v এর x উপাংশ কত?',[6],'u + v = (2 + 4, 3 + (−1)) = (6, 2)। x উপাংশ ৬।'],
+ ['u = (2, 3), v = (4, −1) হলে u − v এর y উপাংশ কত?',[4],'u − v = (2 − 4, 3 − (−1)) = (−2, 4)। y উপাংশ ৪।'],
+ ['u = (3, 4) হলে |3u| কত?',[15],'|3u| = 3 × |u| = 3 × 5 = 15।'],
+ ['u = (3, 4) হলে |−2u| কত?',[10],'|−2u| = |−2| × |u| = 2 × 5 = 10।'],
+ ['A(1, 2) ও B(5, 6) বিন্দুর জন্য |AB| কত? (দুই দশমিক স্থান)',[5.6569],'AB = b − a = (4, 4)। |AB| = √(16 + 16) = √32 ≈ 5.66।'],
+ ['A(2, 4) ও B(8, 10) এর মধ্যবিন্দুর অবস্থান ভেক্টরের x উপাংশ কত?',[5],'½(a + b) = ½(10, 14) = (5, 7)। x উপাংশ ৫।'],
+ ['m = 2, n = 3, u = (1, 2) হলে (m + n)u এর y উপাংশ কত?',[10],'(m + n)u = 5 × (1, 2) = (5, 10)। y উপাংশ ১০। (mu + nu = (2,4) + (3,6) = (5,10) ✅)'],
+ ['ত্রিভুজ ABC এ AB, AC এর মধ্যবিন্দু D, E। BC = 12 সেমি হলে DE কত সেমি?',[6],'মধ্যবিন্দু উপপাদ্য: DE = ½BC = 6 সেমি।'],
+ ['ট্র্যাপিজিয়ামে AD ∥ BC, AD = 6, BC = 10। অসমান্তরাল বাহুর মধ্যবিন্দুদ্বয়ের সংযোজক PQ কত?',[8],'PQ = ½(AD + BC) = ½(6 + 10) = 8।']
+];
+(function(){var h='';PR.forEach(function(p,i){h+='<div class="q"><b>'+bn(i+1)+'.</b> '+p[0]+'<div class="ans"> <input type="text" id="pi'+i+'" size="10"> <button class="btn" data-pc="'+i+'">যাচাই</button> <button class="btn alt" data-ph="'+i+'">সমাধান</button></div><div class="fb" id="pf'+i+'"></div></div>';});$('pracbox').innerHTML=h;})();
+$('pracbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.pc!==undefined){var i=+b.dataset.pc,raw=$('pi'+i).value,v=numOf(raw),ok=!isNaN(v)&&PR[i][1].some(function(a){return Math.abs(a-v)<=0.0151;});
+    $('pf'+i).innerHTML=raw.trim()===''?'আগে উত্তর লেখো।':(ok?'✅ ঠিক! সাবাশ।':'❌ আবার চেষ্টা করো, বা "সমাধান" দেখো।');}
+  if(b.dataset.ph!==undefined){var j=+b.dataset.ph;$('pf'+j).innerHTML='💡 '+PR[j][2];}
+});
+/* ===== কুইজ ===== */
+var QZ=[];function M(q,c,w,e){QZ.push({q:q,o:[c].concat(w),e:e});}
+M('নিচের কোনটি ভেক্টর রাশি?','বেগ',['দ্রুতি','ভর','তাপমাত্রা'],'বেগে পরিমাণ ও দিক দুটোই থাকে। বাকিগুলো শুধু পরিমাণ (স্কেলার)।');
+M('নিচের কোনটি স্কেলার রাশি?','আয়তন',['সরণ','ওজন','বল'],'আয়তন শুধু পরিমাণ দিয়ে বোঝা যায়।');
+M('"বাড়ি থেকে ৩ কি.মি. দূরে" — তথ্যটি—','সরণ বোঝাতে পূর্ণ নয়, কারণ দিক নেই',['পূর্ণ সরণ','ভেক্টর','বেগ'],'সরণ ভেক্টর, তার জন্য দিক লাগে।');
+M('ভেক্টর AB এর আদিবিন্দু কোনটি?','A',['B','AB এর মধ্যবিন্দু','O'],'A থেকে শুরু, B তে শেষ। A আদিবিন্দু, B অন্তবিন্দু।');
+M('দুটি ভেক্টর সমান হতে নিচের কোন শর্ত লাগে?','দৈর্ঘ্য সমান, ধারক সমান্তরাল বা অভিন্ন, দিক একই',['শুধু দৈর্ঘ্য সমান','শুধু দিক একই','শুধু ধারক রেখা অভিন্ন'],'তিনটি শর্তই একসাথে মানতে হয়।');
+M('u = AB হলে −u কত?','BA',['AB','AA','B'],'বিপরীত ভেক্টর: আদি ও অন্তবিন্দু উল্টে যায়।');
+M('AB + BC = ?','AC',['CA','BA','CB'],'ত্রিভুজবিধি: B মাঝের বিন্দু কেটে যায়।');
+M('ত্রিভুজ ABC এ AB + BC + CA = ?','০ (শূন্য ভেক্টর)',['AC','২AB','কোনোটি নয়'],'ঘুরে একই বিন্দুতে ফিরে এলে সরণ শূন্য।');
+M('AB − AC = ?','CB',['BC','BA','AA'],'একই আদিবিন্দুর বিয়োগ: অন্তবিন্দু থেকে অন্তবিন্দু (C থেকে B)।');
+M('দুটি ভেক্টর সমান্তরাল হলে কোন বিধি সব ক্ষেত্রে প্রযোজ্য?','ত্রিভুজবিধি',['সামান্তরিকবিধি','দুটোই নয়','শুধু সামান্তরিকবিধি'],'সমান্তরাল ভেক্টরে সামান্তরিক গঠিত হয় না, কিন্তু ত্রিভুজবিধি সবসময় খাটে।');
+M('u + v = v + u — এটি কোন বিধি?','বিনিময়বিধি',['সংযোগবিধি','বর্জনবিধি','বণ্টনবিধি'],'ক্রম বদলালেও যোগফল একই।');
+M('(u + v) + w = u + (v + w) — এটি কোন বিধি?','সংযোগবিধি',['বিনিময়বিধি','বর্জনবিধি','শূন্যবিধি'],'বন্ধনী কোথায় বসছে তাতে ফল বদলায় না।');
+M('u + v = u + w হলে কী সিদ্ধান্ত হয়?','v = w',['u = 0','v = −w','কিছু বলা যায় না'],'বর্জনবিধি: দুই পাশ থেকে u বাদ দেওয়া যায়।');
+M('u + (−u) = ?','০ (শূন্য ভেক্টর)',['u','২u','−u'],'বিপরীত ভেক্টর যোগ করলে শূন্য ভেক্টর।');
+M('শূন্য ভেক্টরের কী নেই?','দিক ও ধারক রেখা',['দৈর্ঘ্য','মান শূন্য হওয়া','কিছুই বাদ নেই'],'দৈর্ঘ্য শূন্য, কিন্তু নির্দিষ্ট দিক বা ধারক রেখা নেই।');
+M('m < 0 হলে mu এর দিক u এর—','বিপরীত দিকে',['একই দিকে','লম্ব দিকে','দিকহীন'],'ঋণাত্মক সংখ্যা দিয়ে গুণ করলে দিক উল্টে যায়।');
+M('|mu| = ?','|m|·|u|',['m·|u| সবসময়','|m| + |u|','|u|/m'],'দৈর্ঘ্য কখনও ঋণাত্মক নয়, তাই |m|।');
+M('1·u = ?','u',['০','−u','২u'],'১ দিয়ে গুণে কিছু বদলায় না।');
+M('(−1)u = ?','−u',['u','০','1/u'],'(−১)u হলো বিপরীত ভেক্টর।');
+M('(m + n)u = ?','mu + nu',['mn·u','(m·n)u + u','mu·nu'],'বণ্টন সূত্র ১।');
+M('m(u + v) = ?','mu + mv',['mu + v','u + mv','m·u·v'],'বণ্টন সূত্র ২।');
+M('AB ∥ CD হলে—','AB = m·CD (m কোনো সংখ্যা)',['AB = CD সবসময়','AB + CD = 0 সবসময়','|AB| = |CD| সবসময়'],'সমান্তরাল ভেক্টর একটি আরেকটির সংখ্যা-গুণিতক।');
+M('A, B, C সমরেখ হবে যদি এবং কেবল যদি—','AC ও AB এর একটি আরেকটির সংখ্যা-গুণিতক',['AB = BC সবসময়','AB ⊥ AC','AB + AC = 0'],'গুণিতক হলে ধারক রেখা একই, তাই বিন্দু তিনটি একই রেখায়।');
+M('একক ভেক্টরের দৈর্ঘ্য কত?','১',['০','২','অসংজ্ঞায়িত'],'একক ভেক্টর মানে দৈর্ঘ্য ১।');
+M('a ≠ 0 হলে a এর দিকে একক ভেক্টর কোনটি?','a/|a|',['|a|·a','−a/|a|','a·a'],'দৈর্ঘ্য |a| দিয়ে ভাগ করলে দৈর্ঘ্য ১ হয়, দিক একই থাকে।');
+M('A, B এর অবস্থান ভেক্টর a, b হলে AB = ?','b − a',['a − b','a + b','½(a + b)'],'প্রান্তবিন্দু − আদিবিন্দু।');
+M('A, B এর অবস্থান ভেক্টর a, b হলে AB এর মধ্যবিন্দুর অবস্থান ভেক্টর—','½(a + b)',['b − a','a − b','a + b'],'মধ্যবিন্দু দুই প্রান্তের অবস্থান ভেক্টরের গড়।');
+M('ত্রিভুজের দুই বাহুর মধ্যবিন্দুর সংযোজক রেখা তৃতীয় বাহুর—','সমান্তরাল ও অর্ধেক',['লম্ব ও সমান','সমান্তরাল ও সমান','লম্ব ও অর্ধেক'],'DE = ½BC (উদাহরণ ৩)।');
+M('সামান্তরিকের কর্ণদ্বয় পরস্পরকে—','সমদ্বিখণ্ডিত করে',['লম্বভাবে সমান করে','সমান ভাগে তিনভাগ করে','ছেদ করে না'],'উদাহরণ ৪ এর প্রমাণ।');
+M('চতুর্ভুজের চার বাহুর মধ্যবিন্দু ক্রমে জুড়লে কী হয়?','সামান্তরিক',['বর্গ','ট্র্যাপিজিয়াম','ত্রিভুজ'],'উদাহরণ ৫: PQ = SR ও QR = PS।');
+M('ট্র্যাপিজিয়ামে AD ∥ BC। AB, DC এর মধ্যবিন্দু P, Q হলে PQ = ?','½(AD + BC)',['AD − BC','AD + BC','½(AD − BC)'],'অনুশীলনী ১২ এর ৯ ও নমুনা MCQ ৪।');
+M('a, b অসমান্তরাল অশূন্য এবং ma + nb = 0 হলে—','m = n = 0',['m = n ≠ 0','ma = 0','mb = 0'],'নমুনা MCQ ১: দুটি অসমান্তরাল ভেক্টরের রৈখিক সম্পর্ক শূন্য হলে সহগ দুটিই শূন্য।');
+(function(){
+  var done=0,sc=0;
+  QZ.forEach(function(q){var ord=q.o.map(function(t,i){return {t:t,c:i===0};});
+    for(var i=ord.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),k=ord[i];ord[i]=ord[j];ord[j]=k;}q.ord=ord;});
+  var h='';QZ.forEach(function(q,qi){h+='<div class="q" id="qq'+qi+'"><b>'+bn(qi+1)+'.</b> '+q.q+q.ord.map(function(o,oi){return '<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+o.t+'</button>';}).join('')+'<div class="fb" id="qe'+qi+'"></div></div>';});
+  $('quizbox').innerHTML=h;
+  $('quizbox').addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b||b.parentNode.dataset.done)return;
+    var qi=+b.dataset.q,q=QZ[qi],o=q.ord[+b.dataset.o];b.parentNode.dataset.done=1;done++;
+    var btns=b.parentNode.querySelectorAll('.opt');btns.forEach(function(x,i){if(q.ord[i].c)x.classList.add('good');});
+    if(o.c){sc++;$('qe'+qi).textContent='✅ ঠিক! '+q.e;}else{b.classList.add('bad');$('qe'+qi).textContent='❌ ভুল। '+q.e;}
+    $('qscore').textContent='স্কোর: '+bn(sc)+' / '+bn(done)+' (মোট '+bn(QZ.length)+'টি)';
+    try{if(done===QZ.length){localStorage.setItem('sl_done_math-planar-vector','1');var xp=+(localStorage.getItem('sl_xp')||0);localStorage.setItem('sl_xp',xp+sc);}}catch(er){}
+  });
+})();
+/* ===== প্রশ্নোত্তর ===== */
+var QA=[
+ {h:'অনুশীলনী ১২ — MCQ',items:[
+  ['১. দুটি ভেক্টর সমান্তরাল হলে (i) সামান্তরিক বিধি প্রযোজ্য (ii) ত্রিভুজবিধি প্রযোজ্য (iii) দৈর্ঘ্য সর্বদা সমান','খ. কেবল ii। সমান্তরাল ভেক্টরে সামান্তরিক হয় না, কিন্তু ত্রিভুজবিধি সবসময় খাটে। সমান্তরাল ভেক্টরের দৈর্ঘ্য সমান হওয়া জরুরি নয়।'],
+  ['৩. △ABC এর ক্ষেত্রে কোনটি সঠিক?','ঘ. AB + BC + CA = 0।'],
+  ['(চিত্রসহ) P বিন্দুর অবস্থান ভেক্টর কোনটি? (AB এর মধ্যবিন্দু P, A, B এর অবস্থান ভেক্টর a, b)','ঘ. (a + b)/2।'],
+  ['(চিত্রসহ) ট্র্যাপিজিয়ামে PQ = ?','খ. ½(BC + AD)।']]},
+ {h:'অনুশীলনী ১২ — প্রমাণ ও প্রকাশ',items:[
+  ['৪. AC, BD কে AD, BD এর মাধ্যমে প্রকাশ করো এবং দেখাও AC + BD = 2BC ও AC − BD = 2AB','BD = AD − AB ⇒ AB = AD − BD। AC = AB + AD = 2AD − BD। তাই AC + BD = 2AD = 2BC (BC = AD) এবং AC − BD = (AB + AD) − (AD − AB) = 2AB।'],
+  ['৫ ক. −(a + b) = −a − b','(a + b) + (−a − b) = 0, বিপরীত ভেক্টরের সংজ্ঞায় −(a + b) = −a − b।'],
+  ['৫ খ. a + b = c হলে a = c − b','দুই পাশে (−b) যোগ করে a + b − b = c − b, অর্থাৎ a = c − b।'],
+  ['৬ ক. a + a = 2a','1a + 1a = (1 + 1)a = 2a (বণ্টন সূত্র ১)।'],
+  ['৬ খ. (m − n)a = ma − na','(m − n)a = [m + (−n)]a = ma + (−n)a = ma − na।'],
+  ['৬ গ. m(a − b) = ma − mb','m[a + (−b)] = ma + m(−b) = ma − mb।'],
+  ['৭. ত্রিভুজের এক বাহুর মধ্যবিন্দু থেকে অপর বাহুর সমান্তরাল রেখা তৃতীয় বাহুর মধ্যবিন্দুগামী','AB = x, AC = y ধরি, D, AB এর মধ্যবিন্দু; D দিয়ে BC ∥ রেখা AC কে E তে ছেদ করে। DE = k·BC, AE = AD + DE = ½x + k(y − x), আবার E, AC এ আছে বলে AE = t·y। x, y অসমান্তরাল, তাই x এর সহগ: ½ − k = 0 ⇒ k = ½, y এর সহগ t = k = ½। অর্থাৎ AE = ½AC, E মধ্যবিন্দু।'],
+  ['৮. চতুর্ভুজের কর্ণদ্বয় পরস্পরকে সমদ্বিখণ্ডিত করলে তা সামান্তরিক','কর্ণদ্বয় O তে ছেদ করেছে, AO = OC ও BO = OD। তাহলে AB = AO + OB = OC + DO = DO + OC = DC। AB = DC, তাই AB ও DC সমান ও সমান্তরাল ⇒ ABCD সামান্তরিক।'],
+  ['৯. ট্র্যাপিজিয়ামের অসমান্তরাল বাহুর মধ্যবিন্দুর সংযোজক রেখা সমান্তরাল বাহুর সমান্তরাল ও যোগফলের অর্ধেক','উদাহরণ ৭ এর মতো: 2PQ = AD + BC। AD = m·BC (m &gt; 0, একই দিক), তাই PQ = ½(m + 1)BC, অর্থাৎ PQ ∥ BC এবং |PQ| = ½(AD + BC)।'],
+  ['১০. ট্র্যাপিজিয়ামের কর্ণদ্বয়ের মধ্যবিন্দুর সংযোজক রেখা সমান্তরাল বাহুর সমান্তরাল ও বিয়োগফলের অর্ধেক','AC, BD এর মধ্যবিন্দু M, N; অবস্থান ভেক্টর a, b, c, d। M = ½(a + c), N = ½(b + d)। MN = ½[(d − a) + (b − c)] = ½(AD − BC)। AD, BC একই রেখার সমান্তরাল, তাই MN ওদের সমান্তরাল এবং |MN| = ½ |AD − BC|।']]},
+ {h:'নমুনা প্রশ্ন',items:[
+  ['MCQ ১. a, b অশূন্য অসমান্তরাল, ma + nb = 0','গ. m = n = 0।'],
+  ['MCQ ২. AB ∥ DC হলে (i) AB = m·DC (ii) AB = DC (iii) AB = CD','ক. কেবল i।'],
+  ['সৃজনশীল ৫ ক. (AD + DE) কে AC এর মাধ্যমে প্রকাশ','AD + DE = AE = ½AC।'],
+  ['সৃজনশীল ৫ খ. BC ∥ DE এবং DE = ½BC','উদাহরণ ৩ এর প্রমাণ দেখো।'],
+  ['সৃজনশীল ৫ গ. BCED ট্র্যাপিজিয়ামের কর্ণ BE, CD এর মধ্যবিন্দু M, N। দেখাও MN ∥ DE ∥ BC এবং MN = ½(BC − DE)','MN = ½(BC − DE) (ট্র্যাপিজিয়ামের কর্ণের মধ্যবিন্দুর সংযোজক, অনুশীলনী ১২ এর ১০ এর মতো)। BC = 2DE, তাই MN = ½(BC − ½BC) = ¼BC, যা DE ও BC এর সমান্তরাল।'],
+  ['সৃজনশীল ৬ খ. AD + BE + CF = 0','AB = x, AC = y ধরি। AD = ½(x + y), BE = ½y − x, CF = ½x − y। যোগ করলে ½x + ½y + ½y − x + ½x − y = 0।'],
+  ['সৃজনশীল ৬ ক. AB কে BE ও CF এর মাধ্যমে প্রকাশ','AB = x, AC = y ধরলে BE = ½y − x ও CF = ½x − y। এ থেকে y = 2(BE + x) বসিয়ে পাই AB = −⅔(2BE + CF), অর্থাৎ AB = −(4BE + 2CF)/3।'],
+  ['সৃজনশীল ৬ গ. F দিয়ে BC এর সমান্তরাল রেখা E বিন্দুগামী','F, AB এর মধ্যবিন্দু ও E, AC এর মধ্যবিন্দু, তাই মধ্যবিন্দু উপপাদ্যে FE ∥ BC। F দিয়ে BC এর সমান্তরাল রেখা একটাই, তাই সেটি E বিন্দুগামী।'],
+  ['সংক্ষিপ্ত ৭ ক. a, b অশূন্য হলে a = mb হতে পারে কেবল যদি a, b সমান্তরাল','a = mb মানে a, b এর সংখ্যা-গুণিতক, তাই ধারক রেখা অভিন্ন বা সমান্তরাল। উল্টোভাবে সমান্তরাল হলেও এই সম্পর্ক পাওয়া যায়।'],
+  ['সংক্ষিপ্ত ৭ খ. ABCD সামান্তরিক ⇔ b − a = c − d','b − a = AB, c − d = DC। ABCD সামান্তরিক ⇔ AB = DC ⇔ b − a = c − d।'],
+  ['সংক্ষিপ্ত ৭ গ. D, BC এর মধ্যবিন্দু হলে AB + AC = 2AD','AB = AD + DB, AC = AD + DC। যোগ করে AB + AC = 2AD + (DB + DC) = 2AD + 0 (D মধ্যবিন্দু বলে DB = −DC)।'],
+  ['সংক্ষিপ্ত ৭ ঘ. কোন শর্তে u ও v বিপরীত ভেক্টর?','দৈর্ঘ্য সমান (|u| = |v|), ধারক রেখা অভিন্ন বা সমান্তরাল, আর দিক পরস্পর বিপরীত হলে।']]}
+];
+(function(){var h='';QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){h+='<details class="ex"><summary><b>'+it[0]+'</b></summary><p>'+it[1]+'</p></details>';});});$('qabox').innerHTML=h;})();
+</script>
+</body>
+</html>

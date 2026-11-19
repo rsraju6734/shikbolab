@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ঘন জ্যামিতি (উচ্চতর গণিত অধ্যায় ১৩) - ShikboLab</title>
+<meta name="description" content="🧊 ঘন জ্যামিতি (উচ্চতর গণিত অধ্যায় ১৩) — ShikboLab এ বাংলায় ইন্টারঅ্যাকটিভ ব্যাখ্যা, ভার্চুয়াল ল্যাব ও কুইজ।">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.tabs{flex-wrap:wrap}
+canvas{width:100%;height:auto;max-width:640px;display:block;margin:8px auto;border-radius:12px;background:#fff;border:1px solid var(--line);touch-action:none;cursor:crosshair}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.ctl label{font-weight:700;color:var(--navy)}
+.ctl input[type=range]{width:200px;max-width:100%}
+.ctl select,.ctl input[type=text],.ans input,.ctl input[type=number]{font-family:inherit;font-size:16px;padding:5px 6px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;max-width:100%;width:auto}
+.ctl input[type=number]{width:64px}
+.pt{background:#f4f8fb;border-radius:10px;padding:6px 10px;white-space:nowrap}
+.pt b{color:var(--navy)}
+.eqb{background:#eaf7f5;border-radius:10px;padding:10px;text-align:center;font-weight:700;color:var(--navy);margin:8px 0;font-size:18px;overflow-x:auto}
+.say{background:#fff4dc;border-radius:10px;padding:10px 12px;margin:10px 0;font-weight:600}
+.warn{background:#fdeceb;border-left:5px solid #e76f51;border-radius:8px;padding:10px 14px;margin:12px 0}
+.fb{font-weight:700;margin-top:6px}
+.res{background:#eef6ff;border-radius:10px;padding:10px 12px;margin:8px 0;line-height:1.9}
+.res b{color:#0b5ed7}
+.res .ok{color:#1b8a5a;font-weight:700}.res .no{color:#c0392b;font-weight:700}
+.chips button{margin:3px;padding:6px 12px;border-radius:999px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.chips button.on{background:#0b5ed7;color:#fff;border-color:#0b5ed7}
+.step{background:#fff;border:1px solid var(--line);border-left:5px solid #2a9d8f;border-radius:8px;padding:8px 12px;margin:6px 0;display:none}
+.step.show{display:block}
+.ex{border:2px dashed #b8c7d6;border-radius:12px;padding:10px 14px;margin:14px 0;background:#fcfdff}
+.q{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:10px 0;background:#fff}
+.q .opt{display:block;width:100%;text-align:left;margin:5px 0;padding:8px 10px;border-radius:8px;border:2px solid #cfd9e1;background:#fff;font-family:inherit;font-size:16px;cursor:pointer}
+.q .opt.good{background:#d8f3e3;border-color:#2a9d8f}
+.q .opt.bad{background:#fddcdc;border-color:#e76f51}
+.m{font-family:system-ui,'Segoe UI',Arial,sans-serif}
+table.t{border-collapse:collapse;margin:8px 0}
+table.t td,table.t th{border:1px solid #cfd9e1;padding:5px 12px;text-align:center}
+.det{display:inline-block;vertical-align:middle;border-left:2px solid var(--navy);border-right:2px solid var(--navy);padding:0 8px;margin:0 4px;line-height:1.5}
+</style>
+<link rel="stylesheet" href="../css/theme.css">
+<script src="../js/prices.js"></script>
+<script src="../js/demo-saas.js?v=4"></script>
+<script src="../js/theme.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <a class="brand" href="../index.html">Shikbo<span>Lab</span></a>
+  <a class="back" href="../index.html">&larr; সব অধ্যায়</a>
+</header>
+<div class="wrap">
+  <div class="crumb">📐 গণিত &rsaquo; উচ্চতর গণিত &rsaquo; অধ্যায় ১৩ (নবম-দশম শ্রেণি)</div>
+  <h1 class="title">🧊 ঘন জ্যামিতি</h1>
+  <nav class="tabs"><a href="#note">📝 নোট</a><a href="#ex">🪜 ধাপে ধাপে</a><a href="#lab1">📦 আয়তাকার ঘনবস্তু</a><a href="#lab2">🔷 প্রিজম</a><a href="#lab3">🔺 পিরামিড</a><a href="#lab4">🍦 কোণক</a><a href="#lab5">⚽ গোলক</a><a href="#lab6">🔥 গলিয়ে ঢালাই</a><a href="#prac">✍️ প্র্যাকটিস</a><a href="#quiz">❓ কুইজ</a><a href="#qa">📖 প্রশ্নোত্তর</a></nav>
+
+  <section class="panel" id="note">
+    <h2>📝 সহজ নোট</h2>
+    <div class="key">🎯 <b>এই অধ্যায়ে শিখবে:</b> বিন্দু-রেখা-তলের মৌলিক ধারণা, আয়তাকার ঘনবস্তু, ঘনক, প্রিজম, পিরামিড, সমবৃত্তভূমিক কোণক, গোলক এবং যৌগিক ঘনবস্তুর <b>পৃষ্ঠতলের ক্ষেত্রফল ও আয়তন</b>। (π এর মান ৩.১৪১৬ ধরে হিসাব করো, বইয়ের উদাহরণগুলোও তাই করেছে।)</div>
+
+    <h3>১. মাত্রা (Dimension) ⭐</h3>
+    <ul>
+      <li><b>বিন্দু:</b> দৈর্ঘ্য, প্রস্থ, উচ্চতা কিছুই নেই, তাই শূন্যমাত্রিক।</li>
+      <li><b>রেখা:</b> শুধু দৈর্ঘ্য আছে, তাই একমাত্রিক।</li>
+      <li><b>তল:</b> দৈর্ঘ্য ও প্রস্থ আছে, উচ্চতা নেই, তাই দ্বিমাত্রিক।</li>
+      <li><b>ঘনবস্তু:</b> দৈর্ঘ্য, প্রস্থ ও উচ্চতা তিনটিই আছে, তাই ত্রিমাত্রিক। ঘনবস্তু সমতল বা বক্রতল দিয়ে ঘেরা কিছুটা স্থান দখল করে।</li>
+    </ul>
+
+    <h3>২. কিছু প্রাথমিক সংজ্ঞা ⭐⭐</h3>
+    <table class="t m" style="text-align:left"><tr><th>নাম</th><th>সহজ অর্থ</th></tr>
+      <tr><td>সমতল</td><td>তলের যেকোনো দুই বিন্দু জুড়ে সরলরেখা টানলে তা পুরোটাই ঐ তলের উপর থাকে (যেমন স্থির পানির পৃষ্ঠ)।</td></tr>
+      <tr><td>বক্রতল</td><td>এমন তল যেখানে সরলরেখা সম্পূর্ণ তলে থাকে না (যেমন গোলকের পৃষ্ঠ)।</td></tr>
+      <tr><td>একতলীয় রেখা</td><td>একই সমতলে থাকা রেখা। এরা হয় সমান্তরাল, নয়তো কোনো এক বিন্দুতে ছেদ করে।</td></tr>
+      <tr><td>নৈকতলীয় রেখা</td><td>একই সমতলে নেই এমন রেখা। এরা সমান্তরালও নয়, ছেদও করে না (যেমন একটার উপর আরেকটা আড়াআড়ি রাখা দুটি পেনসিল)।</td></tr>
+      <tr><td>সমান্তরাল সরলরেখা</td><td>দুটি একতলীয় রেখা যাদের কোনো সাধারণ বিন্দু নেই।</td></tr>
+      <tr><td>সমান্তরাল তল</td><td>দুটি তল যাদের কোনো সাধারণ রেখা নেই।</td></tr>
+      <tr><td>তলের লম্ব রেখা</td><td>রেখাটি একটি তলের উপর একটি বিন্দুতে মিলে, ঐ বিন্দু দিয়ে তলের মধ্যে আঁকা প্রতিটি রেখার উপরেই লম্ব।</td></tr>
+      <tr><td>তির্যক রেখা</td><td>তলের সাথে সমান্তরালও নয়, লম্বও নয়।</td></tr>
+      <tr><td>উল্লম্ব ও অনুভূমিক</td><td>ওলনের সুতা বরাবর রেখা বা তল উল্লম্ব। উল্লম্ব রেখার সাথে লম্ব তল অনুভূমিক (শয়ান)।</td></tr>
+      <tr><td>দ্বিতল কোণ</td><td>দুটি সমতলের ছেদ রেখার একই বিন্দু থেকে প্রতি তলে ছেদ রেখার উপর লম্ব টানলে যে কোণ হয়। কোণ সমকোণ হলে তল দুটি পরস্পর লম্ব।</td></tr>
+      <tr><td>অভিক্ষেপ</td><td>কোনো বিন্দু বা রেখা থেকে তলের উপর লম্ব ফেলে পাদবিন্দুগুলোর সেটই অভিক্ষেপ (লম্ব অভিক্ষেপ)।</td></tr></table>
+
+    <h3>৩. সরলরেখা ও সমতলের সম্পর্ক ⭐</h3>
+    <ul>
+      <li>সরলরেখা সমতলের সমান্তরাল হলে কোনো সাধারণ বিন্দু থাকে না।</li>
+      <li>সরলরেখা সমতলকে <b>ছেদ করলে</b> মাত্র <b>একটি</b> সাধারণ বিন্দু থাকে।</li>
+      <li>সরলরেখা ও সমতলের <b>দুটি</b> সাধারণ বিন্দু থাকলে পুরো রেখাটিই ঐ সমতলে থাকে।</li>
+      <li>দুটি সমতল ছেদ করলে একটি <b>সরলরেখায়</b> ছেদ করে, আর তাদের অসংখ্য সাধারণ বিন্দু থাকে।</li>
+      <li>দুটি নির্দিষ্ট বিন্দু বা একটি সরলরেখার মধ্য দিয়ে অসংখ্য সমতল আঁকা যায়।</li>
+    </ul>
+
+    <h3>৪. পৃষ্ঠতল, ধার ও কোণ</h3>
+    <ul><li>ঘনবস্তুর তলগুলোকে <b>পৃষ্ঠতল</b> বলে। দুটি পৃষ্ঠতল যে রেখায় মিলে তাকে <b>ধার</b> বলে। একটি বাক্সের ছয়টি পৃষ্ঠতল ও বারটি ধার আছে। ক্রিকেট বল মাত্র একটি বক্রতলে আবদ্ধ।</li></ul>
+
+    <h3>৫. সূত্র সারণি ⭐⭐⭐ (সবচেয়ে গুরুত্বপূর্ণ)</h3>
+    <table class="t m" style="text-align:left"><tr><th>ঘনবস্তু</th><th>সমগ্রতলের ক্ষেত্রফল</th><th>আয়তন</th></tr>
+      <tr><td>আয়তাকার ঘনবস্তু (a, b, c)</td><td>2(ab + bc + ca)</td><td>abc</td></tr>
+      <tr><td>কর্ণ</td><td colspan="2">√(a² + b² + c²)</td></tr>
+      <tr><td>ঘনক (a)</td><td>6a²</td><td>a³ (কর্ণ √3·a)</td></tr>
+      <tr><td>প্রিজম</td><td>2 × ভূমির ক্ষেত্রফল + ভূমির পরিসীমা × উচ্চতা</td><td>ভূমির ক্ষেত্রফল × উচ্চতা</td></tr>
+      <tr><td>পিরামিড (সুষম)</td><td>ভূমির ক্ষেত্রফল + ½ × ভূমির পরিসীমা × হেলানো উচ্চতা l</td><td>⅓ × ভূমির ক্ষেত্রফল × উচ্চতা</td></tr>
+      <tr><td>কোণক (r, h, l)</td><td>বক্রতল πrl; সমগ্র πr(r + l)</td><td>⅓πr²h</td></tr>
+      <tr><td>গোলক (r)</td><td>4πr²</td><td>⁴⁄₃πr³</td></tr></table>
+    <ul>
+      <li><b>প্রিজম:</b> দুই প্রান্তের ভূমি সর্বসম ও সমান্তরাল বহুভুজ, পাশের তলগুলো সামান্তরিক। সব পার্শ্বতল আয়তক্ষেত্র হলে সমপ্রিজম, নইলে তীর্যক প্রিজম। ভূমি সুষম বহুভুজ হলে সুষম প্রিজম। ঘনক ও আয়তাকার ঘনবস্তুও প্রিজম।</li>
+      <li><b>পিরামিড:</b> বহুভুজ ভূমির উপর একটি শীর্ষবিন্দু, পার্শ্বতলগুলো ত্রিভুজ। ভূমি সুষম আর পার্শ্বতল সর্বসম ত্রিভুজ হলে সুষম পিরামিড। শীর্ষ থেকে ভূমির উপর লম্বদৈর্ঘ্য = <b>উচ্চতা h</b>। <b>হেলানো উচ্চতা l = √(h² + r²)</b> (r = ভূমির অন্তর্বৃত্তের ব্যাসার্ধ, বর্গ ভূমিতে r = বাহু/২)। সুষম চতুস্তলকে ৪টি সমবাহু ত্রিভুজ, ৬টি ধার, ৪টি কৌণিক বিন্দু।</li>
+      <li><b>কোণক:</b> সমকোণী ত্রিভুজকে সমকোণ-সংলগ্ন একটি বাহু (অক্ষ) ধরে ঘোরালে সমবৃত্তভূমিক কোণক হয়। উচ্চতা h, ভূমির ব্যাসার্ধ r, হেলানো উচ্চতা <b>l = √(h² + r²)</b>, অর্ধশীর্ষকোণ θ হলে tan θ = r/h। আয়তনের সূত্র নির্ণয় উচ্চতর শ্রেণিতে শেখানো হবে।</li>
+      <li><b>গোলক:</b> অর্ধবৃত্তকে ব্যাস ধরে ঘোরালে গোলক হয়। কেন্দ্র O থেকে h দূরে সমতল কাটলে <b>বৃত্তের ব্যাসার্ধ = √(r² − h²)</b>।</li>
+      <li><b>যৌগিক ঘনবস্তু:</b> দুই বা বেশি ঘনবস্তুর সমন্বয়। যেমন ক্যাপসুল = সিলিন্ডার + দুই প্রান্তে দুটি অর্ধগোলক (অর্থাৎ একটি পুরো গোলক)।</li>
+    </ul>
+    <div class="say">ঢালাই-গলানোর নিয়ম: ঘনবস্তু গলিয়ে অন্য আকার বানালে <b>আয়তন সমান থাকে</b>। সব প্রশ্নে আয়তন সমান করে সমীকরণ বানাও।</div>
+    <div class="warn">⚠️ <b>সাবধান:</b> (১) পিরামিড/কোণকে আয়তনে উচ্চতা h ব্যবহার করো, হেলানো উচ্চতা l নয়। (২) গোলকের ব্যাস দিলে আগে ব্যাসার্ধ বের করো। (৩) প্রিজমের "ভূমির পরিসীমা" বলতে ভূমির সব বাহুর যোগফল। (৪) ক্যাপসুলের মোট দৈর্ঘ্য থেকে দুই অর্ধগোলকের ব্যাসার্ধ বাদ দিয়ে সিলিন্ডারের উচ্চতা পাও। (৫) একক ঠিক রাখো: ক্ষেত্রফল বর্গ একক, আয়তন ঘন একক।</div>
+  </section>
+
+  <section class="panel" id="ex">
+    <h2>🪜 ধাপে ধাপে (বইয়ের উদাহরণ)</h2>
+    <div class="say">👉 "পরের ধাপ" চাপতে থাকো। প্রতিটি ধাপ নিজে খাতায় করে মেলাও।</div>
+
+    <div class="ex" id="E1"><b>১) আয়তাকার ঘনবস্তুর দৈর্ঘ্য : প্রস্থ : উচ্চতা = 4 : 3 : 2, সমগ্রতল 468 বর্গমিটার। কর্ণ ও আয়তন</b> (বই উদাহরণ ১)
+      <div class="step">ধাপ ১: দৈর্ঘ্য, প্রস্থ, উচ্চতা 4x, 3x, 2x মিটার ধরি।</div>
+      <div class="step">ধাপ ২: 2(4x·3x + 3x·2x + 2x·4x) = 468 ⇒ 2 × 26x² = 468 ⇒ 52x² = 468 ⇒ x² = 9 ⇒ <b>x = 3</b>।</div>
+      <div class="step">ধাপ ৩: দৈর্ঘ্য 12 মি., প্রস্থ 9 মি., উচ্চতা 6 মি.।</div>
+      <div class="step">ধাপ ৪: কর্ণ = √(144 + 81 + 36) = √261 ≈ <b>16.16 মিটার</b>।</div>
+      <div class="step">ধাপ ৫: আয়তন = 12 × 9 × 6 = <b>648 ঘনমিটার</b> ✔।</div>
+      <button class="btn" data-ex="E1">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E1">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E2"><b>২) ত্রিভুজাকার প্রিজমের ভূমির বাহু 3, 4, 5 সেমি, উচ্চতা 8 সেমি। সমগ্রতল ও আয়তন</b> (বই উদাহরণ ২)
+      <div class="step">ধাপ ১: 3² + 4² = 25 = 5², তাই ভূমি সমকোণী ত্রিভুজ। ক্ষেত্রফল = ½ × 4 × 3 = <b>6</b> বর্গ সেমি।</div>
+      <div class="step">ধাপ ২: ভূমির পরিসীমা = 3 + 4 + 5 = 12 সেমি।</div>
+      <div class="step">ধাপ ৩: সমগ্রতল = 2 × 6 + 12 × 8 = 12 + 96 = <b>108 বর্গ সেমি</b>।</div>
+      <div class="step">ধাপ ৪: আয়তন = 6 × 8 = <b>48 ঘন সেমি</b> ✔।</div>
+      <button class="btn" data-ex="E2">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E2">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E3"><b>৩) 10 সেমি বাহুর বর্গাকার ভূমির পিরামিড, উচ্চতা 12 সেমি। সমগ্রতল ও আয়তন</b> (বই উদাহরণ ৩)
+      <div class="step">ধাপ ১: ভূমির কেন্দ্র থেকে বাহুর লম্ব দূরত্ব r = 10/2 = 5 সেমি।</div>
+      <div class="step">ধাপ ২: হেলানো উচ্চতা l = √(12² + 5²) = √169 = <b>13</b> সেমি।</div>
+      <div class="step">ধাপ ৩: সমগ্রতল = ভূমি + ½ × পরিসীমা × l = 10 × 10 + ½ × 40 × 13 = 100 + 260 = <b>360 বর্গ সেমি</b>।</div>
+      <div class="step">ধাপ ৪: আয়তন = ⅓ × (10 × 10) × 12 = <b>400 ঘন সেমি</b> ✔।</div>
+      <button class="btn" data-ex="E3">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E3">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E4"><b>৪) কোণকের উচ্চতা 12 সেমি, ভূমির ব্যাস 10 সেমি। হেলানো উচ্চতা, বক্রতল, সমগ্রতল, আয়তন</b> (বই উদাহরণ ৪)
+      <div class="step">ধাপ ১: r = 10/2 = 5 সেমি। l = √(12² + 5²) = <b>13</b> সেমি।</div>
+      <div class="step">ধাপ ২: বক্রতল = πrl = π × 5 × 13 = <b>204.2035</b> বর্গ সেমি।</div>
+      <div class="step">ধাপ ৩: সমগ্রতল = πr(l + r) = π × 5 × 18 = <b>282.7433</b> বর্গ সেমি।</div>
+      <div class="step">ধাপ ৪: আয়তন = ⅓πr²h = ⅓ × π × 25 × 12 = <b>314.1593</b> ঘন সেমি ✔।</div>
+      <button class="btn" data-ex="E4">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E4">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E5"><b>৫) 4 সেমি ব্যাসের লৌহ গোলক পিটিয়ে ⅔ সেমি পুরু বৃত্তাকার পাত। পাতের ব্যাসার্ধ?</b> (বই উদাহরণ ৫)
+      <div class="step">ধাপ ১: গোলকের ব্যাসার্ধ 2 সেমি। আয়তন = ⁴⁄₃π × 2³ = 32π/3।</div>
+      <div class="step">ধাপ ২: পাতের ব্যাসার্ধ r হলে আয়তন = πr² × ⅔ = ⅔πr²।</div>
+      <div class="step">ধাপ ৩: আয়তন সমান: ⅔πr² = 32π/3 ⇒ r² = 16।</div>
+      <div class="step">ধাপ ৪: <b>r = 4 সেমি</b> ✔।</div>
+      <button class="btn" data-ex="E5">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E5">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E6"><b>৬) সমান উচ্চতার কোণক, অর্ধগোলক ও সিলিন্ডার, সমান ভূমি: আয়তনের অনুপাত 1 : 2 : 3</b> (বই উদাহরণ ৬)
+      <div class="step">ধাপ ১: অর্ধগোলকের উচ্চতা = ব্যাসার্ধ, তাই h = r।</div>
+      <div class="step">ধাপ ২: কোণক = ⅓πr²h = ⅓πr³।</div>
+      <div class="step">ধাপ ৩: অর্ধগোলক = ½ × ⁴⁄₃πr³ = ⅔πr³।</div>
+      <div class="step">ধাপ ৪: সিলিন্ডার = πr²h = πr³।</div>
+      <div class="step">ধাপ ৫: অনুপাত = ⅓ : ⅔ : 1 = <b>1 : 2 : 3</b> ✔।</div>
+      <button class="btn" data-ex="E6">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E6">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E7"><b>৭) ক্যাপসুলের মোট দৈর্ঘ্য 15 সেমি, সিলিন্ডার অংশের ব্যাসার্ধ 3 সেমি। সমগ্রতল ও আয়তন</b> (বই উদাহরণ ৯)
+      <div class="step">ধাপ ১: দুই প্রান্তে দুই অর্ধগোলক (প্রতিটির ব্যাসার্ধ 3), সিলিন্ডারের দৈর্ঘ্য l = 15 − (3 + 3) = <b>9</b> সেমি।</div>
+      <div class="step">ধাপ ২: সমগ্রতল = দুই অর্ধগোলক (মিলে পূর্ণ গোলক) + সিলিন্ডারের বক্রতল = 4πr² + 2πrl = 4π(9) + 2π × 3 × 9 = 36π + 54π = <b>90π ≈ 282.74</b> বর্গ সেমি।</div>
+      <div class="step">ধাপ ৩: আয়তন = ⁴⁄₃πr³ + πr²l = ⁴⁄₃π(27) + π × 9 × 9 = 36π + 81π = <b>117π ≈ 367.57</b> ঘন সেমি ✔।</div>
+      <button class="btn" data-ex="E7">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E7">আবার শুরু</button>
+    </div>
+
+    <div class="ex" id="E8"><b>৮) বাইরের ব্যাস 15 সেমি, বেধ 2 সেমি ফাঁপা লোহার গোলক</b> (বই উদাহরণ ১০)
+      <div class="step">ধাপ ১: বাইরের ব্যাসার্ধ 7.5 সেমি, ভিতরের ব্যাসার্ধ 7.5 − 2 = 5.5 সেমি।</div>
+      <div class="step">ধাপ ২: (ক) ফাঁপা অংশের আয়তন = ⁴⁄₃π(5.5)³ ≈ <b>696.91</b> ঘন সেমি।</div>
+      <div class="step">ধাপ ৩: (খ) লোহার আয়তন = ⁴⁄₃π(7.5)³ − ⁴⁄₃π(5.5)³ ≈ 1767.15 − 696.91 = 1070.24। নিরেট গোলকের ব্যাসার্ধ ρ: ⁴⁄₃πρ³ = 1070.24 ⇒ ρ ≈ 6.3454 সেমি, পৃষ্ঠতল 4πρ² ≈ <b>505.97</b> বর্গ সেমি।</div>
+      <div class="step">ধাপ ৪: (গ) গোলকটি ঘনক আকৃতির বাক্সে ঠিকভাবে এঁটে যায়, তাই বাক্সের ধার = গোলকের ব্যাস = 12.6908 সেমি। বাক্সের আয়তন = (12.6908)³ ≈ 2043.93।</div>
+      <div class="step">ধাপ ৫: বাক্সের অনধিকৃত অংশ = 2043.93 − 1070.24 ≈ <b>973.70 ঘন সেমি</b> ✔।</div>
+      <button class="btn" data-ex="E8">পরের ধাপ ▶</button> <button class="btn alt" data-rs="E8">আবার শুরু</button>
+    </div>
+  </section>
+
+  <section class="panel" id="lab1">
+    <h2>📦 ল্যাব ১: আয়তাকার ঘনবস্তু ও ঘনক</h2>
+    <div class="say">👉 দৈর্ঘ্য a, প্রস্থ b, উচ্চতা c বদলাও। সমগ্রতল, আয়তন ও <b style="color:#e53935">কর্ণ</b> হিসাব হবে। ঘূর্ণি স্লাইডার দিয়ে ঘুরিয়ে দেখো। a = b = c করলে ঘনক পাবে।</div>
+    <div class="ctl"><label>a = <span id="l1av"></span></label><input type="range" id="l1a" min="1" max="40" step="1" value="24"> <label>b = <span id="l1bv"></span></label><input type="range" id="l1b" min="1" max="40" step="1" value="18"> <label>c = <span id="l1cv"></span></label><input type="range" id="l1c" min="1" max="40" step="1" value="12"> <label>🔄 ঘোরাও <input type="range" id="l1r" min="0" max="360" step="5" value="35"></label></div>
+    <div class="say" style="font-weight:500">নোট: স্লাইডার অর্ধেক ধাপে চলে (স্লাইডারে ২৪ মানে a = ১২)। a, b, c এর মান ০.৫ থেকে ২০ পর্যন্ত।</div>
+    <div class="chips" id="l1pre"><button data-pre="[24,18,12]">উদাহরণ ১ (১২, ৯, ৬)</button><button data-pre="[32,24,9]">অনুশীলনী ১ (১৬, ১২, ৪.৫)</button><button data-pre="[10,10,10]">ঘনক (৫)</button></div>
+    <canvas id="l1cvs" width="640" height="460"></canvas>
+    <div class="res m" id="l1res"></div>
+  </section>
+
+  <section class="panel" id="lab2">
+    <h2>🔷 ল্যাব ২: সুষম প্রিজম</h2>
+    <div class="say">👉 ভূমির বাহুসংখ্যা n, ভূমির প্রতি বাহু s ও উচ্চতা h বদলাও। ভূমির ক্ষেত্রফল ও পরিসীমা থেকে সমগ্রতল ও আয়তন দেখবে। (এই ল্যাবে ভূমি সুষম বহুভুজ, বইয়ের সমকোণী ত্রিভুজ-ভূমির উদাহরণ ধাপে ধাপে অংশে আছে।)</div>
+    <div class="ctl"><label>n = <span id="l2nv"></span></label><input type="range" id="l2n" min="3" max="8" step="1" value="6"> <label>s = <span id="l2sv"></span></label><input type="range" id="l2s" min="1" max="20" step="1" value="8"> <label>h = <span id="l2hv"></span></label><input type="range" id="l2h" min="1" max="30" step="1" value="10"> <label>🔄 <input type="range" id="l2r" min="0" max="360" step="5" value="30"></label></div>
+    <div class="say" style="font-weight:500">নোট: s ও h স্লাইডার অর্ধেক ধাপে চলে (স্লাইডারে ৮ মানে s = ৪)।</div>
+    <div class="chips" id="l2pre"><button data-pre="[6,8,10]">অনুশীলনী ১৬ (ষড়ভুজ, ৪, ৫)</button><button data-pre="[3,8,16]">ত্রিভুজাকার (৪, ৮)</button><button data-pre="[4,10,20]">বর্গাকার (৫, ১০)</button></div>
+    <canvas id="l2cvs" width="640" height="460"></canvas>
+    <div class="res m" id="l2res"></div>
+  </section>
+
+  <section class="panel" id="lab3">
+    <h2>🔺 ল্যাব ৩: সুষম পিরামিড</h2>
+    <div class="say">👉 n, ভূমির প্রতি বাহু s ও উচ্চতা h বদলাও। <b style="color:#e53935">হেলানো উচ্চতা l = √(h² + r²)</b> দেখো। সমগ্রতল = ভূমি + ½ × পরিসীমা × l এবং আয়তন = ⅓ × ভূমি × h।</div>
+    <div class="ctl"><label>n = <span id="l3nv"></span></label><input type="range" id="l3n" min="3" max="8" step="1" value="4"> <label>s = <span id="l3sv"></span></label><input type="range" id="l3s" min="1" max="24" step="1" value="20"> <label>h = <span id="l3hv"></span></label><input type="range" id="l3h" min="1" max="30" step="1" value="24"> <label>🔄 <input type="range" id="l3r" min="0" max="360" step="5" value="30"></label></div>
+    <div class="say" style="font-weight:500">নোট: s ও h স্লাইডার অর্ধেক ধাপে চলে (স্লাইডারে ২০ মানে s = ১০)।</div>
+    <div class="chips" id="l3pre"><button data-pre="[4,20,24]">উদাহরণ ৩ (১০, ১২)</button><button data-pre="[6,12,20]">অনুশীলনী ১৭ (ষড়ভুজ ৬, ১০)</button><button data-pre="[3,12,10]">ত্রিভুজাকার ভূমি</button></div>
+    <canvas id="l3cvs" width="640" height="460"></canvas>
+    <div class="res m" id="l3res"></div>
+  </section>
+
+  <section class="panel" id="lab4">
+    <h2>🍦 ল্যাব ৪: সমবৃত্তভূমিক কোণক</h2>
+    <div class="say">👉 ভূমির ব্যাসার্ধ r ও উচ্চতা h বদলাও। <b style="color:#e53935">হেলানো উচ্চতা l = √(h² + r²)</b>, অর্ধশীর্ষকোণ θ (tan θ = r/h), বক্রতল, সমগ্রতল ও আয়তন হিসাব হবে।</div>
+    <div class="ctl"><label>r = <span id="l4rv"></span></label><input type="range" id="l4r" min="1" max="24" step="1" value="10"> <label>h = <span id="l4hv"></span></label><input type="range" id="l4h" min="1" max="30" step="1" value="24"> <label>🔄 <input type="range" id="l4a" min="0" max="360" step="5" value="30"></label></div>
+    <div class="say" style="font-weight:500">নোট: r ও h স্লাইডার অর্ধেক ধাপে চলে (স্লাইডারে ১০ মানে r = ৫)।</div>
+    <div class="chips" id="l4pre"><button data-pre="[10,24]">উদাহরণ ৪ (r = ৫, h = ১২)</button><button data-pre="[6,8]">r = ৩, h = ৪</button><button data-pre="[16,16]">r = h</button></div>
+    <canvas id="l4cvs" width="640" height="460"></canvas>
+    <div class="res m" id="l4res"></div>
+  </section>
+
+  <section class="panel" id="lab5">
+    <h2>⚽ ল্যাব ৫: গোলক ও তলের ছেদ</h2>
+    <div class="say">👉 গোলকের ব্যাসার্ধ r এবং কেন্দ্র থেকে সমতলের দূরত্ব h বদলাও। সমতলটি যে বৃত্ত তৈরি করে তার ব্যাসার্ধ <b style="color:#e53935">√(r² − h²)</b>। h = r হলে সমতল গোলককে ছুঁয়ে যায়।</div>
+    <div class="ctl"><label>r = <span id="l5rv"></span></label><input type="range" id="l5r" min="1" max="40" step="1" value="26"> <label>h = <span id="l5hv"></span></label><input type="range" id="l5h" min="0" max="40" step="1" value="24"></div>
+    <div class="say" style="font-weight:500">নোট: স্লাইডার অর্ধেক ধাপে চলে (স্লাইডারে ২৬ মানে r = ১৩)। h এর মান r এর চেয়ে বেশি দিলে সমতল গোলকের বাইরে চলে যায়, তখন ছেদ হয় না।</div>
+    <div class="chips" id="l5pre"><button data-pre="[26,24]">অনুশীলনী ১১ (r = ১৩, h = ১২)</button><button data-pre="[10,0]">বৃহত্তম বৃত্ত (h = ০)</button><button data-pre="[12,12]">ছুঁয়ে যায়</button></div>
+    <canvas id="l5cvs" width="640" height="460"></canvas>
+    <div class="res m" id="l5res"></div>
+  </section>
+
+  <section class="panel" id="lab6">
+    <h2>🔥 ল্যাব ৬: গলিয়ে নতুন আকার (আয়তন সমান)</h2>
+    <div class="say">👉 একটি লৌহ গোলক গলিয়ে (ক) ছোট গোলক, (খ) বৃত্তাকার পাত, (গ) সিলিন্ডার বানানো যায়। আয়তন সমান থাকে, এই নিয়মেই সংখ্যা বা ব্যাসার্ধ বের হয়। ঘরে মান লিখে দেখো (দশমিকও দেওয়া যায়)।</div>
+    <div class="ctl"><span class="pt"><b>বড় গোলকের R</b> = <input type="number" id="l6R" min="0.5" max="50" step="any" value="2"></span> <span class="pt"><b>(ক) ছোট গোলকের r</b> = <input type="number" id="l6r" min="0.1" max="50" step="any" value="0.5"></span></div>
+    <div class="ctl"><span class="pt"><b>(খ) পাতের পুরুত্ব t</b> = <input type="number" id="l6t" min="0.01" max="50" step="any" value="0.6667"></span> <span class="pt"><b>(গ) সিলিন্ডারের ব্যাসার্ধ</b> = <input type="number" id="l6cr" min="0.1" max="50" step="any" value="3"></span> <span class="pt"><b>উচ্চতা</b> = <input type="number" id="l6ch" min="0.1" max="100" step="any" value="8"></span></div>
+    <div class="chips" id="l6pre"><button data-pre="[2,0.5,0.6666667,3,8]">উদাহরণ ৫ (R = ২, t = ⅔)</button><button data-pre="[6,1,1,3,8]">অনুশীলনী ৯ (R = ৬, সিলিন্ডার ৩, ৮)</button></div>
+    <canvas id="l6cvs" width="640" height="360"></canvas>
+    <div class="res m" id="l6res"></div>
+  </section>
+
+  <section class="panel" id="prac">
+    <h2>✍️ প্র্যাকটিস (বইয়ের ধাঁচে)</h2>
+    <div class="say">👉 π এর মান ৩.১৪১৬ ধরো। উত্তর পূর্ণসংখ্যা বা দশমিকে লেখো (দুই দশমিক স্থান পর্যন্ত)। ঋণাত্মক হলে মাইনাস দাও।</div>
+    <div id="pracbox"></div>
+  </section>
+
+  <section class="panel" id="quiz">
+    <h2>❓ কুইজ: নিজেকে যাচাই করো</h2>
+    <div id="quizbox"></div>
+    <div class="fb" id="qscore"></div>
+  </section>
+
+  <section class="panel" id="qa">
+    <h2>📖 বই থেকে প্রশ্নোত্তর</h2>
+    <div class="say">নিজে করে তারপর দেখো। যে প্রশ্নের উত্তর নিশ্চিত করা যায়নি, সেটি আমি বাদ দিয়েছি বা সেখানে কীভাবে ধরেছি তা লিখে দিয়েছি।</div>
+    <div id="qabox"></div>
+  </section>
+</div>
+
+<footer class="site">&copy; ShikboLab · ঘন জ্যামিতি (উচ্চতর গণিত অধ্যায় ১৩)</footer>
+<script>
+var BNS='০১২৩৪৫৬৭৮৯';
+function bn(s){return String(s).replace(/[0-9]/g,function(d){return BNS[d];});}
+function en(s){return String(s).replace(/[০-৯]/g,function(d){return BNS.indexOf(d);});}
+function $(id){return document.getElementById(id);}
+function R2(c){var d=Math.min(2,window.devicePixelRatio||1),w=c.width,h=c.height;c.width=w*d;c.height=h*d;var x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);return x;}
+function fm(v,d){d=(d===undefined)?2:d;var k=Math.pow(10,d),r=Math.round(v*k)/k;if(Math.abs(r)<1e-9)r=0;return bn(String(r).replace('-','−'));}
+function sg(v){return v<0?'−'+bn(-v):bn(v);}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=a%b;a=b;b=t;}return a;}
+function red(n,d){if(d<0){n=-n;d=-d;}var g=gcd(n,d)||1;return [n/g,d/g];}
+function frac(n,d){var r=red(n,d);return r[1]===1?sg(r[0]):sg(r[0])+'/'+bn(r[1]);}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ex){var box=$(b.dataset.ex),s=box.querySelectorAll('.step:not(.show)');if(s.length){s[0].classList.add('show');}if(s.length<=1)b.disabled=true;}
+  if(b.dataset.rs){var bx=$(b.dataset.rs);bx.querySelectorAll('.step').forEach(function(x){x.classList.remove('show');});bx.querySelector('[data-ex]').disabled=false;}
+});
+/* ===== সাধারণ সহায়ক: গ্রিড, বিন্দু টানা, সংখ্যা-ঘর ===== */
+function sq(N){N=Math.round(N);if(N<0)return '?';var k=1,m=N,f;for(f=2;f*f<=m;f++){while(m%(f*f)===0){m/=f*f;k*=f;}}if(m===1)return bn(k);if(k===1)return '√'+bn(m);return bn(k)+'√'+bn(m);}
+function dc(N){return fm(Math.sqrt(N),4);}
+function d2(p,q){return (p[0]-q[0])*(p[0]-q[0])+(p[1]-q[1])*(p[1]-q[1]);}
+function sh(P){var s=0,n=P.length,i,a,b;for(i=0;i<n;i++){a=P[i];b=P[(i+1)%n];s+=a[0]*b[1]-b[0]*a[1];}return s;}
+function cr(o,a,b){return (a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0]);}
+function segX(a,b,c,d){var d1=cr(a,b,c),d2_=cr(a,b,d),d3=cr(c,d,a),d4=cr(c,d,b);return d1*d2_<0&&d3*d4<0;}
+function pn(p){return '('+sg(p[0])+', '+sg(p[1])+')';}
+function quad(p){var x=p[0],y=p[1];if(x===0&&y===0)return 'মূলবিন্দু';if(y===0)return 'x অক্ষের উপর';if(x===0)return 'y অক্ষের উপর';return x>0?(y>0?'১ম চতুর্ভাগ':'৪র্থ চতুর্ভাগ'):(y>0?'২য় চতুর্ভাগ':'৩য় চতুর্ভাগ');}
+function half(S){return fm(Math.abs(S)/2,1);}
+function minus(sym,v){return v===0?sym:sym+(v>0?' − '+bn(v):' + '+bn(-v));}
+var COL=['#e53935','#1971c2','#2a9d8f','#e08a00'],NM=['A','B','C','D'];
+function Cv(id,R){var c=$(id),W=c.width,H=c.height,x=R2(c),s=W/(2*R);return {c:c,x:x,W:W,H:H,R:R,s:s,X:function(u){return W/2+u*s;},Y:function(v){return H/2-v*s;}};}
+function grid(o){var x=o.x,R=o.R,i;x.fillStyle='#fff';x.fillRect(0,0,o.W,o.H);
+  for(i=-R;i<=R;i++){x.strokeStyle=i===0?'#1f3a5f':'#e3eaf0';x.lineWidth=i===0?1.8:1;x.beginPath();x.moveTo(o.X(i),0);x.lineTo(o.X(i),o.H);x.stroke();x.beginPath();x.moveTo(0,o.Y(i));x.lineTo(o.W,o.Y(i));x.stroke();}
+  x.fillStyle='#6b7f95';x.font='11px system-ui';
+  for(i=-R+1;i<R;i++){if(i===0||i%2)continue;x.textAlign='center';x.fillText(sg(i),o.X(i),o.Y(0)+14);x.textAlign='right';x.fillText(sg(i),o.X(0)-4,o.Y(i)+4);}
+  x.textAlign='center';x.fillStyle='#1f3a5f';x.font='700 13px system-ui';x.fillText('X',o.W-10,o.Y(0)-6);x.fillText('Y',o.X(0)+12,12);x.fillText('O',o.X(0)-8,o.Y(0)+14);}
+function seg(o,p,q,col,w,dash){var x=o.x;x.strokeStyle=col;x.lineWidth=w||2;x.setLineDash(dash||[]);x.beginPath();x.moveTo(o.X(p[0]),o.Y(p[1]));x.lineTo(o.X(q[0]),o.Y(q[1]));x.stroke();x.setLineDash([]);}
+function lineMC(o,m,c,col,w){seg(o,[-o.R,m*-o.R+c],[o.R,m*o.R+c],col,w||2.5);}
+function lineVert(o,a,col,w){seg(o,[a,-o.R],[a,o.R],col,w||2.5);}
+function lineThru(o,p,q,col,w){var dx=q[0]-p[0],dy=q[1]-p[1];if(dx===0&&dy===0)return;if(dx===0)lineVert(o,p[0],col,w);else{var m=dy/dx;lineMC(o,m,p[1]-m*p[0],col,w);}}
+function dot(o,p,name,col,lab){var x=o.x;x.fillStyle=col;x.beginPath();x.arc(o.X(p[0]),o.Y(p[1]),6.5,0,6.2832);x.fill();x.strokeStyle='#fff';x.lineWidth=2;x.stroke();
+  x.fillStyle=col;x.font='700 13px system-ui';x.textAlign='left';var tx=o.X(p[0])+9,ty=o.Y(p[1])-9;if(tx>o.W-90)tx-=110;if(ty<16)ty+=26;x.fillText(name+(lab===false?'':pn(p)),tx,ty);}
+function tag(o,p,txt,col){var x=o.x;x.fillStyle=col||'#1f3a5f';x.font='700 12px system-ui';x.textAlign='center';x.fillText(txt,o.X(p[0]),o.Y(p[1])-5);}
+function Ed(boxId,names,pts,R,redraw,idx){
+  var box=$(boxId),h='';idx=idx||names.map(function(n,i){return i;});
+  names.forEach(function(n,i){h+='<span class="pt"><b style="color:'+COL[idx[i]%4]+'">'+n+'</b> ( <input type="number" min="'+(-R)+'" max="'+R+'" step="1" data-i="'+i+'" data-k="0" aria-label="'+n+' এর x"> , <input type="number" min="'+(-R)+'" max="'+R+'" step="1" data-i="'+i+'" data-k="1" aria-label="'+n+' এর y"> )</span>';});
+  box.insertAdjacentHTML('afterbegin',h);
+  function sync(){[].forEach.call(box.querySelectorAll('input[data-i]'),function(e){e.value=pts[+e.dataset.i][+e.dataset.k];});}
+  box.addEventListener('input',function(e){var t=e.target;if(t.dataset.i===undefined)return;var v=Math.round(parseFloat(t.value));if(isNaN(v))return;pts[+t.dataset.i][+t.dataset.k]=Math.max(-R,Math.min(R,v));redraw();});
+  sync();return {sync:sync};}
+function Drag(o,get,after){var act=-1,c=o.c;
+  function pos(e){var r=c.getBoundingClientRect();return [(e.clientX-r.left)*o.W/r.width,(e.clientY-r.top)*o.H/r.height];}
+  c.addEventListener('pointerdown',function(e){var p=pos(e),best=-1,bd=1e9,P=get();P.forEach(function(q,i){var dx=o.X(q[0])-p[0],dy=o.Y(q[1])-p[1],d=dx*dx+dy*dy;if(d<bd){bd=d;best=i;}});
+    if(bd<=28*28){act=best;try{c.setPointerCapture(e.pointerId);}catch(er){}e.preventDefault();}});
+  c.addEventListener('pointermove',function(e){if(act<0)return;var P=get(),p=pos(e),R=o.R,u=Math.round((p[0]-o.W/2)/o.s),v=Math.round((o.H/2-p[1])/o.s);
+    u=Math.max(-R,Math.min(R,u));v=Math.max(-R,Math.min(R,v));if(P[act][0]!==u||P[act][1]!==v){P[act][0]=u;P[act][1]=v;after();}});
+  function up(){act=-1;}c.addEventListener('pointerup',up);c.addEventListener('pointercancel',up);}
+function Pre(boxId,pts,after){$(boxId).addEventListener('click',function(e){var b=e.target.closest('button[data-pre]');if(!b)return;var a=JSON.parse(b.dataset.pre);a.forEach(function(p,i){pts[i][0]=p[0];pts[i][1]=p[1];});after();});}
+function slopeOf(P,Q){var dx=Q[0]-P[0],dy=Q[1]-P[1];return {dx:dx,dy:dy,same:dx===0&&dy===0,vert:dx===0&&dy!==0};}
+function eqStr(n,d,cn,cd){var m=red(n,d),c=red(cn,cd),s='y = ';
+  if(m[0]===0)return 'y = '+(c[0]===0?'০':frac(c[0],c[1]));
+  s+=(m[0]===1&&m[1]===1)?'x':(m[0]===-1&&m[1]===1)?'−x':(m[1]===1?sg(m[0]):'('+frac(m[0],m[1])+')')+'x';
+  if(c[0]!==0)s+=(c[0]>0?' + ':' − ')+frac(Math.abs(c[0]),c[1]);return s;}
+
+/* ===== ৩D সহায়ক ===== */
+var EL=0.45,CE=Math.cos(EL),SE=Math.sin(EL),PI=Math.PI;
+function C3(id){var c=$(id),W=c.width,H=c.height;return {c:c,x:R2(c),W:W,H:H};}
+function fit(o,rb,zh){var sc=Math.min(o.W*0.44/rb,(o.H*0.86)/(zh*CE+2*rb*SE+1e-9)),ext=(zh*CE+2*rb*SE)*sc,oy=o.H/2-ext/2+(zh*CE+rb*SE)*sc;return {sc:sc,oy:oy};}
+function pj(o,f,A,p){var ca=Math.cos(A),sa=Math.sin(A),X=p[0]*ca-p[1]*sa,Y=p[0]*sa+p[1]*ca;return [o.W/2+X*f.sc,f.oy-(p[2]*CE+Y*SE)*f.sc];}
+function clr(o){o.x.fillStyle='#fff';o.x.fillRect(0,0,o.W,o.H);o.x.fillStyle='#f4f8fb';o.x.fillRect(0,0,o.W,o.H);}
+function face(o,f,A,pts,fill){var x=o.x;x.beginPath();pts.forEach(function(p,i){var q=pj(o,f,A,p);i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]);});x.closePath();x.fillStyle=fill;x.fill();}
+function edge(o,f,A,a,b,col,w,dash){var x=o.x,p=pj(o,f,A,a),q=pj(o,f,A,b);x.strokeStyle=col;x.lineWidth=w||2;x.setLineDash(dash||[]);x.beginPath();x.moveTo(p[0],p[1]);x.lineTo(q[0],q[1]);x.stroke();x.setLineDash([]);}
+function txt(o,f,A,p,t,col){var q=pj(o,f,A,p),x=o.x;x.fillStyle=col||'#1f3a5f';x.font='700 14px system-ui';x.textAlign='center';x.fillText(t,q[0],q[1]-6);}
+function sl(id){return +$(id).value;}
+function wire(ids,fn){ids.forEach(function(i){$(i).addEventListener('input',fn);});}
+function preS(box,ids,fn){$(box).addEventListener('click',function(e){var b=e.target.closest('button[data-pre]');if(!b)return;JSON.parse(b.dataset.pre).forEach(function(v,i){$(ids[i]).value=v;});fn();});}
+function ngon(n,R,z){var a=[],k;for(k=0;k<n;k++){var t=2*PI*k/n+PI/2+PI/n;a.push([R*Math.cos(t),R*Math.sin(t),z]);}return a;}
+function bs(){var s='';[].slice.call(arguments).forEach(function(v){s+=v;});return s;}
+
+/* ===== ল্যাব ১ ===== */
+function lab1(){
+  var a=sl('l1a')/2,b=sl('l1b')/2,c=sl('l1c')/2,A=sl('l1r')*PI/180,o=C3('l1cvs'),rb=Math.sqrt(a*a+b*b)/2;
+  $('l1av').textContent=fm(a,1);$('l1bv').textContent=fm(b,1);$('l1cv').textContent=fm(c,1);
+  var f=fit(o,rb,c);clr(o);
+  var B=[[-a/2,-b/2,0],[a/2,-b/2,0],[a/2,b/2,0],[-a/2,b/2,0]],T=B.map(function(p){return [p[0],p[1],c];});
+  face(o,f,A,B,'rgba(25,113,194,.10)');face(o,f,A,T,'rgba(25,113,194,.16)');
+  for(var k=0;k<4;k++){face(o,f,A,[B[k],B[(k+1)%4],T[(k+1)%4],T[k]],'rgba(42,157,143,.12)');}
+  for(k=0;k<4;k++){edge(o,f,A,B[k],B[(k+1)%4],'#1f3a5f',2.2);edge(o,f,A,T[k],T[(k+1)%4],'#1f3a5f',2.2);edge(o,f,A,B[k],T[k],'#1f3a5f',2.2);}
+  edge(o,f,A,B[0],T[2],'#e53935',3,[7,5]);
+  var S=2*(a*b+b*c+c*a),V=a*b*c,D=Math.sqrt(a*a+b*b+c*c),cube=(a===b&&b===c),h='';
+  h+='দৈর্ঘ্য a = <b>'+fm(a,1)+'</b>, প্রস্থ b = <b>'+fm(b,1)+'</b>, উচ্চতা c = <b>'+fm(c,1)+'</b><br>';
+  h+='<b>সমগ্রতল</b> = 2(ab + bc + ca) = 2('+fm(a*b,2)+' + '+fm(b*c,2)+' + '+fm(c*a,2)+') = <b>'+fm(S,2)+'</b> বর্গ একক<br>';
+  h+='<b>আয়তন</b> = abc = '+fm(a,1)+' × '+fm(b,1)+' × '+fm(c,1)+' = <b>'+fm(V,2)+'</b> ঘন একক<br>';
+  h+='<b>কর্ণ</b> = √(a² + b² + c²) = √'+fm(a*a+b*b+c*c,2)+' = <b>'+fm(D,2)+'</b> একক (লাল ডটেড)<br>';
+  h+=cube?'<span class="ok">এটা ঘনক: সমগ্রতল 6a² = '+fm(6*a*a,2)+', আয়তন a³ = '+fm(a*a*a,2)+', কর্ণ √3·a = '+fm(Math.sqrt(3)*a,2)+' ✅</span>':'ঘনক হতে হলে a = b = c লাগে।';
+  $('l1res').innerHTML=h;
+}
+wire(['l1a','l1b','l1c','l1r'],lab1);preS('l1pre',['l1a','l1b','l1c'],lab1);lab1();
+
+/* ===== ল্যাব ২ ===== */
+function lab2(){
+  var n=sl('l2n'),s=sl('l2s')/2,H=sl('l2h')/2,A=sl('l2r')*PI/180,o=C3('l2cvs'),R=s/(2*Math.sin(PI/n));
+  $('l2nv').textContent=bn(n);$('l2sv').textContent=fm(s,1);$('l2hv').textContent=fm(H,1);
+  var f=fit(o,R,H);clr(o);var B=ngon(n,R,0),T=ngon(n,R,H),k;
+  face(o,f,A,B,'rgba(25,113,194,.14)');face(o,f,A,T,'rgba(25,113,194,.18)');
+  for(k=0;k<n;k++)face(o,f,A,[B[k],B[(k+1)%n],T[(k+1)%n],T[k]],'rgba(42,157,143,.10)');
+  for(k=0;k<n;k++){edge(o,f,A,B[k],B[(k+1)%n],'#1f3a5f',2.2);edge(o,f,A,T[k],T[(k+1)%n],'#1f3a5f',2.2);edge(o,f,A,B[k],T[k],'#1f3a5f',2.2);}
+  edge(o,f,A,[0,0,0],[0,0,H],'#e53935',2.6,[6,5]);txt(o,f,A,[0,0,H/2],'h','#e53935');
+  var base=n*s*s/(4*Math.tan(PI/n)),per=n*s,lat=per*H,S=2*base+lat,V=base*H,nm={3:'ত্রিভুজাকার',4:'বর্গাকার',5:'পঞ্চভুজাকার',6:'ষড়ভুজাকার',7:'সপ্তভুজাকার',8:'অষ্টভুজাকার'}[n];
+  var h='<b>'+nm+' সুষম প্রিজম</b> (ভূমির বাহু '+bn(n)+'টি, প্রতিটি '+fm(s,1)+', উচ্চতা '+fm(H,1)+')<br>';
+  h+='ভূমির ক্ষেত্রফল = '+fm(base,3)+' বর্গ একক; ভূমির পরিসীমা = '+bn(n)+' × '+fm(s,1)+' = '+fm(per,1)+'<br>';
+  h+='পার্শ্বতলের ক্ষেত্রফল = পরিসীমা × উচ্চতা = '+fm(lat,2)+'<br>';
+  h+='<b>সমগ্রতল</b> = 2 × ভূমি + পরিসীমা × উচ্চতা = 2 × '+fm(base,2)+' + '+fm(lat,2)+' = <b>'+fm(S,2)+'</b> বর্গ একক<br>';
+  h+='<b>আয়তন</b> = ভূমি × উচ্চতা = '+fm(base,2)+' × '+fm(H,1)+' = <b>'+fm(V,2)+'</b> ঘন একক';
+  $('l2res').innerHTML=h;
+}
+wire(['l2n','l2s','l2h','l2r'],lab2);preS('l2pre',['l2n','l2s','l2h'],lab2);lab2();
+
+/* ===== ল্যাব ৩ ===== */
+function lab3(){
+  var n=sl('l3n'),s=sl('l3s')/2,H=sl('l3h')/2,A=sl('l3r')*PI/180,o=C3('l3cvs'),R=s/(2*Math.sin(PI/n)),r=s/(2*Math.tan(PI/n)),l=Math.sqrt(H*H+r*r);
+  $('l3nv').textContent=bn(n);$('l3sv').textContent=fm(s,1);$('l3hv').textContent=fm(H,1);
+  var f=fit(o,R,H);clr(o);var B=ngon(n,R,0),ap=[0,0,H],k;
+  face(o,f,A,B,'rgba(25,113,194,.14)');
+  for(k=0;k<n;k++)face(o,f,A,[B[k],B[(k+1)%n],ap],'rgba(42,157,143,.10)');
+  for(k=0;k<n;k++){edge(o,f,A,B[k],B[(k+1)%n],'#1f3a5f',2.2);edge(o,f,A,B[k],ap,'#1f3a5f',2.2);}
+  var M=[(B[0][0]+B[1][0])/2,(B[0][1]+B[1][1])/2,0];
+  edge(o,f,A,ap,[0,0,0],'#1b8a5a',2.6,[6,5]);edge(o,f,A,[0,0,0],M,'#1971c2',2.6,[6,5]);edge(o,f,A,ap,M,'#e53935',3.2);
+  txt(o,f,A,[0,0,H/2],'h','#1b8a5a');txt(o,f,A,[M[0]/2,M[1]/2,0],'r','#1971c2');txt(o,f,A,[M[0]/2,M[1]/2,H/2],'l','#e53935');
+  var base=n*s*s/(4*Math.tan(PI/n)),per=n*s,lat=0.5*per*l,S=base+lat,V=base*H/3,
+   nm={3:'ত্রিভুজাকার',4:'বর্গাকার',5:'পঞ্চভুজাকার',6:'ষড়ভুজাকার',7:'সপ্তভুজাকার',8:'অষ্টভুজাকার'}[n];
+  var h='<b>'+nm+' সুষম পিরামিড</b> (ভূমির বাহু '+fm(s,1)+', উচ্চতা '+fm(H,1)+')<br>';
+  h+='ভূমির কেন্দ্র থেকে বাহুর লম্ব দূরত্ব r = '+fm(r,3)+'<br><b>হেলানো উচ্চতা l = √(h² + r²)</b> = √('+fm(H*H,2)+' + '+fm(r*r,2)+') = <b>'+fm(l,3)+'</b><br>';
+  h+='ভূমির ক্ষেত্রফল = '+fm(base,3)+'; ভূমির পরিসীমা = '+fm(per,1)+'<br>পার্শ্বতলের ক্ষেত্রফল = ½ × '+fm(per,1)+' × '+fm(l,3)+' = '+fm(lat,2)+'<br>';
+  h+='<b>সমগ্রতল</b> = ভূমি + পার্শ্বতল = '+fm(base,2)+' + '+fm(lat,2)+' = <b>'+fm(S,2)+'</b> বর্গ একক<br>';
+  h+='<b>আয়তন</b> = ⅓ × ভূমি × h = ⅓ × '+fm(base,2)+' × '+fm(H,1)+' = <b>'+fm(V,2)+'</b> ঘন একক';
+  $('l3res').innerHTML=h;
+}
+wire(['l3n','l3s','l3h','l3r'],lab3);preS('l3pre',['l3n','l3s','l3h'],lab3);lab3();
+
+/* ===== ল্যাব ৪ ===== */
+function lab4(){
+  var r=sl('l4r')/2,H=sl('l4h')/2,A=sl('l4a')*PI/180,o=C3('l4cvs'),l=Math.sqrt(r*r+H*H);
+  $('l4rv').textContent=fm(r,1);$('l4hv').textContent=fm(H,1);
+  var f=fit(o,r,H);clr(o);var x=o.x,pts=[],k,ap=[0,0,H];
+  for(k=0;k<72;k++){var t=2*PI*k/72;pts.push([r*Math.cos(t),r*Math.sin(t),0]);}
+  var pp=pts.map(function(p){return pj(o,f,A,p);}),ia=0,ib=0;pp.forEach(function(q,i){if(q[0]<pp[ia][0])ia=i;if(q[0]>pp[ib][0])ib=i;});
+  face(o,f,A,pts,'rgba(25,113,194,.14)');
+  x.strokeStyle='#1f3a5f';x.lineWidth=2.2;x.beginPath();pp.forEach(function(q,i){i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1]);});x.closePath();x.stroke();
+  edge(o,f,A,ap,pts[ia],'#1f3a5f',2.4);edge(o,f,A,ap,pts[ib],'#e53935',3.4);
+  edge(o,f,A,ap,[0,0,0],'#1b8a5a',2.6,[6,5]);edge(o,f,A,[0,0,0],pts[ib],'#1971c2',2.6,[6,5]);
+  txt(o,f,A,[0,0,H/2],'h','#1b8a5a');txt(o,f,A,[pts[ib][0]/2,pts[ib][1]/2,0],'r','#1971c2');
+  var q1=pj(o,f,A,ap),q2=pj(o,f,A,pts[ib]);x.fillStyle='#e53935';x.font='700 14px system-ui';x.textAlign='left';x.fillText('l',(q1[0]+q2[0])/2+8,(q1[1]+q2[1])/2);
+  var th=Math.atan(r/H)*180/PI,cur=PI*r*l,tot=PI*r*(r+l),V=PI*r*r*H/3;
+  var h='ভূমির ব্যাসার্ধ r = <b>'+fm(r,1)+'</b>, উচ্চতা h = <b>'+fm(H,1)+'</b><br>';
+  h+='<b>হেলানো উচ্চতা l = √(h² + r²)</b> = √('+fm(H*H,2)+' + '+fm(r*r,2)+') = <b>'+fm(l,3)+'</b><br>';
+  h+='অর্ধশীর্ষকোণ θ: tan θ = r/h = '+fm(r/H,3)+' ⇒ θ ≈ <b>'+fm(th,2)+'°</b><br>';
+  h+='<b>বক্রতলের ক্ষেত্রফল</b> = πrl = <b>'+fm(cur,3)+'</b> বর্গ একক<br><b>সমগ্রতল</b> = πr(r + l) = <b>'+fm(tot,3)+'</b> বর্গ একক (ভূমি '+fm(PI*r*r,3)+' সহ)<br>';
+  h+='<b>আয়তন</b> = ⅓πr²h = <b>'+fm(V,3)+'</b> ঘন একক';
+  $('l4res').innerHTML=h;
+}
+wire(['l4r','l4h','l4a'],lab4);preS('l4pre',['l4r','l4h'],lab4);lab4();
+
+/* ===== ল্যাব ৫ ===== */
+function lab5(){
+  var r=sl('l5r')/2,hh=sl('l5h')/2,o=C3('l5cvs'),x=o.x,cx=o.W/2,cy=o.H/2,sc=o.H*0.4/r;clr(o);
+  var R=r*sc;x.strokeStyle='#1f3a5f';x.lineWidth=2.6;x.beginPath();x.arc(cx,cy,R,0,2*PI);x.fillStyle='rgba(25,113,194,.10)';x.fill();x.stroke();
+  x.lineWidth=1.3;x.strokeStyle='#9fb0bd';x.beginPath();x.ellipse(cx,cy,R,R*0.3,0,0,2*PI);x.stroke();
+  x.fillStyle='#1f3a5f';x.beginPath();x.arc(cx,cy,5,0,2*PI);x.fill();x.font='700 14px system-ui';x.textAlign='left';x.fillText('O',cx+8,cy+16);
+  var vis=hh<=r,rho=vis?Math.sqrt(Math.max(0,r*r-hh*hh)):0,h='গোলকের ব্যাসার্ধ r = <b>'+fm(r,1)+'</b>, কেন্দ্র থেকে সমতলের দূরত্ব h = <b>'+fm(hh,1)+'</b><br>';
+  $('l5rv').textContent=fm(r,1);$('l5hv').textContent=fm(hh,1);
+  h+='<b>পৃষ্ঠতল</b> = 4πr² = <b>'+fm(4*PI*r*r,3)+'</b> বর্গ একক; <b>আয়তন</b> = ⁴⁄₃πr³ = <b>'+fm(4*PI*r*r*r/3,3)+'</b> ঘন একক<br>';
+  if(vis){var py=cy-hh*sc;
+    x.strokeStyle='#e53935';x.lineWidth=2.6;x.fillStyle='rgba(229,57,53,.14)';x.beginPath();x.ellipse(cx,py,rho*sc,Math.max(1,rho*sc*0.3),0,0,2*PI);x.fill();x.stroke();
+    x.setLineDash([6,5]);x.strokeStyle='#1b8a5a';x.lineWidth=2.4;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx,py);x.stroke();
+    x.strokeStyle='#1971c2';x.beginPath();x.moveTo(cx,py);x.lineTo(cx+rho*sc,py);x.stroke();x.strokeStyle='#e53935';x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+rho*sc,py);x.stroke();x.setLineDash([]);
+    x.fillStyle='#1b8a5a';x.fillText('h',cx+6,(cy+py)/2);x.fillStyle='#1971c2';x.fillText('ρ',cx+rho*sc/2,py-8);x.fillStyle='#e53935';x.fillText('r',cx+rho*sc/2+6,(cy+py)/2+16);
+    h+='সমতল দিয়ে কাটলে বৃত্তের ব্যাসার্ধ ρ = √(r² − h²) = √('+fm(r*r,2)+' − '+fm(hh*hh,2)+') = <b>'+fm(rho,3)+'</b><br>বৃত্তের ক্ষেত্রফল = πρ² = '+fm(PI*rho*rho,3)+(hh===r?' (h = r, সমতল গোলককে শুধু ছুঁয়ে যায়, বৃত্তটি একটি বিন্দুতে মিলেছে)':hh===0?' (h = ০, এটি গোলকের বৃহত্তম বৃত্ত, ব্যাসার্ধ r)':'');
+  }else{h+='<span class="no">h > r, সমতলটি গোলকের বাইরে আছে। ছেদ হয় না।</span>';}
+  $('l5res').innerHTML=h;
+}
+wire(['l5r','l5h'],lab5);preS('l5pre',['l5r','l5h'],lab5);lab5();
+
+/* ===== ল্যাব ৬ ===== */
+function lab6(){
+  var R=+$('l6R').value,r=+$('l6r').value,t=+$('l6t').value,cr=+$('l6cr').value,ch=+$('l6ch').value,o=C3('l6cvs'),x=o.x;clr(o);
+  if(!(R>0&&r>0&&t>0&&cr>0&&ch>0)){$('l6res').innerHTML='<span class="no">সব ঘরে ০ এর চেয়ে বড় সংখ্যা লেখো।</span>';return;}
+  var V=4*PI*R*R*R/3,n=Math.pow(R/r,3),nf=Math.floor(n+1e-9),rho=Math.sqrt(V/(PI*t)),nc=V/(PI*cr*cr*ch),ncf=Math.floor(nc+1e-9),h='';
+  var bigR=Math.min(90,o.H*0.4);x.fillStyle='rgba(25,113,194,.18)';x.strokeStyle='#1f3a5f';x.lineWidth=2.4;x.beginPath();x.arc(100,o.H/2,bigR,0,2*PI);x.fill();x.stroke();
+  x.fillStyle='#1f3a5f';x.font='700 14px system-ui';x.textAlign='center';x.fillText('বড় গোলক R = '+fm(R,2),100,o.H/2+bigR+22);
+  if(r<=R){var pr=bigR*r/R,gap=pr*2+4,cnt=0,y,xx;x.fillStyle='rgba(42,157,143,.35)';x.strokeStyle='#2a9d8f';x.lineWidth=1.4;
+    for(y=30+pr;y<o.H-30&&cnt<Math.min(nf,200);y+=gap)for(xx=240+pr;xx<o.W-20&&cnt<Math.min(nf,200);xx+=gap){x.beginPath();x.arc(xx,y,pr,0,2*PI);x.fill();x.stroke();cnt++;}
+    x.fillStyle='#1b8a5a';x.textAlign='left';x.fillText(nf>200?'ছোট গোলক ('+bn(nf)+'টির মধ্যে প্রথম ২০০টি দেখানো হলো)':'ছোট গোলক '+bn(nf)+'টি',240,18);}
+  h+='বড় গোলকের আয়তন = ⁴⁄₃πR³ = <b>'+fm(V,3)+'</b> ঘন একক<br>';
+  h+='<b>(ক) ছোট গোলক:</b> n = (R/r)³ = ('+fm(R,2)+'/'+fm(r,2)+')³ = '+fm(n,3)+(r>R?' <span class="no">(ছোট গোলকের ব্যাসার্ধ R এর চেয়ে বড় হতে পারে না)</span>':' ⇒ পূর্ণ গুলি <b>'+bn(nf)+'</b>টি')+'<br>';
+  h+='<b>(খ) বৃত্তাকার পাত</b> (পুরুত্ব '+fm(t,4)+'): πρ²t = '+fm(V,3)+' ⇒ ρ = √(আয়তন/(πt)) = <b>'+fm(rho,3)+'</b> একক<br>';
+  h+='<b>(গ) সিলিন্ডার</b> (ব্যাসার্ধ '+fm(cr,2)+', উচ্চতা '+fm(ch,2)+'): একটির আয়তন '+fm(PI*cr*cr*ch,3)+' ⇒ সংখ্যা = '+fm(nc,3)+' ⇒ পূর্ণ সিলিন্ডার <b>'+bn(ncf)+'</b>টি';
+  $('l6res').innerHTML=h;
+}
+['l6R','l6r','l6t','l6cr','l6ch'].forEach(function(i){$(i).addEventListener('input',lab6);});
+$('l6pre').addEventListener('click',function(e){var b=e.target.closest('button[data-pre]');if(!b)return;JSON.parse(b.dataset.pre).forEach(function(v,i){$(['l6R','l6r','l6t','l6cr','l6ch'][i]).value=v;});lab6();});lab6();
+/* ===== প্র্যাকটিস ===== */
+function numOf(s){s=en(s).replace(/[−–]/g,'-').replace(/\s+/g,'');var m=s.match(/^(-?\d+)\/(\d+)$/);if(m)return +m[1]/+m[2];if(/^-?\d*\.?\d+$/.test(s))return parseFloat(s);return NaN;}
+var PR=[
+ ['আয়তাকার ঘনবস্তুর দৈর্ঘ্য 8, প্রস্থ 6, উচ্চতা 3 সেমি। সমগ্রতলের ক্ষেত্রফল কত বর্গ সেমি?',[180],'2(ab + bc + ca) = 2(48 + 18 + 24) = 2 × 90 = 180।'],
+ ['আয়তাকার ঘনবস্তুর মাত্রা 3, 4, 12 সেমি। কর্ণের দৈর্ঘ্য কত সেমি?',[13],'√(9 + 16 + 144) = √169 = 13।'],
+ ['ঘনকের একটি ধার 5 সেমি হলে আয়তন কত ঘন সেমি?',[125],'a³ = 5³ = 125।'],
+ ['ভূমি সমকোণী ত্রিভুজ (সমকোণ-সংলগ্ন বাহু 6 ও 8 সেমি), উচ্চতা 10 সেমি। প্রিজমের আয়তন কত ঘন সেমি?',[240],'ভূমির ক্ষেত্রফল = ½ × 6 × 8 = 24। আয়তন = 24 × 10 = 240।'],
+ ['6 সেমি বাহুর বর্গাকার ভূমির পিরামিডের উচ্চতা 4 সেমি। আয়তন কত ঘন সেমি?',[48],'⅓ × 36 × 4 = 48।'],
+ ['কোণকের ভূমির ব্যাসার্ধ 3 সেমি, উচ্চতা 4 সেমি। হেলানো উচ্চতা কত সেমি?',[5],'l = √(4² + 3²) = 5।'],
+ ['ঐ কোণকের (r = 3, h = 4) বক্রতলের ক্ষেত্রফল কত বর্গ সেমি? (π = 3.1416)',[47.12],'πrl = π × 3 × 5 = 15π ≈ 47.12।'],
+ ['ঐ কোণকের আয়তন কত ঘন সেমি? (π = 3.1416)',[37.7],'⅓πr²h = ⅓ × π × 9 × 4 = 12π ≈ 37.70।'],
+ ['গোলকের ব্যাসার্ধ 3 সেমি। পৃষ্ঠতলের ক্ষেত্রফল কত বর্গ সেমি? (π = 3.1416)',[113.1],'4πr² = 4 × π × 9 = 36π ≈ 113.10।'],
+ ['ব্যাসার্ধ 13 সেমির গোলকের কেন্দ্র থেকে 12 সেমি দূরে সমতল কাটলে ছেদ-বৃত্তের ব্যাসার্ধ কত সেমি?',[5],'√(13² − 12²) = √25 = 5।']
+];
+(function(){var h='';PR.forEach(function(p,i){h+='<div class="q"><b>'+bn(i+1)+'.</b> '+p[0]+'<div class="ans"> <input type="text" id="pi'+i+'" size="10"> <button class="btn" data-pc="'+i+'">যাচাই</button> <button class="btn alt" data-ph="'+i+'">সমাধান</button></div><div class="fb" id="pf'+i+'"></div></div>';});$('pracbox').innerHTML=h;})();
+$('pracbox').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.pc!==undefined){var i=+b.dataset.pc,raw=$('pi'+i).value,v=numOf(raw),ok=!isNaN(v)&&PR[i][1].some(function(a){return Math.abs(a-v)<=0.0151;});
+    $('pf'+i).innerHTML=raw.trim()===''?'আগে উত্তর লেখো।':(ok?'✅ ঠিক! সাবাশ।':'❌ আবার চেষ্টা করো, বা "সমাধান" দেখো।');}
+  if(b.dataset.ph!==undefined){var j=+b.dataset.ph;$('pf'+j).innerHTML='💡 '+PR[j][2];}
+});
+/* ===== কুইজ ===== */
+var QZ=[];function M(q,c,w,e){QZ.push({q:q,o:[c].concat(w),e:e});}
+M('বিন্দুর মাত্রা কত?','শূন্য',['এক','দুই','তিন'],'বিন্দুর দৈর্ঘ্য, প্রস্থ, উচ্চতা কিছুই নেই।');
+M('রেখা কত মাত্রার?','একমাত্রিক',['শূন্যমাত্রিক','দ্বিমাত্রিক','ত্রিমাত্রিক'],'রেখার শুধু দৈর্ঘ্য আছে।');
+M('তল কত মাত্রার?','দ্বিমাত্রিক',['একমাত্রিক','ত্রিমাত্রিক','শূন্যমাত্রিক'],'তলের দৈর্ঘ্য ও প্রস্থ আছে, উচ্চতা নেই।');
+M('ঘনবস্তু কত মাত্রার?','ত্রিমাত্রিক',['দ্বিমাত্রিক','একমাত্রিক','শূন্যমাত্রিক'],'দৈর্ঘ্য, প্রস্থ, উচ্চতা তিনটিই আছে।');
+M('একই সমতলে নেই এমন দুটি রেখা (সমান্তরালও নয়, ছেদও করে না) কে বলে—','নৈকতলীয় রেখা',['একতলীয় রেখা','সমান্তরাল রেখা','তির্যক তল'],'যেমন আড়াআড়ি রাখা দুটি পেনসিলের রেখা।');
+M('সমতলের যেকোনো দুই বিন্দুর সংযোজক সরলরেখা—','সম্পূর্ণ ঐ তলের উপর থাকে',['তলের বাইরে থাকে','তলকে ছেদ করে','তলের লম্ব হয়'],'এটাই সমতলের সংজ্ঞা।');
+M('গোলকের পৃষ্ঠতল কোন ধরনের তল?','বক্রতল',['সমতল','একতলীয় তল','অনুভূমিক তল'],'এর যেকোনো দুই বিন্দুর সংযোজক রেখা তলের উপর থাকে না।');
+M('একটি সরলরেখা একটি সমতলকে ছেদ করলে সাধারণ বিন্দু কয়টি থাকে?','একটি',['দুটি','অসংখ্য','একটিও না'],'দুটি সাধারণ বিন্দু থাকলে পুরো রেখাই তলে থাকত।');
+M('দুটি সমতল ছেদ করলে তাদের ছেদ—','একটি সরলরেখা',['একটি বিন্দু','একটি বৃত্ত','হয় না'],'সমতল দুটির অসংখ্য সাধারণ বিন্দু থাকে, সবগুলো একটি সরলরেখায়।');
+M('একটি বাক্সের ধার কয়টি?','১২টি',['৬টি','৮টি','১০টি'],'ছয়টি পৃষ্ঠতল ও বারটি ধার।');
+M('a, b, c মাত্রার আয়তাকার ঘনবস্তুর কর্ণ কোনটি?','√(a² + b² + c²)',['a + b + c','√(ab + bc + ca)','abc'],'পীথাগোরাসের উপপাদ্য দুইবার খাটিয়ে।');
+M('a ধারের ঘনকের কর্ণ কত?','√3·a',['3a','a√2','a/√3'],'√(a² + a² + a²) = √3·a।');
+M('a, b, c মাত্রার আয়তাকার ঘনবস্তুর সমগ্রতল—','2(ab + bc + ca)',['ab + bc + ca','abc','2(a + b + c)'],'ছয়টি আয়তক্ষেত্রের ক্ষেত্রফলের যোগফল।');
+M('a ধারের ঘনকের সমগ্রতল—','6a²',['3a²','a³','12a²'],'ছয়টি বর্গ তল।');
+M('প্রিজমের আয়তন =','ভূমির ক্ষেত্রফল × উচ্চতা',['⅓ × ভূমি × উচ্চতা','২ × ভূমি × উচ্চতা','পরিসীমা × উচ্চতা'],'পরিসীমা × উচ্চতা হলো পার্শ্বতলের ক্ষেত্রফল।');
+M('প্রিজমের সমগ্রতল =','2 × ভূমির ক্ষেত্রফল + ভূমির পরিসীমা × উচ্চতা',['ভূমি × উচ্চতা','ভূমি + ½ × পরিসীমা × উচ্চতা','4 × ভূমি'],'দুই প্রান্তে দুটি ভূমি + পার্শ্বতলগুলো।');
+M('ভূমি সুষম বহুভুজ এমন প্রিজমকে বলে—','সুষম প্রিজম',['বিষম প্রিজম','তীর্যক প্রিজম','পিরামিড'],'ভূমি সুষম না হলে বিষম প্রিজম।');
+M('পিরামিডের আয়তন =','⅓ × ভূমির ক্ষেত্রফল × উচ্চতা',['½ × ভূমি × উচ্চতা','ভূমি × উচ্চতা','⅓ × ভূমি × হেলানো উচ্চতা'],'আয়তনে লম্ব উচ্চতা h লাগে, l নয়।');
+M('সুষম পিরামিডে ভূমির পরিসীমা p, হেলানো উচ্চতা l হলে পার্শ্বতলের ক্ষেত্রফল—','½ × p × l',['p × l','⅓ × p × l','p × h'],'প্রতিটি পার্শ্বতল ত্রিভুজ, যার উচ্চতা l।');
+M('পিরামিডের উচ্চতা h, ভূমির অন্তর্বৃত্তের ব্যাসার্ধ r হলে হেলানো উচ্চতা l =','√(h² + r²)',['h + r','√(h² − r²)','h² + r²'],'শীর্ষ, ভূমির কেন্দ্র ও বাহুর মধ্যবিন্দু নিয়ে সমকোণী ত্রিভুজ হয়।');
+M('সুষম চতুস্তলকের ধার ও কৌণিক বিন্দুর সংখ্যা যথাক্রমে—','৬টি ও ৪টি',['৪টি ও ৬টি','৪টি ও ৪টি','৬টি ও ৬টি'],'চারটি সমবাহু ত্রিভুজ তল, ৩ + ৩ = ৬টি ধার।');
+M('কোণকের উচ্চতা h, ভূমির ব্যাসার্ধ r হলে হেলানো উচ্চতা l =','√(h² + r²)',['h + r','√(h² − r²)','πrh'],'সমকোণী ত্রিভুজের অতিভুজ।');
+M('সমবৃত্তভূমিক কোণকের বক্রতলের ক্ষেত্রফল—','πrl',['πr²','πr(r + l)','⅓πr²h'],'সমগ্রতল হলো বক্রতল + ভূমি = πrl + πr²।');
+M('কোণকের আয়তন—','⅓πr²h',['πr²h','½πr²h','πrl'],'একই ভূমি ও উচ্চতার সিলিন্ডারের এক-তৃতীয়াংশ।');
+M('গোলকের পৃষ্ঠতলের ক্ষেত্রফল—','4πr²',['2πr²','⁴⁄₃πr³','πr²'],'বৃহত্তম বৃত্তের ক্ষেত্রফলের চার গুণ।');
+M('গোলকের আয়তন—','⁴⁄₃πr³',['4πr²','⅓πr³','πr³'],'এটাই সূত্র।');
+M('গোলকের কেন্দ্র থেকে h দূরে সমতল কাটলে ছেদ-বৃত্তের ব্যাসার্ধ—','√(r² − h²)',['√(r² + h²)','r − h','r + h'],'কেন্দ্র, বৃত্তের কেন্দ্র ও বৃত্তের উপর একটি বিন্দু নিয়ে সমকোণী ত্রিভুজ হয়।');
+M('সমান উচ্চতা ও সমান ভূমির কোণক, অর্ধগোলক ও সিলিন্ডারের আয়তনের অনুপাত—','১ : ২ : ৩',['১ : ১ : ১','১ : ৩ : ২','৩ : ২ : ১'],'⅓πr³ : ⅔πr³ : πr³ (উদাহরণ ৬)।');
+M('ঘনবস্তু গলিয়ে অন্য আকার বানালে কোনটি সমান থাকে?','আয়তন',['পৃষ্ঠতলের ক্ষেত্রফল','ব্যাসার্ধ','উচ্চতা'],'পদার্থের পরিমাণ একই থাকে, তাই আয়তন সমান।');
+M('ক্যাপসুলের মোট দৈর্ঘ্য L, সিলিন্ডার অংশের ব্যাসার্ধ r হলে সিলিন্ডার অংশের দৈর্ঘ্য—','L − 2r',['L − r','L','L − 4r'],'দুই প্রান্তে দুটি অর্ধগোলকের ব্যাসার্ধ বাদ যায় (উদাহরণ ৯)।');
+(function(){
+  var done=0,sc=0;
+  QZ.forEach(function(q){var ord=q.o.map(function(t,i){return {t:t,c:i===0};});
+    for(var i=ord.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),k=ord[i];ord[i]=ord[j];ord[j]=k;}q.ord=ord;});
+  var h='';QZ.forEach(function(q,qi){h+='<div class="q" id="qq'+qi+'"><b>'+bn(qi+1)+'.</b> '+q.q+q.ord.map(function(o,oi){return '<button class="opt" data-q="'+qi+'" data-o="'+oi+'">'+o.t+'</button>';}).join('')+'<div class="fb" id="qe'+qi+'"></div></div>';});
+  $('quizbox').innerHTML=h;
+  $('quizbox').addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b||b.parentNode.dataset.done)return;
+    var qi=+b.dataset.q,q=QZ[qi],o=q.ord[+b.dataset.o];b.parentNode.dataset.done=1;done++;
+    var btns=b.parentNode.querySelectorAll('.opt');btns.forEach(function(x,i){if(q.ord[i].c)x.classList.add('good');});
+    if(o.c){sc++;$('qe'+qi).textContent='✅ ঠিক! '+q.e;}else{b.classList.add('bad');$('qe'+qi).textContent='❌ ভুল। '+q.e;}
+    $('qscore').textContent='স্কোর: '+bn(sc)+' / '+bn(done)+' (মোট '+bn(QZ.length)+'টি)';
+    try{if(done===QZ.length){localStorage.setItem('sl_done_math-solid-geometry','1');var xp=+(localStorage.getItem('sl_xp')||0);localStorage.setItem('sl_xp',xp+sc);}}catch(er){}
+  });
+})();
+/* ===== প্রশ্নোত্তর ===== */
+var QA=[
+ {h:'অনুশীলনী ১৩ (π = 3.1416 ধরে)',items:[
+  ['১. দৈর্ঘ্য 16, প্রস্থ 12, উচ্চতা 4.5 মি.। পৃষ্ঠতলের ক্ষেত্রফল ও কর্ণ','সমগ্রতল = 2(16·12 + 12·4.5 + 16·4.5) = 2(192 + 54 + 72) = <b>636 বর্গমিটার</b>। কর্ণ = √(256 + 144 + 20.25) = √420.25 = <b>20.5 মিটার</b>। আয়তন = 864 ঘনমিটার।'],
+  ['২. জলাধার 2.5 মি. × 1 মি., উচ্চতা 0.4 মি.','আয়তন = 2.5 × 1 × 0.4 = <b>1 ঘনমিটার</b>। (অভ্যন্তরীণ তলের ক্ষেত্রফলে কয়টি তল ধরতে হবে, তা প্রশ্ন থেকে নিশ্চিত নয়, তাই এটি বাদ দিলাম।)'],
+  ['৩. হোস্টেল: ৭০ জন, প্রত্যেকের ৪.২৫ বর্গমিটার মেঝে ও ১৩.৬ ঘনমিটার স্থান, দৈর্ঘ্য ৩৪ মি.','মেঝের ক্ষেত্রফল = 70 × 4.25 = 297.5 বর্গমিটার ⇒ প্রস্থ = 297.5 ÷ 34 = <b>8.75 মি.</b>। আয়তন = 70 × 13.6 = 952 ঘনমিটার ⇒ উচ্চতা = 952 ÷ 297.5 = <b>3.2 মি.</b>।'],
+  ['৪. কোণকের উচ্চতা 24 সেমি, আয়তন 1232 ঘন সেমি। হেলানো উচ্চতা','⅓πr² × 24 = 1232 ⇒ 8πr² = 1232 ⇒ r² ≈ 49.02। π = 22/7 ধরলে r = 7 ও l = √(576 + 49) = <b>25 সেমি</b> (π = 3.1416 ধরলে প্রায় 25.00)।'],
+  ['৫. সমকোণী ত্রিভুজের দুই বাহু 5 ও 3.5 সেমি, বৃহত্তর বাহুর চতুর্দিকে ঘোরালে আয়তন','কোণক: উচ্চতা h = 5, r = 3.5। V = ⅓π(3.5)²(5) = <b>64.14 ঘন সেমি</b> (প্রায়)।'],
+  ['৬. তিনটি কঠিন কাচের বল (ব্যাসার্ধ 6, 8, r সেমি) গলিয়ে 9 সেমি ব্যাসার্ধের একটি গোলক। r?','আয়তন সমান: 6³ + 8³ + r³ = 9³ ⇒ 216 + 512 + r³ = 729 ⇒ r³ = 1 ⇒ <b>r = 1 সেমি</b>।'],
+  ['৭. ফাঁপা লোহার গোলকের বাইরের ব্যাস 13 সেমি, লোহার বেধ 2 সেমি। ঐ লোহায় নিরেট গোলকের ব্যাস?','বাইরের R = 6.5, ভিতরের = 4.5। লোহার আয়তন = ⁴⁄₃π(6.5³ − 4.5³)। নিরেট গোলকের ব্যাসার্ধ ρ: ρ³ = 274.625 − 91.125 = 183.5 ⇒ ρ ≈ 5.683। ব্যাস ≈ <b>11.37 সেমি</b>।'],
+  ['৮. 4 সেমি ব্যাসার্ধের নিরেট গোলক গলিয়ে 5 সেমি বহির্ব্যাসার্ধের ফাঁপা গোলক। বেধ?','আয়তন সমান: 5³ − s³ = 4³ ⇒ s³ = 61 ⇒ s ≈ 3.9365। বেধ = 5 − 3.9365 ≈ <b>1.06 সেমি</b>।'],
+  ['৯. 6 সেমি ব্যাসার্ধের লোহার গোলক থেকে 8 সেমি দৈর্ঘ্য ও 6 সেমি ব্যাসের কয়টি নিরেট সিলিন্ডার?','গোলকের আয়তন = ⁴⁄₃π·216 = 288π। সিলিন্ডার (r = 3, h = 8) = 72π। সংখ্যা = 288π ÷ 72π = <b>4টি</b>।'],
+  ['১০. 22/π সেমি ব্যাসের গোলক ঘনক আকৃতির বাক্সে ঠিকভাবে এঁটে যায়। অনধিকৃত অংশের আয়তন','বাক্সের ধার = ব্যাস = 22/π = 7.0028। বাক্সের আয়তন (22/π)³ ≈ 343.4। গোলক = ⁴⁄₃π(11/π)³ ≈ 179.8। অনধিকৃত অংশ ≈ <b>163.60 ঘন সেমি</b>।'],
+  ['১১. 13 সেমি ব্যাসার্ধের গোলকের কেন্দ্র থেকে 12 সেমি দূরের তল। ছেদ-বৃত্তের ক্ষেত্রফল','বৃত্তের ব্যাসার্ধ = √(13² − 12²) = 5 সেমি। ক্ষেত্রফল = π × 25 = <b>78.54 বর্গ সেমি</b>।'],
+  ['১২. কাঠের বাক্স (বাইরে 1.6 মি. × 1.2 মি., উচ্চতা 0.8 মি., কাঠ 3 সেমি পুরু)। ভিতরে রং করার খরচ (14.44 টাকা/বর্গমি.)','আমি ধরেছি ঢাকনাসহ বাক্সের সব দিকে কাঠ 3 সেমি পুরু। ভিতরের মাপ 1.54 × 1.14 × 0.74। ভিতরের তল = 2(1.54·1.14 + 1.54·0.74 + 1.14·0.74) = 7.4776 বর্গমিটার। খরচ = 7.4776 × 14.44 ≈ <b>108 টাকা</b> (প্রায়)। প্রশ্নের শর্ত বইয়ের সাথে মিলিয়ে নিও।'],
+  ['১৩. 120 মি. × 90 মি. বাগানের চারদিকে 2 মি. উঁচু, 25 সেমি পুরু প্রাচীর। ইট 25 × 12.5 × 8 সেমি। কয়টি ইট?','প্রাচীরের ভূমি = 120 × 90 − 119.5 × 89.5 = 104.75 বর্গমিটার। আয়তন = 104.75 × 2 = 209.5 ঘনমিটার = 209,500,000 ঘন সেমি। এক ইট = 2500 ঘন সেমি। ইট = <b>83,800টি</b>।'],
+  ['১৪. আয়তাকার ঘনবস্তুর দৈর্ঘ্য : প্রস্থ = 4 : 3, আয়তন 2304। তলায় সীসার প্রলেপ প্রতি বর্গসেমি 10 টাকায় 1920 টাকা। মাত্রা?','তলার ক্ষেত্রফল = 1920 ÷ 10 = 192 বর্গ সেমি। 4k × 3k = 192 ⇒ k = 4। দৈর্ঘ্য <b>16 সেমি</b>, প্রস্থ <b>12 সেমি</b>। উচ্চতা = 2304 ÷ 192 = <b>12 সেমি</b>।'],
+  ['১৫. কোণক আকৃতির তাঁবু, উচ্চতা 7.5 মি., 2000 বর্গমিটার জমি ঘিরবে। ক্যানভাস কত?','πr² = 2000 ⇒ r ≈ 25.231। l = √(7.5² + r²) ≈ 26.322। ক্যানভাস = πrl ≈ <b>2086.49 বর্গমিটার</b> (বক্রতল)।'],
+  ['১৬. সুষম ষড়ভুজাকার প্রিজম, ভূমির বাহু 4 সেমি, উচ্চতা 5 সেমি','ভূমির ক্ষেত্রফল = 6 × (√3/4) × 16 = 24√3 ≈ 41.569। সমগ্রতল = 2 × 41.569 + 24 × 5 ≈ <b>203.14 বর্গ সেমি</b>। আয়তন = 41.569 × 5 ≈ <b>207.85 ঘন সেমি</b>।'],
+  ['১৭. 6 সেমি বাহুর সুষম ষড়ভুজের উপর পিরামিড, উচ্চতা 10 সেমি','r = 3√3 ≈ 5.196, l = √(100 + 27) ≈ 11.269, ভূমির ক্ষেত্রফল ≈ 93.531। সমগ্রতল = 93.531 + ½ × 36 × 11.269 ≈ <b>296.38 বর্গ সেমি</b>। আয়তন = ⅓ × 93.531 × 10 ≈ <b>311.77 ঘন সেমি</b>।'],
+  ['১৮. সুষম চতুস্তলকের ধার 8 সেমি','চারটি সমবাহু ত্রিভুজ: সমগ্রতল = 4 × (√3/4) × 64 = 64√3 ≈ <b>110.85 বর্গ সেমি</b>। আয়তন = a³/(6√2) ≈ <b>60.34 ঘন সেমি</b>। (আয়তনের সূত্রটি বইয়ের বাইরের, আমি h = a√(2/3) দিয়ে মিলিয়েছি।)'],
+  ['১৯. নিচে আয়তাকার ঘনবস্তু (উচ্চতা 3 মি.), উপরে সুষম পিরামিড (ভূমির বাহু 2 মি., উচ্চতা 3 মি.)','আমি ধরেছি ঘনবস্তুর ভূমি 2 × 2 (পিরামিডের ভূমির সমান)। সমগ্রতল = নিচের ভূমি 4 + চার পাশ 4 × (2 × 3) = 24 + পিরামিডের পার্শ্বতল 4 × ½ × 2 × √10 = 4√10 ⇒ মোট ≈ <b>40.65 বর্গমিটার</b>। আয়তন = 12 + 4 = <b>16 ঘনমিটার</b>। (ভূমির মাপ বইয়ের চিত্র থেকে মিলিয়ে নিও।)'],
+  ['২০. দোচালা গুদাম: 25 মি. × 18 মি., দেয়াল 5 মি. উঁচু, প্রতি চালার প্রস্থ 14 মি.','আমি ধরেছি দুই চালা সমান, ছাদ ত্রিভুজাকার প্রিজম। অর্ধপ্রস্থ 9 মি., ঢালের দৈর্ঘ্য 14 মি. ⇒ ছাদের উচ্চতা = √(196 − 81) = √115 ≈ 10.72 মি.। আয়তন = দেয়ালের অংশ 25 × 18 × 5 = 2250 + ছাদ ½ × 18 × 10.72 × 25 ≈ 2412.86 ⇒ মোট ≈ <b>4662.86 ঘনমিটার</b>। শর্ত বইয়ের সাথে মিলিয়ে নিও।'],
+  ['২১. সমবৃত্তভূমিক কোণকাকৃতি তাঁবু: উচ্চতা 8 মি., ভূমির ব্যাস 50 মি.','(ক) হেলানো উচ্চতা = √(64 + 625) = √689 ≈ <b>26.25 মি.</b>। (খ) জমি = π × 25² ≈ <b>1963.50 বর্গমিটার</b>। শূন্যস্থান = ⅓π·625·8 ≈ <b>5235.99 ঘনমিটার</b>। (গ) ক্যানভাস = πrl ≈ 2061.58 বর্গমিটার, খরচ = 2061.58 × 125 ≈ <b>২,৫৭,৬৯৭ টাকা</b> (প্রায়)।']]},
+ {h:'নমুনা প্রশ্ন',items:[
+  ['MCQ ১. 5, 4, 3 সেমি আয়তাকার ঘনবস্তুর কর্ণ','ক. 5√2 সেমি, কারণ √(25 + 16 + 9) = √50 = 5√2।'],
+  ['MCQ ২. সমকোণী ত্রিভুজের (অতিভুজ ভিন্ন) বাহু 4 ও 3 সেমি, বৃহত্তর বাহুর চতুর্দিকে ঘোরালে (i) সমবৃত্তভূমিক কোণক (ii) সমবৃত্তভূমিক সিলিন্ডার (iii) ভূমির ক্ষেত্রফল 9π','গ. i ও iii। ঘোরালে কোণক হয় (r = 3, h = 4), ভূমির ক্ষেত্রফল π × 9 = 9π।'],
+  ['MCQ ৩. 2 সেমি ব্যাসের গোলক সিলিন্ডারে ঠিকভাবে এঁটে গেলে সিলিন্ডারের আয়তন','ক. 2π ঘন সেমি, কারণ r = 1, h = 2 ⇒ π × 1 × 2 = 2π।'],
+  ['MCQ ৪. সিলিন্ডারের অনধিকৃত অংশের আয়তন','খ. 2π/3 ঘন সেমি, কারণ 2π − ⁴⁄₃π = 2π/3।'],
+  ['সৃজনশীল ৬ ক. 12 সেমি ব্যাসের গোলকের পৃষ্ঠতল','r = 6 ⇒ 4π × 36 = 144π ≈ <b>452.39 বর্গ সেমি</b>।'],
+  ['সৃজনশীল ৬ খ. 8 সেমি দৈর্ঘ্য, 6 সেমি ব্যাসের সিলিন্ডার কয়টি','গোলক 288π, প্রতি সিলিন্ডার (r = 3, h = 8) 72π ⇒ <b>4টি</b>।'],
+  ['সৃজনশীল ৬ গ. গোলকটি ঘনক বাক্সে ঠিকভাবে এঁটে গেলে অনধিকৃত অংশ','বাক্সের ধার = 12 ⇒ 1728। অনধিকৃত অংশ = 1728 − 288π ≈ <b>823.22 ঘন সেমি</b>।'],
+  ['সংক্ষিপ্ত ৭ ক. মাত্রা 5, 4, 3 সেমি: সমান কর্ণের ঘনকের সমগ্রতল','কর্ণ = √50। ঘনকের কর্ণ = √3·a ⇒ a² = 50/3। সমগ্রতল = 6a² = <b>100 বর্গ সেমি</b>।'],
+  ['সংক্ষিপ্ত ৭ খ. সমবৃত্তভূমিক কোণক h = 4, r = 6। সমগ্রতল','l = √(16 + 36) = √52 ≈ 7.211। সমগ্রতল = πr(r + l) = π × 6 × 13.211 ≈ <b>249.02 বর্গ সেমি</b>।'],
+  ['সংক্ষিপ্ত ৭ গ. ত্রিভুজাকার প্রিজমের ভূমির বাহু 6, 8, 10 সেমি, উচ্চতা 12 সেমি। আয়তন','ভূমি সমকোণী (36 + 64 = 100), ক্ষেত্রফল = 24। আয়তন = 24 × 12 = <b>288 ঘন সেমি</b>। (সমগ্রতল = 2 × 24 + 24 × 12 = 336।)']]}
+];
+(function(){var h='';QA.forEach(function(g){h+='<h3>'+g.h+'</h3>';g.items.forEach(function(it){h+='<details class="ex"><summary><b>'+it[0]+'</b></summary><p>'+it[1]+'</p></details>';});});$('qabox').innerHTML=h;})();
+</script>
+</body>
+</html>
