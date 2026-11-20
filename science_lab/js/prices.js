@@ -1,3 +1,2 @@
-/* ShikboLab দাম ও ডিসকাউন্ট (js/prices.js)
-   এই ফাইলটা অ্যাডমিন প্যানেলের "🏷️ প্রাইস" ট্যাব থেকে নামিয়ে এখানে বসাও, তারপর git push করলে সবার জন্য লাইভ হবে। */
-window.SL_PRICES={"plans":{"student":{"month":99,"week":35,"disc":0,"label":"","until":0},"family":{"month":249,"week":89,"disc":0,"label":"","until":0},"school":{"month":1999,"week":699,"disc":0,"label":"","until":0}}};
+/* ShikboLab দাম ও ডিসকাউন্ট (js/prices.js) */
+window.SL_PRICES={"plans":{"student":{"month":199,"week":59,"disc":50,"label":"","until":0},"family":{"month":499,"week":99,"disc":50,"label":"","until":0},"custom":{"month":49,"week":0,"disc":50,"label":"","until":0},"school":{"month":2999,"week":899,"disc":50,"label":"","until":0},"school300":{"month":34499,"week":1425,"disc":50,"label":"","until":0},"school500":{"month":5999,"week":1949,"disc":50,"label":"","until":0},"school1000":{"month":9999,"week":3599,"disc":50,"label":"","until":0}}};
