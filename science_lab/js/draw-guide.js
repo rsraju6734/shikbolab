@@ -30,6 +30,7 @@
  +'.dg-steps li .n{flex:none;width:26px;height:26px;border-radius:50%;background:#dbe4ea;color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}.dg-steps li.done{color:#1f3a5f;background:#eef8f5}.dg-steps li.done .n{background:#2a9d8f}'
  +'.dg-steps li.on{color:#1f3a5f;background:#fff7e3;border-color:#f0b429;font-weight:600}.dg-steps li.on .n{background:#f0b429}.dg-steps li .t{flex:1;line-height:1.5}.dg-steps li input{flex:none;width:20px;height:20px;margin-top:3px;accent-color:#2a9d8f;cursor:pointer}'
  +'.dg-trick{margin-top:12px;background:#fff4d6;border-left:5px solid #f0b429;border-radius:12px;padding:10px 14px;line-height:1.6}.dg-lab{margin-top:10px}.dg-lab b{color:#1f3a5f}.dg-lab span{display:inline-block;background:#eaf3ff;color:#1f3a5f;border-radius:999px;padding:3px 11px;margin:3px 4px 0 0;font-size:14.5px;font-weight:600}'
+ +'.dg-real{margin:0 0 14px}.dg-realh{font-weight:700;color:#1f3a5f;margin-bottom:6px}.dg-realh small{font-weight:500;color:#7a8794}.dg-realg{display:flex;flex-wrap:wrap;gap:8px}.dg-realg a{flex:1 1 280px;background:#fff;border:2px solid #cfe3ea;border-radius:14px;padding:6px;display:block}.dg-realg img{display:block;width:100%;height:auto;max-height:420px;object-fit:contain;border-radius:8px}'
  +'.dg-done{margin-top:10px;font-weight:700;color:#1d7a6f}'
  +'.dg-svg .k{stroke:#1f3a5f;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}.dg-svg .tx{fill:#1f3a5f;font:700 13px "Hind Siliguri",sans-serif}'
  +'.dg-svg .lb line{stroke:#c0392b;stroke-width:1.3}.dg-svg .lb circle{fill:#c0392b}.dg-svg .lb text{fill:#7b241c;font:700 12.5px "Hind Siliguri",sans-serif}'
@@ -47,7 +48,7 @@
   var cur=0,step=0,timer=null;
   box.innerHTML='<h3>✏️ ছবি আঁকার ট্রিক</h3><p class="dg-in">বইয়ের ছবিগুলো ধাপে ধাপে আঁকতে শেখো। <b>পরের ধাপ ▶</b> চাপো, আর খাতায় সাথে সাথে পেনসিলে আঁকো। আঁকা হয়ে গেলে ধাপের পাশের বাক্সে টিক দাও।</p>'
    +'<div class="dg-chips">'+list.map(function(d,i){return '<button class="dg-chip" data-i="'+i+'">'+d.title+(d.ref?'<small>'+d.ref+'</small>':'')+'</button>';}).join('')+'</div>'
-   +'<div class="dg-stage"><div><div class="dg-fig" id="dgfig"></div><div class="dg-ctl"><button id="dgp">◀ আগের</button><span class="cnt" id="dgc"></span><button class="go" id="dgn">পরের ধাপ ▶</button><button id="dga">⏵ নিজে নিজে চলুক</button><button id="dgr">↺ আবার</button></div></div>'
+   +'<div class="dg-real" id="dgreal"></div><div class="dg-stage"><div><div class="dg-fig" id="dgfig"></div><div class="dg-ctl"><button id="dgp">◀ আগের</button><span class="cnt" id="dgc"></span><button class="go" id="dgn">পরের ধাপ ▶</button><button id="dga">⏵ নিজে নিজে চলুক</button><button id="dgr">↺ আবার</button></div></div>'
    +'<div><div class="dg-ref" id="dgref"></div><ol class="dg-steps" id="dgs"></ol><div class="dg-done" id="dgd"></div><div class="dg-trick" id="dgt"></div><div class="dg-lab" id="dgl"></div></div></div>';
   var $=function(id){return document.getElementById(id);};
   function stop(){if(timer){clearInterval(timer);timer=null;$('dga').textContent='⏵ নিজে নিজে চলুক';}}
@@ -61,6 +62,8 @@
    $('dgd').textContent=step===n-1?'🎉 ছবি শেষ! এবার বই বন্ধ করে নিজে একবার আঁকো।':'';
    $('dgt').innerHTML='💡 <b>মনে রাখার ট্রিক:</b> '+d.trick;
    $('dgl').innerHTML=d.labels&&d.labels.length?'<b>🏷️ পরীক্ষায় যা চিহ্নিত করতে হবে:</b><br>'+d.labels.map(function(l){return '<span>'+l+'</span>';}).join(''):'';
+   var im=(H.IMG&&H.IMG[slug]&&H.IMG[slug][d.id])||[];
+   $('dgreal').innerHTML=im.length?'<div class="dg-realh">📖 বইয়ের আসল ছবি <small>(ছবিতে ট্যাপ করলে বড় হবে)</small></div><div class="dg-realg">'+im.map(function(f){return '<a href="../img/bio/'+f+'" target="_blank" rel="noopener"><img loading="lazy" src="../img/bio/'+f+'" alt="'+esc(d.title)+' — বইয়ের ছবি"></a>';}).join('')+'</div>':'';
    drawFig(anim);}
   function pick(i){stop();cur=i;step=0;paint(true);}
   box.querySelector('.dg-chips').onclick=function(e){var b=e.target.closest('.dg-chip');if(b)pick(+b.dataset.i);};
