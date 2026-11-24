@@ -78,6 +78,17 @@
  function bn(n){return String(n).replace(/\d/g,function(c){return '০১২৩৪৫৬৭৮৯'.charAt(c);});}
  function en(s){return String(s).replace(/[০-৯]/g,function(c){return '০১২৩৪৫৬৭৮৯'.indexOf(c);});}
  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+/* ইমেইল অথবা বাংলাদেশি মোবাইল নম্বর (০১৭xxxxxxxx, +৮৮০১৭..., 8801...) দিয়ে অ্যাকাউন্ট চেনা যায়। মোবাইল হলে ভেতরে 01xxxxxxxxx@phone.sl নামে রাখা হয় */
+ function normId(x){
+  x=en(String(x||'')).trim().toLowerCase();if(!x)return '';
+  if(x.indexOf('@')>-1)return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(x)&&x.length<120?x:'';
+  var d=x.replace(/[\s\-().]/g,'').replace(/^\+/,'');
+  if(/^8801[3-9]\d{8}$/.test(d))d=d.slice(2);
+  if(/^1[3-9]\d{8}$/.test(d))d='0'+d;
+  return /^01[3-9]\d{8}$/.test(d)?d+'@phone.sl':'';
+ }
+ function isPhoneId(e){return /@phone\.sl$/.test(String(e||''));}
+ function disp(e){return isPhoneId(e)?String(e).replace('@phone.sl',''):String(e||'');}
  function get(){try{var x=JSON.parse(localStorage.getItem(K));if(x&&x.acc)return x;}catch(e){}return {acc:{},ses:null,prog:{}};}
  function put(x){try{localStorage.setItem(K,JSON.stringify(x));}catch(e){}}
  function acc(){var x=get();return x.ses&&x.acc[x.ses]||null;}
@@ -134,7 +145,7 @@ function devId(){var v='';try{v=localStorage.getItem('sl_dev')||'';if(!/^[A-Za-z
  function applyServer(rec,prog){
   var x=get(),a=x.acc[rec.email];
   if(!a)a=x.acc[rec.email]={email:rec.email,hash:'',logo:'',members:[],active:'owner',pays:[],reqs:[],mv:0};
-  ['name','kind','school','trialEnd','paidUntil','suspended','pays','reqs','created','logo','seats','subs','bands','devs'].forEach(function(k){if(rec[k]!==undefined)a[k]=rec[k];});
+  ['name','kind','school','trialEnd','paidUntil','suspended','pays','reqs','created','logo','seats','subs','bands','devs','rem'].forEach(function(k){if(rec[k]!==undefined)a[k]=rec[k];});
   if((rec.mv||0)>=(a.mv||0)){a.members=rec.members||[];a.mv=rec.mv||0;}
   if(a.active!=='owner'&&!(a.members||[]).some(function(m){return m.id===a.active;}))a.active='owner';
   if(prog){x.prog[rec.email]=prog;var dd=x.dirty&&x.dirty[rec.email];if(dd)Object.keys(dd).forEach(function(pid){Object.keys(dd[pid]).forEach(function(f){x.prog[rec.email][pid]=x.prog[rec.email][pid]||{};x.prog[rec.email][pid][f]=dd[pid][f];});});}
@@ -143,7 +154,7 @@ function devId(){var v='';try{v=localStorage.getItem('sl_dev')||'';if(!/^[A-Za-z
  /* ক্লাউডে লগইনের পর ব্রাউজারে পাসওয়ার্ড-হ্যাশ নয়, শুধু সার্ভারের দেওয়া সেশন টোকেন জমা থাকে */
  function cred(a){return a.tok?{tok:a.tok}:{hash:a.hash};}
  function finishLogin(rec,prog,h,tok){applyServer(rec,prog);var x=get(),a=x.acc[rec.email];if(tok){a.tok=tok;a.hash='';}else{a.hash=h;}x.ses=rec.email;put(x);}
- function cloudSignup(o,em){return hash(o.pass).then(function(h){return api({a:'signup',dev:dev(),email:em,hash:h,name:o.name,kind:o.kind,school:o.school||'',logo:o.logo||''}).then(function(r){if(!r.ok)return r;finishLogin(r.acc,{},h,r.tok);return {ok:true};});});}
+ function cloudSignup(o,em){return hash(o.pass).then(function(h){return api({a:'signup',dev:dev(),email:em,rem:(isPhoneId(em)?normId(o.rem):''),hash:h,name:o.name,kind:o.kind,school:o.school||'',logo:o.logo||''}).then(function(r){if(!r.ok)return r;finishLogin(r.acc,{},h,r.tok);return {ok:true};});});}
  function cloudLogin(em,pw){return hash(pw).then(function(h){return api({a:'login',dev:dev(),email:em,hash:h}).then(function(r){if(!r.ok)return r;finishLogin(r.acc,r.prog,h,r.tok);return {ok:true};});});}
  function cloudSync(){
   if(!CLOUD)return Promise.resolve({ok:false,off:1});
@@ -166,10 +177,10 @@ function devId(){var v='';try{v=localStorage.getItem('sl_dev')||'';if(!/^[A-Za-z
   if(!a)a=x.acc[o.e]={email:o.e,hash:o.h,name:o.n,kind:o.k,school:o.s||'',logo:'',created:o.c||Date.now(),trialEnd:o.te,paidUntil:o.pu,compUntil:o.cu||0,suspended:false,members:[],active:'owner',pays:[]};
   a.hash=o.h;a.name=o.n;a.kind=CFG.PLANS[o.k]?o.k:a.kind;a.school=o.s||'';a.trialEnd=o.te;a.paidUntil=o.pu;a.compUntil=o.cu||0;a.suspended=!!o.su;if(o.b&&o.b.length)a.bands=o.b;if(useMem&&o.m)a.members=o.m;
   put(x);return {ok:true,isNew:nw,acc:a};}
- var SL={days:days,price:price,maxDisc:maxDisc,applyPrices:applyPrices,isAdmin:isAdmin,pack:pack,unpack:unpack,mergeIn:mergeIn,cfg:CFG,bn:bn,en:en,esc:esc,get:get,put:put,acc:acc,status:status,hasAccess:hasAccess,isFree:isFree,limits:limits,profiles:profiles,counts:counts,ROLE:ROLE,hash:hash,pwWeak:pwWeak,B:B,quote:quote,CLASSES:CFG.CLASSES,bandsLabel:bandsLabel,sortBands:sortBands,bandOf:bandOf,myBands:myBands,checkBands:checkBands,devId:devId,
+ var SL={days:days,price:price,maxDisc:maxDisc,applyPrices:applyPrices,isAdmin:isAdmin,pack:pack,unpack:unpack,mergeIn:mergeIn,cfg:CFG,bn:bn,en:en,esc:esc,get:get,put:put,acc:acc,status:status,hasAccess:hasAccess,isFree:isFree,limits:limits,profiles:profiles,counts:counts,ROLE:ROLE,hash:hash,pwWeak:pwWeak,normId:normId,disp:disp,isPhoneId:isPhoneId,B:B,quote:quote,CLASSES:CFG.CLASSES,bandsLabel:bandsLabel,sortBands:sortBands,bandOf:bandOf,myBands:myBands,checkBands:checkBands,devId:devId,
   signup:function(o){
-   var em=(o.email||'').trim().toLowerCase();
-   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))return Promise.resolve({ok:false,err:'সঠিক ইমেইল লেখো।'});
+   var em=normId(o.email);
+   if(!em)return Promise.resolve({ok:false,err:'সঠিক ইমেইল অথবা মোবাইল নম্বর লেখো (যেমন 01712345678)।'});
    var pwE=pwWeak(o.pass||'',em);if(pwE)return Promise.resolve({ok:false,err:pwE});
    if(!(o.name||'').trim())return Promise.resolve({ok:false,err:'নাম লেখো।'});
    if((CFG.PLANS[o.kind]||{}).isSchool&&!(o.school||'').trim())return Promise.resolve({ok:false,err:'স্কুলের নাম লেখো।'});
@@ -182,12 +193,15 @@ function devId(){var v='';try{v=localStorage.getItem('sl_dev')||'';if(!/^[A-Za-z
    });
   },
   login:function(em,pw){
-   em=(em||'').trim().toLowerCase();if(CLOUD)return cloudLogin(em,pw);var x=get(),a=x.acc[em];
+   em=normId(em);if(!em)return Promise.resolve({ok:false,err:'সঠিক ইমেইল অথবা মোবাইল নম্বর লেখো।'});if(CLOUD)return cloudLogin(em,pw);var x=get(),a=x.acc[em];
    if(!a)return Promise.resolve({ok:false,err:'এই ইমেইলে অ্যাকাউন্ট নেই।'});
    return hash(pw).then(function(h){if(h!==a.hash)return {ok:false,err:'পাসওয়ার্ড ভুল।'};x.ses=em;put(x);return {ok:true};});
   },
   logout:function(){var x=get(),a=x.ses&&x.acc[x.ses],p=null;if(CLOUD&&a&&(a.tok||a.hash))p=Promise.race([api(Object.assign({a:'devout',email:a.email,dev:{id:devId()}},cred(a)),true),new Promise(function(r){setTimeout(r,2500);})]);x.ses=null;put(x);return p||Promise.resolve();},
-  devRemove:function(em,pw,id){return hash(pw).then(function(h){return api({a:'devrm',email:String(em||'').trim().toLowerCase(),hash:h,rm:id});});},
+  devRemove:function(em,pw,id){return hash(pw).then(function(h){return api({a:'devrm',email:normId(em),hash:h,rm:id});});},
+  resetRequest:function(id){var em=normId(id);if(!em)return Promise.resolve({ok:false,err:'সঠিক ইমেইল অথবা মোবাইল নম্বর লেখো।'});return api({a:'rst_req',email:em});},
+  resetDo:function(id,code,pass){var em=normId(id),e=pwWeak(pass,em);if(!em)return Promise.resolve({ok:false,err:'ইমেইল/মোবাইল ঠিক নেই।'});if(e)return Promise.resolve({ok:false,err:e});if(!/^\d{6}$/.test(en(String(code||'')).trim()))return Promise.resolve({ok:false,err:'৬ অঙ্কের কোড লেখো।'});return hash(pass).then(function(h){return api({a:'rst_do',email:em,code:en(String(code)).trim(),hash:h});});},
+  setRecovery:function(rem){var a=acc();rem=normId(rem);if(!a)return Promise.resolve({ok:false,err:'আগে লগইন করো।'});if(!rem||isPhoneId(rem))return Promise.resolve({ok:false,err:'সঠিক ইমেইল লেখো।'});return api(Object.assign({a:'setrem',email:a.email,rem:rem},cred(a))).then(function(r){if(r.ok)applyServer(r.acc,null);return r;});},
   devRemoveMine:function(id){var x=get(),a=x.ses&&x.acc[x.ses];if(!a)return Promise.resolve({ok:false});return api(Object.assign({a:'devrm',email:a.email,rm:id},cred(a))).then(function(r){if(r.ok)applyServer(r.acc,null);return r;});},
   addMember:function(name,role){return mut(function(a){
    name=(name||'').trim();if(!name)return {ok:false,err:'নাম লেখো।'};

@@ -316,7 +316,7 @@ body.sl-page>.sl-top,body.sl-page>.sl-foot{display:none}
  }
  function rowHTML(a){
   var P=C.PLANS[a.kind]||C.PLANS.student,o=openId===a.email,c=SL.counts(a);
-  var h='<div class="ad-row"><div class="nm">'+P.emoji+' '+esc(a.school||a.name)+'<small>'+esc(a.name)+' · '+esc(a.email)+'</small></div><span class="bdg s">'+P.name.replace(' প্ল্যান','')+'</span>'+badge(a)+pendBadge(a)+'<span style="color:#5b6b78;font-size:14px">👥 '+bn((a.members||[]).length+1)+'</span><button class="slb s ad-sm" data-open="'+esc(a.email)+'">'+(o?'▲ বন্ধ করো':'⚙️ পরিচালনা')+'</button></div>';
+  var h='<div class="ad-row"><div class="nm">'+P.emoji+' '+esc(a.school||a.name)+'<small>'+esc(a.name)+' · '+esc(SL.disp(a.email))+'</small></div><span class="bdg s">'+P.name.replace(' প্ল্যান','')+'</span>'+badge(a)+pendBadge(a)+'<span style="color:#5b6b78;font-size:14px">👥 '+bn((a.members||[]).length+1)+'</span><button class="slb s ad-sm" data-open="'+esc(a.email)+'">'+(o?'▲ বন্ধ করো':'⚙️ পরিচালনা')+'</button></div>';
   if(!o)return h;
   var s=stat(a),exp=Math.max(a.trialEnd||0,a.paidUntil||0);
   h+='<div class="ad-panel" data-e="'+esc(a.email)+'">'
@@ -370,7 +370,7 @@ body.sl-page>.sl-top,body.sl-page>.sl-foot{display:none}
   function sync(){var pk=C.PLANS[q('k').value]||{};q('sw').style.display=pk.isSchool?'block':'none';q('cw').style.display=pk.custom?'block':'none';}q('k').onchange=sync;sync();
   q('rp').onclick=function(){var c='abcdefghjkmnpqrstuvwxyz23456789',r='';for(var i=0;i<8;i++)r+=c[Math.floor(Math.random()*c.length)];q('p').value=r;};
   q('nf').onsubmit=function(e){e.preventDefault();var ne=q('ne');function er(t){ne.textContent=t;ne.style.display='block';}ne.style.display='none';
-   var em=q('e').value.trim().toLowerCase(),pw=q('p').value,nm=q('n').value.trim(),k=q('k').value,sc=q('sc').value.trim(),dd=Math.max(0,+q('dd').value||0);
+   var em=SL.normId(q('e').value),pw=q('p').value,nm=q('n').value.trim(),k=q('k').value,sc=q('sc').value.trim(),dd=Math.max(0,+q('dd').value||0);
    if(!nm)return er('নাম লেখো।');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))return er('সঠিক ইমেইল লেখো।');if(pw.length<8)return er('পাসওয়ার্ড কমপক্ষে ৮ অক্ষর।');if((C.PLANS[k]||{}).isSchool&&!sc)return er('স্কুলের নাম লেখো।');var nsb=[].map.call(document.querySelectorAll('.ncs:checked'),function(e){return e.value;});if(k==='custom'&&!nsb.length)return er('কমপক্ষে একটা বিষয় বেছে নাও।');
    if(accMap()[em])return er('এই ইমেইলে অ্যাকাউন্ট আগেই আছে।');
    SL.hash(pw).then(function(h){var n=Date.now(),paid=q('ty').value==='paid';
