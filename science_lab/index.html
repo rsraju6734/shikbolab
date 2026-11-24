@@ -2,6 +2,8 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ShikboLab - নিজে করে বিজ্ঞান শেখো</title>
 <meta name="description" content="ShikboLab: বাংলায় বিজ্ঞান ও গণিতের ইন্টারঅ্যাকটিভ ভার্চুয়াল ল্যাব, পাঠ ও কুইজ।">
@@ -206,7 +208,7 @@ html,body{overflow-x:clip}
 </style>
 <link rel="stylesheet" href="css/home2.css">
 <script src="js/prices.js"></script>
-<script src="js/demo-saas.js?v=4"></script>
+<script src="js/demo-saas.js?v=5"></script>
 </head>
 <body>
 <div class="bg"><i></i><i></i><i></i></div>
@@ -368,7 +370,7 @@ function home(){
  h+='<div class="mq" aria-label="সব অধ্যায়"><div class="mqi">'+(function(){var l=reg.map(function(c){var p=parse(c);return '<a class="mqc" href="'+c.file+'" style="--c:'+SUBJ[c.subject].c+'">'+esc(p.title)+'</a>';}).join('');return l+l;})()+'</div></div>';
  h+='<section class="sec" id="subjects"><h2 class="rv">📚 তোমার বিষয় বেছে নাও</h2><p class="sub rv" style="--d:60ms">যেকোনো একটিতে ঢুকে অধ্যায়ের ল্যাব খোলো</p><div class="sgrid">';
  var i=0;for(var k in SUBJ){var s=SUBJ[k],n=reg.filter(function(c){return c.subject===k;}).length,x=ext.filter(function(c){return c.subject===k;}).length;
-  h+='<a href="#'+k+'" class="scard rv" style="--c:'+s.c+';--c1:'+s.c1+';--d:'+(i++*90)+'ms">'+art(k)+'<h3>'+s.name+'</h3><div class="tg">'+s.tag+'</div><div class="cnt"><span>'+bn(n)+'টি অধ্যায়'+(x?' + '+bn(x)+'টি বোনাস':'')+'</span><b class="go">→</b></div></a>';}
+  h+='<a href="#'+k+'" class="scard rv" style="--c:'+s.c+';--c1:'+s.c1+';--d:'+(i++*90)+'ms">'+art(k)+'<h3>'+esc(s.name)+'</h3><div class="tg">'+esc(s.tag)+'</div><div class="cnt"><span>'+bn(n)+'টি অধ্যায়'+(x?' + '+bn(x)+'টি বোনাস':'')+'</span><b class="go">→</b></div></a>';}
  h+='</div></section>';
  h+='<section class="sec" id="play"><h2 class="rv">🔬 এখনই হাতে-কলমে চেষ্টা করো</h2><p class="sub rv" style="--d:60ms">কোনো লগইন ছাড়াই, তিনটা মিনি-ল্যাব। নাড়াচাড়া করে দেখো কেমন লাগে</p>'
   +'<div class="play rv"><div class="pstage"><div class="ph"><i></i><i></i><i></i><span style="margin-left:6px">ভার্চুয়াল ল্যাব</span></div><canvas id="pgc" width="440" height="320"></canvas></div>'
@@ -388,7 +390,7 @@ function home(){
  /* bonus filter */
  var pills=document.getElementById('bpills'),bg=document.getElementById('bgrid'),cur='all';
  var ps='<button data-f="all" class="on">সব ('+bn(ext.length)+')</button>';
- for(var kk in SUBJ){var cn=ext.filter(function(c){return c.subject===kk;}).length;if(cn)ps+='<button data-f="'+kk+'">'+SUBJ[kk].icon+' '+SUBJ[kk].name+' ('+bn(cn)+')</button>';}
+ for(var kk in SUBJ){var cn=ext.filter(function(c){return c.subject===kk;}).length;if(cn)ps+='<button data-f="'+kk+'">'+esc(SUBJ[kk].icon)+' '+esc(SUBJ[kk].name)+' ('+bn(cn)+')</button>';}
  pills.innerHTML=ps;
  function fill(){var l=ext.filter(function(c){return cur==='all'||c.subject===cur;});bg.innerHTML=l.map(bonusTile).join('')||'<div class="empty">কিছু নেই</div>';rvInit(bg);}
  pills.onclick=function(e){var b=e.target.closest('button');if(!b)return;cur=b.dataset.f;pills.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b);});fill();};
